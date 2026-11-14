@@ -1,6 +1,10 @@
-# Skills and local source verification
+# Skills and workflows
 
-Each of fifteen source roles has three distinct role-method skills plus five reusable shared source procedures: **50 distinct source skill procedures**. Each exported role contains eight disabled source descriptors (three specific + five shared), not eight live skills. These are **source-only** `SKILL.md` / `skill.yaml` configurations; native host installation and model-selected execution are not included.
+The task collection contains **75 developed skills**, **25 workflows** and **100 task starter configurations**. Start with the [task catalog](../collections/muse-starters-v1/CATALOG.md) or [choose a specialist](collection/SPECIALIST_CATALOG.md).
+
+The toolkit also retains **50 distinct role/shared procedures**: three methods for each of 15 specialists, plus five reusable methods. These overlap the developed task skills rather than adding 50 unrelated integrations.
+
+Each exported role includes eight source descriptors (three role-specific and five shared). `SKILL.md` and `skill.yaml` describe methods; actual native tool availability depends on the receiving host.
 
 | Role | Source kit |
 | --- | --- |

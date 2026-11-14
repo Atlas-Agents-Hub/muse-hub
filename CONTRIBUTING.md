@@ -25,5 +25,6 @@ Source-only, independently tested, native-ready and deployed are distinct states
 For coding conventions and role APIs, see [Extend the toolkit](docs/EXTENDING_GENERIC_AGENTS.md). For sensitive reports, follow [Security](SECURITY.md). Code and documentation contributions must be compatible with the [MIT license](LICENSE).
 
 ## Write for the reader
+Follow the [documentation standards](docs/handbook/EDITORIAL_STANDARDS.md) when editing public product, setup, role or AI-facing pages.
 
 Name the tool and explain what it does, what it produces, how to run it and where its limits are. Describe differences between packages by their actual contents rather than vague comparisons. Keep development milestones and acceptance history out of introductory guides. Preserve exact command names, API identifiers, download versions and compatibility requirements. Check examples against the code, and do not describe a profile, test fixture or local receipt as a deployed service.

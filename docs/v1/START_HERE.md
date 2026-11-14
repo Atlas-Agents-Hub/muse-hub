@@ -6,6 +6,8 @@ Choose a specialist configuration, run a Python tool, open Daily Desk or find a 
 
 Local repository examples use Python 3.12+ on Windows, macOS or Linux. Use `python3` where appropriate. No paid API or signed-in Muse account is needed for local example runs.
 
+For additional guides by task, see the [documentation index](../README.md).
+
 ## 1. Use with Muse
 
 Select a role from the [specialist catalog](../collection/SPECIALIST_CATALOG.md) or a task from the [100 starter configurations](../../collections/muse-starters-v1/CATALOG.md). A selected starter adds methods to your existing Muse assistant; it preserves your existing identity, memory and access permissions.

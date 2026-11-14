@@ -1,9 +1,19 @@
 # Get started
 
+**Muse Specialist Toolkit v1.0.0** includes 15 specialist profiles, 100 task starters, 75 developed skills, 25 workflows, Daily Desk and a directory of 151 custom connectors.
 
-**New to the toolkit?** Start with [four practical paths](v1/START_HERE.md): use a Muse specialist, run an actual tool, open Personal Companion's Daily Desk, or [browse 151 custom connectors](connectors/CATALOG.md). The older executable downloads below remain available for the corresponding release version.
+Choose a guide from the [documentation index](README.md) or follow the [four first-use routes](v1/START_HERE.md). Local examples use Python 3.12+ and do not require a paid API. External accounts are not connected by default.
 
-Choose an executable kit to run a tool, or a starter profile to customize an assistant's instructions. The published v0.4.1-alpha has eight runnable offline Python tools and eleven starter profiles. The current source has 15 profiles and 50 unique instruction procedures; its four newer roles are not included in those historical release ZIPs. External accounts are not connected by default.
+## Download the current V1 packages
+
+- [Complete toolkit source](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip) — source tree, runnable examples and Daily Desk.
+- [Specialist collection](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip) — starters, expanded executable kits and example reports.
+- [Custom connector directory](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip) — 151 connector records and a searchable local directory.
+- [SHA-256 checksums](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt) — verify the exact file you downloaded.
+
+Extract the source ZIP, open a terminal in the project directory, then run `python -B examples/daily_desk.py` to check three tasks, two notes and a restored copy.
+
+The earlier `v0.4.1-alpha` release contains eight executable ZIPs and eleven starter profiles. The no-clone Creative Studio example below still uses that historical release.
 
 ## Run a standalone tool without cloning
 
