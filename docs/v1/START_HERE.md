@@ -2,13 +2,13 @@
 
 **Your Muse. Your Specialists. Your Possibilities.**
 
-Pick your goal. This toolkit combines **15 specialist configurations**, **100 task-focused starters**, a library of skills/workflows, working Python specialist tools, **151 custom connectors**, and Personal Companion's persistent Daily Desk.
+Choose a specialist configuration, run a Python tool, open Daily Desk or find a custom connector. Each section below has a command or a setup guide.
 
 Local repository examples use Python 3.12+ on Windows, macOS or Linux. Use `python3` where appropriate. No paid API or signed-in Muse account is needed for local example runs.
 
 ## 1. Use with Muse
 
-Explore the [specialist catalog](../collection/SPECIALIST_CATALOG.md) or [100 starter configurations](../../collections/muse-starters-v1/CATALOG.md). A selected starter adds methods to your existing Muse assistant; it preserves your existing identity, memory and access permissions.
+Select a role from the [specialist catalog](../collection/SPECIALIST_CATALOG.md) or a task from the [100 starter configurations](../../collections/muse-starters-v1/CATALOG.md). A selected starter adds methods to your existing Muse assistant; it preserves your existing identity, memory and access permissions.
 
 From the repository root:
 
@@ -25,7 +25,7 @@ Read the exported playbook or SKILL.md files and apply the relevant instructions
 
 ## 2. Run specialist tools
 
-Run a real deterministic tool and inspect its output:
+Run the included data check and inspect its output:
 
 ```bash
 python -B tools/muse_collection.py check
@@ -40,7 +40,7 @@ For a no-clone historical executable, see [release downloads](../RELEASES.md). G
 
 ## 3. Open Personal Companion
 
-Daily Desk is the working local full-stack Personal Companion workspace: tasks, notes, revision-checked edits, persisted reopen and checked backup/restore into a new store.
+Daily Desk stores tasks and notes in SQLite. You can edit them, reopen the database, resolve stale-write conflicts and restore a backup into a new store.
 
 Run the entire disposable first-use flow:
 

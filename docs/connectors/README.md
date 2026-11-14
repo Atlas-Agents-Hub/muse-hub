@@ -1,12 +1,12 @@
 # 150+ Custom Connectors for Muse
 
-## Find the right connection
+## Connect a service
 
-**151 connectors · 42 service categories · one searchable directory.**
+**151 connectors across 42 categories.**
 
-Make your Muse more useful with the services you already use—from calendars and coding to design, home devices and business tools.
+Find setup instructions for calendars, code hosting, design platforms, home devices and business services.
 
-## Browse by what you want to do
+## Browse by category
 
 - **[Work and productivity](CATALOG.md#work-and-productivity)** — Plans, messages, scheduling, documents and everyday teamwork. (23)
 - **[AI, research and data](CATALOG.md#ai-research-and-data)** — Model services, information retrieval and structured knowledge. (18)
@@ -17,7 +17,7 @@ Make your Muse more useful with the services you already use—from calendars an
 - **[Publishing and social](CATALOG.md#publishing-and-social)** — Share, publish, stream and build an audience. (13)
 - **[Everyday and more](CATALOG.md#everyday-and-more)** — Travel, personal information, reading and additional services. (13)
 
-## Popular starting points
+## Common services
 
 - **[GitHub](https://github.com/bluman1/muse-connectors/blob/73f302c2d8569fdc65e0e57c26b244c547fcd40e/connectors/github/SKILL.md)** — View your profile, list repos, list open issues, and create issues.
 - **[Notion](https://github.com/bluman1/muse-connectors/blob/73f302c2d8569fdc65e0e57c26b244c547fcd40e/connectors/notion/SKILL.md)** — Search and query Notion, plus create pages, append blocks, and update page properties…

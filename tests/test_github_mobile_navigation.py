@@ -55,13 +55,13 @@ class GitHubMobileNavigation(unittest.TestCase):
   body=doc(CROOT/"README.md")
   self.assertFalse(re.search(r"(?m)^\|.*\|",body))
   self.assertIn("150+ Custom Connectors",body)
-  self.assertIn("Browse by what you want to do",body)
+  self.assertIn("Browse by category",body)
   for group,title in GROUPS.items():
    with self.subTest(group=group):
     self.assertIn("CATALOG.md#"+group,body)
     self.assertIn(title,body)
-  self.assertLess(body.index("Browse by what you want to do"),body.index("Source and attribution"))
-  self.assertNotIn("not installed",body[:body.index("Browse by what you want to do")].lower())
+  self.assertLess(body.index("Browse by category"),body.index("Source and attribution"))
+  self.assertNotIn("not installed",body[:body.index("Browse by category")].lower())
  def test_all_151_connectors_are_grouped_with_links_and_short_descriptions(self):
   body=doc(CROOT/"CATALOG.md")
   self.assertNotRegex(body,r"(?m)^\|.*\|")

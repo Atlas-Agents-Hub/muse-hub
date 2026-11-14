@@ -4,72 +4,72 @@
 
 **15 AI Specialists** · **100+ Configurations** · **150+ Custom Connectors**
 
-Make more of your Muse personal assistant. Explore specialists for software, research, creativity, learning and everyday life—then customize the tools and workflows around what you want to accomplish.
+Pick a specialist for the job. Use a task configuration, run one of the included tools, or connect a service to Muse. Personal Companion includes Daily Desk for tasks and notes.
 
 **[Choose a specialist](#find-your-specialist)** · **[Browse task configurations](collections/muse-starters-v1/CATALOG.md)** · **[Explore custom connectors](docs/connectors/README.md)** · **[Try Daily Desk](docs/spaces/DAILY_DESK.md)**
 
 ## Find your specialist
 
-Start with what you want to do. Every specialist has its own methods, examples and customization options.
+Open a specialist to see its methods, examples and configuration.
 
 ### Build and automate
 
-- **[Software Engineer](presets/software-engineer/)** — Debug, review code and check changes with real tests.
-- **[Data Engineering & Database Architect](presets/data-engineering-architect/)** — Explore data quality, schemas and migrations.
-- **[Automation Engineer](presets/automation-engineer/)** — Design workflows, inspect dependencies and plan safe execution.
-- **[Infrastructure & Reliability Engineer](presets/infrastructure-reliability-engineer/)** — Investigate reliability, incidents and capacity.
+- **[Software Engineer](presets/software-engineer/)** - Reproduce bugs, inspect code changes and run regression tests.
+- **[Data Engineering & Database Architect](presets/data-engineering-architect/)** - Check duplicate keys, field completeness and schema changes.
+- **[Automation Engineer](presets/automation-engineer/)** - Validate dependencies and review retry rules.
+- **[Infrastructure & Reliability Engineer](presets/infrastructure-reliability-engineer/)** - Calculate error budgets and examine incident evidence.
 
 ### Research and evaluate
 
-- **[Research Evaluator](presets/research-evaluator/)** — Examine sources and test claims against evidence.
-- **[Claims Adjudicator](presets/claims-adjudicator/)** — Compare conflicting information and build supported conclusions.
-- **[Adversarial Verifier](presets/adversarial-verifier/)** — Test assumptions and document defensive findings.
-- **[Reverse Engineering & Security Researcher](presets/reverse-engineering-researcher/)** — Analyze artifacts and observed behavior.
+- **[Research Evaluator](presets/research-evaluator/)** - Check quotations, sources and evaluation results.
+- **[Claims Adjudicator](presets/claims-adjudicator/)** - Trace claims to sources and record conflicts.
+- **[Adversarial Verifier](presets/adversarial-verifier/)** - Run bounded defensive checks and record findings.
+- **[Reverse Engineering & Security Researcher](presets/reverse-engineering-researcher/)** - Compare artifacts and recorded system behavior.
 
 ### Create and learn
 
-- **[Creative Studio](presets/creative-studio/)** — Plan media production, storyboards and continuity.
-- **[Product & Interface Designer](presets/product-interface-designer/)** — Work with interface states and usability checks.
-- **[Model Builder](presets/model-builder/)** — Explore experiments, datasets and evaluation.
-- **[Learning Coach](presets/learning-coach/)** — Practice, review material and track learning.
+- **[Creative Studio](presets/creative-studio/)** - Produce briefs, storyboards and continuity records.
+- **[Product & Interface Designer](presets/product-interface-designer/)** - Audit UI states, control labels and user journeys.
+- **[Model Builder](presets/model-builder/)** - Review datasets, experiments and evaluation metrics.
+- **[Learning Coach](presets/learning-coach/)** - Run practice sessions, score answers and review weak areas.
 
 ### Life and planning
 
-- **[Personal Companion](presets/personal-companion/)** — Organize tasks, ideas and personal projects.
-- **[Garden Companion](presets/garden-companion/)** — Keep plant records, observations and care plans.
-- **[Coordinator](presets/coordinator/)** — Organize goals, dependencies and the next useful action.
+- **[Personal Companion](presets/personal-companion/)** - Keep tasks and notes in Daily Desk and organize personal plans.
+- **[Garden Companion](presets/garden-companion/)** - Record plant observations and track care routines.
+- **[Coordinator](presets/coordinator/)** - Map dependencies, decisions and handoffs.
 
-## See it work
+## Try the tools
 
-These are more than instruction files. The toolkit includes executable specialist tools and a working personal workspace.
+Both examples run with the included data. One checks a schema change; the other creates and restores a task-and-note store.
 
-**Run a specialist tool:** From a checkout with Python 3.12+, get an inspectable result using the supplied example data.
+**Data Engineer:** Review a 40-row schema change, including a newly added `note` field (Python 3.12+):
 
 ```bash
 python -B tools/muse_collection.py demo data-engineer
 ```
 
-**Open Personal Companion:** [Daily Desk](docs/spaces/DAILY_DESK.md) keeps tasks and notes across sessions, protects edits and supports backup and restoration.
+**Daily Desk:** [Open the Personal Companion guide](docs/spaces/DAILY_DESK.md) for tasks, notes, revision-checked edits and backup/restore.
 
 ```bash
 python -B examples/daily_desk.py
 ```
 
-**Customize your workflow:** Explore [100 task configurations](collections/muse-starters-v1/CATALOG.md), [specialist examples](docs/collection/SPECIALIST_QUICKSTART.md) and the [full specialist catalog](docs/collection/SPECIALIST_CATALOG.md).
+Expected result: `DAILY_DESK_VERTICAL_SLICE_PASS`, with three tasks, two notes, and a restored copy.
 
-## Explore custom connectors
+For other tasks: [100 task configurations](collections/muse-starters-v1/CATALOG.md), [specialist examples](docs/collection/SPECIALIST_QUICKSTART.md), or the [full specialist catalog](docs/collection/SPECIALIST_CATALOG.md).
 
-Bring the services you already use into Muse. Browse **151 custom connectors**, organized around what you want to accomplish—not a long alphabetical table.
+## Connect your services
 
-**[Find your connectors by category](docs/connectors/README.md)**
+Browse **151 custom connectors** for development, productivity, design, home devices and other services. Entries link to setup instructions and original source documentation.
 
-Work & productivity · AI & data · Development · Creative work · Business · Connected home · Publishing · Everyday life.
+**[Browse the connector directory](docs/connectors/README.md)**
 
-## Get started
+## Setup and documentation
 
-**[Start with Muse](docs/v1/START_HERE.md)** for four practical paths: use a specialist, run a tool, open Daily Desk or add a connector.
+The [setup guide](docs/v1/START_HERE.md) covers configuring a specialist, running tools, using Daily Desk and adding connectors.
 
-Want to learn the system in depth? See the [capability guide](docs/CAPABILITIES.md), [installation guide](docs/GITHUB_QUICKSTART.md) and [practical handbook](docs/handbook/README.md).
+[Capability guide](docs/CAPABILITIES.md) | [Installation guide](docs/GITHUB_QUICKSTART.md) | [Practical handbook](docs/handbook/README.md)
 
 ---
 
