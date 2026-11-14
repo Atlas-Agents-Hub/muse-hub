@@ -163,7 +163,7 @@
     "scheduled_notifications": false,
     "tagged_release_asset": false
   },
-  "release_publication": "SOURCE_CANDIDATE_PENDING_TAG_AND_ASSET_READBACK",
+  "release_publication": "VERIFY_AT_GITHUB_RELEASES",
   "historical_release": "v0.4.1-alpha",
   "configuration_count": 115,
   "configuration_breakdown": {
@@ -202,5 +202,12 @@
     "connectors": "docs/v1/START_HERE.md#4-explore-connectors"
   },
   "download_scope": "sha256_index, complete_toolkit, and executable_offline_kits entries refer to historical v0.4.1-alpha release only; verify V1 assets at GitHub Releases",
-  "product_tagline": "Your Muse. Your Specialists. Your Possibilities."
+  "product_tagline": "Your Muse. Your Specialists. Your Possibilities.",
+  "release_page": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v1.0.0",
+  "v1_sha256_index": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt",
+  "v1_assets": {
+    "source": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip",
+    "connectors": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip",
+    "collection": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip"
+  }
 }
