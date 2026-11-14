@@ -91,13 +91,13 @@ def render() -> dict[str, bytes]:
     homepage = [
         "# 150+ Custom Connectors for Muse",
         "",
-        "## Find the right connection",
+        "## Connect a service",
         "",
-        "**151 connectors · 42 service categories · one searchable directory.**",
+        "**151 connectors across 42 categories.**",
         "",
-        "Make your Muse more useful with the services you already use—from calendars and coding to design, home devices and business tools.",
+        "Find setup instructions for calendars, code hosting, design platforms, home devices and business services.",
         "",
-        "## Browse by what you want to do",
+        "## Browse by category",
         "",
     ]
     for title, intro, categories in GROUPS:
@@ -108,7 +108,7 @@ def render() -> dict[str, bytes]:
         catalog.append(entry)
     homepage.extend([
         "",
-        "## Popular starting points",
+        "## Common services",
         "",
     ])
     highlights = (
