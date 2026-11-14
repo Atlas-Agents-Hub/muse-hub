@@ -7,7 +7,7 @@
     "CHANGELOG.md": "cc327bd83e9b49e95358cd53d54671644944c21efb32cd3acc63af22877b92c7",
     "CONTRIBUTING.md": "9b771cc89ac9bce05e792e6b9a773fbd7f53f3de4664bcd1083c89765fbd3928",
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
-    "README.md": "9825db1e3b16b0e2c22d82cac3d0a8f354c0b075b8777b1bcd0e8c5cab00c4e6",
+    "README.md": "a0bce487d5456f9815480ce3ca77938902cb91864035c0d4b6490252fa30fa81",
     "SECURITY.md": "629e9c23228531771d01f644973019c14e228e52cab3dd71490be4a2bf558ba6",
     "collections/muse-starters-v1/CATALOG.md": "9867e8ce67eee76b12c27867b2c5b991a8ea44e7e13732722fb256fde86aac4d",
     "collections/muse-starters-v1/COUNTS.json": "3ded6dec528100574a4911e1dd904ff3108fa4c0d9644386917363c877884366",
@@ -350,9 +350,9 @@
     "docs/collection/MUSE_CURATED_COLLECTION.md": "50dcc06747a2d81a95d61849bc993f63667b1a6ed620b416ecc9b5289649eb84",
     "docs/collection/SPECIALIST_CATALOG.md": "344bee762887fc1fe0b8161d36a3a6e2760cdbbc29998ce0d4846478fb965bd5",
     "docs/collection/SPECIALIST_QUICKSTART.md": "02e98272d91698e748ece790853c88526d1c4a21aa76b8dea522b4090ec0a981",
-    "docs/connectors/CATALOG.md": "e753b489b246a0d2602cd394c1a4cf494b4f13f5a853447992f37cb06e11cc6b",
+    "docs/connectors/CATALOG.md": "be3a436ecf907b929bbfe7c0dc366cf07b714d894828265971e06f63bc60f16d",
     "docs/connectors/PROVENANCE.json": "2658fef256002235bea2f85d7c179324966c1b89595ddaeb91f39de259ddcbca",
-    "docs/connectors/README.md": "f42a2f413c4391718ba7256d28fdeea810fbf80f92048b82b793fdf8c952f4ed",
+    "docs/connectors/README.md": "df7ece7ceba46ff304540382a5bd6c66004f699ad5fc0e2f28676bd2c8b40943",
     "docs/connectors/SOURCE_RECORDS.json": "5836d82bb6d9820dee844c3b2180bd7f3a9931fc470c0ee912f4ae1c300578a5",
     "docs/connectors/UPSTREAM_LICENSE.txt": "d7e4051c04da81a0e239b1f6c0ef9f1a6eab4d249ee7be463cb106bc6a24b0ac",
     "docs/connectors/app.css": "3c4f88cb2f598687c756aa928500271d6ab03af531ce81b546fac148e139fca0",
@@ -518,6 +518,7 @@
     "scripts/check_ci_results.py": "ec0572e59d150ad1125c25b66ca8fe65dd47e5f0d4b4ac2cb504d1e8880814ad",
     "scripts/check_public.py": "d162affa83bca4e2ded9afa9222293a0ea0b4b508be43e7cc1894a6cebaeea30",
     "scripts/connector_catalog.py": "574ad6d80a6c3ae2144c0da87e0ef221e07efbef574f6827a10a3092ab3f96b4",
+    "scripts/render_github_connector_directory.py": "09a2e639a01c3e1f76ea2d326c049d3dc64235ece69d3505fbaae99170623332",
     "scripts/verify_software_engineer_posix.sh": "225ec20d4bfbb03619447da0ba563bf1c2644437b50bbc377da945589751a591",
     "services/evidence-finder/README.md": "8578ad3bac78c5e6b9a1b93d0496cf4dc22ec6818fd6ea5bc938bef520588274",
     "services/evidence-finder/service.json": "05599bae4d64c3c31e67a62e48cdae6382bca8827fa0a23d6a782f40830d130d",
@@ -664,6 +665,7 @@
     "tests/test_generic_native_canary_cli.py": "1a441c0132c21077e8b9cba947429be0d0fa6d1bdf245064f9f5534d6b27689b",
     "tests/test_generic_native_fleet.py": "95961c84521bea4c0694d86a0fbeafe497119c17987ee8a28deab66e78927a9f",
     "tests/test_generic_native_fleet_cli.py": "7a8cffbf2a0ee089ba5276af9b6d04b60a28afd6f0b5c0112976c81e7200fdb6",
+    "tests/test_github_mobile_navigation.py": "66b8688ecf55037125edfc7fb6bd665517f0e96cd350132f0b78ff6612ee4c23",
     "tests/test_github_quickstart.py": "eec7f87c2921d64f9a66539e064fa5ca04b2ad3ff84ce4d3095463f7c7d2f5ec",
     "tests/test_installer_role_integration.py": "82e542b745da9b7ade752d1fb8dacc96f6ae9624845d5da68da81e0ca61da9cd",
     "tests/test_iron_actor_recipient_observation.py": "4627b478dc777db218cc95b9bcfbd605cfcd10caf3e34aabc04e0c0101ffb95b",
@@ -771,5 +773,5 @@
   "publisher_approval_granted": false,
   "release_kind": "GITHUB_SOURCE_ONLY",
   "schema": "r46/public-source-snapshot-v1",
-  "source_file_count": 762
+  "source_file_count": 764
 }
