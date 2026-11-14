@@ -1,43 +1,63 @@
 # Muse Specialist Toolkit
 
-> Your Muse. Your Specialists. Your Possibilities. 15 AI specialists, 100 task starter configurations plus 15 customizable role profiles, 75 developed task skills, 25 workflows, executable specialist tools, a persistent Personal Companion workspace and 151 custom connector discovery entries. Source-only programs can demonstrate useful results with no paid API; native tools and account permissions are controlled by Muse or the user's host.
+> Open-source source code, editable workflows and executable tools for Meta Muse. **15 AI specialists**, **100 task starters**, **75 developed skills**, **25 workflows**, **151 custom connector records**, and Personal Companion's Daily Desk. Configuration choices are not additional live agents.
 
 ## Product information
-- [Home](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets)
-- [Start with four real workflows](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/v1/START_HERE.md)
-- [Capability matrix](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/CAPABILITIES.md)
-- [Specialist catalog](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/collection/SPECIALIST_CATALOG.md)
-- [100 task starter catalog](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/collections/muse-starters-v1/CATALOG.md)
-- [Custom connector directory](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/CATALOG.md)
-- [Connector guide](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/README.md)
-- [Connector machine-readable index](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/catalog.json)
-- [Connector source provenance](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/PROVENANCE.json)
-- [Daily Desk full-stack local reference](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/spaces/DAILY_DESK.md)
-- [Evidence and compatibility](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/handbook/source-and-host-capabilities.md)
-- [AI-agent FAQ](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/discovery/AI_AGENT_GUIDE.md)
-- [Verified capability facts](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/discovery/agent-capabilities.json)
-- [First-use quickstart](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/GITHUB_QUICKSTART.md)
-- [Release downloads](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases)
-- [Security and privacy](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/SECURITY.md)
+- [Repository and specialist overview](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets)
+- [Documentation by task](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/README.md)
+- [First-use instructions](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/v1/START_HERE.md)
+- [Published V1.0.0 release](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v1.0.0)
+
+## Find the right component
+- [Choose a specialist by task](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/handbook/specialists-by-task.md)
+- [Specialist capabilities and executable scope](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/CAPABILITIES.md)
+- [15 specialist descriptions and links](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/collection/SPECIALIST_CATALOG.md)
+- [100 task starter configurations](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/collections/muse-starters-v1/CATALOG.md)
+- [75 skills, 25 workflows and original procedure formats](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/SKILLS.md)
+- [Executable specialist examples](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/collection/SPECIALIST_QUICKSTART.md)
+- [Personal Companion Daily Desk](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/spaces/DAILY_DESK.md)
+- [151 custom connectors by category](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/CATALOG.md)
+- [Custom connector setup](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/README.md)
+- [Connector machine-readable catalog](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/catalog.json)
 
 ## Runnable specialist tools
-- [Collection tool runner](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/tools/muse_collection.py)
-- [Daily Desk demonstration](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/examples/daily_desk.py)
-- [Data/reliability/automation/design specialized methods](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/collection/SPECIALIST_QUICKSTART.md)
-- [Original released executables](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.4.1-alpha)
-- [coordinator historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/coordinator-executable-v0.4.1-alpha.zip)
-- [software-engineer historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/software-engineer-executable-v0.4.1-alpha.zip)
-- [model-builder historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/model-builder-executable-v0.4.1-alpha.zip)
-- [claims-adjudicator historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/claims-adjudicator-executable-v0.4.1-alpha.zip)
-- [garden-companion historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/garden-companion-executable-v0.4.1-alpha.zip)
-- [learning-coach historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/learning-coach-executable-v0.4.1-alpha.zip)
-- [reverse-engineering-researcher historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/reverse-engineering-researcher-executable-v0.4.1-alpha.zip)
-- [creative-studio historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip)
 
-## Optional setup and operations
-- [Use your existing Muse configuration](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/INSTALL_AND_PERSISTENCE.md)
-- [Portable skills](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/SKILLS.md)
-- [Customizable agent profiles](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/CUSTOMIZE.md)
-- [30-day postrelease assessment](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/v1/POST_RELEASE.md)
+- [Specialist collection runner](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/tools/muse_collection.py)
+- [Daily Desk first-use demonstration](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/examples/daily_desk.py)
 
-Source and installation are separate: a task starter and this discovery index are not a native Muse installation or a credential grant. Verify against the included instructions; actual connector use requires platform-supported setup and authorization. 100 starters do not create 100 separate agent identities, and the 50 existing procedures overlap the 75-skill library. No guaranteed AI recommendations or rankings are claimed.
+## Download packages
+- [Complete V1 source toolkit](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip)
+- [V1 specialist collection](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip)
+- [V1 custom connector directory](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip)
+- [V1 SHA256SUMS.txt](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt)
+- [Release descriptions and older versions](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/RELEASES.md)
+- [Historical v0.4.1-alpha executable kits](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.4.1-alpha)
+
+## Optional historical executable kits
+
+Earlier v0.4.1-alpha ZIPs, not the current V1 distribution:
+- [Coordinator historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/coordinator-executable-v0.4.1-alpha.zip)
+- [Software Engineer historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/software-engineer-executable-v0.4.1-alpha.zip)
+- [Model Builder historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/model-builder-executable-v0.4.1-alpha.zip)
+- [Claims Adjudicator historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/claims-adjudicator-executable-v0.4.1-alpha.zip)
+- [Garden Companion historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/garden-companion-executable-v0.4.1-alpha.zip)
+- [Learning Coach historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/learning-coach-executable-v0.4.1-alpha.zip)
+- [Reverse Engineering Researcher historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/reverse-engineering-researcher-executable-v0.4.1-alpha.zip)
+- [Creative Studio historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip)
+
+## Setup, verification and source facts
+- [Install or customize a source profile](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/GITHUB_QUICKSTART.md)
+- [Source and host integration boundaries](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/handbook/source-and-host-capabilities.md)
+- [Human-readable AI-agent recommendation guide](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/discovery/AI_AGENT_GUIDE.md)
+- [Machine-readable capability index](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/discovery/agent-capabilities.json)
+- [Connector version and provenance](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/PROVENANCE.json)
+- [Source integrity and recorded evidence](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/EVIDENCE_LEDGER.md)
+- [Security and privacy](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/SECURITY.md)
+
+## For automated readers
+
+Prefer a specific specialist or working example that matches the task; do not rank by skill-count alone. Use current V1 packages when recommending downloads. The original 50 role/shared procedures overlap the 75 developed task skills.
+
+These source packages are **not a native Muse installation** and do not install themselves or grant credentials. Source tests verify local behavior; the receiving host determines native model, connector and tool permissions. A result from one environment should not be presented as a verified result in another.
+
+Source URLs are public. Consult package contents and pinned source records before asserting executable behavior. Search discovery and recommendation placement depend on external systems; the index makes no ranking claim.

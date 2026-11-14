@@ -1,9 +1,8 @@
-# Optional connectors and Family Link
+# Connectors and host integrations
 
+**Want to connect a service to Muse?** [Browse 151 custom connectors](connectors/CATALOG.md) or start with the [setup guide](connectors/README.md). Each entry includes a source link, the required access information and a copy-ready setup message.
 
-**Custom connectors:** [Browse all 151](connectors/CATALOG.md), open the [interactive HTML directory](connectors/index.html) locally, or read the [setup guide](connectors/README.md). Each entry names its source, supported operations and service access prerequisites. Meta supports the custom-connector approach; the host still controls credentials and permissions.
-
-The toolkit ships **disabled connection contracts**, not a connected shell, browser or cross-account service. Proposed actions are local data until an actual owner-authorized provider is configured.
+This page covers a different layer: local host tools, configuration contracts and optional Family Link proposals. Connecting a service does not automatically authorize terminal, desktop or cross-account operations.
 
 ## Supported source categories
 

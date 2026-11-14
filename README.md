@@ -69,7 +69,7 @@ Browse **151 custom connectors** for development, productivity, design, home dev
 
 The [setup guide](docs/v1/START_HERE.md) covers configuring a specialist, running tools, using Daily Desk and adding connectors.
 
-[Capability guide](docs/CAPABILITIES.md) | [Installation guide](docs/GITHUB_QUICKSTART.md) | [Practical handbook](docs/handbook/README.md)
+[Documentation](docs/README.md) | [Capability guide](docs/CAPABILITIES.md) | [Installation guide](docs/GITHUB_QUICKSTART.md) | [Practical handbook](docs/handbook/README.md)
 
 ---
 
