@@ -172,7 +172,10 @@ def export_catalog(destination:Path)->dict:
                 info.compress_type=zipfile.ZIP_DEFLATED
                 info.external_attr=0o644<<16
                 z.writestr(info,raw)
-            z.writestr("MANIFEST.json",_canonical(manifest))
+            info=zipfile.ZipInfo("MANIFEST.json",date_time=(2026,1,1,0,0,0))
+            info.compress_type=zipfile.ZIP_DEFLATED
+            info.external_attr=0o644<<16
+            z.writestr(info,_canonical(manifest))
         with zipfile.ZipFile(stage) as z:
             if z.testzip() is not None or set(z.namelist())!=set(hashes)|{"MANIFEST.json"}:
                 raise ValueError("PACKAGE_VERIFICATION_FAILED")

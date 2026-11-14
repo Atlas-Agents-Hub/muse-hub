@@ -517,7 +517,7 @@
     "scripts/build_v1_release.py": "db8c6e90aa3f50ea470a785784863d855b526c44dc0d763f75e28ff22b5f9157",
     "scripts/check_ci_results.py": "ec0572e59d150ad1125c25b66ca8fe65dd47e5f0d4b4ac2cb504d1e8880814ad",
     "scripts/check_public.py": "d162affa83bca4e2ded9afa9222293a0ea0b4b508be43e7cc1894a6cebaeea30",
-    "scripts/connector_catalog.py": "3def23322b755cec04da135c2d042de25491be8ab93461d29b9c315cb845975b",
+    "scripts/connector_catalog.py": "f915649cde6adc2e7cdc418125458d59be152b9838cfd5e0c298e2491da543b4",
     "scripts/verify_software_engineer_posix.sh": "225ec20d4bfbb03619447da0ba563bf1c2644437b50bbc377da945589751a591",
     "services/evidence-finder/README.md": "8578ad3bac78c5e6b9a1b93d0496cf4dc22ec6818fd6ea5bc938bef520588274",
     "services/evidence-finder/service.json": "05599bae4d64c3c31e67a62e48cdae6382bca8827fa0a23d6a782f40830d130d",
@@ -750,6 +750,7 @@
     "tests/test_system_profile.py": "ee56aac04e99516403d6ebf47303783425be43bb7327c54bda3a2a3254df352c",
     "tests/test_toy_model.py": "0f458af2ba04351385459a995065798be6fe1eadc4661a0d728f586a126654d6",
     "tests/test_toy_model_dropin.py": "261b369352aa705cd33f2bfc13f8be27e0f81b51b992069a790b600d8b7a75f5",
+    "tests/test_v1_connector_reproducibility.py": "6ee3abbdd1cfa9ccd488ca548da438d42f0c9962e5bfba0fd4d14bc4506af2d6",
     "tests/test_v1_connectors.py": "dfb9884541d54849f49ffb5103ba899406e4711d5978efab0b2443257baebd0e",
     "tests/test_v1_host_descriptors.py": "608a4a738f2a080f0c194fc324d754e886b6940caed1b9dc633d863cf2996bf7",
     "tests/test_v1_public_sanitization.py": "a2167c0d3693e43f7d8ee71854d0da82eb6132418cb4f0862c4294f16b391e2b",
@@ -770,5 +771,5 @@
   "publisher_approval_granted": false,
   "release_kind": "GITHUB_SOURCE_ONLY",
   "schema": "r46/public-source-snapshot-v1",
-  "source_file_count": 761
+  "source_file_count": 762
 }
