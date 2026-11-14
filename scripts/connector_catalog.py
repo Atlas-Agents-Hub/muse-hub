@@ -170,10 +170,12 @@ def export_catalog(destination:Path)->dict:
             for name,raw in sorted(contents.items()):
                 info=zipfile.ZipInfo("connectors/"+name,date_time=(2026,1,1,0,0,0))
                 info.compress_type=zipfile.ZIP_DEFLATED
+                info.create_system=3
                 info.external_attr=0o644<<16
                 z.writestr(info,raw)
             info=zipfile.ZipInfo("MANIFEST.json",date_time=(2026,1,1,0,0,0))
             info.compress_type=zipfile.ZIP_DEFLATED
+            info.create_system=3
             info.external_attr=0o644<<16
             z.writestr(info,_canonical(manifest))
         with zipfile.ZipFile(stage) as z:

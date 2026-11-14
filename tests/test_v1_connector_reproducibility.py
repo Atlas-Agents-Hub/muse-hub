@@ -32,6 +32,7 @@ class ReproducibleConnectorArchive(unittest.TestCase):
                 self.assertIn("MANIFEST.json", [row.filename for row in members])
                 for row in members:
                     self.assertEqual(row.date_time, (2026, 1, 1, 0, 0, 0))
+                    self.assertEqual(row.create_system, 3, "ZIP must be platform-neutral")
                     self.assertEqual(row.external_attr >> 16, 0o644)
 
     def test_two_clean_exports_have_identical_sha256(self):
