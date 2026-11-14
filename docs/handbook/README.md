@@ -14,6 +14,8 @@ Having trouble getting the assistant to use the right context, keep documents or
 
 [Daily Desk](../spaces/DAILY_DESK.md) is implemented locally. It saves tasks and notes in SQLite, rejects stale edits, and supports checked backup and restore. [The original design notes](daily-desk-design.md) explain its planning history; use the application guide for current commands.
 
+[Browse specialists by task](specialists-by-task.md) to pick a role, example and configuration.
+
 ## Find more capabilities
 
 [Specialist catalog](../collection/SPECIALIST_CATALOG.md) · [75 skills and 25 workflows](../collection/MUSE_CURATED_COLLECTION.md) · [100 starter configurations](../../collections/muse-starters-v1/CATALOG.md) · [151 custom connectors](../connectors/README.md)

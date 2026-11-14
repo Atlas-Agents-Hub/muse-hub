@@ -4,7 +4,7 @@ Find the guide for the task you're doing. The toolkit includes **15 specialist p
 
 ## Start using Muse
 
-- **[Choose a specialist](collection/SPECIALIST_CATALOG.md)** — Find the role suited to your task, then open its methods and examples.
+- **[Choose a specialist](handbook/specialists-by-task.md)** — Find the role suited to your task, then open its methods and examples.
 - **[Pick a task configuration](../collections/muse-starters-v1/CATALOG.md)** — Start from one of 100 task-specific configurations.
 - **[Use a skill or workroom](handbook/README.md)** — Set up instructions, context, subchats and saved documents.
 - **[Explore 151 custom connectors](connectors/README.md)** — Find a service, check access requirements and follow its setup instructions.

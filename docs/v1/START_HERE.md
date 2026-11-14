@@ -10,7 +10,7 @@ For additional guides by task, see the [documentation index](../README.md).
 
 ## 1. Use with Muse
 
-Select a role from the [specialist catalog](../collection/SPECIALIST_CATALOG.md) or a task from the [100 starter configurations](../../collections/muse-starters-v1/CATALOG.md). A selected starter adds methods to your existing Muse assistant; it preserves your existing identity, memory and access permissions.
+Select a role from the [specialist catalog](../handbook/specialists-by-task.md) or a task from the [100 starter configurations](../../collections/muse-starters-v1/CATALOG.md). A selected starter adds methods to your existing Muse assistant; it preserves your existing identity, memory and access permissions.
 
 From the repository root:
 

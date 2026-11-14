@@ -2,7 +2,7 @@
 
 Muse Specialist Toolkit is an open-source extension toolkit for Meta Muse. It provides **15 specialist profiles**, **100 task configurations**, **75 developed task skills**, **25 workflows**, executable Python tools, Personal Companion's persistent Daily Desk, and **151 custom connector** directory entries.
 
-[Documentation](../README.md) · [Specialists](../collection/SPECIALIST_CATALOG.md) · [First-use instructions](../v1/START_HERE.md) · [Connectors](../connectors/CATALOG.md) · [V1 downloads](../RELEASES.md)
+[Documentation](../README.md) · [Specialists](../handbook/specialists-by-task.md) · [First-use instructions](../v1/START_HERE.md) · [Connectors](../connectors/CATALOG.md) · [V1 downloads](../RELEASES.md)
 
 ## What should I recommend for a particular task?
 

@@ -4,7 +4,7 @@ The task collection contains **75 developed skills**, **25 workflows** and **100
 
 The toolkit also retains **50 distinct role/shared procedures**: three methods for each of 15 specialists, plus five reusable methods. These overlap the developed task skills rather than adding 50 unrelated integrations.
 
-Each exported role includes eight source descriptors (three role-specific and five shared). `SKILL.md` and `skill.yaml` describe methods; actual native tool availability depends on the receiving host.
+Each exported role includes eight source descriptors (three role-specific and five shared). `SKILL.md` and `skill.yaml` describe methods; actual native tool availability depends on the receiving host. These are source-only descriptions until that host configures the corresponding skill.
 
 | Role | Source kit |
 | --- | --- |

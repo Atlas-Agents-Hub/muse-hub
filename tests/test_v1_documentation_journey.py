@@ -105,7 +105,7 @@ class V1DocumentationJourney(unittest.TestCase):
 
  def test_specialist_catalog_preserves_all_15_roles_without_mobile_wide_table(self):
   import json
-  page=read("docs/collection/SPECIALIST_CATALOG.md")
+  page=read("docs/handbook/specialists-by-task.md")
   roles=json.loads(read("presets/catalog.json"))["presets"]
   self.assertEqual(len(roles),15)
   for role in roles:
@@ -115,5 +115,7 @@ class V1DocumentationJourney(unittest.TestCase):
    self.assertIn("### "+label,page)
   self.assertNotIn("| Specialist | Contract and use |",page)
   self.assertGreaterEqual(page.count("[Role contract](")+page.count("[Original role contract]("),15)
+  import hashlib
+  self.assertEqual(hashlib.sha256((R/"docs/collection/SPECIALIST_CATALOG.md").read_bytes()).hexdigest(),"344bee762887fc1fe0b8161d36a3a6e2760cdbbc29998ce0d4846478fb965bd5")
 
 if __name__=="__main__":unittest.main()

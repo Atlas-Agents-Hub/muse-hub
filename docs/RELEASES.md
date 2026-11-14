@@ -33,7 +33,7 @@ Checksums verify that the downloaded bytes match the published index; they do no
 
 ### v0.4.1-alpha — eight runnable tools and eleven starter ZIPs
 
-The [historical v0.4.1-alpha release](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.4.1-alpha) provides eight standalone executable Python tools and eleven starter profiles. Its assets and checksums have not been replaced.
+The [historical v0.4.1-alpha release](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.4.1-alpha) provides eight standalone executable Python tools and 11 starter profiles. Its assets and checksums have not been replaced.
 
 An **executable kit** runs a local program on supplied data. A **starter profile** gives you editable instructions; it is not a model-backed autonomous assistant.
 
@@ -50,6 +50,6 @@ This writes JSON, CSV and a textual HTML storyboard. It does not render a film. 
 
 ## Source code and Muse access
 
-No native Muse installation is performed by downloading a source ZIP or starter configuration. They do not enable connectors, credentials, remote services or accounts. Use Muse's supported customization and connector setup when applying source instructions to an existing assistant.
+No native Muse installation is performed by downloading a source ZIP or starter configuration. A Muse account is not required to run local examples; use a clean extraction and keep private account credentials outside the source package. They do not enable connectors, credentials, remote services or accounts. Use Muse's supported customization and connector setup when applying source instructions to an existing assistant.
 
 Local programs run under your OS account and are not operating-system sandboxes. For platform requirements, see [installation](GITHUB_QUICKSTART.md) and [security](SECURITY.md).
