@@ -42,6 +42,7 @@ class RolePositioningTests(unittest.TestCase):
     summary=m.group(1).lower()
     for word in required:self.assertIn(word,summary)
     self.assertGreater(len(summary),85)
+    self.assertNotRegex(summary,r"[a-z][?][a-z]")
   self.assertEqual(len(re.findall(r"(?m)^- \*\*\[[^\]]+\]\(presets/[^)]+/\)\*\*",area)),15)
   self.assertLess(len(source.encode("utf8")),8000)
 

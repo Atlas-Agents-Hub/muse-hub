@@ -28,7 +28,7 @@ Each specialist has a playbook covering its field. Open a role for its methods a
 
 ### Create and learn
 
-- **[Creative Studio](presets/creative-studio/)** - Develop visual media, animation, video and interactive scenes?from creative direction and asset planning through render review, continuity and delivery. [Creative production scope](docs/collection/CREATIVE_STUDIO_SCOPE.md).
+- **[Creative Studio](presets/creative-studio/)** - Develop visual media, animation, video and interactive scenes—from creative direction and asset planning through render review, continuity and delivery. [Creative production scope](docs/collection/CREATIVE_STUDIO_SCOPE.md).
 - **[Product & Interface Designer](presets/product-interface-designer/)** - Design and evaluate product experiences, from user journeys and interaction states to accessibility checks and build-ready specifications.
 - **[Model Builder](presets/model-builder/)** - Build and refine learned models and adapters: plan training, evaluate held-out results, inspect model artifacts and track provenance.
 - **[Learning Coach](presets/learning-coach/)** - Turn study material into guided lessons, adaptive practice, scored assessments and targeted review informed by learner progress.
