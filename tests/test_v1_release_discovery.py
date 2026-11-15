@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
-REPO="https://github.com/sethburkhardt21-dev/muse-ai-agent-presets"
+REPO="https://github.com/atlas-origins/muse-ai-agent-presets"
 TAG="v1.0.0"
 class ReleaseDiscovery(unittest.TestCase):
  def test_v1_public_link_targets_and_legacy_release_separated(self):
@@ -11,6 +11,7 @@ class ReleaseDiscovery(unittest.TestCase):
   self.assertEqual(d["release"],TAG)
   self.assertEqual(d["release_publication"],"VERIFY_AT_GITHUB_RELEASES")
   self.assertEqual(d["release_page"],REPO+"/releases/tag/"+TAG)
+  self.assertNotIn("sethburkhardt21-dev/muse-ai-agent-presets",d["release_page"])
   self.assertEqual(d["v1_sha256_index"],REPO+"/releases/download/"+TAG+"/SHA256SUMS.txt")
   expected={"source":"muse-specialist-toolkit-v1.0.0.zip",
             "connectors":"muse-custom-connectors-v1.0.0.zip",

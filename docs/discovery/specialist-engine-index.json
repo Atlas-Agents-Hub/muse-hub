@@ -1,0 +1,313 @@
+{
+  "schema": "muse-specialist-toolkit/specialist-engines-v1",
+  "product": "Muse Specialist Toolkit",
+  "role_count": 15,
+  "host_integrations": "SEPARATE_AUTHORIZATION",
+  "native_muse_activation": "NOT_ASSERTED",
+  "interpretation": "Specialist playbooks describe field-wide work; included Python engines implement particular local operations. Additional host tools require their own setup and permission.",
+  "roles": [
+    {
+      "id": "coordinator",
+      "scope": "Coordinates multi-step goals across specialists, defining dependencies, owner decisions, resource limits, interruption recovery and independent acceptance.",
+      "real_work": [
+        "Plan scoped task graphs and approval gates",
+        "Recover interrupted tasks without replaying uncertain effects",
+        "Review evidence and handoffs against acceptance criteria"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/coordinator_sourcekit.py",
+        "src/muse_presets/coordinator_review.py",
+        "src/muse_presets/coordinator_dropin.py"
+      ],
+      "examples": [
+        "examples/export_coordinator_sourcekit.py"
+      ],
+      "engine_note": "Local planning, evidence and review functions. No live worker dispatch is included.",
+      "playbook": "presets/coordinator/playbook.json"
+    },
+    {
+      "id": "software-engineer",
+      "scope": "Builds, debugs and validates maintainable software from real source, including implementation, repair, regression testing, source custody and release readiness.",
+      "real_work": [
+        "Reproduce a failing case before changing code",
+        "Implement reviewed repairs and verify regression behavior",
+        "Review source provenance, gated execution and recovery evidence"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/engineer_sourcekit.py",
+        "src/muse_presets/engineer_dropin.py",
+        "src/muse_presets/engineering_pack.py",
+        "presets/software-engineer/runtime/claim-gate/ENGINE.json",
+        "presets/software-engineer/runtime/iron-ledger/ENGINE.json",
+        "presets/software-engineer/runtime/provenance-vault/ENGINE.json"
+      ],
+      "examples": [
+        "examples/software_engineer_workflow_demo.py",
+        "examples/software_engineer_claim_gate_demo.py"
+      ],
+      "engine_note": "Claim Gate has local executable code and tests. Iron Ledger consumer and Provenance Vault are evidence-only source candidates with separate redistribution and native-host qualifications.",
+      "playbook": "presets/software-engineer/playbook.json"
+    },
+    {
+      "id": "model-builder",
+      "scope": "Develops learned models and adapters through dataset design, training plans, bounded model experiments, held-out evaluation and artifact provenance.",
+      "real_work": [
+        "Partition datasets and qualify training plans",
+        "Run small local model training and inspect weights and metrics",
+        "Compare candidates and preserve reproducible model artifacts"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/model_builder_sourcekit.py",
+        "src/muse_presets/model_builder_dropin.py",
+        "src/muse_presets/model_toy_bundle.py",
+        "src/muse_presets/model_toy_math.py",
+        "src/muse_presets/model_eval.py"
+      ],
+      "examples": [
+        "examples/export_model_builder_sourcekit.py"
+      ],
+      "engine_note": "Bundled local toy-model training and evaluation are not a hosted GPU or general-purpose fine-tuning service.",
+      "playbook": "presets/model-builder/playbook.json"
+    },
+    {
+      "id": "research-evaluator",
+      "scope": "Designs and critiques research, checks primary evidence, tests competing explanations and measures candidate claims with held-out, reproducible evaluation.",
+      "real_work": [
+        "Verify quotations and exact source locations",
+        "Check source-family separation and held-out scoring",
+        "Compare hypotheses, controls and counterexamples"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/research_evaluator.py",
+        "src/muse_presets/numeric_evaluation.py",
+        "src/muse_presets/model_eval.py"
+      ],
+      "examples": [
+        "examples/research_evaluator_demo.py",
+        "examples/numeric_evaluation_demo.py"
+      ],
+      "engine_note": "Local evidence and numerical checks are not independent publisher authentication or scientific truth.",
+      "playbook": "presets/research-evaluator/playbook.json"
+    },
+    {
+      "id": "creative-studio",
+      "scope": "Develops original images, animation, video and interactive experiences with art direction, asset development, scene planning, production review, continuity and delivery.",
+      "real_work": [
+        "Establish style, story, asset and interaction direction",
+        "Plan shots, timing, animation and media dependencies",
+        "Review real render outputs and preserve rights and continuity"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/creative_production.py",
+        "src/muse_presets/creative_sourcekit.py",
+        "src/muse_presets/creative_cli.py"
+      ],
+      "examples": [
+        "examples/creative_studio_demo.py",
+        "examples/export_creative_sourcekit.py"
+      ],
+      "engine_note": "The packaged engine builds plans, timelines and textual storyboards. Actual image/video rendering uses separately available host tools.",
+      "playbook": "presets/creative-studio/playbook.json"
+    },
+    {
+      "id": "adversarial-verifier",
+      "scope": "Tests authorized systems, software releases and permission boundaries with threat modeling, negative controls, failure reproduction and remediation verification.",
+      "real_work": [
+        "Define a bounded defensive test plan and stop conditions",
+        "Challenge failure and authorization boundaries with approved host tools",
+        "Record reproducible findings and independently verify fixes"
+      ],
+      "delivery": "source-methods",
+      "source_engines": [],
+      "examples": [],
+      "engine_note": "Public V1 provides this specialist's methods and configuration, not an independent executable security testing service.",
+      "playbook": "presets/adversarial-verifier/playbook.json"
+    },
+    {
+      "id": "personal-companion",
+      "scope": "Helps with private daily organization, personalized planning, routines, accessibility preferences and consent-aware household and life workflows.",
+      "real_work": [
+        "Organize and edit saved tasks and notes",
+        "Preserve preferences and recover interrupted work",
+        "Plan routines and actions with explicit owner permissions"
+      ],
+      "delivery": "local-workbench",
+      "source_engines": [
+        "src/muse_presets/personal_companion.py",
+        "src/muse_presets/space_companion.py",
+        "src/muse_presets/daily_desk.py",
+        "src/muse_presets/space_server.py"
+      ],
+      "examples": [
+        "examples/daily_desk.py",
+        "examples/personal_companion_demo.py"
+      ],
+      "engine_note": "Daily Desk is a functioning local SQLite workbench. Calendar, messaging and native reminders require separately supported integrations.",
+      "playbook": "presets/personal-companion/playbook.json"
+    },
+    {
+      "id": "garden-companion",
+      "scope": "Manages plant records, gardening observations, evidence-aware care guidance and seasonal projects with owner-controlled schedules.",
+      "real_work": [
+        "Record plant observations and uncertainties",
+        "Prepare seasonal planting and maintenance plans",
+        "Track local schedule revisions and care histories"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/garden.py",
+        "src/muse_presets/garden_calendar.py",
+        "src/muse_presets/garden_sourcekit.py"
+      ],
+      "examples": [
+        "examples/garden_calendar_demo.py"
+      ],
+      "engine_note": "Local observations and calendar records do not assert live external calendar synchronization or plant diagnosis.",
+      "playbook": "presets/garden-companion/playbook.json"
+    },
+    {
+      "id": "learning-coach",
+      "scope": "Builds study and learning experiences from supplied material: lesson plans, flashcards, practice, feedback, mastery checks and spaced review.",
+      "real_work": [
+        "Ground lessons and flashcards in supplied sources",
+        "Run scored practice and explain misconceptions",
+        "Track review records and adapt the next session"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/learning.py",
+        "src/muse_presets/learning_session.py",
+        "src/muse_presets/learning_sourcekit.py"
+      ],
+      "examples": [
+        "examples/learning_session_demo.py"
+      ],
+      "engine_note": "Local scoring and review records do not replace professional certification or independently confirm mastery.",
+      "playbook": "presets/learning-coach/playbook.json"
+    },
+    {
+      "id": "claims-adjudicator",
+      "scope": "Evaluates contested technical and factual claims against original evidence, preserving provenance, uncertainty, revision history and defensible conclusions.",
+      "real_work": [
+        "Bind claims to exact evidence and source revisions",
+        "Test whether cited results support the claimed conclusion",
+        "Record qualified verdicts and correction histories"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/claims.py",
+        "src/muse_presets/claims_sourcekit.py"
+      ],
+      "examples": [
+        "examples/export_claims_sourcekit.py"
+      ],
+      "engine_note": "Source-bound reviews are not an independently authenticated legal or scientific ruling.",
+      "playbook": "presets/claims-adjudicator/playbook.json"
+    },
+    {
+      "id": "reverse-engineering-researcher",
+      "scope": "Investigates authorized software behavior, application structure, protocols and defensive artifacts using observations and controlled clean-room analysis.",
+      "real_work": [
+        "Compare recorded application behavior and protocol observations",
+        "Reconstruct bounded behavioral contracts from approved samples",
+        "Inspect security-related findings without unapproved live probing"
+      ],
+      "delivery": "runnable-kit",
+      "source_engines": [
+        "src/muse_presets/reverse.py",
+        "src/muse_presets/reverse_sourcekit.py"
+      ],
+      "examples": [
+        "examples/export_reverse_sourcekit.py",
+        "examples/priority_slices.py"
+      ],
+      "engine_note": "The included executable analyzes supplied observations; no live capture or unapproved target access is bundled.",
+      "playbook": "presets/reverse-engineering-researcher/playbook.json"
+    },
+    {
+      "id": "data-engineering-architect",
+      "scope": "Designs trustworthy data flows and databases, including schema evolution, identity and quality checks, event reconciliation, query access and migration planning.",
+      "real_work": [
+        "Profile supplied data, keys and missing values",
+        "Review schema changes and reconcile versioned events",
+        "Classify supplied query plans and surface migration risks"
+      ],
+      "delivery": "runnable-extension",
+      "source_engines": [
+        "src/muse_presets/specialist_extensions/data.py",
+        "src/muse_presets/specialist_engines.py",
+        "tools/muse_collection.py"
+      ],
+      "examples": [
+        "examples/specialist_engine_demo.py"
+      ],
+      "engine_note": "The source collection provides schema, event and query tools; live databases require explicit connections and authority.",
+      "playbook": "presets/data-engineering-architect/playbook.json"
+    },
+    {
+      "id": "infrastructure-reliability-engineer",
+      "scope": "Analyzes service health, reliability objectives, capacity, incident response and recovery evidence to support operational decisions.",
+      "real_work": [
+        "Compute SLO/error-budget use from supplied events",
+        "Estimate capacity with explicit assumptions",
+        "Reconcile incident timelines and verify recovery evidence"
+      ],
+      "delivery": "runnable-extension",
+      "source_engines": [
+        "src/muse_presets/specialist_extensions/reliability.py",
+        "src/muse_presets/specialist_engines.py",
+        "tools/muse_collection.py"
+      ],
+      "examples": [
+        "examples/specialist_engine_demo.py"
+      ],
+      "engine_note": "Local reliability calculations use supplied metrics and do not mutate production services.",
+      "playbook": "presets/infrastructure-reliability-engineer/playbook.json"
+    },
+    {
+      "id": "automation-engineer",
+      "scope": "Designs multi-stage automations, connector workflows and permission-aware execution with dependency planning, retries, idempotency and effect reconciliation.",
+      "real_work": [
+        "Validate workflow DAGs, prerequisites and approvals",
+        "Review locator selection and idempotency contracts",
+        "Reconcile observed effects and interrupted runs"
+      ],
+      "delivery": "runnable-extension",
+      "source_engines": [
+        "src/muse_presets/specialist_extensions/automation.py",
+        "src/muse_presets/specialist_engines.py",
+        "tools/muse_collection.py"
+      ],
+      "examples": [
+        "examples/specialist_engine_demo.py"
+      ],
+      "engine_note": "The included local engine checks plans and effect records; no live scheduler or service write occurs without a host integration.",
+      "playbook": "presets/automation-engineer/playbook.json"
+    },
+    {
+      "id": "product-interface-designer",
+      "scope": "Designs product experiences spanning research, layout, interaction states, responsive behavior, accessibility and build-ready handoff.",
+      "real_work": [
+        "Map user journeys, requirements and design states",
+        "Check color contrast and declared interface-state coverage",
+        "Review labels, feedback and accessibility requirements"
+      ],
+      "delivery": "runnable-extension",
+      "source_engines": [
+        "src/muse_presets/specialist_extensions/interface.py",
+        "src/muse_presets/specialist_engines.py",
+        "tools/muse_collection.py"
+      ],
+      "examples": [
+        "examples/specialist_engine_demo.py"
+      ],
+      "engine_note": "The included engine evaluates declared state and color inputs; rendered UI and usability reviews require real browser or human evidence.",
+      "playbook": "presets/product-interface-designer/playbook.json"
+    }
+  ]
+}

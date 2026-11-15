@@ -39,6 +39,10 @@ Each specialist has a playbook covering its field. Open a role for its methods a
 - **[Garden Companion](presets/garden-companion/)** - Support garden care across the seasons: track plants, document observations, plan seasonal tasks and maintain an evidence-aware care journal.
 - **[Coordinator](presets/coordinator/)** - Organize complex goals across specialist workflows: sequence dependencies, preserve handoffs, reconcile interruptions and verify completion.
 
+## Built-in engines and workbenches
+
+Each specialist has field-specific methods. The included engines handle reviewed code repairs, model training experiments, research evaluation, creative production planning, data and reliability analysis, workflow checks and interface validation. Personal Companion adds the persistent Daily Desk. [See each specialist's methods, engines and examples](docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md).
+
 ## Try the tools
 
 Both examples run with the included data. One checks a schema change; the other creates and restores a task-and-note store.
@@ -85,7 +89,7 @@ The source catalog includes **15 specialists, 75 skills, 25 workflows and 100 st
 Create an editable profile using the current source:
 
 ```bash
-git clone https://github.com/sethburkhardt21-dev/muse-ai-agent-presets.git
+git clone https://github.com/atlas-origins/muse-ai-agent-presets.git
 cd muse-ai-agent-presets
 python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
 python -B quickstart.py --all
@@ -96,7 +100,7 @@ Profiles are source-only drafts, **not installed native Muse agents**. A profile
 
 The earlier release includes eight executable tools and eleven starter profiles.
 
-The earlier [v0.4.1-alpha executable collection](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.4.1-alpha) includes a downloadable [Creative Studio executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip). Verify it using [SHA256SUMS.txt](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt), then extract and run:
+The earlier [v0.4.1-alpha executable collection](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.4.1-alpha) includes a downloadable [Creative Studio executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip). Verify it using [SHA256SUMS.txt](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt), then extract and run:
 
 ```bash
 python -I -B run.py --operation self-test

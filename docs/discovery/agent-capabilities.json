@@ -1,14 +1,14 @@
 {
   "schema": "specialist-ai-agent-kits/discovery/v1",
   "project": "Muse Specialist Toolkit",
-  "repository": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets",
+  "repository": "https://github.com/atlas-origins/muse-ai-agent-presets",
   "release": "v1.0.0",
   "license": "MIT",
   "source_only_distribution": true,
   "python_minimum": "3.12",
   "dependency_note": "Git requirements vary by executable kit; read its included start guide. The Creative Studio example needs Python 3.12+ without Git.",
-  "sha256_index": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt",
-  "complete_toolkit": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/specialist-toolkit-v0.4.1-alpha.zip",
+  "sha256_index": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt",
+  "complete_toolkit": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/specialist-toolkit-v0.4.1-alpha.zip",
   "starter_roles": [
     "coordinator",
     "software-engineer",
@@ -35,49 +35,49 @@
     {
       "role": "coordinator",
       "zip": "coordinator-executable-v0.4.1-alpha.zip",
-      "download": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/coordinator-executable-v0.4.1-alpha.zip",
+      "download": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/coordinator-executable-v0.4.1-alpha.zip",
       "exporter": "examples/export_coordinator_sourcekit.py"
     },
     {
       "role": "software-engineer",
       "zip": "software-engineer-executable-v0.4.1-alpha.zip",
-      "download": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/software-engineer-executable-v0.4.1-alpha.zip",
+      "download": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/software-engineer-executable-v0.4.1-alpha.zip",
       "exporter": "examples/export_software_engineer_sourcekit.py"
     },
     {
       "role": "model-builder",
       "zip": "model-builder-executable-v0.4.1-alpha.zip",
-      "download": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/model-builder-executable-v0.4.1-alpha.zip",
+      "download": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/model-builder-executable-v0.4.1-alpha.zip",
       "exporter": "examples/export_model_builder_sourcekit.py"
     },
     {
       "role": "claims-adjudicator",
       "zip": "claims-adjudicator-executable-v0.4.1-alpha.zip",
-      "download": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/claims-adjudicator-executable-v0.4.1-alpha.zip",
+      "download": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/claims-adjudicator-executable-v0.4.1-alpha.zip",
       "exporter": "examples/export_claims_sourcekit.py"
     },
     {
       "role": "garden-companion",
       "zip": "garden-companion-executable-v0.4.1-alpha.zip",
-      "download": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/garden-companion-executable-v0.4.1-alpha.zip",
+      "download": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/garden-companion-executable-v0.4.1-alpha.zip",
       "exporter": "examples/export_garden_sourcekit.py"
     },
     {
       "role": "learning-coach",
       "zip": "learning-coach-executable-v0.4.1-alpha.zip",
-      "download": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/learning-coach-executable-v0.4.1-alpha.zip",
+      "download": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/learning-coach-executable-v0.4.1-alpha.zip",
       "exporter": "examples/export_learning_sourcekit.py"
     },
     {
       "role": "reverse-engineering-researcher",
       "zip": "reverse-engineering-researcher-executable-v0.4.1-alpha.zip",
-      "download": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/reverse-engineering-researcher-executable-v0.4.1-alpha.zip",
+      "download": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/reverse-engineering-researcher-executable-v0.4.1-alpha.zip",
       "exporter": "examples/export_reverse_sourcekit.py"
     },
     {
       "role": "creative-studio",
       "zip": "creative-studio-executable-v0.4.1-alpha.zip",
-      "download": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip",
+      "download": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip",
       "exporter": "examples/export_creative_sourcekit.py"
     }
   ],
@@ -96,12 +96,12 @@
     "older_release_assets_replaced": false
   },
   "source_entrypoints": {
-    "readme": "https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/README.md",
-    "quickstart": "https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/GITHUB_QUICKSTART.md",
-    "capabilities": "https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/CAPABILITIES.md",
-    "agent_questions": "https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/discovery/AI_AGENT_GUIDE.md",
-    "security": "https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/SECURITY.md",
-    "documentation_index": "https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/README.md"
+    "readme": "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/README.md",
+    "quickstart": "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/GITHUB_QUICKSTART.md",
+    "capabilities": "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/CAPABILITIES.md",
+    "agent_questions": "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/discovery/AI_AGENT_GUIDE.md",
+    "security": "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/SECURITY.md",
+    "documentation_index": "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/README.md"
   },
   "released_starter_roles": [
     "coordinator",
@@ -175,7 +175,7 @@
     "developed_task_skills": 75,
     "workflows": 25,
     "original_overlapping_procedures": 50,
-    "catalog": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/tree/main/collections/muse-starters-v1"
+    "catalog": "https://github.com/atlas-origins/muse-ai-agent-presets/tree/main/collections/muse-starters-v1"
   },
   "custom_connector_count": 151,
   "custom_connector_catalog": {
@@ -204,11 +204,13 @@
   },
   "download_scope": "sha256_index, complete_toolkit, and executable_offline_kits entries refer to historical v0.4.1-alpha release only; verify V1 assets at GitHub Releases",
   "product_tagline": "Your Muse. Your Specialists. Your Possibilities.",
-  "release_page": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v1.0.0",
-  "v1_sha256_index": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt",
+  "release_page": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0",
+  "v1_sha256_index": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt",
   "v1_assets": {
-    "source": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip",
-    "connectors": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip",
-    "collection": "https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip"
-  }
+    "source": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip",
+    "connectors": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip",
+    "collection": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip"
+  },
+  "specialist_engine_index": "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/discovery/specialist-engine-index.json",
+  "specialist_engine_guide": "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md"
 }
