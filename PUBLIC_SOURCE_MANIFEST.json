@@ -7,7 +7,7 @@
     "CHANGELOG.md": "cc327bd83e9b49e95358cd53d54671644944c21efb32cd3acc63af22877b92c7",
     "CONTRIBUTING.md": "4524e132b46ea67275977328c5c860785e04ec86ddfd7c28c8a4a7986f764e82",
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
-    "README.md": "f805c18b7815251763f12aeb26746e6af5146ed7aebb56428e42e7c8a8b12463",
+    "README.md": "3443316cbdd1204e0eb2b5fe54cad011a36efea112b308a560684c5842f6b130",
     "SECURITY.md": "629e9c23228531771d01f644973019c14e228e52cab3dd71490be4a2bf558ba6",
     "collections/muse-starters-v1/CATALOG.md": "9867e8ce67eee76b12c27867b2c5b991a8ea44e7e13732722fb256fde86aac4d",
     "collections/muse-starters-v1/COUNTS.json": "3ded6dec528100574a4911e1dd904ff3108fa4c0d9644386917363c877884366",
@@ -374,7 +374,7 @@
     "docs/handbook/durable-documents.md": "6007dcb249eb2b553cfd2cacf83b36dce4a73dfec134027cf888cf40512ceb1e",
     "docs/handbook/skill-setup.md": "8db3c7e5027b4d55e0ee66ab6eaaa021e8ddf507027874ce64e6df57e476a13e",
     "docs/handbook/source-and-host-capabilities.md": "c641c69485d18344bff7c9f8f927d21663afdc262caf21ab210e7ef870b3d301",
-    "docs/handbook/specialists-by-task.md": "4aef6c64327d604a07ef8deb09f1c66804b05386a7b5a25ebfe885aca9c6d76b",
+    "docs/handbook/specialists-by-task.md": "e462391fc63e8efb6a5c9b3c7e21463a4ad1c8f445bb3f33b99d736f7eb60774",
     "docs/handbook/subchat-workrooms.md": "d9b0a41407cc4b5774c22a9e2e2ca77ff41c6f51c22ce4c704ae2eb62eb0ac3d",
     "docs/kits/CLAIMS_SOURCEKIT.md": "a53e6cf28def0fed227646c5f2b4bf75eba3349cce243ba4a64bb5b38724604f",
     "docs/kits/CREATIVE_SOURCEKIT.md": "1ec9aac268d94e48314eb80a8fa85d06f7836d8960119cb00594c7027cbd48a8",
@@ -525,6 +525,7 @@
     "scripts/check_public.py": "d162affa83bca4e2ded9afa9222293a0ea0b4b508be43e7cc1894a6cebaeea30",
     "scripts/connector_catalog.py": "574ad6d80a6c3ae2144c0da87e0ef221e07efbef574f6827a10a3092ab3f96b4",
     "scripts/render_github_connector_directory.py": "75d87b8af0b30b4e7c3a2acda940d94f09e536cf037df75abb2dc4c8322dc947",
+    "scripts/render_specialist_directory.py": "42069b3da3d1967b0def0d865e7260cd0b112930463a059e123b60cb8bf0ca24",
     "scripts/verify_software_engineer_posix.sh": "225ec20d4bfbb03619447da0ba563bf1c2644437b50bbc377da945589751a591",
     "services/evidence-finder/README.md": "8578ad3bac78c5e6b9a1b93d0496cf4dc22ec6818fd6ea5bc938bef520588274",
     "services/evidence-finder/service.json": "05599bae4d64c3c31e67a62e48cdae6382bca8827fa0a23d6a782f40830d130d",
@@ -754,6 +755,7 @@
     "tests/test_specialist_engine_positioning.py": "5626c52b95488fdc22ea9f51a5796f0ed166326eb045e49693a50066c259e74a",
     "tests/test_specialist_expansion_v1.py": "78b06e5dee5f4500bf463bfc87c1402941ebfa1d71803bafed0d35a91c23586b",
     "tests/test_specialist_positioning_depth.py": "d7c738cf6a0bf126a72fa15be00cfc723f69d7d566b2eb192d7a8a96cf865612",
+    "tests/test_specialist_role_directory_depth.py": "052e69e570baa2ead78432ad191958aa14b9ccb4a88b03d127a98c1bcc291fac",
     "tests/test_stage_source_pin_continuity.py": "b83c4168d68d8eff49842a46fc5a4178bd723c9fbaedd77ba34b2ecd7a96dd2b",
     "tests/test_standalone_pack.py": "de345903667f8dba7cdae530d955e30d38c32a176cd14bc0e93781b204718040",
     "tests/test_subchat_scopes.py": "5e73eda9ceeb00c1485c7538b50a67c4dbc3a3aac407bb5b8a314516a46d94bb",
@@ -784,5 +786,5 @@
   "publisher_approval_granted": false,
   "release_kind": "GITHUB_SOURCE_ONLY",
   "schema": "r46/public-source-snapshot-v1",
-  "source_file_count": 775
+  "source_file_count": 777
 }
