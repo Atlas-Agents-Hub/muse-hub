@@ -2,7 +2,7 @@
 
 Each profile has field-specific methods and skills. Some also ship executable Python engines or a local application. Use the role for the wider workflow; use an included engine when you need a reproducible local operation.
 
-The descriptions below cover the role?s methods and the software shipped with V1. Muse can also use separately authorized host tools for rendering, development, research or connected services.
+The descriptions below cover the role's methods and the software shipped with V1. Muse can also use separately authorized host tools for rendering, development, research or connected services.
 
 [15 role profiles](../../presets/catalog.json) · [100 task starters](../../collections/muse-starters-v1/CATALOG.md) · [Run an example](SPECIALIST_QUICKSTART.md) · [Machine-readable engine index](../discovery/specialist-engine-index.json)
 

@@ -41,7 +41,7 @@ Each specialist has a playbook covering its field. Open a role for its methods a
 
 ## Built-in engines and workbenches
 
-Each specialist has field-specific methods. The included engines handle reviewed code repairs, model training experiments, research evaluation, creative production planning, data and reliability analysis, workflow checks and interface validation. Personal Companion adds the persistent Daily Desk. [See each specialist?s methods, engines and examples](docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md).
+Each specialist has field-specific methods. The included engines handle reviewed code repairs, model training experiments, research evaluation, creative production planning, data and reliability analysis, workflow checks and interface validation. Personal Companion adds the persistent Daily Desk. [See each specialist's methods, engines and examples](docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md).
 
 ## Try the tools
 

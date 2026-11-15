@@ -4,7 +4,7 @@
 
 [Choose a specialist](collection/SPECIALIST_CATALOG.md), [run a tool](collection/SPECIALIST_QUICKSTART.md), open [Daily Desk](spaces/DAILY_DESK.md), or [find a connector](connectors/README.md). [Downloads](RELEASES.md) lists the published V1 packages.
 
-The original **50 role/shared instruction procedures** are retained within the wider skills architecture and overlap the 75 developed task skills. The [full specialist and engine guide](collection/SPECIALIST_SCOPE_AND_ENGINES.md) describes each role?s field-wide methods alongside its shipped engines. The table below covers **bundled operations**, not the limits of work the specialist can perform with authorized host tools.
+The original **50 role/shared instruction procedures** are retained within the wider skills architecture and overlap the 75 developed task skills. The [full specialist and engine guide](collection/SPECIALIST_SCOPE_AND_ENGINES.md) describes each role's field-wide methods alongside its shipped engines. The table below covers **bundled operations**, not the limits of work the specialist can perform with authorized host tools.
 
 The published **v1.0.0** source package contains these components. Historical **v0.4.1-alpha** downloads included eight executable ZIPs and eleven starter profiles.
 

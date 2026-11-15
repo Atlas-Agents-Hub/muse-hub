@@ -90,4 +90,12 @@ class SpecialistEnginePositioning(unittest.TestCase):
   self.assertIn("atlas-origins",meta["specialist_engine_index"])
   self.assertIn("atlas-origins",(ROOT/"llms.txt").read_text(encoding="utf8"))
 
+ def test_no_broken_possessives_in_role_discovery(self):
+  import re
+  for path in (README, ROOT/"docs/CAPABILITIES.md",GUIDE):
+   text=path.read_text(encoding="utf8")
+   with self.subTest(path=path.name):
+    self.assertNotRegex(text,r"\b(?:role|specialist)\?s\b")
+    self.assertNotIn(chr(0xfffd),text)
+
 if __name__=="__main__": unittest.main()
