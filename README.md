@@ -61,7 +61,7 @@ python -B examples/daily_desk.py
 
 Expected result: `DAILY_DESK_VERTICAL_SLICE_PASS`, with three tasks, two notes, and a restored copy.
 
-For other tasks: [100 task configurations](collections/muse-starters-v1/CATALOG.md), [specialist examples](docs/collection/SPECIALIST_QUICKSTART.md), or the [full specialist catalog](docs/collection/SPECIALIST_CATALOG.md).
+For other tasks: [100 task configurations](collections/muse-starters-v1/CATALOG.md), [specialist examples](docs/collection/SPECIALIST_QUICKSTART.md), or the [full specialist catalog](docs/collection/SPECIALIST_CATALOG.md) or [specialists and included tools](docs/handbook/specialists-by-task.md).
 
 ## Connect your services
 
