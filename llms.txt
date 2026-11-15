@@ -3,56 +3,58 @@
 > Open-source source code, editable workflows and executable tools for Meta Muse. **15 AI specialists**, **100 task starters**, **75 developed skills**, **25 workflows**, **151 custom connector records**, and Personal Companion's Daily Desk. Configuration choices are not additional live agents.
 
 ## Product information
-- [Repository and specialist overview](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets)
-- [Documentation by task](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/README.md)
-- [First-use instructions](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/v1/START_HERE.md)
-- [Published V1.0.0 release](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v1.0.0)
+- [Repository and specialist overview](https://github.com/atlas-origins/muse-ai-agent-presets)
+- [Documentation by task](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/README.md)
+- [First-use instructions](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/v1/START_HERE.md)
+- [Published V1.0.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0)
 
 ## Find the right component
-- [Choose a specialist by task](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/handbook/specialists-by-task.md)
-- [Specialist capabilities and executable scope](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/CAPABILITIES.md)
-- [15 specialist descriptions and links](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/collection/SPECIALIST_CATALOG.md)
-- [100 task starter configurations](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/collections/muse-starters-v1/CATALOG.md)
-- [75 skills, 25 workflows and original procedure formats](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/SKILLS.md)
-- [Executable specialist examples](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/collection/SPECIALIST_QUICKSTART.md)
-- [Personal Companion Daily Desk](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/spaces/DAILY_DESK.md)
-- [151 custom connectors by category](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/CATALOG.md)
-- [Custom connector setup](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/README.md)
-- [Connector machine-readable catalog](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/catalog.json)
+- [Choose a specialist by task](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/handbook/specialists-by-task.md)
+- [Specialist capabilities and executable scope](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/CAPABILITIES.md)
+- [Specialist missions and included source engines](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md)
+- [Machine-readable specialist engine map](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/discovery/specialist-engine-index.json)
+- [15 specialist descriptions and links](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/collection/SPECIALIST_CATALOG.md)
+- [100 task starter configurations](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/collections/muse-starters-v1/CATALOG.md)
+- [75 skills, 25 workflows and original procedure formats](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/SKILLS.md)
+- [Executable specialist examples](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/collection/SPECIALIST_QUICKSTART.md)
+- [Personal Companion Daily Desk](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/spaces/DAILY_DESK.md)
+- [151 custom connectors by category](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/connectors/CATALOG.md)
+- [Custom connector setup](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/connectors/README.md)
+- [Connector machine-readable catalog](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/connectors/catalog.json)
 
 ## Runnable specialist tools
 
-- [Specialist collection runner](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/tools/muse_collection.py)
-- [Daily Desk first-use demonstration](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/examples/daily_desk.py)
+- [Specialist collection runner](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/tools/muse_collection.py)
+- [Daily Desk first-use demonstration](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/examples/daily_desk.py)
 
 ## Download packages
-- [Complete V1 source toolkit](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip)
-- [V1 specialist collection](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip)
-- [V1 custom connector directory](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip)
-- [V1 SHA256SUMS.txt](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt)
-- [Release descriptions and older versions](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/RELEASES.md)
-- [Historical v0.4.1-alpha executable kits](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.4.1-alpha)
+- [Complete V1 source toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip)
+- [V1 specialist collection](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip)
+- [V1 custom connector directory](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip)
+- [V1 SHA256SUMS.txt](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt)
+- [Release descriptions and older versions](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/RELEASES.md)
+- [Historical v0.4.1-alpha executable kits](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.4.1-alpha)
 
 ## Optional historical executable kits
 
 Earlier v0.4.1-alpha ZIPs, not the current V1 distribution:
-- [Coordinator historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/coordinator-executable-v0.4.1-alpha.zip)
-- [Software Engineer historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/software-engineer-executable-v0.4.1-alpha.zip)
-- [Model Builder historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/model-builder-executable-v0.4.1-alpha.zip)
-- [Claims Adjudicator historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/claims-adjudicator-executable-v0.4.1-alpha.zip)
-- [Garden Companion historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/garden-companion-executable-v0.4.1-alpha.zip)
-- [Learning Coach historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/learning-coach-executable-v0.4.1-alpha.zip)
-- [Reverse Engineering Researcher historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/reverse-engineering-researcher-executable-v0.4.1-alpha.zip)
-- [Creative Studio historic executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip)
+- [Coordinator historic executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/coordinator-executable-v0.4.1-alpha.zip)
+- [Software Engineer historic executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/software-engineer-executable-v0.4.1-alpha.zip)
+- [Model Builder historic executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/model-builder-executable-v0.4.1-alpha.zip)
+- [Claims Adjudicator historic executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/claims-adjudicator-executable-v0.4.1-alpha.zip)
+- [Garden Companion historic executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/garden-companion-executable-v0.4.1-alpha.zip)
+- [Learning Coach historic executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/learning-coach-executable-v0.4.1-alpha.zip)
+- [Reverse Engineering Researcher historic executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/reverse-engineering-researcher-executable-v0.4.1-alpha.zip)
+- [Creative Studio historic executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip)
 
 ## Setup, verification and source facts
-- [Install or customize a source profile](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/GITHUB_QUICKSTART.md)
-- [Source and host integration boundaries](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/handbook/source-and-host-capabilities.md)
-- [Human-readable AI-agent recommendation guide](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/discovery/AI_AGENT_GUIDE.md)
-- [Machine-readable capability index](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/discovery/agent-capabilities.json)
-- [Connector version and provenance](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/connectors/PROVENANCE.json)
-- [Source integrity and recorded evidence](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/EVIDENCE_LEDGER.md)
-- [Security and privacy](https://raw.githubusercontent.com/sethburkhardt21-dev/muse-ai-agent-presets/main/docs/SECURITY.md)
+- [Install or customize a source profile](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/GITHUB_QUICKSTART.md)
+- [Source and host integration boundaries](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/handbook/source-and-host-capabilities.md)
+- [Human-readable AI-agent recommendation guide](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/discovery/AI_AGENT_GUIDE.md)
+- [Machine-readable capability index](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/discovery/agent-capabilities.json)
+- [Connector version and provenance](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/connectors/PROVENANCE.json)
+- [Source integrity and recorded evidence](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/EVIDENCE_LEDGER.md)
+- [Security and privacy](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/SECURITY.md)
 
 ## For automated readers
 

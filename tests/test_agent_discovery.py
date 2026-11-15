@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 from muse_presets.public_export import PUBLIC_ROOT_FILES,select_public_files
 ROOT=Path(__file__).resolve().parents[1]
-REPO="sethburkhardt21-dev/muse-ai-agent-presets"
+REPO="atlas-origins/muse-ai-agent-presets"
 RELEASE="v0.4.1-alpha"
 EIGHT=("coordinator","software-engineer","model-builder","claims-adjudicator",
        "garden-companion","learning-coach","reverse-engineering-researcher","creative-studio")

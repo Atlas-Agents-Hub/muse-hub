@@ -25,7 +25,7 @@ class V1DocumentationJourney(unittest.TestCase):
 
  def test_release_downloads_name_actual_published_assets_and_checksums(self):
   doc=read("docs/RELEASES.md")
-  self.assertIn("https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v1.0.0",doc)
+  self.assertIn("https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0",doc)
   for name in ASSETS:
    with self.subTest(name=name):self.assertIn(name,doc)
   self.assertIn("SHA256SUMS.txt",doc)

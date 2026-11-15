@@ -4,29 +4,29 @@
 
 [Choose a specialist](collection/SPECIALIST_CATALOG.md), [run a tool](collection/SPECIALIST_QUICKSTART.md), open [Daily Desk](spaces/DAILY_DESK.md), or [find a connector](connectors/README.md). [Downloads](RELEASES.md) lists the published V1 packages.
 
-The original **50 role/shared instruction procedures** are retained within the wider skills architecture and overlap the 75 developed task skills. A role description is not necessarily a runnable engine: the table below identifies the actual operations.
+The original **50 role/shared instruction procedures** are retained within the wider skills architecture and overlap the 75 developed task skills. The [full specialist and engine guide](collection/SPECIALIST_SCOPE_AND_ENGINES.md) describes each role?s field-wide methods alongside its shipped engines. The table below covers **bundled operations**, not the limits of work the specialist can perform with authorized host tools.
 
 The published **v1.0.0** source package contains these components. Historical **v0.4.1-alpha** downloads included eight executable ZIPs and eleven starter profiles.
 
 ## Choose a tool or profile
 
-| Specialist | Available here | Limits |
+| Specialist | Included source operation | Host/integration boundary |
 | --- | --- | --- |
 | `coordinator` | Review task plans, dependencies and supplied completion evidence; export a standalone tool. | Does not dispatch workers or run a scheduler. |
-| `software-engineer` | Stage code with hash checks; run reviewed repairs and tests in disposable Git repositories; export the runtime. | Not an OS sandbox or unattended deployment service. |
+| `software-engineer` | Engineering sourcekit, Claim Gate, reviewed repair/test workflows and source provenance; Iron Ledger and Provenance Vault source candidates. | Local execution is not an OS sandbox; evidence-only candidates retain separate approval requirements. |
 | `model-builder` | Train small synthetic models, calculate held-out metrics and inspect local model artifacts. | No GPU service or large-model fine-tuning. |
 | `research-evaluator` | Match quotations to supplied text; score predictions and check group leakage. | Does not authenticate publishers or establish scientific truth. |
-| `creative-studio` | Build production briefs, shot timelines, continuity records and textual storyboards. | Does not render images or video or clear third-party rights. |
+| `creative-studio` | Compile briefs into asset dependencies, shot timelines, continuity records and reviewed production exports. | Real images, animation and video are created and inspected through authorized render/design tools; source planner does not replace them. |
 | `adversarial-verifier` | Defensive review instructions and refusal-test patterns. **Template only** as a standalone public package. | No autonomous testing or third-party access. |
-| `personal-companion` | Editable preferences, identity and everyday-assistance methods. **Template only** in the public package. | No live reminders, connected accounts or hosted assistant. |
+| `personal-companion` | Daily Desk tasks and notes with SQLite persistence, revision-safe edits and backup/restore, plus editable personalization methods. | Calendar sync, hosted reminders and connected services require separate host setup. |
 | `garden-companion` | Record observations and review local calendar changes in SQLite. | No external calendar writes or biological diagnosis. |
 | `learning-coach` | Build source-based study sessions, score practice and store review history. | No clinical approval or independent mastery assessment. |
 | `claims-adjudicator` | Review claims against supplied evidence and record qualifications. | Not an independently authenticated verdict. |
 | `reverse-engineering-researcher` | Compare supplied application-observation records. | No live capture, network probing or attack engine. |
-| `data-engineering-architect` | Check supplied rows and keys; report duplicates and null observations. | No live database access, migration or lineage certification. |
-| `infrastructure-reliability-engineer` | Calculate failure fractions and error-budget use from supplied synthetic events. | No live monitoring or production reliability certification. |
-| `automation-engineer` | Produce stable dependency order; reject cycles, duplicate IDs and unknown prerequisites. | Does not schedule jobs, run adapters or prove external idempotency. |
-| `product-interface-designer` | Flag missing control labels in supplied screen descriptions. | Not a rendered-browser, screen-reader or human usability audit. |
+| `data-engineering-architect` | Schema evolution, record quality, versioned-event reconciliation and supplied SQLite query-plan analysis. | Production database access or schema migration requires explicit credentials and approval. |
+| `infrastructure-reliability-engineer` | Error budgets, capacity estimates, incident timing and reliability calculations on supplied measurements. | Live telemetry and infrastructure changes require authorized provider access. |
+| `automation-engineer` | Dependency graphs, approval contracts, locator selection and effect-evidence consistency checks. | Running live adapters or scheduling jobs is a separate host-permitted operation. |
+| `product-interface-designer` | Label checks, sRGB contrast calculations and declared interaction-state graph coverage. | Rendered-browser and real usability reviews need actual interface evidence. |
 
 The [Evidence Finder](../services/evidence-finder/) preserves local findings for these tools. It is a shared service, not another assistant.
 

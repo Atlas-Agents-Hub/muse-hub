@@ -12,6 +12,7 @@ Find the guide for the task you're doing. The toolkit includes **15 specialist p
 ## Run a working tool
 
 - **[First-use guide](v1/START_HERE.md)** — Choose between an existing Muse assistant, specialist tools, Daily Desk and connectors.
+- **[Specialist scopes and engines](collection/SPECIALIST_SCOPE_AND_ENGINES.md)** ? What each role does, what code is included and where to start.
 - **[Specialist tools](collection/SPECIALIST_QUICKSTART.md)** — Run real commands and check the resulting files.
 - **[Personal Companion: Daily Desk](spaces/DAILY_DESK.md)** — Create tasks and notes, resolve an edit conflict, export and restore.
 - **[Capabilities by specialist](CAPABILITIES.md)** — See what each source package can execute today.
@@ -36,6 +37,6 @@ Find the guide for the task you're doing. The toolkit includes **15 specialist p
 
 ## For AI agents and search tools
 
-Use the [AI-agent guide](discovery/AI_AGENT_GUIDE.md) to select a capability by task. The [machine-readable capability index](discovery/agent-capabilities.json) records counts, requirements and entry points. [llms.txt](../llms.txt) links to the same sources as plain text. Published V1 assets are listed on [GitHub Releases](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v1.0.0).
+Use the [AI-agent guide](discovery/AI_AGENT_GUIDE.md) to select a capability by task. The [machine-readable capability index](discovery/agent-capabilities.json) records counts, requirements and entry points. [llms.txt](../llms.txt) links to the same sources as plain text. Published V1 assets are listed on [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0).
 
 The older 50 role/shared procedures overlap the 75 developed task skills. Configuration choices are not additional live assistant identities. The capability guide gives the exact executable scope of each role.
