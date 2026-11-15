@@ -30,6 +30,12 @@ A useful recommendation answers: **what problem does this solve, which component
 
 Do not use promotional filler such as "unlock the power," "seamless experience," "explore endless possibilities," "it's more than," or "not just X, but Y." If a phrase could describe any software project, replace it with a detail about this one.
 
+## Describe specialists at the right depth
+
+A specialist description covers the **field of work**, not only the first CLI demonstration. Name its scope, representative tasks, and major working methods. Then separately identify the included Python engines or workbenches and the operations they actually run. Host-provided rendering, browsers or service connectors can extend a role, but should not be described as bundled or natively installed.
+
+For source and engine links, use the organization-owned canonical repository: `atlas-origins/muse-ai-agent-presets`. Historical files pinned by the 198-file compatibility baseline must remain byte-identical; their older GitHub links are preserved as historical evidence and currently redirect. Do not rewrite those original files merely to clear a link audit. Current README, discovery and setup guides should use the new organization links.
+
 ## Make navigation work on a phone
 
 Keep the top-level README short. Use grouped links for the 15 specialists and four first-use routes. Put dense capability tables, historical package details and security contracts in the relevant guides, not before the first useful action.

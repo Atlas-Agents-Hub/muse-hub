@@ -12,7 +12,7 @@ Find the guide for the task you're doing. The toolkit includes **15 specialist p
 ## Run a working tool
 
 - **[First-use guide](v1/START_HERE.md)** — Choose between an existing Muse assistant, specialist tools, Daily Desk and connectors.
-- **[Specialist scopes and engines](collection/SPECIALIST_SCOPE_AND_ENGINES.md)** ? What each role does, what code is included and where to start.
+- **[Specialist scopes and engines](collection/SPECIALIST_SCOPE_AND_ENGINES.md)** — What each role covers, which engines are included, and how to use them.
 - **[Specialist tools](collection/SPECIALIST_QUICKSTART.md)** — Run real commands and check the resulting files.
 - **[Personal Companion: Daily Desk](spaces/DAILY_DESK.md)** — Create tasks and notes, resolve an edit conflict, export and restore.
 - **[Capabilities by specialist](CAPABILITIES.md)** — See what each source package can execute today.

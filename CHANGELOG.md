@@ -14,7 +14,7 @@
 - Harden archive, manifest, linked-path and import boundaries; retain disabled native integrations.
 - Preserve bounded process logs and explicit HOLD state when owned-process cleanup cannot be confirmed; never retry automatically.
 
-This file records published features rather than internal engineering work. Exact release assets remain available under [GitHub Releases](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases).
+This file records published features rather than internal engineering work. Exact release assets remain available under [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases).
 
 ## v0.3.1-alpha — portable release quality
 
@@ -42,7 +42,7 @@ These features ship in the complete toolkit source. Starter profiles and three e
 - A source-only quickstart for Windows, macOS and Linux.
 - Disabled-by-default optional connectors and local scope validation.
 
-[Download the eleven kits](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.2.0-alpha).
+[Download the eleven kits](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.2.0-alpha).
 
 ## Extended Software Engineer Source Kit — alpha
 
@@ -50,12 +50,12 @@ These features ship in the complete toolkit source. Starter profiles and three e
 - Local Claim Gate, evidence and recovery utilities plus reproducible disposable Git tests.
 - Source-package verification and platform-specific limitation notes.
 
-[Download the extended kit](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/software-engineer-sourcekit-r56-alpha).
+[Download the extended kit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/software-engineer-sourcekit-r56-alpha).
 
 ## Initial alpha — v0.1.0-alpha
 
 - Starter role profiles, source templates and initial configuration tooling.
 
-[View the archive](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.1.0-alpha).
+[View the archive](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.1.0-alpha).
 
 The repository is an unofficial source toolkit, not a connected native Muse installation. Refer to [Capabilities](docs/CAPABILITIES.md) for executable examples and to [Security](docs/SECURITY.md) for important boundaries.

@@ -1,6 +1,6 @@
 # Skills and workflows
 
-The task collection contains **75 developed skills**, **25 workflows** and **100 task starter configurations**. Start with the [task catalog](../collections/muse-starters-v1/CATALOG.md) or [choose a specialist](collection/SPECIALIST_CATALOG.md).
+The task collection contains **75 developed skills**, **25 workflows** and **100 task starter configurations**. Start with the [task catalog](../collections/muse-starters-v1/CATALOG.md) or [choose a specialist by scope and included engines](handbook/specialists-by-task.md). The [original role contracts](collection/SPECIALIST_CATALOG.md) remain available as a compatibility reference.
 
 The toolkit also retains **50 distinct role/shared procedures**: three methods for each of 15 specialists, plus five reusable methods. These overlap the developed task skills rather than adding 50 unrelated integrations.
 
