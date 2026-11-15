@@ -2,6 +2,12 @@
 
 The toolkit separates assistant instructions, local programs and host integrations. You can run a local program without installing an assistant, or adapt a role profile to a host you configure separately.
 
+## Collection and engine layers
+
+The current source includes **75 developed task skills**, **25 workflows** and **100 task starters** alongside the original **50 unique procedures** (45 role-specific methods plus five shared). The original procedure layer overlaps the larger collection; it is not 50 more independently authored skills. Configuration counts do not create additional native assistants.
+
+Different specialists include different executable engines. [Specialist scope and source engines](collection/SPECIALIST_SCOPE_AND_ENGINES.md) describes what each role handles and which local operations are available. [Specialists by task](handbook/specialists-by-task.md) is the user-facing directory. These are the same roles; the tool depth varies by specialist.
+
 ## Role profiles
 
 `presets/catalog.json` lists the 15 source roles. Each role has a `preset.json` for its settings and a `playbook.json` for its working methods. The files in `templates/profile/` provide editable instructions, preferences and memory placeholders.

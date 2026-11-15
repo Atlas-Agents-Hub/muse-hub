@@ -23,7 +23,7 @@ python -B quickstart.py --all
 python -B examples/export_portable_skills.py --plan
 ```
 
-Read the exported playbook or SKILL.md files and apply the relevant instructions through your Muse's supported customization flow. The source exporter does not sign in, install native agents or change live account settings.
+To see the wider work each role supports and the bundled engines, see [Specialist scopes and engines](../collection/SPECIALIST_SCOPE_AND_ENGINES.md).\n\nRead the exported playbook or SKILL.md files and apply the relevant instructions through your Muse's supported customization flow. The source exporter does not sign in, install native agents or change live account settings.
 
 ## 2. Run specialist tools
 
@@ -70,6 +70,6 @@ Connect through Muse's supported secure custom-connector workflow, not by sharin
 
 ## Troubleshooting
 
-Confirm the Python version, current working directory and writable output directory. Create-only exporters refuse existing paths. A configuration is not account authorization; the receiving host determines which operations are available. Consult the [capability guide](../CAPABILITIES.md), [full repository quickstart](../GITHUB_QUICKSTART.md), or the [issue tracker](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/issues).
+Confirm the Python version, current working directory and writable output directory. Create-only exporters refuse existing paths. A configuration is not account authorization; the receiving host determines which operations are available. Consult the [capability guide](../CAPABILITIES.md), [full repository quickstart](../GITHUB_QUICKSTART.md), or the [issue tracker](https://github.com/atlas-origins/muse-ai-agent-presets/issues).
 
 After the release, review the [30-day adoption assessment](POST_RELEASE.md) before expanding the catalog or commissioning fourteen more specialist workbenches.

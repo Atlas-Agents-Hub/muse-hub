@@ -1,6 +1,12 @@
 # Installation and saved data
 
-Choose whether you want to run a tool or customize a profile. An executable package contains runnable Python code; a starter profile contains instructions and configuration for an assistant you connect separately. Extracting either package does not install a native Muse agent.
+Choose the package that matches your task. The published [v1.0.0 release](RELEASES.md) offers the complete source toolkit, the portable specialist collection and the searchable 151-connector directory. The specialist collection includes bundled runnable tools and task profiles; the complete source includes Personal Companion's Daily Desk.
+
+The earlier [v0.4.1-alpha](RELEASES.md#v041-alpha--eight-runnable-tools-and-eleven-starter-zips) shipped eight standalone executable ZIPs and eleven starter profiles. These packages remain available with their original instructions. Extracting a ZIP or customizing a profile does not install a native Muse agent.
+
+## Use the V1 specialist collection
+
+Download `muse-specialist-collection-v1.0.0.zip` from the [current release](RELEASES.md), compare its SHA-256 with the release checksum index, and extract it into a new directory. Follow the included `START_HERE.md` and select the specialist kit or starter you need. The GitHub source checkout also supports `python -B tools/muse_collection.py check` with Python 3.12+.
 
 ## Run a downloaded tool
 

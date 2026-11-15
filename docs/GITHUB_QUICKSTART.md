@@ -6,10 +6,10 @@ Choose a guide from the [documentation index](README.md) or follow the [four fir
 
 ## Download the current V1 packages
 
-- [Complete toolkit source](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip) — source tree, runnable examples and Daily Desk.
-- [Specialist collection](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip) — starters, expanded executable kits and example reports.
-- [Custom connector directory](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip) — 151 connector records and a searchable local directory.
-- [SHA-256 checksums](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt) — verify the exact file you downloaded.
+- [Complete toolkit source](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip) — source tree, runnable examples and Daily Desk.
+- [Specialist collection](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip) — starters, expanded executable kits and example reports.
+- [Custom connector directory](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip) — 151 connector records and a searchable local directory.
+- [SHA-256 checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt) — verify the exact file you downloaded.
 
 Extract the source ZIP, open a terminal in the project directory, then run `python -B examples/daily_desk.py` to check three tasks, two notes and a restored copy.
 
@@ -19,7 +19,7 @@ The earlier `v0.4.1-alpha` release contains eight executable ZIPs and eleven sta
 
 For this Creative Studio example, you need Python 3.12+, but not Git. Software Engineer workflows may require Git; check each package's start guide.
 
-Download the [Creative Studio executable](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip), compare its SHA-256 with [SHA256SUMS.txt](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt), and extract it into a new folder. Open a terminal in that folder:
+Download the [Creative Studio executable](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip), compare its SHA-256 with [SHA256SUMS.txt](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt), and extract it into a new folder. Open a terminal in that folder:
 
 ```bash
 python -I -B run.py --operation self-test
@@ -35,7 +35,7 @@ The demo creates production JSON, a shot-list CSV and a textual HTML storyboard 
 Clone the source from GitHub using Python 3.12+ and Git. Run the commands below in bash or Windows PowerShell; use `python3` on macOS/Linux if that is your installed command.
 
 ```bash
-git clone https://github.com/sethburkhardt21-dev/muse-ai-agent-presets.git
+git clone https://github.com/atlas-origins/muse-ai-agent-presets.git
 cd muse-ai-agent-presets
 python -B quickstart.py --all
 ```
@@ -82,7 +82,7 @@ The four new specialist fixtures are available through `PYTHONPATH=src python3 -
 | A checksum differs | Stop and check the download or source change. Do not bypass the check. |
 | Connector or native skill unavailable | Configure and verify the host integration separately. |
 | Platform-specific operation unsupported | Check [Capabilities](CAPABILITIES.md); an unsupported operation is not a passed test. |
-| Need a ZIP instead of a clone | Use the [v0.4.1-alpha downloads](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/tag/v0.4.1-alpha). |
+| Need a ZIP instead of a clone | Use the [v0.4.1-alpha downloads](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.4.1-alpha). |
 
 For code changes, follow [Development](DEVELOPMENT.md). Local execution is not a sandbox; read [Security](SECURITY.md) before running untrusted code.
 

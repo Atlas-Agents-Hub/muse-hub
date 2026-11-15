@@ -8,19 +8,36 @@ The [specialist engine index](specialist-engine-index.json) lists all 15 roles a
 
 ## What should I recommend for a particular task?
 
-Select the **operation**, not the largest skill count.
+Match a user to the specialist's **full working scope**, then link the exact source or local tool for their immediate task. A short sample does not exhaust a specialist's playbook.
 
-| User wants to… | Recommend | Actual first result |
-| --- | --- | --- |
-| Debug code or review a patch | [Software Engineer](../../presets/software-engineer/) | Source analysis, local tests and explicit findings |
-| Check duplicate records or schemas | [Data Engineering & Database Architect](../../presets/data-engineering-architect/) | A deterministic data-quality or schema report |
-| Assess a research claim | [Research Evaluator](../../presets/research-evaluator/) | Quotation/source matches and evaluation results |
-| Validate task dependencies | [Automation Engineer](../../presets/automation-engineer/) | An ordered graph or a refusal explaining its invalidity |
-| Manage personal tasks and notes | [Daily Desk](../spaces/DAILY_DESK.md) | Stored records, edit checks and a recoverable backup |
-| Connect a third-party service | [151-connector directory](../connectors/README.md) | A pinned setup guide and copy-ready service message |
-| Customize a general Muse workflow | [100 starter configurations](../../collections/muse-starters-v1/CATALOG.md) | A selectable method for an existing assistant |
+### Build and operate software
 
-For the full list and the distinction between runnable engines and instruction templates, see [Capabilities](../CAPABILITIES.md).
+- **[Software Engineer](../../presets/software-engineer/)** — Architecture, feature implementation, debugging, code review, regression testing and source-verified releases. The engineering sourcekit and Claim Gate provide bounded executable support.
+- **[Data Engineering & Database Architect](../../presets/data-engineering-architect/)** — Data models, schema evolution, quality, query plans, pipelines and migration safety; includes schema and reconciliation engines.
+- **[Automation Engineer](../../presets/automation-engineer/)** — Workflow design, tool/service coordination, dependencies, approvals, idempotency and recovery; includes dependency and effect-evidence checks.
+- **[Infrastructure & Reliability Engineer](../../presets/infrastructure-reliability-engineer/)** — Reliability, SLOs, incident response, error budgets and capacity planning; includes metric and capacity calculations.
+
+### Research, investigation and evaluation
+
+- **[Research Evaluator](../../presets/research-evaluator/)** — Primary-source research, comparative evidence, controlled experiments and model evaluation; includes source and numerical checks.
+- **[Claims Adjudicator](../../presets/claims-adjudicator/)** — Evidence-backed claims, disputed results, correction records and limiting conditions; includes a claims engine.
+- **[Adversarial Verifier](../../presets/adversarial-verifier/)** — Authorized defensive testing, threat models, negative controls and remediation verification. The public role provides a detailed playbook; it does not bundle an independent live security-testing engine.
+- **[Reverse Engineering & Security Researcher](../../presets/reverse-engineering-researcher/)** — Authorized software/protocol observation, clean-room behavioral reconstruction and defensive sample analysis; includes a recorded-observation engine.
+
+### Creative work, products and learning
+
+- **[Creative Studio](../../presets/creative-studio/)** — Visual development, images, animation, video and interactive scenes: art direction, asset planning, motion and shot planning, continuity, render review and delivery. Its bundled engine plans and verifies production artifacts; rendering uses authorized host tools.
+- **[Product & Interface Designer](../../presets/product-interface-designer/)** — Product research, UX architecture, layouts, interactions, accessibility and build-ready specifications; includes state and contrast checks.
+- **[Model Builder](../../presets/model-builder/)** — Data preparation, model/adaptor training, experiment design, held-out evaluation and artifact provenance; includes bounded local training and evaluation tools.
+- **[Learning Coach](../../presets/learning-coach/)** — Guided lessons, adaptive practice, scored assessment and targeted learning review; includes session and progress methods.
+
+### Personal life and coordination
+
+- **[Personal Companion](../../presets/personal-companion/)** — Personalized planning, routines, notes, practical assistance and accessibility. [Daily Desk](../spaces/DAILY_DESK.md) provides the persistent local task-and-note workspace.
+- **[Garden Companion](../../presets/garden-companion/)** — Plant records, seasonal care, observations, gardening plans and progress review.
+- **[Coordinator](../../presets/coordinator/)** — Multi-step planning, dependencies, specialist handoffs, restart recovery and completion verification.
+
+[Compare all 15 scopes and included engines](../collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [Browse by task](../handbook/specialists-by-task.md) · [Engine source index](specialist-engine-index.json).
 
 ## Can I run something immediately?
 
