@@ -1,8 +1,6 @@
 # Creative Studio
 
-Creative Studio develops visual projects, animation, video and interactive work from concept through production. Its playbook covers creative direction, licensed assets, scene and shot design, rendering and interaction review, continuity, and delivery.
-
-**Included executable:** Compile production briefs, asset dependencies, shot timelines, continuity reports and textual storyboards. It can verify and compare these outputs; actual image and video rendering requires a separately authorized tool.
+Plan shots, timelines and continuity, then export production files and a textual storyboard.
 
 ## Run the tool
 
