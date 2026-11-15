@@ -7,7 +7,7 @@
     "CHANGELOG.md": "cc327bd83e9b49e95358cd53d54671644944c21efb32cd3acc63af22877b92c7",
     "CONTRIBUTING.md": "4524e132b46ea67275977328c5c860785e04ec86ddfd7c28c8a4a7986f764e82",
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
-    "README.md": "6703ebf11dfb6aa529bb519e4c505f4230805dbdea331c23f888c745428b9a7a",
+    "README.md": "43c709e1074696d589cb30221e8fcf737c209c5a5b30f237b07315c810956df8",
     "SECURITY.md": "629e9c23228531771d01f644973019c14e228e52cab3dd71490be4a2bf558ba6",
     "collections/muse-starters-v1/CATALOG.md": "9867e8ce67eee76b12c27867b2c5b991a8ea44e7e13732722fb256fde86aac4d",
     "collections/muse-starters-v1/COUNTS.json": "3ded6dec528100574a4911e1dd904ff3108fa4c0d9644386917363c877884366",
@@ -348,6 +348,7 @@
     "docs/SECURITY.md": "81e0fbf682b9d75981663548af86f9b8a65294b7dd7caf12bbfd33a076deec73",
     "docs/SKILLS.md": "91f0666c9e05e4aff3c6ceb8a18452b5e322cc4dfe22ef9d4e6f88020d888d47",
     "docs/WORKFLOWS.md": "c0c7c2768730fa42c9570db371ea7e9f5884ae3cd49537681efc1aeabdcad8bd",
+    "docs/collection/CREATIVE_STUDIO_SCOPE.md": "7c37ff3237ebf9aaef29236ce7ae322bbee0ba12e8e489d015c2c1151b45a293",
     "docs/collection/MUSE_CURATED_COLLECTION.md": "50dcc06747a2d81a95d61849bc993f63667b1a6ed620b416ecc9b5289649eb84",
     "docs/collection/SPECIALIST_CATALOG.md": "344bee762887fc1fe0b8161d36a3a6e2760cdbbc29998ce0d4846478fb965bd5",
     "docs/collection/SPECIALIST_QUICKSTART.md": "02e98272d91698e748ece790853c88526d1c4a21aa76b8dea522b4090ec0a981",
@@ -749,6 +750,7 @@
     "tests/test_space_server.py": "ac4e9d0d9f2ece37269c95f340f2d505ac6551f1f24df30745fac038f95fa42f",
     "tests/test_specialist_engine_contracts.py": "01ce9a6c671eca2fc65f8202269ca4df7426b7758e93e395d880aff26800e6c1",
     "tests/test_specialist_expansion_v1.py": "78b06e5dee5f4500bf463bfc87c1402941ebfa1d71803bafed0d35a91c23586b",
+    "tests/test_specialist_positioning_depth.py": "d7c738cf6a0bf126a72fa15be00cfc723f69d7d566b2eb192d7a8a96cf865612",
     "tests/test_stage_source_pin_continuity.py": "b83c4168d68d8eff49842a46fc5a4178bd723c9fbaedd77ba34b2ecd7a96dd2b",
     "tests/test_standalone_pack.py": "de345903667f8dba7cdae530d955e30d38c32a176cd14bc0e93781b204718040",
     "tests/test_subchat_scopes.py": "5e73eda9ceeb00c1485c7538b50a67c4dbc3a3aac407bb5b8a314516a46d94bb",
@@ -779,5 +781,5 @@
   "publisher_approval_granted": false,
   "release_kind": "GITHUB_SOURCE_ONLY",
   "schema": "r46/public-source-snapshot-v1",
-  "source_file_count": 770
+  "source_file_count": 772
 }
