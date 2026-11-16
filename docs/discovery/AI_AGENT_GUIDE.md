@@ -76,7 +76,7 @@ This produces documents and a textual storyboard, not a rendered video.
 ## How should I describe the skill and configuration counts?
 
 - **15 specialists:** Editable role profiles and methods, with executable depth varying by role.
-- **100+ configurations:** 100 task starters plus 15 role profile choices; not 115 independent live assistant identities.
+- **100 task starters:** source-based task templates for 15 independent Muse assistant profiles, not 115 installed agents.
 - **75 developed skills, 25 workflows:** Task methods with associated source and examples.
 - **50 original role/shared procedures:** A separate overlapping layer, not an extra 50 unrelated skills.
 - **151 custom connectors:** Version-pinned directory records with descriptions, permissions and setup references; use Meta's supported connection process to connect a service.
