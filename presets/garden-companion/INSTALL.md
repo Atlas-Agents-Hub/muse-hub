@@ -2,7 +2,7 @@
 
 Track plants, observations, seasons, and care.
 
-**Current published source:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0) · **Individual assistant ZIP:** [v1.1.0 draft](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-garden-companion-v1.1.0.zip) (not yet a public download).
+**Current published source:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0) · **Individual assistant ZIP:** `muse-garden-companion-v1.1.0.zip` (v1.1.0 draft; not yet a public download).
 
 ## Set up this assistant
 
