@@ -1,5 +1,32 @@
 # Downloads and versions
 
+## Individual Muse assistants ? v1.1.0
+
+Pick a specialist and download its ZIP. Every download is a complete set of files for one Muse assistant: Main, three subchats, skills and workflows. **No Python is required for assistant setup.** The optional local utilities can be run separately.
+
+**[Choose a specialist ZIP](DOWNLOAD_A_SPECIALIST.md)** ? **[Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS.txt)**
+
+Direct downloads:
+- [Coordinator](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-coordinator-v1.1.0.zip)
+- [Software Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-software-engineer-v1.1.0.zip)
+- [Model Builder](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-model-builder-v1.1.0.zip)
+- [Research Evaluator](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-research-evaluator-v1.1.0.zip)
+- [Creative Studio](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-creative-studio-v1.1.0.zip)
+- [Adversarial Verifier](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-adversarial-verifier-v1.1.0.zip)
+- [Personal Companion](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-personal-companion-v1.1.0.zip)
+- [Garden Companion](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-garden-companion-v1.1.0.zip)
+- [Learning Coach](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-learning-coach-v1.1.0.zip)
+- [Claims Adjudicator](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-claims-adjudicator-v1.1.0.zip)
+- [Reverse Engineering & Security Researcher](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-reverse-engineering-researcher-v1.1.0.zip)
+- [Data Engineering & Database Architect](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-data-engineer-v1.1.0.zip)
+- [Infrastructure & Reliability Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-reliability-engineer-v1.1.0.zip)
+- [Automation Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-automation-engineer-v1.1.0.zip)
+- [Product & Interface Designer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-product-interface-designer-v1.1.0.zip)
+
+These packages are intended for separate Muse assistants, not fifteen roles inside one shared account. The ZIPs do not automatically create Muse accounts, register native tools, or connect services.
+
+### Previous: v1.0.0 toolkit
+
 ## Muse Specialist Toolkit v1.0.0
 
 The V1 source covers 15 specialists, 100 task starters, 75 developed skills, 25 workflows and 151 connector records. The 50 original role/shared procedures remain available and overlap the developed skills.

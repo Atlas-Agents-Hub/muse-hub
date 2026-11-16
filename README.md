@@ -1,5 +1,7 @@
 # Muse Specialist Toolkit
 
+**[Download a specialist ZIP](docs/DOWNLOAD_A_SPECIALIST.md)** ? 15 separate assistants, one ZIP each, with Main, three subchats and a setup guide. No Python needed.
+
 ### Your Muse. Your Specialists. Your Possibilities.
 
 **15 AI Specialists** · **100+ Configurations** · **150+ Custom Connectors**

@@ -1,9 +1,25 @@
-# Install Product & Interface Designer
+# Download Product & Interface Designer
 
-**Standalone source kit:** clone the repository, use Python 3.12+, set `PYTHONPATH=src`, and run `python -B -m muse_presets.cli doctor`. Then run `python -B examples/github_quickstart.py --role product-interface-designer --to "$HOME/new-product-interface-designer"`. Existing destinations are refused and original user memory is not copied.
+**[Download Product & Interface Designer ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-product-interface-designer-v1.1.0.zip)** ? [Verify download](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS.txt)
 
-**Local executable evidence:** run `python -B examples/specialist_engine_demo.py --role product-interface-designer`. This example requires no API key or external account.
+No Python is needed to set up the assistant.
 
-**Native personal Muse/Hatch or Muse Code:** source extraction is NOT host installation. Use the receiving host's independently verified import and permission flow. All local subchats, doors, skills, schedules and connectors start unbound/disabled. User memory remains owner controlled.
+## Set it up in Muse
 
-For all supported source-first commands and troubleshooting, see the [GitHub Quickstart](../../docs/GITHUB_QUICKSTART.md).
+1. Download the ZIP and unzip it.
+2. Create **one separate Muse assistant** for Product & Interface Designer. Don't add all 15 specialists to one assistant.
+3. Start in Main. Use the files named in START_HERE.md as its instructions and documents.
+4. Set up its **three subchats** inside that assistant. Each has its own instructions, context, tools and memory files.
+5. Try the first example request in START_HERE.md. Add extra skills or local tools only as needed.
+
+Each ZIP contains the Main profile, subchats, role-specific skills, workflows and any optional bundled utilities. It does **not automatically** create an account, create subchats, connect apps or grant permissions.
+
+## Need more detail?
+
+- [Pick another specialist](../../docs/DOWNLOAD_A_SPECIALIST.md)
+- [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
+- [Build from source ? for developers](../../docs/GITHUB_QUICKSTART.md)
+
+Source role ID: `product-interface-designer`.
+
+The original source command is in [examples/github_quickstart.py](../../examples/github_quickstart.py) if you want to generate or customize a development copy. You don't need it for the ZIP.

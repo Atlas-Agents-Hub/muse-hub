@@ -1,5 +1,8 @@
 # Get started
 
+**Want a complete Muse specialist without commands?** [Download an individual specialist ZIP](DOWNLOAD_A_SPECIALIST.md). This page is for advanced source and development workflows.
+
+
 **Muse Specialist Toolkit v1.0.0** includes 15 specialist profiles, 100 task starters, 75 developed skills, 25 workflows, Daily Desk and a directory of 151 custom connectors.
 
 Choose a guide from the [documentation index](README.md) or follow the [four first-use routes](v1/START_HERE.md). Local examples use Python 3.12+ and do not require a paid API. External accounts are not connected by default.

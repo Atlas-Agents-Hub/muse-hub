@@ -1,23 +1,25 @@
-# Set up Personal Companion
+# Download Personal Companion
 
-This public starter contains instructions and configuration, not an installed assistant. Use the complete toolkit for any local examples linked from the [role guide](README.md).
+**[Download Personal Companion ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-personal-companion-v1.1.0.zip)** ? [Verify download](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS.txt)
 
-## Create a profile copy
+No Python is needed to set up the assistant.
 
-From the repository root:
+## Set it up in Muse
 
-```bash
-python -B quickstart.py --role personal-companion --to "$HOME/my-personal-companion"
-```
+1. Download the ZIP and unzip it.
+2. Create **one separate Muse assistant** for Personal Companion. Don't add all 15 specialists to one assistant.
+3. Start in Main. Use the files named in START_HERE.md as its instructions and documents.
+4. Set up its **three subchats** inside that assistant. Each has its own instructions, context, tools and memory files.
+5. Try the first example request in START_HERE.md. Add extra skills or local tools only as needed.
 
-Use `python3` on macOS/Linux where appropriate; the wrapper also works in Windows PowerShell without setting `PYTHONPATH`. The destination must not exist. Read the generated guide before editing your copy, and keep personal memory and credentials outside the repository.
+Each ZIP contains the Main profile, subchats, role-specific skills, workflows and any optional bundled utilities. It does **not automatically** create an account, create subchats, connect apps or grant permissions.
 
-## Check before connecting
+## Need more detail?
 
-Run the package's supported local checks and review the files it creates. A hash receipt detects changed bytes; it does not establish a host identity or grant tool access. No external account, skill registration or scheduled job is activated by these steps.
+- [Pick another specialist](../../docs/DOWNLOAD_A_SPECIALIST.md)
+- [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
+- [Build from source ? for developers](../../docs/GITHUB_QUICKSTART.md)
 
-[Role guide](README.md) · [Installation and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
+Source role ID: `personal-companion`.
 
-For the complete source setup, expected outputs and troubleshooting, see [Get started](../../docs/GITHUB_QUICKSTART.md).
-
-The source wrapper delegates to [examples/github_quickstart.py](../../examples/github_quickstart.py); use the wrapper above for the no-environment-variable route.
+The original source command is in [examples/github_quickstart.py](../../examples/github_quickstart.py) if you want to generate or customize a development copy. You don't need it for the ZIP.

@@ -1,5 +1,8 @@
 # Start here — Muse Specialist Toolkit
 
+**Want a complete Muse specialist without commands?** [Download an individual specialist ZIP](../DOWNLOAD_A_SPECIALIST.md). This page is for advanced source and development workflows.
+
+
 **Your Muse. Your Specialists. Your Possibilities.**
 
 Choose a specialist configuration, run a Python tool, open Daily Desk or find a custom connector. Each section below has a command or a setup guide.

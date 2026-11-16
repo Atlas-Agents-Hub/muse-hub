@@ -1,5 +1,12 @@
 # Installation and saved data
 
+## The easiest way: download one specialist ZIP
+
+[Choose your Muse specialist](DOWNLOAD_A_SPECIALIST.md). Download its ZIP, unzip it, open START_HERE.md, then set up Main and the three subchats inside a dedicated Muse assistant. No Python or Git is needed for that setup. Downloading does not install an account or connect tools automatically; use Muse's own setup and permission controls.
+
+## For developers: older source and tool setup
+
+
 Choose the package that matches your task. The published [v1.0.0 release](RELEASES.md) offers the complete source toolkit, the portable specialist collection and the searchable 151-connector directory. The specialist collection includes bundled runnable tools and task profiles; the complete source includes Personal Companion's Daily Desk.
 
 The earlier [v0.4.1-alpha](RELEASES.md#v041-alpha--eight-runnable-tools-and-eleven-starter-zips) shipped eight standalone executable ZIPs and eleven starter profiles. These packages remain available with their original instructions. Extracting a ZIP or customizing a profile does not install a native Muse agent.

@@ -56,7 +56,19 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
   import hashlib
   baseline=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_bytes())
   self.assertEqual(len(baseline["files"]),198)
+  preserved=0
   for name,digest in baseline["files"].items():
    with self.subTest(path=name):
-    self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),digest)
+    # Versioned reader rewrite preserves original INSTALL bytes separately.
+    path=(ROOT/"docs/history/v1-install"/(Path(name).parent.name+".md")
+          if name.startswith("presets/") and name.endswith("/INSTALL.md")
+          else ROOT/name)
+    if path!=ROOT/name:preserved+=1
+    self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),digest)
+  self.assertEqual(preserved,15)
+  history=json.loads((ROOT/"docs/history/v1-install/MIGRATION_MANIFEST.json").read_text())
+  self.assertEqual(len(history["entries"]),15)
+  for entry in history["entries"]:
+   self.assertEqual(hashlib.sha256((ROOT/entry["archive_path"]).read_bytes()).hexdigest(),
+                    entry["sha256"])
 if __name__=="__main__":unittest.main()

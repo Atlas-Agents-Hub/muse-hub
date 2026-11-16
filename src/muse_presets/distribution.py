@@ -52,6 +52,21 @@ def product_findings(root:Path)->list[dict[str,str]]:
     body=p.read_text(encoding='utf-8')
    except (OSError,UnicodeError,ValueError):add(rel,'UNREADABLE_PRODUCT_PAGE');continue
    if '\ufffd' in body or '\u00e2\u20ac' in body:add(rel,'CORRUPTED_PRODUCT_TEXT')
+   # Replaced installation guides are preserved byte-for-byte in a historical
+   # folder. Their original relative links refer to their previous location.
+   # Skip those old links ONLY when the archived bytes match the frozen
+   # public source baseline; a modified archive fails closed.
+   if rel.startswith('docs/history/v1-install/') and name.endswith('.md') and name != 'README.md':
+    original='presets/'+p.stem+'/INSTALL.md'
+    try:
+     baseline=json.loads((root/'collections/muse-starters-v1/PUBLIC_BASELINE.json').read_text(encoding='utf-8'))
+     expected=baseline['files'].get(original)
+     if (type(expected) is not str or len(expected)!=64
+             or hashlib.sha256(p.read_bytes()).hexdigest()!=expected):
+      add(rel,'HISTORICAL_INSTALL_CHANGED')
+    except (OSError,ValueError,KeyError,TypeError):
+     add(rel,'HISTORICAL_INSTALL_UNVERIFIABLE')
+    continue
    if WORK_ID.search(_prose(body)):add(rel,'INTERNAL_WORK_LANGUAGE')
    for match in LINK.finditer(body):
     target=match.group(1).strip().split('#',1)[0].split('?',1)[0]
