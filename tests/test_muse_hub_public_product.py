@@ -63,6 +63,16 @@ class MuseHubPublicProduct(unittest.TestCase):
         self.assertIn("releases/latest", downloads)
         self.assertNotIn(" ? ",downloads)
 
+    def test_active_docs_have_no_escaped_line_breaks(self):
+        paths=[ROOT/"README.md",ROOT/"llms.txt",ROOT/"hub/README.md",ROOT/"docs/README.md"]
+        paths.extend((ROOT/"presets").glob("*/README.md"))
+        paths.extend((ROOT/"presets").glob("*/INSTALL.md"))
+        for p in paths:
+            text=p.read_text(encoding="utf-8")
+            with self.subTest(path=p.relative_to(ROOT).as_posix()):
+                self.assertNotIn(chr(92)+"n-",text)
+                self.assertNotIn(chr(92)+"n##",text)
+
     def test_llms_txt_parseable_links_and_source_identity(self):
         t=read("llms.txt")
         self.assertIn("## Current public release",t)

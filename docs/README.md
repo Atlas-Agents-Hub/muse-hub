@@ -23,7 +23,8 @@ Pick what you want to accomplish. You do not need to understand the repository a
 - **[Developer quickstart](GITHUB_QUICKSTART.md)** — clone, check source, and run local examples.
 - **[Architecture](ARCHITECTURE.md)** — roles, files, host boundaries, and integration scope.
 - **[Source and host limits](handbook/source-and-host-capabilities.md)** — what passing tests actually establish.
-- **[Troubleshoot with the practical handbook](handbook/README.md)** — solve context, subchat, or setup issues.\n- **[Security](SECURITY.md)** — protected memory, permissions, and provider credentials.
+- **[Troubleshoot with the practical handbook](handbook/README.md)** — solve context, subchat, or setup issues.
+- **[Security](SECURITY.md)** — protected memory, permissions, and provider credentials.
 - **[Contributing](../CONTRIBUTING.md)** — reproducible changes and regressions.
 - **[Verify download checksums and release history](RELEASES.md)** — distinguish public assets from staged drafts.
 - **[Muse Hub scope](../hub/README.md)** — how the wider Hub grows within this repository.
