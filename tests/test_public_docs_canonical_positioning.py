@@ -60,7 +60,7 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
   for name,digest in baseline["files"].items():
    with self.subTest(path=name):
     # Versioned reader rewrite preserves original INSTALL bytes separately.
-    path=(ROOT/"docs/history/v1-install"/(Path(name).parent.name+".md")
+    path=(ROOT/"docs/history/v1-install"/(Path(name).parent.name+".txt")
           if name.startswith("presets/") and name.endswith("/INSTALL.md")
           else ROOT/name)
     if path!=ROOT/name:preserved+=1

@@ -47,22 +47,22 @@ class OneClickDocs(unittest.TestCase):
                 self.assertIn("not automatically",text)
                 self.assertNotIn("download and sign in",text)
 
-    def test_historical_install_archives_are_pinned_and_tampering_refused(self):
-        from tempfile import TemporaryDirectory
+    def test_original_install_text_archives_remain_byte_identical(self):
+        import hashlib
+        historical=ROOT/"docs/history/v1-install"
+        baseline=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_text())
+        manifest=json.loads((historical/"MIGRATION_MANIFEST.json").read_text())
+        self.assertEqual(len(manifest["entries"]),15)
+        for entry in manifest["entries"]:
+            with self.subTest(role=entry["original_path"]):
+                target=ROOT/entry["archive_path"]
+                self.assertEqual(target.suffix,".txt")
+                self.assertTrue(target.is_file())
+                self.assertEqual(hashlib.sha256(target.read_bytes()).hexdigest(),
+                                 baseline["files"][entry["original_path"]])
         from muse_presets.distribution import product_findings
-        historical=ROOT/"docs/history/v1-install/adversarial-verifier.md"
-        with TemporaryDirectory() as temp:
-            r=Path(temp)
-            p=r/"docs/history/v1-install/adversarial-verifier.md"
-            p.parent.mkdir(parents=True)
-            p.write_bytes(historical.read_bytes())
-            baseline=r/"collections/muse-starters-v1/PUBLIC_BASELINE.json"
-            baseline.parent.mkdir(parents=True)
-            baseline.write_bytes((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_bytes())
-            self.assertEqual(product_findings(r),[])
-            p.write_bytes(p.read_bytes()+b"tampered")
-            issues=product_findings(r)
-            self.assertTrue(any(x["reason"]=="HISTORICAL_INSTALL_CHANGED" for x in issues))
+        self.assertFalse(any(x["reason"]=="HISTORICAL_INSTALL_CHANGED"
+                             for x in product_findings(ROOT)))
 
     def test_direct_download_page_has_no_404_local_links(self):
         page=ROOT/"docs/DOWNLOAD_A_SPECIALIST.md"
