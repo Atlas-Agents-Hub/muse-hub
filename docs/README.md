@@ -1,42 +1,33 @@
-# Muse Specialist Toolkit documentation
+# Muse Hub documentation
 
-Find the guide for the task you're doing. The toolkit includes **15 specialist profiles**, **100 task configurations**, **75 developed skills**, **25 workflows**, executable tools, **151 custom connectors**, and Personal Companion's Daily Desk.
+Pick what you want to accomplish. You do not need to understand the repository architecture to begin.
 
-## Start using Muse
+## Set up a Muse assistant
 
-- **[Choose a specialist](handbook/specialists-by-task.md)** — Find the role suited to your task, then open its methods and examples.
-- **[Pick a task configuration](../collections/muse-starters-v1/CATALOG.md)** — Start from one of 100 task-specific configurations.
-- **[Use a skill or workroom](handbook/README.md)** — Set up instructions, context, subchats and saved documents.
-- **[Explore 151 custom connectors](connectors/README.md)** — Find a service, check access requirements and follow its setup instructions.
+- **[Choose one of 15 specialists](DOWNLOAD_A_SPECIALIST.md)** — get its role guide and individual ZIP when v1.1.0 publishes.
+- **[Current published release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest)** — use available v1.0.0 assets now. The 15 ZIPs for v1.1.0 are still a draft.
+- **[First-use and saved data](INSTALL_AND_PERSISTENCE.md)** — configure Main and three subchats, then keep private memory and account credentials outside the repository.
+- **[Use a skill or a subchat](handbook/README.md)** — load the relevant instructions without mixing accounts.
 
-## Run a working tool
+## Find existing capabilities
 
-- **[First-use guide](v1/START_HERE.md)** — Choose between an existing Muse assistant, specialist tools, Daily Desk and connectors.
-- **[Specialist scopes and engines](collection/SPECIALIST_SCOPE_AND_ENGINES.md)** — What each role covers, which engines are included, and how to use them.
-- **[Specialist tools](collection/SPECIALIST_QUICKSTART.md)** — Run real commands and check the resulting files.
-- **[Personal Companion: Daily Desk](spaces/DAILY_DESK.md)** — Create tasks and notes, resolve an edit conflict, export and restore.
-- **[Capabilities by specialist](CAPABILITIES.md)** — See what each source package can execute today.
+- **[Specialists by task](handbook/specialists-by-task.md)** — match a goal to a specialist.
+- **[Skills and workflows](SKILLS.md)** — 75 skills and 25 workflows.
+- **[100 task starters](../collections/muse-starters-v1/CATALOG.md)** — pick a configuration, not another assistant.
+- **[Tools and working engines](CAPABILITIES.md)** — what runs in local source today and what requires external permissions.
+- **[Personal Companion: Daily Desk](spaces/DAILY_DESK.md)** — tasks, notes, conflict detection, and backup/restore.
+- **[Custom connectors — 151 records](connectors/README.md)** — source and setup links, not connected services.
 
-## Install and maintain
+## Extend, test, and maintain
 
-- **[Downloads and release files](RELEASES.md)** — Choose a V1 package, verify its checksum and distinguish earlier versions.
-- **[Installation guide](GITHUB_QUICKSTART.md)** — Clone the repository, run a source check and customize a profile.
-- **[Skills and workflows](SKILLS.md)** — Understand task skills, role procedures and portable exports.
-- **[Connectors and host tools](CONNECTORS.md)** — How service connections differ from local host tools and Family Link.
-- **[Saved data and updates](INSTALL_AND_PERSISTENCE.md)** — Keep personal changes when updating configurations.
-- **[Troubleshoot setup](handbook/README.md)** — Problems with context, skills, workrooms, saved documents or tool activation.
+- **[Developer quickstart](GITHUB_QUICKSTART.md)** — clone, check source, and run local examples.
+- **[Architecture](ARCHITECTURE.md)** — roles, files, host boundaries, and integration scope.
+- **[Source and host limits](handbook/source-and-host-capabilities.md)** — what passing tests actually establish.
+- **[Troubleshoot with the practical handbook](handbook/README.md)** — solve context, subchat, or setup issues.\n- **[Security](SECURITY.md)** — protected memory, permissions, and provider credentials.
+- **[Contributing](../CONTRIBUTING.md)** — reproducible changes and regressions.
+- **[Verify download checksums and release history](RELEASES.md)** — distinguish public assets from staged drafts.
+- **[Muse Hub scope](../hub/README.md)** — how the wider Hub grows within this repository.
 
-## Verify and extend
+## Machine-readable information
 
-- **[Architecture](ARCHITECTURE.md)** — Component boundaries, where tools run and how roles share source infrastructure.
-- **[Source and host capabilities](handbook/source-and-host-capabilities.md)** — What a successful local test proves.
-- **[Source integrity and evidence](EVIDENCE_LEDGER.md)** — Trace results to code, tests and supporting records.
-- **[Security](SECURITY.md)** — Files, credentials, provider permissions and safe execution.
-- **[Contribute](../CONTRIBUTING.md)** — Make changes, run checks and submit a reviewed pull request.
-- **[Documentation standards](handbook/EDITORIAL_STANDARDS.md)**: Keep examples, claims and navigation precise.
-
-## For AI agents and search tools
-
-Use the [AI-agent guide](discovery/AI_AGENT_GUIDE.md) to select a capability by task. The [machine-readable capability index](discovery/agent-capabilities.json) records counts, requirements and entry points. [llms.txt](../llms.txt) links to the same sources as plain text. Published V1 assets are listed on [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0).
-
-The older 50 role/shared procedures overlap the 75 developed task skills. Configuration choices are not additional live assistant identities. The capability guide gives the exact executable scope of each role.
+The [AI-agent discovery guide](discovery/AI_AGENT_GUIDE.md), [capability index](discovery/agent-capabilities.json), and [llms.txt](../llms.txt) use the same source inventory. The legacy source labels in archived kits remain historical evidence, not the current product name.

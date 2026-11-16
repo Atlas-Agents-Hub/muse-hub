@@ -26,6 +26,7 @@ class OneClickDocs(unittest.TestCase):
                 self.assertIn("three subchats",install)
                 self.assertNotIn("This public starter",install)
                 self.assertNotIn("The source wrapper delegates",install)
+                self.assertIn("draft",install.lower())
                 self.assertLess(len(install.splitlines()),47)
         self.assertEqual(downloads.count("-v1.1.0.zip"),15)
 
@@ -33,7 +34,7 @@ class OneClickDocs(unittest.TestCase):
         readme=(ROOT/"README.md").read_text()
         self.assertIn("docs/DOWNLOAD_A_SPECIALIST.md",readme[:750])
         release=(ROOT/"docs/RELEASES.md").read_text()
-        self.assertIn("## Individual Muse assistants ? v1.1.0",release[:600])
+        self.assertIn("## v1.1.0 — pending publication",release)
         self.assertIn("v1.0.0",release)
         self.assertIn("v0.4.1-alpha",release)
         self.assertIn("SHA256SUMS.txt",release)

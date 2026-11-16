@@ -1,17 +1,21 @@
 # Adversarial Verifier
 
-Organize defensive checks, record failures and review evidence.
+**Muse Hub specialist:** Challenge authorized releases with negative controls and reproducible evidence.
 
-## Use the profile
+**[Set up Adversarial Verifier](INSTALL.md)** — one dedicated Muse assistant, its Main documents and three subchats. The 15 roles are not combined into one shared Muse account.
 
-This public package provides editable instructions and working methods. It is not a separately packaged executable tool. Read [Capabilities](../../docs/CAPABILITIES.md) for the exact distinction.
+## First task
 
-## Customize the profile
+"Review this proposed release for failure modes, unsafe effects, and missing tests."
 
-Use [the setup guide](INSTALL.md) to create a separate working copy, then edit its instructions and preferences. Generated skills and connectors remain disabled until you configure an integration.
+## Methods, skills, and local tools
 
-## Limits
+This role has a broader working scope than any single command-line demo. [Read the verified scope and engine guide](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) or [compare source-backed capabilities](../../docs/CAPABILITIES.md).
 
-The public starter contains review instructions, not an autonomous security-testing service. No native Muse installation is performed.
+The current public source release is [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). An individual v1.1.0 assistant ZIP is staged as a draft and is not yet a public download. [See release status](../../docs/RELEASES.md).
 
-[Installation and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
+## Privacy and runtime
+
+Profile documents are editable source, not loaded native Muse instructions or verified model sessions. Local tools require their own runtime and permissions. Keep personal memory and credentials outside public GitHub. Any connections to other assistants or services require separate authorization.
+
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Muse Hub product scope](../../hub/README.md)

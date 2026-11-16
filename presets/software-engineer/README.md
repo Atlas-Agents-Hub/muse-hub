@@ -1,23 +1,21 @@
 # Software Engineer
 
-Reproduce bugs, apply reviewed patches and check the results in disposable Git repositories.
+**Muse Hub specialist:** Reproduce a software defect and verify the fix.
 
-## Run the tool
+**[Set up Software Engineer](INSTALL.md)** — one dedicated Muse assistant, its Main documents and three subchats. The 15 roles are not combined into one shared Muse account.
 
-[Download the executable kit](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/software-engineer-executable-v0.4.1-alpha.zip) and its [checksum list](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt). Extract into a new folder and follow the included start guide.
+## First task
 
-From the repository root:
+"Investigate this failing test, isolate the cause, and specify a regression check."
 
-```bash
-PYTHONPATH=src python3 -B examples/software_engineer_workflow_demo.py
-```
+## Methods, skills, and local tools
 
-## Customize the profile
+This role has a broader working scope than any single command-line demo. [Read the verified scope and engine guide](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) or [compare source-backed capabilities](../../docs/CAPABILITIES.md).
 
-Use [the setup guide](INSTALL.md) to create a separate working copy, then edit its instructions and preferences. Generated skills and connectors remain disabled until you configure an integration.
+The current public source release is [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). An individual v1.1.0 assistant ZIP is staged as a draft and is not yet a public download. [See release status](../../docs/RELEASES.md).
 
-## Limits
+## Privacy and runtime
 
-Reviewed code runs under your operating-system account, not in a sandbox. Production TaskGuard and retention guarantees require separate acceptance. No native Muse installation is performed.
+Profile documents are editable source, not loaded native Muse instructions or verified model sessions. Local tools require their own runtime and permissions. Keep personal memory and credentials outside public GitHub. Any connections to other assistants or services require separate authorization.
 
-[Installation and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Muse Hub product scope](../../hub/README.md)

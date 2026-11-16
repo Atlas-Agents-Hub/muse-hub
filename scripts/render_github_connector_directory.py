@@ -89,7 +89,9 @@ def render() -> dict[str, bytes]:
         "",
     ]
     homepage = [
-        "# 150+ Custom Connectors for Muse",
+        "# Muse Hub connector directory — 151 records",
+        "",
+        "Browse source records and original setup instructions. Listing a connector here does not install it, authenticate an account, grant access, or establish native Muse tool availability.",
         "",
         "## Connect a service",
         "",
@@ -135,7 +137,7 @@ def render() -> dict[str, bytes]:
         "Connector information is adapted from the MIT-licensed [muse-connectors](https://github.com/bluman1/muse-connectors) project.",
         "See the [upstream license](UPSTREAM_LICENSE.txt) and [pinned source record](PROVENANCE.json).",
         "",
-        "[Back to Muse Specialist Toolkit](../../README.md) · [All connector categories](CATALOG.md)",
+        "[Back to Muse Hub](../../README.md) · [All connector categories](CATALOG.md)",
         "",
     ])
     catalog.extend(["", "---", ""])

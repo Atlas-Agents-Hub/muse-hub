@@ -1,8 +1,10 @@
 # Installation and saved data
 
-## The easiest way: download one specialist ZIP
+## Start with one Muse assistant
 
-[Choose your Muse specialist](DOWNLOAD_A_SPECIALIST.md). Download its ZIP, unzip it, open START_HERE.md, then set up Main and the three subchats inside a dedicated Muse assistant. No Python or Git is needed for that setup. Downloading does not install an account or connect tools automatically; use Muse's own setup and permission controls.
+[Choose a Muse specialist](DOWNLOAD_A_SPECIALIST.md) and read its role guide. Each specialist is intended for a separate Muse assistant with its own Main and three subchats. **v1.1.0 individual ZIPs are currently a draft and not public downloads.** The [current published v1.0.0 source toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) remains available.
+
+For a published individual ZIP: download it, verify the checksum, unzip it, and follow `START_HERE.md`. Basic Muse profile setup needs no Python. Optional local programs and third-party service integrations require their own permissions and runtime. Downloading never creates an assistant or signs into a provider.
 
 ## For developers: older source and tool setup
 
@@ -13,7 +15,7 @@ The earlier [v0.4.1-alpha](RELEASES.md#v041-alpha--eight-runnable-tools-and-elev
 
 ## Use the V1 specialist collection
 
-Download `muse-specialist-collection-v1.0.0.zip` from the [current release](RELEASES.md), compare its SHA-256 with the release checksum index, and extract it into a new directory. Follow the included `START_HERE.md` and select the specialist kit or starter you need. The GitHub source checkout also supports `python -B tools/muse_collection.py check` with Python 3.12+.
+Download `muse-specialist-collection-v1.0.0.zip` from the [published v1.0.0 release](RELEASES.md), compare its SHA-256 with the release checksum index, and extract it into a new directory. Follow the included `START_HERE.md` and select the specialist kit or starter you need. The GitHub source checkout also supports `python -B tools/muse_collection.py check` with Python 3.12+.
 
 ## Run a downloaded tool
 

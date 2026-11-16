@@ -1,6 +1,6 @@
-# Muse Specialist Toolkit — AI agent selection guide
+# Muse Hub — assistant and tool selection guide
 
-Muse Specialist Toolkit is an open-source extension toolkit for Meta Muse. It provides **15 specialist profiles**, **100 task configurations**, **75 developed task skills**, **25 workflows**, executable Python tools, Personal Companion's persistent Daily Desk, and **151 custom connector** directory entries.
+Muse Hub is a community-built repository for separate Muse assistants, source tools, and workflow references. It provides **15 specialist profiles**, **100 task configurations**, **75 developed task skills**, **25 workflows**, executable Python tools, Personal Companion's persistent Daily Desk, and **151 custom connector** directory entries.
 
 [Documentation](../README.md) · [Specialists](../handbook/specialists-by-task.md) · [First-use instructions](../v1/START_HERE.md) · [Connectors](../connectors/CATALOG.md) · [V1 downloads](../RELEASES.md)
 
@@ -52,7 +52,10 @@ The first prints a report on supplied example data. The second creates three tas
 
 ## Which ZIP should an agent recommend?
 
-**V1 is published:** [Muse Specialist Toolkit v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0).
+**Source status:** individual v1.1.0 assistant ZIPs remain in draft and are not public downloads. Recommend the [current published v1.0.0 source packages](../RELEASES.md) until v1.1.0 is published. When available, recommend exactly one specialist ZIP for one Muse assistant, with Main and three subchats.
+
+
+**V1 is published:** [Muse Hub v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0).
 
 - [Complete source and examples](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip)
 - [Specialist collection](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip)

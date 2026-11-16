@@ -1,33 +1,18 @@
-# Downloads and versions
+# Muse Hub downloads and versions
 
-## Individual Muse assistants ? v1.1.0
+**Current published release:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). **Latest published version:** [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest).
 
-Pick a specialist and download its ZIP. Every download is a complete set of files for one Muse assistant: Main, three subchats, skills and workflows. **No Python is required for assistant setup.** The optional local utilities can be run separately.
+**Individual specialist ZIPs: v1.1.0 is still a draft.** All 15 packages and a checksum index have been staged for review, but direct download links under `releases/download/v1.1.0/` will not work until the release is published. Do not present them as available now.
 
-**[Choose a specialist ZIP](DOWNLOAD_A_SPECIALIST.md)** ? **[Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS.txt)**
+[Choose an assistant](DOWNLOAD_A_SPECIALIST.md) · [Set up Main and three subchats](INSTALL_AND_PERSISTENCE.md) · [Muse Hub scope](../hub/README.md)
 
-Direct downloads:
-- [Coordinator](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-coordinator-v1.1.0.zip)
-- [Software Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-software-engineer-v1.1.0.zip)
-- [Model Builder](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-model-builder-v1.1.0.zip)
-- [Research Evaluator](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-research-evaluator-v1.1.0.zip)
-- [Creative Studio](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-creative-studio-v1.1.0.zip)
-- [Adversarial Verifier](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-adversarial-verifier-v1.1.0.zip)
-- [Personal Companion](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-personal-companion-v1.1.0.zip)
-- [Garden Companion](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-garden-companion-v1.1.0.zip)
-- [Learning Coach](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-learning-coach-v1.1.0.zip)
-- [Claims Adjudicator](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-claims-adjudicator-v1.1.0.zip)
-- [Reverse Engineering & Security Researcher](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-reverse-engineering-researcher-v1.1.0.zip)
-- [Data Engineering & Database Architect](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-data-engineer-v1.1.0.zip)
-- [Infrastructure & Reliability Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-reliability-engineer-v1.1.0.zip)
-- [Automation Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-automation-engineer-v1.1.0.zip)
-- [Product & Interface Designer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-product-interface-designer-v1.1.0.zip)
+## v1.1.0 — pending publication
 
-These packages are intended for separate Muse assistants, not fifteen roles inside one shared account. The ZIPs do not automatically create Muse accounts, register native tools, or connect services.
+Each ZIP is intended to contain a separate Muse assistant home: Main instructions, three subchat profiles, selected skills and workflows. A ZIP is not a created Muse account, active connector, or installed native tool. Use the [15-role index](DOWNLOAD_A_SPECIALIST.md) for the exact filenames and links once the release becomes public. Use `SHA256SUMS.txt` to verify downloaded files.
 
-### Previous: v1.0.0 toolkit
+## Current published source
 
-## Muse Specialist Toolkit v1.0.0
+## Muse Hub v1.0.0 (originally released as Muse Specialist Toolkit)
 
 The V1 source covers 15 specialists, 100 task starters, 75 developed skills, 25 workflows and 151 connector records. The 50 original role/shared procedures remain available and overlap the developed skills.
 

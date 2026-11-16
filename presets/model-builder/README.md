@@ -1,17 +1,21 @@
 # Model Builder
 
-Run small-model training examples and compare development and held-out results.
+**Muse Hub specialist:** Plan model training, artifact inspection, and evaluation.
 
-## Run the tool
+**[Set up Model Builder](INSTALL.md)** — one dedicated Muse assistant, its Main documents and three subchats. The 15 roles are not combined into one shared Muse account.
 
-[Download the executable kit](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/model-builder-executable-v0.4.1-alpha.zip) and its [checksum list](https://github.com/sethburkhardt21-dev/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt). Extract into a new folder and follow the included start guide.
+## First task
 
-## Customize the profile
+"Compare these model candidates and define a held-out evaluation plan."
 
-Use [the setup guide](INSTALL.md) to create a separate working copy, then edit its instructions and preferences. Generated skills and connectors remain disabled until you configure an integration.
+## Methods, skills, and local tools
 
-## Limits
+This role has a broader working scope than any single command-line demo. [Read the verified scope and engine guide](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) or [compare source-backed capabilities](../../docs/CAPABILITIES.md).
 
-These examples do not train large language models or provide a GPU training service. No native Muse installation is performed.
+The current public source release is [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). An individual v1.1.0 assistant ZIP is staged as a draft and is not yet a public download. [See release status](../../docs/RELEASES.md).
 
-[Installation and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
+## Privacy and runtime
+
+Profile documents are editable source, not loaded native Muse instructions or verified model sessions. Local tools require their own runtime and permissions. Keep personal memory and credentials outside public GitHub. Any connections to other assistants or services require separate authorization.
+
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Muse Hub product scope](../../hub/README.md)

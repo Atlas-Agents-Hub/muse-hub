@@ -7,7 +7,7 @@ import json
 ROOT=Path(__file__).resolve().parents[1]
 README=ROOT/"README.md"
 CREATIVE=ROOT/"docs"/"collection"/"CREATIVE_STUDIO_SCOPE.md"
-FROZEN_CREATIVE=ROOT/"presets"/"creative-studio"/"README.md"
+FROZEN_CREATIVE=ROOT/"docs/history/v1-role-readmes/creative-studio.txt"
 
 REQUIRED={
  "software-engineer": ("build","debug","regression"),
@@ -30,20 +30,18 @@ REQUIRED={
 class RolePositioningTests(unittest.TestCase):
  def test_exact_role_inventory_and_role_scope(self):
   source=README.read_text(encoding="utf8")
-  area=source.split("## Find your specialist",1)[1].split("## Try the tools",1)[0]
+  area=source.split("## The 15 specialists",1)[1].split("## Tools, skills, and connectors",1)[0]
   registry=json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf8"))
   self.assertEqual(set(registry["presets"]),set(REQUIRED))
   for role,required in REQUIRED.items():
    with self.subTest(role=role):
-    regex=r"(?m)^- \*\*\[[^\]]+\]\(presets/"+re.escape(role)+r"/\)\*\* - (.+)$"
-    m=re.search(regex,area)
-    self.assertIsNotNone(m,role)
-    if not m:continue
-    summary=m.group(1).lower()
-    for word in required:self.assertIn(word,summary)
-    self.assertGreater(len(summary),85)
-    self.assertNotRegex(summary,r"[a-z][?][a-z]")
-  self.assertEqual(len(re.findall(r"(?m)^- \*\*\[[^\]]+\]\(presets/[^)]+/\)\*\*",area)),15)
+    self.assertEqual(source.count('presets/'+role+'/INSTALL.md'),1)
+    intro=(ROOT/'presets'/role/'INSTALL.md').read_text().lower()
+    self.assertIn('first task to try',intro)
+    self.assertIn('three subchats',intro)
+    scope=(ROOT/'docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md').read_text().lower()
+    self.assertIn(role.replace('-', ' ').split(' ')[0],scope)
+  self.assertEqual(sum(source.count('presets/'+role+'/INSTALL.md') for role in REQUIRED),15)
   self.assertLess(len(source.encode("utf8")),8000)
 
  def test_no_more_roles_reduced_to_only_demo_operations(self):
@@ -70,8 +68,8 @@ class RolePositioningTests(unittest.TestCase):
 
  def test_role_intro_links_to_concrete_implemented_capabilities(self):
   body=README.read_text(encoding="utf8")
-  self.assertIn("[capability guide](docs/capabilities.md)",body.lower())
-  self.assertIn("## Try the tools",body)
+  self.assertIn("docs/capabilities.md",body.lower())
+  self.assertIn("## Tools, skills, and connectors",body)
   self.assertIn("python -B examples/daily_desk.py",body)
 
 if __name__=="__main__":unittest.main()

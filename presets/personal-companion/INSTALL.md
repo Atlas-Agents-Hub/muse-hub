@@ -1,25 +1,31 @@
-# Download Personal Companion
+# Personal Companion | Muse Hub
 
-**[Download Personal Companion ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-personal-companion-v1.1.0.zip)** ? [Verify download](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS.txt)
+Organize tasks, notes, preferences, and routines privately.
 
-No Python is needed to set up the assistant.
+**Current published source:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0) · **Individual assistant ZIP:** [v1.1.0 draft](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-personal-companion-v1.1.0.zip) (not yet a public download).
 
-## Set it up in Muse
+## Set up this assistant
 
-1. Download the ZIP and unzip it.
-2. Create **one separate Muse assistant** for Personal Companion. Don't add all 15 specialists to one assistant.
-3. Start in Main. Use the files named in START_HERE.md as its instructions and documents.
-4. Set up its **three subchats** inside that assistant. Each has its own instructions, context, tools and memory files.
-5. Try the first example request in START_HERE.md. Add extra skills or local tools only as needed.
+1. Choose a **separate Muse assistant** for Personal Companion. Don't combine multiple specialists in one account.
+2. When v1.1.0 is published, download the individual ZIP and open its `START_HERE.md`.
+3. Start in **Main** with the supplied identity and instruction documents.
+4. Set up its **three subchats** inside this same assistant. Each subchat has its own instructions, user context, tools, and memory files.
+5. Keep credentials and personal memory outside public GitHub. Any service connection must be authorized separately.
 
-Each ZIP contains the Main profile, subchats, role-specific skills, workflows and any optional bundled utilities. It does **not automatically** create an account, create subchats, connect apps or grant permissions.
+**First task to try:** "Help me plan today and identify what needs follow-up."
 
-## Need more detail?
+No Python is needed to set up the assistant. For the **current published v1.0.0 source release**, follow [the source setup guide](../../docs/GITHUB_QUICKSTART.md) instead of assuming the draft ZIP is already available.
 
-- [Pick another specialist](../../docs/DOWNLOAD_A_SPECIALIST.md)
-- [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
-- [Build from source ? for developers](../../docs/GITHUB_QUICKSTART.md)
+## Optional source tools
+
+For a development copy, use the reviewed [source generator](../../examples/github_quickstart.py) (`examples/github_quickstart.py`) and the [developer setup guide](../../docs/GITHUB_QUICKSTART.md). These require a trusted source checkout, not a preconfigured Muse account.
+
+See [this specialist's capability scope](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [the local tool guide](../../docs/CAPABILITIES.md). Local scripts run under the computer's permissions; they are not native Muse registrations.
 
 Source role ID: `personal-companion`.
 
-The original source command is in [examples/github_quickstart.py](../../examples/github_quickstart.py) if you want to generate or customize a development copy. You don't need it for the ZIP.
+## More help
+
+[Choose another specialist](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Saved data and updates](../../docs/INSTALL_AND_PERSISTENCE.md) · [Muse Hub product scope](../../hub/README.md)
+
+Downloading a ZIP or copying a profile does **not automatically** create a Muse account or subchat, grant tool access, or connect external services.

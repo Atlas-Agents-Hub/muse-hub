@@ -1,23 +1,21 @@
 # Research Evaluator
 
-Check quotations against source text and score supplied held-out predictions.
+**Muse Hub specialist:** Compare research claims against original sources and numerical evidence.
 
-## Use the profile
+**[Set up Research Evaluator](INSTALL.md)** — one dedicated Muse assistant, its Main documents and three subchats. The 15 roles are not combined into one shared Muse account.
 
-This public package provides editable instructions and working methods. It is not a separately packaged executable tool. The complete toolkit includes the local example `examples/research_evaluator_demo.py`. Read [Capabilities](../../docs/CAPABILITIES.md) for the exact distinction.
+## First task
 
-From the repository root:
+"Assess this claim, identify the strongest evidence, and record uncertainty."
 
-```bash
-PYTHONPATH=src python3 -B examples/research_evaluator_demo.py
-```
+## Methods, skills, and local tools
 
-## Customize the profile
+This role has a broader working scope than any single command-line demo. [Read the verified scope and engine guide](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) or [compare source-backed capabilities](../../docs/CAPABILITIES.md).
 
-Use [the setup guide](INSTALL.md) to create a separate working copy, then edit its instructions and preferences. Generated skills and connectors remain disabled until you configure an integration.
+The current public source release is [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). An individual v1.1.0 assistant ZIP is staged as a draft and is not yet a public download. [See release status](../../docs/RELEASES.md).
 
-## Limits
+## Privacy and runtime
 
-A matching quotation or metric does not establish scientific truth or independently authenticate the supplied labels. No native Muse installation is performed.
+Profile documents are editable source, not loaded native Muse instructions or verified model sessions. Local tools require their own runtime and permissions. Keep personal memory and credentials outside public GitHub. Any connections to other assistants or services require separate authorization.
 
-[Installation and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Muse Hub product scope](../../hub/README.md)

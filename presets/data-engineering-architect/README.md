@@ -1,17 +1,21 @@
 # Data Engineering & Database Architect
 
-Profiles local datasets, validates schema and identity risks, and plans reversible data changes without production writes.
+**Muse Hub specialist:** Profile data, check schemas, and plan safe migrations.
 
-**Grade:** editable starter role, not a registered native Muse assistant. The offline engine runs separately.
+**[Set up Data Engineering & Database Architect](INSTALL.md)** — one dedicated Muse assistant, its Main documents and three subchats. The 15 roles are not combined into one shared Muse account.
 
-## Role methods
+## First task
 
-- **profile-dataset** — A local CSV or table needs a quality assessment.
-- **validate-schema** — An ingestion contract needs deterministic schema checks.
-- **plan-migration** — A schema change impacts data consumers.
+"Review this schema change for compatibility and data quality risks."
 
-## First result
+## Methods, skills, and local tools
 
-From the cloned repository with Python 3.12+, set `PYTHONPATH=src` and run `python -B examples/specialist_engine_demo.py --role data-engineering-architect`. This analyzes fictional input only. To make a new unbound profile run `python -B examples/github_quickstart.py --role data-engineering-architect --to "$HOME/new-data-engineering-architect"`.
+This role has a broader working scope than any single command-line demo. [Read the verified scope and engine guide](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) or [compare source-backed capabilities](../../docs/CAPABILITIES.md).
 
-See [installation](INSTALL.md), [capabilities](../../docs/CAPABILITIES.md) and [method contract](playbook.json). Real native Muse installation remains separate.
+The current public source release is [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). An individual v1.1.0 assistant ZIP is staged as a draft and is not yet a public download. [See release status](../../docs/RELEASES.md).
+
+## Privacy and runtime
+
+Profile documents are editable source, not loaded native Muse instructions or verified model sessions. Local tools require their own runtime and permissions. Keep personal memory and credentials outside public GitHub. Any connections to other assistants or services require separate authorization.
+
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Muse Hub product scope](../../hub/README.md)

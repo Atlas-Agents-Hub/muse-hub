@@ -14,7 +14,7 @@ from .neutrality import audit_public_tree
 SCHEMA="r46/public-source-snapshot-v1"
 PUBLIC_DIRS=frozenset({
     ".github", "docs", "examples", "presets", "scripts",
-    "services", "src", "templates", "tests", "skills", "collections", "tools",
+    "services", "src", "templates", "tests", "skills", "collections", "tools", "hub",
 })
 PUBLIC_ROOT_FILES=frozenset({
     ".gitattributes", ".gitignore", "CHANGELOG.md",
@@ -57,7 +57,7 @@ SENSITIVE_SUFFIX=frozenset({
     ".log",".bak",".backup",".tar",".gz",".7z",
 })
 MAX_FILE_BYTES=2_000_000
-MAX_FILES=800  # Reviewed 75-skill collection closure; finite source budget retained.
+MAX_FILES=840  # Bounded capacity for reviewed Muse Hub docs and archived role pages.
 MAX_TOTAL_BYTES=20_000_000
 
 class PublicExportError(ValueError):
@@ -146,7 +146,8 @@ def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
                 continue
             name=relative.as_posix()
             if ((entry.name=="collections" and not name.startswith("collections/muse-starters-v1/"))
-                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py"})):
+                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py"})
+                or (entry.name=="hub" and name != "hub/README.md")):
                 raise PublicExportError("UNAPPROVED_COLLECTION_PATH")
             if name in PRIVATE_EXCLUDED_TESTS:
                 continue

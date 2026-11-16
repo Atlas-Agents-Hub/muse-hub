@@ -43,16 +43,38 @@ class CollectionPromotion(unittest.TestCase):
   p=json.loads((C/'PUBLIC_BASELINE.json').read_bytes())
   self.assertEqual(p['source_commit'],'b75ef3091b8195dbbc090a8ab308c9d9130fd585')
   self.assertEqual(len(p['files']),198)
+  archived=0
   for name,expected in p['files'].items():
-   with self.subTest(path=name):self.assertEqual(hashlib.sha256((R/name).read_bytes()).hexdigest(),expected)
+   with self.subTest(path=name):
+    if name.startswith('presets/') and name.endswith('/INSTALL.md'):
+     path=R/'docs/history/v1-install'/(pathlib.Path(name).parent.name+'.txt')
+     archived+=1
+    elif name.startswith('presets/') and name.endswith('/README.md'):
+     path=R/'docs/history/v1-role-readmes'/(pathlib.Path(name).parent.name+'.txt')
+     archived+=1
+    else:path=R/name
+    self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),expected)
+  self.assertEqual(archived,30)
+  for archive,count in [('v1-install',15),('v1-role-readmes',15)]:
+   history=json.loads((R/'docs/history'/archive/'MIGRATION_MANIFEST.json').read_text())
+   self.assertEqual(len(history['entries']),count)
+   for entry in history['entries']:
+    self.assertEqual(hashlib.sha256((R/entry['archive_path']).read_bytes()).hexdigest(),
+                     p['files'][entry['original_path']])
  def test_public_projection_has_closed_origin_and_no_private_ledger(self):
   x=json.loads((C/'PROMOTION_PROVENANCE.json').read_bytes())
   self.assertEqual(x['source_kind'],'OWNER_AUTHORIZED_FIRST_PARTY')
   self.assertFalse(x['private_history_included']);self.assertFalse(x['upstream_code_imported'])
   self.assertTrue(x['incoming_files'])
+  preserved=0
   for name,row in x['incoming_files'].items():
-   self.assertEqual(hashlib.sha256((R/name).read_bytes()).hexdigest(),row['sha256'])
+   path=(R/'docs/history/promotion-source/SPECIALIST_QUICKSTART.txt'
+         if name=='docs/collection/SPECIALIST_QUICKSTART.md' else R/name)
+   if path!=R/name:preserved+=1
+   self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),row['sha256'])
    self.assertIn(row['rights'],('PROJECT_MIT_ORIGINAL','REFERENCE_ONLY_PUBLIC_SOURCE_METADATA'))
+  self.assertEqual(preserved,1)
+  self.assertTrue((R/'docs/collection/SPECIALIST_QUICKSTART.md').is_file())
   self.assertNotIn('private_repository',x)
  def test_invalid_origin_and_false_native_badges_are_rejected(self):
   tool=load_tool();d=tool.load_collection()

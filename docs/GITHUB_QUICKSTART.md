@@ -1,9 +1,11 @@
-# Get started
+# Muse Hub — get started from source
 
-**Want a complete Muse specialist without commands?** [Download an individual specialist ZIP](DOWNLOAD_A_SPECIALIST.md). This page is for advanced source and development workflows.
+**Muse Hub developer setup.** If you only want to configure an assistant, start with the [15 role guides](DOWNLOAD_A_SPECIALIST.md). The 15 complete v1.1.0 ZIPs are still in draft; the published v1.0.0 source and older examples remain available. The project includes 75 skills, 25 workflows, 100 starters, and 151 connector records. See the [documentation index](README.md) for tasks.
+
+The commands below are for source checkout and local tools; they do not create native Muse agents or connect accounts.
 
 
-**Muse Specialist Toolkit v1.0.0** includes 15 specialist profiles, 100 task starters, 75 developed skills, 25 workflows, Daily Desk and a directory of 151 custom connectors.
+**The published v1.0.0 source** includes 15 specialist profiles, 100 task starters, 75 developed skills, 25 workflows, Daily Desk and a directory of 151 custom connectors.
 
 Choose a guide from the [documentation index](README.md) or follow the [four first-use routes](v1/START_HERE.md). Local examples use Python 3.12+ and do not require a paid API. External accounts are not connected by default.
 
@@ -34,6 +36,8 @@ These commands also work in Windows PowerShell. The destination must be a new ab
 The demo creates production JSON, a shot-list CSV and a textual HTML storyboard from a fictional brief. It does not render a movie or connect to a model provider. A starter profile is not a model-backed autonomous assistant.
 
 ## Clone and verify the current source
+
+The [source-based assistant generator](../examples/github_quickstart.py) (`examples/github_quickstart.py`) creates editable files in a new directory; it does not install a native Muse assistant.
 
 Clone the source from GitHub using Python 3.12+ and Git. Run the commands below in bash or Windows PowerShell; use `python3` on macOS/Linux if that is your installed command.
 
