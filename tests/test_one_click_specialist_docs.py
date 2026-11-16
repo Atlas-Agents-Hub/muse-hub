@@ -10,16 +10,16 @@ ALIAS={"data-engineering-architect":"data-engineer",
 
 class OneClickDocs(unittest.TestCase):
     def test_every_specialist_has_one_actual_named_zip_asset_link(self):
-        catalog=json.loads((ROOT/"presets/catalog.json").read_text())
+        catalog=json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf-8"))
         roles=catalog["presets"]
         self.assertEqual(len(roles),15)
-        downloads=(ROOT/"docs/DOWNLOAD_A_SPECIALIST.md").read_text()
+        downloads=(ROOT/"docs/DOWNLOAD_A_SPECIALIST.md").read_text(encoding="utf-8")
         self.assertIn("one muse assistant",downloads.lower())
         for role in roles:
             asset="muse-"+ALIAS.get(role,role)+"-v1.1.0.zip"
             link=RELEASE+asset
             with self.subTest(role=role):
-                install=(ROOT/"presets"/role/"INSTALL.md").read_text()
+                install=(ROOT/"presets"/role/"INSTALL.md").read_text(encoding="utf-8")
                 self.assertIn(link,install)
                 self.assertIn(link,downloads)
                 self.assertIn("No Python",install)
@@ -31,18 +31,18 @@ class OneClickDocs(unittest.TestCase):
         self.assertEqual(downloads.count("-v1.1.0.zip"),15)
 
     def test_readme_and_release_make_downloads_primary(self):
-        readme=(ROOT/"README.md").read_text()
+        readme=(ROOT/"README.md").read_text(encoding="utf-8")
         self.assertIn("docs/DOWNLOAD_A_SPECIALIST.md",readme[:750])
-        release=(ROOT/"docs/RELEASES.md").read_text()
+        release=(ROOT/"docs/RELEASES.md").read_text(encoding="utf-8")
         self.assertIn("## v1.1.0 — pending publication",release)
         self.assertIn("v1.0.0",release)
         self.assertIn("v0.4.1-alpha",release)
         self.assertIn("SHA256SUMS.txt",release)
 
     def test_role_packages_do_not_claim_account_or_tool_activation(self):
-        catalog=json.loads((ROOT/"presets/catalog.json").read_text())
+        catalog=json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf-8"))
         for role in catalog["presets"]:
-            text=(ROOT/"presets"/role/"INSTALL.md").read_text().lower()
+            text=(ROOT/"presets"/role/"INSTALL.md").read_text(encoding="utf-8").lower()
             with self.subTest(role=role):
                 self.assertIn("separate muse assistant",text)
                 self.assertIn("not automatically",text)
@@ -51,8 +51,8 @@ class OneClickDocs(unittest.TestCase):
     def test_original_install_text_archives_remain_byte_identical(self):
         import hashlib
         historical=ROOT/"docs/history/v1-install"
-        baseline=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_text())
-        manifest=json.loads((historical/"MIGRATION_MANIFEST.json").read_text())
+        baseline=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_text(encoding="utf-8"))
+        manifest=json.loads((historical/"MIGRATION_MANIFEST.json").read_text(encoding="utf-8"))
         self.assertEqual(len(manifest["entries"]),15)
         for entry in manifest["entries"]:
             with self.subTest(role=entry["original_path"]):
@@ -67,6 +67,6 @@ class OneClickDocs(unittest.TestCase):
 
     def test_direct_download_page_has_no_404_local_links(self):
         page=ROOT/"docs/DOWNLOAD_A_SPECIALIST.md"
-        for path in re.findall(r"\]\(([^)#]+)(?:#[^)]+)?\)",page.read_text()):
+        for path in re.findall(r"\]\(([^)#]+)(?:#[^)]+)?\)",page.read_text(encoding="utf-8")):
             if "://" in path or path.startswith("#"):continue
             self.assertTrue((page.parent/path).exists(),path)
