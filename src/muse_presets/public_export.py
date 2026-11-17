@@ -172,7 +172,7 @@ def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
                 continue
             name=relative.as_posix()
             if ((entry.name=="collections" and not name.startswith("collections/muse-starters-v1/"))
-                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py"})
+                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py", "tools/hub_journeys.py"})
                 or (entry.name=="hub" and name not in PUBLIC_HUB_FILES)
                 or (entry.name=="kits" and name not in PUBLIC_KITS_FILES)):
                 raise PublicExportError("UNAPPROVED_COLLECTION_PATH")

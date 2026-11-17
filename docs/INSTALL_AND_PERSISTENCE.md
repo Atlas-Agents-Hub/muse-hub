@@ -1,5 +1,7 @@
 # Installation and saved data
 
+For a read-only H00–H21 first-use, health, failure and recovery plan covering all 15 specialists, see the [H19 installation and recovery journeys](handbook/hub-setup-journeys.md). The journey checker never installs a native Muse assistant or invokes a connected provider.
+
 ## Start with one Muse assistant
 
 [Choose a Muse specialist](DOWNLOAD_A_SPECIALIST.md) and read its role guide. Each specialist is intended for a separate Muse assistant with its own Main and three subchats. **v1.1.0 individual ZIPs are currently a draft and not public downloads.** The [current published v1.0.0 source toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) remains available.
