@@ -22,7 +22,10 @@ class MuseHubOverlay(unittest.TestCase):
         self.assertEqual(self.html.count('class="role-card"'), 15)
         self.assertIn('href="public/index.html"', self.html)
         self.assertIn('href="../index.html"', self.explore)
-        self.assertNotIn('/kits/', self.html)
+        # The old Atlas Origins /kits/ destination must not be linked.
+        # New first-party Muse Hub engineering kits are legitimate.
+        self.assertNotIn("atlas-origins.github.io/kits/", self.html)
+        self.assertNotIn('href="/kits/"', self.html)
 
     def test_role_specific_setup_from_canonical_fifteen(self):
         roles = json.loads((SITE/'roles.json').read_text('utf8'))['roles']
