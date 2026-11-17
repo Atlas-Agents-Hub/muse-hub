@@ -1,6 +1,6 @@
-# Start here — Muse Specialist Toolkit
+# Muse Hub — first use
 
-**Your Muse. Your Specialists. Your Possibilities.**
+**Muse Hub setup:** [choose a specialist](../DOWNLOAD_A_SPECIALIST.md), give it its own Muse assistant, then configure its Main and three subchats. Individual v1.1.0 ZIPs are a draft; v1.0.0 remains the current published source release. The local source and tool steps below still apply to development workflows.
 
 Choose a specialist configuration, run a Python tool, open Daily Desk or find a custom connector. Each section below has a command or a setup guide.
 
@@ -23,7 +23,9 @@ python -B quickstart.py --all
 python -B examples/export_portable_skills.py --plan
 ```
 
-To see the wider work each role supports and the bundled engines, see [Specialist scopes and engines](../collection/SPECIALIST_SCOPE_AND_ENGINES.md).\n\nRead the exported playbook or SKILL.md files and apply the relevant instructions through your Muse's supported customization flow. The source exporter does not sign in, install native agents or change live account settings.
+To see the wider work each role supports and the bundled engines, see [Specialist scopes and engines](../collection/SPECIALIST_SCOPE_AND_ENGINES.md).
+
+Read the exported playbook or SKILL.md files and apply the relevant instructions through your Muse's supported customization flow. The source exporter does not sign in, install native agents or change live account settings.
 
 ## 2. Run specialist tools
 

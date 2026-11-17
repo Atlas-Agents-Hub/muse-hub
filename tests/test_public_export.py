@@ -95,6 +95,22 @@ class CleanPublicExportTests(unittest.TestCase):
         with self.assertRaisesRegex(PublicExportError,"UNKNOWN_TOPLEVEL_ENTRY"):
             select_public_files(tree)
 
+    def test_only_reviewed_muse_hub_entrypoint_is_exportable(self):
+        root=self.base/"muse-hub-fixture"
+        root.mkdir()
+        (root/"README.md").write_text("# Muse Hub",encoding="utf8")
+        (root/"hub").mkdir()
+        (root/"hub/README.md").write_text("# Muse Hub scope",encoding="utf8")
+        selected=select_public_files(root)
+        self.assertIn("hub/README.md",selected)
+        (root/"hub/secret-notes.md").write_text("Owner-only text",encoding="utf8")
+        with self.assertRaisesRegex(PublicExportError,"UNAPPROVED_COLLECTION_PATH"):
+            select_public_files(root)
+        (root/"hub/secret-notes.md").unlink()
+        (root/"hub/credentials.json").write_text('{"token":"x"}',encoding="utf8")
+        with self.assertRaises(PublicExportError):
+            select_public_files(root)
+
     def test_symlink_file_rejected_before_reading_external(self):
         source=self.base/"safe"
         source.mkdir()

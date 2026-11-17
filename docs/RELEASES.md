@@ -1,6 +1,18 @@
-# Downloads and versions
+# Muse Hub downloads and versions
 
-## Muse Specialist Toolkit v1.0.0
+**Current published release:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). **Latest published version:** [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest).
+
+**Individual specialist ZIPs: v1.1.0 is still a draft.** All 15 packages and a checksum index have been staged for review, but direct download links under `releases/download/v1.1.0/` will not work until the release is published. Do not present them as available now.
+
+[Choose an assistant](DOWNLOAD_A_SPECIALIST.md) · [Set up Main and three subchats](INSTALL_AND_PERSISTENCE.md) · [Muse Hub scope](../hub/README.md)
+
+## v1.1.0 — pending publication
+
+Each ZIP is intended to contain a separate Muse assistant home: Main instructions, three subchat profiles, selected skills and workflows. A ZIP is not a created Muse account, active connector, or installed native tool. Use the [15-role index](DOWNLOAD_A_SPECIALIST.md) for the exact filenames and links once the release becomes public. Use `SHA256SUMS.txt` to verify downloaded files.
+
+## Current published source
+
+## Muse Hub v1.0.0 (originally released as Muse Specialist Toolkit)
 
 The V1 source covers 15 specialists, 100 task starters, 75 developed skills, 25 workflows and 151 connector records. The 50 original role/shared procedures remain available and overlap the developed skills.
 

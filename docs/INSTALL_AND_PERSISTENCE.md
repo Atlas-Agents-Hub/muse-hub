@@ -1,12 +1,21 @@
 # Installation and saved data
 
+## Start with one Muse assistant
+
+[Choose a Muse specialist](DOWNLOAD_A_SPECIALIST.md) and read its role guide. Each specialist is intended for a separate Muse assistant with its own Main and three subchats. **v1.1.0 individual ZIPs are currently a draft and not public downloads.** The [current published v1.0.0 source toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) remains available.
+
+For a published individual ZIP: download it, verify the checksum, unzip it, and follow `START_HERE.md`. Basic Muse profile setup needs no Python. Optional local programs and third-party service integrations require their own permissions and runtime. Downloading never creates an assistant or signs into a provider.
+
+## For developers: older source and tool setup
+
+
 Choose the package that matches your task. The published [v1.0.0 release](RELEASES.md) offers the complete source toolkit, the portable specialist collection and the searchable 151-connector directory. The specialist collection includes bundled runnable tools and task profiles; the complete source includes Personal Companion's Daily Desk.
 
 The earlier [v0.4.1-alpha](RELEASES.md#v041-alpha--eight-runnable-tools-and-eleven-starter-zips) shipped eight standalone executable ZIPs and eleven starter profiles. These packages remain available with their original instructions. Extracting a ZIP or customizing a profile does not install a native Muse agent.
 
 ## Use the V1 specialist collection
 
-Download `muse-specialist-collection-v1.0.0.zip` from the [current release](RELEASES.md), compare its SHA-256 with the release checksum index, and extract it into a new directory. Follow the included `START_HERE.md` and select the specialist kit or starter you need. The GitHub source checkout also supports `python -B tools/muse_collection.py check` with Python 3.12+.
+Download `muse-specialist-collection-v1.0.0.zip` from the [published v1.0.0 release](RELEASES.md), compare its SHA-256 with the release checksum index, and extract it into a new directory. Follow the included `START_HERE.md` and select the specialist kit or starter you need. The GitHub source checkout also supports `python -B tools/muse_collection.py check` with Python 3.12+.
 
 ## Run a downloaded tool
 

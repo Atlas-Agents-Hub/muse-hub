@@ -66,12 +66,15 @@ class ConnectorCatalogTests(unittest.TestCase):
 class V1ProductTests(unittest.TestCase):
  def test_hero_leads_with_specialists_configs_connectors(self):
   s=(R/'README.md').read_text();hero=s.split('\n## ',1)[0]
-  for value in ['Muse Specialist Toolkit','Your Muse. Your Specialists. Your Possibilities.','15','100+','150+']:self.assertIn(value,hero)
-  self.assertNotIn('offline',hero.lower());self.assertNotIn('75 skills',hero.lower())
+  for value in ('Muse Hub','15 independent assistants','75 skills','25 workflows',
+                '100 task starters','151 connector records'):
+   self.assertIn(value,hero)
+  self.assertNotIn('Muse Specialist Toolkit',s)
   self.assertLess(len(s.encode()),8000)
+
  def test_four_routes_and_current_release_metadata_agree(self):
   d=json.loads((R/'docs/discovery/agent-capabilities.json').read_bytes())
-  self.assertEqual(d['project'],'Muse Specialist Toolkit');self.assertEqual(d['release'],'v1.0.0')
+  self.assertEqual(d['project'],'Muse Hub');self.assertEqual(d['release'],'v1.0.0')
   self.assertEqual(d['custom_connector_count'],151);self.assertEqual(d['configuration_count'],115)
   for p in ['docs/v1/START_HERE.md','docs/v1/POST_RELEASE.md','docs/connectors/README.md','scripts/build_v1_release.py']:
    self.assertTrue((R/p).is_file(),p)

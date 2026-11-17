@@ -1,34 +1,33 @@
-# Set up Research Evaluator
+# Research Evaluator | Muse Hub
 
-This public starter contains instructions and configuration, not an installed assistant. Use the complete toolkit for any local examples linked from the [role guide](README.md).
+Compare research claims against original sources and numerical evidence.
 
-## Create a profile copy
+**Current published source:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0) · **Individual assistant ZIP:** `muse-research-evaluator-v1.1.0.zip` (v1.1.0 draft; not yet a public download).
 
-From the repository root:
+## Set up this assistant
 
-```bash
-python -B quickstart.py --role research-evaluator --to "$HOME/my-research-evaluator"
-```
+1. Choose a **separate Muse assistant** for Research Evaluator. Don't combine multiple specialists in one account.
+2. When v1.1.0 is published, download the individual ZIP and open its `START_HERE.md`.
+3. Start in **Main** with the supplied identity and instruction documents.
+4. Set up its **three subchats** inside this same assistant. Each subchat has its own instructions, user context, tools, and memory files.
+5. Keep credentials and personal memory outside public GitHub. Any service connection must be authorized separately.
 
-Use `python3` on macOS/Linux where appropriate; the wrapper also works in Windows PowerShell without setting `PYTHONPATH`. The destination must not exist. Read the generated guide before editing your copy, and keep personal memory and credentials outside the repository.
+**First task to try:** "Assess this claim, identify the strongest evidence, and record uncertainty."
 
-## Check before connecting
+No Python is needed to set up the assistant. For the **current published v1.0.0 source release**, follow [the source setup guide](../../docs/GITHUB_QUICKSTART.md) instead of assuming the draft ZIP is already available.
 
-Run the package's supported local checks and review the files it creates. A hash receipt detects changed bytes; it does not establish a host identity or grant tool access. No external account, skill registration or scheduled job is activated by these steps.
+## Optional source tools
 
-[Role guide](README.md) · [Installation and saved data](../../docs/INSTALL_AND_PERSISTENCE.md)
+For a development copy, use the reviewed [source generator](../../examples/github_quickstart.py) (`examples/github_quickstart.py`) and the [developer setup guide](../../docs/GITHUB_QUICKSTART.md). These require a trusted source checkout, not a preconfigured Muse account.
 
-For the complete source setup, expected outputs and troubleshooting, see [Get started](../../docs/GITHUB_QUICKSTART.md).
+See [this specialist's capability scope](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [the local tool guide](../../docs/CAPABILITIES.md). Local scripts run under the computer's permissions; they are not native Muse registrations.
 
-The source wrapper delegates to [examples/github_quickstart.py](../../examples/github_quickstart.py); use the wrapper above for the no-environment-variable route.
+The numeric evaluation source demo is [`examples/numeric_evaluation_demo.py`](../../examples/numeric_evaluation_demo.py); run it only from a trusted source checkout with the documented Python environment.
 
-## Try source checks and numerical evaluation
+Source role ID: `research-evaluator`.
 
-From the repository root on macOS/Linux:
+## More help
 
-```bash
-PYTHONPATH=src python3 -B examples/research_evaluator_demo.py
-PYTHONPATH=src python3 -B examples/numeric_evaluation_demo.py
-```
+[Choose another specialist](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Saved data and updates](../../docs/INSTALL_AND_PERSISTENCE.md) · [Muse Hub product scope](../../hub/README.md)
 
-In PowerShell, set `$env:PYTHONPATH = "src"` and use `python`. The first command checks supplied quotations; the second scores fictional held-out predictions and rejects tampered input. `LOCAL_NUMERIC_HELDOUT_EVALUATED` is a local numerical result, not independently verified scientific truth or native Muse execution.
+Downloading a ZIP or copying a profile does **not automatically** create a Muse account or subchat, grant tool access, or connect external services.

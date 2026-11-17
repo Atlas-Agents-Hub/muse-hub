@@ -46,11 +46,11 @@ class PublicProductSurfaceTests(unittest.TestCase):
  def test_readme_is_short_product_entrypoint(self):
   readme=(ROOT/"README.md").read_text(encoding="utf-8")
   self.assertLess(len(readme.encode("utf-8")),8000)
-  for text in ("# Muse Specialist Toolkit","v0.4.1-alpha","docs/CAPABILITIES.md",
+  for text in ("# Muse Hub","v0.4.1-alpha","docs/CAPABILITIES.md",
                "docs/GITHUB_QUICKSTART.md","MIT","source-only"):
    self.assertIn(text,readme)
   for role in ROLE_SLUGS:
-   self.assertIn("presets/"+role+"/",readme)
+   self.assertIn("presets/"+role+"/INSTALL.md",readme)
   self.assertIsNone(WORK_MARKERS.search(re.sub(r"\]\([^)]+\)", "]()", readme)))
 
  def test_no_internal_docs_or_milestone_filenames(self):
@@ -58,7 +58,8 @@ class PublicProductSurfaceTests(unittest.TestCase):
   self.assertFalse(current & INTERNAL_DOCS,sorted(current & INTERNAL_DOCS))
   self.assertFalse([x for x in current if re.match(r"R\d\d[_-]",x)])
   self.assertIn("README.md",current)
-  self.assertLessEqual(len(current - {"README.md"}),18)  # preserve topical-doc limit; allow one index
+  self.assertLessEqual(len(current - {"README.md"}),19)
+  self.assertIn("DOWNLOAD_A_SPECIALIST.md",current)  # preserve topical-doc limit; allow one index
 
  def test_all_product_docs_exist_and_read_as_product(self):
   for name in VISITOR_DOCS:

@@ -62,6 +62,19 @@ class CompatibilityGuards(unittest.TestCase):
   self.assertEqual(x['legacy_procedures'],50)
   self.assertIsNone(x['combined_unique_capabilities'])
   self.assertFalse(x['native_installed'])
+ def test_archived_role_and_promotion_tampering_refused(self):
+  from unittest.mock import patch
+  original=M._bytes
+  for target,expected in (
+   ('docs/history/v1-install/adversarial-verifier.txt','PUBLIC_SOURCE_DRIFT'),
+   ('docs/history/v1-role-readmes/creative-studio.txt','PUBLIC_SOURCE_DRIFT'),
+   ('docs/history/promotion-source/SPECIALIST_QUICKSTART.txt','IMPORTED_SOURCE_DRIFT')):
+   def reader(root,name,checked=target):
+    return b'tampered' if name==checked else original(root,name)
+   with self.subTest(archive=target),patch.object(M,'_bytes',side_effect=reader):
+    with self.assertRaisesRegex(M.CompatibilityError,expected):
+     M.check_repository(R)
+
  def test_original_history_remains_snapshot_not_catalog_downgrade(self):
   original=json.loads((R/'collections/muse-starters-v1/r5/baseline/legacy_catalog.json').read_bytes())
   current=json.loads((R/'presets/catalog.json').read_bytes())

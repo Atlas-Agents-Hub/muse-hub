@@ -42,7 +42,7 @@ class V1DocumentationJourney(unittest.TestCase):
 
  def test_docs_home_provides_task_and_technical_routes(self):
   page=read("docs/README.md")
-  self.assertIn("# Muse Specialist Toolkit documentation",page)
+  self.assertIn("# Muse Hub documentation",page)
   for v in ("Personal Companion","Custom connectors","Specialist","Skills and workflows",
             "Install","Verify","Troubleshoot"):
    with self.subTest(item=v):self.assertIn(v.lower(),page.lower())

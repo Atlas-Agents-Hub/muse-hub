@@ -21,40 +21,41 @@ class GitHubMobileNavigation(unittest.TestCase):
  def test_homepage_is_a_product_story_not_a_scrollable_table_or_warnings(self):
   body=doc(README);hero=body.split("\n## ",1)[0]
   self.assertLess(len(hero.encode("utf8")),1100)
-  for claim in ["Muse Specialist Toolkit","Your Muse. Your Specialists. Your Possibilities.",
-                "15 AI Specialists","100+ Configurations","150+ Custom Connectors"]:
+  for claim in ["# Muse Hub","15 independent assistants","three subchats",
+                "75 skills","25 workflows","100 task starters","151 connector records"]:
    self.assertIn(claim,hero)
-  for phrase in ["source-only","not installed","offline","75 skills","native enrollment"]:
-   self.assertNotIn(phrase,hero.lower())
-  self.assertFalse(re.search(r"(?m)^\|\s*---",body))
+  self.assertNotIn("Muse Specialist Toolkit",body)
+  self.assertNotIn("atlas-origins.github.io/kits",body)
   self.assertFalse(re.search(r"(?m)^\|.*\|",body))
   self.assertNotIn(" ? ",body)
+
  def test_homepage_has_four_obvious_actions_before_technical_details(self):
-  body=doc(README);first=body.split("## For developers",1)[0]
-  for phrase in ["Choose a specialist","Browse task configurations",
-                 "Explore custom connectors","Try Daily Desk"]:
+  body=doc(README);first=body.split("## The 15 specialists",1)[0]
+  for phrase in ("Choose an assistant","Get the current published release",
+                 "Browse tools","Explore connector records"):
    self.assertIn(phrase,first)
-  self.assertIn("docs/connectors/README.md",first)
-  self.assertIn("docs/v1/START_HERE.md",first)
-  self.assertIn("docs/spaces/DAILY_DESK.md",first)
+  for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/connectors/README.md",
+               "docs/CAPABILITIES.md","docs/RELEASES.md","docs/v1/START_HERE.md",
+               "docs/spaces/DAILY_DESK.md","docs/README.md"):
+   self.assertIn(path,body)
   self.assertIn("tools/muse_collection.py demo data-engineer",body)
-  self.assertIn("docs/collection/SPECIALIST_QUICKSTART.md",body)
   self.assertIn("[AI-agent discovery index](llms.txt)",body)
   self.assertIn("not installed native muse agents",body.lower())
+
  def test_all_specialists_are_visible_in_use_case_groups(self):
   body=doc(README)
   roles=json.loads(doc(ROOT/"presets/catalog.json"))["presets"]
   self.assertEqual(len(roles),15)
   for role in roles:
    with self.subTest(role=role):
-    self.assertEqual(body.count("presets/"+role+"/"),1)
-  for phrase in ["Build and automate","Research and evaluate",
+    self.assertEqual(body.count("presets/"+role+"/INSTALL.md"),1)
+  for phrase in ["Build and automate","Research and review",
                  "Create and learn","Life and planning"]:
    self.assertIn(phrase,body)
  def test_connector_landing_has_use_case_navigation_not_an_undifferentiated_list(self):
   body=doc(CROOT/"README.md")
   self.assertFalse(re.search(r"(?m)^\|.*\|",body))
-  self.assertIn("150+ Custom Connectors",body)
+  self.assertIn("Muse Hub connector directory",body)
   self.assertIn("Browse by category",body)
   for group,title in GROUPS.items():
    with self.subTest(group=group):

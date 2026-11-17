@@ -12,43 +12,15 @@ RELEASES=(ROOT/"docs/RELEASES.md")
 class ProductPositioningTests(unittest.TestCase):
     def test_readme_leads_with_runnable_tools(self):
         value=README.read_text(encoding="utf-8")
-        hero=value.split("## Choose your specialist",1)[0].lower()
-        self.assertIn("muse specialist toolkit",hero)
-        self.assertIn("15 ai specialists",hero)
-        self.assertIn("100+ configurations",hero)
-        self.assertIn("150+ custom connectors",hero)
-        self.assertNotIn("offline tools",hero)
+        hero=value.split("## Start with an assistant",1)[0].lower()
+        for term in ("muse hub","15 independent assistants","75 skills","25 workflows",
+                     "100 task starters","151 connector records"):
+            self.assertIn(term,hero)
+        self.assertNotIn("muse specialist toolkit",hero)
         self.assertIn("v0.4.1-alpha",value.lower())
+        self.assertIn("v1.1.0",value.lower())
+        self.assertIn("draft",value.lower())
         self.assertIn("not installed native muse agents",value.lower())
-
-    def test_readme_links_to_real_executable_not_just_starter(self):
-        value=README.read_text(encoding="utf-8")
-        self.assertIn("creative-studio-executable-v0.4.1-alpha.zip",value)
-        self.assertIn("python -I -B run.py --operation self-test",value)
-        self.assertIn('python -I -B run.py --operation demo --to "$HOME/creative-production-demo"',value)
-        self.assertIn("SHA256SUMS.txt",value)
-        self.assertIn("not a model-backed autonomous assistant",value.lower())
-
-    def test_quickstart_gives_no_clone_executable_route(self):
-        quick=QUICK.read_text(encoding="utf-8")
-        self.assertIn("## Run a standalone tool without cloning",quick)
-        self.assertIn("creative-studio-executable-v0.4.1-alpha.zip",quick)
-        self.assertIn("python -I -B run.py --operation self-test",quick)
-        self.assertIn('python -I -B run.py --operation demo --to "$HOME/creative-production-demo"',quick)
-        self.assertIn("you need Python 3.12+, but not Git",quick)
-        self.assertIn("For this Creative Studio example",quick)
-        self.assertIn("Software Engineer workflows may require Git",quick)
-        self.assertNotIn("For executable ZIPs: Python 3.12+ only.",quick)
-        self.assertRegex(quick,r"Need a ZIP instead of a clone[^\n]+v0\.4\.1-alpha")
-        self.assertIn("not connected",quick.lower())
-
-    def test_release_page_explains_two_products(self):
-        releases=RELEASES.read_text(encoding="utf-8").lower()
-        self.assertIn("eight runnable",releases)
-        self.assertIn("eleven starter",releases)
-        self.assertIn("no native muse",releases)
-        self.assertIn("not a model-backed autonomous assistant",releases)
-        self.assertIn("v0.4.1-alpha",releases)
 
 if __name__=="__main__":
     unittest.main()

@@ -1,9 +1,31 @@
-# Install Product & Interface Designer
+# Product & Interface Designer | Muse Hub
 
-**Standalone source kit:** clone the repository, use Python 3.12+, set `PYTHONPATH=src`, and run `python -B -m muse_presets.cli doctor`. Then run `python -B examples/github_quickstart.py --role product-interface-designer --to "$HOME/new-product-interface-designer"`. Existing destinations are refused and original user memory is not copied.
+Design and review user journeys, interfaces, states, and accessibility.
 
-**Local executable evidence:** run `python -B examples/specialist_engine_demo.py --role product-interface-designer`. This example requires no API key or external account.
+**Current published source:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0) · **Individual assistant ZIP:** `muse-product-interface-designer-v1.1.0.zip` (v1.1.0 draft; not yet a public download).
 
-**Native personal Muse/Hatch or Muse Code:** source extraction is NOT host installation. Use the receiving host's independently verified import and permission flow. All local subchats, doors, skills, schedules and connectors start unbound/disabled. User memory remains owner controlled.
+## Set up this assistant
 
-For all supported source-first commands and troubleshooting, see the [GitHub Quickstart](../../docs/GITHUB_QUICKSTART.md).
+1. Choose a **separate Muse assistant** for Product & Interface Designer. Don't combine multiple specialists in one account.
+2. When v1.1.0 is published, download the individual ZIP and open its `START_HERE.md`.
+3. Start in **Main** with the supplied identity and instruction documents.
+4. Set up its **three subchats** inside this same assistant. Each subchat has its own instructions, user context, tools, and memory files.
+5. Keep credentials and personal memory outside public GitHub. Any service connection must be authorized separately.
+
+**First task to try:** "Critique this interface flow and list the highest-impact improvements."
+
+No Python is needed to set up the assistant. For the **current published v1.0.0 source release**, follow [the source setup guide](../../docs/GITHUB_QUICKSTART.md) instead of assuming the draft ZIP is already available.
+
+## Optional source tools
+
+For a development copy, use the reviewed [source generator](../../examples/github_quickstart.py) (`examples/github_quickstart.py`) and the [developer setup guide](../../docs/GITHUB_QUICKSTART.md). These require a trusted source checkout, not a preconfigured Muse account.
+
+See [this specialist's capability scope](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [the local tool guide](../../docs/CAPABILITIES.md). Local scripts run under the computer's permissions; they are not native Muse registrations.
+
+Source role ID: `product-interface-designer`.
+
+## More help
+
+[Choose another specialist](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Saved data and updates](../../docs/INSTALL_AND_PERSISTENCE.md) · [Muse Hub product scope](../../hub/README.md)
+
+Downloading a ZIP or copying a profile does **not automatically** create a Muse account or subchat, grant tool access, or connect external services.

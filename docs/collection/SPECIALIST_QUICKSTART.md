@@ -1,5 +1,8 @@
 # Start with a useful result
 
+**Want a complete Muse specialist without commands?** [Download an individual specialist ZIP](../DOWNLOAD_A_SPECIALIST.md). This page is for advanced source and development workflows.
+
+
 ## Run a specialist locally
 
 Use a current source checkout and Python 3.12 or newer. These commands work from the repository root in PowerShell, macOS Terminal or a Linux shell; no `PYTHONPATH` setup is required for the collection commands.

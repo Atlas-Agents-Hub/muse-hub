@@ -34,7 +34,7 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
   self.assertIn("specialists-by-task.md",text)
  def test_discovery_index_contains_canonical_website(self):
   text=(ROOT/"llms.txt").read_text("utf8")
-  self.assertIn("https://atlas-origins.github.io/kits/",text)
+  self.assertIn("hub/README.md",text)
   cap=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_bytes())
   self.assertIn("specialist_engine_index",cap)
   self.assertEqual(cap["custom_connector_count"],151)
@@ -56,7 +56,26 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
   import hashlib
   baseline=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_bytes())
   self.assertEqual(len(baseline["files"]),198)
+  preserved=0
   for name,digest in baseline["files"].items():
    with self.subTest(path=name):
-    self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),digest)
+    # Exact original INSTALL and README bytes remain in reviewed archives.
+    path=(ROOT/"docs/history/v1-install"/(Path(name).parent.name+".txt")
+          if name.startswith("presets/") and name.endswith("/INSTALL.md")
+          else ROOT/"docs/history/v1-role-readmes"/(Path(name).parent.name+".txt")
+          if name.startswith("presets/") and name.endswith("/README.md")
+          else ROOT/name)
+    if path!=ROOT/name:preserved+=1
+    self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),digest)
+  self.assertEqual(preserved,30)
+  history=json.loads((ROOT/"docs/history/v1-install/MIGRATION_MANIFEST.json").read_text())
+  self.assertEqual(len(history["entries"]),15)
+  for entry in history["entries"]:
+   self.assertEqual(hashlib.sha256((ROOT/entry["archive_path"]).read_bytes()).hexdigest(),
+                    entry["sha256"])
+  role_history=json.loads((ROOT/"docs/history/v1-role-readmes/MIGRATION_MANIFEST.json").read_text())
+  self.assertEqual(len(role_history["entries"]),15)
+  for entry in role_history["entries"]:
+   self.assertEqual(hashlib.sha256((ROOT/entry["archive_path"]).read_bytes()).hexdigest(),
+                    entry["sha256"])
 if __name__=="__main__":unittest.main()

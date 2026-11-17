@@ -103,9 +103,33 @@ def check_repository(root:Path=ROOT)->dict:
     require(baseline['schema']=='muse-collection-public-baseline/v1' and
             baseline['source_commit']==mapping['public_base'],'PUBLIC_BASELINE')
     require(type(baseline['files']) is dict and len(baseline['files'])==198,'PUBLIC_BASELINE')
+    # The original role guides are retained byte-for-byte in versioned
+    # archives; current user-facing READMEs/INSTALLs may evolve.
+    historical={}
+    for folder,leaf in (('v1-install','INSTALL.md'),
+                        ('v1-role-readmes','README.md')):
+        manifest=read_json(root/('docs/history/'+folder+'/MIGRATION_MANIFEST.json'))
+        entries=manifest.get('entries') if type(manifest) is dict else None
+        require(type(entries) is list and len(entries)==15,
+                'HISTORICAL_MIGRATION_MISSING:'+folder)
+        for entry in entries:
+            require(type(entry) is dict,'HISTORICAL_ENTRY_INVALID')
+            original=entry.get('original_path')
+            archived=entry.get('archive_path')
+            require(type(original) is str and type(archived) is str,
+                    'HISTORICAL_ENTRY_INVALID')
+            role=original.removeprefix('presets/').removesuffix('/'+leaf)
+            require(role in roles and original=='presets/'+role+'/'+leaf
+                    and archived=='docs/history/'+folder+'/'+role+'.txt'
+                    and entry.get('sha256')==baseline['files'].get(original)
+                    and original not in historical,
+                    'HISTORICAL_ENTRY_INVALID')
+            historical[original]=archived
+    require(len(historical)==30,'HISTORICAL_MIGRATION_COUNT')
     for name,h in baseline['files'].items():
         require(type(h) is str and bool(HEX.fullmatch(h)),'PUBLIC_BASELINE')
-        require(_digest(_bytes(root,name))==h,'PUBLIC_SOURCE_DRIFT:'+name)
+        checked=historical.get(name,name)
+        require(_digest(_bytes(root,checked))==h,'PUBLIC_SOURCE_DRIFT:'+name)
     provenance=read_json(root/(prefix+'PROMOTION_PROVENANCE.json'))
     require(set(provenance)=={'schema','source_kind','private_history_included','upstream_code_imported','scope','incoming_files'},'PROVENANCE_SCHEMA')
     require(provenance['schema']=='muse-collection-promotion/v1' and
@@ -118,7 +142,14 @@ def check_repository(root:Path=ROOT)->dict:
         require(all(type(row[k]) is str and HEX.fullmatch(row[k]) for k in ['sha256','source_sha256']),'PROVENANCE_HASH')
         require(row['rights'] in {'PROJECT_MIT_ORIGINAL','REFERENCE_ONLY_PUBLIC_SOURCE_METADATA'},'PROVENANCE_RIGHTS')
         require(row['disposition'] in {'BYTE_PRESERVED','REVIEWED_PUBLIC_ADAPTATION'},'PROVENANCE_DISPOSITION')
-        require(_digest(_bytes(root,name))==row['sha256'],'IMPORTED_SOURCE_DRIFT:'+name)
+        # Pin the accepted promotion bytes separately from its revised,
+        # current reader-facing example guide.
+        archived=('docs/history/promotion-source/SPECIALIST_QUICKSTART.txt'
+                  if name=='docs/collection/SPECIALIST_QUICKSTART.md' else name)
+        require(_digest(_bytes(root,archived))==row['sha256'],
+                'IMPORTED_SOURCE_DRIFT:'+name)
+        if archived!=name:
+            require((root/name).is_file(),'CURRENT_PROMOTION_GUIDE_MISSING')
         if row['disposition']=='BYTE_PRESERVED':require(row['sha256']==row['source_sha256'],'PROVENANCE_HASH')
     return {'status':'COLLECTION_COMPATIBILITY_VERIFIED','role_count':15,
             'collection_skills':len(data['skills']),'legacy_procedures':len(expected),

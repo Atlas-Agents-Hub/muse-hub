@@ -1,6 +1,6 @@
 {
   "schema": "specialist-ai-agent-kits/discovery/v1",
-  "project": "Muse Specialist Toolkit",
+  "project": "Muse Hub",
   "repository": "https://github.com/atlas-origins/muse-ai-agent-presets",
   "release": "v1.0.0",
   "license": "MIT",
@@ -203,7 +203,7 @@
     "connectors": "docs/v1/START_HERE.md#4-explore-connectors"
   },
   "download_scope": "sha256_index, complete_toolkit, and executable_offline_kits entries refer to historical v0.4.1-alpha release only; verify V1 assets at GitHub Releases",
-  "product_tagline": "Your Muse. Your Specialists. Your Possibilities.",
+  "product_tagline": "Separate Muse assistants, useful skills, verified tools, and source-based workflows.",
   "release_page": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0",
   "v1_sha256_index": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt",
   "v1_assets": {

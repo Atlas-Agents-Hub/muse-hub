@@ -18,8 +18,8 @@ class AgentDiscoveryTests(unittest.TestCase):
   file=ROOT/"llms.txt"
   self.assertTrue(file.is_file())
   text=file.read_text(encoding="utf-8")
-  self.assertTrue(text.startswith("# Muse Specialist Toolkit\n"))
-  self.assertRegex(text,r"(?m)^> .*15 AI specialists.*151 custom connector")
+  self.assertTrue(text.startswith("# Muse Hub\n"))
+  self.assertRegex(text,r"(?m)^> .*15 independent Muse assistants.*151 connector records")
   self.assertIn("## Runnable specialist tools",text)
   self.assertIn("## Product information",text)
   self.assertIn("## Optional",text)
@@ -91,12 +91,12 @@ class AgentDiscoveryTests(unittest.TestCase):
 
  def test_readme_links_machine_index_before_role_table(self):
   text=(ROOT/"README.md").read_text(encoding="utf-8")
-  header=text.split("## Find your starting point",1)[0]
-  self.assertIn("[AI-agent discovery index](llms.txt)",header)
-  self.assertIn("[Verified capability facts](docs/discovery/agent-capabilities.json)",header)
-  self.assertIn("15",header)
-  self.assertIn("100+",header)
-  self.assertIn("150+",header)
+  hero=text.split("## Start with an assistant",1)[0]
+  for term in ("# Muse Hub","15 independent assistants","75 skills","25 workflows",
+               "100 task starters","151 connector records"):
+   self.assertIn(term,hero)
+  self.assertIn("[AI-agent discovery index](llms.txt)",text)
+  self.assertIn("[Verified capability facts](docs/discovery/agent-capabilities.json)",text)
   self.assertLess(len(text.encode("utf-8")),8000)
   self.assertIn("not installed native muse agents",text.lower())
 
