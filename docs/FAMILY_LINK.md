@@ -8,6 +8,10 @@ Every one of the 15 source presets declares `family_link` inside `preset.json`, 
 
 `verify_finding` validates an immutable-shaped finder result with `source_uri`, 64-character SHA256, `observation` and `FOUND/NOT_FOUND`; it rejects extra verdict fields and fake found-without-observation. This is schema checking only, **not** authentication of a remote source or owner.
 
+## Source-only installable demo (not a native bridge)
+
+The [H12 envelope and role-boundary source contracts](../kits/family-handoff/README.md) pin source-level fields and disabled profiles. The [offline Family Link source kit](kits/FAMILY_LINK_SOURCEKIT.md) packages the existing bounded envelope, 15 disabled-by-default role policies, and a deterministic separate-process demo. It provides source checks only; there is **no live delivery, identity, provider connection, authenticated consent or durable replay fence**.
+
 ## Future authenticated bridge (not yet implemented)
 
 A production integration must bind: source role and live native identity, recipient's authenticated host/account, owner-approved scope, exact task hash and immutable intent, lease/fence, host capacity, approved transport, one-effect identity, recipient readback, no unknown replay and an independent acceptance result. Create separate `family_link/native/` adapters per verified host; prohibit self-issued grants. The source of truth for native sender/receiver ownership remains the receiving host and actual original role.
