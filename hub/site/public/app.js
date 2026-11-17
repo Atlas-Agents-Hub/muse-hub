@@ -14,8 +14,25 @@
     status.textContent = 'Catalog verification failed. No sources are shown.';
     return;
   }
+  // Validate every field used by rendering before constructing any UI.
+  // A malformed offline copy must explain the failure, not throw on a null row.
+  const isText = value => typeof value === 'string' && value.trim().length > 0;
+  const itemFields = ['id', 'name', 'summary', 'category', 'platform',
+                      'install_method', 'evidence', 'license_class', 'url'];
+  const malformedItem = item => !item || typeof item !== 'object' ||
+    Array.isArray(item) || itemFields.some(key => !isText(item[key]));
+  const malformedRoute = route => !route || typeof route !== 'object' ||
+    Array.isArray(route) || !isText(route.id) || !isText(route.title) ||
+    !isText(route.notice) || !Array.isArray(route.source_ids) ||
+    route.source_ids.some(id => !isText(id));
+  if (data.items.some(malformedItem) || data.routes.some(malformedRoute)) {
+    status.textContent = 'Catalog source restriction failed. No sources are shown.';
+    return;
+  }
   const allowed = new Set(data.items.map(item => item.id));
-  if (allowed.size !== 63 || data.routes.some(route => route.source_ids.some(id => !allowed.has(id)))) {
+  const routeIds = new Set(data.routes.map(route => route.id));
+  if (allowed.size !== 63 || routeIds.size !== data.routes.length ||
+      data.routes.some(route => route.source_ids.some(id => !allowed.has(id)))) {
     status.textContent = 'Catalog source restriction failed. No sources are shown.';
     return;
   }
