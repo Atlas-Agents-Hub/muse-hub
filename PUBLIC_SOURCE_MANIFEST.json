@@ -475,10 +475,10 @@
     "examples/specialist_kit_runner.py": "cf988a8e3f3ccb18102d0a965e80f6ad633984be29be9972d30286e671e15d77",
     "examples/verify_role_packages.py": "e0a134f2fb4911264ce1b8bd951652347faca0eb1f8d0ef8d0ab568b52e6e190",
     "hub/README.md": "2ae46bf41295df57a691ad69937b0254d963c42df45423338ea11cc3f0b936da",
-    "hub/site/INTEGRITY.json": "11d06d8a79e499b35a94502357d9442ae22cee3f869e8d1888a7f0a73d09a087",
+    "hub/site/INTEGRITY.json": "922d3fd2217ab9f67fa1130d8e493c4a5355fa6e333db5920321bbc4daaacf93",
     "hub/site/README.md": "dbc3564aa7bb1a4828ebcf5deba71e8633b8a125e88dd091692680ce46cfe64c",
     "hub/site/index.html": "974dc9b1e69a434b31bd13a5b2eec8b0cbb6a97e05cde338cd12e7d2f6528fbf",
-    "hub/site/public/app.js": "09ccd917b319379d7e1e6150fcb9ee66452ff2d6ab12a548f19a827944f75a28",
+    "hub/site/public/app.js": "dec91015078ff088f16f475692d9733d6bc910f56c087d46b6014ef328c80aeb",
     "hub/site/public/catalog.json": "4586c2a05f26f3a320727bbc7bf050cd01c8fa34db35df56c6ef77d5cebd5b11",
     "hub/site/public/index.html": "e7b40dc82997dc6f8f172055817f5a607ded39a8713348bc4c5e70ff5af9d10c",
     "hub/site/public/styles.css": "402d0dfee6d4283b28fd5c4c5f2ab15cc01c7ecb7b03c4600d59a42cd469f691",
@@ -754,6 +754,7 @@
     "tests/test_github_mobile_navigation.py": "2586a74cccc851f7cc704fdc153e0f8892d6130cab325c422d9b0b96d6795b51",
     "tests/test_github_quickstart.py": "eec7f87c2921d64f9a66539e064fa5ca04b2ad3ff84ce4d3095463f7c7d2f5ec",
     "tests/test_h11_engineering_doors.py": "003745c784b60d2de70a084e4cf690e1708097aded8f8e313062e106be849053",
+    "tests/test_hub_catalog_failclosed.py": "1b3d4fee1c74ba5cbcc96a8b8984f6be0f4a355b2001cd4d8198816c50143cd0",
     "tests/test_hub_feature_readiness.py": "93a0b08bf2cf93b1370fbfbce30c6346700947c5378e8c64edbe79f1315685b5",
     "tests/test_hub_firstuse_accessibility.py": "6330fae428b077d11f99c0a8cb5c84275d1e723306c8f9f4c73b91fc3ab03b05",
     "tests/test_hub_journeys.py": "fd18f54981d63ec47eab108d507e9cdc4466263064836bd30f2b669a132c4f5e",
@@ -882,5 +883,5 @@
   "publisher_approval_granted": false,
   "release_kind": "GITHUB_SOURCE_ONLY",
   "schema": "r46/public-source-snapshot-v1",
-  "source_file_count": 873
+  "source_file_count": 874
 }
