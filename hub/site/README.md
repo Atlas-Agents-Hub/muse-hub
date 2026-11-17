@@ -8,4 +8,6 @@ Open index.html locally to explore specialist profiles, filters and role-specifi
 
 The H11 five-door engineering kit, H12 Family Link source contract, and H03 historical route comparator are linked at their source-tested scope. They do not grant native permissions or qualify original production TaskGuard and retention holds.
 
+First-use navigation: each specialist card offers a shareable `?role=<reviewed-id>#setup` link. Keyboard activation focuses the selected guide heading before the setup links; keyboard and reduced-motion navigation avoid long animated scrolls. Card actions use 44px minimum touch targets. The landing and resource screens share a self-contained SVG favicon derived from their existing original brand paths, with no external asset, script or network dependency.
+
 INTEGRITY.json records exact bytes and SHA-256 for each static site asset, including the inline Muse mark. Changes must refresh this record and the root PUBLIC_SOURCE_MANIFEST.json through the existing source scanner. Verify responsiveness, keyboard operation, CSP, external links, and native installation boundaries on the eventual deployed host before claiming launch.

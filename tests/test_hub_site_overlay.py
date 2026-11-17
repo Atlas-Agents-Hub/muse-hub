@@ -61,6 +61,11 @@ class MuseHubOverlay(unittest.TestCase):
         for page, dirname in ((self.html,SITE), (self.explore,SITE/'public')):
             for ref in re.findall(r'(?:src|href)="([^"]+)"', page):
                 if ref.startswith(('https://', '#')): continue
+                if ref.startswith('data:image/svg+xml,'):
+                    # Explicitly scoped to the original self-contained favicon.
+                    # No other data: links gain an exception to local path checks.
+                    self.assertIn('<link rel="icon" type="image/svg+xml" href="'+ref+'">', page)
+                    continue
                 if ref.startswith('?role='):
                     self.assertTrue(ref.endswith('#setup'), ref)
                     self.assertTrue(dirname.joinpath('index.html').is_file(), ref)
