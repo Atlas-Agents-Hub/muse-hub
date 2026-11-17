@@ -58,7 +58,8 @@ class PublicProductSurfaceTests(unittest.TestCase):
   self.assertFalse(current & INTERNAL_DOCS,sorted(current & INTERNAL_DOCS))
   self.assertFalse([x for x in current if re.match(r"R\d\d[_-]",x)])
   self.assertIn("README.md",current)
-  self.assertLessEqual(len(current - {"README.md"}),19)
+  self.assertIn("HUB_FEATURE_READINESS.md",current)
+  self.assertLessEqual(len(current - {"README.md","HUB_FEATURE_READINESS.md"}),19)
   self.assertIn("DOWNLOAD_A_SPECIALIST.md",current)  # preserve topical-doc limit; allow one index
 
  def test_all_product_docs_exist_and_read_as_product(self):

@@ -38,6 +38,9 @@ PUBLIC_KITS_FILES=frozenset({
     "kits/family-handoff/README.md",
     "kits/family-handoff/envelope-contract.json",
     "kits/family-handoff/role-boundaries.json",
+    "kits/engineering-doors/README.md",
+    "kits/engineering-doors/manifest.json",
+    "kits/engineering-doors/stage-routes.json",
 })
 PUBLIC_ROOT_FILES=frozenset({
     ".gitattributes", ".gitignore", "CHANGELOG.md",
