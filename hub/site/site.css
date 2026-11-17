@@ -86,7 +86,7 @@ button { cursor:pointer; }
 .role-card h3 { margin:35px 0 10px; font:normal 28px/1.13 var(--serif); letter-spacing:-.032em; }
 .role-card p { margin:0 0 28px; font-size:12px; line-height:1.7; color:#57554c; }
 .role-card-actions { margin-top:auto; padding-top:12px; border-top:1px solid #c0beb3; display:flex; align-items:stretch; justify-content:space-between; gap:10px 14px; flex-wrap:wrap; }
-.role-card-actions a { display:inline-flex; align-items:center; justify-content:space-between; gap:10px; font-size:11px; font-weight:800; text-decoration:none; }
+.role-card-actions a { display:inline-flex; align-items:center; justify-content:space-between; gap:10px; min-height:44px; font-size:11px; font-weight:800; text-decoration:none; }
 .role-card-actions a:hover { text-decoration:underline; }
 .role-card-setup { text-decoration-color:#b2bd22!important; text-underline-offset:5px!important; }
 .role-card-profile { color:#514d42; }
@@ -152,6 +152,7 @@ button { cursor:pointer; }
 .setup-role-empty p { color:#c6c4b9; max-width:440px; font:normal 21px/1.5 var(--serif); margin:0; }
 .setup-role-empty a { text-decoration-thickness:1px; }
 #setup-role-title { font:normal clamp(29px,3vw,43px)/1.16 var(--serif); margin:0 0 10px; letter-spacing:-.025em; }
+#setup-role-title:focus-visible { outline:3px solid var(--signal); outline-offset:4px; }
 #setup-role-description { font-size:13px; color:#c4c2b5; margin:0 0 24px; line-height:1.7; }
 .setup-role-links { display:flex; gap:10px; flex-wrap:wrap; }
 .setup-role-links a { min-height:45px; display:inline-flex; align-items:center; gap:9px; padding:10px 13px; border:1px solid var(--paper); font-weight:760; font-size:11px; text-decoration:none; }

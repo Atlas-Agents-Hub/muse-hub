@@ -85,6 +85,7 @@
       const url = new URL(window.location.href);
       if (slug && knownRoles.has(slug)) {
         url.searchParams.set('role', slug);
+        url.hash = '#setup';
       } else {
         url.searchParams.delete('role');
       }
@@ -109,8 +110,19 @@
         syncRoleURL(slug);
         const reduceMotion = window.matchMedia &&
           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        document.getElementById('setup').scrollIntoView(
-          {behavior: reduceMotion ? 'auto' : 'smooth'});
+        // Keyboard and reduced-motion navigation should not animate across
+        // the long specialist catalog. The document's CSS otherwise uses
+        // smooth scrolling for ordinary anchor navigation.
+        const immediate = reduceMotion || event.detail === 0;
+        const rootStyle = document.documentElement.style;
+        const originalBehavior = rootStyle.scrollBehavior;
+        if (immediate) rootStyle.scrollBehavior = 'auto';
+        try {
+          setupTitle.scrollIntoView({behavior: immediate ? 'auto' : 'smooth', block: 'center'});
+        } finally {
+          if (immediate) rootStyle.scrollBehavior = originalBehavior;
+        }
+        setupTitle.focus({ preventScroll: true });
       });
     }
     selectSetupRole();
