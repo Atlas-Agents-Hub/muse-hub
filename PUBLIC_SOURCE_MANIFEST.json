@@ -3,7 +3,7 @@
     ".gitattributes": "a20f0e8c617e6f8c382868f89ef45b4c72b30a906b59d6f3dd881bace4a093b1",
     ".github/muse-hub-metadata-proposal.json": "1823aab5da9fe4fd924d32d496b7528115a06a8e4bd69939c95fe654f88dba23",
     ".github/pull_request_template.md": "3cabbfe998a986a047918d80a777e6eeeb6595fa227f81d38e2b4c34b58ee639",
-    ".github/workflows/checks.yml": "6ad89a0fdfd89518ade1c676ecac33bf5708de4cb3af22bfcee252f7e2f58511",
+    ".github/workflows/checks.yml": "edbd2656da2726210d4ec83c6cbb99eb8460d50eb5c61239e53a1fd110d8cae8",
     ".gitignore": "f9a0a64567a39914b27e754fee211afad7b6da159590c3a5a0899e95bb34b395",
     "CHANGELOG.md": "59a131a51ca0e953ef8bc49cb1c598cfa1f0a646313f8dc9c092d665fcf82154",
     "CONTRIBUTING.md": "4524e132b46ea67275977328c5c860785e04ec86ddfd7c28c8a4a7986f764e82",
@@ -713,6 +713,7 @@
     "tests/test_builder_delivery.py": "9f0deed0e99f6f308a7fa93a71aee234a8aca9086024a371c5dc391d2dd37ce3",
     "tests/test_builder_delivery_cli.py": "7c4d54b2671a6e1a9a09a2245c0e3358441fd544c399a302fc734364c4f84e4c",
     "tests/test_capture_cleanup_evidence.py": "ec1da18db7fb92028e7b76500960f8d0f4b5c0f20fde07a4a8f9791ef94a3f10",
+    "tests/test_ci_node24_action_integrity.py": "96571a15d002afe7787f8f1116a722b15e394a71ac9115455e6ee8a2a07267d7",
     "tests/test_claims_archive_corruption.py": "539f68ebdc8b9dd53bd757ff4d0c85c1e0be99db6ca22a89b6e8e4c0a84d3347",
     "tests/test_claims_sourcekit.py": "0c67c72a8015fb81f4c7c705af648e4df65d91e7756e6f6aba07d61f62d2cd21",
     "tests/test_cli.py": "95186fe2f87a7dbd42d46724c8c2ea7d46ada0ba90632da5c0787c71ca98bb5e",
@@ -881,5 +882,5 @@
   "publisher_approval_granted": false,
   "release_kind": "GITHUB_SOURCE_ONLY",
   "schema": "r46/public-source-snapshot-v1",
-  "source_file_count": 872
+  "source_file_count": 873
 }
