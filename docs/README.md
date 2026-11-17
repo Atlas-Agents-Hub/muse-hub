@@ -16,6 +16,8 @@ Pick what you want to accomplish. You do not need to understand the repository a
 - **[Skills and workflows](SKILLS.md)** — 75 skills and 25 workflows.
 - **[100 task starters](../collections/muse-starters-v1/CATALOG.md)** — pick a configuration, not another assistant.
 - **[Tools and working engines](CAPABILITIES.md)** — what runs in local source today and what requires external permissions.
+- **[Family Link offline handoff kit](kits/FAMILY_LINK_SOURCEKIT.md)** — package and independently test the existing local envelope and replay-shape demo; no live delivery.
+- **[Family Link H12 source contracts](../kits/family-handoff/README.md)** — precise envelope fields, role allowlists and negative identity/replay tests; still proposal-only.
 - **[Personal Companion: Daily Desk](spaces/DAILY_DESK.md)** — tasks, notes, conflict detection, and backup/restore.
 - **[Custom connectors — 151 records](connectors/README.md)** — source and setup links, not connected services.
 

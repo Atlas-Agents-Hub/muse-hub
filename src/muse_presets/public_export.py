@@ -14,7 +14,7 @@ from .neutrality import audit_public_tree
 SCHEMA="r46/public-source-snapshot-v1"
 PUBLIC_DIRS=frozenset({
     ".github", "docs", "examples", "presets", "scripts",
-    "services", "src", "templates", "tests", "skills", "collections", "tools", "hub",
+    "services", "src", "templates", "tests", "skills", "collections", "tools", "hub", "kits",
 })
 # Only the source-reviewed static website may accompany the existing Hub
 # scope document. No dynamic server, private donor, image, credential or binary
@@ -31,6 +31,13 @@ PUBLIC_HUB_FILES=frozenset({
     "hub/site/roles.json",
     "hub/site/site.css",
     "hub/site/site.js",
+})
+# Only H12's separately source-reviewed, proposal-only contract files.
+# Other kit families must be admitted through their own explicit review.
+PUBLIC_KITS_FILES=frozenset({
+    "kits/family-handoff/README.md",
+    "kits/family-handoff/envelope-contract.json",
+    "kits/family-handoff/role-boundaries.json",
 })
 PUBLIC_ROOT_FILES=frozenset({
     ".gitattributes", ".gitignore", "CHANGELOG.md",
@@ -73,7 +80,7 @@ SENSITIVE_SUFFIX=frozenset({
     ".log",".bak",".backup",".tar",".gz",".7z",
 })
 MAX_FILE_BYTES=2_000_000
-MAX_FILES=840  # Bounded capacity for reviewed Muse Hub docs and archived role pages.
+MAX_FILES=2048  # Bounded expansion for source-reviewed Hub kits; other privacy/size gates unchanged.
 MAX_TOTAL_BYTES=20_000_000
 
 class PublicExportError(ValueError):
@@ -163,7 +170,8 @@ def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
             name=relative.as_posix()
             if ((entry.name=="collections" and not name.startswith("collections/muse-starters-v1/"))
                 or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py"})
-                or (entry.name=="hub" and name not in PUBLIC_HUB_FILES)):
+                or (entry.name=="hub" and name not in PUBLIC_HUB_FILES)
+                or (entry.name=="kits" and name not in PUBLIC_KITS_FILES)):
                 raise PublicExportError("UNAPPROVED_COLLECTION_PATH")
             if name in PRIVATE_EXCLUDED_TESTS:
                 continue
