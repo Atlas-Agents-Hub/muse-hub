@@ -1,0 +1,1640 @@
+[
+  {
+    "method": "ac_oauth.callback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "activity.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "activity.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "activity.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "ads.details",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.idea-cards.debug",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.idea-cards.detail",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.idea-cards.execute",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.idea-cards.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.idea-cards.share",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.idea-cards.share-preview",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.ideas.engagement",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.ideas.feedback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api.ideas.reset",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "api_key_auth.callback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "appeals.packet",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "appeals.submit",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.fetch_url",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.participation.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.participation.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.pin",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.placement.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.remove",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.save",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.share",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.slides.rebuild",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "artifacts.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "bootstrap.reset",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser.debug_access.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser.lease",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser.lease_overrides.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser.lease_overrides.release",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser.lease_overrides.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser.local_testing.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser.local_testing.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_activity.snapshot",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_stream.attach",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.clipboard.copy",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.clipboard.paste",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.clipboard.readiness",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.close",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.end_and_release",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.heartbeat",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.lease_info",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.present",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.refresh_environment",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.release",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.stop",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.takeover",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "browser_task.viewer",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "bug_report_logs.create",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "bug_report_logs.download",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "channels.link",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "channels.status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "channels.unlink",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.cancel",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.delete_turn",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.history",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.history_window",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.mark_seen",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.message_get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.poke",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.search",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.stream",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.stream_events",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "http": "POST",
+    "method": "chat.subscribe",
+    "noiseOnly": true,
+    "path": "/chat/subscribe",
+    "requestTimeoutMs": 30000,
+    "streamMode": "subscription"
+  },
+  {
+    "method": "chat.sxs.select",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.themes",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.themes.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "chat.unread_count",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "check",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "client.invoke.result",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "client.register_capabilities",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "client.runtime_state",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "computer.context",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "computer.preview",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "computer.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "config.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "config.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connection.ping",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.accounts",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "http": "POST",
+    "method": "connectors.accounts_link",
+    "path": "/connectors/{id}/accounts/link?capabilities={capabilities}"
+  },
+  {
+    "method": "connectors.accounts_unlink",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.connect",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.connect_info",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.disconnect",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.homepage",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.permissions",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "connectors.scope_link",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "consent_auth.callback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.capture",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.capture.external_provider.fulfill",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.capture.external_provider.request",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.capture.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.catalog",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.catalog.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.catalog.details",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.catalog.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "credentials.register",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "custom_connectors.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "custom_connectors.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "aliases": [
+      "custom_oauth_connector.register"
+    ],
+    "http": "POST",
+    "method": "custom_connectors.register",
+    "path": "/v1/custom-connectors/register",
+    "service": "authd"
+  },
+  {
+    "method": "dyi.export",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.approval",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.approval.decide",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.approval.edit_message",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.approval.editable_message",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.approval.history",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.approvals",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.active",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.active.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.connector",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.connector.reset",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.hitl",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.hitl.snooze.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.mitm",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.network_rules",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.reset",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.revoke",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.scoped",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.scoped.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.sni_rejection",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "egress.permissions.tproxy",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.attachment.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.mailbox.address_availability",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.mailbox.create",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.mailbox.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.mailbox.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.mailbox.setup",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.mailbox.setup.end",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.mailbox.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.messages.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.messages.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.owner_candidates.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.owner_challenges.create",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.owner_challenges.verify",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.owners.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.owners.revoke",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.settings.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.settings.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.threads.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "email.threads.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.infinite",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.prompt.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.prompt.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.prompts.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.regenerate",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.reorder",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.search",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.social_source_icon",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.unit",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.unit.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.unit.media",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.unit.reaction",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.unit.tap",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "feed.units.seen",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "foa.accounts",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "foa_auth.callback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.export",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.library",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.mkdir",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.raw",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.read",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.reads",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.rename",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.search",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.stat",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.stats",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.thumbnail",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "fs.write",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "git.log",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "git.show_file",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "github.installation.callback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "goal_prompt",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "goals.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "goals.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "goals.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "goals.reorder",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "goals.suggestions.decide",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "goals.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "grants.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "home_link_bug_reports.collect",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "hotels.details",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "hotels.events",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "hotels.results",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "idea-cards.media",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "identity",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "identity.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "iframe.call",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "invite.badge.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "invite.badge.seen",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "link_preview",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "memory.consolidate",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "memory.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "memory.reindex",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "memory.search",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "messenger-read.unlock",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "messenger.fb-check",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "messenger.pin_status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "messenger_companion.unlock",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "model.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "model.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "navigation.pinned.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "navigation.recents.touch",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "navigation.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "navigation.tab_order.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "navigation.tab_order.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "aliases": [
+      "/nodes/disconnect"
+    ],
+    "http": "POST",
+    "method": "node.disconnect",
+    "path": "/api/nodes/disconnect"
+  },
+  {
+    "aliases": [
+      "/nodes/heartbeat"
+    ],
+    "http": "POST",
+    "method": "node.heartbeat",
+    "path": "/api/nodes/heartbeat"
+  },
+  {
+    "aliases": [
+      "/nodes/list"
+    ],
+    "http": "POST",
+    "method": "node.list",
+    "path": "/api/nodes/list"
+  },
+  {
+    "aliases": [
+      "/nodes/register"
+    ],
+    "http": "POST",
+    "method": "node.register",
+    "path": "/api/nodes/register"
+  },
+  {
+    "aliases": [
+      "/nodes/unpair"
+    ],
+    "http": "POST",
+    "method": "node.unpair",
+    "path": "/api/nodes/unpair"
+  },
+  {
+    "method": "nodes.invoke_ack",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "nodes.invoke_result",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "nodes.sync",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "oauth.callback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.complete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.identity",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.identity.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.pages.start",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.questions",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.reset",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.state",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.tasks",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "onboarding.variants",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peerSpaces.asset",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peerSpaces.document",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peerSpaces.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peerSpaces.post",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peerSpaces.share",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peerSpaces.sharedWithMe.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peerSpaces.shares.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peerSpaces.unshare",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.activity.dismiss",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.activity.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.avatar",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.connections.disconnect",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.connections.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.connections.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.connections.related",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.connections.resources",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.disconnect",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.discretion.write",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.inbox.decline",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.inbox.deliver",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.inbox.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.invites.accept",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.invites.create",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.invites.delivery",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.invites.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.invites.open",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.invites.opened",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.invites.revoke",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.photo",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.requests.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.requests.sas",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.requests.sas.confirm",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.reset_conversation",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.rules.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.rules.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.rules.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "peers.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "permissions.inventory",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "permissions.settings",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "permissions.settings.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "pin.reminder_confirm",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "pin.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "podcasts.episode.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "podcasts.episodes.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "podcasts.feed.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "podcasts.feeds.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "product_improvements.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "product_improvements.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "professional_consent.resume",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "reactions.toggle",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "redteam.mocks.apply",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "redteam.mocks.clear",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "redteam.mocks.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "redteam.sidecar.tail",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "rv_migration.enable_export",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "saved.default_save",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "saved.default_status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "saved.item_delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "search.debug_overrides.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "search.debug_overrides.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "session.archive",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "session.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "session.pin",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "session.rename",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "session.start",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "session.unarchive",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "session.unpin",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "sessions.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "sessions.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.capabilities",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.create",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.definition",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.definition.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.detail",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.identity.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.remote.open",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.remote.send",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.shares.conversation",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.shares.create",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.shares.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.shares.revoke",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shared_agents.state.update",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "sharing.attempt",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "sharing.eligibility",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shopping.cart",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shopping.events",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "shopping.product_details",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "skills.disconnect",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "skills.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "skills.set_disabled",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.audience.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.audience.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.cvm.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.cvm.post",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.cvm.render",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.debug.invocation",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.debug.invocations",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.debug.log",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.debug.summary",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.export_html",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.owned.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.save",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.saved.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.share",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.share.fix",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.share.review",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.share.settings",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.share.settings.save",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.share.status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.sharing.settings",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "spaces.unshare",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "ssh.operator.disable",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "ssh.operator.enable",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "subagents.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "subagents.status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "subscription.callback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "subscription.redeem_complimentary",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "tasks.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "tasks.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "tasks.run",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "tasks.runs",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "tasks.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "theme.subscribe",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "username_password_auth.callback",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "vault.luks_status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "vm.enrollment_health",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "vm.health",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "vm_migrations.latest",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.active_voice",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.active_voice.save",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.available_voices",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.avatar_video.prepare",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.calls.join",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.calls.media_endpoint",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.calls.user_speech",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.catalog",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.catalog_filters",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.custom_voices.delete",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.custom_voices.list",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.custom_voices.rename",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.dictation",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.end_call",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.onboarding.reset",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.pipeline_profiles",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.s2s_prompts",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.select_pipeline_profile",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.select_s2s_prompt",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.speak",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.start_call",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "voice.user_speech_started",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "wallet.get",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "wallet.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "whatsapp.install",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "whatsapp.login",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "whatsapp_companion.link",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "whatsapp_companion.status",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "widgets.state.patch",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  },
+  {
+    "method": "widgets.state.set",
+    "projection": "NAME_ONLY_NOT_FULL_ROUTE"
+  }
+]

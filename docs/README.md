@@ -22,6 +22,7 @@ Pick what you want to accomplish. You do not need to understand the repository a
 ## Extend, test, and maintain
 
 - **[Developer quickstart](GITHUB_QUICKSTART.md)** — clone, check source, and run local examples.
+- **[Offline Muse CLI route compatibility](discovery/ROUTE_COMPATIBILITY.md)** — inspect pinned historical source methods and field differences; not live API access.
 - **[Architecture](ARCHITECTURE.md)** — roles, files, host boundaries, and integration scope.
 - **[Source and host limits](handbook/source-and-host-capabilities.md)** — what passing tests actually establish.
 - **[Troubleshoot with the practical handbook](handbook/README.md)** — solve context, subchat, or setup issues.

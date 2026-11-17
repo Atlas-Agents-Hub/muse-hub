@@ -345,7 +345,7 @@
     "docs/INSTALL_AND_PERSISTENCE.md": "0de4ed37dce2799a6836eb82ec302d146bfb75580f4ae3cad9df404f4254afd1",
     "docs/LEARNING_LOCAL_STUDY.md": "e4924865f93f5326270524d66ba082cd287d55b27aca8353b2ced622d5632736",
     "docs/OPTIONAL_DONOR_ADAPTERS.md": "0b7763f43e3fe5e1dae345830edd87d9f646e69cc7018c5d8a9fa700a2b8f4fe",
-    "docs/README.md": "0f444af90de57479fa0a62da47664a5843636761a7e5164f674f4a061ad0199c",
+    "docs/README.md": "1c93d187788db119352648d3df089553e143736737c3784f64bfd4586a3f6e88",
     "docs/RELEASES.md": "be794110d21f416748b70d242e1476aa4ee3d24b2dcd5159ff5e4000cba5d606",
     "docs/SECURITY.md": "81e0fbf682b9d75981663548af86f9b8a65294b7dd7caf12bbfd33a076deec73",
     "docs/SKILLS.md": "16ce57f401bf66211172a1125fbd530dc1c9c4f2d83255363c31ce89cb45eee1",
@@ -366,7 +366,11 @@
     "docs/connectors/index.html": "38e21522df501d89e27ec6eb35a42ab52ddfdb66892238a7c1e0bc37788319ed",
     "docs/connectors/upstream-catalog.json": "9b5f998d4c696feb59674a6e4808bd710b3ae75a92374c393723922ec524f3ff",
     "docs/discovery/AI_AGENT_GUIDE.md": "4388d651b626b89cf2934f77ca631c0e13b64efc821678ad83d55f397416a5ee",
+    "docs/discovery/ROUTE_COMPATIBILITY.md": "f020fa7bef76e3dbc254e465da92b3644ee9103b726ed6207d622c2cf927fc1e",
     "docs/discovery/agent-capabilities.json": "356b59132201f012b318c3517e66309ff09b26368cbfc9535a95571b5299fa41",
+    "docs/discovery/route-compat/NIKSHIPS-MIT.txt": "ed1e9c386559a5d5f0eed150a7d52a175036bf2a886edd83c9ddbf8d8972ebbc",
+    "docs/discovery/route-compat/new-402.json": "4eaf51c921920665b7e512a3c3a9b486aabe7b9f95630961b989cecaa4b1a336",
+    "docs/discovery/route-compat/old-258.json": "c800ba8833e0dff6cb3da868b1f9f3404f2a2e36bea42f8c359f634d084633cd",
     "docs/discovery/specialist-engine-index.json": "0baed4dcff6f0aecda4b2ad448aa0923a95b8983a89062cafbaa73938c54d808",
     "docs/donors/DONOR_RESEARCH.json": "a724e8ebd7e175c5ab962d1b5751986d1ad37f2c8ba59ec192039df9d01df923",
     "docs/handbook/EDITORIAL_STANDARDS.md": "d2a2e64c1657f6a819946dbaeb3c413e2d5205db45fcbf871f067d17f9e7f763",
@@ -641,7 +645,7 @@
     "src/muse_presets/portable_connectors.py": "91f7b3db1754749c8ea70561cae96810ce4cb6aaa7a9a46ece22422f0f7ea311",
     "src/muse_presets/portable_skill_export.py": "96025c7b411f549a68077d128901f5eafdda02f1d15899eabea032bf466582da",
     "src/muse_presets/provenance_vault.py": "a62c2b3b15e33c2ee3e54be793bc9afbd12ac7d12f4af41e61ece02f16e63625",
-    "src/muse_presets/public_export.py": "a0ed9466b6e928cd7e90d5f0745b4a0c8d2c45140a70fc6923c0c80b4cc48795",
+    "src/muse_presets/public_export.py": "955d0c10c3f60d2596db99c7c02fd23f1595689a80d867f0284e47f2b80644fb",
     "src/muse_presets/research_evaluator.py": "6af1da789cc31bf7cb2b0044de327c5fbd5c03a76757b262074befd4db05f262",
     "src/muse_presets/reverse.py": "3d5b4ff667ec996397f85a5a5746913d8aaff03801a864f1bbde5ffbe7dcc800",
     "src/muse_presets/reverse_sourcekit.py": "2dd3c5d091d73461956c7e39f032b87b3191c2edf9f0099eee9601bba54cbdac",
@@ -763,6 +767,7 @@
     "tests/test_muse_r5_offline_outcomes.py": "07ad258b4cb4d3562c199c08836e856ab721e026df772900e80c0141a5ab0cf6",
     "tests/test_muse_r5_product.py": "31a544e1d309afd56f11bc3bbda6c1387359de7ce999b91c79a40a33e826a0c2",
     "tests/test_muse_r5_tools.py": "c773b4136ef604959b25f33afaa7a0b2a3322f88121a9bb2771ac92082f5a62c",
+    "tests/test_muse_route_compat_h03.py": "5d4461e7e3ff37b36c154f2eaaa560650f7cc9d11ea9bcfeb0d7e7b00bc18c8f",
     "tests/test_native_host_doctor.py": "2934fbb693ae0cd5a23a2d0e6ce42ef0051279814ea113c20489643eb8127e16",
     "tests/test_native_host_doctor_exec_safety.py": "cc9ec1f6bf39afa1c8db94d11a09b563f4b043549a05635a6a125fd21f2d0b3a",
     "tests/test_native_host_doctor_macos_alias.py": "ff3f741ff75f64b596036f3978d364072cbfd55df7a79a34889d5906956ba911",
@@ -831,6 +836,7 @@
     "tests/test_vault_quarantine_writer.py": "0500248918d76f411c3fe9396ab957a727547e2b502c45c4d95efd969e81da3d",
     "tests/test_vault_statement_adoption.py": "a43e38b97240cbae686b352b758e3cefc7d4ea809d878acf92ce9394aa53fd99",
     "tools/collection_compatibility.py": "6353cb1ac57f57f21033ea833090356e790e34e94c081dac7b8af32f0d4e35bf",
+    "tools/compare_muse_routes.py": "b386c415148d0a4c753cd7b704e3f59a7095986d387aed0de4bfe0796868f954",
     "tools/muse_collection.py": "cea2b2fe19567da6e7e2b1ee7bec0088a57d4ee313a936265d754dd2ce3cb131"
   },
   "internal_control_plane_excluded": true,
@@ -841,5 +847,5 @@
   "publisher_approval_granted": false,
   "release_kind": "GITHUB_SOURCE_ONLY",
   "schema": "r46/public-source-snapshot-v1",
-  "source_file_count": 832
+  "source_file_count": 838
 }
