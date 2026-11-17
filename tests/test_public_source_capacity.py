@@ -20,7 +20,7 @@ class PublicSourceCapacityTests(unittest.TestCase):
             root = Path(d)
             docs = root / "docs"
             docs.mkdir()
-            (root / "README.md").write_text("# Safe source\n", encoding="utf-8")
+            (root / "README.md").write_bytes(b"# Safe source\n")
             for i in range(2047):
                 (docs / f"reviewed-{i:04d}.md").write_text(f"# Reviewed {i}\n", encoding="utf-8")
             files = select_public_files(root, verify_manifest=False)
