@@ -1,0 +1,52 @@
+{
+  "schema": "muse-hub/five-door-source-contract/v1",
+  "source_grade": "PINNED_OFFLINE_CONTRACT_ONLY",
+  "original_controller_provenance": "owner-private local five-seam engineering source, read-only inspected",
+  "original_controller_relative_path": "operations/engineering-doors-20261101/doorctl.py",
+  "original_doorctl_sha256": "20af2111089774f23a4c8ac5737d868f5ceeb4e08fdeae93adc9e748f7fb0b19",
+  "original_entrypoint_evidence": "25 local wrapper files observed on the authorized original host; native Muse registration not inferred",
+  "original_local_entrypoint_count": 25,
+  "stage_order": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5"
+  ],
+  "lanes": [
+    "controller",
+    "connection_presentation",
+    "games",
+    "seam_testing",
+    "qualification"
+  ],
+  "existing_engine_role": "software-engineer",
+  "existing_engine_path": "presets/software-engineer/runtime/claim-gate/engineering_workflow.py",
+  "existing_engine_sha256": "467b69836e3b08b189f2635388854563ad2b758ff7fca66705688326408b79a4",
+  "existing_engine_demo": "examples/software_engineer_workflow_demo.py",
+  "h11_reused_demo": "examples/five_door_offline_demo.py",
+  "original_owner_controller_only_apply": true,
+  "noncontroller_s3_proposal_only": true,
+  "unknown_outcomes_stop_and_reconcile": true,
+  "stop_states": [
+    "SOURCE_DRIFT",
+    "RED_NOT_REPRODUCED",
+    "UNKNOWN_EFFECT_HOLD",
+    "GREEN_FAILED",
+    "REVIEW_FAILED",
+    "CANDIDATE_SOURCE_PIN_MISMATCH",
+    "S5_REVIEW_WITNESS_DRIFT"
+  ],
+  "demo_source": "SYNTHETIC_FROZEN_CLAMP_FIXTURE",
+  "S2_real_test_process": true,
+  "S3_local_sha_preimage_validation": true,
+  "S5_local_separate_process_reopen": true,
+  "native_muse_activated": false,
+  "external_effect_authorized": false,
+  "shared_source_writes_enabled": false,
+  "original_controller_replaced": false,
+  "independent_host_authenticated": false,
+  "production_taskguard_fixed": false,
+  "production_retention_witness_proven": false,
+  "publication_authorized": false
+}

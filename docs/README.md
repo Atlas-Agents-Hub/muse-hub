@@ -18,6 +18,8 @@ Pick what you want to accomplish. You do not need to understand the repository a
 - **[Tools and working engines](CAPABILITIES.md)** — what runs in local source today and what requires external permissions.
 - **[Family Link offline handoff kit](kits/FAMILY_LINK_SOURCEKIT.md)** — package and independently test the existing local envelope and replay-shape demo; no live delivery.
 - **[Family Link H12 source contracts](../kits/family-handoff/README.md)** — precise envelope fields, role allowlists and negative identity/replay tests; still proposal-only.
+- **[Five-door H11 engineering contract](../kits/engineering-doors/README.md)** — source-pinned S1–S5 workflow with a disposable RED/CAS/GREEN/S5 review demonstration; no native controller.
+- **[Complete H00–H21 feature-readiness matrix](HUB_FEATURE_READINESS.md)** — all 22 source statuses, exact dependencies, original acceptance and unresolved native/site/security gates.
 - **[Personal Companion: Daily Desk](spaces/DAILY_DESK.md)** — tasks, notes, conflict detection, and backup/restore.
 - **[Custom connectors — 151 records](connectors/README.md)** — source and setup links, not connected services.
 
