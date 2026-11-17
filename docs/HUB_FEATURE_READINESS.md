@@ -25,7 +25,7 @@ This is the **22-item feature list** from the owner-provided Muse Hub executor g
 | H16 | Rights-reviewed Arcade | P1 | H14 | `PRIVATE_DONOR_NOT_HUB` | Per-game license/source ledger and actual mobile gameplay smoke tests |
 | H17 | Notebook persistence | P1 | H14 | `NOT_VERIFIED` | Separate notebook acceptance; existing Daily Desk alone is not this feature |
 | H18 | Apple Watch/Gadget expansion | P2 | H07 | `NOT_VERIFIED` | Paired watch Wi-Fi/cellular/readability, wrong/unpaired rejection |
-| H19 | Installation and recovery journeys | P1 | H02, H05, H08, H11, H12 | `PARTIAL_SOURCE` | Host-qualified first-use and recovery route checks for each feature |
+| H19 | Installation and recovery journeys | P1 | H02, H05, H08, H11, H12 | `SOURCE_JOURNEYS_TESTED_HOST_NOT_VERIFIED` | Host-qualified first-use and recovery route checks for each feature |
 | H20 | End-to-end gate with negative cases | P0 | H13, H14, H16, H17, H19 | `NOT_VERIFIED` | Owner-authorized target, runtime identities, device and original witness across supported routes |
 | H21 | Distribution and release | P0 | H20 | `RELEASE_NOT_READY` | Complete H20, independent public QA and release/deploy authorization; keep v1.1.0 draft |
 

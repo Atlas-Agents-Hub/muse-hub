@@ -358,10 +358,12 @@
         "H11",
         "H12"
       ],
-      "status": "PARTIAL_SOURCE",
+      "status": "SOURCE_JOURNEYS_TESTED_HOST_NOT_VERIFIED",
       "source_paths": [
         "docs/GITHUB_QUICKSTART.md",
-        "docs/INSTALL_AND_PERSISTENCE.md"
+        "docs/INSTALL_AND_PERSISTENCE.md",
+        "tools/hub_journeys.py",
+        "docs/handbook/hub-setup-journeys.md"
       ],
       "minimum_acceptance": "For each route: install/configure/health/named test/failure/stop/uninstall with no invented receipts",
       "next_verification": "Host-qualified first-use and recovery route checks for each feature",
