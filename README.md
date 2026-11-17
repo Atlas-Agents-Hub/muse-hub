@@ -1,80 +1,77 @@
 # Muse Hub
 
-**One dedicated Muse assistant for each kind of work. Skills, workflows, source tools, and connector guides in one repository.**
+**Independently developed for focused work inside Muse.** Configure one specialist at a time, with its own Main conversation and **three subchats**. The toolkit contains **15 independent assistants**, **75 skills**, **25 workflows**, **100 task starters**, and **151 connector records**—not automatically connected accounts.
 
-Muse Hub is a community-built project for configuring and extending Muse assistants. It includes **15 independent assistants**, each with its own Main conversation and **three subchats**, plus **75 skills**, **25 workflows**, **100 task starters**, and **151 connector records**. Those records are not connected accounts.
-
-**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · [Specialist methods and engines](docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) · **[Get the current published release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest)** · **[Browse tools](docs/CAPABILITIES.md)** · **[Explore connector records](docs/connectors/README.md)**
+**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Get the current published release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest)** · [Browse tools](docs/CAPABILITIES.md) · [Explore connector records](docs/connectors/README.md)
 
 ## Start with an assistant
 
-1. [Choose a specialist](docs/DOWNLOAD_A_SPECIALIST.md) that matches your work.
-2. Get its individual ZIP when **v1.1.0** is published. The 15 ZIPs are currently staged in a **draft** release; they are not yet public downloads. The [current published v1.0.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0) is available now.
-3. Create a **separate Muse assistant** for that specialist. Use its Main files, then set up its three subchats inside the same assistant.
-4. Start with a task. Use optional local tools or service connectors only when you need them and have authorized their setup.
+1. [Choose a specialist](docs/DOWNLOAD_A_SPECIALIST.md) below and read its setup guide.
+2. Use the **[published v1.0.0 source release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0)** or [source checkout](docs/v1/START_HERE.md). The 15 individual **v1.1.0 ZIPs remain a draft**; they are not public downloads.
+3. Set up a **separate Muse assistant** for the chosen role, then add its Main instructions and three subchats as appropriate. Source profiles do not provision Muse accounts, memory, credentials, or tools.
 
-Each assistant has its own instructions, documents, and memory. **Muse Hub does not put the 15 specialists inside one shared Muse account.** A downloaded package does not create accounts, grant permissions, or connect services.
+**Explore first:** [Find specialists by task](docs/handbook/specialists-by-task.md) · [Specialist methods and engines](docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [Verified capability facts](docs/discovery/agent-capabilities.json).
 
 ## The 15 specialists
 
-### Build and automate
+Choose a discipline to expand its independently maintained role guides.
 
-- **[Software Engineer](presets/software-engineer/INSTALL.md)** — Reproduce bugs, implement changes, and check regressions.
-- **[Data Engineering & Database Architect](presets/data-engineering-architect/INSTALL.md)** — Work with data quality, schemas, and migrations.
-- **[Automation Engineer](presets/automation-engineer/INSTALL.md)** — Design workflows with approval, retry, and recovery boundaries.
-- **[Infrastructure & Reliability Engineer](presets/infrastructure-reliability-engineer/INSTALL.md)** — Investigate incidents, capacity, and service reliability.
+<details>
+<summary><strong>Build and automate</strong> — 4 specialists</summary>
 
-### Research and review
+- [Software Engineer](presets/software-engineer/INSTALL.md) — Debugging, real tests, bounded code repair.
+- [Data Engineering & Database Architect](presets/data-engineering-architect/INSTALL.md) — Pipelines, migrations, schemas and data quality.
+- [Automation Engineer](presets/automation-engineer/INSTALL.md) — Scoped workflows, recovery and approval boundaries.
+- [Infrastructure & Reliability Engineer](presets/infrastructure-reliability-engineer/INSTALL.md) — Incident investigation and system reliability.
 
-- **[Research Evaluator](presets/research-evaluator/INSTALL.md)** — Compare evidence, evaluate results, and record uncertainty.
-- **[Claims Adjudicator](presets/claims-adjudicator/INSTALL.md)** — Trace claims to their evidence and preserve corrections.
-- **[Adversarial Verifier](presets/adversarial-verifier/INSTALL.md)** — Find failures with authorized negative testing.
-- **[Reverse Engineering & Security Researcher](presets/reverse-engineering-researcher/INSTALL.md)** — Study authorized software behavior and suspicious messages.
+</details>
 
-### Create and learn
+<details>
+<summary><strong>Research and review</strong> — 4 specialists</summary>
 
-- **[Creative Studio](presets/creative-studio/INSTALL.md)** — Plan visual work, animation, continuity, and delivery.
-- **[Product & Interface Designer](presets/product-interface-designer/INSTALL.md)** — Design and review interfaces, states, and accessibility.
-- **[Model Builder](presets/model-builder/INSTALL.md)** — Plan small-model training and held-out evaluation.
-- **[Learning Coach](presets/learning-coach/INSTALL.md)** — Create source-grounded lessons, practice, and review.
+- [Research Evaluator](presets/research-evaluator/INSTALL.md) — Evidence, evaluation and uncertainty.
+- [Claims Adjudicator](presets/claims-adjudicator/INSTALL.md) — Claim provenance and correction.
+- [Adversarial Verifier](presets/adversarial-verifier/INSTALL.md) — Authorized negative testing.
+- [Reverse Engineering & Security Researcher](presets/reverse-engineering-researcher/INSTALL.md) — Defensive research and permitted software analysis.
 
-### Life and planning
+</details>
 
-- **[Personal Companion](presets/personal-companion/INSTALL.md)** — Organize tasks, notes, and routines with Daily Desk.
-- **[Garden Companion](presets/garden-companion/INSTALL.md)** — Record plants, seasons, observations, and care.
-- **[Coordinator](presets/coordinator/INSTALL.md)** — Plan complex work, dependencies, and evidence-based handoffs.
+<details>
+<summary><strong>Create and learn</strong> — 4 specialists</summary>
+
+- [Creative Studio](presets/creative-studio/INSTALL.md) — Media planning, animation and continuity.
+- [Product & Interface Designer](presets/product-interface-designer/INSTALL.md) — Design systems, usability and accessibility.
+- [Model Builder](presets/model-builder/INSTALL.md) — Datasets, training experiments and held-out evaluation.
+- [Learning Coach](presets/learning-coach/INSTALL.md) — Lessons, practice and review.
+
+</details>
+
+<details>
+<summary><strong>Life and planning</strong> — 3 specialists</summary>
+
+- [Personal Companion](presets/personal-companion/INSTALL.md) — Notes, routines and a local Daily Desk.
+- [Garden Companion](presets/garden-companion/INSTALL.md) — Plants, seasons, observations and care.
+- [Coordinator](presets/coordinator/INSTALL.md) — Dependencies, task plans and evidence-based handoffs.
+
+</details>
 
 ## Tools, skills, and connectors
 
-- **[Skills and workflows](docs/SKILLS.md):** 75 developed skills and 25 source workflows; the original role/shared procedures overlap these rather than increasing the unique count.
-- **[Task starters](collections/muse-starters-v1/CATALOG.md):** 100 starters are task configurations, not 100 additional assistants.
-- **[Local examples](docs/collection/SPECIALIST_QUICKSTART.md):** bounded Python engines for schema checks, research evaluation, reliability and other tasks. The [capability guide](docs/CAPABILITIES.md) identifies what ships and what requires a separate authorized runtime.
-- **[Personal Companion Daily Desk](docs/spaces/DAILY_DESK.md):** a local SQLite task-and-note workbench with backup and restore.
-- **[151 connector records](docs/connectors/README.md):** discover integrations and their original setup instructions. Listing a connector does not install or authenticate it.
+These are working **source-only and offline** capabilities, not a claim that they have been installed into a Muse account.
 
-To run the included source examples with Python 3.12+:
+- **[Five-door engineering (H11)](kits/engineering-doors/README.md):** an S1 capture → S2 RED → S3 scoped repair → S4 GREEN → S5 local independent review demonstration, reusing the existing Claim Gate.
+- **[Family Link (H12)](kits/family-handoff/README.md):** a bounded, replay-aware offline envelope and [portable source kit](docs/kits/FAMILY_LINK_SOURCEKIT.md). No authenticated cross-account delivery is claimed.
+- **[Muse CLI compatibility (H03)](docs/discovery/ROUTE_COMPATIBILITY.md):** pinned 258/402 historical method comparison, not verified live API access.
+- **[Skills and workflows](docs/SKILLS.md):** 75 skills and 25 workflows. The 100 starters are [selectable task configurations](collections/muse-starters-v1/CATALOG.md), not additional agents.
+- **[Daily Desk](docs/spaces/DAILY_DESK.md):** local SQLite tasks and notes with backup/restore. [151 connector records](docs/connectors/README.md) are research and setup references, not authorized services.
 
-```sh
-python -B tools/muse_collection.py demo data-engineer
-python -B examples/daily_desk.py
-```
+**[H00–H21 feature and acceptance tracker](docs/HUB_FEATURE_READINESS.md)** separates source-tested features from provider, device, security, and release work that remains unverified.
 
-The Daily Desk example should report `DAILY_DESK_VERTICAL_SLICE_PASS`. These are local calculations; they do **not** demonstrate native Muse agent installation or a model-backed autonomous assistant.
+For role details, read the [specialist quickstart](docs/collection/SPECIALIST_QUICKSTART.md) and [specialist catalog](docs/collection/SPECIALIST_CATALOG.md).
 
-## The wider Muse Hub
+## Try a local tool
 
-[Preview the standalone Muse Hub source site](hub/site/index.html) and its [63-reference explorer](hub/site/public/index.html) locally. Both are **source-only and not deployed**; no Muse account, tool, device, Family Link, or shared memory connection is activated. Read [Hub scope](hub/README.md) before treating planned functionality as available.
-
-## Documentation and versions
-
-**[Documentation index](docs/README.md) · [Browse specialists by task](docs/handbook/specialists-by-task.md)** · [First-use guide](docs/v1/START_HERE.md) · [Installation and saved data](docs/INSTALL_AND_PERSISTENCE.md) · [Downloads and version status](docs/RELEASES.md) · [AI-agent discovery index](llms.txt) · [Developer source setup](docs/GITHUB_QUICKSTART.md) · [Verified capability facts](docs/discovery/agent-capabilities.json) · [Contribute](CONTRIBUTING.md) · [Security](SECURITY.md) · [MIT license](LICENSE)
-
-[Original role contracts](docs/collection/SPECIALIST_CATALOG.md) document the historical specialist scope. The 50 original role/shared procedures overlap the 75 developed skills; configurations are not additional live assistants. The historical **v0.4.1-alpha** release included eight executable tools and eleven starter profiles. The published **v1.0.0** source and the historical [v0.4.1-alpha](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.4.1-alpha) executable kits are still available. The **v1.1.0** individual assistant ZIPs are draft assets pending required GitHub checks and publication. Read the version guide before following a ZIP link.
-
-<details>
-<summary>Developer setup and older standalone tool</summary>
-
-Clone the repository and run local examples with Python 3.12+:
+Python 3.12+ is required for the included tools. Use reviewed source in a disposable workspace.
 
 ```sh
 git clone https://github.com/atlas-origins/muse-ai-agent-presets.git
@@ -82,15 +79,27 @@ cd muse-ai-agent-presets
 python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
 python -B quickstart.py --all
 python -B examples/export_portable_skills.py --plan
+python -B tools/muse_collection.py demo data-engineer
+python -B examples/daily_desk.py
+PYTHONPATH=src python -B examples/five_door_offline_demo.py
 ```
 
-An earlier [Creative Studio standalone ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip) runs with Python 3.12+ and no Git:
+For configuration, see [developer source setup](docs/GITHUB_QUICKSTART.md), the [general first-use guide](docs/v1/START_HERE.md), and [installation and saved data](docs/INSTALL_AND_PERSISTENCE.md).
 
-```sh
-python -I -B run.py --operation self-test
+## Standalone Muse Hub website
+
+The [Muse Hub website source](hub/site/index.html) and [63-reference source explorer](hub/site/public/index.html) are independently branded; the site is **not deployed**. The source preview does not authenticate Muse accounts, issue permissions, or connect devices.
+
+## Releases and boundaries
+
+**v1.0.0** is the current published source release; **v1.1.0** is a draft. The historical **v0.4.1-alpha** executable examples remain available. That earlier scope included **eleven roles and eight runnable offline tools**, not the current 15 specialist packages. The **50 original role/shared procedures** overlap the 75 developed skills. [See verified downloads and checksums](docs/RELEASES.md).
+
+These profiles are **not installed native Muse agents** and do not imply an authenticated assistant, model, or remote capability. Original TaskGuard/retention production holds and native Family Link acceptance remain open. Read the [capability ledger](docs/CAPABILITIES.md) before enabling an extension.
+
+For the historical Creative Studio standalone ZIP, use its extracted \`run.py\` with:
+
+\`\`\`sh
 python -I -B run.py --operation demo --to "$HOME/creative-production-demo"
-```
+\`\`\`
 
-The latter produces a textual storyboard and source artifacts, not rendered video. Verify release ZIPs against `SHA256SUMS.txt` and review local permissions before execution. Profiles are source-only, **not installed native Muse agents**; they are not a model-backed autonomous assistant out of the box, and they do not establish an authenticated Muse connection.
-
-</details>
+[Documentation](docs/README.md) · [AI-agent discovery index](llms.txt) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)

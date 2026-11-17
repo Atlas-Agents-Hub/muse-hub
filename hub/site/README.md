@@ -1,9 +1,11 @@
-# Muse Hub — website source
+# Muse Hub — standalone website source
 
-A standalone, offline-friendly product website for **Muse Hub**, with an independently identifiable wordmark and static design system. This source is included at `hub/site/` in the isolated Muse specialist repository integration candidate; it has not been merged, hosted or released. The product website is independent of other product and organization websites, even though versioned source links use the existing technical GitHub namespace.
+Muse Hub is an independently developed specialist toolkit. This directory contains the standalone Muse Hub website source on GitHub, with its own brand, editorial black/ivory/signal palette, 15 specialist setup journeys, and a rights-filtered 63-reference source directory. It remains separate from other sites and does not alter another project's files.
 
-Open `index.html` for the 15-profile landing page. Each specialist has a role-specific **Set up this specialist** link that selects its verified source profile and installation guide in the on-page setup section; the selector only changes local presentation, not a Muse account. Open `public/index.html` for the H02 directory of **63 reviewed public source references**. They are links to their original publishers, not mirrored code or connected accounts.
+**Deployment status: NOT DEPLOYED.** The site source is integrated into the public toolkit repository, but no dedicated Muse Hub host or independent domain has been configured or accepted. Source on GitHub is not a live website. Hosting under a different organization requires a separately verified repository/URL migration, permissions, owner approval, and hosted QA.
 
-This package contains no authentication, telemetry, installer, third-party copied modules, or device/runtime effects. All accounts, skills, tools, connectors, schedules and host permissions require their own opt-in and verified receiving environment. Source `v1.0.0` is currently published; individual `v1.1.0` specialist ZIPs remain an unpublished draft at this snapshot. Do not follow direct draft-download links.
+Open index.html locally to explore specialist profiles, filters and role-specific setup guidance. Open public/index.html to browse 63 references to their original publishers. The site has no authentication, account connection, live model call, remote execution, credential storage, tracking, or payment integration.
 
-The accompanying `INTEGRITY.json` lists exact bytes and SHA-256 digests for each packaged site file. The GitHub repository's canonical public-source manifest must also be refreshed by its authorized source process when integrating this subtree. Publication and final hosted browser/CSP checks have **not** happened.
+The H11 five-door engineering kit, H12 Family Link source contract, and H03 historical route comparator are linked at their source-tested scope. They do not grant native permissions or qualify original production TaskGuard and retention holds.
+
+INTEGRITY.json records exact bytes and SHA-256 for each static site asset, including the inline Muse mark. Changes must refresh this record and the root PUBLIC_SOURCE_MANIFEST.json through the existing source scanner. Verify responsiveness, keyboard operation, CSP, external links, and native installation boundaries on the eventual deployed host before claiming launch.

@@ -76,13 +76,41 @@
     setupResult.hidden = false;
   }
   if (setupReady) {
-    setupSelect.addEventListener('change', selectSetupRole);
+    // Only reviewed role identifiers may affect onboarding state.
+    const incomingRole = new URL(window.location.href).searchParams.get('role');
+    if (incomingRole && knownRoles.has(incomingRole)) {
+      setupSelect.value = incomingRole;
+    }
+    function syncRoleURL(slug) {
+      const url = new URL(window.location.href);
+      if (slug && knownRoles.has(slug)) {
+        url.searchParams.set('role', slug);
+      } else {
+        url.searchParams.delete('role');
+      }
+      try {
+        // file:// previews can disallow history updates.
+        history.replaceState(null, '', url);
+      } catch (_) {
+        // Local selection still works when history is unavailable.
+      }
+    }
+    setupSelect.addEventListener('change', () => {
+      selectSetupRole();
+      syncRoleURL(setupSelect.value);
+    });
     for (const link of document.querySelectorAll('[data-select-role]')) {
-      link.addEventListener('click', () => {
+      link.addEventListener('click', event => {
         const slug = link.dataset.selectRole;
         if (!knownRoles.has(slug)) return;
+        event.preventDefault();
         setupSelect.value = slug;
         selectSetupRole();
+        syncRoleURL(slug);
+        const reduceMotion = window.matchMedia &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.getElementById('setup').scrollIntoView(
+          {behavior: reduceMotion ? 'auto' : 'smooth'});
       });
     }
     selectSetupRole();

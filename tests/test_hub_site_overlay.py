@@ -22,17 +22,21 @@ class MuseHubOverlay(unittest.TestCase):
         self.assertEqual(self.html.count('class="role-card"'), 15)
         self.assertIn('href="public/index.html"', self.html)
         self.assertIn('href="../index.html"', self.explore)
-        self.assertNotIn('/kits/', self.html)
+        # The old Atlas Origins /kits/ destination must not be linked.
+        # New first-party Muse Hub engineering kits are legitimate.
+        self.assertNotIn("atlas-origins.github.io/kits/", self.html)
+        self.assertNotIn('href="/kits/"', self.html)
 
     def test_role_specific_setup_from_canonical_fifteen(self):
         roles = json.loads((SITE/'roles.json').read_text('utf8'))['roles']
         slugs = {r['id'] for r in roles}
         choices = re.findall(r'<option value="([a-z][a-z0-9-]+)" data-description=', self.html)
-        card_links = re.findall(r'class="role-card-setup" href="#setup" data-select-role="([a-z][a-z0-9-]+)"', self.html)
+        card_links = re.findall(r'class="role-card-setup" href="\?role=([a-z][a-z0-9-]+)#setup" data-select-role="([a-z][a-z0-9-]+)"', self.html)
         self.assertEqual(len(choices), 15)
         self.assertEqual(len(card_links), 15)
         self.assertEqual(set(choices), slugs)
-        self.assertEqual(set(card_links), slugs)
+        self.assertEqual({slug for slug, role in card_links if slug == role}, slugs)
+        self.assertTrue(all(slug == role for slug, role in card_links))
         self.assertIn('id="setup-role-result"', self.html)
         self.assertNotIn('/'.join(('releases','download','v1.1.0'))+'/', self.html)
         self.assertIn('aria-live="polite"', self.html)
@@ -57,6 +61,10 @@ class MuseHubOverlay(unittest.TestCase):
         for page, dirname in ((self.html,SITE), (self.explore,SITE/'public')):
             for ref in re.findall(r'(?:src|href)="([^"]+)"', page):
                 if ref.startswith(('https://', '#')): continue
+                if ref.startswith('?role='):
+                    self.assertTrue(ref.endswith('#setup'), ref)
+                    self.assertTrue(dirname.joinpath('index.html').is_file(), ref)
+                    continue
                 self.assertNotIn('..', Path(ref).parts[1:], ref)
                 self.assertTrue((dirname/ref).resolve().exists(), ref)
 
