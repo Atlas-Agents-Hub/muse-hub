@@ -12,6 +12,7 @@ Pick what you want to accomplish. You do not need to understand the repository a
 ## Find existing capabilities
 
 - **[Specialists by task](handbook/specialists-by-task.md)** — match a goal to a specialist.
+- **[Standalone Muse Hub source preview](../hub/site/index.html)** — source-only and not deployed; browse the [63-reference source directory](../hub/site/public/index.html).
 - **[Skills and workflows](SKILLS.md)** — 75 skills and 25 workflows.
 - **[100 task starters](../collections/muse-starters-v1/CATALOG.md)** — pick a configuration, not another assistant.
 - **[Tools and working engines](CAPABILITIES.md)** — what runs in local source today and what requires external permissions.

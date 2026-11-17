@@ -52,10 +52,12 @@
 
 ## Hub scope
 - [Muse Hub status and product boundaries](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/hub/README.md)
+- [Source-only Muse Hub site](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/hub/site/index.html)
+- [63-reference source explorer](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/hub/site/public/index.html)
 
 ## Boundaries
 - Each role is intended for its own Muse assistant/account. Do not combine the 15 Main conversations or their private subchat memories.
 - The source kits are not a native Muse installation, authenticated accounts, or guarantees of model-backed autonomous execution.
-- The independent Muse Hub discovery/workspace is an integration goal within this repository, not a released hosted or connected product.
+- The Muse Hub discovery site exists only in the local source candidate; it is not a released, hosted, authenticated or connected product.
 - Connector records document available source and setup routes; account connection and tool permissions must be established by the user.
 - Use original provider documentation, current version requirements, and appropriate authorizations before executing local code.

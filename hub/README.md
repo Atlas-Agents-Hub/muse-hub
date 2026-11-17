@@ -9,9 +9,9 @@ Muse Hub is **the expanded scope of this repository**, not a separate GitHub pro
 - **151 connector records** linking to source and setup information; no provider account is connected by the catalog.
 - **v1.0.0 is public.** Individual assistant ZIPs for **v1.1.0** are verified draft assets, not yet publicly released.
 
-## What is being integrated
+## Standalone website source (not deployed)
 
-The Muse Hub discovery interface, source/right audits, and cross-assistant route ideas exist as source work outside the accepted public v1.0.0 release. They are intended to live under this repository's `hub/` area after independent acceptance. **Do not label the interface deployed, and do not redirect visitors to a separate Muse Hub repository.**
+The [Muse Hub source website](site/index.html) and [63-reference explorer](site/public/index.html) are integrated into this **local source candidate**, not released or deployed. Both are static pages for browsing profiles and links, not a connected Muse terminal, account broker or native workspace. H04–H21 provider/device integrations remain separate acceptance gates. This existing repository is the intended GitHub source home; no additional Hub repository has been authorized.
 
 ## What stays separate
 

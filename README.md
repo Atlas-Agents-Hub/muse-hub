@@ -63,7 +63,7 @@ The Daily Desk example should report `DAILY_DESK_VERTICAL_SLICE_PASS`. These are
 
 ## The wider Muse Hub
 
-Muse Hub is expanding beyond downloadable specialist kits to a discovery and workspace experience. See [Hub scope and maturity](hub/README.md) for what is available as source, what is still being integrated, and what remains private. Hub does **not** provide live Family Link routing, device control, a shared memory system, or automatic account access in this public repository.
+[Preview the standalone Muse Hub source site](hub/site/index.html) and its [63-reference explorer](hub/site/public/index.html) locally. Both are **source-only and not deployed**; no Muse account, tool, device, Family Link, or shared memory connection is activated. Read [Hub scope](hub/README.md) before treating planned functionality as available.
 
 ## Documentation and versions
 

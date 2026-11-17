@@ -16,6 +16,22 @@ PUBLIC_DIRS=frozenset({
     ".github", "docs", "examples", "presets", "scripts",
     "services", "src", "templates", "tests", "skills", "collections", "tools", "hub",
 })
+# Only the source-reviewed static website may accompany the existing Hub
+# scope document. No dynamic server, private donor, image, credential or binary
+# is admitted by a directory-prefix rule.
+PUBLIC_HUB_FILES=frozenset({
+    "hub/README.md",
+    "hub/site/INTEGRITY.json",
+    "hub/site/README.md",
+    "hub/site/index.html",
+    "hub/site/public/app.js",
+    "hub/site/public/catalog.json",
+    "hub/site/public/index.html",
+    "hub/site/public/styles.css",
+    "hub/site/roles.json",
+    "hub/site/site.css",
+    "hub/site/site.js",
+})
 PUBLIC_ROOT_FILES=frozenset({
     ".gitattributes", ".gitignore", "CHANGELOG.md",
     "CONTRIBUTING.md", "LICENSE", "README.md", "SECURITY.md", "llms.txt",
@@ -147,7 +163,7 @@ def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
             name=relative.as_posix()
             if ((entry.name=="collections" and not name.startswith("collections/muse-starters-v1/"))
                 or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py"})
-                or (entry.name=="hub" and name != "hub/README.md")):
+                or (entry.name=="hub" and name not in PUBLIC_HUB_FILES)):
                 raise PublicExportError("UNAPPROVED_COLLECTION_PATH")
             if name in PRIVATE_EXCLUDED_TESTS:
                 continue
