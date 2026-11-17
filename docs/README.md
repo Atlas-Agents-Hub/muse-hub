@@ -20,6 +20,7 @@ Pick what you want to accomplish. You do not need to understand the repository a
 - **[Family Link H12 source contracts](../kits/family-handoff/README.md)** — precise envelope fields, role allowlists and negative identity/replay tests; still proposal-only.
 - **[Five-door H11 engineering contract](../kits/engineering-doors/README.md)** — source-pinned S1–S5 workflow with a disposable RED/CAS/GREEN/S5 review demonstration; no native controller.
 - **[Complete H00–H21 feature-readiness matrix](HUB_FEATURE_READINESS.md)** — all 22 source statuses, exact dependencies, original acceptance and unresolved native/site/security gates.
+- **[Companion Home H14–H17](COMPANION_HOME.md)** — five source-only rooms, original game, neutral motion and owner/Space SQLite recovery.
 - **[Personal Companion: Daily Desk](spaces/DAILY_DESK.md)** — tasks, notes, conflict detection, and backup/restore.
 - **[Custom connectors — 151 records](connectors/README.md)** — source and setup links, not connected services.
 

@@ -59,7 +59,12 @@ class PublicProductSurfaceTests(unittest.TestCase):
   self.assertFalse([x for x in current if re.match(r"R\d\d[_-]",x)])
   self.assertIn("README.md",current)
   self.assertIn("HUB_FEATURE_READINESS.md",current)
-  self.assertLessEqual(len(current - {"README.md","HUB_FEATURE_READINESS.md"}),19)
+  self.assertIn("COMPANION_HOME.md",current)
+  # Two source-reviewed product guides are admitted explicitly. The cap on
+  # all other top-level docs is unchanged and still rejects arbitrary sprawl.
+  self.assertLessEqual(len(current - {
+      "README.md", "HUB_FEATURE_READINESS.md", "COMPANION_HOME.md",
+  }),19)
   self.assertIn("DOWNLOAD_A_SPECIALIST.md",current)  # preserve topical-doc limit; allow one index
 
  def test_all_product_docs_exist_and_read_as_product(self):

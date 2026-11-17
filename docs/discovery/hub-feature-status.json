@@ -273,64 +273,78 @@
       "site_deployed": false
     },
     {
-      "id": "H14",
-      "title": "Neutral Companion Home rooms",
-      "priority": "P0",
       "dependencies": [
         "H00"
       ],
-      "status": "PRIVATE_DONOR_NOT_HUB",
-      "source_paths": [],
-      "minimum_acceptance": "Config-driven five rooms, remove personal identity and room-local chat; keep global assistant external",
-      "next_verification": "Rights-clean neutral room UI and native/browser responsive scene QA",
-      "evidence_status": "USER_SOURCE_GRAPH_PLUS_FROZEN_PUBLIC_SOURCE_PROJECTION",
+      "evidence_status": "TESTED_MACHINEB_SOURCE_PREVIEW_NOT_NATIVE",
+      "id": "H14",
+      "minimum_acceptance": "Five neutral, configurable rooms render in the local static browser; original donor's room transport and private scenes are not included.",
       "native_runtime_verified": false,
-      "site_deployed": false
+      "next_verification": "Browser QA, actual Muse-native room binding and independent mobile accessibility remain separate.",
+      "priority": "P0",
+      "site_deployed": false,
+      "source_paths": [
+        "examples/companion_home/index.html",
+        "examples/companion_home/rooms.json",
+        "scripts/build_companion_rooms.py"
+      ],
+      "status": "SOURCE_IMPLEMENTED_NOT_NATIVE",
+      "title": "Neutral Companion Home rooms"
     },
     {
+      "dependencies": [
+        "H14"
+      ],
+      "evidence_status": "TESTED_MACHINEB_SOURCE_PREVIEW_NOT_NATIVE",
       "id": "H15",
-      "title": "Portable animation director",
+      "minimum_acceptance": "Four deterministic geometric poses, pause/resume, next-pose, reduced-motion and hidden-tab behavior; no original proprietary skins.",
+      "native_runtime_verified": false,
+      "next_verification": "Real phone/mobile rendered states and native Muse scene director are not qualified.",
       "priority": "P1",
+      "site_deployed": false,
+      "source_paths": [
+        "examples/companion_home/home.js",
+        "examples/companion_home/style.css"
+      ],
+      "status": "SOURCE_IMPLEMENTED_LOCAL_BROWSER",
+      "title": "Portable animation director"
+    },
+    {
       "dependencies": [
         "H14"
       ],
-      "status": "PRIVATE_DONOR_NOT_HUB",
-      "source_paths": [],
-      "minimum_acceptance": "Neutral pose/director, reduced motion, pause/resume; no private skins",
-      "next_verification": "Independent deterministic frame tests, phone render and continuity review",
-      "evidence_status": "USER_SOURCE_GRAPH_PLUS_FROZEN_PUBLIC_SOURCE_PROJECTION",
-      "native_runtime_verified": false,
-      "site_deployed": false
-    },
-    {
+      "evidence_status": "TESTED_MACHINEB_SOURCE_PREVIEW_NOT_NATIVE",
       "id": "H16",
-      "title": "Rights-reviewed Arcade",
-      "priority": "P1",
-      "dependencies": [
-        "H14"
-      ],
-      "status": "PRIVATE_DONOR_NOT_HUB",
-      "source_paths": [],
-      "minimum_acceptance": "Only per-title licensed public game assets; touch, Back and saves; exclude ROMs",
-      "next_verification": "Per-game license/source ledger and actual mobile gameplay smoke tests",
-      "evidence_status": "USER_SOURCE_GRAPH_PLUS_FROZEN_PUBLIC_SOURCE_PROJECTION",
+      "minimum_acceptance": "One original MIT-licensed Signal Trail browser game, keyboard/touch, Back and browser-local numeric score; no ROMs.",
       "native_runtime_verified": false,
-      "site_deployed": false
+      "next_verification": "Independent mobile game-state QA and additional individually licensed titles remain.",
+      "priority": "P1",
+      "site_deployed": false,
+      "source_paths": [
+        "examples/companion_home/home.js",
+        "examples/companion_home/arcade-rights.json"
+      ],
+      "status": "SOURCE_IMPLEMENTED_ORIGINAL_GAME",
+      "title": "Rights-reviewed Arcade"
     },
     {
-      "id": "H17",
-      "title": "Notebook persistence",
-      "priority": "P1",
       "dependencies": [
         "H14"
       ],
-      "status": "NOT_VERIFIED",
-      "source_paths": [],
-      "minimum_acceptance": "Room-bound SQLite revisions, duplicate/late callback, reopen and restore to new store",
-      "next_verification": "Separate notebook acceptance; existing Daily Desk alone is not this feature",
-      "evidence_status": "USER_SOURCE_GRAPH_PLUS_FROZEN_PUBLIC_SOURCE_PROJECTION",
+      "evidence_status": "TESTED_MACHINEB_SOURCE_PREVIEW_NOT_NATIVE",
+      "id": "H17",
+      "minimum_acceptance": "Room-prefixed owner/Space SQLite, revisions, reopening, empty-store restore and scope/duplicate/malformed refusals.",
       "native_runtime_verified": false,
-      "site_deployed": false
+      "next_verification": "Host-authenticated Muse identity, real callback fencing and cross-device sync remain NOT VERIFIED.",
+      "priority": "P1",
+      "site_deployed": false,
+      "source_paths": [
+        "src/muse_presets/personal_companion.py",
+        "src/muse_presets/room_notebook.py",
+        "examples/companion_home_notebook_demo.py"
+      ],
+      "status": "SOURCE_TESTED_LOCAL_SQLITE",
+      "title": "Notebook persistence"
     },
     {
       "id": "H18",

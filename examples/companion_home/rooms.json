@@ -1,0 +1,68 @@
+{
+  "schema": "muse-hub/neutral-companion-home/v1",
+  "native_muse_installed": false,
+  "room_local_chat": false,
+  "global_assistant_external": true,
+  "rooms": [
+    {
+      "id": "focus",
+      "label": "Focus Room",
+      "theme": "signal",
+      "feature_ids": [
+        "daily-plan",
+        "quick-routines"
+      ],
+      "description": "A quiet place to choose what matters today, one priority at a time.",
+      "kicker": "THE MOMENT AHEAD",
+      "prompt": "One clear next step."
+    },
+    {
+      "id": "notebook",
+      "label": "Notebook",
+      "theme": "ivory",
+      "feature_ids": [
+        "room-notebook",
+        "local-revisions"
+      ],
+      "description": "A private local notebook concept powered by the existing owner-scoped SQLite source.",
+      "kicker": "WORDS TO KEEP",
+      "prompt": "Ideas deserve a place."
+    },
+    {
+      "id": "garden",
+      "label": "Garden",
+      "theme": "mint",
+      "feature_ids": [
+        "calm-scenes",
+        "reduced-motion"
+      ],
+      "description": "A gentle, original geometric scene designed for rest and reduced motion.",
+      "kicker": "A LITTLE STILLNESS",
+      "prompt": "Leave room to grow."
+    },
+    {
+      "id": "arcade",
+      "label": "Arcade",
+      "theme": "coral",
+      "feature_ids": [
+        "signal-trail",
+        "local-score"
+      ],
+      "description": "Play an original no-assets-needed attention game with a local score record.",
+      "kicker": "A SMALL CHALLENGE",
+      "prompt": "Follow the next signal."
+    },
+    {
+      "id": "studio",
+      "label": "Studio",
+      "theme": "lavender",
+      "feature_ids": [
+        "pose-director",
+        "pause-resume"
+      ],
+      "description": "Explore a portable, deterministic pose director without character skins or proprietary media.",
+      "kicker": "MOTION, YOUR WAY",
+      "prompt": "Make space for movement."
+    }
+  ]
+}

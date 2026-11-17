@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#151515">
+  <meta name="color-scheme" content="dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="A source-only, configurable five-room Companion Home for Muse Hub. Original arcade, accessible motion, and a local owner-scoped notebook reference.">
+  <title>Companion Home — Muse Hub / Source Preview</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="rooms.js"></script>
+  <script defer src="home.js"></script>
+</head>
+<body data-theme="signal" data-motion="paused">
+  <a class="skip-link" href="#main">Skip to the rooms</a>
+  <header class="topbar">
+    <div class="shell header-inner">
+      <a href="#top" class="brand" aria-label="Companion Home, start">
+        <svg class="brand-mark" width="38" height="38" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+          <path d="M4 5h11l8 11-6 8-6-8v17H4V5Z" fill="currentColor"/>
+          <path d="m22 17 7-12h6v28h-7V19l-9 14-5-8 8-8Z" fill="currentColor"/>
+        </svg>
+        <span>MUSE <strong>HOME</strong></span>
+      </a>
+      <div class="topbar-meta"><span class="live-dot" aria-hidden="true"></span> SOURCE-ONLY / LOCAL PREVIEW</div>
+      <a href="../../docs/COMPANION_HOME.md" class="header-link">Source guide <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero shell" id="top" aria-labelledby="hero-title">
+      <div class="hero-eyebrow"><span>FIVE ROOMS. ONE QUIET PLACE.</span><span>01 / 05</span></div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="small-caps">A DIFFERENT KIND OF WORKSPACE</p>
+          <h1 id="hero-title">A little room<br>for <em>everything.</em></h1>
+          <p class="hero-intro">Five configurable rooms for focus, notes, calm, play, and creative movement. Built as an independent Muse Hub source experience—not a second assistant or a shared account.</p>
+          <a class="explore-link" href="#rooms"><span>Explore the rooms</span><span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-art" aria-label="Abstract geometric interior with warm light" role="img">
+          <span class="arch arch-back" aria-hidden="true"></span>
+          <span class="arch arch-front" aria-hidden="true"></span>
+          <span class="window window-a" aria-hidden="true"></span>
+          <span class="window window-b" aria-hidden="true"></span>
+          <span class="floor" aria-hidden="true"></span>
+          <span class="lightbeam" aria-hidden="true"></span>
+          <span class="figure" aria-hidden="true"><span></span></span>
+          <span class="art-caption">MADE FOR THE MOMENTS BETWEEN.</span>
+        </div>
+      </div>
+      <div class="hero-base"><span>LOCAL BY DEFAULT</span><span>NO NATIVE MUSE CONNECTION IMPLIED</span></div>
+    </section>
+
+    <section class="room-section shell" id="rooms" aria-labelledby="rooms-title">
+      <div class="section-title-row">
+        <div>
+          <p class="small-caps">THE SPACES</p>
+          <h2 id="rooms-title">Choose your room.</h2>
+        </div>
+        <span class="count-mark">05 / 05</span>
+      </div>
+      <nav id="room-nav" class="room-nav" aria-label="Room navigation" role="tablist"></nav>
+
+      <div class="room-frame">
+        <div class="room-head">
+          <span id="room-kicker" class="small-caps">THE MOMENT AHEAD</span>
+          <span id="room-number" class="room-number">01 / 05</span>
+        </div>
+        <div class="room-intro">
+          <h3 id="room-heading">Focus Room</h3>
+          <p id="room-description">A quiet place for one next step.</p>
+        </div>
+        <div id="room-panel" class="room-panel" role="tabpanel" tabindex="0" aria-live="polite">
+          <section class="room-content" id="focus" data-room-panel="focus" aria-label="Focus Room">
+            <div class="content-grid">
+              <div class="content-copy">
+                <p class="overline">A SIMPLE START</p>
+                <h4>Make one thing<br>matter today.</h4>
+                <p>A little structure can feel like more space. This checklist is a browser-only preview; it never sends a task or starts a reminder.</p>
+                <button type="button" class="inline-action" id="focus-check" aria-pressed="false">Mark today’s focus <span aria-hidden="true">↗</span></button>
+                <p id="focus-status" class="subtle-status" aria-live="polite">Nothing has been scheduled or sent.</p>
+              </div>
+              <div class="focus-art" aria-hidden="true">
+                <div class="focus-ring"><div class="focus-core"></div></div>
+                <span class="focus-grid-word">ONE THING<br>AT A TIME.</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="room-content" id="notebook" data-room-panel="notebook" aria-label="Notebook" hidden>
+            <div class="content-grid">
+              <div class="content-copy">
+                <p class="overline">PRIVATE SOURCE REFERENCE</p>
+                <h4>Keep the thought.<br>Leave the noise.</h4>
+                <p>The actual notebook uses the existing <code>PersonalCompanion</code> owner/Space-scoped SQLite backend. This static preview deliberately does not collect or store private notes.</p>
+                <a class="inline-action" href="../../docs/COMPANION_HOME.md#notebook-and-recovery">Open the local notebook guide <span aria-hidden="true">↗</span></a>
+                <p class="subtle-status">Local revisions, restart recovery and a new-store restore are covered by source tests. No cloud sync.</p>
+              </div>
+              <div class="note-art" aria-hidden="true">
+                <div class="note-surface">
+                  <span class="note-margin"></span><span class="note-line long"></span>
+                  <span class="note-line"></span><span class="note-line"></span>
+                  <span class="note-line short"></span><span class="note-line long"></span>
+                  <span class="note-corner"></span>
+                </div>
+                <span class="note-art-caption">WORDS HAVE A PLACE.</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="room-content" id="garden" data-room-panel="garden" aria-label="Garden" hidden>
+            <div class="content-grid">
+              <div class="content-copy">
+                <p class="overline">A PAUSE CAN BE PRODUCTIVE</p>
+                <h4>There is time<br>to be still.</h4>
+                <p>An original vector-like scene, drawn entirely with CSS shapes. No copied characters, donor artwork, or third-party assets.</p>
+                <a href="#studio" class="inline-action" data-room-target="studio">Visit the motion studio <span aria-hidden="true">↗</span></a>
+                <p class="subtle-status">Respects the operating system’s reduced-motion preference.</p>
+              </div>
+              <div class="garden-art" aria-label="Minimal quiet garden landscape" role="img">
+                <span class="garden-sun" aria-hidden="true"></span>
+                <span class="garden-hill hill-back" aria-hidden="true"></span>
+                <span class="garden-hill hill-front" aria-hidden="true"></span>
+                <span class="garden-stem" aria-hidden="true"></span>
+                <span class="garden-leaf one" aria-hidden="true"></span>
+                <span class="garden-leaf two" aria-hidden="true"></span>
+              </div>
+            </div>
+          </section>
+
+          <section class="room-content" id="arcade" data-room-panel="arcade" aria-label="Arcade" hidden>
+            <div class="content-grid">
+              <div class="content-copy">
+                <p class="overline">ORIGINAL MINI-GAME / MIT</p>
+                <h4>Follow the<br>signal.</h4>
+                <p>Signal Trail is a small, original browser game. Pick the highlighted tile using touch or keys 1–4. Only non-personal game progress is saved in this browser.</p>
+                <div class="arcade-actions">
+                  <button id="arcade-new" class="inline-action" type="button">New game <span aria-hidden="true">↗</span></button>
+                  <button id="arcade-back" class="quiet-action" type="button">Back to Focus</button>
+                </div>
+                <p class="subtle-status">Score <strong id="arcade-score">0</strong> · Turn <strong id="arcade-turn">1</strong></p>
+              </div>
+              <div id="arcade-game" class="arcade-game">
+                <div class="game-meta"><span>SIGNAL TRAIL / 001</span><span>TOUCH OR 1–4</span></div>
+                <div class="game-pads" role="group" aria-label="Signal Trail tiles">
+                  <button class="pad" type="button" data-pad="0" aria-label="Tile 1">01</button>
+                  <button class="pad" type="button" data-pad="1" aria-label="Tile 2">02</button>
+                  <button class="pad" type="button" data-pad="2" aria-label="Tile 3">03</button>
+                  <button class="pad" type="button" data-pad="3" aria-label="Tile 4">04</button>
+                </div>
+                <p id="arcade-message" class="game-message" role="status" aria-live="polite">Select a highlighted tile.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="room-content" id="studio" data-room-panel="studio" aria-label="Studio" hidden>
+            <div class="content-grid">
+              <div class="content-copy">
+                <p class="overline">A NEUTRAL POSE DIRECTOR</p>
+                <h4>Motion, on<br>your terms.</h4>
+                <p>Four deterministic geometric poses. Pause or resume motion, advance one frame, or let your reduced-motion setting stop animation automatically.</p>
+                <div class="studio-actions">
+                  <button type="button" class="inline-action" data-action="motion" aria-pressed="false">Resume motion <span aria-hidden="true">↗</span></button>
+                  <button type="button" class="quiet-action" data-action="next-pose">Next pose</button>
+                </div>
+                <p id="motion-status" class="subtle-status" aria-live="polite">Motion paused · Pose 1 / 4</p>
+              </div>
+              <div class="studio-art">
+                <div class="studio-stage" role="img" aria-label="Abstract animated geometry with four deterministic poses">
+                  <span id="pose-shape" class="pose-shape" aria-hidden="true"><span></span></span>
+                  <span class="studio-orbit" aria-hidden="true"></span>
+                  <span class="studio-ground" aria-hidden="true"></span>
+                  <span class="studio-caption">STUDY 04 / NEUTRAL FORMS</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="room-footer"><span id="room-feature">ROOM FEATURE</span><span>LOCAL SOURCE PREVIEW · NO PROVIDER EFFECTS</span></div>
+      </div>
+    </section>
+    <section class="disclosure shell" aria-labelledby="scope-title">
+      <div>
+        <p class="small-caps">A CLEAR BOUNDARY</p>
+        <h2 id="scope-title">Source is a beginning,<br>not an installed assistant.</h2>
+      </div>
+      <p>Companion Home is a portable, independent source experience. The global Muse assistant remains external. The notebook persists only through a separately run, owner-scoped SQLite source module. No live Muse rooms, provider accounts, cross-device sync, background reminders or effects are implied.</p>
+    </section>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>MUSE HUB / COMPANION HOME</span><span>ORIGINAL UI + GAME · MIT SOURCE</span><a href="../../docs/COMPANION_HOME.md">Read source and limitations ↗</a></div></footer>
+</body>
+</html>
