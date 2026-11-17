@@ -20,10 +20,10 @@ This is the **22-item feature list** from the owner-provided Muse Hub executor g
 | H11 | Neutral five-door engineering workflow | P0 | H00 | `SOURCE_ONLY_NATIVE_NOT_VERIFIED` | Independently source-test current kit; original owner/recipient and production S5 still require actual authority |
 | H12 | Neutral Family Link envelope | P0 | H00 | `SOURCE_MERGED_NATIVE_NOT_VERIFIED` | Independent real recipient identity, consent, transport admission, ACK and durable replay fence |
 | H13 | Cross-role plan to selected transport | P1 | H04, H05, H09, H12 | `PROVIDER_BLOCKED` | One independently authenticated recipient outcome or NOT_PROVEN without dispatch |
-| H14 | Neutral Companion Home rooms | P0 | H00 | `PRIVATE_DONOR_NOT_HUB` | Rights-clean neutral room UI and native/browser responsive scene QA |
-| H15 | Portable animation director | P1 | H14 | `PRIVATE_DONOR_NOT_HUB` | Independent deterministic frame tests, phone render and continuity review |
-| H16 | Rights-reviewed Arcade | P1 | H14 | `PRIVATE_DONOR_NOT_HUB` | Per-game license/source ledger and actual mobile gameplay smoke tests |
-| H17 | Notebook persistence | P1 | H14 | `NOT_VERIFIED` | Separate notebook acceptance; existing Daily Desk alone is not this feature |
+| H14 | Neutral Companion Home rooms | P0 | H00 | `SOURCE_IMPLEMENTED_NOT_NATIVE` | Browser QA, actual Muse-native room binding and independent mobile accessibility remain separate. |
+| H15 | Portable animation director | P1 | H14 | `SOURCE_IMPLEMENTED_LOCAL_BROWSER` | Real phone/mobile rendered states and native Muse scene director are not qualified. |
+| H16 | Rights-reviewed Arcade | P1 | H14 | `SOURCE_IMPLEMENTED_ORIGINAL_GAME` | Independent mobile game-state QA and additional individually licensed titles remain. |
+| H17 | Notebook persistence | P1 | H14 | `SOURCE_TESTED_LOCAL_SQLITE` | Host-authenticated Muse identity, real callback fencing and cross-device sync remain NOT VERIFIED. |
 | H18 | Apple Watch/Gadget expansion | P2 | H07 | `NOT_VERIFIED` | Paired watch Wi-Fi/cellular/readability, wrong/unpaired rejection |
 | H19 | Installation and recovery journeys | P1 | H02, H05, H08, H11, H12 | `SOURCE_JOURNEYS_TESTED_HOST_NOT_VERIFIED` | Host-qualified first-use and recovery route checks for each feature |
 | H20 | End-to-end gate with negative cases | P0 | H13, H14, H16, H17, H19 | `NOT_VERIFIED` | Owner-authorized target, runtime identities, device and original witness across supported routes |

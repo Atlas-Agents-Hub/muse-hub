@@ -188,6 +188,45 @@ class PersonalCompanion:
             revision=_integer(expected_revision+1,minimum=1)
             self._db.execute("UPDATE companion_notes SET text='',state='deleted',revision=? WHERE owner_key=? AND space_key=? AND note_key=?",(revision,*scope.key(),key))
             return {'note_id':key,'revision':revision,'state':'deleted','secure_erasure':False}
+    def import_frozen_notes(self, records: list[dict]) -> dict:
+        """Restore reviewed current notes atomically into an empty local owner/Space.
+
+        This is an owner-approved local source operation; the injected host
+        scope alone is NOT a provider-authenticated identity. Existing notes
+        including tombstones are never overwritten.
+        """
+        scope = self._scope(True)
+        if type(records) is not list or len(records) > _LIMIT:
+            raise ValueError('INVALID_IMPORT_NOTES')
+        prepared = []
+        seen = set()
+        for row in records:
+            if type(row) is not dict or set(row) != {'note_id','text','revision'}:
+                raise ValueError('INVALID_IMPORT_NOTE')
+            key = _id(row['note_id'])
+            body = _text(row['text'])
+            rev = _integer(row['revision'],minimum=1)
+            if rev > 1_000_000:
+                raise ValueError('INVALID_IMPORT_REVISION')
+            if key in seen:
+                raise ValueError('DUPLICATE_IMPORT_NOTE')
+            seen.add(key)
+            prepared.append((key,body,rev))
+        with self._transaction():
+            total = self._db.execute(
+                'SELECT COUNT(*) FROM companion_notes WHERE owner_key=? AND space_key=?',
+                scope.key(),
+            ).fetchone()[0]
+            if total:
+                raise ValueError('RESTORE_TARGET_NOT_EMPTY')
+            for key, body, rev in prepared:
+                self._db.execute(
+                    "INSERT INTO companion_notes VALUES(?,?,?,?,?,'active')",
+                    (*scope.key(),key,body,rev),
+                )
+        return {'count':len(prepared), 'scope':'LOCAL_SQLITE_ONLY',
+                'native_installed':False, 'provider_authenticated':False}
+
     def _reminder_row(self,scope: CompanionScope,key: str):
         return self._db.execute('SELECT reminder_key,title,due_ms,revision,state FROM companion_reminders WHERE owner_key=? AND space_key=? AND reminder_key=?',(*scope.key(),key)).fetchone()
     @staticmethod

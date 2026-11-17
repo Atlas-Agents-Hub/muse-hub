@@ -1,0 +1,18 @@
+{
+  "schema": "muse-hub/arcade-rights/v1",
+  "third_party_gameplay_assets_included": false,
+  "license": "MIT (repository LICENSE)",
+  "games": [
+    {
+      "id": "signal-trail",
+      "title": "Signal Trail",
+      "rights": "ORIGINAL_MIT_SOURCE",
+      "source": "examples/companion_home/home.js",
+      "external_assets": [],
+      "roms": [],
+      "platform": "Browser-only local interaction; no game assets, account or network",
+      "saved_state": "only seed, turn and score in localStorage; never synced",
+      "verified_native_runtime": false
+    }
+  ]
+}

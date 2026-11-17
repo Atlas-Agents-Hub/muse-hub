@@ -95,6 +95,7 @@ class FeatureReadinessContract(unittest.TestCase):
             self.assertIn(tasks[key]["status"], {
                 "PROVIDER_BLOCKED", "NOT_VERIFIED", "PRIVATE_DONOR_NOT_HUB",
                 "RELEASE_NOT_READY", "SOURCE_ONLY_INCOMPLETE",
+                "SOURCE_IMPLEMENTED_NOT_NATIVE",
             })
         self.assertIn("NO_NATIVE_GRANTS", record["boundary_notes"])
 
