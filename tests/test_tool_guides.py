@@ -25,7 +25,7 @@ class ToolGuideTests(unittest.TestCase):
                 self.assertGreaterEqual(len(row['steps']),3)
                 self.assertGreaterEqual(len(row['checks']),2)
                 self.assertTrue(row['supported_functions'])
-                body=(ROOT/row['doc_path']).read_text()
+                body=(ROOT/row['doc_path']).read_text(encoding='utf-8')
                 self.assertIn(row['title'],body)
                 self.assertIn(row['starter_prompt'],body)
                 self.assertIn('## Check the result',body)

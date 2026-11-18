@@ -829,7 +829,6 @@ class ToolSchemaGenerator:
             "side_effects": description.side_effects,
             "dependencies": description.dependencies,
             "security_requirements": description.security_requirements,
-            "generated_at": "2024-01-15T10:30:00Z",
             "schema_version": "1.0",
             "input_parameters": len(input_params),
             "output_parameters": len(output_params),
@@ -967,7 +966,7 @@ def main():
                 if validation_errors:
                     print(f"  {schema.name}: {', '.join(validation_errors)}")
                 else:
-                    print(f"  {schema.name}: ✓ Valid")
+                    print(f"  {schema.name}: PASS: Valid")
         
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

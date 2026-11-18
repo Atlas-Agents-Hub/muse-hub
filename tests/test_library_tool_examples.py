@@ -355,9 +355,22 @@ class LibraryToolExamples(unittest.TestCase):
 
     def test_tool_schemas_sample_has_valid_required_array_shapes(self):
         work = self.copy_skill("agent-designer")
-        result = self.run_helper(work, "tool_schema_generator.py", "assets/sample_tool_descriptions.json",
+        # Exercise Windows' default console encoding even on UTF-8 Linux runners.
+        # A per-process wrapper preserves isolated mode and the input's contents.
+        (work / "cp1252_schema_runner.py").write_text(
+            "import runpy, sys\n"
+            "sys.stdout.reconfigure(encoding='cp1252', errors='strict')\n"
+            "sys.stderr.reconfigure(encoding='cp1252', errors='strict')\n"
+            "sys.argv[0] = 'tool_schema_generator.py'\n"
+            "runpy.run_path('tool_schema_generator.py', run_name='__main__')\n",
+            encoding="utf-8",
+        )
+        result = self.run_helper(work, "cp1252_schema_runner.py", "assets/sample_tool_descriptions.json",
                                  "--validate", "-o", "schemas")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("PASS: Valid", result.stdout)
+        for suffix in ("_openai", "_anthropic", "_validation", "_examples"):
+            self.assertIsInstance(json.loads((work / f"schemas{suffix}.json").read_text(encoding="utf-8")), dict)
         schemas = json.loads((work / "schemas.json").read_text(encoding="utf-8"))["tool_schemas"]
         self.assertEqual(len(schemas), 5)
         def check_node(node):
@@ -371,6 +384,7 @@ class LibraryToolExamples(unittest.TestCase):
                 for value in node:
                     check_node(value)
         for tool in schemas:
+            self.assertNotIn("generated_at", tool["metadata"])
             check_node(tool["openai_schema"]["parameters"])
             check_node(tool["anthropic_schema"]["input_schema"])
 
