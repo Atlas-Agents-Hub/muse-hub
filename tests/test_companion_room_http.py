@@ -166,6 +166,20 @@ class RoomHttpTests(unittest.TestCase):
                 self.assertEqual(self.call("/api/room/put", data)[0], 400)
         self.assertEqual(self.listing()["notes"], [])
 
+    def test_unicode_codepoint_limit_and_utf8_http_roundtrip(self):
+        for count, expected in ((4001, 200), (8000, 200), (8001, 400)):
+            text = "\U0001f600" * count
+            body = json.dumps(dict(room_id="notebook", note_id="unicode" + str(count),
+                                   text=text, expected_revision=0),
+                              ensure_ascii=False).encode("utf-8")
+            with self.subTest(codepoints=count):
+                self.assertLess(len(body), 32768)
+                status, _, raw = self.call("/api/room/put", body)
+                self.assertEqual(status, expected, raw)
+        rows = self.listing()["notes"]
+        self.assertEqual({row["note_id"]: len(row["text"]) for row in rows},
+                         {"unicode4001": 4001, "unicode8000": 8000})
+
     def test_malformed_duplicate_and_nonfinite_json(self):
         for raw in ['{"room_id":"notebook","room_id":"garden"}', '{"room_id":NaN}', '[]', '{', 'null']:
             self.assertEqual(self.call("/api/room/list", raw)[0], 400)

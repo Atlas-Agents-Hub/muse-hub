@@ -198,7 +198,7 @@ def build_journeys(root: Path = ROOT, *, feature: str | None = None,
                 "Run the named local source test independently; it cannot prove native host behavior."
                 if test_path else "No qualified host test exists; do not claim operational acceptance.",
                 name=name,
-                command=("python -B -m unittest discover -s tests -p " +
+                command=("python -B scripts/run_source_test.py " +
                          Path(test_path).name) if test_path else None),
             "failure": _phase(
                 "HOLD_UNKNOWN",

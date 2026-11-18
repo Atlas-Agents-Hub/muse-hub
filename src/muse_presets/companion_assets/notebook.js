@@ -12,12 +12,13 @@
   const knownRooms = new Set(['focus', 'notebook', 'garden', 'arcade', 'studio']);
 
   function controls() {
+    const locked = !token || !current;
     el('notebook-workspace').setAttribute('aria-busy', String(busy));
-    for (const id of ['notebook-refresh', 'notebook-lock', 'notebook-room', 'room-note-new']) el(id).disabled = busy;
-    el('room-note-text').disabled = busy || Boolean(pending);
-    el('room-note-save').disabled = busy || blocked || Boolean(pending);
-    el('room-note-delete').disabled = busy || blocked || Boolean(pending);
-    for (const button of el('room-note-list').querySelectorAll('button')) button.disabled = busy || Boolean(pending);
+    for (const id of ['notebook-refresh', 'notebook-lock', 'notebook-room', 'room-note-new']) el(id).disabled = busy || locked;
+    el('room-note-text').disabled = busy || locked || Boolean(pending);
+    el('room-note-save').disabled = busy || locked || blocked || Boolean(pending);
+    el('room-note-delete').disabled = busy || locked || blocked || Boolean(pending);
+    for (const button of el('room-note-list').querySelectorAll('button')) button.disabled = busy || locked || Boolean(pending);
     el('notebook-session-form').querySelector('button').disabled = busy;
   }
   function resetEditor() {
@@ -44,7 +45,7 @@
       const heading = note.text.split('\n')[0].slice(0, 80);
       button.append(node('strong', heading), node('span', 'Revision ' + note.revision + ' · Open to edit'));
       button.addEventListener('click', () => {
-        if (busy || pending || !discardDraft()) return;
+        if (!token || busy || pending || !discardDraft()) return;
         current = {...note}; blocked = false;
         el('room-note-text').value = note.text;
         el('notebook-editor-title').textContent = 'Edit your note';
@@ -64,11 +65,17 @@
       const response = await fetch(path, {method: 'POST', cache: 'no-store', credentials: 'omit', redirect: 'error',
         headers: {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'},
         body: JSON.stringify(data), signal: controller.signal});
+      if (requestEpoch !== sessionEpoch) throw new Error('SESSION_CLEARED');
+      // Authorization revocation clears private state even if its body is invalid.
+      if (response.status === 401 || response.status === 403) {
+        const error = new Error('SESSION_NOT_AUTHORIZED');
+        error.status = response.status; error.path = path; throw error;
+      }
       const body = await response.json();
       if (requestEpoch !== sessionEpoch) throw new Error('SESSION_CLEARED');
       if (!response.ok) {
         const error = new Error(typeof body.error === 'string' ? body.error : 'REQUEST_UNCONFIRMED');
-        error.status = response.status; throw error;
+        error.status = response.status; error.path = path; throw error;
       }
       return body;
     } finally { clearTimeout(timer); }
@@ -78,7 +85,7 @@
       Array.isArray(data.notes) && data.notes.length <= 256 &&
       new Set(data.notes.map(n => n && n.note_id)).size === data.notes.length &&
       data.notes.every(n => n && n.room_id === room && /^[A-Za-z][A-Za-z0-9-]{0,39}$/.test(n.note_id) &&
-        typeof n.text === 'string' && n.text.length <= 8000 && Number.isSafeInteger(n.revision) && n.revision > 0);
+        typeof n.text === 'string' && Array.from(n.text).length <= 8000 && Number.isSafeInteger(n.revision) && n.revision > 0);
   }
   async function refresh() {
     const data = await api('/api/room/list', {room_id: room});
@@ -106,20 +113,38 @@
     try { await action(); }
     catch (error) {
       if (actionEpoch !== sessionEpoch) return;
-      if (pending && error.status >= 400 && error.status < 500) {
+      if (error.status === 401 || error.status === 403) {
+        const outcome = pending ? (pending.acknowledged ?
+          'The change was acknowledged, but its saved state could not be read back. ' :
+          'The save or delete outcome is not confirmed. ') : '';
+        clearSession();
+        status('Session authorization ended. Page memory cleared. ' + outcome +
+          'Reopen the correct local session and check saved notes before another change; nothing was retried.');
+        el('notebook-token').focus();
+        return;
+      }
+      // Only refusal of the mutation itself can release its pending write fence.
+      if (pending && error.path === '/api/room/' + pending.operation &&
+          error.status >= 400 && error.status < 500) {
         pending = null;
-        blocked = error.status === 409 || error.status === 401 || error.status === 403;
+        blocked = error.status === 409;
         status(error.status === 409 ? 'A newer saved revision exists. Your draft is preserved. Refresh saved notes, then review before editing again.' :
           'The change was refused (' + error.message + '). Your draft is preserved. Check the input or reopen the local session.');
       } else {
         blocked = true;
-        status(pending ? 'Save or delete outcome is not confirmed. Your draft is preserved. Use Refresh saved notes before any new change; do not resend.' :
+        status(pending ? (pending.acknowledged ?
+          'The change was acknowledged, but saved state has not been read back. Use Refresh saved notes before any new change; do not resend.' :
+          'Save or delete outcome is not confirmed. Your draft is preserved. Use Refresh saved notes before any new change; do not resend.') :
           'Could not read saved notes. Check the local session and server, then Refresh saved notes.');
       }
     } finally { if (actionEpoch === sessionEpoch) { busy = false; controls(); } }
   }
   async function mutate(operation) {
-    if (pending || blocked || !current) return;
+    if (!token || pending || blocked || !current) return;
+    if (operation === 'put' && (!draft().trim() || Array.from(draft()).length > 8000)) {
+      status('Enter between 1 and 8,000 characters. Your draft is unchanged.');
+      return;
+    }
     pending = {operation, room_id: room, note_id: current.note_id, expected_revision: current.revision};
     if (operation === 'put') pending.text = draft();
     controls();
@@ -127,6 +152,7 @@
     const result = await api('/api/room/' + operation, body);
     if (!result || result.note_id !== pending.note_id || result.room_id !== room ||
         result.revision !== pending.expected_revision + 1) throw new Error('MUTATION_READBACK_UNCONFIRMED');
+    pending.acknowledged = true;
     await refresh();
   }
   el('notebook-session-form').addEventListener('submit', event => {
@@ -166,12 +192,12 @@
     if (!hadPending && blocked) status('Saved notes refreshed. Your draft is unchanged. Open a saved note or choose New note after reviewing.');
   }));
   el('room-note-new').addEventListener('click', () => {
-    if (busy || pending || !discardDraft()) return;
+    if (!token || busy || pending || !discardDraft()) return;
     resetEditor(); controls(); el('room-note-text').focus(); status('New draft. Nothing saved yet.');
   });
   el('notebook-room').addEventListener('change', event => {
     const next = event.target.value;
-    if (busy || pending || !knownRooms.has(next) || !discardDraft()) { event.target.value = room; return; }
+    if (!token || busy || pending || !knownRooms.has(next) || !discardDraft()) { event.target.value = room; return; }
     perform(async () => { room = next; notes = []; renderNotes(); resetEditor(); await refresh(); });
   });
   function clearSession() {

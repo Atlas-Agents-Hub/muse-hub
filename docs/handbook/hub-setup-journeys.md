@@ -23,6 +23,12 @@ The `--verify` command checks the 22-feature register, dependency graph, source 
 6. **stop:** the journey starts no background worker. Stop only an owned process after reconciling identity and side effects.
 7. **uninstall:** remove only verified disposable local output. Remote jobs, accounts and host registrations require owner-authorized revocation.
 
+The returned named-test commands use the portable source runner, for example:
+
+    python -B scripts/run_source_test.py test_companion_home_h14_h17.py
+
+Run these commands from the repository root. The runner adds the checkout's `src` directory to Python's import path, so Windows, macOS and Linux use the same command without a package installation or preconfigured `PYTHONPATH`. It executes only the explicitly selected source suite and returns its real exit status; displaying a journey never executes it.
+
 The tool is a **read-only source planner**, not a second installer, Claim Gate, transport selector or execution authority. For disposable source packaging, use the existing `python -B quickstart.py --role learning-coach` command. For create-only staging, see [Installation and saved data](../INSTALL_AND_PERSISTENCE.md).
 
 ## Feature-specific boundaries
@@ -42,7 +48,7 @@ The original TaskGuard terminal/retention durable-witness holds and H12 real-rec
 
 The [Companion Home guide](../COMPANION_HOME.md#use-the-real-local-notebook) now gives an explicit local launch, session entry, saved-note health check, revision-conflict recovery, stop/restart and database-preserving uninstall path. Use `examples/space_starter.py --serve --companion-home` with an owner-controlled absolute database path. This is one usable **local** journey, not completion of the CLI, coding bridge, desktop, five-door or authenticated Family Link setup paths.
 
-H03 and H14?H17 now expose their existing named source tests through the journey tool. `SOURCE_TEST_AVAILABLE_NOT_RUN` means exactly that: displaying a test command does not execute it or prove native acceptance. The interactive Notebook's additional real HTTP tests are named in its guide.
+H03 and H14–H17 now expose their existing named source tests through the journey tool. `SOURCE_TEST_AVAILABLE_NOT_RUN` means exactly that: displaying a test command does not execute it or prove native acceptance. The interactive Notebook's additional real HTTP tests are named in its guide.
 
 ## Failure and restart policy
 

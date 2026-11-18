@@ -1,5 +1,9 @@
 """Keep existing source tests discoverable without promoting native acceptance."""
 import importlib.util
+import os
+import shlex
+import subprocess
+import sys
 from pathlib import Path
 import unittest
 
@@ -15,7 +19,7 @@ class SourceTestMappingTests(unittest.TestCase):
         test = row["phases"]["named_test"]
         self.assertEqual(test["status"], "SOURCE_TEST_AVAILABLE_NOT_RUN")
         self.assertEqual(test["name"], "tests/" + filename)
-        self.assertEqual(test["command"], "python -B -m unittest discover -s tests -p " + filename)
+        self.assertEqual(test["command"], "python -B scripts/run_source_test.py " + filename)
         self.assertTrue((ROOT / test["name"]).is_file())
         self.assertFalse(row["native_runtime_verified"])
         self.assertFalse(row["site_deployed"])
@@ -35,6 +39,21 @@ class SourceTestMappingTests(unittest.TestCase):
 
     def test_h17_sqlite_test_is_discoverable(self):
         self.assert_mapping("H17", "test_companion_home_h14_h17.py")
+
+    def test_advertised_commands_run_without_installed_package_or_pythonpath(self):
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        env["PYTHONNOUSERSITE"] = "1"
+        for feature in ("H03", "H14"):
+            with self.subTest(feature=feature):
+                command = journeys.build_journeys(ROOT, feature=feature)["journeys"][0]["phases"]["named_test"]["command"]
+                argv = shlex.split(command)
+                self.assertEqual(argv.pop(0), "python")
+                result = subprocess.run([sys.executable, *argv], cwd=ROOT, env=env,
+                                        stdin=subprocess.DEVNULL, capture_output=True,
+                                        text=True, encoding="utf-8", timeout=40)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertRegex(result.stderr, r"Ran [1-9][0-9]* tests")
 
     def test_unmapped_native_routes_stay_unverified(self):
         for feature in ("H04", "H05", "H06", "H07", "H08", "H09", "H10", "H13", "H18", "H20"):
