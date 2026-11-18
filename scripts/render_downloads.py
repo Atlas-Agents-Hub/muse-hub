@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the public downloads directory from the validated Muse collection."""
+"""Render static release labels and downloads from the validated Muse collection."""
 from __future__ import annotations
 
 import argparse
@@ -15,6 +15,14 @@ from muse_collection import load_collection
 
 REPO = 'https://github.com/atlas-origins/muse-ai-agent-presets'
 SITE = ROOT / 'hub/site'
+HOME_CAPTIONS = {
+    'packages': 'Complete ZIP packages · Version {version}',
+    'specialist': 'YOUR SPECIALIST / VERSION {version}',
+    'footer': 'VERSION {version} · BUILT FOR MUSE',
+}
+CAPTION = re.compile(
+    r'(?P<open><(?P<tag>div|span)\b[^<>]*\bdata-release-caption="(?P<key>[^"]+)"[^<>]*>)'
+    r'[^<>]*(?P<close></(?P=tag)>)')
 
 
 def release_version(root: Path = ROOT) -> str:
@@ -84,9 +92,46 @@ def catalog(root: Path = ROOT) -> dict:
             'bundles':bundles,'items':rows}
 
 
-def render(data: dict, root: Path = ROOT) -> str:
-    version = data['version']
+def render_homepage(data: dict, root: Path = ROOT) -> str:
+    """Keep authored page markup while deriving every current release field."""
     home = (root / 'hub/site/index.html').read_text(encoding='utf-8')
+    seen = []
+
+    def caption(match: re.Match) -> str:
+        key = match['key']
+        if key not in HOME_CAPTIONS or key in seen:
+            raise ValueError('Homepage release captions must have unique known keys.')
+        seen.append(key)
+        label = HOME_CAPTIONS[key].format(version=data['version'].removeprefix('v'))
+        return match['open'] + html.escape(label) + match['close']
+
+    home = CAPTION.sub(caption, home)
+    if set(seen) != set(HOME_CAPTIONS) or home.count('data-release-caption') != len(seen):
+        raise ValueError('Homepage must mark all three release captions.')
+    if re.search(r'\bversion\s+v?[0-9]+\.[0-9]+\.[0-9]+\b', CAPTION.sub('', home), re.IGNORECASE):
+        raise ValueError('Homepage has an unmarked release caption.')
+
+    assets = {row['asset']: row['url'] for row in data['items'] + data['bundles']}
+    release_link = re.compile(r'href="' + re.escape(REPO + '/releases/') + r'(?P<route>[^"]+)"')
+
+    def link(match: re.Match) -> str:
+        route = match['route']
+        if re.fullmatch(r'tag/v[0-9]+\.[0-9]+\.[0-9]+', route):
+            return f'href="{REPO}/releases/tag/{data["version"]}"'
+        download = re.fullmatch(r'download/v[0-9]+\.[0-9]+\.[0-9]+/([^/]+)', route)
+        if download:
+            asset = re.sub(r'-v[0-9]+\.[0-9]+\.[0-9]+(?=\.zip$)', '-' + data['version'], download[1])
+            if asset in assets:
+                return f'href="{html.escape(assets[asset])}"'
+        raise ValueError('Homepage release link does not name a catalog download.')
+
+    return release_link.sub(link, home)
+
+
+def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
+    version = data['version']
+    if home is None:
+        home = render_homepage(data, root)
     favicon = home[home.index('  <link rel="icon"'):home.index('\n',home.index('  <link rel="icon"'))]
     header = home[home.index('  <header'):home.index('  <main')]
     header = header.replace('href="#top"','href="index.html"').replace('href="#specialists"','href="index.html#specialists"').replace('href="#setup"','href="index.html#setup"')
@@ -151,8 +196,10 @@ def render(data: dict, root: Path = ROOT) -> str:
 
 def outputs(root: Path = ROOT) -> dict[str,bytes]:
     data=catalog(root)
-    return {'downloads.json':(json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8'),
-            'downloads.html':render(data,root).encode('utf-8')}
+    home=render_homepage(data,root)
+    return {'index.html':home.encode('utf-8'),
+            'downloads.json':(json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8'),
+            'downloads.html':render(data,root,home=home).encode('utf-8')}
 
 
 def main() -> int:

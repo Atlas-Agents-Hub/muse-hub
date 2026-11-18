@@ -1,10 +1,16 @@
 """Public downloads and deployment must agree with the actual release."""
 from __future__ import annotations
 import copy
+from contextlib import redirect_stderr, redirect_stdout
 import importlib.util
+import io
 import json
 from pathlib import Path
+import re
+import sys
+import tempfile
 import unittest
+from unittest import mock
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -36,8 +42,9 @@ class PublicReleaseDownloads(unittest.TestCase):
         urls={row['id']:row['url'] for row in self.directory['items'] if row['kind']=='specialist'}
         self.assertEqual(urls,{role['id']:role['download_url'] for role in roles})
         self.assertEqual(urls,discovery['specialist_downloads'])
-        self.assertTrue(urls['data-engineering-architect'].endswith('/muse-data-engineer-v1.1.1.zip'))
-        self.assertTrue(urls['infrastructure-reliability-engineer'].endswith('/muse-reliability-engineer-v1.1.1.zip'))
+        version=self.renderer.release_version()
+        self.assertTrue(urls['data-engineering-architect'].endswith('/muse-data-engineer-'+version+'.zip'))
+        self.assertTrue(urls['infrastructure-reliability-engineer'].endswith('/muse-reliability-engineer-'+version+'.zip'))
 
     def release_fixture(self):
         rows=self.directory['items']+self.directory['bundles']
@@ -103,6 +110,134 @@ class PublicReleaseDownloads(unittest.TestCase):
                 self.assertNotIn(phrase,text,(name,phrase))
 
 
+
+
+class GeneratedReleasePresentation(unittest.TestCase):
+    """The catalog drives static release captions as well as download links."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.renderer=load_script('render_downloads')
+        cls.collection=cls.renderer.load_collection(ROOT/'collections/muse-starters-v1')
+
+    def fixture(self,root,version='v9.8.7'):
+        (root/'presets').mkdir()
+        (root/'presets/catalog.json').write_text(json.dumps({'release':version}),encoding='utf-8')
+        site=root/'hub/site'
+        site.mkdir(parents=True)
+        for name in ('index.html','roles.json'):
+            (site/name).write_bytes((ROOT/'hub/site'/name).read_bytes())
+        return site
+
+    def run_renderer(self,root,check=False):
+        outputs=self.renderer.outputs
+        stream=io.StringIO()
+        with mock.patch.object(self.renderer,'outputs',side_effect=lambda:outputs(root)), \
+             mock.patch.object(self.renderer,'SITE',root/'hub/site'), \
+             mock.patch.object(sys,'argv',['render_downloads.py']+(['--check'] if check else [])), \
+             redirect_stdout(stream),redirect_stderr(stream):
+            result=self.renderer.main()
+        return result,stream.getvalue()
+
+    def test_check_rejects_stale_homepage_caption_with_or_without_v_prefix(self):
+        with tempfile.TemporaryDirectory() as directory, \
+             mock.patch.object(self.renderer,'load_collection',return_value=self.collection):
+            root=Path(directory)
+            site=self.fixture(root)
+            for name,content in self.renderer.outputs(root).items():
+                (site/name).write_bytes(content)
+            current=(site/'index.html').read_text(encoding='utf-8')
+            for caption in ('Version 0.1.0','Version v0.1.0'):
+                with self.subTest(caption=caption):
+                    stale,count=re.subn(r'Version v?[0-9]+\.[0-9]+\.[0-9]+',caption,current,count=1)
+                    self.assertEqual(count,1)
+                    (site/'index.html').write_text(stale,encoding='utf-8')
+                    result,message=self.run_renderer(root,check=True)
+                    self.assertEqual(result,1,message)
+                    self.assertIn('index.html',message)
+                    self.assertEqual((site/'index.html').read_text(encoding='utf-8'),stale)
+
+    def test_each_homepage_caption_and_downloads_footer_is_checked(self):
+        with tempfile.TemporaryDirectory() as directory, \
+             mock.patch.object(self.renderer,'load_collection',return_value=self.collection):
+            root=Path(directory)
+            site=self.fixture(root)
+            expected=self.renderer.outputs(root)
+            for name,key in (('index.html','packages'),('index.html','specialist'),
+                             ('index.html','footer'),('downloads.html','footer')):
+                with self.subTest(page=name,caption=key):
+                    for output,content in expected.items():(site/output).write_bytes(content)
+                    page=expected[name].decode('utf-8')
+                    stale,count=re.subn(r'(data-release-caption="'+key+r'"[^>]*>)([^<]+)',
+                                        lambda match:match[1]+match[2].replace('9.8.7','0.1.0'),page)
+                    self.assertEqual(count,1)
+                    (site/name).write_text(stale,encoding='utf-8')
+                    result,message=self.run_renderer(root,check=True)
+                    self.assertEqual(result,1,message)
+                    self.assertIn(name,message)
+                    self.assertEqual((site/name).read_text(encoding='utf-8'),stale)
+
+    def test_catalog_upgrade_updates_static_labels_links_and_inherited_footer_in_one_pass(self):
+        from html.parser import HTMLParser
+        class Page(HTMLParser):
+            def __init__(self):super().__init__();self.text=[];self.links=[]
+            def handle_starttag(self,tag,attrs):
+                if tag=='a' and 'href' in dict(attrs):self.links.append(dict(attrs)['href'])
+            def handle_data(self,value):self.text.append(value)
+
+        with tempfile.TemporaryDirectory() as directory, \
+             mock.patch.object(self.renderer,'load_collection',return_value=self.collection):
+            root=Path(directory)
+            site=self.fixture(root)
+            for version in ('v9.8.7','v10.4.2'):
+                with self.subTest(version=version):
+                    (root/'presets/catalog.json').write_text(json.dumps({'release':version}),encoding='utf-8')
+                    self.assertEqual(self.run_renderer(root,check=True)[0],1)
+                    self.assertEqual(self.run_renderer(root)[0],0)
+                    data=json.loads((site/'downloads.json').read_text(encoding='utf-8'))
+                    self.assertEqual(data['version'],version)
+                    expected_urls={row['url'] for row in data['items']+data['bundles']}
+                    for name,label_count in (('index.html',3),('downloads.html',2)):
+                        page=Page();page.feed((site/name).read_text(encoding='utf-8'))
+                        labels=re.findall(r'\bversion\s+v?([0-9]+\.[0-9]+\.[0-9]+)\b',' '.join(page.text),re.IGNORECASE)
+                        self.assertEqual(labels,[version.removeprefix('v')]*label_count,name)
+                        downloads={url for url in page.links if '/releases/download/' in url}
+                        self.assertEqual(len(downloads),17 if name=='index.html' else 120,name)
+                        self.assertTrue(downloads<=expected_urls,(name,downloads-expected_urls))
+                        releases=[url for url in page.links if '/releases/tag/' in url]
+                        self.assertTrue(all(url==self.renderer.REPO+'/releases/tag/'+version for url in releases))
+                    self.assertEqual(self.run_renderer(root,check=True)[0],0)
+                    before={name:(site/name).read_bytes() for name in self.renderer.outputs(root)}
+                    self.assertEqual(self.run_renderer(root)[0],0)
+                    self.assertEqual(before,{name:(site/name).read_bytes() for name in before})
+
+    def test_missing_duplicate_unknown_or_unmarked_homepage_caption_is_refused(self):
+        with tempfile.TemporaryDirectory() as directory, \
+             mock.patch.object(self.renderer,'load_collection',return_value=self.collection):
+            root=Path(directory)
+            site=self.fixture(root)
+            home=(site/'index.html').read_text(encoding='utf-8')
+            mutations={
+                'missing':home.replace(' data-release-caption="packages"',''),
+                'duplicate':home+'<span data-release-caption="footer">VERSION 1.0.0</span>',
+                'unknown':home.replace('data-release-caption="packages"','data-release-caption="extra"'),
+                'unmarked':home+'<p>Version 0.1.0</p>',
+            }
+            for change,content in mutations.items():
+                with self.subTest(change=change):
+                    (site/'index.html').write_text(content,encoding='utf-8')
+                    with self.assertRaisesRegex(ValueError,'[Hh]omepage'):
+                        self.renderer.outputs(root)
+
+    def test_unknown_homepage_release_download_is_refused(self):
+        with tempfile.TemporaryDirectory() as directory, \
+             mock.patch.object(self.renderer,'load_collection',return_value=self.collection):
+            root=Path(directory)
+            site=self.fixture(root)
+            home=(site/'index.html').read_text(encoding='utf-8')
+            (site/'index.html').write_text(home.replace('/muse-software-engineer-v','/muse-unknown-v'),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'catalog download'):
+                self.renderer.outputs(root)
 
 
 class ReleaseContentProof(unittest.TestCase):

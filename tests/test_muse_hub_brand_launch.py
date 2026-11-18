@@ -25,7 +25,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
         for label in ("15 independent assistants","three subchats","75 skills",
                       "25 workflows","100 task starters","151 connectors"):
             self.assertIn(label,hero)
-        for action in ("Choose an assistant","Download v1.1.1",
+        for action in ("Choose an assistant","Download v1.1.2",
                        "Visit Muse Hub","Get started"):
             self.assertIn(action,hero)
         self.assertEqual(text.count("<details>"),4)
@@ -43,10 +43,10 @@ class MuseHubBrandLaunch(unittest.TestCase):
                      "docs/COMPANION_HOME.md",
                      "docs/handbook/specialists-by-task.md",
                      "https://atlas-origins.github.io/muse-ai-agent-presets/",
-                     "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1"):
+                     "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2"):
             self.assertIn(path,text)
         self.assertNotRegex(text, r"\b[HS]\d{2}\b")
-        for stale in ("v1.1.1 draft", "source-only", "not deployed"):
+        for stale in ("v1.1.2 draft", "source-only", "not deployed"):
             self.assertNotIn(stale,text.lower())
         self.assertIn("quickstart.py --role personal-companion --to",text)
 
@@ -59,7 +59,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
                      "docs/GETTING_STARTED.md",
                      "docs/TERMINAL.md",
                      "docs/COMPANION_HOME.md",
-                     "releases/download/v1.1.1/"):
+                     "releases/download/v1.1.2/"):
             self.assertIn(path,html)
         self.assertNotRegex(html, r"\b[HS]\d{2}\b")
         self.assertNotIn("COMMUNITY SOURCE PROJECT",html)

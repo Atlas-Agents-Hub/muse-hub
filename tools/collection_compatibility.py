@@ -23,7 +23,7 @@ ALIASES={'data-engineer':'data-engineering-architect','reliability-engineer':'in
 SHARED={'evidence_audit','safe_resume','research_verification','consent_and_effects','quality_handoff'}
 REVISION_MANIFEST='collections/muse-starters-v1/PUBLIC_REVISIONS.json'
 # An edited local manifest cannot authorize a new current source hash.
-REVISION_MANIFEST_SHA256='617ff43b056896859c04e5fcaff7cb6c0c5abbaa3353e1d1df35e9ecabe0b7d9'
+REVISION_MANIFEST_SHA256='16cf01e86f0b7bac1fce5d3ff1013bcbe325f7da9af98fa6dcbf135482c058c6'
 PREVIOUS_REVISION_PATH='docs/history/public-revisions-v1.1.0.json.txt'
 PREVIOUS_REVISION_SHA256='e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324'
 PUBLIC_BASELINE_SHA256='755ffbbf3bdb8abeb97bd69a6b59f616d4acd535a292b3228afff8e8e7cfe589'
