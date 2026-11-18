@@ -14,6 +14,8 @@ from .personal_companion import PersonalCompanion,CompanionScope
 from .space_companion import SpaceCompanion
 from .daily_desk import DailyDesk,restore_desk,inspect_desk,canonical,MAX_ARCHIVE_BYTES
 from .database_paths import validated_database_path
+from .room_notebook import RoomNotebook
+from .companion_web import companion_pages
 
 class RequestRefused(ValueError):
  def __init__(self,status:int,code:str):self.status=status;self.code=code;super().__init__(code)
@@ -28,7 +30,7 @@ def _pairs(pairs):
 def _bad_constant(_):raise ValueError('NONFINITE_JSON')
 
 def make_server(database:str|Path,*,token:str,authority:Callable[[],CompanionScope],port:int=0,
-                daily_desk:bool=False,restore_directory:str|Path|None=None):
+                daily_desk:bool=False,restore_directory:str|Path|None=None,companion_home:bool=False):
  """Bind only 127.0.0.1; caller explicitly serves/closes the returned server.
 
  Token is an OS-user-controlled local demo session, not Muse identity proof.
@@ -38,6 +40,8 @@ def make_server(database:str|Path,*,token:str,authority:Callable[[],CompanionSco
  if not callable(authority):raise ValueError('AUTHORITY_UNBOUND')
  if type(port) is not int or not 0<=port<=65535:raise ValueError('INVALID_PORT')
  if type(daily_desk) is not bool:raise ValueError('INVALID_DESK_MODE')
+ if type(companion_home) is not bool:raise ValueError('INVALID_COMPANION_MODE')
+ if companion_home and daily_desk:raise ValueError('CONFLICTING_UI_MODES')
  if restore_directory is not None:
   if not daily_desk:raise ValueError('RESTORE_REQUIRES_DESK_MODE')
   restore_directory=Path(restore_directory)
@@ -48,7 +52,9 @@ def make_server(database:str|Path,*,token:str,authority:Callable[[],CompanionSco
    raise ValueError('RESTORE_PATH_UNSAFE')
  database=Path(database)
  # Validate storage using the accepted services before opening a listener.
- with PersonalCompanion(database,authority=authority) as store:store.preferences()
+ with PersonalCompanion(database,authority=authority) as store:
+  store.preferences()
+  room_scope_key=store._scope(True).key() if companion_home else None
  with SpaceCompanion(database,authority=authority) as store:store.snapshot()
  if daily_desk:
   with DailyDesk(database,authority=authority) as store:store.snapshot()
@@ -58,6 +64,7 @@ def make_server(database:str|Path,*,token:str,authority:Callable[[],CompanionSco
   p=assets/name
   if p.is_symlink() or not p.is_file() or p.stat().st_size>131072:raise ValueError('UI_ASSET_INVALID')
   pages[path]=(mime,p.read_bytes())
+ if companion_home:pages=companion_pages()
  class Handler(BaseHTTPRequestHandler):
   server_version='LocalSpace/1';sys_version='';protocol_version='HTTP/1.0'
   def setup(self):
@@ -123,11 +130,37 @@ def make_server(database:str|Path,*,token:str,authority:Callable[[],CompanionSco
      result['name']=name
    return self._reply(200,result)
 
+  def _room(self,method):
+   routes={'/api/room/list':{'room_id'},
+           '/api/room/put':{'room_id','note_id','text','expected_revision'},
+           '/api/room/forget':{'room_id','note_id','expected_revision'}}
+   if method!='POST' or self.path not in routes:raise RequestRefused(404,'ROUTE_NOT_FOUND')
+   self._headers(True)
+   data=self._body()
+   if set(data)!=routes[self.path]:raise ValueError('REQUEST_FIELDS')
+   # Bind this local session to its original owner/Space. Browser fields cannot
+   # select authority, and one request uses a single validated scope snapshot.
+   try:
+    scope=authority()
+    if type(scope) is not CompanionScope:raise ValueError('AUTHORITY_UNVERIFIED')
+    scope.checked()
+   except Exception as exc:raise ValueError('AUTHORITY_UNVERIFIED') from exc
+   if not scope.owner_present:raise ValueError('OWNER_APPROVAL_REQUIRED')
+   if scope.key()!=room_scope_key:raise ValueError('SESSION_SCOPE_CHANGED')
+   with PersonalCompanion(database,authority=lambda:scope) as store:
+    book=RoomNotebook(store)
+    if self.path=='/api/room/list':result={'room_id':data['room_id'],'notes':book.notes(data['room_id'])}
+    elif self.path=='/api/room/put':result=book.put(data['room_id'],data['note_id'],data['text'],expected_revision=data['expected_revision'])
+    else:result=book.forget(data['room_id'],data['note_id'],expected_revision=data['expected_revision'])
+   result.update(native_installed=False,provider_connected=False,scope='LOCAL_SQLITE_OWNER_SPACE_ONLY')
+   return self._reply(200,result)
+
   def _handle(self,method):
    try:
     self._headers(False)
     if method=='GET' and self.path in pages:
      mime,data=pages[self.path];return self._reply(200,data,mime)
+    if companion_home:return self._room(method)
     if daily_desk:return self._desk(method)
     allowed={'/api/state':set(),'/api/config':{'enabled','expected_revision'},'/api/note':{'note_id','text','expected_revision'},'/api/request':{'request_id','prompt'},'/api/cancel':{'request_id','expected_revision'}}
     if self.path not in allowed or (method=='GET')!=(self.path=='/api/state'):raise RequestRefused(404,'ROUTE_NOT_FOUND')
@@ -145,8 +178,8 @@ def make_server(database:str|Path,*,token:str,authority:Callable[[],CompanionSco
     self._reply(200,result)
    except RequestRefused as exc:self._reply(exc.status,{'error':exc.code})
    except (ValueError,TypeError,UnicodeError,RecursionError) as exc:
-    code=str(exc) if str(exc) in {'AUTHORITY_UNVERIFIED','OWNER_APPROVAL_REQUIRED','STALE_REVISION','REQUEST_CONFLICT','ADAPTER_DISABLED','REQUEST_TERMINAL','REQUEST_NOT_FOUND','OPERATION_CONFLICT','RESTORE_EXISTS','RESTORE_SCOPE_MISMATCH','ARCHIVE_DIGEST_MISMATCH','RECORD_LIMIT','OPERATION_LIMIT','RESTORE_PUBLISHED_READBACK_UNCONFIRMED','RESTORE_READBACK_UNCONFIRMED','LOCAL_TRANSACTION_UNCONFIRMED_REOPEN_RECEIPT','TRANSACTION_UNCONFIRMED_REOPEN_ORIGINAL_STATE'} else 'INVALID_REQUEST'
-    status=503 if 'UNCONFIRMED' in code else 403 if code in {'AUTHORITY_UNVERIFIED','OWNER_APPROVAL_REQUIRED'} else 409 if code in {'STALE_REVISION','REQUEST_CONFLICT','ADAPTER_DISABLED','REQUEST_TERMINAL','OPERATION_CONFLICT','RESTORE_EXISTS'} else 400
+    code=str(exc) if str(exc) in {'SESSION_SCOPE_CHANGED','NOTE_NOT_FOUND','AUTHORITY_UNVERIFIED','OWNER_APPROVAL_REQUIRED','STALE_REVISION','REQUEST_CONFLICT','ADAPTER_DISABLED','REQUEST_TERMINAL','REQUEST_NOT_FOUND','OPERATION_CONFLICT','RESTORE_EXISTS','RESTORE_SCOPE_MISMATCH','ARCHIVE_DIGEST_MISMATCH','RECORD_LIMIT','OPERATION_LIMIT','RESTORE_PUBLISHED_READBACK_UNCONFIRMED','RESTORE_READBACK_UNCONFIRMED','LOCAL_TRANSACTION_UNCONFIRMED_REOPEN_RECEIPT','TRANSACTION_UNCONFIRMED_REOPEN_ORIGINAL_STATE'} else 'INVALID_REQUEST'
+    status=503 if 'UNCONFIRMED' in code else 404 if code=='NOTE_NOT_FOUND' else 403 if code in {'SESSION_SCOPE_CHANGED','AUTHORITY_UNVERIFIED','OWNER_APPROVAL_REQUIRED'} else 409 if code in {'STALE_REVISION','REQUEST_CONFLICT','ADAPTER_DISABLED','REQUEST_TERMINAL','OPERATION_CONFLICT','RESTORE_EXISTS'} else 400
     self._reply(status,{'error':code})
    except (TimeoutError,OSError,sqlite3.Error):self._reply(503,{'error':'LOCAL_STATE_UNCONFIRMED_REOPEN'})
   def do_GET(self):self._handle('GET')

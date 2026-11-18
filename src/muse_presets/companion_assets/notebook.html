@@ -1,0 +1,29 @@
+<section class="room-content notebook-local" id="notebook" data-room-panel="notebook" aria-label="Notebook" hidden>
+  <div class="notebook-title"><div><p class="overline">YOUR LOCAL NOTEBOOK</p><h4>Keep the thought.</h4></div><span class="notebook-badge">SQLite · on this computer</span></div>
+  <p class="notebook-intro">Room-by-room notes, saved on this computer. No Muse account, cloud sync, or background service is connected.</p>
+  <div id="notebook-unlock" class="notebook-unlock">
+    <h5>Open your local session</h5>
+    <p>Enter the temporary token from the local launcher. It stays in this tab’s memory, never in a URL or browser storage.</p>
+    <form id="notebook-session-form"><label for="notebook-token">Local session token</label><div class="notebook-session-row"><input id="notebook-token" type="password" autocomplete="off" minlength="32" maxlength="128" required><button type="submit">Open Notebook</button></div></form>
+  </div>
+  <p id="notebook-status" class="notebook-status" role="status" aria-live="polite" aria-atomic="true">Locked. Your database is unchanged.</p>
+  <div id="notebook-workspace" hidden>
+    <div class="notebook-toolbar">
+      <div><label for="notebook-room">Save in this room</label><select id="notebook-room"><option value="notebook">Notebook</option><option value="focus">Focus Room</option><option value="garden">Garden</option><option value="arcade">Arcade</option><option value="studio">Studio</option></select></div>
+      <div class="notebook-actions"><button id="notebook-refresh" type="button" class="notebook-secondary">Refresh saved notes</button><button id="notebook-lock" type="button" class="notebook-secondary">Lock Notebook</button></div>
+    </div>
+    <div class="notebook-columns">
+      <section class="notebook-editor" aria-labelledby="notebook-editor-title">
+        <div class="notebook-section-heading"><h5 id="notebook-editor-title">A new note</h5><span id="notebook-revision">Not saved yet</span></div>
+        <form id="room-note-form">
+          <label for="room-note-text">Your note</label>
+          <textarea id="room-note-text" rows="8" maxlength="16000" required placeholder="What is worth keeping?" aria-describedby="notebook-editor-help"></textarea>
+          <p id="notebook-editor-help" class="notebook-hint">Save explicitly. Unsaved text stays only in this tab. Up to 8,000 characters.</p>
+          <div class="notebook-actions"><button id="room-note-save" type="submit">Save note</button><button id="room-note-new" type="button" class="notebook-secondary">New note</button><button id="room-note-delete" type="button" class="notebook-danger" hidden>Delete note</button></div>
+        </form>
+      </section>
+      <section class="notebook-saved" aria-labelledby="notebook-saved-title"><div class="notebook-section-heading"><h5 id="notebook-saved-title">Saved notes</h5><span id="notebook-count">0</span></div><p id="notebook-empty">Nothing here yet. Save your first thought.</p><ul id="room-note-list" aria-label="Saved notes in the selected room"></ul></section>
+    </div>
+    <p class="notebook-privacy">Lock clears this page, not your database. SQLite is not encrypted. Deleting a note is not secure physical erasure. Stop the local server to revoke its session token.</p>
+  </div>
+</section>

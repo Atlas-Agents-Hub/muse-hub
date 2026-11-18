@@ -19,8 +19,13 @@ IDS = tuple(f"H{i:02d}" for i in range(22))
 ROLE_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 TESTS = {
     "H02": "tests/test_hub_site_overlay.py",
+    "H03": "tests/test_muse_route_compat_h03.py",
     "H11": "tests/test_h11_engineering_doors.py",
     "H12": "tests/test_family_sourcekit.py",
+    "H14": "tests/test_companion_home_h14_h17.py",
+    "H15": "tests/test_companion_home_h14_h17.py",
+    "H16": "tests/test_companion_home_h14_h17.py",
+    "H17": "tests/test_companion_home_h14_h17.py",
     "H19": "tests/test_hub_journeys.py",
 }
 
@@ -193,7 +198,7 @@ def build_journeys(root: Path = ROOT, *, feature: str | None = None,
                 "Run the named local source test independently; it cannot prove native host behavior."
                 if test_path else "No qualified host test exists; do not claim operational acceptance.",
                 name=name,
-                command=("python -B -m unittest discover -s tests -p " +
+                command=("python -B scripts/run_source_test.py " +
                          Path(test_path).name) if test_path else None),
             "failure": _phase(
                 "HOLD_UNKNOWN",

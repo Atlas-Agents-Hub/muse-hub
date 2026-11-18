@@ -30,12 +30,13 @@ def demo():
   return {'status':'OFFLINE_SPACE_STARTER_DEMO_PASS','scope':'DISPOSABLE_LOCAL_SQLITE_ONLY','default_off_verified':True,'notebook_reopened':True,'request_callback_database_loop':True,'duplicate_callback_no_new_effect':True,'late_callback_cannot_undo_cancel':True,'unknown_survives_restart':True,'callback_authentication':'SYNTHETIC_TEST_VERIFIER_ONLY','provider_jobs_created':0,'native_muse_installed':False,'server_started':False}
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--serve',action='store_true');p.add_argument('--database',type=Path);p.add_argument('--port',type=int,default=0);args=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--serve',action='store_true');p.add_argument('--database',type=Path);p.add_argument('--port',type=int,default=0);p.add_argument('--companion-home',action='store_true',help='serve the local five-room Notebook instead of the default Space example');args=p.parse_args()
+ if args.companion_home and not args.serve:p.error('--companion-home requires explicit --serve')
  if not args.serve:print(json.dumps(demo(),indent=2,sort_keys=True));return
  if args.database is None:p.error('--serve requires --database with an absolute path in an owner-protected directory')
  # The local session is a development fixture, not an authenticated Muse owner.
  scope=CompanionScope('local-owner','local-space','local-owner',True);token=secrets.token_urlsafe(36)
- server=make_server(args.database,token=token,authority=lambda:scope,port=args.port)
+ server=make_server(args.database,token=token,authority=lambda:scope,port=args.port,companion_home=args.companion_home)
  print('LOCAL DEVELOPMENT ONLY / NO NATIVE PROVIDER',flush=True)
  print('Open http://127.0.0.1:'+str(server.server_address[1]),flush=True)
  print('Session token (keep local): '+token,flush=True)
