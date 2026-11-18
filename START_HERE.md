@@ -18,4 +18,4 @@ The [terminal guide](docs/TERMINAL.md) covers more commands, Muse chat from the 
 
 ## Check your download
 
-Compare the ZIP's SHA-256 digest with `SHA256SUMS` on the [v1.2.0 release page](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0). Keep the extracted toolkit in its own folder so updates preserve your existing work.
+Compare the ZIP's SHA-256 digest with `SHA256SUMS` on the [v1.3.0 release page](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.3.0). Keep the extracted toolkit in its own folder so updates preserve your existing work.

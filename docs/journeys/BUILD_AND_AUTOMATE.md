@@ -26,6 +26,8 @@ reply. Show the decisions I need to make before using it with my real work.
 
 ## 2. Choose your browser, computer or terminal route
 
+Have more work than capacity? Use the [Project Prioritization calculator](../../collections/muse-starters-v1/skills/project-prioritization/PRIORITIZE.md) with your task estimates and resource budgets. It compares RICE scores and includes prerequisite work before choosing a feasible batch. The Coordinator download includes the calculator, guide and sample backlog.
+
 [Muse's shared cloud computer and browser](https://muse.ai/) can handle web work. [Muse for Mac](https://www.meta.com/blog/meta-connect-2026-everything-we-announced/) can work with Mac apps using the permissions you grant.
 
 For personal Muse chat from a terminal, follow the [muse-cli setup guide](../TERMINAL.md#chat-with-your-personal-muse). Once your connection is ready:

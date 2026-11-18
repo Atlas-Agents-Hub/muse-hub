@@ -29,12 +29,12 @@ ROLE = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*\Z")
 SOURCE_PINS = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "examples/family_offline_handoff_demo.py": "cd830ada0c87a72586ce5265b52e748bee89c14916bb3f224a4b6e8805f30a43",
-    "presets/catalog.json": "89071cffeebc554317405e0a22b9352f85697dbcc3db4f06b2e9d315fb78d5f5",
-    "src/muse_presets/__init__.py": "f89ec296d543dcd19a79e895543370e0f250ee823d68b1cf32312cdea95075bf",
+    "presets/catalog.json": "813365d95f97f7bdcf5d4d73576f75b510a09390d739d54e52d312d8ac6d9b89",
+    "src/muse_presets/__init__.py": "bf900eea3a45b5e1a2e27fd418e961743e894e46acf650961e56fee686751273",
     "src/muse_presets/catalog.py": "8d2f49924dbdf538c61c5b3fc25d588812309ec4901d3f289ae0f387ca76c445",
     "src/muse_presets/family.py": "af043cc6edc7e0670d2ec098bdd94f7064f4998d58e784f5669cc740bb23780b",
     "src/muse_presets/family_envelope.py": "ac0aaa563db8e26ebf0fe023970130fba491872984ec3a6bdd2e168f3f901efb",
-    "src/muse_presets/neutrality.py": "c22e459f40662c35998a203750e0991f7505c4c908f6c138d1cd76cfae97a60c",
+    "src/muse_presets/neutrality.py": "ce049763fcd993fbcc4cf845faa947e7c52554e8011e26a39a06e46973ff1910",
     "src/muse_presets/playbooks.py": "d3c5f9c90450d349fc0b49425ea72dc4d352635012ace24e45cee97e09b45a94",
 }
 # Exact accepted role bytes, in addition to disabled-by-default policy shape.

@@ -91,6 +91,8 @@ Muse brings you back with reminders; Daily Desk and Companion Home keep your sav
 
 ## 5. Review and adjust
 
+For a larger backlog, the Personal Companion download includes a [prioritization calculator](../../collections/muse-starters-v1/skills/project-prioritization/PRIORITIZE.md). Give it task estimates, dependencies and capacity in hours or days. It returns a ranked list, a feasible next batch and an explanation for work that will not fit. Use the result alongside your fixed commitments and personal priorities.
+
 At your weekly check-in, answer four questions:
 
 - What moved the goal forward?

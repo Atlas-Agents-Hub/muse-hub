@@ -1,8 +1,8 @@
 # Muse Hub downloads and versions
 
-**Current release: [v1.2.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/SHA256SUMS)
+**Current release: [v1.3.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.3.0)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.3.0/SHA256SUMS)
 
-## v1.2.0 - explore the whole Hub
+## v1.3.0 - choose work that fits
 
 [Choose one of the 15 assistants](DOWNLOAD_A_SPECIALIST.md). Each ZIP brings together its Main instructions, three subchat guides, selected skills, workflows, examples, and `START_HERE.md`.
 
@@ -10,15 +10,15 @@ The collection includes 75 skills, 25 workflows, 100 task starters, and setup re
 
 Extract your package into a new folder and start with its included guide. Assistant instructions require no Python. Optional local programs state their requirements beside their commands; repository examples use Python 3.12+.
 
-This update opens six paths into Muse Hub and adds practical guides to [organize your day](journeys/ORGANIZE_YOUR_DAY.md), [build and automate](journeys/BUILD_AND_AUTOMATE.md), and [create something](journeys/CREATE_SOMETHING.md). Explore Muse features, Companion spaces, connections, computer tools, and community resources alongside the specialist collection. Resource-library filters now have shareable links that work with browser Back and Forward.
+This update adds a [prioritization calculator](../collections/muse-starters-v1/skills/project-prioritization/PRIORITIZE.md) to the existing planning skill. Compare exact RICE scores, include prerequisite work and choose a batch within each resource's capacity. The download includes a guide, JSON and CSV examples, and reports that explain deferred work. The calculator runs with Python 3.10 or newer and is also included in the Coordinator, Personal Companion and related workflow or starter packages.
 
 ## Complete collections
 
-- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-specialist-toolkit-v1.2.0.zip)
-- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-specialists-v1.2.0.zip)
-- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-skills-v1.2.0.zip)
-- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-workflows-v1.2.0.zip)
-- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-starters-v1.2.0.zip)
+- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.3.0/muse-specialist-toolkit-v1.3.0.zip)
+- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.3.0/muse-specialists-v1.3.0.zip)
+- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.3.0/muse-skills-v1.3.0.zip)
+- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.3.0/muse-workflows-v1.3.0.zip)
+- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.3.0/muse-starters-v1.3.0.zip)
 
 ## Verify your download
 
@@ -27,24 +27,28 @@ Download `SHA256SUMS` from the same release. Calculate the archive's SHA-256 and
 **Windows PowerShell:**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.2.0.zip
+Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.3.0.zip
 ```
 
 **macOS:**
 
 ```sh
-shasum -a 256 muse-personal-companion-v1.2.0.zip
+shasum -a 256 muse-personal-companion-v1.3.0.zip
 ```
 
 **Linux:**
 
 ```sh
-sha256sum muse-personal-companion-v1.2.0.zip
+sha256sum muse-personal-companion-v1.3.0.zip
 ```
 
 Keep the original ZIP and your customized working copy separately. [Setup and saved data](INSTALL_AND_PERSISTENCE.md) explains updates and backup.
 
 ## Earlier releases
+
+### v1.2.0 - explore the whole Hub
+
+The [v1.2.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0) opened six homepage paths, added guides for planning, engineering and creative work, and introduced shareable resource filters with browser Back and Forward. Its original archives and checksums remain available.
 
 ### v1.1.2 - consistent release labels
 

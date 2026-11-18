@@ -4,7 +4,7 @@
 
 Choose from **15 independent assistants**, each with Main and **three subchats**. Add **75 skills**, **25 workflows**, **100 task starters**, and guides to **151 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
 
-**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.2.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
+**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.3.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.3.0)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
 
 ## Start with what you want to do
 

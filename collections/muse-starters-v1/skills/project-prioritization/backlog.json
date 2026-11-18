@@ -1,0 +1,80 @@
+{
+  "schema": "muse-prioritization/v1",
+  "reach_period": "customers per quarter",
+  "effort_unit": "person-days",
+  "capacity": {
+    "engineering": 10,
+    "design": 2
+  },
+  "items": [
+    {
+      "id": "tracking-live",
+      "name": "Customer tracking is ready",
+      "reach": 100,
+      "impact": 1,
+      "confidence_pct": 100,
+      "effort": 1,
+      "resource": "engineering",
+      "dependencies": [],
+      "status": "done"
+    },
+    {
+      "id": "prep-data",
+      "name": "Prepare the customer data",
+      "reach": 120,
+      "impact": 0.5,
+      "confidence_pct": 100,
+      "effort": 2,
+      "resource": "engineering",
+      "dependencies": [],
+      "status": "todo"
+    },
+    {
+      "id": "onboarding",
+      "name": "Improve onboarding",
+      "reach": 500,
+      "impact": 2,
+      "confidence_pct": 80,
+      "effort": 6,
+      "resource": "engineering",
+      "dependencies": [
+        "tracking-live",
+        "prep-data"
+      ],
+      "status": "todo"
+    },
+    {
+      "id": "quick-guide",
+      "name": "First-run guide, \"quick start\"",
+      "reach": 160,
+      "impact": 1,
+      "confidence_pct": 100,
+      "effort": 2,
+      "resource": "design",
+      "dependencies": [],
+      "status": "todo"
+    },
+    {
+      "id": "billing-rewrite",
+      "name": "Rebuild the billing experience",
+      "reach": 900,
+      "impact": 3,
+      "confidence_pct": 80,
+      "effort": 12,
+      "resource": "engineering",
+      "dependencies": [],
+      "status": "todo"
+    },
+    {
+      "id": "mobile-polish",
+      "name": "Polish the mobile layout",
+      "reach": 100,
+      "impact": 1,
+      "confidence_pct": 50,
+      "effort": 3,
+      "resource": "engineering",
+      "dependencies": [],
+      "status": "todo"
+    }
+  ]
+}

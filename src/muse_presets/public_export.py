@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 import tempfile
 import zipfile
-from .neutrality import audit_public_tree
+from .neutrality import REVIEWED_TEXT_FILES, audit_public_tree
 
 SCHEMA="r46/public-source-snapshot-v1"
 PUBLIC_DIRS=frozenset({
@@ -110,7 +110,8 @@ def _validate_file(path:Path,relative:Path)->bytes:
             or path.name.lower().startswith(".env.")
             or path.suffix.lower() in SENSITIVE_SUFFIX):
         raise PublicExportError("SENSITIVE_OR_BINARY_ASSET_REFUSED")
-    if path.suffix.lower() not in TEXT_EXT and path.name not in PLAIN_NAMES:
+    if (path.suffix.lower() not in TEXT_EXT and path.name not in PLAIN_NAMES
+            and relative.as_posix() not in REVIEWED_TEXT_FILES):
         raise PublicExportError("UNREVIEWED_NON_TEXT_FILE")
     try:
         if path.stat().st_size>MAX_FILE_BYTES:
@@ -175,7 +176,7 @@ def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
                 continue
             name=relative.as_posix()
             if ((entry.name=="collections" and not name.startswith("collections/muse-starters-v1/"))
-                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py", "tools/hub_journeys.py"})
+                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py", "tools/hub_journeys.py", "tools/prioritize.py"})
                 or (entry.name=="hub" and name not in PUBLIC_HUB_FILES)
                 or (entry.name=="kits" and name not in PUBLIC_KITS_FILES)):
                 raise PublicExportError("UNAPPROVED_COLLECTION_PATH")

@@ -18,6 +18,10 @@ PYTHONPATH=src python3 -B -m muse_presets.cli doctor
 
 On Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python`.
 
+## Develop and check locally
+
+Run focused tests locally while making a change. Finish the relevant regression, packaging and public-content checks before pushing the completed batch. Use GitHub Actions for the final pull-request checks and substantial integrated changes; avoid repeated pushes or manual runs for routine edits. Required branch checks still apply before merging, and release and deployment jobs run when the finished change is ready to publish.
+
 The public repository is a **product source distribution**, not an engineering scratchpad. Do not add milestone-numbered progress documents, internal task trackers, temporary checkpoints or machine-local receipts to its default branch.
 
 In your pull request, describe the changed behavior, commands you ran, observed results, and any remaining checks. Verify external actions through the service that performed them before reporting completion.

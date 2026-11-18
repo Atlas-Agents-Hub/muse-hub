@@ -33,6 +33,7 @@ def release_version(root: Path = ROOT) -> str:
 
 # Short customer descriptions; procedures and acceptance criteria remain in each kit.
 DESCRIPTIONS = {
+    'project-prioritization': 'Rank your backlog with RICE and choose work that fits your dependencies and resource budgets. Includes a Python calculator and JSON/CSV examples.',
     'claim-audit': 'Check a factual claim against the evidence that supports it.',
     'release-readiness': 'Review a release package, its checks, and the path to delivery.',
     'purchase-compare': 'Compare products against your requirements, budget and total cost.',

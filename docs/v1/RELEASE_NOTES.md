@@ -1,14 +1,14 @@
-# Muse Hub v1.2.0
+# Muse Hub v1.3.0
 
 Get more out of Muse: explore its features, customize an assistant, connect tools, and create a useful workspace.
 
 ## Improved in this update
 
-- Six homepage paths for Muse features, specialists, automation, Companion spaces, computer tools, and the resource library.
-- Three guided journeys for [everyday planning](../journeys/ORGANIZE_YOUR_DAY.md), [engineering](../journeys/BUILD_AND_AUTOMATE.md), and [creative work](../journeys/CREATE_SOMETHING.md).
-- Clear routes to persistent notes, Companion Studio, Signal Trail, and Family Link.
-- Shareable resource filters with browser Back and Forward, plus working navigation across Home and Downloads.
-- Browser checks for mobile layouts, filtering, keyboard use, and resource links.
+- A [prioritization calculator](../../collections/muse-starters-v1/skills/project-prioritization/PRIORITIZE.md) with exact RICE scoring and stable rankings.
+- A feasible next batch that includes prerequisites, counts shared work once and respects each resource's capacity.
+- JSON and CSV inputs, ranked reports and clear explanations for deferred work.
+- Ready examples and a command guide inside the planning skill, Coordinator, Personal Companion and related workflow or starter downloads.
+- A direct planning-kit download on the homepage and searchable calculator details in Downloads.
 
 ## What is included
 
@@ -28,6 +28,6 @@ Assistant instructions require no Python. Optional local programs list their req
 
 ## Downloads and updates
 
-Use the [v1.2.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0) and compare each download with its `SHA256SUMS` entry. Keep your original download and customized working copy separately. Preserve preferences, memory, credentials, and saved databases when updating.
+Use the [v1.3.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.3.0) and compare each download with its `SHA256SUMS` entry. Keep your original download and customized working copy separately. Preserve preferences, memory, credentials, and saved databases when updating.
 
 [Get started](../GETTING_STARTED.md) · [Terminal](../TERMINAL.md) · [Setup and saved data](../INSTALL_AND_PERSISTENCE.md) · [Release history](../RELEASES.md)
