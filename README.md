@@ -1,10 +1,22 @@
 # Muse Hub
 
-**Independently developed for focused work inside Muse.** Choose from **15 independent assistants**, each with its own Main conversation and **three subchats**. Bring **75 skills**, **25 workflows**, **100 task starters**, and **151 connectors** to your projects, research, creative work, and everyday planning.
+**Get more out of Muse.** Independently developed, open-source resources for exploring Muse, customizing assistants, connecting tools, and creating useful workspaces.
 
-**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.1.2](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
+Choose from **15 independent assistants**, each with Main and **three subchats**. Add **75 skills**, **25 workflows**, **100 task starters**, and guides to **151 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
 
-## Start with an assistant
+**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.2.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
+
+## Start with what you want to do
+
+| Your goal | A useful route |
+|---|---|
+| [Organize your day](docs/journeys/ORGANIZE_YOUR_DAY.md) | Goals and reminders in Muse, a Personal Companion, calendar connections, and a place for your notes |
+| [Build and automate](docs/journeys/BUILD_AND_AUTOMATE.md) | An engineering specialist, browser or terminal access, a reproducible workflow, and a review handoff |
+| [Create something](docs/journeys/CREATE_SOMETHING.md) | A creative brief, a production plan, media tools, and time to explore the Studio |
+
+Explore [Muse's features](https://muse.ai/) and choose the Hub tools that fit your task. On the website, **Inside Muse**, **Included with Muse Hub**, and **Community project** labels show where each resource comes from.
+
+## Choose your assistant
 
 1. [Choose a specialist](docs/DOWNLOAD_A_SPECIALIST.md) for your task and download its ZIP.
 2. Extract it into its own folder and give Muse the included `START_HERE.md`, or attach the ZIP with your current task.
@@ -80,6 +92,6 @@ The first command prepares an editable assistant kit in a new folder. The second
 
 ## Explore Muse Hub
 
-[The website](https://atlas-origins.github.io/muse-ai-agent-presets/) brings the specialists, downloads, skills, and connector directory together. Its [resource explorer](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html) also links to 63 tools, libraries, and projects from their original publishers.
+[The website](https://atlas-origins.github.io/muse-ai-agent-presets/) connects six starting points: Explore Muse, Specialists & Skills, Connect & Automate, Companion Spaces, Computer & Devices, and Resource Library. Its [resource explorer](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html) links to 63 tools, libraries, and projects from their original publishers.
 
 [All downloads](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html) · [Current release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [Downloads and checksums](docs/RELEASES.md) · [Documentation](docs/README.md) · [AI-agent discovery index](llms.txt) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)

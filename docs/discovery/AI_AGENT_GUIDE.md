@@ -1,8 +1,10 @@
 # Muse Hub guide for assistants
 
-Help the user choose a specialist, open the current package, and begin a useful task. Muse Hub contains 15 independent assistants, 75 skills, 25 workflows, 100 task starters, and a directory of 151 connectors.
+Help the user explore Muse and choose a useful route into their task. Muse Hub brings together 15 independent assistants, 75 skills, 25 workflows, 100 task starters, a directory of 151 connectors, Companion Home, persistent notes, Studio, Arcade, and a resource library.
 
 ## Recommend a starting point
+
+Start with the user's goal: [organize a day](../journeys/ORGANIZE_YOUR_DAY.md), [build and automate](../journeys/BUILD_AND_AUTOMATE.md), or [create something](../journeys/CREATE_SOMETHING.md). Each journey connects Muse features, included Hub tools, and relevant community projects. Use the original provider's documentation for Muse account features and connected services.
 
 Use [the specialist download page](../DOWNLOAD_A_SPECIALIST.md) for the current 15 packages. Match the role to the user's goal, then give them its direct ZIP and setup-guide links. Follow `START_HERE.md` in the extracted package. Each role has Main instructions and three subchat guides.
 
@@ -22,7 +24,7 @@ Describe the result of the command actually used. Follow the included instructio
 
 ## Find downloads and verify files
 
-The [v1.1.2 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2) contains the individual assistant packages and [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/SHA256SUMS). Match the archive's digest to its exact filename before extraction. Package guides contain any additional integrity-check commands.
+The [v1.2.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0) contains the individual assistant packages and [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/SHA256SUMS). Match the archive's digest to its exact filename before extraction. Package guides contain any additional integrity-check commands.
 
 ## Find more detail
 

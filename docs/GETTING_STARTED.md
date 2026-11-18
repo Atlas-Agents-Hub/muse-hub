@@ -1,6 +1,6 @@
 # Get started with Muse Hub
 
-Choose an assistant, bring a task, and build from a useful first result.
+Bring a goal and build from a useful first result. Follow a guided route to [organize your day](journeys/ORGANIZE_YOUR_DAY.md), [build and automate](journeys/BUILD_AND_AUTOMATE.md), or [create something](journeys/CREATE_SOMETHING.md). To start directly with a specialist, use the steps below.
 
 ## 1. Choose your specialist
 

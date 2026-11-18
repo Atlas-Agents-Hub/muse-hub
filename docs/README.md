@@ -1,6 +1,12 @@
 # Muse Hub documentation
 
-Start with an assistant and a task, then add the methods and tools you need.
+Explore Muse, choose a task, and find the assistants, tools, and workspaces that help you do it.
+
+## Follow a journey
+
+- **[Organize your day](journeys/ORGANIZE_YOUR_DAY.md)** — goals, reminders, calendar review, and persistent notes.
+- **[Build and automate](journeys/BUILD_AND_AUTOMATE.md)** — engineering, browser and terminal tools, service connections, and review.
+- **[Create something](journeys/CREATE_SOMETHING.md)** — a creative brief, a production plan, media tools, and the Studio.
 
 ## Start here
 
@@ -26,6 +32,10 @@ Start with an assistant and a task, then add the methods and tools you need.
 - [Family Link](FAMILY_LINK.md) — prepare and review handoffs.
 - [Learning sessions](LEARNING_LOCAL_STUDY.md) — study methods and a local storage example.
 - [Garden calendar](GARDEN_LOCAL_CALENDAR.md) — observations, planning, and a calendar example.
+
+## Explore Muse and community tools
+
+[Muse features](https://muse.ai/) · [Reminders and scheduled tasks](https://www.meta.com/help/superintelligence/1484325780075655/) · [Muse Gadgets](https://gadgets.muse.ai/) · [63-resource library](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html)
 
 ## Build and extend
 

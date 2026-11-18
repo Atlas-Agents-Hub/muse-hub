@@ -1,13 +1,14 @@
-# Muse Hub v1.1.2
+# Muse Hub v1.2.0
 
-Choose a specialist, open its package, and start with your own task.
+Get more out of Muse: explore its features, customize an assistant, connect tools, and create a useful workspace.
 
 ## Improved in this update
 
-- Clear setup instructions throughout the downloads and local apps.
-- Correct skill-guide paths and complete practice files in exported kits.
-- Easier keyboard navigation, readable focus indicators and working resource links with JavaScript disabled.
-- Release checks that match every package, checksum and download link to the website version.
+- Six homepage paths for Muse features, specialists, automation, Companion spaces, computer tools, and the resource library.
+- Three guided journeys for [everyday planning](../journeys/ORGANIZE_YOUR_DAY.md), [engineering](../journeys/BUILD_AND_AUTOMATE.md), and [creative work](../journeys/CREATE_SOMETHING.md).
+- Clear routes to persistent notes, Companion Studio, Signal Trail, and Family Link.
+- Shareable resource filters with browser Back and Forward, plus working navigation across Home and Downloads.
+- Browser checks for mobile layouts, filtering, keyboard use, and resource links.
 
 ## What is included
 
@@ -27,6 +28,6 @@ Assistant instructions require no Python. Optional local programs list their req
 
 ## Downloads and updates
 
-Use the [v1.1.2 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2) and compare each download with its `SHA256SUMS` entry. Keep your original download and customized working copy separately. Preserve preferences, memory, credentials, and saved databases when updating.
+Use the [v1.2.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0) and compare each download with its `SHA256SUMS` entry. Keep your original download and customized working copy separately. Preserve preferences, memory, credentials, and saved databases when updating.
 
 [Get started](../GETTING_STARTED.md) · [Terminal](../TERMINAL.md) · [Setup and saved data](../INSTALL_AND_PERSISTENCE.md) · [Release history](../RELEASES.md)

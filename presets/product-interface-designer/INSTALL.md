@@ -2,7 +2,7 @@
 
 Design and review user journeys, interfaces, states, and accessibility.
 
-**[Download Product & Interface Designer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-product-interface-designer-v1.1.2.zip)** · [v1.1.2 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/SHA256SUMS)
+**[Download Product & Interface Designer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-product-interface-designer-v1.2.0.zip)** · [v1.2.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/SHA256SUMS)
 
 ## Set up this assistant
 
@@ -19,6 +19,6 @@ No Python is needed for the assistant instructions. The package's `START_HERE.md
 
 Use the supplied skills and workflows that fit your task. [Explore this specialist's methods and tools](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md), or use the [terminal guide](../../docs/TERMINAL.md) for command-line work.
 
-Role ID: `product-interface-designer`. Package: `muse-product-interface-designer-v1.1.2.zip`.
+Role ID: `product-interface-designer`. Package: `muse-product-interface-designer-v1.2.0.zip`.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)

@@ -139,6 +139,28 @@ class GeneratedReleasePresentation(unittest.TestCase):
             result=self.renderer.main()
         return result,stream.getvalue()
 
+    def test_shared_navigation_returns_to_each_homepage_section(self):
+        """New home sections must not become dead anchors on Downloads."""
+        with tempfile.TemporaryDirectory() as directory, \
+             mock.patch.object(self.renderer,'load_collection',return_value=self.collection):
+            root=Path(directory)
+            site=self.fixture(root)
+            home=(site/'index.html').read_text(encoding='utf-8')
+            for section in ('explore','companion','computer','journeys','setup'):
+                with self.subTest(section=section):
+                    link=f'<a href="#{section}">Open {section}</a>'
+                    candidate=home.replace('</header>',link+'</header>',1)
+                    candidate=candidate.replace('</footer>',link+'</footer>',1)
+                    result=self.renderer.render(self.renderer.catalog(root),root,home=candidate)
+                    header=result[result.index('  <header'):result.index('  <main')]
+                    footer=result[result.index('  <footer'):result.index('\n</body>')]
+                    for region in (header,footer):
+                        self.assertIn(f'href="index.html#{section}"',region)
+                        self.assertNotIn(f'href="#{section}"',region)
+                    # Download group jumps still target the Downloads page.
+                    self.assertIn('href="#skills"',result)
+                    self.assertIn('href="#workflows"',result)
+
     def test_check_rejects_stale_homepage_caption_with_or_without_v_prefix(self):
         with tempfile.TemporaryDirectory() as directory, \
              mock.patch.object(self.renderer,'load_collection',return_value=self.collection):

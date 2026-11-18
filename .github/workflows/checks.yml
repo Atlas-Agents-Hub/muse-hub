@@ -23,6 +23,9 @@ jobs:
           python-version: '3.12'
       - name: Product, privacy and distribution integrity
         run: python -B scripts/check_public.py
+      - name: Browser journeys and resource navigation
+        timeout-minutes: 5
+        run: node tests/hub_experience_browser.cjs hub/site "$(command -v google-chrome)" "$RUNNER_TEMP/muse-hub-browser-${{ github.run_id }}-${{ github.run_attempt }}" --require-journeys
   source-tests:
     name: source-tests (${{ matrix.os }})
     strategy:
