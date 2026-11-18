@@ -25,8 +25,8 @@ class CoordinatorCliTests(unittest.TestCase):
         p=self.root/"coordinator"
         code,result=self.invoke(["coordinator-dropin","--to",str(p)])
         self.assertEqual(code,0)
-        self.assertEqual(result["status"],"SOURCE_ONLY_COORDINATOR_STAGED")
-        self.assertFalse(result["native_installed"])
+        self.assertEqual(result["status"],"COORDINATOR_FILES_CREATED")
+        self.assertNotIn('native_installed',result)
         code,result=self.invoke(["coordinator-dropin-inspect","--path",str(p)])
         self.assertEqual(code,0)
         self.assertEqual(result["status"],"LOCAL_COORDINATOR_MATCH")
@@ -48,7 +48,7 @@ class CoordinatorCliTests(unittest.TestCase):
         code,out=self.invoke(["coordinator-dropin-inspect","--path",str(p)])
         self.assertEqual(code,2)
         self.assertEqual(out["status"],"REVIEW_REQUIRED")
-        self.assertFalse(out["native_installed"])
+        self.assertNotIn('native_installed',out)
 
     def test_missing_source_does_not_fabricate_host_auth(self):
         code,out=self.invoke(["coordinator-dropin-inspect","--path",str(self.root/"absent")])

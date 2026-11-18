@@ -1,7 +1,4 @@
-"""R53 actual offline numeric held-out evaluation on synthetic binary outcomes.
-
-No scholarship retrieval, model execution, independent timestamps or causal proof.
-"""
+"""Evaluate held-out binary predictions using a synthetic example."""
 from __future__ import annotations
 
 import copy

@@ -1,8 +1,4 @@
-"""Structured specialist work methods, not installed skills or host authority.
-
-The source contracts are newly authored neutral guidance. They cannot grant tools,
-start jobs, authenticate reviewers, or substitute for native Muse execution.
-"""
+"""Validate and render specialist methods, examples, and handoff rules."""
 from __future__ import annotations
 
 import json
@@ -63,7 +59,7 @@ def validate_playbook(book: object, preset: dict) -> list[str]:
     canary = book['first_canary']
     if not isinstance(canary, dict) or set(canary) != _CANARY_FIELDS:
         return ['INVALID_CANARY_SHAPE']
-    if canary['grade'] != 'SOURCE_ONLY':
+    if canary['grade'] != 'EXAMPLE_TASK':
         return ['INVALID_CANARY_GRADE']
     if not all(_plain(canary[field], limit=600) for field in ('task', 'observable_result', 'negative_test')):
         return ['INVALID_CANARY_CONTENT']

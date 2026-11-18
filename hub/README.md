@@ -1,6 +1,6 @@
 # Muse Hub
 
-[Open the website](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Download Muse Hub](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.4.0) · [Get started](../docs/GETTING_STARTED.md)
+[Open the website](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Download Muse Hub](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0) · [Get started](../docs/GETTING_STARTED.md)
 
 Get more out of Muse. Explore its features, customize an assistant, connect your tools, and build a workspace around the work you do.
 
@@ -13,7 +13,7 @@ Get more out of Muse. Explore its features, customize an assistant, connect your
 ## Find your starting point
 
 - [Specialists](../docs/DOWNLOAD_A_SPECIALIST.md): complete ZIPs with a profile, setup guide, focused subchats and a first task.
-- [75 skills](../docs/SKILLS.md) and [25 workflows](../docs/WORKFLOWS.md): practical methods, examples and checks.
+- [461 skills](../docs/SKILLS.md) and [58 workflows](../docs/WORKFLOWS.md): practical methods, examples and checks.
 - [100 task starters](../docs/collection/MUSE_CURATED_COLLECTION.md): project starting points with clear goals.
 - [Muse in your terminal](../docs/TERMINAL.md): installation, account setup and everyday commands.
 - [Connector guides](../docs/connectors/README.md): setup information for 151 services and integrations.

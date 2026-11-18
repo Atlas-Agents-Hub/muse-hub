@@ -1,9 +1,6 @@
-"""Real source-only review/checkpoint/reopen across separate Python processes.
+"""Review, save, and reopen a coordinator checkpoint across Python processes.
 
-This uses synthetic inputs and a temporary file, never a native planner,
-scheduler, local model, connected account, original task DB or actual worker.
-Run: PYTHONPATH=src python -B examples/continuum_checkpoint_demo.py
-"""
+Run: PYTHONPATH=src python -B examples/continuum_checkpoint_demo.py"""
 from __future__ import annotations
 
 import json

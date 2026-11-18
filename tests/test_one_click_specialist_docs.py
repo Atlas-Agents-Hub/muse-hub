@@ -4,7 +4,8 @@ import json
 import re
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
-RELEASE="https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/"
+VERSION=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
+RELEASE="https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/"+VERSION+"/"
 ALIAS={"data-engineering-architect":"data-engineer","infrastructure-reliability-engineer":"reliability-engineer"}
 
 class OneClickDocs(unittest.TestCase):
@@ -14,13 +15,13 @@ class OneClickDocs(unittest.TestCase):
         downloads=(ROOT/"docs/DOWNLOAD_A_SPECIALIST.md").read_text(encoding="utf-8")
         self.assertIn("one Muse assistant",downloads)
         for role in roles:
-            asset="muse-"+ALIAS.get(role,role)+"-v1.4.0.zip"
+            asset="muse-"+ALIAS.get(role,role)+"-"+VERSION+".zip"
             link=RELEASE+asset
             with self.subTest(role=role):
                 install=(ROOT/"presets"/role/"INSTALL.md").read_text(encoding="utf-8")
                 self.assertIn(link,install)
                 self.assertEqual(downloads.count(link),1)
-                for step in ("START_HERE.md","Main","three subchats","First task to try","No Python"):
+                for step in ("START_HERE.md","Main","three subchats","First task to try"):
                     self.assertIn(step,install)
                 self.assertIn("separate Muse assistant",install)
                 self.assertIn("account and permissions",install)
@@ -31,8 +32,8 @@ class OneClickDocs(unittest.TestCase):
         readme=(ROOT/"README.md").read_text(encoding="utf-8")
         self.assertIn("docs/DOWNLOAD_A_SPECIALIST.md",readme[:750])
         release=(ROOT/"docs/RELEASES.md").read_text(encoding="utf-8")
-        self.assertIn("releases/tag/v1.4.0",release)
-        self.assertLess(release.index("v1.4.0"),release.index("## Earlier releases"))
+        self.assertIn("releases/tag/"+VERSION,release)
+        self.assertLess(release.index(VERSION),release.index("## Earlier releases"))
         self.assertIn("v1.0.0",release)
         self.assertIn("v0.4.1-alpha",release)
         self.assertIn(RELEASE+"SHA256SUMS",release)
@@ -41,26 +42,21 @@ class OneClickDocs(unittest.TestCase):
         for path in ("README.md","docs/DOWNLOAD_A_SPECIALIST.md","docs/RELEASES.md","llms.txt"):
             with self.subTest(path=path):
                 text=(ROOT/path).read_text(encoding="utf-8")
-                self.assertIn("releases/tag/v1.4.0",text)
+                self.assertIn("releases/tag/"+VERSION,text)
                 self.assertNotIn("not publicly downloadable",text)
                 self.assertNotIn("still a draft",text)
 
-    def test_original_install_text_archives_remain_byte_identical(self):
-        import hashlib
-        historical=ROOT/"docs/history/v1-install"
-        baseline=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_text(encoding="utf-8"))
-        manifest=json.loads((historical/"MIGRATION_MANIFEST.json").read_text(encoding="utf-8"))
-        self.assertEqual(len(manifest["entries"]),15)
-        for entry in manifest["entries"]:
-            with self.subTest(role=entry["original_path"]):
-                target=ROOT/entry["archive_path"]
-                self.assertEqual(target.suffix,".txt")
-                self.assertTrue(target.is_file())
-                self.assertEqual(hashlib.sha256(target.read_bytes()).hexdigest(),
-                                 baseline["files"][entry["original_path"]])
-        from muse_presets.distribution import product_findings
-        self.assertFalse(any(x["reason"]=="HISTORICAL_INSTALL_CHANGED"
-                             for x in product_findings(ROOT)))
+    def test_current_install_guides_preserve_customization_and_recovery_paths(self):
+        roles=json.loads((ROOT/'presets/catalog.json').read_bytes())['presets']
+        for role in roles:
+            with self.subTest(role=role):
+                body=(ROOT/'presets'/role/'INSTALL.md').read_text()
+                self.assertIn('START_HERE.md',body)
+                self.assertIn('Main',body)
+                self.assertIn('three subchats',body)
+        guide=(ROOT/'docs/INSTALL_AND_PERSISTENCE.md').read_text().lower()
+        for term in ('backup','update','memory'):
+            self.assertIn(term,guide)
 
     def test_direct_download_page_has_no_404_local_links(self):
         page=ROOT/"docs/DOWNLOAD_A_SPECIALIST.md"

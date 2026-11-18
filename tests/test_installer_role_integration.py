@@ -14,7 +14,7 @@ class InstallerRoleIntegrationTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name).resolve()
         self.role=self.root/"model-builder"
-        self.assertEqual(stage_model_builder_dropin(self.role)["status"],"SOURCE_ONLY_MODEL_BUILDER_STAGED")
+        self.assertEqual(stage_model_builder_dropin(self.role)["status"],"MODEL_BUILDER_FILES_CREATED")
 
     def test_original_role_carries_pinned_installer_and_sourcekit(self):
         receipt=json.loads((self.role/"receipts/MODEL_BUILDER_RECEIPT.json").read_bytes())
@@ -59,7 +59,7 @@ class InstallerRoleIntegrationTests(unittest.TestCase):
         p=subprocess.run([sys.executable,"-I","-B",str(cli),"stage","--to",str(dest),"--include-toy-training"],cwd=fresh,capture_output=True,text=True,timeout=35)
         self.assertEqual(p.returncode,0,p.stdout+p.stderr)
         info=json.loads(p.stdout)
-        self.assertEqual(info["status"],"SOURCE_ONLY_TOY_EXTENSION_STAGED")
+        self.assertEqual(info["status"],"TOY_EXTENSION_FILES_CREATED")
         self.assertFalse(info["training_started"])
         verifier=dest/"runtime/model_toy_install.py"
         checked=subprocess.run([sys.executable,"-I","-B",str(verifier),"inspect","--root",str(dest),"--stage-sha256",info["stage_receipt_sha256"]],cwd=fresh,capture_output=True,text=True,timeout=35)

@@ -30,7 +30,7 @@ class DocumentedFirstRunTests(unittest.TestCase):
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
             self.assertTrue((target/'system-profile/profile/AGENTS.md').is_file())
             self.assertTrue((target/'system-profile/profile/MEMORY.md').is_file())
-            self.assertFalse(json.loads(result.stdout)['native_installed'])
+            self.assertEqual(json.loads(result.stdout)['mode'],'PACKAGE_CREATED')
 
     def test_portable_documented_destination_creates_inspectable_library(self):
         text=(ROOT/'docs/SKILLS.md').read_text(encoding='utf-8')

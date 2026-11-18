@@ -22,7 +22,7 @@ class RolePlaybookTests(unittest.TestCase):
                 signature = tuple(m['id'] for m in book['methods'])
                 self.assertNotIn(signature, signatures)
                 signatures.add(signature)
-                self.assertEqual(book['first_canary']['grade'], 'SOURCE_ONLY')
+                self.assertEqual(book['first_canary']['grade'], 'EXAMPLE_TASK')
         self.assertEqual(validate_catalog(), [])
 
     def test_all_handoffs_are_policy_allowlisted(self):
@@ -119,7 +119,7 @@ class RolePlaybookTests(unittest.TestCase):
             data = json.dumps(book).lower()
             self.assertNotIn('/home/', data)
             self.assertNotIn('c:\\users\\', data)
-            self.assertNotIn('https://github.com/sethburkhardt21-dev/', data)
+            self.assertNotIn('https://github.com/example-private-account/', data)
             self.assertNotIn('muse://auth', data)
 
 

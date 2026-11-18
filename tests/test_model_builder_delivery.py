@@ -13,7 +13,7 @@ class ModelBuilderDeliveryTests(unittest.TestCase):
         self.assertTrue(result.get("checkpoint_inference_executed"),result)
         self.assertTrue(result.get("baseline_recovery_tested"),result)
         self.assertEqual(result.get("toy_model_family"),"binary-integer-perceptron")
-        self.assertFalse(result["native_installed"])
+        self.assertNotIn("native_installed",result)
         self.assertFalse(result["external_effects_authorized"])
 
     def test_export_cli_works_without_importing_repository_examples_in_runtime(self):

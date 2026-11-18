@@ -1,9 +1,7 @@
 # Security policy
 
-This repository is a **source-first alpha with locally executable engines**. Those tools may create local, owner-controlled receipts and state, but never grant native Muse permissions or authorize connected-account effects. Please report vulnerabilities using a private GitHub security advisory instead of publishing private details in an issue.
+Report vulnerabilities through a [private GitHub security advisory](https://github.com/atlas-origins/muse-ai-agent-presets/security/advisories/new).
 
-Do not provide secrets, user data, malware binaries, weaponized exploit samples or real account identifiers in reports. Include a minimal non-sensitive reproducer, source commit, host type, expected and observed behavior. Do not run tests outside your authorized devices/sandboxes.
+Include the affected release, steps to reproduce the issue, expected and observed behavior, and a small example with sensitive data removed. Keep account credentials, personal records and private project files out of reports. Test only systems you own or are authorized to assess.
 
-The optional Family Link implementation is local proposal/shape validation only; it provides no authentication, cryptographic signing, live transport, native admission or effects.
-
-Release privacy checks cover the complete public source distribution; a separate private identity/history screen and rights review are still required. See [Security](docs/SECURITY.md) and [Security](docs/SECURITY.md).
+For package verification, connector permissions, backups and protecting saved records, see [Security and privacy](docs/SECURITY.md).

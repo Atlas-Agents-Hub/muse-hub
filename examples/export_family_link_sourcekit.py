@@ -1,4 +1,4 @@
-"""Export or verify a source-pinned, offline-only Family Link handoff ZIP."""
+"""Build or verify a self-contained Family Link handoff ZIP."""
 from __future__ import annotations
 
 import argparse

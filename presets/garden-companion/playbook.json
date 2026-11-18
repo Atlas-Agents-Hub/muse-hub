@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Preview a three-event fictional garden schedule change on one committed revision.",
     "observable_result": "Date comparison, source revision and refusal when one event is stale; no calendar write.",
     "negative_test": "Change event revision after preview and require an atomic refusal."

@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Reconstruct an owned toy form from scripted UI and offline PCAP fixtures.",
     "observable_result": "Observed state machine, differential tests, full trace hashes and isolated no-network evidence.",
     "negative_test": "Supply an out-of-scope hostname or non-isolated sample and require refusal."

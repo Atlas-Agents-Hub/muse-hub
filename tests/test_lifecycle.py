@@ -1,4 +1,4 @@
-"""Red/green safeguards for source-only rendered profile inspection."""
+"""Profile inspection preserves personal changes and identifies policy drift."""
 import io
 import json
 import os
@@ -20,14 +20,15 @@ class LifecycleInspectionTests(unittest.TestCase):
         render_preset('garden-companion', profile, display_name='Garden Guide')
         return profile
 
-    def test_fresh_profile_has_local_match_without_native_claim(self):
+    def test_fresh_profile_matches_and_inspection_preserves_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             profile = self.create_profile(tmp)
             before = {p.name: p.read_bytes() for p in profile.iterdir()}
             result = inspect_render(profile)
             self.assertEqual(result['status'], 'LOCAL_MATCH')
-            self.assertEqual(result['native_muse_status'], 'NOT_CHECKED')
-            self.assertEqual(result['evidence_grade'], 'UNAUTHENTICATED_LOCAL_ONLY')
+            self.assertEqual(result['inspection'], 'PROFILE_FILES')
+            self.assertEqual(result['owner_modified'], [])
+            self.assertEqual(result['policy_modified'], [])
             self.assertEqual(before, {p.name: p.read_bytes() for p in profile.iterdir()})
 
     def test_owner_customization_is_detected_and_never_overwritten(self):
@@ -47,7 +48,7 @@ class LifecycleInspectionTests(unittest.TestCase):
             result = inspect_render(profile)
             self.assertEqual(result['status'], 'REVIEW_REQUIRED')
             self.assertEqual(result['policy_modified'], ['FAMILY_LINK.json'])
-            self.assertEqual(result['native_muse_status'], 'NOT_CHECKED')
+            self.assertEqual(result['inspection'], 'PROFILE_FILES')
 
     def test_missing_managed_file_requires_review_not_restoration(self):
         with tempfile.TemporaryDirectory() as tmp:

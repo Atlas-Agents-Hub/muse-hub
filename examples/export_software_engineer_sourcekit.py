@@ -1,8 +1,7 @@
-"""Export a self-contained, source-only Software Engineer runtime ZIP.
+"""Build and verify a self-contained Software Engineer runtime ZIP.
 
-Creates a pristine disposable pack using canonical pinned source, verifies its
-closed layout, then exports a new ZIP. Never modifies live agent homes.
-"""
+The exporter creates a temporary package, checks its complete file inventory,
+and writes a new archive at the requested destination."""
 from __future__ import annotations
 
 import argparse

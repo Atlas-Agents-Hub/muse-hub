@@ -24,7 +24,7 @@ Describe the task, included files, and next action. Keep internal acceptance IDs
 - **Connectors:** A directory entry is a service guide; the user completes setup through the supported host flow.
 - **Tests:** State which suite ran, on which revision, and whether skips or limitations apply.
 
-Use current counts consistently: 15 specialists; 100 task starters; 75 skills; 25 workflows; 151 connectors. The 50 original role/shared procedures overlap the developed skills. Update claims only with source and test evidence.
+Use current counts consistently: 15 specialists; 100 task starters; 461 skills; 58 workflows; 151 connectors. The 50 original role/shared procedures overlap the developed skills. Update claims only with source and test evidence.
 
 ## Write for people and retrieval tools
 

@@ -1,8 +1,4 @@
-"""T06 role-method skill proposals: source-checked, disabled, never a native grant.
-
-Uses the existing T04/T05 source contracts and the R32 custom-skill descriptor
-shape; no executable runner, scheduler, host registry write or owner identity.
-"""
+"""Create and verify specialist skill instruction files."""
 from __future__ import annotations
 
 import hashlib

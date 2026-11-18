@@ -1,83 +1,94 @@
-# Daily Desk: tasks, notes and a way back
+# Daily Desk: tasks, notes, and saved progress
 
 Keep tasks and notes together in Daily Desk. Edit records in your browser, reopen them later, resolve conflicting edits, and back up your work. Daily Desk stores your records in a SQLite database on your computer.
 
-## First useful result — no setup or account
+## Try the worked example
 
-From a source checkout with Python 3.12+:
+From a checkout with Python 3.12+:
 
 ```sh
 python -B examples/daily_desk.py
 ```
 
-Use `python3` on macOS/Linux where appropriate. No pip install or `PYTHONPATH` setting is needed. This creates **3 tasks** and **2 notes** in temporary storage, edits a task and note, reopens them, refuses stale revisions, repeats one identical operation safely, exports an archive, restores into a new database and compares the restored records. The output must report `DAILY_DESK_VERTICAL_SLICE_PASS`. It does not start a server or keep the fictional data.
+Use `python3` on macOS or Linux where appropriate. The command uses Python's standard library. It creates three sample tasks and two notes, edits and reopens them, checks conflicting and repeated updates, then backs up and restores the records in temporary storage. Read the result for each check.
 
-## Open your own local desk
+## Open your desk
 
 ```sh
 python -B examples/daily_desk.py --serve --database "$HOME/daily-desk.sqlite"
 ```
 
-The same command works in PowerShell. The parent directory must already exist and be owner-controlled. Choose a new database name for a fresh desk, or the same path to reopen an existing desk. The launcher creates a sibling `daily-desk-restores` directory for new restored stores; use `--restore-directory` with a safe absolute path to choose another local restore directory.
+The same command works in PowerShell. Choose a path in an existing private directory. Use a new filename for a fresh desk or the same path to reopen an existing one. The launcher creates a sibling `daily-desk-restores` directory for restored databases; use `--restore-directory` with an absolute path to choose another location.
 
-The terminal prints a loopback URL and a random local-session token. Open that URL **on the same computer** and enter the token. Keep the terminal running while you use the desk; Ctrl+C stops this foreground server. The token is not a Muse credential and is never written into the page, a URL, cookie or persistent browser-token store. Reloading requires entering it again; restarting the launcher creates a new token.
+Open the **127.0.0.1 URL printed in your terminal** on the same computer and enter the session token. Keep the terminal running while using the desk. Press Ctrl+C to stop it.
 
-The UI is usable at narrow viewport widths, but phone-to-computer networking is not implemented. Do not tunnel the development server or expose it to the internet. Python's standard-library HTTP server is not a production web service.
+The page keeps the token in memory for the current session. Enter it again after reloading. Restarting the launcher creates a new token. Keep this development server on your computer; use a production server and authentication when building a shared application.
 
-## The everyday flow
+## Work with tasks and notes
 
-Create a task with a concrete title; its due time is optional and displayed in your local time zone. A due time is only a stored timestamp, not a scheduled reminder. Edit a task to mark it done. Notes are plain text, not executable HTML or instructions to another agent.
+Create a task with a clear title and, optionally, a due time. Due times appear in your local time zone. Mark a task done when you finish it. For scheduled notifications, use [Muse reminders](https://www.meta.com/help/superintelligence/1484325780075655/). Notes store plain text, including emoji.
 
-Each saved record displays its revision. Selecting a record loads that version into the editor. If another tab or authorized writer saves a newer version, your old save is refused with `STALE_REVISION`. Your draft stays in the editor. Choose **Load saved version** deliberately before applying another edit; the application does not silently overwrite the newer work.
+Select a saved record to edit it. Each record has a revision; if another tab saves a newer version, Daily Desk keeps your draft and asks you to resolve the conflict. Choose **Load saved version** when you want to compare the latest saved text before applying an edit.
 
-**Refresh saved work** reloads the list without replacing an open draft. **Lock session** hides the workspace and drops the token from page memory; it does not delete saved records. Tasks and notes remain in the local SQLite database after reopening.
+**Refresh saved work** reloads the list while preserving your open draft. **Lock session** hides the workspace and clears the page's token. Your saved tasks and notes remain in the database.
 
-## When the reply disappears
+## Recover an interrupted save
 
-Every task/note mutation binds one operation ID to the exact content and expected revision in the same SQLite transaction. If the reply is lost after commit, an identical retry returns the original result instead of inserting again. Reusing the ID with a changed kind, record or content is refused.
+Each save has an operation ID tied to its content and expected revision. Repeating the same save returns its recorded result. Daily Desk refuses to reuse that ID for different content.
 
-The page keeps only an uncertain write's payload, ID and store binding in tab session storage until confirmation. The token is not included. This means unsent or uncertain note text can remain in that tab's storage; browser session restoration policies may retain it. Close or clear the tab according to your browser's privacy controls when appropriate.
+If a response disappears, choose **Check saved receipt** first. The page reopens a saved result when it exists. Otherwise, choose **Retry the exact write** to repeat the original operation. Keep the same database open while resolving the save.
 
-Choose **Check saved receipt** first. If the receipt exists, the page reads back the result without replaying the write. Otherwise, **Retry the exact write** resends the same operation and payload. A different database served on the same port has a different instance identity; the pending write is blocked rather than sent to the replacement store. Do not change storage records to bypass that protection.
+Until confirmation, the page retains the pending content and operation ID in the tab's session storage. Your browser may restore that text when reopening a session. Use its privacy controls to clear the tab when needed.
 
 ## Back up and restore
 
-**Download backup** produces a strict JSON archive containing task records, note records (including deleted-note tombstones) and local write receipts. Its SHA-256 digest covers a canonical payload. The digest detects accidental or unexplained changes; it does **not** prove the publisher's identity or grant access.
+Choose **Download backup** to save a JSON archive of tasks, notes, deleted-note records, and write receipts. Its checksum lets Daily Desk detect changed archive content. Keep the backup in protected storage because receipts can include earlier note text.
 
-Choose the backup file and a new store name in the restore panel. Restoration fully validates the archive, creates a staging database, checks it, then publishes a new database without replacing an existing file. The active desk remains unchanged. **Check restore result** reads the chosen destination without creating or migrating it. A missing reply does not justify using another name and creating duplicate stores.
+Choose the file and a new store name in the restore panel. Daily Desk validates the archive, checks a staging database, and creates a new database while preserving existing files. **Check restore result** reopens the chosen destination if the reply was interrupted. Check that result before trying another restore.
 
-To reopen the restored store, stop the original launcher and use the printed database path:
+To open the restored desk, stop the launcher and restart with the restored database path:
 
 ```sh
 python -B examples/daily_desk.py --serve --database "$HOME/daily-desk-restores/desk-restored.sqlite"
 ```
 
-You can also restore an archive from the terminal, without a listener:
+You can also restore from the terminal:
 
 ```sh
 python -B examples/daily_desk.py --restore "$HOME/daily-desk-backup.json" --database "$HOME/restored-desk.sqlite"
 ```
 
-The destination must be new. Restoration preserves record IDs, content, revisions and operation receipts, but intentionally creates a **new database-instance identity**. This prevents a pending browser mutation from an old instance reaching the restored store unintentionally. Exporting it again yields the same canonical record payload.
+Choose a new destination. Restoration preserves record IDs, content, revisions, and operation receipts. It assigns the restored database a new instance ID so a pending save from another desk cannot be applied to it accidentally.
 
-## Storage, limits and security
+## Storage and limits
 
-The local reference uses injected owner/space scope; a browser-supplied owner ID is not authority. The HTTP adapter preserves strict loopback, Host/Origin, token, JSON, body and content-security-policy checks. Daily Desk routes expose neither native claim/callback authority nor the Space adapter's request-enabling controls.
+| Item | Limit |
+| --- | --- |
+| Tasks | 256 records |
+| Notes | 256 records |
+| Task and note operation receipts | 1,024 records |
+| Backup archive | 16 MiB |
+| Task title | 160 characters |
+| Note text | 8,000 characters |
 
-This first slice has explicit bounds: 256 task records, 256 note records, 1,024 task/note operation receipts and a 16 MiB archive limit. It refuses over-budget operations rather than silently dropping history. Receipt retention/compaction is not implemented. Task titles are at most 160 characters, notes at most 8,000, and invalid identifiers, control characters, nonfinite or incorrectly typed numbers are refused. Export can refuse a data set whose serialized size exceeds its bound; records are not deleted to make it fit.
+Daily Desk preserves existing history when a limit is reached and reports the operation it could not complete. Keep exports and records within these limits; use a separate new database when you need a fresh workspace.
 
-SQLite and archives are plaintext. Write receipts may retain earlier note text. Logical deletion is not secure erasure. Use owner-controlled local storage and operating-system access controls; this is not encryption, a multitenant sandbox or a network filesystem guarantee. Restore path checks reject traversal, unsafe aliases, existing destinations and sidecar collisions. Publishing uses a same-filesystem no-replace hard link. A process or power failure after publication may leave a staging name or an unconfirmed readback; inspect the original destination instead of automatically replaying. Abrupt power-loss durability and filesystem-adversary resistance are not certified here.
+SQLite databases and backup archives contain readable text. Protect their directories and backups using your operating system's access controls. Write receipts may retain older note text after an edit or deletion, so include them in your retention decisions. Follow your storage system's procedures when permanent erasure is required.
 
-The archive excludes session tokens, browser state, reminders/preferences, provider request queues and callback records. Restoring it does not reconnect services, change the original store or activate external work.
+The backup contains the desk's tasks, notes, and write receipts. Keep your separate service settings, preferences, and credentials in their own protected storage.
 
-## Implementation and verification
+## Developer reference
 
-`DailyDesk` extends `PersonalCompanion` using the same scope, path admission, SQLite connection and transaction machinery. Existing notes remain in `companion_notes`; tasks, operation receipts and a store-instance identifier use additional tables. The existing `make_server` accepts an opt-in desk mode; its original Space UI and request/callback protocol remain available unchanged by default.
+`DailyDesk` extends `PersonalCompanion` using its account and workspace scope, path checks, SQLite connection, and transactions. Notes use `companion_notes`; tasks, operation receipts, and the database-instance ID use additional tables. Enable desk mode through the existing server factory.
+
+The host resolves user access. The HTTP layer checks loopback requests, origins, session tokens, JSON fields, and body size. Restore operations validate paths and create a new destination without replacing existing data. After a process or power interruption, inspect the original restore destination before retrying.
 
 ```sh
 PYTHONPATH=src python3 -B -m unittest discover -s tests -p 'test_daily_desk*.py' -v
 ```
 
-On PowerShell, set `$env:PYTHONPATH='src'` and use `python`. Tests cover atomic writes and rollback, concurrent/stale edits, duplicate and conflicting operations, owner isolation, migrations, reopen, strict archives, read-only restore inspection, no-overwrite races and actual HTTP refusals. The client fixture tests lost acknowledgments; real browser and cross-platform evidence are separate from those assertions.
+On PowerShell, set `$env:PYTHONPATH = "src"` and use `python`. The tests cover atomic saves, rollback, concurrent edits, duplicate and conflicting operations, user separation, database migration, reopen, archive validation, restore races, and HTTP requests. Open the desk to check editing, recovery, and restore in your browser.
 
-See the [original Space starter](OPTIONAL_SPACE_STARTER.md), [durable-document guide](../handbook/durable-documents.md) and [design contract](../handbook/daily-desk-design.md). Official implementation references: [SQLite transactions](https://www.sqlite.org/lang_transaction.html) and [SQLite isolation](https://www.sqlite.org/isolation.html).
+[Companion Home](../COMPANION_HOME.md) · [Space workspace](OPTIONAL_SPACE_STARTER.md) · [Document recovery](../handbook/durable-documents.md) · [Data design](../handbook/daily-desk-design.md)
+
+Implementation references: [SQLite transactions](https://www.sqlite.org/lang_transaction.html) and [SQLite isolation](https://www.sqlite.org/isolation.html).

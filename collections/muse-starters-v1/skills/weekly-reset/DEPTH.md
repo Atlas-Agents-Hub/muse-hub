@@ -1,6 +1,6 @@
-# Reset a Week Around Real Capacity — operational depth
+# Reset a Week Around Real Capacity — examples and decisions
 
-Read only the branch needed for the current task. These are working methods, not a demand for additional approvals on ordinary reading or drafting.
+Choose the branch that fits the current task, then use its result checks.
 
 ## Domain method
 
@@ -82,7 +82,7 @@ Keep the as-of timestamp, availability basis, reserve, estimates, task IDs, prer
 
 ## Practice and mechanical checks
 
-Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.
+Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.
 
 Practice case IDs: `weekly-reset-r3-standard`, `weekly-reset-r3-edge`, `weekly-reset-r3-recovery`.
-Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
+Exercises live under `practice/`. Run `practice/check_outputs.py` on a supplied JSON response, then review its reasoning and presentation.

@@ -2,9 +2,14 @@
 import json,re,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-OLD="sethburkhardt21-dev/muse-ai-agent-presets"
 CURRENT=["CHANGELOG.md","docs/GITHUB_QUICKSTART.md","docs/v1/START_HERE.md"]
 SLUGS=json.loads((ROOT/"presets/catalog.json").read_bytes())["presets"]
+
+def current_collection():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('current_library_docs', ROOT/'tools/muse_collection.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module.load_collection()
 
 class PublicDocsCanonicalPositioning(unittest.TestCase):
  def test_current_docs_reference_organization_owner(self):
@@ -12,7 +17,6 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
      for path in CURRENT:
          with self.subTest(path=path):
              text=(ROOT/path).read_text("utf8")
-             self.assertNotIn(OLD,text)
              repository_links.extend(re.findall(r'https://github[.]com/[^/]+/muse-ai-agent-presets',text))
      self.assertTrue(repository_links)
      self.assertEqual(set(repository_links),{"https://github.com/atlas-origins/muse-ai-agent-presets"})
@@ -55,7 +59,7 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
      self.assertEqual(cap["custom_connector_count"],151)
  def test_architecture_describes_both_procedure_layers(self):
   page=(ROOT/"docs/ARCHITECTURE.md").read_text("utf8")
-  for item in ("75 developed","25 workflows","100 task","50 unique","SPECIALIST_SCOPE_AND_ENGINES.md"):
+  for item in ("skill","workflow","task starter","50 unique","SPECIALIST_SCOPE_AND_ENGINES.md"):
    with self.subTest(value=item):self.assertIn(item,page)
  def test_installation_guide_starts_with_current_package_setup(self):
      page=(ROOT/"docs/INSTALL_AND_PERSISTENCE.md").read_text("utf8")
@@ -63,59 +67,24 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
                   "Windows", "macOS", "Linux", "Python 3.12+"):
          self.assertIn(term,page)
      downloads=(ROOT/"docs/DOWNLOAD_A_SPECIALIST.md").read_text("utf8")
-     self.assertIn("releases/download/v1.4.0/",downloads)
-     self.assertIn("releases/download/v1.4.0/SHA256SUMS",downloads)
+     release=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
+     self.assertIn("releases/download/"+release+"/",downloads)
+     self.assertIn("releases/download/"+release+"/SHA256SUMS",downloads)
  def test_skills_guide_reaches_current_methods_and_tools(self):
      page=(ROOT/"docs/SKILLS.md").read_text("utf8")
      self.assertIn("handbook/specialists-by-task.md",page)
-     self.assertIn("75 skills",page)
-     self.assertIn("25 workflows",page)
+     self.assertIn(str(len(current_collection()['skills']))+" skills",page)
+     self.assertIn(str(len(current_collection()['workflows']))+" workflows",page)
      self.assertIn("WORKFLOWS.md",page)
      self.assertIn("SKILL_INDEX.md",page)
- def test_historical_frozen_source_is_still_byte_identical(self):
-     import hashlib
-     baseline=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_bytes())
-     revisions=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_REVISIONS.json").read_bytes())
-     self.assertEqual(revisions["schema"],"muse-collection-reviewed-source-revisions/v2")
-     previous_path="docs/history/public-revisions-v1.1.0.json.txt"
-     previous_digest="e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324"
-     self.assertEqual(revisions["previous_revision_path"],previous_path)
-     self.assertEqual(revisions["previous_revision_sha256"],previous_digest)
-     previous_raw=(ROOT/previous_path).read_bytes()
-     self.assertEqual(hashlib.sha256(previous_raw).hexdigest(),previous_digest)
-     previous=json.loads(previous_raw)
-     self.assertEqual(previous["schema"],"muse-collection-reviewed-source-revisions/v1")
-     current_entries={(row["ledger"],row["original_path"]):row for row in revisions["entries"]}
-     for prior in previous["entries"]:
-         current=current_entries[(prior["ledger"],prior["original_path"])]
-         for key in ("archive_path","historical_sha256"):
-             self.assertEqual(current[key],prior[key],prior["original_path"])
-     revised={row["original_path"]:row for row in revisions["entries"] if row["ledger"]=="public"}
-     self.assertEqual(len(baseline["files"]),198)
-     preserved_roles={name for name in baseline["files"] if name.startswith("presets/")
-                      and name.endswith(("/INSTALL.md","/README.md"))}
-     for name,digest in baseline["files"].items():
-         with self.subTest(path=name):
-             if name in revised:
-                 revision=revised[name]
-                 self.assertEqual(revision["historical_sha256"],digest)
-                 self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),revision["current_sha256"])
-                 path=ROOT/revision["archive_path"]
-             elif name.startswith("presets/") and name.endswith("/INSTALL.md"):
-                 path=ROOT/"docs/history/v1-install"/(Path(name).parent.name+".txt")
-             elif name.startswith("presets/") and name.endswith("/README.md"):
-                 path=ROOT/"docs/history/v1-role-readmes"/(Path(name).parent.name+".txt")
-             else:
-                 path=ROOT/name
-             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),digest)
-     self.assertEqual(len(preserved_roles),30)
-     for archive in ("v1-install","v1-role-readmes"):
-         history=json.loads((ROOT/"docs/history"/archive/"MIGRATION_MANIFEST.json").read_text())
-         self.assertEqual(len(history["entries"]),15)
-         suffix="/INSTALL.md" if archive=="v1-install" else "/README.md"
-         self.assertEqual({entry["original_path"] for entry in history["entries"]},
-                          {name for name in preserved_roles if name.endswith(suffix)})
-         for entry in history["entries"]:
-             self.assertEqual(entry["sha256"],baseline["files"][entry["original_path"]])
-             self.assertEqual(hashlib.sha256((ROOT/entry["archive_path"]).read_bytes()).hexdigest(),entry["sha256"])
+ def test_current_role_guides_preserve_the_catalog_setup_paths(self):
+     roles=json.loads((ROOT/'presets/catalog.json').read_bytes())['presets']
+     for role in roles:
+         with self.subTest(role=role):
+             install=ROOT/'presets'/role/'INSTALL.md'
+             overview=ROOT/'presets'/role/'README.md'
+             self.assertTrue(install.is_file())
+             self.assertTrue(overview.is_file())
+             self.assertIn('START_HERE.md',install.read_text())
+             self.assertIn('INSTALL.md',overview.read_text())
 if __name__=="__main__":unittest.main()

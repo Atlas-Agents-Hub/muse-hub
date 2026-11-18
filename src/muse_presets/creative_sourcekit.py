@@ -1,4 +1,4 @@
-"""Pinned create-only Creative Studio kit; never imports or runs an external renderer."""
+"""Build a Creative Studio toolkit for briefs, storyboards, and production planning."""
 from __future__ import annotations
 import hashlib
 import io
@@ -16,10 +16,10 @@ SOURCE_SHA={
     'src/muse_presets/creative_production.py':'301366c81d13c68eba892b1c72f9e64e44588918e81f9c18ef5a98f5d0b87876',
     'src/muse_presets/creative_cli.py':'91a5fc7f4a359c70dc9c9fb601182ae886965e6f044d64cde562fe1e42f66584',
     'tests/test_creative_production.py':'cabb9b017d8a47cf6c0f1b0c7739693db509839a424b2ff6893bc423c860d488',
-    'presets/creative-studio/preset.json':'d6b89a7f0851258af12afcbc224f822e4b0ec76e26e58ee993c789ee4b4ccd48',
-    'presets/creative-studio/playbook.json':'83130fc7d3b22129c3f7641c2f07774be7f489edb37bd32dc10c0028ba0e568a',
+    'presets/creative-studio/preset.json':'c88aebc47eb4cdd88622a7335bcefa836a279d4f6928a96e91fc289c65ca16f6',
+    'presets/creative-studio/playbook.json':'0d6e7c12f1c5b2505821b98ea2f8add0d607aa308af48f0abd1a1201d375dbc7',
     'examples/creative_brief.json':'ac766aa9e21313d6845051e485978e15e0dd058344f4e00bca6cb787e931a8ee',
-    'docs/kits/CREATIVE_SOURCEKIT.md':'4d66e397d9bc31647c00b2facf29ca4c750a475399d99a3c554c640fc18cc2b6',
+    'docs/kits/CREATIVE_SOURCEKIT.md':'a9b34d6e6ad1dc79c7347fd034fab1c8960232ca8de60376933630d745f6f3ef',
 }
 SOURCE_MAP={
     'LICENSE':'LICENSE',
@@ -31,7 +31,7 @@ SOURCE_MAP={
     'examples/creative_brief.json':'sample-brief.json',
     'docs/kits/CREATIVE_SOURCEKIT.md':'START_HERE.md',
 }
-RUNNER=r'''"""Integrity-check the offline kit before importing its production planner."""
+RUNNER=r'''"""Verify the toolkit files before running the production planner."""
 from __future__ import annotations
 import hashlib,json,os,stat,sys,unittest
 from pathlib import Path
@@ -119,7 +119,7 @@ def _distribution(source_root: Path) -> dict[str,bytes]:
     profile=json.loads(files['preset.json'])
     _require(profile['id']=='creative-studio' and profile['native_muse_status']=='UNBOUND' and
              profile['family_link']['enabled'] is False,'CREATIVE_PROFILE_CAPABILITY_DRIFT')
-    files['muse_presets/__init__.py']=b'"""Pinned offline creative production planning only."""\n'
+    files['muse_presets/__init__.py']=b'"""Creative Studio production-planning toolkit."""\n'
     pins={n:hashlib.sha256(b).hexdigest() for n,b in sorted(files.items())}
     files['run.py']=RUNNER.replace('__PIN_MAP__',repr(pins)).encode('utf-8')
     files['SOURCEKIT_MANIFEST.json']=canonical_bytes({'schema':SCHEMA,'role_id':'creative-studio',

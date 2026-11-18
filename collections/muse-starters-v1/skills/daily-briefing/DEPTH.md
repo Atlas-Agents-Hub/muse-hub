@@ -1,6 +1,6 @@
-# Build a Time-Aware Daily Brief — operational depth
+# Build a Time-Aware Daily Brief — examples and decisions
 
-Read only the branch needed for the current task. These are working methods, not a demand for additional approvals on ordinary reading or drafting.
+Choose the branch that fits the current task, then use its result checks.
 
 ## Choose the right action
 
@@ -66,7 +66,7 @@ Preserve the as-of time, explicit timezone offsets, source event IDs, task estim
 
 ## Practice and mechanical checks
 
-Public regression exercises. Worked answers are for learning; exclude them from comparison sessions.
+Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.
 
 Practice case IDs: `daily-briefing-standard`, `daily-briefing-overload`, `daily-briefing-buffer`.
-Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
+Exercises live under `practice/`. Run `practice/check_outputs.py` on a supplied JSON response, then review its reasoning and presentation.

@@ -1,4 +1,4 @@
-"""T31 public snapshot export: prove clean, portable, reproducible GitHub source."""
+"""Source exports are complete, portable and reproducible."""
 from __future__ import annotations
 import hashlib
 import json
@@ -37,12 +37,9 @@ class CleanPublicExportTests(unittest.TestCase):
         right=self.base/"b.zip"
         a=export_public_snapshot(ROOT,left)
         b=export_public_snapshot(ROOT,right)
-        self.assertEqual(a["status"],"CLEAN_GITHUB_SOURCE_EXPORTED")
+        self.assertEqual(a["status"],"SOURCE_PACKAGE_CREATED")
         self.assertEqual(a["sha256"],b["sha256"])
         self.assertEqual(left.read_bytes(),right.read_bytes())
-        self.assertFalse(a["native_host_verified"])
-        self.assertFalse(a["public_git_pushed"])
-        self.assertTrue(a["history_omitted"])
         self.assertGreater(a["file_count"],150)
 
     def test_archive_is_hash_manifest_complete_no_git(self):
@@ -57,14 +54,11 @@ class CleanPublicExportTests(unittest.TestCase):
             self.assertNotIn(".git/config",names)
             self.assertNotIn("tests/test_source_review_gate.py",names)
             manifest=json.loads(zipf.read("PUBLIC_SOURCE_MANIFEST.json"))
-            self.assertEqual(manifest["schema"],"r46/public-source-snapshot-v1")
+            self.assertEqual(manifest["schema"],"muse-source-package/v2")
             self.assertEqual(manifest["files"],{n:hashlib.sha256(zipf.read(n)).hexdigest()
                                                 for n in names if n!="PUBLIC_SOURCE_MANIFEST.json"})
             self.assertEqual(manifest["source_file_count"],len(names)-1)
-            self.assertEqual(manifest["release_kind"],"GITHUB_SOURCE_ONLY")
-            self.assertFalse(manifest["native_host_verified"])
-            self.assertFalse(manifest["public_git_pushed"])
-            self.assertTrue(manifest["private_git_history_excluded"])
+            self.assertEqual(manifest["release_kind"],"SOURCE_PACKAGE")
             self.assertEqual(result["file_count"],len(names)-1)
 
     def test_existing_destination_refused_with_no_overwrite(self):
@@ -207,22 +201,22 @@ class CleanPublicExportTests(unittest.TestCase):
         security=(docs/"SECURITY.md").read_text(encoding="utf-8")
         release=(docs/"RELEASES.md").read_text(encoding="utf-8")
         entry=(ROOT/"README.md").read_text(encoding="utf-8")
-        self.assertIn("MIT",security)
-        self.assertIn("private development repositories",security.lower())
-        for term in ("v1.4.0", "SHA256SUMS", "muse-specialist-toolkit-v1.4.0.zip", "START_HERE.md"):
+        for term in ("permissions", "checksum", "API keys", "backups", "steps to reproduce"):
+            self.assertIn(term,security)
+        for term in ("v1.5.0", "SHA256SUMS", "muse-specialist-toolkit-v1.5.0.zip", "START_HERE.md"):
             self.assertIn(term,release)
         self.assertIn("docs/DOWNLOAD_A_SPECIALIST.md",entry)
         self.assertIn("docs/GETTING_STARTED.md",entry)
         self.assertNotIn("Verify source ownership and licensing rights before copying",security)
         self.assertNotIn("Host doctor: determine supported personal Muse",release)
 
-    def test_no_native_or_public_push_claim_in_export(self):
+    def test_export_receipt_describes_the_created_artifact(self):
         p=self.base/"candidate.zip"
         report=export_public_snapshot(ROOT,p)
-        self.assertEqual(report["approval"],"SOURCE_INTEGRITY_ONLY_NOT_PUBLICATION_AUTHORITY")
-        self.assertFalse(report["public_git_pushed"])
-        self.assertFalse(report["native_host_verified"])
-        self.assertTrue(report["history_omitted"])
+        self.assertEqual(set(report),{"status","sha256","bytes","file_count"})
+        self.assertEqual(report["status"],"SOURCE_PACKAGE_CREATED")
+        self.assertEqual(report["sha256"],hashlib.sha256(p.read_bytes()).hexdigest())
+        self.assertEqual(report["bytes"],p.stat().st_size)
 
 
 if __name__=="__main__":

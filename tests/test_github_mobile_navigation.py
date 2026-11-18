@@ -21,8 +21,9 @@ class GitHubMobileNavigation(unittest.TestCase):
  def test_homepage_is_a_product_story_not_a_scrollable_table_or_warnings(self):
   body=doc(README);hero=body.split("\n## ",1)[0]
   self.assertLess(len(hero.encode("utf8")),1100)
+  inventory=json.loads(doc(ROOT/"hub/site/downloads.json"))["counts"]
   for claim in ["# Muse Hub","15 independent assistants","three subchats",
-                "75 skills","25 workflows","100 task starters","151 connectors"]:
+                str(inventory["skill"])+" skills",str(inventory["workflow"])+" workflows","100 task starters","151 connectors"]:
    self.assertIn(claim,hero)
   self.assertNotIn("Muse Specialist Toolkit",body)
   self.assertNotIn("atlas-origins.github.io/kits",body)
@@ -31,7 +32,7 @@ class GitHubMobileNavigation(unittest.TestCase):
 
  def test_homepage_has_four_obvious_actions_before_technical_details(self):
   body=doc(README);first=body.split("## The 15 specialists",1)[0]
-  for phrase in ("Choose an assistant","Download v1.4.0",
+  for phrase in ("Choose an assistant","Download v1.5.0",
                  "Visit Muse Hub","Get started"):
    self.assertIn(phrase,first)
   for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/connectors/README.md",

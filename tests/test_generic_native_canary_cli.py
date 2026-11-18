@@ -28,13 +28,13 @@ class GenericCanaryCliTests(unittest.TestCase):
             "--host", "personal-hatch", "--to", str(dest),
         ])
         self.assertEqual(rc, 0)
-        self.assertEqual(result["status"], "SOURCE_ONLY_STAGED")
-        self.assertFalse(result["native_installed"])
+        self.assertEqual(result["status"], "HOST_PACKAGE_CREATED")
+        self.assertNotIn('native_installed',result)
         self.assertFalse(result["external_effect_authorized"])
         rc, result = self.call(["generic-native-inspect", "--path", str(dest)])
         self.assertEqual(rc, 0)
-        self.assertEqual(result["status"], "SOURCE_ONLY_MATCH")
-        self.assertFalse(result["native_installed"])
+        self.assertEqual(result["status"], "FILES_VERIFIED")
+        self.assertNotIn('native_installed',result)
 
     def test_existing_destination_is_not_overwritten(self):
         dest = self.root / "existing"

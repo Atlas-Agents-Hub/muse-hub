@@ -29,7 +29,7 @@ def main(argv=None):
         with tempfile.TemporaryDirectory(prefix="r58-offline-coordinator-source-") as temp:
             source=Path(temp)/"coordinator"
             staged=stage_coordinator_dropin(source)
-            if (staged["status"]!="SOURCE_ONLY_COORDINATOR_STAGED"
+            if (staged["status"]!="COORDINATOR_FILES_CREATED"
                 or inspect_coordinator_dropin(source)["status"]!="LOCAL_COORDINATOR_MATCH"):
                 raise ValueError("COORDINATOR_SOURCEKIT_PRISTINE_PREFLIGHT_FAILED")
             receipt=export_coordinator_sourcekit(source,args.to)

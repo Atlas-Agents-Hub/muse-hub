@@ -1,6 +1,6 @@
 name: engineering_source_provenance
 title: Engineering Source Provenance
-description: Local digest pin and donor-manifest verification; no native Muse effects, licensing or publication approval.
+description: Verify source references and package manifests against exact file digests.
 include_in_prompt: false
 availability:
   confidential_vm: true

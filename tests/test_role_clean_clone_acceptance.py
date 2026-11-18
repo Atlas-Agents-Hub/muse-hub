@@ -1,4 +1,4 @@
-"""T32 source acceptance: per-role local functionality, never native-host claims."""
+"""Specialist packages preserve integrity and run their documented examples."""
 from __future__ import annotations
 import json
 from pathlib import Path
@@ -22,14 +22,14 @@ class RoleCleanCloneAcceptanceTests(unittest.TestCase):
 
     def test_all_eleven_distinct_packages_source_checked(self):
         result=self.report
-        self.assertEqual(result["status"],"CLEAN_CLONE_ROLE_MATRIX_SOURCE_ONLY")
+        self.assertEqual(result["status"],"ROLE_PACKAGES_VERIFIED")
         self.assertEqual(result["role_count"],15)
         self.assertEqual(set(result["roles"]),set(load_registry()["presets"]))
         self.assertEqual(result["subchats"],45)
         self.assertEqual(result["disabled_skills"],120)
-        self.assertFalse(result["native_installed"])
-        self.assertFalse(result["public_git_pushed"])
-        self.assertFalse(result["provider_connected"])
+        self.assertNotIn('native_installed',result)
+        self.assertNotIn('public_git_pushed',result)
+        self.assertNotIn('provider_connected',result)
         for role,item in result["roles"].items():
             self.assertEqual(item["source_inspection"],"LOCAL_STANDALONE_MATCH",role)
             self.assertEqual(item["source_export"],"LOCAL_EXPORT_CREATED",role)
@@ -38,8 +38,8 @@ class RoleCleanCloneAcceptanceTests(unittest.TestCase):
             self.assertEqual(item["subchats"],3)
             self.assertEqual(item["disabled_skills"],8)
             self.assertFalse(item["external_effects_authorized"])
-            self.assertFalse(item["native_installed"])
-            self.assertFalse(item["provider_connected"])
+            self.assertNotIn('native_installed',item)
+            self.assertNotIn('provider_connected',item)
 
     def test_coordinator_and_model_builder_execute_real_local_demo(self):
         for role in ("coordinator","model-builder"):
@@ -65,7 +65,7 @@ class RoleCleanCloneAcceptanceTests(unittest.TestCase):
     def test_three_other_roles_do_not_fabricate_engines(self):
         for role in ("creative-studio","adversarial-verifier","personal-companion"):
             item=self.report["roles"][role]
-            self.assertEqual(item["local_demo_grade"],"SOURCE_TEMPLATE_ONLY")
+            self.assertEqual(item["local_demo_grade"],"PROFILE_TEMPLATE")
             self.assertFalse(item["local_engine_executed"])
             self.assertIsNone(item["demo_exit_code"])
 
@@ -80,7 +80,7 @@ class RoleCleanCloneAcceptanceTests(unittest.TestCase):
         item=self.report["roles"]["software-engineer"]
         self.assertEqual(item["local_demo_grade"],"LOCAL_ENGINE_DEMO_PASSED")
         self.assertTrue(item["local_engine_executed"])
-        self.assertFalse(item["native_installed"])
+        self.assertNotIn('native_installed',item)
 
     def test_shared_evidence_finder_is_not_twelfth_agent(self):
         item=self.report["shared_services"]["evidence-finder"]
@@ -103,15 +103,15 @@ class RoleCleanCloneAcceptanceTests(unittest.TestCase):
                              encoding="utf-8")
             self.assertEqual(inspect_standalone_pack(path)["status"],"REVIEW_REQUIRED")
 
-    def test_cli_json_is_source_only(self):
+    def test_cli_json_reports_package_results(self):
         buffer=io.StringIO()
         with patch.object(verify,"verify_all",return_value=self.report):
             with redirect_stdout(buffer):
                 self.assertEqual(verify.main(["--all"]),0)
         parsed=json.loads(buffer.getvalue())
         self.assertEqual(parsed["role_count"],15)
-        self.assertFalse(parsed["native_installed"])
-        self.assertFalse(parsed["public_git_pushed"])
+        self.assertNotIn('native_installed',parsed)
+        self.assertNotIn('public_git_pushed',parsed)
 
     def test_docs_show_included_tools_and_their_setup(self):
         docs=(self.root/"docs/CAPABILITIES.md").read_text(encoding="utf-8")

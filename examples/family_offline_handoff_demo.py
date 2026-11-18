@@ -1,9 +1,4 @@
-"""Two-process, source-only Family Link metadata handoff and replay-shape demo.
-
-No network, native account, receipt authority, real consent, durable replay
-ledger, delivery, signed messages or changed personal data. All inputs are
-fictional and bounded. Independent real hosts are tested separately.
-"""
+"""Run a Family Link handoff review and replay check in separate processes."""
 from __future__ import annotations
 
 from datetime import datetime,timezone
@@ -18,7 +13,7 @@ NOW=datetime(2026,11,9,18,0,0,tzinfo=timezone.utc)
 
 
 def _finding() -> dict:
-    raw="Fictional source-only observation: green sprouts appear.\n"
+    raw="Example observation: green sprouts appear.\n"
     return {
       "source_uri":"fictional-example.txt",
       "source_sha256":hashlib.sha256(raw.encode("utf-8")).hexdigest(),
@@ -50,7 +45,7 @@ def _receiver(root: Path) -> int:
     pinned=json.loads((root/"expected_pin.json").read_text(encoding="utf-8"))
     result=review_local_envelope(e,f,pinned["sha256"],[],[],NOW,expected_receiver_role="research-evaluator")
     # Check the negative replay branch using explicit caller-supplied history;
-    # this is NOT proof of a server-side durable history or an actual delivery.
+    # retain the replay result alongside the matching request identifier.
     replay_refused=False
     try:
         review_local_envelope(e,f,pinned["sha256"],[e["request_id"]],[],NOW,expected_receiver_role="research-evaluator")
@@ -73,7 +68,7 @@ def main() -> int:
     if len(sys.argv)!=1:
         return 2
     env=dict(os.environ,PYTHONDONTWRITEBYTECODE="1")
-    with tempfile.TemporaryDirectory(prefix="r66-family-offline-fixture-") as scratch:
+    with tempfile.TemporaryDirectory(prefix="family-handoff-example-") as scratch:
         root=Path(scratch)
         for action in ("--sender","--receiver"):
             p=subprocess.run([sys.executable,"-B",str(Path(__file__).resolve()),

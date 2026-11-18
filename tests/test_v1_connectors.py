@@ -66,15 +66,16 @@ class ConnectorCatalogTests(unittest.TestCase):
 class V1ProductTests(unittest.TestCase):
  def test_hero_leads_with_specialists_skills_workflows_and_connectors(self):
      s=(R/'README.md').read_text();hero=s.split('\n## ',1)[0]
-     for value in ('Muse Hub','15 independent assistants','75 skills','25 workflows',
-                   '100 task starters','151 connectors'):
+     counts=json.loads((R/'hub/site/downloads.json').read_bytes())['counts']
+     for value in ('Muse Hub','15 independent assistants',f"{counts['skill']} skills",f"{counts['workflow']} workflows",
+                   f"{counts['tool-guide']} tool guides",'100 task starters','151 connectors'):
          self.assertIn(value,hero)
      self.assertNotIn('Muse Specialist Toolkit',s)
      self.assertLess(len(s.encode()),8000)
 
  def test_current_setup_routes_and_release_metadata_agree(self):
      d=json.loads((R/'docs/discovery/agent-capabilities.json').read_bytes())
-     self.assertEqual(d['project'],'Muse Hub');self.assertEqual(d['release'],'v1.4.0')
+     self.assertEqual(d['project'],'Muse Hub');self.assertEqual(d['release'],'v1.5.0')
      self.assertEqual(d['custom_connector_count'],151);self.assertEqual(d['configuration_count'],115)
      self.assertEqual(len(d['specialist_downloads']),15)
      for p in ['docs/GETTING_STARTED.md','docs/TERMINAL.md','docs/v1/POST_RELEASE.md',
@@ -84,7 +85,7 @@ class V1ProductTests(unittest.TestCase):
          self.assertTrue((R/path.split('#')[0]).is_file(),path)
  def test_first_use_preserves_identity_and_release_history(self):
      releases=(R/'docs/RELEASES.md').read_text()
-     for version in ('v1.4.0','v1.0.0','v0.4.1-alpha'):
+     for version in ('v1.5.0','v1.0.0','v0.4.1-alpha'):
          self.assertIn(version,releases)
      s=(R/'docs/v1/START_HERE.md').read_text()
      for target in ('../DOWNLOAD_A_SPECIALIST.md','../GETTING_STARTED.md','../TERMINAL.md',

@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Audit a fictional Save button without a label.",
     "observable_result": "Identify one static missing-label issue.",
     "negative_test": "Supply duplicate control IDs and refuse."

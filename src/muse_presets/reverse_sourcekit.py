@@ -1,9 +1,4 @@
-"""Create-only, exact-byte portable Reverse Researcher fixture comparison kit.
-
-No executable binary inspection, live network access, desktop control,
-security probing or malware execution is provided. Only caller-supplied
-offline observation fixtures are compared by the pinned existing engine.
-"""
+"""Build a toolkit for comparing supplied behavior observations."""
 from __future__ import annotations
 
 import hashlib
@@ -23,8 +18,8 @@ SOURCE_SHA = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "src/muse_presets/reverse.py": "3d5b4ff667ec996397f85a5a5746913d8aaff03801a864f1bbde5ffbe7dcc800",
     "tests/test_reverse_fixture.py": "d3229a34a348ea35ee18d9a0fcfe7a3b03ccb751e8eeac2bc946eaeb3b432aeb",
-    "presets/reverse-engineering-researcher/preset.json": "a8d0933de95103e512339aefed4a1fc4f18c1c73a4d0d49c7c14ba00759ebdf1",
-    "presets/reverse-engineering-researcher/playbook.json": "d363137bedaf2a974a66ab93cefe380270a623610f2cd1deb6a52c9e05b59294",
+    "presets/reverse-engineering-researcher/preset.json": 'f4b34287ed03dcfd1a59cdb1caa7ebb98e8ac096efade5d6ef15cca641c0e3ab',
+    "presets/reverse-engineering-researcher/playbook.json": '6b17bc20e32fa6d03390d3b18520af53cb159e40ee6b2591fef18e1ef3846482',
 }
 SOURCE_MAP = {
     "LICENSE": "LICENSE",
@@ -76,7 +71,7 @@ the runner checks their hashes and rejects linked or altered source before
 loading the engine.
 """
 
-RUNNER = r'''"""Bounded, offline-only observation diff; no live target behavior."""
+RUNNER = r'''"""Compare supplied behavior observations and report their differences."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -275,7 +270,7 @@ def _distribution(source_root: Path) -> dict[str, bytes]:
              and profile.get("native_muse_status") == "UNBOUND"
              and profile.get("family_link",{}).get("enabled") is False,
              "REVERSE_PROFILE_SCOPE_CHANGED")
-    files["muse_presets/__init__.py"] = b'"""Pinned offline reverse fixture comparison only."""\n'
+    files["muse_presets/__init__.py"] = b'"""Behavior-observation comparison toolkit."""\n'
     files["START_HERE.md"] = START_HERE.encode("utf-8")
     pins = {name:_sha(raw) for name,raw in sorted(files.items())}
     files["run.py"] = RUNNER.replace("__PIN_MAP__", repr(pins)).encode("utf-8")

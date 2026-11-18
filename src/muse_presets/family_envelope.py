@@ -192,7 +192,7 @@ def review_local_envelope(
         raise ValueError("DECLARED_REQUEST_REPLAY")
     return {
         "schema":"r66/family-offline-shape-review-v1",
-        "status":"LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED",
+        "status":"HANDOFF_REVIEW_PASSED",
         "request_id":envelope["request_id"],
         "sender_role":envelope["sender_role"],
         "receiver_role":envelope["receiver_role"],

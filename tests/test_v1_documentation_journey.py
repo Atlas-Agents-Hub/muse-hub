@@ -19,9 +19,9 @@ class V1DocumentationJourney(unittest.TestCase):
 
  def test_release_page_starts_with_current_downloads_and_keeps_history(self):
   page=read("docs/RELEASES.md")
-  self.assertIn("releases/tag/v1.4.0",first(page))
-  self.assertIn("releases/download/v1.4.0/SHA256SUMS",page)
-  self.assertLess(page.index("v1.4.0"),page.index("v1.0.0"))
+  self.assertIn("releases/tag/v1.5.0",first(page))
+  self.assertIn("releases/download/v1.5.0/SHA256SUMS",page)
+  self.assertLess(page.index("v1.5.0"),page.index("v1.0.0"))
   self.assertLess(page.index("v1.0.0"),page.index("v0.4.1-alpha"))
   self.assertIn("Get-FileHash",page)
   self.assertIn("sha256sum",page)
@@ -37,16 +37,17 @@ class V1DocumentationJourney(unittest.TestCase):
   self.assertIn("quickstart.py --all",page)
 
  def test_skill_and_tool_pages_offer_current_methods(self):
-  for term in ("15","75","25","100","151"):
+  inventory=json.loads(read("hub/site/downloads.json"))["counts"]
+  for term in ("15",str(inventory["skill"]),str(inventory["workflow"]),"100","151"):
    self.assertIn(term,first(read("docs/CAPABILITIES.md")))
   skills=read("docs/SKILLS.md")
-  for term in ("75","25","100","50","SKILL.md","--to"):
+  for term in (str(inventory["skill"]),str(inventory["workflow"]),"100","50","SKILL.md","--to"):
    self.assertIn(term,skills)
 
  def test_ai_index_recommends_current_packages(self):
   for path in ("llms.txt","docs/discovery/AI_AGENT_GUIDE.md"):
    text=read(path)
-   self.assertIn("releases/tag/v1.4.0",text)
+   self.assertIn("releases/tag/v1.5.0",text)
    self.assertIn("TERMINAL.md",text)
    self.assertNotIn("guaranteed ranking",text.lower())
 

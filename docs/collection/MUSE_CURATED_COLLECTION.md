@@ -1,6 +1,6 @@
 # Specialist collection
 
-Explore **15 specialist packages, 75 skills, 25 workflows, and 100 task starters**. Start with [an assistant download](../DOWNLOAD_A_SPECIALIST.md), a [task starter](../../collections/muse-starters-v1/CATALOG.md), or the [tool quickstart](SPECIALIST_QUICKSTART.md).
+Explore **15 specialist packages, 461 skills, 58 workflows, and 100 task starters**. Start with [an assistant download](../DOWNLOAD_A_SPECIALIST.md), a [task starter](../../collections/muse-starters-v1/CATALOG.md), or the [tool quickstart](SPECIALIST_QUICKSTART.md).
 
 ## Choose a method for your task
 
@@ -28,6 +28,6 @@ Keep the original package and your working copy separately. Export a new version
 
 ## Developer references
 
-The [compatibility map](../../collections/muse-starters-v1/PUBLIC_COMPATIBILITY.json) maps existing procedure IDs and the `data-engineer` and `reliability-engineer` toolkit aliases. `python -B tools/collection_compatibility.py` checks those relationships and preserved source records. The collection's historical evaluation records remain with its engineering data.
+The [compatibility map](../../collections/muse-starters-v1/PUBLIC_COMPATIBILITY.json) maps existing procedure IDs and the `data-engineer` and `reliability-engineer` toolkit aliases. `python -B tools/collection_compatibility.py` checks those relationships and preserved source records. The skill and workflow catalogs drive the downloadable packages.
 
 [Get started](../GETTING_STARTED.md) · [Skills](../SKILLS.md) · [Workflows](../WORKFLOWS.md) · [Operating handbook](../handbook/README.md)

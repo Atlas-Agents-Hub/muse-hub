@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Run a tiny authorized local adapter or deterministic student baseline against a disjoint example set.",
     "observable_result": "Real training-or-direct decision with model/data hashes and an examiner handoff, no invented model gain.",
     "negative_test": "Inject a contaminated held-out record or fake optimizer receipt; reject training/promotion."

@@ -1,0 +1,31 @@
+name: macOS compatibility
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: macos-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      PYTHONPATH: src
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Test macOS compatibility
+        run: python -B -m unittest discover -s tests -v
+      - name: Check the product and specialist packages
+        run: |
+          python -B scripts/check_public.py
+          python -B -m muse_presets.cli doctor
+          python -B examples/github_quickstart.py --all

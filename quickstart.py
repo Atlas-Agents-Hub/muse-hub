@@ -1,4 +1,4 @@
-"""One-command source-only role starter. No installer or provider credential effects.
+"""Create and check a Muse Hub specialist package.
 
 Run from a checked-out public source tree using Python 3.12+:
   python -B quickstart.py --all
@@ -20,6 +20,5 @@ if __name__ == "__main__":
         raise SystemExit(main())
     except (OSError, ValueError, TypeError, KeyError) as exc:
         print(json.dumps({"status": "REFUSED", "reason": str(exc),
-                          "native_installed": False,
                           "external_effect_authorized": False}))
         raise SystemExit(2)

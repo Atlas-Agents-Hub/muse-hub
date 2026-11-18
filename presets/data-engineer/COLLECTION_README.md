@@ -1,6 +1,6 @@
 # Data Engineering & Database Architect
 
-Design safe data contracts, reconcile incremental records and review query access paths with reproducible offline tools.
+Design safe data contracts, reconcile incremental records and review query access paths with reproducible database tools.
 
 ## Run the exported kit
 

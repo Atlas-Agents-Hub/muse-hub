@@ -7,7 +7,7 @@ from muse_presets.claims_sourcekit import export_claims_sourcekit,verify_claims_
 
 ROOT=Path(__file__).resolve().parents[1]
 def main(argv=None)->int:
-    p=argparse.ArgumentParser(description="Build or verify a source-only Claims kit")
+    p=argparse.ArgumentParser(description="Build or verify a Claims kit")
     commands=p.add_mutually_exclusive_group(required=True)
     commands.add_argument("--to",type=Path,help="New ZIP file; never overwrite")
     commands.add_argument("--verify",type=Path,help="Previously created ZIP")

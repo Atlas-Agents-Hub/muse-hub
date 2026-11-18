@@ -37,7 +37,17 @@ class DistributionTests(unittest.TestCase):
                         sub=json.loads(inner.read('MANIFEST.json'))
                         for item,expected in sub['files'].items():
                             self.assertEqual(hashlib.sha256(inner.read(item)).hexdigest(),expected)
-            self.assertFalse(manifest['native_agents_installed'])
+            self.assertEqual(manifest['schema'],'muse-collection-distribution/v1')
+            roster=json.loads(z.read('SPECIALISTS.json'))
+            identifiers={row['id'] for row in roster}
+            self.assertEqual(len(identifiers),len(roster))
+            aliases=json.loads((R/'collections/muse-starters-v1/PUBLIC_COMPATIBILITY.json').read_bytes())['role_aliases']
+            roles=json.loads((R/'presets/catalog.json').read_bytes())['presets']
+            self.assertEqual({aliases.get(identifier,identifier) for identifier in identifiers},set(roles))
+            self.assertEqual(manifest['specialists_catalogued'],len(roster))
+            counts=json.loads(z.read('COUNTS.json'))
+            for key in ('skills','workflows','starters_packaged','standalone_extensions_packaged'):
+                self.assertEqual(manifest[key],counts[key])
             self.assertEqual(manifest['standalone_extensions_packaged'],4)
 
     def test_bundle_contains_actual_local_results_and_honest_workflow_limits(self):
@@ -47,8 +57,8 @@ class DistributionTests(unittest.TestCase):
             self.assertEqual(len(reports),9)
             for name in reports:
                 report=json.loads(z.read(name))
-                self.assertTrue(report['results']);self.assertFalse(report['external_actions_performed'])
-                if 'workflow' in report:self.assertFalse(report['full_workflow_executed'])
+                self.assertTrue(report['results']);self.assertEqual(report['status'],'EXAMPLES_COMPLETED')
+                if 'workflow' in report:self.assertIn('unexecuted_skills',report)
 
     def test_existing_download_destination_is_not_overwritten(self):
         self.require_bundle()

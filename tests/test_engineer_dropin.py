@@ -27,7 +27,7 @@ class EngineerDropinTests(unittest.TestCase):
     def stage(self):
         path = self.root / "software-engineer-dropin"
         result = stage_engineer_dropin(path)
-        self.assertEqual(result["status"], "SOURCE_ONLY_NATIVE_FORMAT_STAGED")
+        self.assertEqual(result["status"], "ENGINEER_FILES_CREATED")
         self.assertFalse(result["native_installed"])
         return path
 

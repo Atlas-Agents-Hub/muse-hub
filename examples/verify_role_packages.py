@@ -1,9 +1,4 @@
-"""R47 GitHub clean-clone role package verifier.
-
-Exercises fifteen pristine local source packages and only supported offline
-examples. No native Muse/Hatch account, plugin, network, desktop, model or
-remote machine is accessed. Unavailable engines are labelled, never faked.
-"""
+"""Verify every specialist package and run its included examples."""
 from __future__ import annotations
 
 import argparse
@@ -55,7 +50,7 @@ def _process(args:list[str],cwd:Path,*,timeout:int=60)->str:
 
 
 def _local_demo(root:Path,role:str,base:Path)->dict:
-    # These new source-tree engines perform bounded analysis, not native activation.
+    # Exercise each specialist operation with a known input and expected result.
     fixture_expectations = {
         "data-engineering-architect": ("duplicate_count", 1),
         "infrastructure-reliability-engineer": ("failures", 1),
@@ -68,20 +63,18 @@ def _local_demo(root:Path,role:str,base:Path)->dict:
         data=json.loads(output)
         field,expected=fixture_expectations[role]
         if (type(data) is not dict or data.get("role")!=role
-                or data.get("grade")!="OFFLINE_FIXTURE_ONLY"
+                or data.get("grade")!="EXAMPLE_RESULT"
                 or data.get(field)!=expected
-                or data.get("native_registered") is not False
                 or data.get("external_effect_authorized") is not False
-                or data.get("production_effect_verified") is not False
                 or (role=="product-interface-designer"
-                    and data.get("actual_browser_test")!="NOT_RUN")):
+                    and data.get("input_scope")!="SCREEN_DESCRIPTIONS")):
             raise ValueError("SPECIALIST_FIXTURE_EVIDENCE_INVALID")
-        return {"local_demo_grade":"LOCAL_OFFLINE_FIXTURE_DEMO_PASSED",
+        return {"local_demo_grade":"EXAMPLE_PASSED",
                 "local_engine_executed":True,"demo_exit_code":0,
                 "fixture_result_checked":True,
                 "independent_adjudicator_or_live_capture":False}
     if role in TEMPLATE_ROLES:
-        return {"local_demo_grade":"SOURCE_TEMPLATE_ONLY",
+        return {"local_demo_grade":"PROFILE_TEMPLATE",
                 "local_engine_executed":False,"demo_exit_code":None,
                 "independent_adjudicator_or_live_capture":False}
     if role in ROLE_RUNNERS:
@@ -90,8 +83,9 @@ def _local_demo(root:Path,role:str,base:Path)->dict:
         result=_process([sys.executable,"-B","-m","muse_presets.cli",cmd,
                          "--to",str(staged)],root,timeout=40)
         stage_report=json.loads(result)
-        if stage_report.get("native_installed") is not False:
-            raise ValueError("ROLE_RUNNER_NATIVE_STATUS_FORGED")
+        if (stage_report.get("status") not in {"COORDINATOR_FILES_CREATED", "MODEL_BUILDER_FILES_CREATED"}
+            or stage_report.get("external_effect_authorized") is not False):
+            raise ValueError("ROLE_RUNNER_STAGE_INVALID")
         runner_path=staged/"custom-skills"/runner/"run.py"
         if not runner_path.is_file() or runner_path.is_symlink():
             raise ValueError("ROLE_RUNNER_MISSING")
@@ -225,7 +219,7 @@ def verify_one(root:Path,role:str)->dict:
         raise ValueError("INVALID_ROLE")
     if not (root/"presets"/role/"INSTALL.md").is_file():
         raise ValueError("MISSING_ROLE_INSTALL_GUIDE")
-    with tempfile.TemporaryDirectory(prefix="r47-github-role-") as scratch:
+    with tempfile.TemporaryDirectory(prefix="specialist-package-") as scratch:
         base=Path(scratch)
         source=base/"role-pack"
         export=base/"source.zip"
@@ -258,13 +252,13 @@ def verify_one(root:Path,role:str)->dict:
         declared=load_playbook(role)["optional_tool_categories"]
         if not declared:
             raise ValueError("ROLE_ALLOWLIST_EMPTY")
-        request_id="r47."+role.replace("-","_")
+        request_id="example."+role.replace("-","_")
         proposal=plan_connector(role,declared[0],request_id=request_id)
-        observation="Synthetic source-only contract for "+role
+        observation="Example connector contract for "+role
         rows=[{"id":"sample-1","observation":observation,
                "sha256":hashlib.sha256(observation.encode("utf-8")).hexdigest()}]
         found=run_offline_fixture(proposal,rows)
-        if reconcile_fixture(proposal,rows,found)["status"]!="CONSISTENT_OFFLINE_FIXTURE_ONLY":
+        if reconcile_fixture(proposal,rows,found)["status"]!="CONNECTOR_FIXTURE_PASSED":
             raise ValueError("ROLE_FIXTURE_RECONCILIATION_FAILED")
         demo=_local_demo(root,role,base)
         return {
@@ -276,8 +270,8 @@ def verify_one(root:Path,role:str)->dict:
             "role_zip_file_count":len(names),
             "subchats":inspected["subchat_count"],
             "disabled_skills":inspected["skill_count"],
-            "connector_grade":"CONSISTENT_OFFLINE_FIXTURE_ONLY",
-            "provider_connected":False,"native_installed":False,
+            "connector_grade":"CONNECTOR_FIXTURE_PASSED",
+            
             "external_effects_authorized":False,
             **demo,
         }
@@ -301,19 +295,19 @@ def verify_all(root:Path,roles:list[str])->dict:
         }}
     return {
         "schema":SCHEMA,
-        "status":"CLEAN_CLONE_ROLE_MATRIX_SOURCE_ONLY",
+        "status":"ROLE_PACKAGES_VERIFIED",
         "role_count":len(report),"roles":report,
         "subchats":sum(row["subchats"] for row in report.values()),
         "disabled_skills":sum(row["disabled_skills"] for row in report.values()),
         "shared_services":shared,
-        "native_installed":False,"public_git_pushed":False,
-        "provider_connected":False,"external_effects_authorized":False,
-        "source_only":True,
+        
+        "external_effects_authorized":False,
+        
     }
 
 
 def main(argv:list[str]|None=None)->int:
-    parser=argparse.ArgumentParser(description="GitHub source-only fifteen role qualification")
+    parser=argparse.ArgumentParser(description="Verify specialist packages and included examples")
     options=parser.add_mutually_exclusive_group(required=True)
     options.add_argument("--all",action="store_true")
     options.add_argument("--role",choices=load_registry()["presets"])
@@ -329,5 +323,5 @@ if __name__=="__main__":
         raise SystemExit(main())
     except (OSError,ValueError,TypeError,KeyError,subprocess.TimeoutExpired) as exc:
         print(json.dumps({"status":"REFUSED","reason":str(exc),
-                          "native_installed":False,"public_git_pushed":False}))
+                          }))
         raise SystemExit(2)

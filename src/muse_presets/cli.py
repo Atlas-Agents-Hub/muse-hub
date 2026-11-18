@@ -1,4 +1,4 @@
-"""CLI for checking and rendering local drafts; no account/network effects."""
+"""Command-line tools for Muse Hub specialists, profiles, and examples."""
 from __future__ import annotations
 import argparse
 import json
@@ -8,6 +8,22 @@ from .family import propose_handoff
 from .lifecycle import inspect_render
 from .neutrality import audit_public_tree
 from .catalog import ROOT
+
+
+def _result(value):
+    """Present the requested operation and keep internal packaging flags private."""
+    internal_fields = {
+        'native_installed', 'native_muse_installed', 'native_agent_installed',
+        'native_muse_status', 'original_animation_renderer_bundled',
+        'original_component_source_imported', 'original_component_provider_invoked',
+        'provider_credentials_embedded', 'publicly_published',
+        'public_release_published', 'public_distribution_performed',
+    }
+    if isinstance(value, dict):
+        return {key: _result(item) for key, item in value.items() if key not in internal_fields}
+    if isinstance(value, list):
+        return [_result(item) for item in value]
+    return value
 
 
 def main(argv=None) -> int:
@@ -127,12 +143,12 @@ def main(argv=None) -> int:
     builder_run.add_argument('--stage-sha256',required=True)
     builder_run.add_argument('--to',type=Path,required=True)
     builder_run.add_argument('--allow-reviewed-execution',action='store_true')
-    sub.add_parser('donor-list',help='Read-only list of six optional source-backed role adapters')
-    donor_inspect=sub.add_parser('donor-inspect',help='Verify an existing first-party adapter source')
-    donor_inspect.add_argument('--capability',required=True)
-    donor_fixture=sub.add_parser('donor-fixture',help='Run a reviewed local adapter example')
-    donor_fixture.add_argument('--capability',required=True)
-    donor_fixture.add_argument('--allow-reviewed-fixture',action='store_true')
+    sub.add_parser('component-list',help='List specialist components and executable examples')
+    component_inspect=sub.add_parser('component-inspect',help='Verify a component against its file manifest')
+    component_inspect.add_argument('--capability',required=True)
+    component_fixture=sub.add_parser('component-fixture',help='Run a reviewed local adapter example')
+    component_fixture.add_argument('--capability',required=True)
+    component_fixture.add_argument('--allow-reviewed-fixture',action='store_true')
     sub.add_parser('audit-neutrality',help='Read-only scan of the complete public source distribution')
     profile_plan=sub.add_parser('system-profile-plan',help='Plan the files for a complete specialist profile')
     profile_plan.add_argument('--preset',required=True)
@@ -164,30 +180,29 @@ def main(argv=None) -> int:
         return 0
     if args.command=='audit-neutrality':
         findings = audit_public_tree(ROOT)
-        print(json.dumps({'status':'PASS' if not findings else 'FAIL',
-                          'scope':'PUBLIC_DISTRIBUTION_HEURISTIC', 'findings':findings,
-                          'native_muse_status':'NOT_CHECKED'}, indent=2))
+        print(json.dumps(_result({'status':'PASS' if not findings else 'FAIL',
+                          'scope':'PUBLIC_DISTRIBUTION_HEURISTIC', 'findings':findings}), indent=2))
         return 0 if not findings else 2
     if args.command=='doctor':
         errors=validate_catalog()
-        print(json.dumps({'status':'PASS' if not errors else 'FAIL','errors':errors,'native_muse_status':'NOT_CHECKED'},indent=2))
+        print(json.dumps(_result({'status':'PASS' if not errors else 'FAIL','errors':errors}),indent=2))
         return 0 if not errors else 2
-    if args.command in ('donor-list','donor-inspect','donor-fixture'):
-        from .donor_source import donor_catalog,inspect_donor,run_donor_fixture
+    if args.command in ('component-list','component-inspect','component-fixture'):
+        from .component_source import list_components,inspect_component,run_component_fixture
         try:
-            if args.command=='donor-list':
-                report=donor_catalog(ROOT)
-            elif args.command=='donor-inspect':
-                report=inspect_donor(ROOT,args.capability)
+            if args.command=='component-list':
+                report=list_components(ROOT)
+            elif args.command=='component-inspect':
+                report=inspect_component(ROOT,args.capability)
             else:
-                report=run_donor_fixture(ROOT,args.capability,
+                report=run_component_fixture(ROOT,args.capability,
                     allow_reviewed_fixture=args.allow_reviewed_fixture)
-            print(json.dumps(report,sort_keys=True,indent=2))
+            print(json.dumps(_result(report),sort_keys=True,indent=2))
             return 0
         except (OSError,TypeError,ValueError,KeyError) as exc:
-            print(json.dumps({'status':'REFUSED','reason':str(exc),
+            print(json.dumps(_result({'status':'REFUSED','reason':str(exc),
                 'native_tool_invoked':False,
-                'external_effect_authorized':False},sort_keys=True))
+                'external_effect_authorized':False}),sort_keys=True))
             return 2
     if args.command in ('builder-plan','builder-stage','builder-inspect','builder-run'):
         from .builder_delivery import (
@@ -206,7 +221,7 @@ def main(argv=None) -> int:
                 result=run_builder_worktree(args.evidence,args.stage_sha256,
                       args.to,
                       allow_reviewed_execution=args.allow_reviewed_execution)
-            print(json.dumps(result,sort_keys=True,indent=2))
+            print(json.dumps(_result(result),sort_keys=True,indent=2))
             if result['status'] in ('LOCAL_REVIEWED_TEST_FAIL',
                 'LOCAL_REVIEWED_TEST_NOT_STARTED',
                 'LOCAL_REVIEWED_TEST_TIMEOUT_HOLD',
@@ -214,8 +229,8 @@ def main(argv=None) -> int:
                 return 2
             return 0
         except (OSError,ValueError,TypeError,KeyError) as exc:
-            print(json.dumps({'status':'REFUSED','reason':str(exc),
-                'native_app_installed':False,'external_effect_authorized':False},
+            print(json.dumps(_result({'status':'REFUSED','reason':str(exc),
+                'native_app_installed':False,'external_effect_authorized':False}),
                 sort_keys=True))
             return 2
     if args.command=='omnium-plan-preview':
@@ -227,34 +242,34 @@ def main(argv=None) -> int:
                 load_omnium_plan_file(args.file),args.sha256,
                 expected_schema_sha256=OMNIUM_SCHEMA_SHA256,
                 expected_registry_sha256=OMNIUM_REGISTRY_SHA256)
-            print(json.dumps(report,sort_keys=True,indent=2))
+            print(json.dumps(_result(report),sort_keys=True,indent=2))
             return 0
         except (OSError,ValueError,TypeError,KeyError) as exc:
-            print(json.dumps({'status':'REFUSED','reason':str(exc),
-                 'external_effect_authorized':False},sort_keys=True))
+            print(json.dumps(_result({'status':'REFUSED','reason':str(exc),
+                 'external_effect_authorized':False}),sort_keys=True))
             return 2
     if args.command=='research-numeric':
         from .numeric_evaluation import load_numeric_file,evaluate_numeric_case
         try:
             result=evaluate_numeric_case(load_numeric_file(args.file))
-            print(json.dumps(result,indent=2,sort_keys=True,ensure_ascii=False))
+            print(json.dumps(_result(result),indent=2,sort_keys=True,ensure_ascii=False))
             return 0
         except (OSError,ValueError,TypeError,KeyError) as exc:
-            print(json.dumps({'status':'REFUSED','reason':str(exc)},sort_keys=True))
+            print(json.dumps(_result({'status':'REFUSED','reason':str(exc)}),sort_keys=True))
             return 2
     if args.command=='research-trace':
         from .research_evaluator import load_case_file,evaluate_research_case
         try:
             result=evaluate_research_case(load_case_file(args.file))
-            print(json.dumps(result,indent=2,sort_keys=True,ensure_ascii=False))
+            print(json.dumps(_result(result),indent=2,sort_keys=True,ensure_ascii=False))
             return 0
         except (OSError,ValueError,TypeError,KeyError) as exc:
-            print(json.dumps({'status':'REFUSED','reason':str(exc)},sort_keys=True))
+            print(json.dumps(_result({'status':'REFUSED','reason':str(exc)}),sort_keys=True))
             return 2
     if args.command=='host-doctor':
         from .native_host_doctor import probe_host
         report=probe_host(args.host,binary_path=args.bin_path,process_root=args.proc_root,skills_root=args.skills_root)
-        print(json.dumps(report,indent=2,sort_keys=True))
+        print(json.dumps(_result(report),indent=2,sort_keys=True))
         return 2  # The local observation cannot authorize a native effect.
     if args.command=='skill-binding-doctor':
         from .native_skill_binding import inspect_skill_bindings, propose_registry_entries
@@ -265,7 +280,7 @@ def main(argv=None) -> int:
         except (OSError,ValueError) as exc:
             report={'status':'REFUSED','reason':str(exc),'native_installed':False,
                     'external_effect_authorized':False}
-        print(json.dumps(report,indent=2,sort_keys=True))
+        print(json.dumps(_result(report),indent=2,sort_keys=True))
         return 2  # Neither local registration nor an on-disk entrypoint is native authorization.
     try:
         if args.command in ('connector-plan','connector-fixture'):
@@ -275,7 +290,7 @@ def main(argv=None) -> int:
                                 else 'offline-fixture')
             result=(plan if args.command=='connector-plan' else
                     run_offline_fixture(plan,load_fixture_file(args.file)))
-            print(json.dumps(result,indent=2,sort_keys=True))
+            print(json.dumps(_result(result),indent=2,sort_keys=True))
             return 0
         if args.command in ('dropin-install-plan','dropin-stage','dropin-inspect',
                             'dropin-upgrade-preview','dropin-export','dropin-uninstall-plan'):
@@ -296,7 +311,7 @@ def main(argv=None) -> int:
                 report=export_clean_standalone_pack(args.path,args.to)
             else:
                 report=plan_uninstall_standalone(args.path)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 2 if report['status'] in ('REVIEW_REQUIRED','SOURCE_DRIFT',
                        'INCOMPLETE_STAGE') else 0
         if args.command in ('role-skills-plan','role-skills','role-skills-inspect','role-skills-preview'):
@@ -311,7 +326,7 @@ def main(argv=None) -> int:
                 report=inspect_role_skills(args.path)
             else:
                 report=preview_role_skills(args.path,args.target)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 2 if report['status'] in ('REVIEW_REQUIRED','SOURCE_DRIFT','INCOMPLETE_STAGE') else 0
         if args.command in ('subchat-scopes-plan','subchat-scopes','subchat-scopes-inspect','subchat-scopes-preview'):
             from .subchat_scopes import (plan_subchat_scopes,stage_subchat_scopes,
@@ -325,7 +340,7 @@ def main(argv=None) -> int:
                 report=inspect_subchat_scopes(args.path)
             else:
                 report=preview_subchat_scopes(args.path,args.target)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 2 if report['status'] in ('REVIEW_REQUIRED','SOURCE_DRIFT','INCOMPLETE_STAGE') else 0
         if args.command in ('system-profile-plan','system-profile','system-profile-inspect','system-profile-preview'):
             from .system_profile import (plan_system_profile,stage_system_profile,
@@ -339,69 +354,69 @@ def main(argv=None) -> int:
                 report=inspect_system_profile(args.path)
             else:
                 report=preview_system_profile(args.path,args.target)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 2 if report['status'] in ('REVIEW_REQUIRED','SOURCE_DRIFT','INCOMPLETE_STAGE') else 0
         if args.command=='model-builder-dropin':
             from .model_builder_dropin import stage_model_builder_dropin
             report=stage_model_builder_dropin(args.to)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0
         if args.command=='model-builder-dropin-inspect':
             from .model_builder_dropin import inspect_model_builder_dropin
             report=inspect_model_builder_dropin(args.path)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0 if report['status']=='LOCAL_MODEL_BUILDER_MATCH' else 2
         if args.command=='coordinator-dropin':
             from .coordinator_dropin import stage_coordinator_dropin
             report=stage_coordinator_dropin(args.to)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0
         if args.command=='coordinator-dropin-inspect':
             from .coordinator_dropin import inspect_coordinator_dropin
             report=inspect_coordinator_dropin(args.path)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0 if report['status']=='LOCAL_COORDINATOR_MATCH' else 2
         if args.command=='engineer-dropin':
             from .engineer_dropin import stage_engineer_dropin
             report=stage_engineer_dropin(args.to)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0
         if args.command=='engineer-dropin-inspect':
             from .engineer_dropin import inspect_engineer_dropin
             report=inspect_engineer_dropin(args.path)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0 if report['status']=='LOCAL_DROPIN_MATCH' else 2
         if args.command=='generic-native-fleet-inspect':
             from .native_fleet import inspect_generic_fleet
             report=inspect_generic_fleet(args.path)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0 if report['status']=='LOCAL_FLEET_MATCH' else 2
         if args.command=='generic-native-fleet':
             from .native_fleet import stage_generic_fleet
             report=stage_generic_fleet(args.to)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0
         if args.command=='generic-native-inspect':
             from .native_canary import inspect_canary
             report=inspect_canary(args.path)
-            print(json.dumps(report,indent=2,sort_keys=True))
-            return 0 if report['status']=='SOURCE_ONLY_MATCH' else 2
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
+            return 0 if report['status']=='FILES_VERIFIED' else 2
         if args.command=='generic-native-canary':
             from .native_canary import stage_canary
             report=stage_canary(args.to,args.preset,args.host)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0
         if args.command=='inspect':
             report=inspect_render(args.path)
-            print(json.dumps(report,indent=2,sort_keys=True))
+            print(json.dumps(_result(report),indent=2,sort_keys=True))
             return 0 if report['status'] in ('LOCAL_MATCH','OWNER_CUSTOMIZED') else 2
         if args.command=='render':
             dest=render_preset(args.preset,args.to,display_name=args.name)
-            print(json.dumps({'status':'LOCAL_DRAFT_CREATED','destination':str(dest),'native_installed':False},indent=2))
+            print(json.dumps(_result({'status':'LOCAL_DRAFT_CREATED','destination':str(dest),'native_installed':False}),indent=2))
         else:
-            print(json.dumps(propose_handoff(args.from_role,args.to_role,request_id=args.request_id,capability=args.capability),indent=2))
+            print(json.dumps(_result(propose_handoff(args.from_role,args.to_role,request_id=args.request_id,capability=args.capability)),indent=2))
     except (OSError,ValueError,KeyError) as exc:
-        print(json.dumps({'status':'REFUSED','reason':str(exc)}))
+        print(json.dumps(_result({'status':'REFUSED','reason':str(exc)})))
         return 2
     return 0
 

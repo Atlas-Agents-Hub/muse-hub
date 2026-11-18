@@ -11,7 +11,7 @@ class CliTests(unittest.TestCase):
         output=io.StringIO()
         with redirect_stdout(output): code=main(['doctor'])
         self.assertEqual(code,0)
-        self.assertEqual(json.loads(output.getvalue())['native_muse_status'],'NOT_CHECKED')
+        self.assertEqual(json.loads(output.getvalue())['status'],'PASS')
 
     def test_list_includes_all_roles(self):
         output=io.StringIO()

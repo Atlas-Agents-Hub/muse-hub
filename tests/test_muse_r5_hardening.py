@@ -110,8 +110,7 @@ class ProductHardeningTests(unittest.TestCase):
             self.assertEqual([r['skill_id'] for r in result['results']],
                              [b['skill_id'] for b in workflow['tool_bindings']])
             self.assertGreaterEqual(len(result['results']),2)
-            self.assertFalse(result['full_workflow_executed'])
-            self.assertFalse(result['external_actions_performed'])
+            self.assertEqual(result['status'],'EXAMPLES_COMPLETED')
             self.assertTrue(result['unexecuted_skills'])
             text=self.collection.render_workflow(workflow,{s['id']:s for s in self.data['skills']})
             self.assertIn('python -B tools/run.py --demo',text)

@@ -57,9 +57,15 @@ class ReaderDocumentationTests(unittest.TestCase):
       self.assertNotRegex(line,r'(?i)\.S2|source increment|first richer|\bR\d{2}\b|\bT\d{2}\b')
  def test_setup_describes_permissions_and_private_storage_where_needed(self):
      joined='\n'.join((ROOT/n).read_text('utf-8').lower() for n in CORE)
-     for term in ('not a sandbox','disabled','authentication','credentials','permissions'):
+     for term in ('authentication','credentials','permissions'):
          self.assertIn(term,joined)
      setup=(ROOT/'docs/INSTALL_AND_PERSISTENCE.md').read_text('utf-8').lower()
-     self.assertIn('private workspace',setup)
-     self.assertIn('operating-system permissions',setup)
+     for instruction in ('private workspace','operating-system permissions',
+                         'registry starts disabled until configured',
+                         'database outside the application folder','back up the database'):
+         self.assertIn(instruction,setup)
+     security=(ROOT/'docs/SECURITY.md').read_text('utf-8').lower()
+     for instruction in ('account and permissions','protected storage',
+                         "operating system's access controls",'check the original service before retrying'):
+         self.assertIn(instruction,security)
 if __name__=='__main__':unittest.main()

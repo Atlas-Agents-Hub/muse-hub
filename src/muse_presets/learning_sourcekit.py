@@ -1,9 +1,4 @@
-"""Deterministic standalone Learning kit; no native account or scheduler.
-
-Verification compares canonical bytes without parsing the supplied ZIP.
-The unchanged SQLite engine requires a protected host-side authority resolver.
-Packaging follows the accepted Garden R78 contract; original study bytes stay pinned.
-"""
+"""Build a Learning Coach toolkit with persistent study sessions."""
 from __future__ import annotations
 import hashlib
 import io
@@ -19,9 +14,9 @@ MAX_ARCHIVE = 500_000
 SOURCE_SHA = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "examples/learning_session_demo.py": "4600987556e80ad06c27e8fe0a35d916618635ff5cfaaa49705cd6b9bab014ce",
-    "presets/learning-coach/playbook.json": "fcac671b6edd2d28bf834fada3faa992577670079f5a6900702c88338f9480e7",
-    "presets/learning-coach/preset.json": "11ac7532685fdf00e037f69401bf9b5e72a87aec16b31b557335e9313b1a0c84",
-    "src/muse_presets/database_paths.py": "1b3cb8a42cb29036aada91e314bffdbf397c46fdecf6227e4177022ac34acc79",
+    "presets/learning-coach/playbook.json": '389e00d1b2ccdd71aa2bf8fb5abbf8f160365190a6fab9aa54c93411d125f6f2',
+    "presets/learning-coach/preset.json": 'ee6abb91860348085be2def86b224560148b349a804542223998fd9a6299c836',
+    "src/muse_presets/database_paths.py": '86849fb3fc770109e868d533acd567980681570d4d7218734b56090506feca38',
     "src/muse_presets/learning_session.py": "f81e1e786b6956f1f48acc0437e782c5eabe674f65d16322a0b8f3395dae7d3b",
     "tests/test_learning_session.py": "297abafe69d92dafec903ccb52499b89d7f90d25ec5d8de75884b111a50f4443"
 }
@@ -76,7 +71,7 @@ and answers in a private folder protected by your computer's permissions.
 The package contains the Learning engine, database utilities, runnable demo,
 regression tests, role preset, playbook, and license.
 """
-RUNNER = r'''"""Offline Learning demo and original tests. No live-provider authority."""
+RUNNER = r'''"""Run the Learning Coach example and its regression tests."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -213,7 +208,7 @@ def _distribution(root: Path) -> dict[str, bytes]:
     _require(profile.get("id") == "learning-coach" and
              profile.get("native_muse_status") == "UNBOUND" and
              profile["family_link"]["enabled"] is False, "LEARNING_PROFILE_AUTHORITY_CHANGED")
-    members["muse_presets/__init__.py"] = b'"""Pinned offline Learning source only."""\n'
+    members["muse_presets/__init__.py"] = b'"""Learning Coach study-session toolkit."""\n'
     members["START_HERE.md"] = START_HERE.encode("utf-8")
     pins = {name: _sha(raw) for name, raw in sorted(members.items())}
     members["run.py"] = RUNNER.replace("__PIN_MAP__", repr(pins)).encode("utf-8")

@@ -127,7 +127,7 @@ class InstallAdverseTests(unittest.TestCase):
         self.assertEqual(sum(row[0]==2 for row in outputs),4,outputs)
         for code,reply,err in outputs:
             self.assertEqual(err,'')
-            self.assertEqual(reply['status'],'SOURCE_ONLY_TOY_EXTENSION_STAGED' if code==0 else 'REFUSED')
+            self.assertEqual(reply['status'],'TOY_EXTENSION_FILES_CREATED' if code==0 else 'REFUSED')
         pin=winners[0][1]['stage_receipt_sha256']
         self.assertEqual(install.inspect_extension(self.dest,pin)['status'],
                          'LOCAL_TOY_EXTENSION_STAGE_MATCH')

@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Create two short flashcards from a synthetic printed paragraph and score one attempt.",
     "observable_result": "Exact quotation source, independent answer rubric, idempotent learner record and due suggestion.",
     "negative_test": "Inject a hallucinated quote or replayed grade; require refusal."

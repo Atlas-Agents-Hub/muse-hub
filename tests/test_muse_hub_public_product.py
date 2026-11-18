@@ -4,13 +4,17 @@ import hashlib
 import json
 import re
 import unittest
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"tools"))
+from muse_collection import load_collection
 from urllib.parse import urlsplit
 ROOT=Path(__file__).resolve().parents[1]
 TICK=chr(96)
 REPO="https://github.com/atlas-origins/muse-ai-agent-presets"
 SITE="https://atlas-origins.github.io/muse-ai-agent-presets/"
-RELEASE=REPO+"/releases/tag/v1.4.0"
-DOWNLOAD=REPO+"/releases/download/v1.4.0/"
+VERSION=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
+RELEASE=REPO+"/releases/tag/"+VERSION
+DOWNLOAD=REPO+"/releases/download/"+VERSION+"/"
 ALIASES={"data-engineering-architect":"data-engineer",
          "infrastructure-reliability-engineer":"reliability-engineer"}
 def read(s):return (ROOT/s).read_text(encoding="utf-8")
@@ -31,7 +35,7 @@ class MuseHubPublicProduct(unittest.TestCase):
             with self.subTest(file=name):
                 s=read(name)
                 self.assertIn(RELEASE,s)
-                for stale in ("v1.4.0 draft", "not deployed", "source-only"):
+                for stale in (VERSION+" draft", "not deployed", "source-only"):
                     self.assertNotIn(stale,s.lower())
         self.assertIn("releases/latest", read("README.md"))
         self.assertIn(REPO+"/releases/tag/v1.0.0", read("docs/RELEASES.md"))
@@ -50,7 +54,7 @@ class MuseHubPublicProduct(unittest.TestCase):
                 self.assertIn("Main",t)
                 self.assertIn("three subchats",t)
                 self.assertIn(RELEASE,t)
-                self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-v1.4.0.zip",t)
+                self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-"+VERSION+".zip",t)
                 self.assertIn("START_HERE.md",t)
                 self.assertNotIn(" ? ",t)
                 self.assertNotIn("This public starter",t)
@@ -71,7 +75,7 @@ class MuseHubPublicProduct(unittest.TestCase):
         self.assertIn("releases/latest", downloads)
         roles=json.loads(read("presets/catalog.json"))["presets"]
         for role in roles:
-            self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-v1.4.0.zip",downloads)
+            self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-"+VERSION+".zip",downloads)
         self.assertNotIn(" ? ",downloads)
 
     def test_active_docs_have_no_escaped_line_breaks(self):
@@ -104,31 +108,35 @@ class MuseHubPublicProduct(unittest.TestCase):
                 if parsed.hostname=="atlas-origins.github.io":
                     self.assertTrue(parsed.path.startswith("/muse-ai-agent-presets/"))
 
-    def test_metadata_proposal_does_not_claim_live_issuance(self):
-        j=json.loads(read(".github/muse-hub-metadata-proposal.json"))
-        self.assertEqual(j["product_name"],"Muse Hub")
-        self.assertEqual(j["repository"],"atlas-origins/muse-ai-agent-presets")
-        self.assertEqual(j["homepage"],SITE)
-        self.assertNotIn("atlas-origins.github.io/kits",j["homepage"])
-        self.assertLessEqual(len(j["description"]),160)
-        self.assertEqual(j["applied_to_github"],False)
-        self.assertFalse(j["claims_live_hub_runtime"])
+    def test_repository_metadata_describes_the_product_and_search_topics(self):
+        metadata=json.loads(read('.github/muse-hub-metadata-proposal.json'))
+        self.assertEqual(metadata['product_name'],'Muse Hub')
+        self.assertEqual(metadata['repository'],'atlas-origins/muse-ai-agent-presets')
+        self.assertEqual(metadata['homepage'],SITE)
+        self.assertEqual(metadata['schema'],'muse-hub/github-metadata/v2')
+        self.assertLessEqual(len(metadata['description']),160)
+        self.assertIn('muse-ai',metadata['topics'])
+        self.assertLessEqual(len(metadata['topics']),20)
+        self.assertEqual(len(metadata['topics']),len(set(metadata['topics'])))
+        for topic in metadata['topics']:
+            self.assertRegex(topic,r'^[a-z0-9-]{1,50}$')
 
-    def test_original_public_source_custody_remains_verifiable(self):
-        ledger=json.loads(read("collections/muse-starters-v1/PUBLIC_BASELINE.json"))["files"]
-        migration=json.loads(read("docs/history/v1-install/MIGRATION_MANIFEST.json"))["entries"]
-        self.assertEqual(len(migration),15)
-        for row in migration:
-            archived=ROOT/row["archive_path"]
-            self.assertTrue(archived.is_file())
-            self.assertEqual(hashlib.sha256(archived.read_bytes()).hexdigest(),
-                             ledger[row["original_path"]])
+    def test_current_public_setup_files_are_present_for_every_role(self):
+        roles=json.loads(read('presets/catalog.json'))['presets']
+        for role in roles:
+            with self.subTest(role=role):
+                self.assertTrue((ROOT/'presets'/role/'INSTALL.md').is_file())
+                self.assertTrue((ROOT/'presets'/role/'README.md').is_file())
+                self.assertEqual(json.loads(read('presets/'+role+'/playbook.json'))['role_id'],role)
 
-    def test_public_guides_exclude_private_source_ids(self):
-        for name in ("README.md","hub/README.md","docs/README.md"):
+    def test_public_guides_describe_the_current_library(self):
+        data=load_collection()
+        skills=data['skills'];workflows=data['workflows']
+        main=read('README.md')
+        self.assertIn('151 connectors',main)
+        self.assertIn(str(len(skills))+' skills',main)
+        self.assertIn(str(len(workflows))+' workflows',main)
+        for name in ('README.md','hub/README.md','docs/README.md'):
             text=read(name)
-            self.assertNotIn("GreenBean-Muse-Assistant",text)
-            self.assertNotIn("muse-ai-agent-presets-r32" + "-private",text)
-        self.assertIn("151 connectors",read("README.md"))
-        self.assertIn("75 skills",read("README.md"))
-        self.assertIn("25 workflows",read("README.md"))
+            self.assertNotIn('private_repository',text)
+            self.assertNotIn('HOST_MAP.'+'local.json',text)

@@ -1,9 +1,4 @@
-"""Create-only downloadable ZIP of an already-pinned, pristine Software Engineer pack.
-
-The generic profile kit lacks runtime files. This source kit packages the existing
-R55 engineering_pack tree without native account access, code generation, or
-another Claim Gate. It has unsigned local hashes, not publisher authentication.
-"""
+"""Build and verify a portable Software Engineer toolkit."""
 from __future__ import annotations
 
 import hashlib
@@ -90,7 +85,7 @@ def _expected_source_members() -> set[str]:
 
 
 def _example() -> bytes:
-    # Reuse the one reviewed R55 case, rather than inventing a second fixture.
+    # Reuse the one reviewed case, rather than inventing a second fixture.
     from .workflow_fixture import fixture_case
     case = fixture_case()
     return (json.dumps(case, sort_keys=True, separators=(",", ":"), ensure_ascii=False)

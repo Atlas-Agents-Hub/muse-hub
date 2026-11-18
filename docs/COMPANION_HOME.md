@@ -20,7 +20,7 @@ The room selector takes you between Focus Room, Notebook, Garden, Arcade, and St
 
 You can also open `examples/companion_home/index.html` for a quick tour of the rooms, Studio, and Arcade. Launch the command above when you want to save notebook entries.
 
-## Use the real local Notebook
+## Save notes in Notebook
 
 Choose **Notebook** and enter the session token printed by the current launch. Keep the token private; enter it only in the local page. It stays in the page's memory and is cleared when the page locks or closes.
 
@@ -54,7 +54,7 @@ The example below checks notebook updates, restart, and restoration into a new e
 
 ```sh
 PYTHONPATH=src python3 -B examples/companion_home_notebook_demo.py
-python -B scripts/run_source_test.py test_companion_home_h14_h17.py
+PYTHONPATH=src python -B -m unittest discover -s tests -p 'test_companion_room*.py' -v
 ```
 
 On PowerShell, set `$env:PYTHONPATH = "src"` for the example. HTTP, launcher, and browser-client regressions are in `tests/test_companion_room_http.py`, `tests/test_companion_room_launcher.py`, and `tests/test_companion_room_client.py`. The client tests require Node.js.

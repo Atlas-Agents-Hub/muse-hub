@@ -1,8 +1,4 @@
-"""Deterministic, standalone Garden source kit; no native account or calendar.
-
-Verification compares canonical bytes without parsing the supplied ZIP.
-The unchanged SQLite engine still requires a host-side authority resolver.
-"""
+"""Build a Garden Companion toolkit with a persistent care calendar."""
 from __future__ import annotations
 import hashlib
 import io
@@ -17,11 +13,11 @@ SCHEMA = "muse-presets/garden-executable-sourcekit-v1"
 MAX_ARCHIVE = 500_000
 SOURCE_SHA = {
     "src/muse_presets/garden_calendar.py": "af982eb2cdba413e6cb7fcaa04ac3235e37af45fc855e66377b1ca99a9fb662f",
-    "src/muse_presets/database_paths.py": "1b3cb8a42cb29036aada91e314bffdbf397c46fdecf6227e4177022ac34acc79",
+    "src/muse_presets/database_paths.py": '86849fb3fc770109e868d533acd567980681570d4d7218734b56090506feca38',
     "examples/garden_calendar_demo.py": "19c1cd3703bbd48aef210c4a2f5cad540c5efd2827c6add7fba791bf18b41344",
     "tests/test_garden_calendar.py": "63fb0c7ed0ea2407a07446ef798c3f9cf580445f32f410fd11dcf67d362b332d",
-    "presets/garden-companion/preset.json": "8fa1478f149bc1a7a9cd7690d370266f245f982aeff5fd9c4bd018718784c7fe",
-    "presets/garden-companion/playbook.json": "4966f2ea9649b3594752a6754b0d4d92334bddc5a3d7c8131f6c00d4f2207fb6",
+    "presets/garden-companion/preset.json": 'a17cebd32f4b91bf063fd3dee37349da3d1b44f06f9f42f971d26dd108d8ad8a',
+    "presets/garden-companion/playbook.json": 'b311a4c96e440e0d2d9545f07119717fae87ba32d8a04d7cc17b4bcaf862fa26',
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
 }
 SOURCE_MAP = {
@@ -68,7 +64,7 @@ location for personal information.
 The package contains the Garden engine, database utilities, runnable demo,
 regression tests, role preset, playbook, and license.
 """
-RUNNER = r'''"""Offline Garden demo and original tests. No live-provider authority."""
+RUNNER = r'''"""Run the Garden Companion example and its regression tests."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -204,7 +200,7 @@ def _distribution(root: Path) -> dict[str, bytes]:
     _require(profile.get("id") == "garden-companion" and
              profile.get("native_muse_status") == "UNBOUND" and
              profile["family_link"]["enabled"] is False, "GARDEN_PROFILE_AUTHORITY_CHANGED")
-    members["muse_presets/__init__.py"] = b'"""Pinned offline Garden source only."""\n'
+    members["muse_presets/__init__.py"] = b'"""Garden Companion care-calendar toolkit."""\n'
     members["START_HERE.md"] = START_HERE.encode("utf-8")
     pins = {name: _sha(raw) for name, raw in sorted(members.items())}
     members["run.py"] = RUNNER.replace("__PIN_MAP__", repr(pins)).encode("utf-8")

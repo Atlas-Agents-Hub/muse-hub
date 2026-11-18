@@ -46,7 +46,7 @@ class PublicProductSurfaceTests(unittest.TestCase):
  def test_readme_is_short_product_entrypoint(self):
   readme=(ROOT/"README.md").read_text(encoding="utf-8")
   self.assertLess(len(readme.encode("utf-8")),8000)
-  for text in ("# Muse Hub","v1.4.0","docs/CAPABILITIES.md",
+  for text in ("# Muse Hub","v1.5.0","docs/CAPABILITIES.md",
                "docs/GITHUB_QUICKSTART.md","MIT","docs/TERMINAL.md"):
    self.assertIn(text,readme)
   for role in ROLE_SLUGS:
@@ -97,10 +97,10 @@ class PublicProductSurfaceTests(unittest.TestCase):
  def test_published_download_links_present_without_private_credential_urls(self):
   text="\n".join((ROOT/x).read_text(encoding="utf-8")
                  for x in ("README.md","CHANGELOG.md","docs/RELEASES.md"))
-  self.assertIn("releases/tag/v1.4.0",text)
-  self.assertIn("releases/download/v1.4.0/SHA256SUMS",text)
+  self.assertIn("releases/tag/v1.5.0",text)
+  self.assertIn("releases/download/v1.5.0/SHA256SUMS",text)
   self.assertNotIn("token=",text.lower())
-  self.assertNotIn("sethburkhardt21-dev/muse-ai-agent-presets-r32" + "-private",text)
+  self.assertNotIn("example-private-account/muse-ai-agent-presets-r32" + "-private",text)
 
  def test_relative_markdown_links_resolve_across_visible_source(self):
   pages=[ROOT/"README.md",ROOT/"CHANGELOG.md",ROOT/"CONTRIBUTING.md",
@@ -128,8 +128,8 @@ class PublicProductSurfaceTests(unittest.TestCase):
   self.assertEqual(manifest["source_file_count"],len(selected))
   self.assertEqual(manifest["files"],
                    {name:hashlib.sha256(raw).hexdigest() for name,raw in selected.items()})
-  self.assertTrue(manifest["private_git_history_excluded"])
-  self.assertFalse(manifest["owner_state_included"])
+  self.assertEqual(set(manifest),{"schema","release_kind","source_file_count","files"})
+  self.assertEqual(manifest["release_kind"],"SOURCE_PACKAGE")
 
  def test_ci_cannot_bypass_product_surface_checks(self):
   workflow=(ROOT/".github/workflows/checks.yml").read_text(encoding="utf-8")

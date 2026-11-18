@@ -3,7 +3,6 @@
   "product": "Muse Hub",
   "role_count": 15,
   "host_integrations": "SEPARATE_AUTHORIZATION",
-  "native_muse_activation": "NOT_ASSERTED",
   "interpretation": "Specialist playbooks describe field-wide work; included Python engines implement particular local operations. Additional host tools require their own setup and permission.",
   "roles": [
     {
@@ -23,7 +22,6 @@
       "examples": [
         "examples/export_coordinator_sourcekit.py"
       ],
-      "engine_note": "Local planning, evidence and review functions. No live worker dispatch is included.",
       "playbook": "presets/coordinator/playbook.json"
     },
     {
@@ -47,7 +45,6 @@
         "examples/software_engineer_workflow_demo.py",
         "examples/software_engineer_claim_gate_demo.py"
       ],
-      "engine_note": "Claim Gate has local executable code and tests. Iron Ledger consumer and Provenance Vault are evidence-only source candidates with separate redistribution and native-host qualifications.",
       "playbook": "presets/software-engineer/playbook.json"
     },
     {
@@ -69,7 +66,6 @@
       "examples": [
         "examples/export_model_builder_sourcekit.py"
       ],
-      "engine_note": "Bundled local toy-model training and evaluation are not a hosted GPU or general-purpose fine-tuning service.",
       "playbook": "presets/model-builder/playbook.json"
     },
     {
@@ -90,7 +86,6 @@
         "examples/research_evaluator_demo.py",
         "examples/numeric_evaluation_demo.py"
       ],
-      "engine_note": "Local evidence and numerical checks are not independent publisher authentication or scientific truth.",
       "playbook": "presets/research-evaluator/playbook.json"
     },
     {
@@ -111,7 +106,6 @@
         "examples/creative_studio_demo.py",
         "examples/export_creative_sourcekit.py"
       ],
-      "engine_note": "The packaged engine builds plans, timelines and textual storyboards. Actual image/video rendering uses separately available host tools.",
       "playbook": "presets/creative-studio/playbook.json"
     },
     {
@@ -125,7 +119,6 @@
       "delivery": "source-methods",
       "source_engines": [],
       "examples": [],
-      "engine_note": "Public V1 provides this specialist's methods and configuration, not an independent executable security testing service.",
       "playbook": "presets/adversarial-verifier/playbook.json"
     },
     {
@@ -147,7 +140,6 @@
         "examples/daily_desk.py",
         "examples/personal_companion_demo.py"
       ],
-      "engine_note": "Daily Desk is a functioning local SQLite workbench. Calendar, messaging and native reminders require separately supported integrations.",
       "playbook": "presets/personal-companion/playbook.json"
     },
     {
@@ -167,7 +159,6 @@
       "examples": [
         "examples/garden_calendar_demo.py"
       ],
-      "engine_note": "Local observations and calendar records do not assert live external calendar synchronization or plant diagnosis.",
       "playbook": "presets/garden-companion/playbook.json"
     },
     {
@@ -187,7 +178,6 @@
       "examples": [
         "examples/learning_session_demo.py"
       ],
-      "engine_note": "Local scoring and review records do not replace professional certification or independently confirm mastery.",
       "playbook": "presets/learning-coach/playbook.json"
     },
     {
@@ -206,7 +196,6 @@
       "examples": [
         "examples/export_claims_sourcekit.py"
       ],
-      "engine_note": "Source-bound reviews are not an independently authenticated legal or scientific ruling.",
       "playbook": "presets/claims-adjudicator/playbook.json"
     },
     {
@@ -226,7 +215,6 @@
         "examples/export_reverse_sourcekit.py",
         "examples/priority_slices.py"
       ],
-      "engine_note": "The included executable analyzes supplied observations; no live capture or unapproved target access is bundled.",
       "playbook": "presets/reverse-engineering-researcher/playbook.json"
     },
     {
@@ -246,7 +234,6 @@
       "examples": [
         "examples/specialist_engine_demo.py"
       ],
-      "engine_note": "The source collection provides schema, event and query tools; live databases require explicit connections and authority.",
       "playbook": "presets/data-engineering-architect/playbook.json"
     },
     {
@@ -266,7 +253,6 @@
       "examples": [
         "examples/specialist_engine_demo.py"
       ],
-      "engine_note": "Local reliability calculations use supplied metrics and do not mutate production services.",
       "playbook": "presets/infrastructure-reliability-engineer/playbook.json"
     },
     {
@@ -286,7 +272,6 @@
       "examples": [
         "examples/specialist_engine_demo.py"
       ],
-      "engine_note": "The included local engine checks plans and effect records; no live scheduler or service write occurs without a host integration.",
       "playbook": "presets/automation-engineer/playbook.json"
     },
     {
@@ -306,7 +291,6 @@
       "examples": [
         "examples/specialist_engine_demo.py"
       ],
-      "engine_note": "The included engine evaluates declared state and color inputs; rendered UI and usability reviews require real browser or human evidence.",
       "playbook": "presets/product-interface-designer/playbook.json"
     }
   ]

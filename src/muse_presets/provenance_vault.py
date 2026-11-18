@@ -1,8 +1,6 @@
-"""Bounded local provenance checks for the neutral Software Engineer.
+"""Verify source references, manifests, and evidence-ledger seals.
 
-Original-source-guided contract: digest-qualified references and donor-manifest
-admission, with stricter path refusal and no imported private profile/state.
-This module grants no external, native Muse, or redistribution authority.
+Digest checks, bounded reads, and strict path validation protect file integrity.
 """
 from __future__ import annotations
 
@@ -201,8 +199,7 @@ def admit_manifest_pin(
 
 
 
-# R32.2: source-only inventory and a PURE seal over the existing Evidence Finder
-# head. This is NOT a second append-only log, receipt writer, or host authority.
+# Inventory and seal the current Evidence Finder head without changing its ledger.
 from datetime import datetime, timedelta, timezone
 
 
@@ -457,7 +454,7 @@ def verify_local_source_seal(
 
 
 
-# R32.1b: read-only, UNAUTHENTICATED subject statements and adoption previews.
+# read-only, UNAUTHENTICATED subject statements and adoption previews.
 # The original private Vault used an unsigned in-toto-shaped envelope and
 # writer-owned adoption registry. These helpers preserve only the verifiable
 # local contracts; no DSSE signer or state-writing adoption is implemented.
@@ -640,7 +637,7 @@ def verify_local_adoption_preview(
 
 
 
-# R32.1c: create-only LOCAL quarantine custody, never a native adoption effect.
+# create-only LOCAL quarantine custody, never a native adoption effect.
 # The caller supplies a guard for an explicitly owned disposable destination.
 # A guard callback is a local assertion, NOT authenticated host-issued consent.
 import re as _local_re
@@ -971,7 +968,7 @@ def inspect_local_adoption_quarantine(destination: os.PathLike[str] | str) -> di
 
 
 
-# R32.1d: offline export and restore of the already verified local quarantine.
+# offline export and restore of the already verified local quarantine.
 # Deliberately use deterministic ZIP_STORED with exact whitelist validation.
 # This does NOT export a licensed/native/host-admitted agent or grant rights.
 import io as _archive_io
@@ -1417,7 +1414,7 @@ def restore_local_quarantine_archive(
 
 
 
-# R32.1e: bounded READ-ONLY dependent quarantine drift assessment.
+# bounded READ-ONLY dependent quarantine drift assessment.
 # The original donor has a registry-mutating invalidate_dependent_adoptions;
 # this generic version never edits that registry or invents host authority.
 def assess_local_quarantine_dependency(

@@ -1,10 +1,4 @@
-"""Explicit opt-in staging for the bounded toy-training extension.
-
-This module stages reviewed source only. It does not install a native agent,
-train a model, start a service, modify the legacy Model Builder role, or grant
-external effects. Hashes provide local continuity, not issuer authentication.
-Interrupted output is retained and cannot be overwritten or retried in place.
-"""
+"""Add the reviewed small-model example to a specialist package."""
 from __future__ import annotations
 
 import argparse
@@ -159,7 +153,7 @@ def stage_extension(destination: Path, *, include_toy_training: bool = False) ->
         _restore_marker(target)
         raise
     return {
-        "status": "SOURCE_ONLY_TOY_EXTENSION_STAGED",
+        "status": "TOY_EXTENSION_FILES_CREATED",
         "scope": "OPT_IN_SYNTHETIC_TOY_EXTENSION_ONLY",
         "stage_receipt_sha256": engine.digest(receipt),
         "member_count": len(members) + 1,

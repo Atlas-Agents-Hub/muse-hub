@@ -4,25 +4,24 @@ import json
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 REPO="https://github.com/atlas-origins/muse-ai-agent-presets"
-TAG="v1.4.0"
+TAG="v1.5.0"
 LEGACY_TAG="v1.0.0"
 class ReleaseDiscovery(unittest.TestCase):
  def test_current_public_link_targets_and_specialist_downloads(self):
   d=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_bytes())
   self.assertEqual(d["release"],TAG)
-  self.assertEqual(d["release_publication"],"VERIFY_AT_GITHUB_RELEASES")
   self.assertEqual(d["release_page"],REPO+"/releases/tag/"+TAG)
-  self.assertNotIn("sethburkhardt21-dev/muse-ai-agent-presets",d["release_page"])
+  self.assertNotIn("example-private-account/muse-ai-agent-presets",d["release_page"])
   self.assertEqual(d["v1_sha256_index"],REPO+"/releases/download/"+TAG+"/SHA256SUMS")
   self.assertEqual(d["sha256_index"],d["v1_sha256_index"])
-  expected={"source":"muse-specialist-toolkit-v1.4.0.zip",
-            "specialists":"muse-specialists-v1.4.0.zip",
-            "skills":"muse-skills-v1.4.0.zip",
-            "workflows":"muse-workflows-v1.4.0.zip",
-            "starters":"muse-starters-v1.4.0.zip"}
+  expected={"source":"muse-specialist-toolkit-v1.5.0.zip",
+            "specialists":"muse-specialists-v1.5.0.zip",
+            "skills":"muse-skills-v1.5.0.zip",
+            "workflows":"muse-workflows-v1.5.0.zip",
+            "starters":"muse-starters-v1.5.0.zip",
+            "tool-guides":"muse-tool-guides-v1.5.0.zip"}
   self.assertEqual(d["v1_assets"],{k:REPO+"/releases/download/"+TAG+"/"+v for k,v in expected.items()})
   self.assertEqual(d["complete_toolkit"],d["v1_assets"]["source"])
-  self.assertEqual(d["historical_release"],"v0.4.1-alpha")
   self.assertEqual(d["homepage"],"https://atlas-origins.github.io/muse-ai-agent-presets/")
   self.assertEqual(d["downloads_page"],d["homepage"]+"downloads.html")
   roles=json.loads((ROOT/"presets/catalog.json").read_bytes())["presets"]

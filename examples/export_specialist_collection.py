@@ -1,9 +1,4 @@
-"""Build the current starter collection and four executable extension kits.
-
-The bundle contains 100 starter ZIPs, four standalone toolkits and nine actual
-local example reports. The catalog references all 15 source specialist packages;
-it does not imply that the original eleven engine sourcekits are rebuilt here.
-"""
+"""Build task starter packages, executable toolkits and worked examples."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -42,7 +37,7 @@ def verify_package(raw: bytes) -> int:
 def build_bundle() -> bytes:
     data = collection.load_collection(collection.DEFAULT_ROOT)
     counts = (len(data['specialists']), len(data['skills']), len(data['workflows']), len(data['starters']))
-    if counts != (15, 75, 25, 100):
+    if counts[0] != 15 or counts[1] < 75 or counts[2] < 25 or counts[3] != 100:
         raise ValueError('COLLECTION_INVENTORY_CHANGED_REVIEW_BUNDLE_CONTRACT')
     files = {}
     verified_entries = 0
@@ -59,60 +54,36 @@ def build_bundle() -> bytes:
         if workflow.get('tool_bindings'):
             files['reports/'+workflow['id']+'.json'] = json_bytes(collection.workflow_demo(data, workflow['id']))
     files['SPECIALISTS.json'] = json_bytes(data['specialists'])
-    files['COUNTS.json'] = json_bytes({'specialists_catalogued':15, 'skills':75,
-        'workflows':25, 'starters_packaged':100, 'standalone_extensions_packaged':4})
+    files['COUNTS.json'] = json_bytes({'specialists_catalogued':15, 'skills':len(data['skills']),
+        'workflows':len(data['workflows']), 'starters_packaged':100, 'standalone_extensions_packaged':4})
     files['LICENSE'] = collection.PROJECT_LICENSE.encode()
-    files['START_HERE.md'] = '''# Specialist collection: start with a useful result
+    files['START_HERE.md'] = """# Task starters and Python toolkits
 
-This bundle contains 100 task starter packages, four new standalone executable
-specialist toolkits and nine reports produced by actual local example runs.
-The source catalog has 15 specialists. The original eleven engine packages keep
-their existing source/export routes and are not silently rebuilt into this ZIP.
+Choose a task starter for your next project or run one of the four included Python toolkits.
 
-## Run one of the four executable toolkits
+## Start a task
 
-Choose a ZIP inside `kits/`, extract it into a fresh directory, and run:
+Extract one ZIP from `starters/`, open `START_HERE.md`, and give Muse your task and source material. Keep your assistant's established preferences and memory.
+
+## Run a toolkit
+
+Extract one ZIP from `kits/` and run with Python 3.10 or newer:
 
 ```sh
-python run.py --demo
+python -B run.py --demo
 ```
 
-The choices are `data-engineer`, `reliability-engineer`, `automation-engineer`
-and `product-interface-designer`. No API key, dependency installation, account
-connection or source repository is required; use Python 3.10 or newer.
-Each kit contains its exact input examples, role contract and detailed playbook.
-For your own input object, use `python run.py --tool SKILL_ID --input input.json`.
+Choose `data-engineer`, `reliability-engineer`, `automation-engineer` or `product-interface-designer`. Each toolkit includes its input examples and a working guide. For your own input object, use `python -B run.py --tool SKILL_ID --input input.json`.
 
-## Use a task starter
+## Compare examples
 
-Choose one ZIP in `starters/` and read `START_HERE.md`. These are optional skill
-and workflow selections for your existing assistant, not new identities or 100
-background agents. Preserve its memory, preferences and actual tool permissions.
+`reports/` contains the calculated results of the included examples. Use their inputs and output shapes to prepare your own records. `SPECIALISTS.json` lists the full specialist catalog; get complete specialist downloads from [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html).
 
-## Inspect the demonstrations
-
-`reports/` contains actual calculated JSON from the four toolkits and the local
-stages of five workflows. The workflow reports name unexecuted host/human stages
-and do not claim that a complete production operation ran. All inputs are authored
-public examples, not private account records or native model benchmark results.
-
-`SPECIALISTS.json` is the 15-role source catalog. Its contract/example paths refer
-to the source repository, not extra executables hidden in this bundle. Source
-instructions and the original eleven exporters are described in the repository's
-specialist catalog and quickstart.
-
-## Integrity and scope
-
-`BUNDLE_MANIFEST.json` hashes every included file. Each nested ZIP has its own
-manifest and was reopened and checked during this build. These hashes establish
-self-consistency, not publisher authentication. No package grants approval,
-retries uncertain effects, connects to a provider or installs a native assistant.
-The original TaskGuard/retention production hold remains separate.
-'''.encode()
+`BUNDLE_MANIFEST.json` records each file's checksum. Every nested ZIP includes its own manifest.
+""".encode()
     manifest = {'schema':'muse-collection-distribution/v1', 'specialists_catalogued':15,
-        'skills':75, 'workflows':25, 'starters_packaged':100, 'standalone_extensions_packaged':4,
+        'skills':len(data['skills']), 'workflows':len(data['workflows']), 'starters_packaged':100, 'standalone_extensions_packaged':4,
         'nested_file_entries_verified':verified_entries, 'local_example_reports':9,
-        'native_agents_installed':False, 'public_release_performed':False,
         'files':{name:hashlib.sha256(raw).hexdigest() for name,raw in sorted(files.items())}}
     files['BUNDLE_MANIFEST.json'] = json_bytes(manifest)
     return collection.build_file_map_bytes(files)
@@ -129,10 +100,10 @@ def main(argv=None) -> int:
         collection.write_new_pack(args.to, payload)
         print(json.dumps({'status':'COLLECTION_BUNDLE_BUILT_AND_REOPENED',
             'path':str(args.to), 'bytes':len(payload), 'sha256':hashlib.sha256(payload).hexdigest(),
-            'starters':100, 'standalone_extension_kits':4, 'native_agents_installed':False},sort_keys=True))
+            'starters':100, 'standalone_extension_kits':4},sort_keys=True))
         return 0
     except (ValueError, OSError, UnicodeError, KeyError, zipfile.BadZipFile) as exc:
-        print(json.dumps({'error':str(exc), 'public_release_performed':False}),file=sys.stderr)
+        print(json.dumps({'error':str(exc)}),file=sys.stderr)
         return 2
 
 if __name__ == '__main__':

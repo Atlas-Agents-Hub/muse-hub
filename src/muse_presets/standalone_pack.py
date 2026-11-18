@@ -1,9 +1,4 @@
-"""T07 standalone generic role package lifecycle; source only, never native install.
-
-Composes canonical T04 system profiles, T05 scoped subchats and T06 disabled
-role skills. No owner credentials, provider session, registry writes or live
-host effects. Uninstall/rollback and upgrade are review-only proposals.
-"""
+"""Create, inspect, and export standalone specialist packages."""
 from __future__ import annotations
 
 import hashlib
@@ -83,7 +78,7 @@ def _expected_receipt(role:str,display_name:str|None)->dict:
         "method_ids":plan["method_ids"],"skill_ids":plan["skill_ids"],
         "shared_skill_ids":plan["shared_skill_ids"],
         "components":records,
-        "grade":"LOCAL_SOURCE_ONLY",
+        "grade":"PACKAGE_FILES",
         "native_installed":False,"provider_owner_id":None,
         "registered_skills":False,"model_invocation_verified":False,
         "recipient_readback_verified":False,"external_effect_authorized":False,
@@ -132,7 +127,7 @@ def _write_new(path:Path,data:bytes)->None:
 
 def stage_standalone_pack(destination:Path,role:str,*,display_name:str|None=None,
                           expected_profile_source_sha256:str|None=None)->dict:
-    """Create-only. Incomplete failures remain as fenced owned draft directories."""
+    """Create a new package and preserve interrupted work for recovery."""
     dest=Path(destination)
     _require_new(dest)
     admitted=_current_plan(role,display_name)
@@ -269,7 +264,7 @@ def preview_standalone_upgrade(candidate:Path,target:Path)->dict:
 
 
 def export_clean_standalone_pack(source:Path,destination:Path)->dict:
-    """Export pristine original source only, no customized owner memory."""
+    """Export the package's original files while preserving personal customizations."""
     source,destination=Path(source),Path(destination)
     if inspect_standalone_pack(source)["status"]!="LOCAL_STANDALONE_MATCH":
         raise ValueError("UNTRUSTED_OR_CUSTOMIZED_EXPORT")
@@ -305,7 +300,7 @@ def plan_uninstall_standalone(destination:Path)->dict:
     if result["status"] not in ("LOCAL_STANDALONE_MATCH","OWNER_CUSTOMIZED"):
         raise ValueError("UNTRUSTED_UNINSTALL_SOURCE")
     return {"status":"UNINSTALL_PREVIEW_ONLY","role":result["role"],
-            "grade":"LOCAL_SOURCE_ONLY","can_delete":False,
+            "grade":"PACKAGE_FILES","can_delete":False,
             "requires_owner_confirmation":True,
             "owner_customizations_present":result["owner_customizations_present"],
             "requires_private_owner_export":result["owner_customizations_present"],

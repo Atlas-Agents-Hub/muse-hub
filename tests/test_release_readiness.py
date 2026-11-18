@@ -28,11 +28,16 @@ class ReleaseReadinessTests(unittest.TestCase):
    text=p.read_text(encoding='utf-8')
    if '\ufffd' in text or '\u00e2\u20ac' in text:bad.append(p.name)
   self.assertEqual(bad,[])
- def test_required_workflow_covers_three_platforms(self):
+ def test_required_checks_cover_linux_windows_and_macos_runs_separately(self):
   text=(ROOT/'.github/workflows/checks.yml').read_text(encoding='utf-8')
-  for required in ('ubuntu-latest','windows-latest','macos-latest','if: ${{ always() }}','needs: [source-tests, public-quality]','scripts/check_ci_results.py'):
+  for required in ('ubuntu-latest','windows-latest','if: ${{ always() }}','needs: [source-tests, public-quality]','scripts/check_ci_results.py'):
    self.assertIn(required,text)
   self.assertNotIn('continue-on-error: true',text)
+  self.assertNotRegex(text,r'(?im)^\s*(?:runs-on|os):.*\bmacos')
+  macos=(ROOT/'.github/workflows/macos.yml').read_text(encoding='utf-8')
+  self.assertIn('workflow_dispatch:',macos)
+  self.assertIn('runs-on: macos-latest',macos)
+  self.assertNotRegex(macos,r'(?m)^\s*(?:push|pull_request|pull_request_target|schedule|workflow_run):')
  def test_gate_accepts_only_all_success(self):
   gate=self.gate()
   self.assertTrue(gate.check_results({'source-tests':{'result':'success'},'public-quality':{'result':'success'}}))

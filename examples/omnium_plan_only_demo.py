@@ -1,9 +1,4 @@
-"""Fictional input modeled on actual Omnium plan output; no Omnium route run.
-
-This tests the T15 neutral read-only consumer seam, NOT compiler accuracy,
-worker dispatch, host attestation or a signed original mission-plan receipt.
-All custody digests except pinned schema/registry/compiler are synthetic.
-"""
+"""Review a synthetic Omnium planning example and its integrity checks."""
 from __future__ import annotations
 
 import copy

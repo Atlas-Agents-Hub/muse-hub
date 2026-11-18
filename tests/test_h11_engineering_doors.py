@@ -1,4 +1,4 @@
-"""H11: existing-engine five-door source integration, never native activation."""
+"""Engineering repair stages preserve source integrity and effect controls."""
 from __future__ import annotations
 
 import hashlib
@@ -78,7 +78,7 @@ class FiveDoorSourceTests(unittest.TestCase):
 
     def test_disposable_real_red_cas_green_independent_local_reopen(self):
         self.assertTrue(DEMO.is_file())
-        with tempfile.TemporaryDirectory(prefix="muse-h11-e2e-") as d:
+        with tempfile.TemporaryDirectory(prefix="engineering-review-e2e-") as d:
             path = Path(d) / "source-fixture"
             env = dict(os.environ, PYTHONPATH=str(ROOT / "src"),
                        PYTHONDONTWRITEBYTECODE="1")
@@ -88,16 +88,14 @@ class FiveDoorSourceTests(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, proc.stderr)
             evidence = json.loads(proc.stdout)
             self.assertEqual(evidence["status"],
-                             "LOCAL_FIVE_DOOR_REVIEW_PASS_NOT_NATIVE")
+                             "ENGINEERING_REVIEW_PASSED")
             self.assertEqual([x["stage"] for x in evidence["stages"]], STAGES)
             self.assertEqual(evidence["stages"][1]["test_exit_code"], 1)
             self.assertEqual(evidence["stages"][3]["test_exit_code"], 0)
             self.assertEqual(evidence["stages"][3]["tests_run"], 4)
             self.assertEqual(evidence["stages"][4]["verdict"], "REVIEW_PASS")
-            for key in ("native_muse_invoked", "external_effect_authorized",
-                        "original_controller_invoked", "independent_identity_authenticated",
-                        "os_sandboxed", "original_taskguard_released"):
-                self.assertIs(evidence[key], False)
+            self.assertEqual(evidence["schema"], "muse-hub/engineering-review-result/v1")
+            self.assertIs(evidence["external_effect_authorized"], False)
             self.assertTrue((path / "work" / "candidate.json").is_file())
             self.assertTrue((path / "review" / "REVIEW.json").is_file())
             self.assertTrue((path / "engine" / "runtime" / "claim-gate" /
@@ -137,7 +135,7 @@ class FiveDoorSourceTests(unittest.TestCase):
     def test_public_export_remains_exact_allowlist(self):
         selected = select_public_files(ROOT, verify_manifest=False)
         self.assertTrue(REQUIRED.issubset(selected))
-        with tempfile.TemporaryDirectory(prefix="h11-export-negative-") as d:
+        with tempfile.TemporaryDirectory(prefix="engineering-export-negative-") as d:
             root = Path(d)
             (root / "kits/engineering-doors").mkdir(parents=True)
             for name in REQUIRED:

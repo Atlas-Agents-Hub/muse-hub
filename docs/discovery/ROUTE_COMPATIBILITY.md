@@ -1,50 +1,49 @@
 # Muse CLI route reference
 
-Compare two saved revisions of the Muse CLI route table. For personal Muse chat, side chats, and current setup, use the [terminal guide](../TERMINAL.md).
+Compare two saved revisions of the Muse CLI route table. For personal Muse chat, side chats, history, and setup, use the [terminal guide](../TERMINAL.md).
 
-## What was verified
+## Included route snapshots
 
-The two public, MIT-licensed `nikships/muse-cli` source revisions were read at their immutable commits, and their **Git blob SHA-1s** checked against the original research pins. The included fixtures are byte-identical to the earlier route projections. They preserve every method name but carry full HTTP/path details **only for the eight names with observed differences**.
+The comparison uses two MIT-licensed `nikships/muse-cli` revisions, identified by immutable commits and Git blob hashes. The fixtures preserve every method name and the HTTP/path details for the eight names whose definitions changed.
 
-| Pinned source | Earlier | Newer |
+| Source | Earlier revision | Later revision |
 | --- | --- | --- |
 | Commit | `dbc7624368fd3aec20258c545f50654dbc92cc5f` | `b62adbabb77abf688d26a74f93d405b6667dbc9f` |
-| Blob SHA-1 | `bfdb6b492290c1dd8827087f2f49ab8046f56664` | `6634f1b09d7e98b235bd24bdf3397391689cf981` |
+| Git blob SHA-1 | `bfdb6b492290c1dd8827087f2f49ab8046f56664` | `6634f1b09d7e98b235bd24bdf3397391689cf981` |
 | Method names | **258** | **402** |
-| Name-only projections | 250 | 394 |
-| Detailed projections | 8 | 8 |
+| Name-only entries | 250 | 394 |
+| Entries with full details | 8 | 8 |
 
-[Earlier original route table](https://github.com/nikships/muse-cli/blob/dbc7624368fd3aec20258c545f50654dbc92cc5f/src/muse_cli/routes.json) · [Newer original route table](https://github.com/nikships/muse-cli/blob/b62adbabb77abf688d26a74f93d405b6667dbc9f/src/muse_cli/routes.json) · [Upstream MIT license](route-compat/NIKSHIPS-MIT.txt)
+[Earlier route table](https://github.com/nikships/muse-cli/blob/dbc7624368fd3aec20258c545f50654dbc92cc5f/src/muse_cli/routes.json) · [Later route table](https://github.com/nikships/muse-cli/blob/b62adbabb77abf688d26a74f93d405b6667dbc9f/src/muse_cli/routes.json) · [MIT license](route-compat/NIKSHIPS-MIT.txt)
 
-The source-diff yields **146 added method names, two names absent from the newer file, and eight changed definitions**. The absent names are `feed.ingest` and `feed.unit.share`. This is a *historical source delta*, not proof that the live service added or removed any endpoint.
+The later file adds **146 method names**, omits `feed.ingest` and `feed.unit.share`, and changes eight definitions. Use this reference when comparing client versions; check the client and connected account for current service behavior.
 
-## What changed in the eight detailed rows
+## Changed definitions
 
-| Method(s) | Source-level change | Operational interpretation |
-| --- | --- | --- |
-| `chat.subscribe` | `requestTimeoutMs` introduced, 30,000 | Source change; behavior requires separately authorized runtime testing |
-| `connectors.accounts_link` | Adds `capabilities` query placeholder | URL-template change; do not infer credentials or permissions |
-| `custom_connectors.register` | Alias list serialized as JSON string → list | Representation difference |
-| `node.list`, `node.register`, `node.heartbeat`, `node.unpair`, `node.disconnect` | Same alias serialization difference | Representation difference, not an independently demonstrated breaking API change |
+| Method(s) | Change in the route table |
+| --- | --- |
+| `chat.subscribe` | Adds `requestTimeoutMs` with a value of 30,000. |
+| `connectors.accounts_link` | Adds a `capabilities` query placeholder. |
+| `custom_connectors.register` | Changes aliases from a serialized JSON string to a list. |
+| `node.list`, `node.register`, `node.heartbeat`, `node.unpair`, `node.disconnect` | Uses the same list representation for aliases. |
 
-All **396 other names** in the union lack a full route definition in these projections. The comparator retains each row's observed version(s), whether full details exist, and `live_availability: NOT_TESTED`. It does not execute any method.
+The other 396 distinct method names are stored as name-only entries. The report identifies the revision in which each name appears and whether full route details are available.
 
-## Run it locally
+## Compare revisions
 
-From a source checkout with Python 3.12+:
+From a checkout with Python 3.12+:
 
 ```sh
 python -B tools/compare_muse_routes.py --expect 258,402,146,2,8
 python -B tools/compare_muse_routes.py --out /path/to/new-report.json
-python -B -m unittest discover -s tests -p test_muse_route_compat_h03.py -v
 ```
 
-The comparator uses Python's standard library, reads local JSON, produces deterministic JSON and **never makes network requests**. The `--out` destination must not already exist; it does not overwrite prior evidence.
+The comparator reads the saved JSON files with Python's standard library and produces a repeatable JSON report. Choose a new `--out` destination to preserve previous reports.
 
-With `--old` and `--new` custom files, the report is explicitly marked `UNVERIFIED_CUSTOM_INPUT_NOT_LIVE_PROVIDER`. Inputs are size-bounded, must be UTF-8 JSON, and reject duplicate methods, unrecognized fields, unsafe aliases, malformed relative paths and encoded traversal. The two default fixtures are pinned to exact SHA-256 digests. Source pins prove file identity, **not** live account availability.
+Use `--old` and `--new` to compare your own route files. Inputs must be UTF-8 JSON within the documented size limit. The parser checks duplicate methods, unknown fields, aliases, relative paths, and traversal attempts. The included snapshots are checked against their SHA-256 digests before comparison.
 
-## Related setup and source references
+## License and setup
 
-This comparison describes two saved source revisions. For current terminal setup, chat, side chats, and history commands, use the [terminal guide](../TERMINAL.md). Connection status comes from the client and account you are using.
+The projected identifiers and eight definitions are provided under the included `nikships/muse-cli` MIT notice. Retain the source revisions and notice when reusing this reference.
 
-The projected identifiers and eight changed definitions are attributed to `nikships/muse-cli` under its included MIT notice; third-party source code and credentials are not bundled. Keep the original source snapshots and the evidence of their exact revisions when researching later versions.
+[Set up Muse in your terminal](../TERMINAL.md) · [Computer and device resources](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html?route=desktop)

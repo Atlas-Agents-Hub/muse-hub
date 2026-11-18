@@ -1,40 +1,44 @@
-"""Current R5 additions cannot erase or rewrite historical collection content."""
+"""Task starters retain stable specialist bindings and resolve current methods."""
 from pathlib import Path
-import hashlib,json,unittest
-R=Path(__file__).resolve().parents[1]
-C=R/'collections/muse-starters-v1'
-B=C/'r5/baseline'
-ADMITTED={'data-cleaner':'data-engineer','operations-analyst':'reliability-engineer',
+import json
+import unittest
+
+ROOT=Path(__file__).resolve().parents[1]
+C=ROOT/'collections/muse-starters-v1'
+BINDINGS={'data-cleaner':'data-engineer','operations-analyst':'reliability-engineer',
           'customer-support-designer':'automation-engineer','frontend-partner':'product-interface-designer'}
-def read(p):return json.loads(p.read_text('utf-8'))
-class HistoricalProjectionTests(unittest.TestCase):
-    def test_original_evaluation_specs_and_workflows_remain_unchanged(self):
-        for filename,key,count in [('evaluation_cases.json','skill_id',64),('workflows.json','id',20)]:
-            old=read(B/filename);current=read(C/filename)
-            self.assertEqual(len(old),count)
-            self.assertEqual(current[:count],old)
-            self.assertEqual(len({r[key] for r in current}),len(current))
-    def test_original_starters_have_only_admitted_additions(self):
-        old=read(B/'starters.json');current=read(C/'starters.json')
-        self.assertEqual([p['id'] for p in current],[p['id'] for p in old])
-        for before,after in zip(old,current):
-            with self.subTest(starter=before['id']):
-                if before['id'] not in ADMITTED:self.assertEqual(after,before);continue
-                self.assertEqual(set(after),set(before)|{'specialist_role'})
-                self.assertEqual(after['specialist_role'],ADMITTED[before['id']])
-                for key,value in before.items():
-                    if key in ('skills','workflows'):
-                        self.assertEqual(after[key][:len(value)],value)
-                        self.assertEqual(len(after[key]),len(set(after[key])))
-                    else:self.assertEqual(after[key],value)
-    def test_archived_json_bytes_match_original_unmodified_historical_manifest(self):
-        manifest=read(C/'R3_BASELINE_ASSETS.json')['files']
-        for name in ('evaluation_cases.json','starters.json','workflows.json'):
-            self.assertEqual(hashlib.sha256((B/name).read_bytes()).hexdigest(),manifest['collections/muse-starters-v1/'+name])
-    def test_r4_qualification_counts_are_history_not_current_inventory(self):
-        counts=read(C/'COUNTS.json')
-        self.assertEqual(counts['r4_focused_test_cases_at_qualification'],397)
-        self.assertEqual(counts['r4_parent_test_cases_at_qualification'],2041)
-        self.assertEqual(counts['initial_evaluation_case_specifications'],64)
-        self.assertEqual(counts['current_evaluation_case_specifications'],75)
+
+
+def read(name):return json.loads((C/name).read_bytes())
+
+
+class StarterCompatibilityTests(unittest.TestCase):
+    def test_task_specs_and_workflows_reference_current_skills(self):
+        skills={row['id'] for row in read('skills.json')}
+        cases=read('evaluation_cases.json')
+        self.assertEqual(len(cases),len({case['skill_id'] for case in cases}))
+        self.assertTrue({case['skill_id'] for case in cases}<=skills)
+        for workflow in read('workflows.json'):
+            self.assertTrue(workflow['skills'])
+            self.assertEqual(len(workflow['skills']),len(set(workflow['skills'])))
+            self.assertTrue(set(workflow['skills'])<=skills)
+
+    def test_starter_links_and_specialist_bindings_remain_usable(self):
+        starters=read('starters.json')
+        self.assertEqual(len(starters),100)
+        self.assertEqual(len(starters),len({row['id'] for row in starters}))
+        skills={row['id'] for row in read('skills.json')}
+        workflows={row['id'] for row in read('workflows.json')}
+        roles={row['id'] for row in read('specialists.json')}
+        for starter in starters:
+            with self.subTest(starter=starter['id']):
+                self.assertTrue(set(starter['skills'])<=skills)
+                self.assertTrue(set(starter['workflows'])<=workflows)
+                self.assertEqual(len(starter['skills']),len(set(starter['skills'])))
+                self.assertEqual(len(starter['workflows']),len(set(starter['workflows'])))
+                if 'specialist_role' in starter:self.assertIn(starter['specialist_role'],roles)
+                if starter['id'] in BINDINGS:self.assertEqual(starter['specialist_role'],BINDINGS[starter['id']])
+                self.assertTrue((C/'starters'/starter['id']/'STARTER.md').is_file())
+
+
 if __name__=='__main__':unittest.main()

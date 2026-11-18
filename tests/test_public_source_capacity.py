@@ -13,20 +13,20 @@ from muse_presets.public_export import (
 
 class PublicSourceCapacityTests(unittest.TestCase):
     def test_capacity_extends_future_reviewed_files_with_explicit_hard_limit(self):
-        self.assertEqual(MAX_FILES, 2048)
+        self.assertEqual(MAX_FILES, 12000)
         self.assertEqual(MAX_FILE_BYTES, 2_000_000)
-        self.assertEqual(MAX_TOTAL_BYTES, 20_000_000)
+        self.assertEqual(MAX_TOTAL_BYTES, 80_000_000)
         with tempfile.TemporaryDirectory(prefix="muse-public-capacity-") as d:
             root = Path(d)
             docs = root / "docs"
             docs.mkdir()
             (root / "README.md").write_bytes(b"# Safe source\n")
-            for i in range(2047):
+            for i in range(MAX_FILES - 1):
                 (docs / f"reviewed-{i:04d}.md").write_text(f"# Reviewed {i}\n", encoding="utf-8")
             files = select_public_files(root, verify_manifest=False)
-            self.assertEqual(len(files), 2048)
+            self.assertEqual(len(files), MAX_FILES)
             self.assertEqual(files["README.md"], b"# Safe source\n")
-            (docs / "reviewed-2047.md").write_text("# Excess source\n", encoding="utf-8")
+            (docs / "excess-file.md").write_text("# Excess source\n", encoding="utf-8")
             with self.assertRaisesRegex(PublicExportError, "PUBLIC_SOURCE_RESOURCE_LIMIT"):
                 select_public_files(root, verify_manifest=False)
 

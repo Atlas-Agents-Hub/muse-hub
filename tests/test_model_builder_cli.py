@@ -25,8 +25,8 @@ class ModelBuilderCliTests(unittest.TestCase):
         dest=self.root/"model-builder"
         code,receipt=self.invoke(["model-builder-dropin","--to",str(dest)])
         self.assertEqual(code,0)
-        self.assertEqual(receipt["status"],"SOURCE_ONLY_MODEL_BUILDER_STAGED")
-        self.assertFalse(receipt["native_installed"])
+        self.assertEqual(receipt["status"],"MODEL_BUILDER_FILES_CREATED")
+        self.assertNotIn('native_installed',receipt)
         code,report=self.invoke(["model-builder-dropin-inspect","--path",str(dest)])
         self.assertEqual(code,0)
         self.assertEqual(report["status"],"LOCAL_MODEL_BUILDER_MATCH")
@@ -48,7 +48,7 @@ class ModelBuilderCliTests(unittest.TestCase):
         code,result=self.invoke(["model-builder-dropin-inspect","--path",str(target)])
         self.assertEqual(code,2)
         self.assertEqual(result["status"],"REVIEW_REQUIRED")
-        self.assertFalse(result["native_installed"])
+        self.assertNotIn('native_installed',result)
 
 
 if __name__=="__main__":

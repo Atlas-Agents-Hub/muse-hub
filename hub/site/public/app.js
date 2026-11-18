@@ -1,4 +1,4 @@
-/* Muse Hub directory. Local catalog only; no network, analytics, storage or account access. */
+/* Search and explore the Muse Hub resource directory. */
 (() => {
   'use strict';
   const byId = id => document.getElementById(id);
@@ -30,9 +30,8 @@
   // Validate every nested member before reading its fields in the renderer.
   // This is a locally embedded source catalogue, not a provider response.
   const validateCatalog = catalog => {
-    if (!isRecord(catalog) || catalog.schema !== 'muse-hub-h02/public-discovery/v1' ||
-        catalog.count !== 63 || catalog.native_muse_connected !== false ||
-        catalog.publication !== 'PUBLIC_DIRECTORY' ||
+    if (!isRecord(catalog) || catalog.schema !== 'muse-resource-directory/v2' ||
+        catalog.count !== 63 ||
         !Array.isArray(catalog.items) || catalog.items.length !== 63 ||
         !Array.isArray(catalog.routes) || catalog.routes.length !== expectedRoutes.size) return false;
 
@@ -40,8 +39,8 @@
     for (const item of catalog.items) {
       if (!isRecord(item) || !textField(item.id) || !/^MH-\d{3}$/.test(item.id) ||
           seenItems.has(item.id) || !safeUrl(item.url) ||
-          !['name', 'summary', 'category', 'platform', 'install_method', 'evidence',
-            'license_class', 'limitation'].every(key => textField(item[key])) ||
+          !['name', 'summary', 'category', 'platform', 'install_method',
+            'license_class'].every(key => textField(item[key])) ||
           !Array.isArray(item.route_tags) ||
           item.route_tags.some(tag => typeof tag !== 'string' || !expectedRoutes.has(tag)) ||
           new Set(item.route_tags).size !== item.route_tags.length) return false;
@@ -220,7 +219,7 @@
   const matches = item => {
     const q = queryState.search.toLocaleLowerCase().trim();
     const haystack = [item.name, item.summary, item.category, item.platform, item.install_method,
-      item.evidence, item.id].join(' ').toLocaleLowerCase();
+      item.id].join(' ').toLocaleLowerCase();
     const route = queryState.route ? routes.get(queryState.route) : null;
     return (!q || haystack.includes(q)) && (!queryState.category || queryState.category === item.category) &&
       (!route || route.source_ids.includes(item.id));

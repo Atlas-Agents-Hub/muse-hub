@@ -1,9 +1,4 @@
-"""Room-scoped notebook over the existing PersonalCompanion SQLite authority.
-
-This is an offline host-injected store, NOT a native Muse installation, account
-authentication, or multi-device synchronization. Archive fingerprints are
-integrity checks, not signatures. No messages, network or schedulers.
-"""
+"""Store persistent room notes with revision checks and archive recovery."""
 from __future__ import annotations
 
 from hashlib import sha256

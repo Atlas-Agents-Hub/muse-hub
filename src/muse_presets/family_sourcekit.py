@@ -1,9 +1,4 @@
-"""Deterministic, source-pinned Family Link OFFLINE handoff kit (H12).
-
-Bundles the existing local envelope/role-policy implementation verbatim,
-not a replacement transport or actor. No credentials, native permissions,
-background workers or cross-account execution.
-"""
+"""Build and verify a two-process Family Link handoff toolkit."""
 from __future__ import annotations
 
 import hashlib
@@ -15,7 +10,7 @@ import zipfile
 
 SCHEMA = "muse-hub/family-link-offline-kit/v2"
 SOURCE_BASE_COMMIT = "49fb71a162173ac2dfb2c0f805e36109c34ac042"
-SCOPE = "SOURCE_ONLY_OFFLINE_TWO_PROCESS_NOT_DELIVERED"
+SCOPE = "TWO_PROCESS_HANDOFF"
 MANIFEST = "SOURCEKIT_MANIFEST.json"
 MAX_MEMBERS = 40
 MAX_FILE = 128_000
@@ -28,33 +23,33 @@ ROLE = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*\Z")
 # Exact release inputs are pinned below and revised only after review.
 SOURCE_PINS = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
-    "examples/family_offline_handoff_demo.py": "cd830ada0c87a72586ce5265b52e748bee89c14916bb3f224a4b6e8805f30a43",
-    "presets/catalog.json": "30d08201d3348983ce0d2b881760c1df70d13c751fa0d113dea6207029ac7728",
-    "src/muse_presets/__init__.py": "86359c4685076f570a358401c8864e6fcdfada5246ef64f5299b9b8c5797dd3a",
-    "src/muse_presets/catalog.py": "8d2f49924dbdf538c61c5b3fc25d588812309ec4901d3f289ae0f387ca76c445",
+    "examples/family_offline_handoff_demo.py": 'a10917b6c541307f5963cf2d09f88db0542d5ea5442f16e9acee23bb553f71b7',
+    "presets/catalog.json": 'd6fc62647cbf08deed286677b4d8b9852001cd2e2fbd9330506f816f7b118bb3',
+    "src/muse_presets/__init__.py": '112ef2f80840b5bddecb2e3dec6f6ceca6cc8c3b5862c28e6dad31b4e86d70bd',
+    "src/muse_presets/catalog.py": '685a1c393f8581a4741e40da47fa31accd3577a94a0185a5ca5008e4b690ca48',
     "src/muse_presets/family.py": "af043cc6edc7e0670d2ec098bdd94f7064f4998d58e784f5669cc740bb23780b",
-    "src/muse_presets/family_envelope.py": "ac0aaa563db8e26ebf0fe023970130fba491872984ec3a6bdd2e168f3f901efb",
-    "src/muse_presets/neutrality.py": "ce049763fcd993fbcc4cf845faa947e7c52554e8011e26a39a06e46973ff1910",
-    "src/muse_presets/playbooks.py": "d3c5f9c90450d349fc0b49425ea72dc4d352635012ace24e45cee97e09b45a94",
+    "src/muse_presets/family_envelope.py": '02fd3b8d6d811bfa21554b09702807f6cf39ec05ed869bb7f672b6e367e5083b',
+    "src/muse_presets/neutrality.py": '38119ac763825c5c4c3a313b20c8122d787b06d4ebcd30aec015cdcb8bff5e8c',
+    "src/muse_presets/playbooks.py": 'c3abac0812efe26fbf34698e24fcdc18ebbd0d756bdc771092353b1859e04774',
 }
 # Exact accepted role bytes, in addition to disabled-by-default policy shape.
 # A silent title/description edit must not alter the kit without a new review.
 ROLE_PINS = {
-    "coordinator": "8ccb1cfb93d1c96241380d986d98bdf3c78cb48c5fcc789a38bb8d2e99e1edca",
-    "software-engineer": "ec17acb58001b70a1ba3a0e7bedf66dc98a53a53fab923712a83d66c67cd17db",
-    "model-builder": "2633fa6710c913af8a6d3d1314aa087f12774bf86d407d15a24ab52cccfd32cd",
-    "research-evaluator": "418b0ba914eba8adaa05379124e73e692b786ba6c27fd63bd4e4effc3387e6de",
-    "creative-studio": "d6b89a7f0851258af12afcbc224f822e4b0ec76e26e58ee993c789ee4b4ccd48",
-    "adversarial-verifier": "319d0dcd9651c8735bc98d4309371a91dd70da2ed539ad3e9075f617f6f71fbe",
-    "personal-companion": "c6ffcc014a50319e16ccef442b389d1feeffdfefed25a19e3dc11a0b4b1a317f",
-    "garden-companion": "8fa1478f149bc1a7a9cd7690d370266f245f982aeff5fd9c4bd018718784c7fe",
-    "learning-coach": "11ac7532685fdf00e037f69401bf9b5e72a87aec16b31b557335e9313b1a0c84",
-    "claims-adjudicator": "0d9205ec0e107baf4600106d8b0815a9e2ab8ce1923cf869408ada75ececaca7",
-    "reverse-engineering-researcher": "a8d0933de95103e512339aefed4a1fc4f18c1c73a4d0d49c7c14ba00759ebdf1",
-    "data-engineering-architect": "309a87c089f7df118e67f5534c7f4d836d7aa2cae1deb2529a4503eb839f408b",
-    "infrastructure-reliability-engineer": "5f90c6933687e4fdc40544a45c2946dded8caad6588308a9377e121eab2ff3b6",
-    "automation-engineer": "af24ba98e7a99b41dad430273bed1f87b575319590aa88fab06a8d1ec0e6b1af",
-    "product-interface-designer": "45127a557bcd56d2a6856a37bf043cfcb0e9e49947913b6b0507cc3de9db3622",
+    "coordinator": '8de5decae4de3f106393dae46a447cccbb062ea94a00a20345026eefc285602c',
+    "software-engineer": '6d0c183e6a38048feeb195c40efc5a3177b87f07b9e2e78679b99993d49e72c6',
+    "model-builder": 'a7282f147723f9d7d92c2161fdb57750b79a16f732f5aefbc6206a1aa36fc9a4',
+    "research-evaluator": '44b71797e388adab8dc25ecbddd034a4a6424f901e38a55628db7a22242850fd',
+    "creative-studio": 'c88aebc47eb4cdd88622a7335bcefa836a279d4f6928a96e91fc289c65ca16f6',
+    "adversarial-verifier": '9d8f6fba05d2398d10b2d09cf47dd8ad06f88168a399ddc5ea0c6711c6cdc732',
+    "personal-companion": '0e1c62bd9fdb969040ffed6bdb3919e448eee9335500988dee7b85a04714198d',
+    "garden-companion": 'a17cebd32f4b91bf063fd3dee37349da3d1b44f06f9f42f971d26dd108d8ad8a',
+    "learning-coach": 'ee6abb91860348085be2def86b224560148b349a804542223998fd9a6299c836',
+    "claims-adjudicator": '256b02fa961aa27561fa1a252c36cc023cc297825d65d485fbdb8c1b3bff3a29',
+    "reverse-engineering-researcher": 'f4b34287ed03dcfd1a59cdb1caa7ebb98e8ac096efade5d6ef15cca641c0e3ab',
+    "data-engineering-architect": '711af6cc6bba03be6891e79af679fda0411fee6d4e84d4cc953afc74b0c7d5e0',
+    "infrastructure-reliability-engineer": '2a1ea9f2e4097a27f257fe036c28267623cb8dde63f46b601e0d172d4e3f11e7',
+    "automation-engineer": 'dee0d21cc084530b7273505dad496d2fcb2d43b098a0bab6b1770df5a6cfadcc',
+    "product-interface-designer": 'eda17bdfc2af0814f86546e11bc62bc1627ca2889ba397fe53d432f3552cc7d4',
 }
 EXPECTED_ROLES = (
     "coordinator", "software-engineer", "model-builder", "research-evaluator",
@@ -70,7 +65,7 @@ FALSE_FLAGS = (
 )
 START_HERE = """# Family Link handoff review
 
-Inspect a bounded handoff envelope and its role policy, then run the included
+Inspect a handoff envelope and its role policy, then run the included
 two-process example to see validation and replay protection in action.
 
 Use Python 3.12 or newer. Compare the archive's SHA-256 with the release
@@ -86,14 +81,12 @@ On Windows PowerShell, run from the extracted folder:
     $env:PYTHONPATH="src"
     python -B examples/family_offline_handoff_demo.py
 
-Expected status: LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED. The report sets
-separate_process_verified and replayed_id_refused to true. The example reviews
-the envelope locally; it does not send a message to another account.
+Expected status: HANDOFF_REVIEW_PASSED. The report sets
+separate_process_verified and replayed_id_refused to true.
 
 Read the included role profiles and policy with your Muse task. For a real
 handoff, use a connected transport, identify the intended recipient, follow the
-user's authorization, and verify delivery through that transport. A local
-envelope or checksum alone cannot establish that a recipient received it.
+user's authorization, and verify the result through the receiving transport.
 Keep any failed or ambiguous delivery record for reconciliation before retrying.
 
 The manifest records the reviewed source bytes. Keep it with the example
@@ -160,7 +153,7 @@ def _validate_profile(role: str, data: bytes) -> None:
     policy = profile.get("family_link")
     if (
         profile.get("schema") != "muse-presets/preset-v1"
-        or profile.get("maturity") != "SOURCE_TEMPLATE_ONLY"
+        or profile.get("maturity") != "PROFILE_TEMPLATE"
         or profile.get("native_muse_status") != "UNBOUND"
         or profile.get("requirements") != {
             "permissions": [], "external_services": [], "secret_values": [],

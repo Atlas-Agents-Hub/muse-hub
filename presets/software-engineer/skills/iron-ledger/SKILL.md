@@ -3,7 +3,7 @@ name: engineering-evidence-receipt-consumer
 description: Read-only existing Evidence Finder receipts, TaskGuard recovery and local actor/recipient observations.
 version: 0.3.0
 scope: software-engineer
-authority: local-source-only; native-muse-not-registered; no-external-effects
+authority: host-permissions-required
 ---
 
 # Iron Ledger — read-only Evidence Finder consumer

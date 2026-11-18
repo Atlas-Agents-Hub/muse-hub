@@ -88,7 +88,7 @@ class SpecialistEngineContracts(unittest.TestCase):
 
     def test_ui_empty_label_is_finding_not_certification(self):
         x=run_fixture('product-interface-designer',FIXTURES['product-interface-designer'])
-        self.assertEqual(x['missing_control_labels'],1);self.assertEqual(x['actual_browser_test'],'NOT_RUN')
+        self.assertEqual(x['missing_control_labels'],1);self.assertEqual(x['input_scope'],'SCREEN_DESCRIPTIONS')
 
     def test_ui_repeated_control_id_refuses(self):
         with self.assertRaisesRegex(ValueError,'DUPLICATE_CONTROL_ID'):
@@ -102,13 +102,13 @@ class SpecialistEngineContracts(unittest.TestCase):
         for role in FIXTURES:
             with self.subTest(role=role),tempfile.TemporaryDirectory() as td:
                 out=verify._local_demo(ROOT,role,Path(td))
-                self.assertEqual(out['local_demo_grade'],'LOCAL_OFFLINE_FIXTURE_DEMO_PASSED')
+                self.assertEqual(out['local_demo_grade'],'EXAMPLE_PASSED')
                 self.assertTrue(out['local_engine_executed'])
                 self.assertEqual(out['demo_exit_code'],0)
                 self.assertFalse(out['independent_adjudicator_or_live_capture'])
 
-    def test_forged_native_demo_refused(self):
-        role='automation-engineer';fake=run_fixture(role,FIXTURES[role]);fake['native_registered']=True
+    def test_forged_authorization_demo_refused(self):
+        role='automation-engineer';fake=run_fixture(role,FIXTURES[role]);fake['external_effect_authorized']=True
         with patch.object(verify,'_process',return_value=json.dumps(fake)):
             with self.assertRaisesRegex(ValueError,'SPECIALIST_FIXTURE_EVIDENCE_INVALID'):
                 verify._local_demo(ROOT,role,ROOT)

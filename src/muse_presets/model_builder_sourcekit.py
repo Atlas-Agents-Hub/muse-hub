@@ -1,9 +1,4 @@
-"""Self-contained Model Builder ZIP, reusing the original disabled-role stager.
-
-A source kit is not native registration or an inference service. Only pristine
-canonical role bytes may ship; mutable local receipts cannot authorize exporting
-owner memory. Distribution-only newline/receipt normalization is deterministic.
-"""
+"""Build and verify a portable Model Builder toolkit."""
 from __future__ import annotations
 
 import hashlib
@@ -110,7 +105,7 @@ def _read_tree(root: Path) -> dict[str, bytes]:
 def _canonical() -> dict[str, bytes]:
     with tempfile.TemporaryDirectory(prefix="model-source-canonical-") as temp:
         root = Path(temp) / "model-builder"
-        if stage_model_builder_dropin(root)["status"] != "SOURCE_ONLY_MODEL_BUILDER_STAGED":
+        if stage_model_builder_dropin(root)["status"] != "MODEL_BUILDER_FILES_CREATED":
             raise ValueError("MODEL_SOURCEKIT_CANONICAL_STAGE_REFUSED")
         if inspect_model_builder_dropin(root)["status"] != "LOCAL_MODEL_BUILDER_MATCH":
             raise ValueError("MODEL_SOURCEKIT_CANONICAL_INSPECTION_REFUSED")

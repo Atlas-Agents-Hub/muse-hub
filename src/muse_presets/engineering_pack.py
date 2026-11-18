@@ -315,7 +315,7 @@ def stage_engineer_pack(destination:Path)->dict:
     # No automatic cleanup on failure: if another writer touches the newly
     # created destination, do not destroy their unknown edits.
     (dest/'STAGING_INCOMPLETE').write_text(
-        'A source-only staging operation did not finish. Do not activate.\n',
+        'Package creation was interrupted. Inspect the existing files before resuming.\n',
         encoding='utf-8')
     render_preset('software-engineer',dest/'profile')
     target=dest/'runtime'/'claim-gate'

@@ -45,7 +45,7 @@ class NativeSkillBindingTests(unittest.TestCase):
         self.assertEqual(row["source_status"], "DESCRIPTOR_VALID")
         self.assertEqual(row["catalog_status"], "CATALOG_ENTRY_MISSING")
         self.assertEqual(out["status"], "LOCAL_CATALOG_GAP")
-        self.assertEqual(out["evidence_grade"], "UNATTESTED_LOCAL_SOURCE_ONLY")
+        self.assertEqual(out["evidence_grade"], "FILES_INSPECTED")
         self.assertFalse(out["authority"]["provider_invocation_verified"])
         self.assertFalse(out["authority"]["external_effect_authorized"])
 

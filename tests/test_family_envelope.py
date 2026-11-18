@@ -23,7 +23,7 @@ def mod():
 
 
 def finding():
-    text="Fictional source-only observation: green sprouts appear.\n"
+    text="Example observation: green sprouts appear.\n"
     return {"source_uri":"fictional-example.txt",
             "source_sha256":hashlib.sha256(text.encode("utf-8")).hexdigest(),
             "observation":text,"result":"FOUND"}
@@ -76,7 +76,7 @@ class FamilyOfflineEnvelopeTests(unittest.TestCase):
             envelope=out,finding=finding(),
             expected_envelope_sha256=mod().envelope_sha256(out),
             seen_request_ids=[],revoked_request_ids=[],now_utc=NOW)
-        self.assertEqual(observed["status"],"LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED")
+        self.assertEqual(observed["status"],"HANDOFF_REVIEW_PASSED")
         self.assertEqual(observed["request_id"],"fixture-13")
         self.assertFalse(observed["recipient_acknowledged"])
         self.assertFalse(observed["effect_authorized"])
@@ -203,7 +203,7 @@ class FamilyOfflineEnvelopeTests(unittest.TestCase):
             cwd=root,env=env,capture_output=True,text=True,timeout=45)
         self.assertEqual(proc.returncode,0,proc.stderr)
         doc=json.loads(proc.stdout)
-        self.assertEqual(doc["status"],"LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED")
+        self.assertEqual(doc["status"],"HANDOFF_REVIEW_PASSED")
         self.assertTrue(doc["separate_process_verified"])
         self.assertTrue(doc["replayed_id_refused"])
         self.assertFalse(doc["external_effect_authorized"])

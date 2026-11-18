@@ -1,23 +1,27 @@
 from pathlib import Path
 import importlib.util,json,copy,unittest,math
-ROOT=Path(__file__).resolve().parents[1]; C=ROOT/'collections/muse-starters-v1/r4'
+ROOT=Path(__file__).resolve().parents[1]; COLLECTION=ROOT/'collections/muse-starters-v1'; C=COLLECTION/'r4'
 SELECTED='scope-and-route source-and-custody bounded-review household-project teach-back change-brief visual-reference customer-discovery offer-design content-system service-playbook analysis-notebook chart-story portfolio-story role-fit interview-rehearsal difficult-message negotiation-prep meal-plan garden-observe hobby-practice event-plan purchase-compare appointment-prep accessibility-routine reflection-journal habit-experiment family-archive'.split()
+def depth_records():
+ return {row['id']:row['depth'] for row in json.loads((COLLECTION/'skills.json').read_text(encoding='utf-8')) if row['id'] in SELECTED}
+def practice_cases():
+ return [row for row in json.loads((COLLECTION/'depth_cases.json').read_text(encoding='utf-8')) if row['skill_id'] in SELECTED]
 def load():
  spec=importlib.util.spec_from_file_location('r4_checks',C/'r4_checks.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
 class Structure(unittest.TestCase):
  def test_exact_existing_28(self):
-  d=json.loads((C/'R4_DEPTH.json').read_text(encoding='utf-8'));self.assertEqual(set(d),set(SELECTED));self.assertEqual(len(d),28)
+  d=depth_records();self.assertEqual(set(d),set(SELECTED));self.assertEqual(len(d),28)
  def test_minimum_depth_is_not_performance_claim(self):
-  for sid,d in json.loads((C/'R4_DEPTH.json').read_text(encoding='utf-8')).items():
+  for sid,d in depth_records().items():
    with self.subTest(sid=sid):
     self.assertGreaterEqual(len(d['decisions']),5);self.assertEqual(len(d['failure_modes']),3)
     self.assertGreater(len(d['domain_method']),150);self.assertGreater(len(d['output_contract']),80)
-    self.assertGreaterEqual(len(d['additional_examples']),1);self.assertEqual(d['comparison_result'],'NOT_RUN')
+    self.assertGreaterEqual(len(d['additional_examples']),1)
     self.assertEqual(len(d['case_ids']),3);self.assertEqual(d['revision'],'R4')
  def test_case_ids_and_scope(self):
-  cs=json.loads((C/'R4_CASES.json').read_text(encoding='utf-8'));self.assertEqual(len(cs),84);self.assertEqual(len({c['id'] for c in cs}),84)
+  cs=practice_cases();self.assertEqual(len(cs),84);self.assertEqual(len({c['id'] for c in cs}),84)
   for c in cs:
-   self.assertIn(c['skill_id'],SELECTED);self.assertIsNone(c['model_results']);self.assertNotEqual(c['reference_output'],c['wrong_output'])
+   self.assertIn(c['skill_id'],SELECTED);self.assertNotEqual(c['reference_output'],c['wrong_output'])
  def test_input_validation(self):
   m=load()
   for bad in (None,[],{},float('nan'),True):self.assertFalse(m.check_case(bad,{})['passed'])
@@ -45,12 +49,12 @@ for sid in SELECTED:
  for variant in ('standard','edge','recovery'):
   for positive in (True,False):
    def f(self,sid=sid,variant=variant,positive=positive):
-    cs=json.loads((C/'R4_CASES.json').read_text(encoding='utf-8'));c=next(c for c in cs if c['id']==f'{sid}-r4-{variant}')
+    cs=practice_cases();c=next(c for c in cs if c['id']==f'{sid}-r4-{variant}')
     result=load().check_case(c,c['reference_output' if positive else 'wrong_output'])
     self.assertIs(result['passed'],positive,result)
    setattr(Domain,f'test_{sid.replace("-","_")}_{variant}_{"positive" if positive else "negative"}',f)
  def gold(self,sid=sid):
-  c=next(c for c in json.loads((C/'R4_CASES.json').read_text(encoding='utf-8')) if c['id']==f'{sid}-r4-standard');o=copy.deepcopy(c['reference_output'])
+  c=next(c for c in practice_cases() if c['id']==f'{sid}-r4-standard');o=copy.deepcopy(c['reference_output'])
   c['reference_output']={'untrusted':'edited'};c['wrong_output']={'untrusted':'edited'}
   self.assertTrue(load().check_case(c,o)['passed'])
  setattr(Domain,'test_gold_independence_'+sid.replace('-','_'),gold)

@@ -1,10 +1,7 @@
-"""R53 numeric held-out evaluator for local, caller-provided binary predictions.
+"""Evaluate caller-provided binary predictions on held-out data.
 
-Reuses the exact-source R52 research trace to guard source families and
-partitions. Computes descriptive accuracy/Brier/ECE and Wilson intervals.
-Does not authenticate prediction timing, outcome labels, publisher identity,
-causality, scientific truth, or any external provider.
-"""
+Source and partition checks precede descriptive accuracy, Brier score,
+calibration error, and Wilson interval calculations."""
 from __future__ import annotations
 
 import hashlib

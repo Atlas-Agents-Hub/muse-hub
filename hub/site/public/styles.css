@@ -214,8 +214,7 @@ body:not(.directory-ready) .catalog-stage { grid-template-columns: minmax(0,1fr)
   .route-card, .resource-card, .detail-panel { transition: none; }
 }
 
-/* Muse Hub independent product identity: shared editorial ink, ivory and signal.
-   Preserve the upstream H02 component structure and contrast-tested text colors. */
+/* Shared Muse Hub colors for the resource explorer. */
 :root {
   --paper: #f8f6e9;
   --surface: #fffdf5;

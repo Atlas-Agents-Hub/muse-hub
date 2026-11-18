@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Profile a fictional table containing duplicate keys.",
     "observable_result": "Return duplicate counts without writing data.",
     "negative_test": "Supply a path-like key and require refusal."

@@ -32,8 +32,7 @@ def main() -> int:
                 raise PublicExportError("OPERATOR_DENYLIST_TOO_LONG")
         result=export_public_snapshot(root,args.to,forbidden_terms=terms)
     except (PublicExportError,ValueError,OSError) as exc:
-        print(json.dumps({"status":"REFUSED","reason":str(exc),
-                          "public_git_pushed":False},sort_keys=True))
+        print(json.dumps({"status":"REFUSED","reason":str(exc)},sort_keys=True))
         return 2
     print(json.dumps(result,indent=2,sort_keys=True))
     return 0

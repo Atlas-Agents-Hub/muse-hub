@@ -260,7 +260,7 @@ class NumericHeldoutTests(unittest.TestCase):
         self.assertEqual(report["local_demo_grade"],"LOCAL_SLICE_DEMO_PASSED")
         self.assertTrue(report["numeric_heldout_scored"])
         self.assertFalse(report["numeric_scientific_verdict_verified"])
-        self.assertFalse(report["provider_connected"])
+        self.assertNotIn("provider_connected",report)
 
     def test_sample_partition_claim_must_match_verified_source(self):
         case=make_case()

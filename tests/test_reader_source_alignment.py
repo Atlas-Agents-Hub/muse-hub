@@ -3,6 +3,12 @@ from pathlib import Path
 import json,re,unittest
 ROOT=Path(__file__).resolve().parents[1]
 
+def current_collection():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('current_library_docs', ROOT/'tools/muse_collection.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module.load_collection()
+
 class ReaderSourceAlignmentTests(unittest.TestCase):
  def text(self,path):return (ROOT/path).read_text(encoding='utf-8')
  def test_readme_and_capabilities_include_every_current_role(self):
@@ -22,12 +28,18 @@ class ReaderSourceAlignmentTests(unittest.TestCase):
              self.assertIn('15',body)
              self.assertIn('DOWNLOAD_A_SPECIALIST.md',body)
      catalog=json.loads(self.text('hub/site/downloads.json'))
-     self.assertEqual(catalog['version'],'v1.4.0')
-     self.assertEqual(catalog['counts'],{'specialist':15,'skill':75,'workflow':25})
-     self.assertEqual(len(catalog['items']),115)
-     self.assertEqual(len({item['asset'] for item in catalog['items']}),115)
+     version=json.loads(self.text('presets/catalog.json'))['release']
+     collection=current_collection()
+     capabilities=json.loads(self.text('docs/discovery/agent-capabilities.json'))
+     tools=json.loads(self.text(capabilities.get('tool_guide_catalog','collections/tool-guides.json')))
+     expected={'specialist':15,'skill':len(collection['skills']),'workflow':len(collection['workflows']),
+               'tool-guide':len(tools['guides'])}
+     self.assertEqual(catalog['version'],version)
+     self.assertEqual(catalog['counts'],expected)
+     self.assertEqual(len(catalog['items']),sum(expected.values()))
+     self.assertEqual(len({item['asset'] for item in catalog['items']}),len(catalog['items']))
      for item in catalog['items']:
-         self.assertEqual(item['url'],'https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/'+item['asset'])
+         self.assertEqual(item['url'],'https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/'+version+'/'+item['asset'])
  def test_local_entrypoints_survive_reader_rewrite(self):
      for page in ['README.md','docs/GITHUB_QUICKSTART.md']:
          body=self.text(page)
@@ -50,17 +62,23 @@ class ReaderSourceAlignmentTests(unittest.TestCase):
          self.assertIn(value,body)
      self.assertIn('refusing to replace',body)
      self.assertIn('original download, your working copy, and the new package',body)
- def test_runtime_and_comparative_claims_remain_in_scoped_technical_records(self):
+ def test_discovery_metadata_matches_current_setup_and_inventory(self):
      guide=self.text('docs/discovery/AI_AGENT_GUIDE.md')
      self.assertIn('agent-capabilities.json',guide)
-     self.assertIn('Describe the result of the command actually used',guide)
      capabilities=json.loads(self.text('docs/discovery/agent-capabilities.json'))
-     for field in ('native_muse_agents_installed','hosted_agent_service',
-                   'autonomous_model_backed_agents_out_of_box','external_connectors_enabled'):
-         self.assertIs(capabilities['boundaries'][field],False)
+     self.assertEqual(capabilities['homepage'],'https://atlas-origins.github.io/muse-ai-agent-presets/')
+     self.assertEqual(capabilities['release'],json.loads(self.text('presets/catalog.json'))['release'])
+     self.assertTrue((ROOT/capabilities['tool_guides']).is_file())
+     tools=json.loads(self.text(capabilities.get('tool_guide_catalog','collections/tool-guides.json')))
+     self.assertEqual(capabilities['tool_guide_count'],len(tools['guides']))
+     self.assertEqual(capabilities['tool_workflow_count'],len(tools['workflows']))
+     for kit in capabilities['executable_kits']:
+         self.assertTrue((ROOT/kit['exporter']).is_file())
+         self.assertTrue(kit['download'].endswith('/'+kit['zip']))
+     self.assertEqual(set(capabilities['starter_roles']),set(json.loads(self.text('presets/catalog.json'))['presets']))
      counts=json.loads(self.text('collections/muse-starters-v1/COUNTS.json'))
-     self.assertEqual(counts['paired_muse_comparisons_executed'],0)
-     self.assertEqual(counts['independent_upstream_reviews'],0)
+     self.assertEqual(counts['skills'],len(current_collection()['skills']))
+     self.assertEqual(counts['workflows'],len(current_collection()['workflows']))
  def test_reader_rewrite_does_not_reintroduce_unsafe_example_destinations(self):
   for p in [ROOT/'README.md',*sorted((ROOT/'docs').rglob('*.md')),*sorted((ROOT/'presets').glob('*/INSTALL.md'))]:
    with self.subTest(path=p.relative_to(ROOT).as_posix()):

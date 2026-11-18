@@ -3,7 +3,7 @@ name: engineering-claim-gate
 description: Atomic local claim, replay refusal, fenced leases, approval holds and UNKNOWN recovery for authorized engineering tasks.
 version: 1.1.0
 scope: software-engineer
-authority: source-only-owner-boundary-required
+authority: host-permissions-required
 ---
 
 # Engineering Claim Gate

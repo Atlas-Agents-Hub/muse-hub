@@ -1,8 +1,4 @@
-"""Four bounded, deterministic offline specialist exercises.
-
-This is library code for fictional supplied data, not an autonomous Muse
-model, a database operator, an infrastructure probe or a browser audit.
-"""
+"""Evaluate example data, reliability events, dependency graphs, and screen descriptions."""
 from __future__ import annotations
 from decimal import (Decimal, Context, localcontext, ROUND_HALF_EVEN,
                      InvalidOperation, DivisionByZero, Overflow)
@@ -38,9 +34,8 @@ def _rows(value, max_rows=10000):
 
 
 def _common(role):
-    return {"role": role, "grade": "OFFLINE_FIXTURE_ONLY",
-            "native_registered": False, "external_effect_authorized": False,
-            "production_effect_verified": False}
+    return {"role": role, "grade": "EXAMPLE_RESULT",
+            "external_effect_authorized": False}
 
 
 def _data(payload):
@@ -75,7 +70,7 @@ def _data(payload):
     return {"rows": len(rows), "key": key, "duplicate_count": duplicates,
             "nulls_by_column": dict(sorted(counts.items())),
             "columns": sorted({k for row in rows for k in row}),
-            "claim": "OBSERVED_SUPPLIED_ROWS_ONLY_NO_EXTERNAL_DATABASE"}
+            "input_scope": "SUPPLIED_ROWS"}
 
 
 def _reliability(payload):
@@ -109,7 +104,7 @@ def _reliability(payload):
                 "failure_rate": str(rate), "objective": str(target),
                 "error_budget_multiple": str(budget),
                 "within_objective": Decimal(failures) <= allowance * Decimal(len(rows)),
-                "claim": "SUPPLIED_SYNTHETIC_EVENTS_NOT_LIVE_SLO_PROOF"}
+                "input_scope": "SUPPLIED_EVENTS"}
 
 
 def _automation(payload):
@@ -152,7 +147,7 @@ def _automation(payload):
         raise ValueError("DEPENDENCY_CYCLE")
     return {"order": order, "step_count": len(steps),
             "all_effects_disabled": True,
-            "claim": "VALIDATED_GRAPH_NOT_EXECUTED_SCHEDULE"}
+            "input_scope": "DEPENDENCY_GRAPH"}
 
 
 def _designer(payload):
@@ -187,8 +182,7 @@ def _designer(payload):
                 findings.append({"screen": sid, "control": cid,
                                  "finding": "MISSING_ACCESSIBLE_NAME_IN_SUPPLIED_DESCRIPTION"})
     return {"screen_count": len(screens), "missing_control_labels": len(findings),
-            "findings": findings, "actual_browser_test": "NOT_RUN",
-            "claim": "STATIC_SUPPLIED_SCREEN_DESCRIPTION_ONLY"}
+            "findings": findings, "input_scope": "SCREEN_DESCRIPTIONS"}
 
 
 def run_fixture(role: str, payload: dict) -> dict:

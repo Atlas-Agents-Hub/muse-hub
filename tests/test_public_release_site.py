@@ -33,8 +33,10 @@ class PublicReleaseDownloads(unittest.TestCase):
         self.assertEqual(self.directory, self.renderer.catalog())
         for name,expected in self.renderer.outputs().items():
             self.assertEqual((ROOT/'hub/site'/name).read_bytes(),expected,name)
-        self.assertEqual(self.directory['counts'],{'specialist':15,'skill':75,'workflow':25})
-        self.assertEqual(len({row['asset'] for row in self.directory['items']}),115)
+        collection=self.renderer.load_collection(ROOT/'collections/muse-starters-v1')
+        self.assertEqual(self.directory['counts'],{'specialist':15,'skill':len(collection['skills']),
+            'workflow':len(collection['workflows']),'tool-guide':51})
+        self.assertEqual(len({row['asset'] for row in self.directory['items']}),sum(self.directory['counts'].values()))
 
     def test_all_specialist_aliases_agree_between_site_and_discovery(self):
         roles=json.loads((ROOT/'hub/site/roles.json').read_text(encoding='utf-8'))['roles']
@@ -224,7 +226,7 @@ class GeneratedReleasePresentation(unittest.TestCase):
                         labels=re.findall(r'\bversion\s+v?([0-9]+\.[0-9]+\.[0-9]+)\b',' '.join(page.text),re.IGNORECASE)
                         self.assertEqual(labels,[version.removeprefix('v')]*label_count,name)
                         downloads={url for url in page.links if '/releases/download/' in url}
-                        self.assertEqual(len(downloads),18 if name=='index.html' else 120,name)
+                        self.assertEqual(len(downloads),18 if name=='index.html' else len(expected_urls),name)
                         planning_url=self.renderer.REPO+'/releases/download/'+version+'/muse-skill-project-prioritization-'+version+'.zip'
                         self.assertIn(planning_url,downloads,name)
                         self.assertTrue(downloads<=expected_urls,(name,downloads-expected_urls))
@@ -278,8 +280,8 @@ class ReleaseContentProof(unittest.TestCase):
         import hashlib
         release=self.release_fixture()
         bodies={row['name']:('content for '+row['name']).encode() for row in release['assets']}
-        records={'specialists':[],'skills':[],'workflows':[],'bundles':[]}
-        key={'specialist':'specialists','skill':'skills','workflow':'workflows'}
+        records={'specialists':[],'skills':[],'workflows':[],'tool-guides':[],'bundles':[]}
+        key={'specialist':'specialists','skill':'skills','workflow':'workflows','tool-guide':'tool-guides'}
         rows=list(self.directory['items'])+list(self.directory['bundles'])
         name='muse-role-procedures-50-'+self.directory['version']+'.zip'
         rows.append({'id':'role-procedures-50','asset':name,
@@ -358,6 +360,59 @@ class ReleaseContentProof(unittest.TestCase):
         self.seal_fixture(release,bodies)
         with self.assertRaisesRegex(ValueError,'Duplicate JSON key'):
             self.verify(release,bodies)
+
+
+class SpecialistDownloadDiscovery(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.renderer = load_script('render_downloads')
+        cls.release = load_script('build_release')
+        cls.collection = cls.renderer.load_collection(ROOT/'collections/muse-starters-v1')
+        cls.directory = cls.renderer.catalog()
+
+    def test_specialist_filters_match_extracted_package_membership(self):
+        """Search includes dependencies pulled in by a workflow, as the ZIP does."""
+        for canonical in self.release.ROLE_WORKFLOWS:
+            role = self.release.ALIASES.get(canonical, canonical)
+            files = self.release.specialist_files(self.collection, canonical)
+            expected_skills = {name.split('/')[1] for name in files
+                               if re.fullmatch(r'skills/[^/]+/SKILL\.md', name)}
+            expected_workflows = {Path(name).stem for name in files
+                                  if re.fullmatch(r'workflows/[^/]+\.md', name)}
+            expected_guides = {Path(name).stem for name in files
+                               if re.fullmatch(r'docs/tools/[^/]+\.md', name)}
+            for kind, expected in (('skill', expected_skills), ('workflow', expected_workflows),
+                                   ('tool-guide', expected_guides)):
+                with self.subTest(specialist=role, kind=kind):
+                    found = {row['id'] for row in self.directory['items']
+                             if row['kind'] == kind and role in row['roles']}
+                    self.assertEqual(found, expected)
+        original = next(row for row in self.directory['items']
+                        if row['kind'] == 'workflow' and row['id'] == 'reproduce-to-repair')
+        self.assertIn('software-engineer', original['roles'])
+
+    def test_subjects_are_consistent_and_keep_catalog_terms_searchable(self):
+        expected = {'Software & automation', 'Data & AI', 'Research & science',
+                    'Design & visualization', 'Creative & games', 'Business & projects',
+                    'Personal planning', 'Home & travel', 'Learning & study', 'Security',
+                    'Infrastructure & reliability', 'Using Muse'}
+        self.assertEqual(set(self.directory['categories']), expected)
+        self.assertEqual(len(self.directory['items']), 585)
+        self.assertEqual(len({row['url'] for row in self.directory['items']}), 585)
+        by_id = {(row['kind'], row['id']): row for row in self.directory['items']}
+        skills = {row['id']: row for row in self.collection['skills']}
+        for skill in skills.values():
+            row = by_id['skill', skill['id']]
+            self.assertEqual(row['category'], self.renderer.subject(skill['category']))
+            self.assertIn(skill['category'], row['keywords'])
+        for workflow in self.collection['workflows']:
+            self.assertEqual(by_id['workflow', workflow['id']]['category'],
+                             self.renderer.subject(skills[workflow['skills'][0]]['category']))
+        rendered = self.renderer.render(self.directory)
+        self.assertIn('software-engineering', rendered)
+        self.assertIn('data-category="Software &amp; automation"', rendered)
+        with self.assertRaisesRegex(ValueError, 'Unmapped public subject'):
+            self.renderer.subject('unknown-new-category')
 
 
 if __name__=='__main__':unittest.main()

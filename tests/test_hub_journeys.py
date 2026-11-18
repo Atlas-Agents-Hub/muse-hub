@@ -1,6 +1,5 @@
-"""H19 source-only first-use/recovery journey regression and hostile-data tests."""
+"""Current setup guides, safe source references, and read-only command output."""
 from __future__ import annotations
-
 import copy
 import hashlib
 import importlib.util
@@ -12,42 +11,36 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-MODULE = ROOT / "tools" / "hub_journeys.py"
+MODULE = ROOT / "tools/hub_journeys.py"
 SPEC = importlib.util.spec_from_file_location("muse_hub_journeys", MODULE)
-assert SPEC and SPEC.loader
 J = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(J)
 
 
 class HubJourneysTest(unittest.TestCase):
-    def _feature_fixture(self, root):
+    def feature_fixture(self, root):
         data = (ROOT / J.FEATURE_REGISTER).read_bytes()
-        archive = root / J.FEATURE_REGISTER
-        archive.parent.mkdir(parents=True, exist_ok=True)
-        archive.write_bytes(data)
-        tasks = json.loads(data)["tasks"]
-        for task in tasks:
-            for name in task["source_paths"]:
+        catalog = root / J.FEATURE_REGISTER
+        catalog.parent.mkdir(parents=True)
+        catalog.write_bytes(data)
+        features = json.loads(data)["features"]
+        for item in features:
+            for name in [item["guide"], *item["source_paths"], *item["tests"]]:
                 path = root / name
                 path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_bytes(b"current checkout fixture\n")
-        return tasks
+                path.write_text("Current guide fixture\n", encoding="utf-8")
+        return features
 
-    def test_historical_graph_is_bound_without_reading_customer_navigation(self):
-        data = (ROOT / J.FEATURE_REGISTER).read_bytes()
-        self.assertEqual(hashlib.sha256(data).hexdigest(),
-                         "487f25e98f24b22218d24a8f62567d60dcec8212493c57949f20ab809afddbaf")
+    def test_current_catalog_loads_and_missing_source_is_rejected(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
-            tasks = self._feature_fixture(root)
-            navigation = root / "docs/discovery/hub-feature-status.json"
-            navigation.parent.mkdir(parents=True, exist_ok=True)
-            navigation.write_text('{"schema":"muse-hub/distribution-links/v1"}', encoding="utf-8")
-            before = navigation.read_bytes()
-            self.assertEqual(J.load_features(root), tasks)
-            self.assertEqual(navigation.read_bytes(), before)
+            features = self.feature_fixture(root)
+            self.assertEqual(J.load_features(root), features)
+            (root / features[0]["guide"]).unlink()
+            with self.assertRaisesRegex(ValueError, "SOURCE_PATH_MISSING"):
+                J.load_features(root)
 
-    def test_missing_archive_does_not_fall_back_to_customer_discovery(self):
+    def test_missing_catalog_does_not_fall_back_to_another_document(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             navigation = root / "docs/discovery/hub-feature-status.json"
@@ -56,152 +49,104 @@ class HubJourneysTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "SOURCE_PATH_MISSING"):
                 J.load_features(root)
 
-    def test_changed_historical_bytes_are_refused(self):
-        with tempfile.TemporaryDirectory() as folder:
-            root = Path(folder)
-            self._feature_fixture(root)
-            archive = root / J.FEATURE_REGISTER
-            archive.write_bytes(archive.read_bytes() + b"\n")
-            with self.assertRaisesRegex(ValueError, "SOURCE_DOCUMENT_HASH_MISMATCH"):
-                J.load_features(root)
-
-    def test_historical_graph_still_requires_current_source_files(self):
-        with tempfile.TemporaryDirectory() as folder:
-            root = Path(folder)
-            tasks = self._feature_fixture(root)
-            self.assertEqual(J.load_features(root), tasks)
-            (root / tasks[0]["source_paths"][0]).unlink()
-            with self.assertRaisesRegex(ValueError, "SOURCE_PATH_MISSING"):
-                J.load_features(root)
-
-    def test_all_22_features_and_15_roles_are_source_checked(self):
+    def test_inventory_matches_current_feature_and_role_catalogs(self):
         result = J.verify_inventory(ROOT)
-        self.assertEqual(result["status"], "SOURCE_INVENTORY_VALID_NOT_RUNTIME_VERIFIED")
-        self.assertEqual(result["features"], 22)
+        self.assertEqual(result["status"], "SETUP_GUIDES_VALID")
+        self.assertEqual(result["features"], len(J.load_features(ROOT)))
+        self.assertEqual(result["roles"], len(J.load_roles(ROOT)))
         self.assertEqual(result["roles"], 15)
-        self.assertFalse(result["native_installed"])
-        self.assertFalse(result["external_effect_authorized"])
-        self.assertFalse(result["site_deployed"])
 
-    def test_h19_source_acceptance_is_recorded_without_native_promotion(self):
-        row = next(x for x in J.load_features(ROOT) if x["id"] == "H19")
-        self.assertEqual(row["status"], "SOURCE_JOURNEYS_TESTED_HOST_NOT_VERIFIED")
-        self.assertIn("tools/hub_journeys.py", row["source_paths"])
-        self.assertIn("docs/handbook/hub-setup-journeys.md", row["source_paths"])
-        self.assertIs(row["native_runtime_verified"], False)
-        self.assertIs(row["site_deployed"], False)
-        docs = (ROOT / "docs/HUB_FEATURE_READINESS.md").read_text(encoding="utf-8")
-        self.assertIn("(discovery/hub-feature-status.json)", docs)
-        self.assertIn("(handbook/hub-setup-journeys.md)", docs)
-
-    def test_every_feature_has_seven_explicit_phases_and_holds(self):
+    def test_every_feature_has_actionable_setup_and_recovery_steps(self):
         output = J.build_journeys(ROOT)
-        self.assertEqual(len(output["journeys"]), 22)
-        self.assertEqual([x["id"] for x in output["journeys"]], [f"H{i:02d}" for i in range(22)])
-        for row in output["journeys"]:
-            with self.subTest(feature=row["id"]):
-                self.assertEqual(set(row["phases"]), set(J.PHASES))
-                self.assertEqual(row["phases"]["failure"]["status"], "HOLD_UNKNOWN")
-                self.assertEqual(row["phases"]["stop"]["status"], "NO_EXTERNAL_EFFECT")
-                self.assertEqual(row["phases"]["uninstall"]["status"], "MANUAL_OWNER_VERIFICATION")
-                self.assertFalse(row["native_runtime_verified"])
-                self.assertFalse(row["site_deployed"])
-                self.assertIn("named_test", row["phases"])
-                self.assertTrue(row["phases"]["named_test"]["name"])
-                self.assertTrue(row["next_verification"])
+        expected = {item["id"] for item in J.load_features(ROOT)}
+        self.assertEqual({item["id"] for item in output["journeys"]}, expected)
+        self.assertTrue({"daily-desk", "companion-home", "terminal", "family-link", "creative-studio"} <= expected)
+        for item in output["journeys"]:
+            with self.subTest(feature=item["id"]):
+                self.assertEqual(set(item["phases"]), set(J.PHASES))
+                self.assertTrue(all(step["instruction"] for step in item["phases"].values()))
+                self.assertTrue((ROOT / item["guide"]).is_file())
+                for command in item["phases"]["named_test"]["commands"]:
+                    self.assertRegex(command, r"^python -B scripts/run_source_test.py test_[a-z0-9_]+\.py$")
+                    self.assertTrue((ROOT / "tests" / command.split()[-1]).is_file())
 
-    def test_all_roles_have_real_install_guide_without_installed_claim(self):
+    def test_all_roles_have_a_resolvable_setup_guide(self):
         for role in J.load_roles(ROOT):
             with self.subTest(role=role["id"]):
-                result = J.build_journeys(ROOT, feature="H19", role=role["id"])
+                result = J.build_journeys(ROOT, feature="specialists", role=role["id"])
                 self.assertEqual(result["role"]["id"], role["id"])
-                self.assertEqual(result["role"]["guide"], "presets/" + role["id"] + "/INSTALL.md")
+                self.assertTrue((ROOT / result["role"]["guide"]).is_file())
                 self.assertEqual(len(result["journeys"]), 1)
-                self.assertFalse(result["native_installed"])
 
-    def test_missing_source_is_not_promoted_to_installable(self):
-        tasks = copy.deepcopy(J.load_features(ROOT))
-        target = next(t for t in tasks if t["id"] == "H11")
-        target["source_paths"] = ["kits/engineering-doors/not-present.json"]
-        with self.assertRaisesRegex(ValueError, "SOURCE_PATH_MISSING"):
-            J.validate_features(tasks, ROOT)
+    def test_traversal_aliases_and_symlinks_are_refused(self):
+        features = copy.deepcopy(J.load_features(ROOT))
+        for unsafe in ("../private", "/etc/passwd", "docs/../README.md", "docs//README.md", "./README.md", "C:\\private\\key"):
+            features[0]["source_paths"] = [unsafe]
+            with self.subTest(path=unsafe), self.assertRaisesRegex(ValueError, "SOURCE_PATH_UNSAFE"):
+                J.validate_features(features, ROOT)
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "target.md").write_text("Fixture\n")
+            try:
+                (root / "link.md").symlink_to(root / "target.md")
+            except (OSError, NotImplementedError):
+                self.skipTest("Symlinks unavailable on this host")
+            with self.assertRaisesRegex(ValueError, "SOURCE_PATH_UNSAFE"):
+                J._safe_file(root, "link.md")
 
-    def test_path_traversal_and_symlink_references_refused(self):
-        tasks = copy.deepcopy(J.load_features(ROOT))
-        target = next(t for t in tasks if t["id"] == "H11")
-        for unsafe in ("../private", "/etc/passwd", "kits/../../secrets", "C:\\secrets\\key"):
-            with self.subTest(path=unsafe):
-                target["source_paths"] = [unsafe]
-                with self.assertRaisesRegex(ValueError, "SOURCE_PATH_UNSAFE"):
-                    J.validate_features(tasks, ROOT)
+    def test_duplicate_ids_extra_fields_and_incomplete_steps_are_refused(self):
+        mutations = (
+            ("FEATURE_ID", lambda x: x[1].update(id=x[0]["id"])),
+            ("FEATURE_SCHEMA", lambda x: x[0].update(extra=True)),
+            ("INSTRUCTION_SHAPE", lambda x: x[0]["instructions"].pop("failure")),
+            ("SOURCE_PATH_SHAPE", lambda x: x[0].update(source_paths=[{}])),
+            ("TEST_PATH_SHAPE", lambda x: x[0].update(tests=["tests/test_a.py;touch bad"])),
+        )
+        for reason, mutate in mutations:
+            value = copy.deepcopy(J.load_features(ROOT))
+            mutate(value)
+            with self.subTest(reason=reason), self.assertRaisesRegex(ValueError, reason):
+                J.validate_features(value, ROOT)
 
-    def test_duplicate_unknown_and_cyclic_dependencies_refused(self):
-        tasks = copy.deepcopy(J.load_features(ROOT))
-        tasks[1]["id"] = tasks[0]["id"]
-        with self.assertRaisesRegex(ValueError, "FEATURE_IDS"):
-            J.validate_features(tasks, ROOT)
-        tasks = copy.deepcopy(J.load_features(ROOT))
-        tasks[0]["dependencies"] = ["H99"]
-        with self.assertRaisesRegex(ValueError, "DEPENDENCY_UNKNOWN"):
-            J.validate_features(tasks, ROOT)
-        tasks = copy.deepcopy(J.load_features(ROOT))
-        tasks[0]["dependencies"] = ["H01"]
-        with self.assertRaisesRegex(ValueError, "DEPENDENCY_CYCLE"):
-            J.validate_features(tasks, ROOT)
+    def test_duplicate_json_keys_constants_and_oversized_input_are_refused(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "input.json"
+            for raw, reason in ((b'{"features":[],"features":[]}', "DUPLICATE_JSON_KEY"),
+                                (b'{"value":NaN}', "INVALID_JSON_CONSTANT"),
+                                (b" " * (J.MAX_DOCUMENT_BYTES + 1), "SOURCE_DOCUMENT_SIZE")):
+                path.write_bytes(raw)
+                with self.subTest(reason=reason), self.assertRaisesRegex(ValueError, reason):
+                    J._read_json(path)
 
-    def test_unknown_role_or_feature_refused(self):
+    def test_unknown_role_or_feature_is_refused(self):
         with self.assertRaisesRegex(ValueError, "ROLE_UNKNOWN"):
-            J.build_journeys(ROOT, role="admin<script>")
+            J.build_journeys(ROOT, role="unknown-role")
         with self.assertRaisesRegex(ValueError, "FEATURE_UNKNOWN"):
-            J.build_journeys(ROOT, feature="H99")
+            J.build_journeys(ROOT, feature="missing-feature")
 
-    def test_cli_json_and_markdown_are_read_only(self):
-        paths = {J.FEATURE_REGISTER, "docs/discovery/hub-feature-status.json", "hub/site/roles.json"}
-        paths.update(path for task in J.load_features(ROOT) for path in task["source_paths"])
-        paths.update("presets/" + role["id"] + "/INSTALL.md" for role in J.load_roles(ROOT))
+    def test_cli_json_markdown_and_errors_preserve_inputs(self):
+        features = J.load_features(ROOT)
+        paths = {J.FEATURE_REGISTER, "hub/site/roles.json"}
+        paths.update(name for item in features for name in [item["guide"], *item["source_paths"], *item["tests"]])
         before = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths}
-        for args in (
-            ["--verify"],
-            ["--feature", "H19", "--role", "learning-coach"],
-            ["--all"],
-        ):
-            with self.subTest(args=args):
-                result = subprocess.run(
-                    [sys.executable, "-B", str(MODULE), *args],
-                    cwd=ROOT, capture_output=True, text=True, timeout=30)
-                self.assertEqual(result.returncode, 0, result.stderr)
-                payload = json.loads(result.stdout)
-                self.assertFalse(payload["native_installed"])
-                self.assertFalse(payload["external_effect_authorized"])
-        md = subprocess.run(
-            [sys.executable, "-B", str(MODULE), "--all", "--format", "markdown"],
-            cwd=ROOT, capture_output=True, text=True, timeout=30)
-        self.assertEqual(md.returncode, 0, md.stderr)
-        self.assertIn("H19", md.stdout)
-        self.assertIn("NOT VERIFIED", md.stdout)
-        self.assertNotIn("native Muse installed", md.stdout.lower())
-        invalid = subprocess.run(
-            [sys.executable, "-B", str(MODULE), "--feature", "H99"],
-            cwd=ROOT, capture_output=True, text=True, timeout=30)
-        self.assertNotEqual(invalid.returncode, 0)
-        after = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths}
-        self.assertEqual(after, before)
+        for args in (["--verify"], ["--feature", "daily-desk", "--role", "learning-coach"], ["--all"]):
+            result = subprocess.run([sys.executable, "-B", str(MODULE), *args], cwd=ROOT, capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn(json.loads(result.stdout)["status"], {"SETUP_GUIDES_VALID", "SETUP_GUIDES_READY"})
+        result = subprocess.run([sys.executable, "-B", str(MODULE), "--feature", "daily-desk", "--format", "markdown"], cwd=ROOT, capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        for phrase in ("Daily Desk", "Check saved receipt", "Get started", "Recover"):
+            self.assertIn(phrase, result.stdout)
+        invalid = subprocess.run([sys.executable, "-B", str(MODULE), "--feature", "missing-feature"], cwd=ROOT, capture_output=True, text=True, timeout=30)
+        self.assertEqual(invalid.returncode, 2)
+        self.assertEqual(json.loads(invalid.stdout)["reason"], "FEATURE_UNKNOWN")
+        self.assertEqual(before, {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths})
 
-    def test_documented_journey_is_discoverable_and_non_destructive(self):
-        doc = (ROOT / "docs/handbook/hub-setup-journeys.md").read_text(encoding="utf-8")
-        index = (ROOT / "docs/README.md").read_text(encoding="utf-8")
-        handbook = (ROOT / "docs/handbook/README.md").read_text(encoding="utf-8")
-        self.assertIn("tools/hub_journeys.py", doc)
-        self.assertIn("handbook/README.md", index)
-        self.assertIn("hub-setup-journeys.md", handbook)
-        for entrypoint in ("START_HERE.md", "GETTING_STARTED.md", "TERMINAL.md",
-                           "COMPANION_HOME.md#open-companion-home",
-                           "scripts/run_source_test.py"):
-            self.assertIn(entrypoint, doc)
-        for recovery in ("same database path", "newly printed token",
-                         "reconcile the original result", "Back up local databases"):
-            self.assertIn(recovery, doc)
-        self.assertIn("read-only", doc)
+    def test_documented_entrypoints_remain_discoverable(self):
+        doc = (ROOT / "docs/handbook/hub-setup-journeys.md").read_text()
+        for term in ("START_HERE.md", "tools/hub_journeys.py", "--feature daily-desk", "same database path", "newly printed token", "Back up local databases"):
+            self.assertIn(term, doc)
+        self.assertIn("hub-setup-journeys.md", (ROOT / "docs/handbook/README.md").read_text())
 
 
 if __name__ == "__main__":

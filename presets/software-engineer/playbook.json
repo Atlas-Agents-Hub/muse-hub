@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Fix a seeded parser error in an unrelated disposable Python package.",
     "observable_result": "Failing test, minimal patch, regression pass, exact changed source and review request.",
     "negative_test": "Change the base revision between test and patch and require refusal/rebase."

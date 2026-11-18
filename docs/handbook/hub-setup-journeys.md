@@ -35,17 +35,18 @@ Compare the new package with your original and customized copies. Preserve memor
 
 ## Developer diagnostics
 
-The repository includes a read-only setup index that checks its feature register, source paths, and role guides:
+The setup index links each feature to its current guide, relevant files, and checks:
 
 ```sh
 python -B tools/hub_journeys.py --verify
 python -B tools/hub_journeys.py --all --format markdown
+python -B tools/hub_journeys.py --feature daily-desk --format markdown
 ```
 
 For a named regression command printed by that index, use the portable runner from the repository root:
 
 ```sh
-python -B scripts/run_source_test.py test_companion_home_h14_h17.py
+python -B scripts/run_source_test.py test_companion_room_http.py
 ```
 
 The runner sets up the package import path and returns the selected suite's exit status. The setup index displays commands for you to choose; it reads the checkout without running them.

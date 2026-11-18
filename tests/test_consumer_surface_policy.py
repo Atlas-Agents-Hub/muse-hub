@@ -27,15 +27,17 @@ class ConsumerSurfacePolicy(unittest.TestCase):
                 found=self.findings(path,'<main>These are <b>source-only</b> capabilities.</main>')
                 self.assertIn('INTERNAL_RELEASE_LANGUAGE',{row['reason'] for row in found})
 
-    def test_machine_fields_code_samples_and_history_are_preserved(self):
+    def test_machine_fields_and_code_samples_are_preserved(self):
         fixtures=(
             ('skills/shared/example/SKILL.md','---\nstatus: source-only\n---\n# Check your work\nRun the included example.\n'),
             ('docs/USAGE.md','# Use the verifier\n```json\n{"status":"source-only"}\n```\n'),
-            ('docs/history/older-guide.txt','Old source-only release notes.\n'),
             ('examples/companion_home/index.html','<script>const status="source-only";</script><main>Open your notebook.</main>'),
         )
         for path,text in fixtures:
             with self.subTest(path=path):self.assertEqual(self.findings(path,text),[])
 
+    def test_retired_history_is_not_reintroduced_to_the_current_product(self):
+        found=self.findings('docs/history/older-guide.txt','Old release notes.\n')
+        self.assertIn('INTERNAL_ARTIFACT',{row['reason'] for row in found})
 
 if __name__=='__main__':unittest.main()

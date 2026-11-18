@@ -27,12 +27,10 @@
     ],
     "recovery": "Continue the useful read-only or drafting portion. Name the exact missing input or unresolved effect; never invent access or repeat an ambiguous consequential action.",
     "example": "Help me turn these scattered notes into a decision-ready project brief; the deadline and audience are already in the notes.",
-    "improvement": "Adds a minimal-context routing budget and explicitly prevents installation theater from blocking useful personal-assistant work.",
     "source_ids": [
       "muse-workflows",
       "superpowers"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -112,9 +110,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -145,12 +141,10 @@
     ],
     "recovery": "Continue the useful read-only or drafting portion. Name the exact missing input or unresolved effect; never invent access or repeat an ambiguous consequential action.",
     "example": "Check that this summary accurately reflects the three attached documents and show where each disputed statement came from.",
-    "improvement": "Separates source integrity from truth and authority while keeping the evidence record small enough to use.",
     "source_ids": [
       "muse-workflows",
       "superpowers"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -230,9 +224,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -263,12 +255,10 @@
     ],
     "recovery": "Continue the useful read-only or drafting portion. Name the exact missing input or unresolved effect; never invent access or repeat an ambiguous consequential action.",
     "example": "Review this itinerary against our budget and accessibility requirements; identify only problems that could affect the trip.",
-    "improvement": "Replaces generic criticism with acceptance-bound checks and truthful reviewer provenance.",
     "source_ids": [
       "muse-workflows",
       "superpowers"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -348,9 +338,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -381,12 +369,10 @@
     ],
     "recovery": "Continue the useful read-only or drafting portion. Name the exact missing input or unresolved effect; never invent access or repeat an ambiguous consequential action.",
     "example": "The session stopped after preparing a calendar update. Check whether it happened before continuing.",
-    "improvement": "Adds original-destination reconciliation and explicit protection for interrupted personal-assistant actions.",
     "source_ids": [
       "muse-workflows",
       "superpowers"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "decisions": [
@@ -455,8 +441,7 @@
           "disposition": "REFERENCE_ONLY_NO_COPY"
         }
       ],
-      "quality_claim": "More explicit procedures and checkable examples; comparative Muse performance has not been measured.",
-      "practice_scope": "Public regression exercises. Worked answers are for learning; exclude them from comparison sessions."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -487,13 +472,11 @@
     ],
     "recovery": "Use the supplied facts to make a provisional plan, label unsourced commitments as suggestions, and ask only for the missing detail that changes the next action.",
     "example": "I have meetings at 10 and 3, a 45-minute commute and one report due tomorrow. Help me plan today without overscheduling.",
-    "improvement": "Combines briefing clarity with explicit capacity, provenance and no-duplicate calendar boundaries.",
     "source_ids": [
       "muse-connectors",
       "grok-briefs",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "decisions": [
@@ -568,8 +551,7 @@
           "disposition": "REFERENCE_ONLY_NO_COPY"
         }
       ],
-      "quality_claim": "More explicit procedures and checkable examples; comparative Muse performance has not been measured.",
-      "practice_scope": "Public regression exercises. Worked answers are for learning; exclude them from comparison sessions."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -603,13 +585,11 @@
     ],
     "recovery": "Keep the as-of timestamp, availability basis, reserve, estimates, task IDs, prerequisites, completion evidence and deferred reasons. On resume, refresh changed commitments and recompute only affected allocations.",
     "example": "Here is my backlog and last week’s notes. Build a week that fits around two evening shifts and a family event.",
-    "improvement": "Add explicit capacity arithmetic, completion identity and dependency-aware selection instead of relying on a conversational priority list.",
     "source_ids": [
       "muse-connectors",
       "grok-briefs",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -675,9 +655,7 @@
         }
       ],
       "handoff": "Keep the as-of timestamp, availability basis, reserve, estimates, task IDs, prerequisites, completion evidence and deferred reasons. On resume, refresh changed commitments and recompute only affected allocations.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "weekly-reset-r3-standard",
         "weekly-reset-r3-edge",
@@ -724,13 +702,11 @@
     ],
     "recovery": "Preserve thread and message IDs, last read timestamp, pending drafts and original mutation IDs. Never preserve passwords or unnecessary message bodies in a generic skill package.",
     "example": "Summarize these six threads and draft replies to the two that need decisions; do not send anything.",
-    "improvement": "Add thread supersession, sent-versus-draft distinction and unknown-send reconciliation with exact message identity.",
     "source_ids": [
       "muse-connectors",
       "grok-briefs",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -796,9 +772,7 @@
         }
       ],
       "handoff": "Preserve thread and message IDs, last read timestamp, pending drafts and original mutation IDs. Never preserve passwords or unnecessary message bodies in a generic skill package.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "inbox-triage-r3-standard",
         "inbox-triage-r3-edge",
@@ -845,14 +819,12 @@
     ],
     "recovery": "Keep transcript version, stable utterance IDs, action identity, changes and unresolved phrases. Reopen the original board before applying any pending task mutation; completed creation is not repeated.",
     "example": "Turn these project-meeting notes into a decision log and action list; leave unassigned items unassigned.",
-    "improvement": "Add revision chains, canceled obligations and relative-date ambiguity without forcing a setup interview for already usable notes.",
     "source_ids": [
       "muse-connectors",
       "grok-briefs",
       "muse-catalog",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -918,9 +890,7 @@
         }
       ],
       "handoff": "Keep transcript version, stable utterance IDs, action identity, changes and unresolved phrases. Reopen the original board before applying any pending task mutation; completed creation is not repeated.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "meeting-to-actions-r3-standard",
         "meeting-to-actions-r3-edge",
@@ -964,13 +934,11 @@
     ],
     "recovery": "Use the supplied facts to make a provisional plan, label unsourced commitments as suggestions, and ask only for the missing detail that changes the next action.",
     "example": "Help me organize a move from a one-bedroom apartment in three weeks using the inventory I attached.",
-    "improvement": "Adds disruption, dependencies and reversible staging to ordinary household checklists.",
     "source_ids": [
       "muse-connectors",
       "grok-briefs",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -1050,9 +1018,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -1086,13 +1052,11 @@
     ],
     "recovery": "Keep source price dates, units, billing terms, assumptions, horizon and original decision. On resume, refresh changed quotes; preserve actual paid transactions separately from proposed changes.",
     "example": "Compare these three phone plans using the bills and usage figures I supplied; show first-year and ongoing cost.",
-    "improvement": "Add comparable cash-flow horizons, deposit treatment and liquidity constraints rather than applying a generic budget ratio.",
     "source_ids": [
       "muse-connectors",
       "grok-briefs",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -1158,9 +1122,7 @@
         }
       ],
       "handoff": "Keep source price dates, units, billing terms, assumptions, horizon and original decision. On resume, refresh changed quotes; preserve actual paid transactions separately from proposed changes.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "decision-budget-r3-standard",
         "decision-budget-r3-edge",
@@ -1207,12 +1169,10 @@
     ],
     "recovery": "Keep source revision, page anchors, concept IDs, explicit versus inferred edge labels and unreadable regions. Re-map only changed lecture sections and never silently merge different course versions.",
     "example": "Give me a concept map of this kidney-failure lecture before I study it; use only the uploaded slides.",
-    "improvement": "The reviewed entrypoint is a broad study planner, not a detailed source-location and concept-edge compiler; this skill adds that narrower capability without claiming superior learning outcomes.",
     "source_ids": [
       "muse-catalog",
       "muse-workflows"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -1278,9 +1238,7 @@
         }
       ],
       "handoff": "Keep source revision, page anchors, concept IDs, explicit versus inferred edge labels and unreadable regions. Re-map only changed lecture sections and never silently merge different course versions.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "lecture-map-r3-standard",
         "lecture-map-r3-edge",
@@ -1324,12 +1282,10 @@
     ],
     "recovery": "Keep unsupported claims out of the answer key. Explain the gap and continue with the supported material; preserve prior learner answers rather than silently rescoring them.",
     "example": "Create 12 short-answer cards from this lecture section, keeping the source’s terminology and numbers.",
-    "improvement": "Adds answer provenance, atomic learning targets and ambiguity review to ordinary card generation.",
     "source_ids": [
       "muse-catalog",
       "muse-workflows"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "decisions": [
@@ -1398,8 +1354,7 @@
           "disposition": "REFERENCE_ONLY_NO_COPY"
         }
       ],
-      "quality_claim": "More explicit procedures and checkable examples; comparative Muse performance has not been measured.",
-      "practice_scope": "Public regression exercises. Worked answers are for learning; exclude them from comparison sessions."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -1433,12 +1388,10 @@
     ],
     "recovery": "Preserve learner-local item, attempt and rubric IDs, raw first answers, hint levels, source anchors and unresolved scoring conflicts. On resume, reuse accepted scores and never leak another learner's history.",
     "example": "Quiz me on these six concepts one at a time. After each answer, explain only what I missed.",
-    "improvement": "Add assistance-aware scoring, rubric versioning and duplicate-attempt control; these are checkable record properties, not claims about retention gains.",
     "source_ids": [
       "muse-catalog",
       "muse-workflows"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -1504,9 +1457,7 @@
         }
       ],
       "handoff": "Preserve learner-local item, attempt and rubric IDs, raw first answers, hint levels, source anchors and unresolved scoring conflicts. On resume, reuse accepted scores and never leak another learner's history.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "retrieval-practice-r3-standard",
         "retrieval-practice-r3-edge",
@@ -1553,12 +1504,10 @@
     ],
     "recovery": "Keep the original reasoning, diagnosis alternatives, counterexample, assistance given, source conditions and unanswered transfer item. Do not restart an explanation already understood or silently reclassify a coached response as independent.",
     "example": "I keep mixing up clearance and filtration. Use my lecture to show the difference, then test me with one example.",
-    "improvement": "Add explicit discrimination between conceptual and execution errors, with a separate unseen-transfer status.",
     "source_ids": [
       "muse-catalog",
       "muse-workflows"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -1624,9 +1573,7 @@
         }
       ],
       "handoff": "Keep the original reasoning, diagnosis alternatives, counterexample, assistance given, source conditions and unanswered transfer item. Do not restart an explanation already understood or silently reclassify a coached response as independent.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "misconception-clinic-r3-standard",
         "misconception-clinic-r3-edge",
@@ -1673,12 +1620,10 @@
     ],
     "recovery": "Preserve the blueprint version, source map, independent attempt IDs, completed blocks, reserve choices and remaining windows. Resume from the next unfinished prerequisite; never infer a reminder or calendar write from the plan itself.",
     "example": "I have nine study sessions before the exam and these five slide decks. Build a plan using my missed-question list.",
-    "improvement": "Add exam-blueprint fidelity, explicit minute accounting and assistance-aware rescheduling rather than a fixed daily-duration default.",
     "source_ids": [
       "muse-catalog",
       "muse-workflows"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -1744,9 +1689,7 @@
         }
       ],
       "handoff": "Preserve the blueprint version, source map, independent attempt IDs, completed blocks, reserve choices and remaining windows. Resume from the next unfinished prerequisite; never infer a reminder or calendar write from the plan itself.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "exam-plan-r3-standard",
         "exam-plan-r3-edge",
@@ -1790,12 +1733,10 @@
     ],
     "recovery": "Keep unsupported claims out of the answer key. Explain the gap and continue with the supported material; preserve prior learner answers rather than silently rescoring them.",
     "example": "Listen to my explanation of this mechanism and challenge the weakest link before helping me rewrite it.",
-    "improvement": "Keeps the learner as the explainer and checks predictive understanding rather than fluency alone.",
     "source_ids": [
       "muse-catalog",
       "muse-workflows"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -1875,9 +1816,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -1911,12 +1850,10 @@
     ],
     "recovery": "Save the decision rule, subquestion IDs, source versions and access states, exclusions, counterevidence and stopping budget. Resume with the first decision-changing gap, not another unrestricted search.",
     "example": "Find whether this proposed workflow solves our actual failure, using the incident records and current documentation.",
-    "improvement": "Add a typed question-to-evidence matching contract and mechanical checks preventing causal conclusions from descriptive-only inputs.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -1982,9 +1919,7 @@
         }
       ],
       "handoff": "Save the decision rule, subquestion IDs, source versions and access states, exclusions, counterevidence and stopping budget. Resume with the first decision-changing gap, not another unrestricted search.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "question-to-evidence-r3-standard",
         "question-to-evidence-r3-edge",
@@ -2031,13 +1966,11 @@
     ],
     "recovery": "Preserve the protocol version, original record IDs, dedup and study-family map, exact screening reasons, access flags and extracted locators. Resume unresolved full-text decisions without rescreening settled records.",
     "example": "Compare these eight papers and identify which three are most useful for understanding the disagreement.",
-    "improvement": "Add explicit record/report/study-family accounting and an unresolved-access state that can be checked on concrete inputs.",
     "source_ids": [
       "muse-workflows",
       "agency",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -2103,9 +2036,7 @@
         }
       ],
       "handoff": "Preserve the protocol version, original record IDs, dedup and study-family map, exact screening reasons, access flags and extracted locators. Resume unresolved full-text decisions without rescreening settled records.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "literature-triage-r3-standard",
         "literature-triage-r3-edge",
@@ -2149,12 +2080,10 @@
     ],
     "recovery": "Report the supported findings and the search boundary. Separate unavailable evidence from evidence of absence, and show what observation would resolve the uncertainty.",
     "example": "A report says the whole workflow is complete after unit tests. Check exactly which parts the evidence establishes.",
-    "improvement": "Adds proposition-level review and narrower corrected language rather than an undifferentiated pass badge.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "decisions": [
@@ -2229,8 +2158,7 @@
           "disposition": "REFERENCE_ONLY_NO_COPY"
         }
       ],
-      "quality_claim": "More explicit procedures and checkable examples; comparative Muse performance has not been measured.",
-      "practice_scope": "Public regression exercises. Worked answers are for learning; exclude them from comparison sessions."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -2264,12 +2192,10 @@
     ],
     "recovery": "Carry the observation version, hypothesis definitions, prediction matrix, actual measurements, assumptions and next authorized discriminating check. Never rewrite a prior prediction after seeing its result.",
     "example": "Why did usage rise after our redesign? Compare the redesign hypothesis with promotion and measurement changes.",
-    "improvement": "Add an executable discriminating-test contract and explicit unknown-versus-contradicted accounting rather than ranking explanations by citation volume.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -2335,9 +2261,7 @@
         }
       ],
       "handoff": "Carry the observation version, hypothesis definitions, prediction matrix, actual measurements, assumptions and next authorized discriminating check. Never rewrite a prior prediction after seeing its result.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "competing-explanations-r3-standard",
         "competing-explanations-r3-edge",
@@ -2381,12 +2305,10 @@
     ],
     "recovery": "Report the supported findings and the search boundary. Separate unavailable evidence from evidence of absence, and show what observation would resolve the uncertainty.",
     "example": "Compare the current product guide with last month’s saved copy and tell me which changes affect my workflow.",
-    "improvement": "Adds baseline discipline and effective-date handling to a generic latest-news summary.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -2466,9 +2388,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -2502,12 +2422,10 @@
     ],
     "recovery": "Save transcript versions, consent scope, codebook revisions, excerpt locators, participant-level support/dissent and unasked topics. Resume with the missing evidence or decision, not another synthetic persona.",
     "example": "Synthesize these six customer interviews into needs, disagreements and the next prototype questions.",
-    "improvement": "Add explicit participant-denominator and quote-fidelity checks; avoid inheriting unmeasured improvement percentages from illustrative communication examples.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -2573,9 +2491,7 @@
         }
       ],
       "handoff": "Save transcript versions, consent scope, codebook revisions, excerpt locators, participant-level support/dissent and unasked topics. Resume with the missing evidence or decision, not another synthetic persona.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "interview-synthesis-r3-standard",
         "interview-synthesis-r3-edge",
@@ -2619,13 +2535,11 @@
     ],
     "recovery": "Preserve the original state and logs. Narrow the failing case, stop after the agreed attempt budget, and return a reproducible next step rather than a speculative broad change.",
     "example": "This parser drops the final item. Reproduce the failure on the supplied fixture before changing implementation.",
-    "improvement": "Adds a negative control and causal failure check to ordinary reproduction-first debugging.",
     "source_ids": [
       "superpowers",
       "tgl",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "decisions": [
@@ -2700,8 +2614,7 @@
           "disposition": "REFERENCE_ONLY_NO_COPY"
         }
       ],
-      "quality_claim": "More explicit procedures and checkable examples; comparative Muse performance has not been measured.",
-      "practice_scope": "Public regression exercises. Worked answers are for learning; exclude them from comparison sessions."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -2735,13 +2648,11 @@
     ],
     "recovery": "Preserve the base and candidate identities, failing command, invariant, patch, unaffected controls, full-suite results and unmerged work. Resume from the first unverified gate, never by resetting the owner's tree.",
     "example": "Fix the reproduced off-by-one bug without rewriting the parser, and test empty and single-item inputs.",
-    "improvement": "Add source-revision and authorized-file accounting to the repair handoff, with a stale-base negative case rather than relying on procedural prose alone.",
     "source_ids": [
       "superpowers",
       "tgl",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -2807,9 +2718,7 @@
         }
       ],
       "handoff": "Preserve the base and candidate identities, failing command, invariant, patch, unaffected controls, full-suite results and unmerged work. Resume from the first unverified gate, never by resetting the owner's tree.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "minimal-repair-r3-standard",
         "minimal-repair-r3-edge",
@@ -2853,13 +2762,11 @@
     ],
     "recovery": "Preserve the original state and logs. Narrow the failing case, stop after the agreed attempt budget, and return a reproducible next step rather than a speculative broad change.",
     "example": "Review this transaction patch for data-loss paths and show the smallest case for each genuine issue.",
-    "improvement": "Adds causal traces and evidence grades to generic code-review checklists.",
     "source_ids": [
       "superpowers",
       "tgl",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "decisions": [
@@ -2934,8 +2841,7 @@
           "disposition": "REFERENCE_ONLY_NO_COPY"
         }
       ],
-      "quality_claim": "More explicit procedures and checkable examples; comparative Muse performance has not been measured.",
-      "practice_scope": "Public regression exercises. Worked answers are for learning; exclude them from comparison sessions."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -2969,13 +2875,11 @@
     ],
     "recovery": "Carry the schema version, consumer assumptions, examples, scoped idempotency identity, retention policy, compatibility findings and executed test commands. Resume unresolved consumer or runtime checks without inventing deployment.",
     "example": "Design a small task-update API with examples for stale revisions and a lost response after a successful write.",
-    "improvement": "Add explicit strict-consumer and same-key/different-payload cases; do not claim to replace its entire API-platform scope with one skill.",
     "source_ids": [
       "superpowers",
       "tgl",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -3041,9 +2945,7 @@
         }
       ],
       "handoff": "Carry the schema version, consumer assumptions, examples, scoped idempotency identity, retention policy, compatibility findings and executed test commands. Resume unresolved consumer or runtime checks without inventing deployment.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "api-contract-r3-standard",
         "api-contract-r3-edge",
@@ -3090,13 +2992,11 @@
     ],
     "recovery": "Preserve the journey, state matrix, tool/browser versions, observed steps, criterion references and unresolved checks. Resume at the missing interaction or repaired flow; do not rerun a whole-site audit or claim universal accessibility from a sampled task.",
     "example": "Review this mobile modal for focus, scrolling and toolbar overlap; distinguish measured findings from screenshot-only concerns.",
-    "improvement": "Add an observation-type contract and negative controls against invented passes; avoid inheriting arbitrary automation-coverage percentages or default-to-failure rhetoric.",
     "source_ids": [
       "superpowers",
       "tgl",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -3162,9 +3062,7 @@
         }
       ],
       "handoff": "Preserve the journey, state matrix, tool/browser versions, observed steps, criterion references and unresolved checks. Resume at the missing interaction or repaired flow; do not rerun a whole-site audit or claim universal accessibility from a sampled task.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "accessible-ui-r3-standard",
         "accessible-ui-r3-edge",
@@ -3211,14 +3109,12 @@
     ],
     "recovery": "Keep the candidate digest, obligation matrix, exact commands and results, qualified package, original publication identifier and rollback conditions. Resume the earliest unresolved gate without rebuilding accepted bytes.",
     "example": "Check this release ZIP against the acceptance checklist without uploading or publishing it.",
-    "improvement": "Add candidate-bound runtime/package obligations and readiness-versus-publication accounting; retain its strong hash and review-scope discipline.",
     "source_ids": [
       "superpowers",
       "tgl",
       "agency",
       "muse-workflows"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -3284,9 +3180,7 @@
         }
       ],
       "handoff": "Keep the candidate digest, obligation matrix, exact commands and results, qualified package, original publication identifier and rollback conditions. Resume the earliest unresolved gate without rebuilding accepted bytes.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "release-readiness-r3-standard",
         "release-readiness-r3-edge",
@@ -3333,12 +3227,10 @@
     ],
     "recovery": "Preserve confirmed decisions with their sources, proposed alternatives, exact protected material, asset rights and the requested deliverable. Resume the specific production step or unresolved conflict rather than another broad branding interview.",
     "example": "Turn this product story into a warm 30-second video brief with three concrete opening ideas.",
-    "improvement": "Add a compact constraint-provenance contract and exact-copy/format conflict cases; do not claim this narrower brief skill replaces the full brand system.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -3404,9 +3296,7 @@
         }
       ],
       "handoff": "Preserve confirmed decisions with their sources, proposed alternatives, exact protected material, asset rights and the requested deliverable. Resume the specific production step or unresolved conflict rather than another broad branding interview.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "creative-brief-r3-standard",
         "creative-brief-r3-edge",
@@ -3450,12 +3340,10 @@
     ],
     "recovery": "Preserve the approved version and reference assets. Revise only the failing dimension, state unrendered portions, and offer a usable partial deliverable instead of claiming a finished production.",
     "example": "Use these three references to define a consistent look for six scenes while preserving the character’s proportions.",
-    "improvement": "Adds dimension-specific reference reconciliation instead of a pile of style keywords.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -3535,9 +3423,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -3571,12 +3457,10 @@
     ],
     "recovery": "Preserve the shot IDs, story beat map, frame rate, durations, overlap rules, geography and continuity state. Resume the unverified shot or transition without redesigning accepted assets or claiming unrendered footage.",
     "example": "Plan a 20-second four-shot sequence showing a character discovering a hidden room.",
-    "improvement": "Add exact frame-budget and transition accounting in a compact storyboard procedure; retain the upstream as a broader film-production benchmark.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -3642,9 +3526,7 @@
         }
       ],
       "handoff": "Preserve the shot IDs, story beat map, frame rate, durations, overlap rules, geography and continuity state. Resume the unverified shot or transition without redesigning accepted assets or claiming unrendered footage.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "storyboard-r3-standard",
         "storyboard-r3-edge",
@@ -3688,12 +3570,10 @@
     ],
     "recovery": "Preserve the approved version and reference assets. Revise only the failing dimension, state unrendered portions, and offer a usable partial deliverable instead of claiming a finished production.",
     "example": "Compare these eight frames for character size, clothing and prop continuity before we animate them.",
-    "improvement": "Adds stateful transition checking and narrow revision scope to general visual QA.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "decisions": [
@@ -3768,8 +3648,7 @@
           "disposition": "REFERENCE_ONLY_NO_COPY"
         }
       ],
-      "quality_claim": "More explicit procedures and checkable examples; comparative Muse performance has not been measured.",
-      "practice_scope": "Public regression exercises. Worked answers are for learning; exclude them from comparison sessions."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -3803,12 +3682,10 @@
     ],
     "recovery": "Keep source identities, edit decisions, export settings, output digest, probe/inspection records and original delivery operation. Resume the missing content or delivery check without overwriting originals.",
     "example": "Prepare this clip for a vertical post, retaining readable captions and checking the first and last frames.",
-    "improvement": "Add a requirement-by-requirement output contract and separate local-render versus external-delivery reconciliation; existing upstream production breadth remains valuable.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -3874,9 +3751,7 @@
         }
       ],
       "handoff": "Keep source identities, edit decisions, export settings, output digest, probe/inspection records and original delivery operation. Resume the missing content or delivery check without overwriting originals.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "edit-and-export-r3-standard",
         "edit-and-export-r3-edge",
@@ -3923,12 +3798,10 @@
     ],
     "recovery": "Save the source version, edit mode, protected-span list, factual qualifiers and approved output. Resume from the unresolved editorial issue, not a new voice-calibration interview or an overwrite of the original.",
     "example": "Rewrite this announcement to sound direct and human without changing its commitments or adding marketing claims.",
-    "improvement": "Add explicit qualifier and exact-command regression cases; do not inherit arbitrary punctuation house rules as universal writing quality.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -3994,9 +3867,7 @@
         }
       ],
       "handoff": "Save the source version, edit mode, protected-span list, factual qualifiers and approved output. Resume from the unresolved editorial issue, not a new voice-calibration interview or an overwrite of the original.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "prose-revision-r3-standard",
         "prose-revision-r3-edge",
@@ -4040,13 +3911,11 @@
     ],
     "recovery": "Separate confirmed evidence from assumptions. Produce a reversible next experiment or draft, and do not turn a missing integration into a reason to abandon useful analysis.",
     "example": "Help me test whether small clinics need this document workflow before I build it.",
-    "improvement": "Adds disconfirmation criteria and behavioral questions to customer-discovery scripts.",
     "source_ids": [
       "grok-briefs",
       "agency",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -4126,9 +3995,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -4159,13 +4026,11 @@
     ],
     "recovery": "Separate confirmed evidence from assumptions. Produce a reversible next experiment or draft, and do not turn a missing integration into a reason to abandon useful analysis.",
     "example": "Write a clear offer for a document-cleanup service that cannot promise legal or clinical correctness.",
-    "improvement": "Adds promise-to-capability alignment and explicit exclusions to positioning work.",
     "source_ids": [
       "grok-briefs",
       "agency",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -4245,9 +4110,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -4278,13 +4141,11 @@
     ],
     "recovery": "Separate confirmed evidence from assumptions. Produce a reversible next experiment or draft, and do not turn a missing integration into a reason to abandon useful analysis.",
     "example": "Turn this guide into a week of useful posts without exaggerating its results or repeating the same hook.",
-    "improvement": "Adds source lineage and capacity limits to a generic content schedule.",
     "source_ids": [
       "grok-briefs",
       "agency",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -4364,9 +4225,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -4397,13 +4256,11 @@
     ],
     "recovery": "Separate confirmed evidence from assumptions. Produce a reversible next experiment or draft, and do not turn a missing integration into a reason to abandon useful analysis.",
     "example": "Create a customer-return playbook using these five real cases, including missing receipts and disputed delivery.",
-    "improvement": "Adds exception handling and outcome confirmation to a simple process checklist.",
     "source_ids": [
       "grok-briefs",
       "agency",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -4483,9 +4340,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -4519,13 +4374,11 @@
     ],
     "recovery": "Preserve backlog and score versions, resource budgets, prerequisite closure, completed work and displacement decisions. Resume from the changed constraint rather than rescoring everything to fit a preferred answer.",
     "example": "Choose the next three tasks from this backlog while protecting the active release and avoiding duplicate work.",
-    "improvement": "Add mechanically checkable dependency/resource feasibility and cycle controls; do not adopt fixed success percentages or universal reserve ratios without project evidence.",
     "source_ids": [
       "grok-briefs",
       "agency",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -4591,9 +4444,7 @@
         }
       ],
       "handoff": "Preserve backlog and score versions, resource budgets, prerequisite closure, completed work and displacement decisions. Resume from the changed constraint rather than rescoring everything to fit a preferred answer.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "project-prioritization-r3-standard",
         "project-prioritization-r3-edge",
@@ -4640,14 +4491,12 @@
     ],
     "recovery": "Keep metric definitions, source versions, period and population filters, numerators/denominators, formulas and open alternative explanations. Resume the missing comparison or calculation, not an unsupported causal narrative.",
     "example": "Our support resolution rate fell this month. Check whether case mix or reporting changes explain it.",
-    "improvement": "Add an analysis-specific arithmetic contract for rates and zero baselines while keeping governed presentation-only work separate.",
     "source_ids": [
       "grok-briefs",
       "agency",
       "muse-connectors",
       "muse-workflows"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -4713,9 +4562,7 @@
         }
       ],
       "handoff": "Keep metric definitions, source versions, period and population filters, numerators/denominators, formulas and open alternative explanations. Resume the missing comparison or calculation, not an unsupported causal narrative.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "metrics-review-r3-standard",
         "metrics-review-r3-edge",
@@ -4762,12 +4609,10 @@
     ],
     "recovery": "Preserve raw digests, data dictionary, grouping and timing rules, allowed-use evidence, conflict list and partition decisions. Resume the specific unresolved check; do not silently resplit a consumed test set.",
     "example": "Inspect this survey export before we analyze satisfaction, including duplicate respondents and missing responses.",
-    "improvement": "Add pre-evaluation entity-group, duplicate-conflict and feature-time checks; do not imply the intake helper performs training or external rights verification.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -4833,9 +4678,7 @@
         }
       ],
       "handoff": "Preserve raw digests, data dictionary, grouping and timing rules, allowed-use evidence, conflict list and partition decisions. Resume the specific unresolved check; do not silently resplit a consumed test set.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "dataset-intake-r3-standard",
         "dataset-intake-r3-edge",
@@ -4882,12 +4725,10 @@
     ],
     "recovery": "Keep source versions, matching keys, original cell references, exact amounts, currency/sign rules and proposed/applied changes. Resume with authoritative readback of the affected rows, not a wholesale workbook rewrite.",
     "example": "Find why the monthly total differs from the invoice list without changing the original workbook.",
-    "improvement": "Add focused row-identity, duplicate and currency reconciliation rather than importing broad investment recommendations or arbitrary finance targets.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -4953,9 +4794,7 @@
         }
       ],
       "handoff": "Keep source versions, matching keys, original cell references, exact amounts, currency/sign rules and proposed/applied changes. Resume with authoritative readback of the affected rows, not a wholesale workbook rewrite.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "spreadsheet-reconcile-r3-standard",
         "spreadsheet-reconcile-r3-edge",
@@ -4999,12 +4838,10 @@
     ],
     "recovery": "Retain raw data and the transformation log. Stop the affected calculation on ambiguous units or keys, and continue independent analyses without filling gaps with invented observations.",
     "example": "Analyze these task durations and explain the median, spread and outliers with reproducible calculations.",
-    "improvement": "Adds execution evidence and arithmetic controls to a narrative analysis.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -5084,9 +4921,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -5117,12 +4952,10 @@
     ],
     "recovery": "Retain raw data and the transformation log. Stop the affected calculation on ambiguous units or keys, and continue independent analyses without filling gaps with invented observations.",
     "example": "Make a chart comparing these response times without hiding the long tail or the sample sizes.",
-    "improvement": "Adds rendered readability and encoding checks to chart generation.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -5202,9 +5035,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -5235,12 +5066,10 @@
     ],
     "recovery": "Retain raw data and the transformation log. Stop the affected calculation on ambiguous units or keys, and continue independent analyses without filling gaps with invented observations.",
     "example": "Compare two assistant instructions on the same ten tasks, preserving both failures and token costs.",
-    "improvement": "Adds paired conditions and unrun-result discipline to casual model rankings.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "decisions": [
@@ -5309,8 +5138,7 @@
           "disposition": "REFERENCE_ONLY_NO_COPY"
         }
       ],
-      "quality_claim": "More explicit procedures and checkable examples; comparative Muse performance has not been measured.",
-      "practice_scope": "Public regression exercises. Worked answers are for learning; exclude them from comparison sessions."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -5344,12 +5172,10 @@
     ],
     "recovery": "Preserve input and output digests, key/version semantics, transformation version, authorized window, conflicts and invariant results. Resume the specific failed boundary without silently changing the source contract.",
     "example": "Check this cleaned contact table against the original export and account for every removed or merged row.",
-    "improvement": "Add small portable invariant cases and explicit scope labels; preserve the upstream's stronger pipeline details rather than claiming a universal replacement.",
     "source_ids": [
       "muse-workflows",
       "agency"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -5415,9 +5241,7 @@
         }
       ],
       "handoff": "Preserve input and output digests, key/version semantics, transformation version, authorized window, conflicts and invariant results. Resume the specific failed boundary without silently changing the source contract.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "data-quality-review-r3-standard",
         "data-quality-review-r3-edge",
@@ -5461,12 +5285,10 @@
     ],
     "recovery": "Retain the person’s actual record and voice. Mark an unsupported requirement as a gap and strengthen the supported evidence instead of manufacturing credentials or guarantees.",
     "example": "Turn this debugging project into a portfolio case study emphasizing the diagnosis, repair and regression evidence.",
-    "improvement": "Adds evidence-linked contribution and tradeoff narratives to résumé-style project descriptions.",
     "source_ids": [
       "agency",
       "grok-shares"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -5546,9 +5368,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -5579,12 +5399,10 @@
     ],
     "recovery": "Retain the person’s actual record and voice. Mark an unsupported requirement as a gap and strengthen the supported evidence instead of manufacturing credentials or guarantees.",
     "example": "Compare this backend role with my three projects and identify the strongest evidence and the real gaps.",
-    "improvement": "Adds explicit evidence mapping instead of vague encouragement or degree-based dismissal.",
     "source_ids": [
       "agency",
       "grok-shares"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -5664,9 +5482,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -5700,12 +5516,10 @@
     ],
     "recovery": "Keep the base resume, posting version, evidence map, approved phrasing and unresolved claims. Resume the next targeted section without overwriting the master resume or inventing missing qualifications.",
     "example": "Tailor this resume for an automation role using only the projects and experience I supplied.",
-    "improvement": "Add explicit project-maturity and contribution-scope controls; avoid arbitrary match-percentage targets as a substitute for truthful fit.",
     "source_ids": [
       "agency",
       "grok-shares"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -5771,9 +5585,7 @@
         }
       ],
       "handoff": "Keep the base resume, posting version, evidence map, approved phrasing and unresolved claims. Resume the next targeted section without overwriting the master resume or inventing missing qualifications.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "resume-tailor-r3-standard",
         "resume-tailor-r3-edge",
@@ -5817,12 +5629,10 @@
     ],
     "recovery": "Retain the person’s actual record and voice. Mark an unsupported requirement as a gap and strengthen the supported evidence instead of manufacturing credentials or guarantees.",
     "example": "Interview me about this architecture decision and challenge any part that sounds vague or overstated.",
-    "improvement": "Adds adversarial but relevant follow-up and preserves the candidate’s own voice.",
     "source_ids": [
       "agency",
       "grok-shares"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -5902,9 +5712,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -5935,12 +5743,10 @@
     ],
     "recovery": "Retain the person’s actual record and voice. Mark an unsupported requirement as a gap and strengthen the supported evidence instead of manufacturing credentials or guarantees.",
     "example": "Write a firm but professional message explaining why this repeated scope change needs a revised deadline.",
-    "improvement": "Adds fact-motive separation and actionable requests to generic tone polishing.",
     "source_ids": [
       "agency",
       "grok-shares"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -6020,9 +5826,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -6053,12 +5857,10 @@
     ],
     "recovery": "Retain the person’s actual record and voice. Mark an unsupported requirement as a gap and strengthen the supported evidence instead of manufacturing credentials or guarantees.",
     "example": "Help me compare these two project offers and prepare a conversation about scope, payment timing and support obligations.",
-    "improvement": "Adds explicit alternatives and total-term comparison rather than aggressive scripted demands.",
     "source_ids": [
       "agency",
       "grok-shares"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -6138,9 +5940,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -6174,12 +5974,10 @@
     ],
     "recovery": "Preserve exact dates, offsets, source observation times, travel and buffer assumptions, hard constraints and original booking references. Resume the unverified leg or provider readback without duplicating reservations.",
     "example": "Plan a low-walking two-day city visit with one indoor alternative each day and no bookings.",
-    "improvement": "Add offset-aware connection arithmetic, explicit hard-constraint rejection and quote-versus-reservation evidence.",
     "source_ids": [
       "muse-catalog",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -6245,9 +6043,7 @@
         }
       ],
       "handoff": "Preserve exact dates, offsets, source observation times, travel and buffer assumptions, hard constraints and original booking references. Resume the unverified leg or provider readback without duplicating reservations.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "itinerary-plan-r3-standard",
         "itinerary-plan-r3-edge",
@@ -6291,12 +6087,10 @@
     ],
     "recovery": "Keep the plan useful with explicit contingencies. Recheck time-sensitive constraints before a commitment and leave purchases, reservations and physical actions to the authorized route.",
     "example": "Plan four dinners using these pantry items, with one quick backup and a short shopping list.",
-    "improvement": "Adds inventory-first planning and practical fallback meals rather than a generic menu.",
     "source_ids": [
       "muse-catalog",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -6376,9 +6170,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -6409,12 +6201,10 @@
     ],
     "recovery": "Keep the plan useful with explicit contingencies. Recheck time-sensitive constraints before a commitment and leave purchases, reservations and physical actions to the authorized route.",
     "example": "Log these yellowing leaves and help me decide what to observe next before changing the care routine.",
-    "improvement": "Adds observation-first reasoning and trend history to instant plant-diagnosis prompts.",
     "source_ids": [
       "muse-catalog",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -6494,9 +6284,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -6527,12 +6315,10 @@
     ],
     "recovery": "Keep the plan useful with explicit contingencies. Recheck time-sensitive constraints before a commitment and leave purchases, reservations and physical actions to the authorized route.",
     "example": "Give me a 15-minute drawing exercise for perspective, then review my attempt against one clear objective.",
-    "improvement": "Adds feedback-driven progression and equipment awareness to generic habit advice.",
     "source_ids": [
       "muse-catalog",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -6612,9 +6398,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -6645,12 +6429,10 @@
     ],
     "recovery": "Keep the plan useful with explicit contingencies. Recheck time-sensitive constraints before a commitment and leave purchases, reservations and physical actions to the authorized route.",
     "example": "Organize a small game night for eight people with simple food and a plan that works if two guests arrive late.",
-    "improvement": "Adds explicit guest constraints and dependency handling without turning a gathering into enterprise project management.",
     "source_ids": [
       "muse-catalog",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -6730,9 +6512,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -6763,12 +6543,10 @@
     ],
     "recovery": "Keep the plan useful with explicit contingencies. Recheck time-sensitive constraints before a commitment and leave purchases, reservations and physical actions to the authorized route.",
     "example": "Compare these three devices for my stated workflow, including compatibility and recurring costs.",
-    "improvement": "Adds fit, disqualifiers and total cost instead of ranking products by popularity.",
     "source_ids": [
       "muse-catalog",
       "muse-connectors"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -6848,9 +6626,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -6881,12 +6657,10 @@
     ],
     "recovery": "Keep a useful organizational or writing result without presenting it as medical, legal or therapeutic authority. For urgent safety concerns, direct the user to appropriate real-world help.",
     "example": "Organize these notes into a one-page appointment summary and questions; do not try to diagnose the problem.",
-    "improvement": "Adds timeline fidelity and question prioritization while staying organizational rather than clinical.",
     "source_ids": [
       "agency",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -6966,9 +6740,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -7002,12 +6774,10 @@
     ],
     "recovery": "Preserve the current plan version, exact instructions, consent/sharing scope, proposed versus accepted owners, original message IDs and open clinical questions. Resume acknowledgments or clarifications without rewriting treatment or replaying an uncertain send.",
     "example": "Help organize rides, meals and the written instructions for a family member’s recovery, keeping medical decisions with their clinician.",
-    "improvement": "Add plan-version fidelity, accepted-owner and delivery-state controls; avoid importing broad medical-response rules or compliance claims without applicable evidence.",
     "source_ids": [
       "agency",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
@@ -7073,9 +6843,7 @@
         }
       ],
       "handoff": "Preserve the current plan version, exact instructions, consent/sharing scope, proposed versus accepted owners, original message IDs and open clinical questions. Resume acknowledgments or clarifications without rewriting treatment or replaying an uncertain send.",
-      "quality_claim": "Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.",
-      "comparison_result": "NOT_RUN",
-      "practice_scope": "Three authored public exercises cover a standard task, an edge condition and recovery or changed evidence. Their answers are development examples, not held-out results. Supplied-output checks cover only declared facts and invariants; language quality, visual quality and real provider behavior remain separate.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "care-coordination-r3-standard",
         "care-coordination-r3-edge",
@@ -7119,12 +6887,10 @@
     ],
     "recovery": "Keep a useful organizational or writing result without presenting it as medical, legal or therapeutic authority. For urgent safety concerns, direct the user to appropriate real-world help.",
     "example": "Make this morning checklist easier to follow with one step at a time and a way to resume after interruptions.",
-    "improvement": "Adds individualized format and interruption support without assuming disability from limited information.",
     "source_ids": [
       "agency",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -7204,9 +6970,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -7237,12 +7001,10 @@
     ],
     "recovery": "Keep a useful organizational or writing result without presenting it as medical, legal or therapeutic authority. For urgent safety concerns, direct the user to appropriate real-world help.",
     "example": "Help me write about this difficult week without turning it into advice or a diagnosis.",
-    "improvement": "Adds consent around support mode and separates emotion from unsupported factual conclusions.",
     "source_ids": [
       "agency",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -7322,9 +7084,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -7355,12 +7115,10 @@
     ],
     "recovery": "Keep a useful organizational or writing result without presenting it as medical, legal or therapeutic authority. For urgent safety concerns, direct the user to appropriate real-world help.",
     "example": "Help me try a ten-minute evening tidy for a week with a fallback for exhausted days.",
-    "improvement": "Adds an explicit fallback and learning-oriented review instead of rigid streak pressure.",
     "source_ids": [
       "agency",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -7440,9 +7198,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -7473,12 +7229,10 @@
     ],
     "recovery": "Keep a useful organizational or writing result without presenting it as medical, legal or therapeutic authority. For urgent safety concerns, direct the user to appropriate real-world help.",
     "example": "Organize these photos and notes into a family album outline, marking unknown dates rather than guessing.",
-    "improvement": "Adds uncertainty and privacy handling to sentimental narrative generation.",
     "source_ids": [
       "agency",
       "muse-catalog"
     ],
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R4",
@@ -7558,9 +7312,7 @@
           "review_scope": "DISCOVERY_INDEX_ONLY; no claim that this is the strongest task-specific competitor"
         }
       ],
-      "comparison_result": "NOT_RUN",
-      "quality_claim": "Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.",
-      "practice_scope": "Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality."
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task."
     }
   },
   {
@@ -7592,10 +7344,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Produce added, removed, retyped and nullability-tightened columns; list required backfills; state the observed row count and the limits of a logical-only review. Include a migration sequence, validation queries to be reviewed by the owner, consumer compatibility notes and a rollback boundary. The tool returns a comparison, not executed DDL.",
     "example": "A populated customer table has integer id; add nullable text note.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -7667,10 +7417,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Produce added, removed, retyped and nullability-tightened columns; list required backfills; state the observed row count and the limits of a logical-only review. Include a migration sequence, validation queries to be reviewed by the owner, consumer compatibility notes and a rollback boundary. The tool returns a comparison, not executed DDL.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "schema-evolution-r5-standard",
         "schema-evolution-r5-edge",
@@ -7707,10 +7455,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return a newly calculated state, applied keys, stale-event count, duplicate-event count and any conflicting keys. Conflict returns the original state without partial application. Preserve source and batch digests, version semantics and deletion retention requirements for a real pipeline owner. External writes remain false.",
     "example": "State contains A version 3 deleted; incoming A version 2 value 10 and a repeat of the tombstone.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -7782,10 +7528,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return a newly calculated state, applied keys, stale-event count, duplicate-event count and any conflicting keys. Conflict returns the original state without partial application. Preserve source and batch digests, version semantics and deletion retention requirements for a real pipeline owner. External writes remain false.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "incremental-pipeline-r5-standard",
         "incremental-pipeline-r5-edge",
@@ -7822,10 +7566,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return classified supplied plan rows and retained unclassified rows; propose a concrete measurement and index hypothesis only where source evidence supports it. Include exact SQL/parameter identity, engine version, cardinality, before/after latency and write-cost tradeoffs when those are actually observed. performance_proven and query_executed remain false for text-only inspection.",
     "example": "Plan rows include SCAN users, SEARCH orders USING INDEX order_id, and a temporary ordering B-tree.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -7897,10 +7639,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return classified supplied plan rows and retained unclassified rows; propose a concrete measurement and index hypothesis only where source evidence supports it. Include exact SQL/parameter identity, engine version, cardinality, before/after latency and write-cost tradeoffs when those are actually observed. performance_proven and query_executed remain false for text-only inspection.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "query-plan-review-r5-standard",
         "query-plan-review-r5-edge",
@@ -7937,10 +7677,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return the exact supplied-window SLI, bad-event count, allowed and remaining bad-event budgets, burn rate and no-traffic state. Decimal-string outputs preserve calculation meaning. Include eligibility exclusions, data freshness and target provenance in the human report. No monitor, alert or service setting is created.",
     "example": "A window contains 1000 eligible requests, 998 good, with target 0.999.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -8012,10 +7750,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return the exact supplied-window SLI, bad-event count, allowed and remaining bad-event budgets, burn rate and no-traffic state. Decimal-string outputs preserve calculation meaning. Include eligibility exclusions, data freshness and target provenance in the human report. No monitor, alert or service setting is created.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "service-objectives-r5-standard",
         "service-objectives-r5-edge",
@@ -8052,10 +7788,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return required serving instances, total including reserve, additional instances relative to the current count, effective throughput per instance and currently available throughput after reserve. Record workload identity and assumptions in the handoff. No scale action is performed and the estimate is not a price quote.",
     "example": "Demand is 900 requests/second, measured capacity 250, utilization target 0.6, four current instances and one reserve.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -8127,10 +7861,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return required serving instances, total including reserve, additional instances relative to the current count, effective throughput per instance and currently available throughput after reserve. Record workload identity and assumptions in the handoff. No scale action is performed and the estimate is not a price quote.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "capacity-planning-r5-standard",
         "capacity-planning-r5-edge",
@@ -8167,10 +7899,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return the ordered event IDs, open/resolved state, time to mitigation, time to resolution and elapsed interval for this one incident. The narrative must distinguish observed impact, hypotheses and actions actually performed. Preserve absent resolution as null and describe the record as supplied evidence rather than authenticated telemetry.",
     "example": "Start at 07:00-05:00, mitigation at 12:05Z and resolution at 12:20Z.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -8242,10 +7972,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return the ordered event IDs, open/resolved state, time to mitigation, time to resolution and elapsed interval for this one incident. The narrative must distinguish observed impact, hypotheses and actions actually performed. Preserve absent resolution as null and describe the record as supplied evidence rather than authenticated telemetry.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "incident-triage-r5-standard",
         "incident-triage-r5-edge",
@@ -8282,10 +8010,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return ordered step IDs, blocked steps with concrete reasons and a ready-for-host-review or blocked classification. execution_authorized and external_actions_performed are always false. A useful handoff includes the original user request, exact target identities, observable success conditions, failure reconciliation and evidence required by the existing executor.",
     "example": "A read step feeds a send step whose approval is false and whose idempotency key is once.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -8357,10 +8083,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return ordered step IDs, blocked steps with concrete reasons and a ready-for-host-review or blocked classification. execution_authorized and external_actions_performed are always false. A useful handoff includes the original user request, exact target identities, observable success conditions, failure reconciliation and evidence required by the existing executor.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "automation-contract-r5-standard",
         "automation-contract-r5-edge",
@@ -8397,10 +8121,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return the selected candidate ID or null, all eligible IDs, rejected IDs with reasons and whether more observation is needed. The report never claims a browser action or authenticated target observation. Include actual page/frame identity and observation age in the host handoff where available.",
     "example": "A role locator matches two submit buttons; a unique test ID points to delete instead.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -8472,10 +8194,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return the selected candidate ID or null, all eligible IDs, rejected IDs with reasons and whether more observation is needed. The report never claims a browser action or authenticated target observation. Include actual page/frame identity and observation age in the host handoff where available.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "selector-resilience-r5-standard",
         "selector-resilience-r5-edge",
@@ -8512,10 +8232,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return a consistency observation, retained receipt IDs and explicit requirements for provider readback. retry_authorized, provider_evidence_authenticated and external_actions_performed are always false. Preserve original operation identity and unresolved records; never manufacture a replacement ledger, claim or grant.",
     "example": "An operation has a request digest but only an unknown observation with no receipt.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -8587,10 +8305,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return a consistency observation, retained receipt IDs and explicit requirements for provider readback. retry_authorized, provider_evidence_authenticated and external_actions_performed are always false. Preserve original operation identity and unresolved records; never manufacture a replacement ledger, claim or grant.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "effect-reconciliation-r5-standard",
         "effect-reconciliation-r5-edge",
@@ -8627,10 +8343,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return every checked pair with token identities, calculated ratio, threshold and pass/fail result. Include an overall calculation result while keeping conformance_certified and rendered_ui_inspected false. The design handoff should also identify real component states and any missing browser, keyboard or visual inspection.",
     "example": "Black text token #000000 on white #ffffff has a supplied threshold of 4.5.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -8702,10 +8416,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return every checked pair with token identities, calculated ratio, threshold and pass/fail result. Include an overall calculation result while keeping conformance_certified and rendered_ui_inspected false. The design handoff should also identify real component states and any missing browser, keyboard or visual inspection.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "design-token-audit-r5-standard",
         "design-token-audit-r5-edge",
@@ -8742,10 +8454,8 @@
     ],
     "recovery": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return reachable and unreachable states, missing required states, nonterminal dead ends and a scoped declared-graph status. browser_tested is always false. A complete design handoff includes each state purpose, visible feedback, event contract, error recovery, focus behavior and the exact runtime checks still needed.",
     "example": "A flow declares idle, loading, success and error, but only connects idle to loading and loading to success; empty is required.",
-    "improvement": "An original task-specific procedure paired with a bounded executable tool, discriminating public exercises and explicit outcome limits.",
     "source_ids": [],
     "origin": "ORIGINAL_FIRST_PARTY",
-    "evaluation": "SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED",
     "tool_binding": {
       "module": "muse_presets.specialist_extensions",
       "function": "evaluate",
@@ -8817,10 +8527,8 @@
         }
       ],
       "handoff": "Preserve the exact supplied input and tool version, the returned report, any unresolved source assumptions and the next authorized check. Return reachable and unreachable states, missing required states, nonterminal dead ends and a scoped declared-graph status. browser_tested is always false. A complete design handoff includes each state purpose, visible feedback, event contract, error recovery, focus behavior and the exact runtime checks still needed.",
-      "comparison_result": "NOT_RUN",
       "upstream_items": [],
-      "quality_claim": "Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.",
-      "practice_scope": "Three authored public exercises cover a standard input, an edge condition and changed evidence or recovery. Expected outputs are development examples, not hidden model evaluations.",
+      "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "interaction-state-coverage-r5-standard",
         "interaction-state-coverage-r5-edge",

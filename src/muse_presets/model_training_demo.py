@@ -1,8 +1,4 @@
-"""Opt-in role adapter for the existing bounded decimal-linear experiment.
-
-Reuses R60 math, evidence and exact restoration unchanged. Runs only a fictional
-fixture in a newly owned temporary directory; no provider or deployment grants.
-"""
+"""Run a bounded decimal-linear training example and verify checkpoint restoration."""
 from __future__ import annotations
 from pathlib import Path
 import tempfile

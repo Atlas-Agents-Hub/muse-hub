@@ -25,8 +25,8 @@ class EngineerDropinCliTests(unittest.TestCase):
         dest = self.root / "new-engineer"
         code, staged = self.call(["engineer-dropin", "--to", str(dest)])
         self.assertEqual(code, 0)
-        self.assertEqual(staged["status"], "SOURCE_ONLY_NATIVE_FORMAT_STAGED")
-        self.assertFalse(staged["native_installed"])
+        self.assertEqual(staged["status"], "ENGINEER_FILES_CREATED")
+        self.assertNotIn('native_installed',staged)
         code, checked = self.call(["engineer-dropin-inspect", "--path", str(dest)])
         self.assertEqual(code, 0)
         self.assertEqual(checked["status"], "LOCAL_DROPIN_MATCH")
@@ -47,7 +47,7 @@ class EngineerDropinCliTests(unittest.TestCase):
         )
         self.assertEqual(code, 2)
         self.assertEqual(report["status"], "REVIEW_REQUIRED")
-        self.assertFalse(report["native_installed"])
+        self.assertNotIn('native_installed',report)
 
 
 if __name__ == "__main__":

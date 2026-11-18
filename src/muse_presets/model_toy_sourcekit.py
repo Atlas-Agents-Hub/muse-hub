@@ -1,4 +1,4 @@
-"""Export and verify the Model Builder's portable small-model experiment toolkit."""
+"""Package the small-model training example with reproducible verification."""
 from __future__ import annotations
 
 import argparse

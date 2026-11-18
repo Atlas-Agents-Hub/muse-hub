@@ -1,8 +1,4 @@
-"""Reproducible standalone Claims Adjudicator ZIP: exact existing source.
-
-Not a native assistant, independently attested judge, source of evidence, or
-permission to contact any external system. Never copies owner state.
-"""
+"""Build a Claims Adjudicator toolkit for scope and evidence review."""
 from __future__ import annotations
 import hashlib
 import io
@@ -25,8 +21,8 @@ MAX_UNPACKED=500_000
 MAX_MEMBERS=20
 SOURCE_SHA={
     "src/muse_presets/claims.py":"af6e5558024cbca4099d1f65ef2f68ae6d062df105db22eb34aa17da7d79a1e9",
-    "presets/claims-adjudicator/preset.json":"0d9205ec0e107baf4600106d8b0815a9e2ab8ce1923cf869408ada75ececaca7",
-    "presets/claims-adjudicator/playbook.json":"a6f73c7e2558bce6119c4fc35e32e649b8c9276cacf5f589122614ccf7be5ce6",
+    "presets/claims-adjudicator/preset.json":'256b02fa961aa27561fa1a252c36cc023cc297825d65d485fbdb8c1b3bff3a29',
+    "presets/claims-adjudicator/playbook.json":'c022488af4e493d02cc78c8fa3012a89acdafe7317133c39dfbc86bc6d72ccf3',
     "LICENSE":"af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
 }
 EXAMPLE={
@@ -66,7 +62,7 @@ The manifest detects changes to the packaged files. Verify the archive digest
 against the release checksum before running it, and use operating-system
 isolation when evaluating code you do not trust.
 """
-RUNNER=r'''"""Standalone claims-only runner; no account, provider, or native installation."""
+RUNNER=r'''"""Run a Claims Adjudicator evidence-scope check."""
 from __future__ import annotations
 import argparse
 import hashlib

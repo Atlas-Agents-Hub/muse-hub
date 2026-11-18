@@ -39,6 +39,6 @@ Explore Muse, choose a task, and find the assistants, tools, and workspaces that
 
 ## Build and extend
 
-[Developer quickstart](GITHUB_QUICKSTART.md) · [Runnable workflows](WORKFLOWS.md) · [Included capabilities](CAPABILITIES.md) · [Host setup](HOST_COMPATIBILITY.md) · [Architecture](ARCHITECTURE.md) · [Development](DEVELOPMENT.md) · [Security](SECURITY.md)
+[Developer quickstart](GITHUB_QUICKSTART.md) · [Tool adapters](TOOL_ADAPTERS.md) · [Runnable workflows](WORKFLOWS.md) · [Included capabilities](CAPABILITIES.md) · [Host setup](HOST_COMPATIBILITY.md) · [Architecture](ARCHITECTURE.md) · [Development](DEVELOPMENT.md) · [Security](SECURITY.md)
 
 [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Repository](https://github.com/atlas-origins/muse-ai-agent-presets) · [Current release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest)

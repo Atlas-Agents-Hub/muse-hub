@@ -343,5 +343,10 @@ button { cursor:pointer; }
 .download-card a { min-height:44px; display:inline-flex; justify-content:space-between; align-items:center; gap:14px; font-size:12px; font-weight:800; border-top:1px solid #c0beb3; padding-top:10px; text-decoration:none; }
 .download-card a:hover { text-decoration:underline; }
 .download-card[hidden],.download-section[hidden] { display:none; }
+.downloads-catalog .role-toolbar { display:grid; grid-template-columns:minmax(220px,2fr) repeat(3,minmax(145px,1fr)) auto; }
+.downloads-catalog .category-wrap { max-width:none; min-width:0; }
+.download-card .guide-link { margin-bottom:8px; }
+@media(max-width:1100px) { .downloads-catalog .role-toolbar { grid-template-columns:repeat(2,minmax(0,1fr)); }.downloads-catalog .reset-btn { justify-self:start; } }
+@media(max-width:520px) { .downloads-catalog .role-toolbar { grid-template-columns:minmax(0,1fr); } }
 @media(max-width:1000px) { .bundle-grid,.download-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:690px) { .downloads-hero { padding-top:42px; }.bundle-grid,.download-grid { grid-template-columns:1fr; }.downloads-catalog { padding-top:35px; }.downloads-help { gap:5px 20px; } }

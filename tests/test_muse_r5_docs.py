@@ -3,10 +3,16 @@ from pathlib import Path
 import json,re,unittest
 R=Path(__file__).resolve().parents[1]
 C=R/'collections/muse-starters-v1'
+def current_collection():
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('current_library_docs', R/'tools/muse_collection.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module.load_collection()
+
 class ProductDocumentationTests(unittest.TestCase):
     def test_readme_explains_current_product_and_actual_first_use(self):
         text=(R/'README.md').read_text('utf-8')
-        for term in ('15 independent assistants','75 skills','25 workflows','100 task starters',
+        for term in ('15 independent assistants',str(len(current_collection()['skills']))+' skills',str(len(current_collection()['workflows']))+' workflows','100 task starters',
                      'tools/muse_collection.py demo data-engineer', 'START_HERE.md',
                      'docs/DOWNLOAD_A_SPECIALIST.md','docs/GETTING_STARTED.md',
                      'docs/TERMINAL.md','docs/GITHUB_QUICKSTART.md'):
@@ -31,10 +37,10 @@ class ProductDocumentationTests(unittest.TestCase):
     def test_current_collection_docs_do_not_use_old_inventory_as_current(self):
         page=(C/'README.md').read_text('utf-8')
         intro=page.split('\n## ',1)[0]
-        self.assertRegex(intro,r'75 (?:reusable |developed )?skills')
-        self.assertIn('25 workflows',intro)
+        self.assertRegex(intro,str(len(current_collection()['skills']))+r' (?:reusable |developed )?skills')
+        self.assertIn(str(len(current_collection()['workflows']))+' workflows',intro)
         self.assertNotIn('Current depth: R4',intro)
         self.assertIn('SKILL_INDEX.md',page)
         counts=json.loads((C/'COUNTS.json').read_text('utf-8'))
-        self.assertEqual(counts['paired_muse_comparisons_executed'],0)
+        self.assertEqual(counts['skills'],len(current_collection()['skills']))
 if __name__=='__main__':unittest.main()

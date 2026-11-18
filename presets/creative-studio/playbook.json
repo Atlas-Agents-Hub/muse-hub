@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Produce and verify an original three-frame animation from licensed toy assets.",
     "observable_result": "Rendered outputs, exact source/assets and an independent continuity review.",
     "negative_test": "Change one reference pose or break a frame; require targeted review failure."

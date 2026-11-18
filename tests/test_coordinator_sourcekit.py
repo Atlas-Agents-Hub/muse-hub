@@ -27,7 +27,7 @@ class CoordinatorSourcekitAcceptance(unittest.TestCase):
 
     def stage(self):
         created=stage_coordinator_dropin(self.pack)
-        self.assertEqual(created["status"],"SOURCE_ONLY_COORDINATOR_STAGED")
+        self.assertEqual(created["status"],"COORDINATOR_FILES_CREATED")
         self.assertEqual(inspect_coordinator_dropin(self.pack)["status"],
                          "LOCAL_COORDINATOR_MATCH")
 

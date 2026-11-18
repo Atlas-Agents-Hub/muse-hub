@@ -1,8 +1,6 @@
-"""Source-only SQLite path admission shared by local specialist engines.
+"""Validate SQLite storage paths used by the specialist tools.
 
-Do not treat a valid local path as authorized host storage. Files remain
-unencrypted and subject to the host filesystem's own access controls.
-"""
+Stored files use the host filesystem's access controls and are unencrypted."""
 from __future__ import annotations
 
 import sys

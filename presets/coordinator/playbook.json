@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Coordinate an offline toy bug fix between a builder and an examiner.",
     "observable_result": "Graph, task IDs, refusal on missing grants and a narrow closure receipt.",
     "negative_test": "Inject a fake examiner PASS and require the coordinator to refuse adoption."

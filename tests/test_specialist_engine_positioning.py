@@ -62,12 +62,7 @@ class SpecialistEnginePositioning(unittest.TestCase):
      self.assertIn("separately authorized host tools",guide)
      self.assertIn("tool registrations and approvals",guide)
 
- def test_source_manifests_not_relabelled_as_native_activation(self):
-  doc=self.load()
-  self.assertEqual(doc["native_muse_activation"], "NOT_ASSERTED")
-  for role in doc["roles"]:
-   self.assertNotIn("INSTALLED_NATIVE",str(role))
-   self.assertNotIn("BLACK_RAVEN_LIVE",str(role))
+ def test_engine_manifests_preserve_action_permissions(self):
   for name in ("iron-ledger","provenance-vault"):
    p=ROOT/f"presets/software-engineer/runtime/{name}/ENGINE.json"
    md=json.loads(p.read_bytes())

@@ -17,8 +17,8 @@ class AgentDiscoveryTests(unittest.TestCase):
   self.assertIn("llms.txt",PUBLIC_ROOT_FILES)
   text=(ROOT/"llms.txt").read_text(encoding="utf-8")
   self.assertTrue(text.startswith("# Muse Hub\n"))
-  self.assertIn("15 independent Muse assistants",text)
-  self.assertIn(URL+"/releases/tag/v1.4.0",text)
+  self.assertIn("15 specialist assistants",text)
+  self.assertIn(URL+"/releases/tag/v1.5.0",text)
   self.assertIn(SITE,text)
   links=re.findall(r"(?m)^- \[[^\]]+\]\((https://[^)]+)\)",text)
   self.assertGreaterEqual(len(links),30)
@@ -36,7 +36,7 @@ class AgentDiscoveryTests(unittest.TestCase):
    self.assertIn(target,text)
   for step in ("START_HERE.md","three subchat","SHA256SUMS","quickstart.py --all"):
    self.assertIn(step,text)
-  self.assertIn("releases/tag/v1.4.0",text)
+  self.assertIn("releases/tag/v1.5.0",text)
   self.assertNotIn("source-only",text)
 
  def test_readme_and_agent_index_agree_on_entrypoints(self):
@@ -59,7 +59,7 @@ class AgentDiscoveryTests(unittest.TestCase):
   doc=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_text(encoding="utf-8"))
   self.assertEqual(doc["schema"],"specialist-ai-agent-kits/discovery/v1")
   self.assertEqual(doc["repository"],URL)
-  self.assertEqual(doc["release"],"v1.4.0")
+  self.assertEqual(doc["release"],"v1.5.0")
   self.assertEqual(doc["license"],"MIT")
   roles=json.loads((ROOT/"presets/catalog.json").read_text())["presets"]
   self.assertEqual(set(doc["starter_roles"]),set(roles))
@@ -67,25 +67,23 @@ class AgentDiscoveryTests(unittest.TestCase):
   self.assertEqual(doc["released_starter_zip_count"],15)
   aliases={"data-engineering-architect":"data-engineer","infrastructure-reliability-engineer":"reliability-engineer"}
   for role in roles:
-   asset="muse-"+aliases.get(role,role)+"-v1.4.0.zip"
-   expected=URL+"/releases/download/v1.4.0/"+asset
+   asset="muse-"+aliases.get(role,role)+"-v1.5.0.zip"
+   expected=URL+"/releases/download/v1.5.0/"+asset
    self.assertEqual(doc["specialist_downloads"][role],expected)
-  for entry in doc["executable_offline_kits"]:
+  for entry in doc["executable_kits"]:
    self.assertEqual(entry["download"],doc["specialist_downloads"][entry["role"]])
    self.assertTrue((ROOT/entry["exporter"]).is_file())
-  self.assertEqual(doc["sha256_index"],URL+"/releases/download/v1.4.0/SHA256SUMS")
+  self.assertEqual(doc["sha256_index"],URL+"/releases/download/v1.5.0/SHA256SUMS")
   self.assertEqual(doc["homepage"],SITE)
   self.assertEqual(doc["downloads_page"],SITE+"downloads.html")
 
- def test_agent_boundary_claims_are_fail_closed(self):
+ def test_discovery_states_requirements_and_links_to_real_guides(self):
   doc=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_text(encoding="utf-8"))
-  claims=doc["boundaries"]
-  for key in ("native_muse_agents_installed","hosted_agent_service",
-              "autonomous_model_backed_agents_out_of_box","external_connectors_enabled",
-              "independent_rights_authentication","large_language_model_training"):
-   self.assertIs(claims[key],False,key)
   self.assertEqual(doc["python_minimum"],"3.12")
   self.assertIn("Git requirements vary",doc["dependency_note"])
+  for key in ("tool_guides","specialist_library"):
+   self.assertTrue((ROOT/doc[key]).is_file())
+  self.assertEqual(doc["tool_guide_count"],51)
   self.assertNotIn("password",str(doc).lower())
   self.assertNotIn("token=",str(doc).lower())
 

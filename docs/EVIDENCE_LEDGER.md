@@ -1,4 +1,4 @@
-# Evidence Finder: local durable evidence custody
+# Evidence Finder: save sources and findings
 
 Save exact text findings and linked receipts in a local SQLite evidence ledger.
 
@@ -12,7 +12,7 @@ From the toolkit root with Python 3.12+:
 
 In Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python -B`. The regression command is `PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_evidence_ledger.py -v`; on Windows use the same PowerShell import-path setting.
 
-The example uses only fictional data and an ephemeral temporary directory. It records a complete exact-text finding and an explicit NOT_FOUND, deletes the source, and reopens the recorded evidence in a separate SQLite connection.
+The example uses sample data in a temporary directory. It records a complete exact-text finding and an explicit NOT_FOUND, deletes the source, and reopens the recorded evidence in a separate SQLite connection.
 
 A different specialist role uses the same source API:
 
@@ -32,11 +32,11 @@ When integrating the ledger, provide an authenticated authority callback and sou
 
 ## Exact behavior
 
-The existing bounded Finder searches one explicitly supplied UTF-8 file under an allowed root, refusing traversal and symlinks. The ledger stores its exact source digest, query and whole original text for FOUND records. A NOT_FOUND receipt stores the source digest and scope but no full absent-match source text. It preserves the original observed negative result without independently proving the absence after source deletion.
+The existing bounded Finder searches one explicitly supplied UTF-8 file under an allowed root, refusing traversal and symlinks. The ledger stores its exact source digest, query and whole original text for FOUND records. A NOT_FOUND receipt stores the source digest and scope but no full absent-match source text. Reopen the recorded search result when the source changes or becomes unavailable.
 
 Records are partitioned by owner/workspace/role/actor labels, checked through the host-supplied callback. On each read, verify or capture the complete local chain is validated before returning a result. An identical operation ID and input preserves its first receipt, even if the source later disappears; a changed request under the same operation ID refuses. A changed source under a new operation ID creates a distinct record.
 
-The SQLite chain keeps a separate local head. Truncated history, ordinary row deletion and byte modifications are detected. A local chain is NOT a cryptographic signature, immutable ledger or externally anchored anti-rollback system: someone who can rewrite both rows and head can forge another valid-looking history.
+The SQLite chain checks its saved head to detect truncated history, deleted rows, and changed bytes. Protect both the database and its backups: a process with permission to rewrite the rows and chain head can replace their history.
 
 ## Keep evidence private
 

@@ -1,8 +1,4 @@
-"""Portable, source-pinned scoped subchat drafts for the 15 generic Muse roles.
-
-No host IDs are discovered or minted here. This module cannot install, spawn,
-grant tools, activate cron, hand off messages or modify the recipient's files.
-"""
+"""Create specialist task-context folders and inspect their contents."""
 from __future__ import annotations
 
 import hashlib
@@ -82,7 +78,7 @@ def _method_files(role: str, method: dict, book: dict, display_name: str) -> dic
         "native_loaded": False, "model_invocation_verified": False,
         "recipient_readback_verified": False, "external_effect_authorized": False,
         "enabled_skills": [], "scheduled_jobs": [], "connector_grants": [],
-        "source_grade": "LOCAL_SUBCHAT_DRAFT_ONLY",
+        "source_grade": "CONTEXT_FILES",
         "host_registration": "UNBOUND_OWNER_AND_PROVIDER_REQUIRED",
         "memory_policy": "RECEIVING_OWNER_CONTROLLED_NO_DONOR_IMPORT",
     }
@@ -193,7 +189,7 @@ def _write_new(path: Path, data: bytes) -> None:
 
 def stage_subchat_scopes(destination: Path, role: str, *, display_name: str | None = None,
                          expected_profile_source_sha256: str | None = None) -> dict:
-    """Stage new source-only subchats. Any interrupted stage remains fenced."""
+    """Create task contexts and preserve an interrupted operation for recovery."""
     dest = Path(destination)
     _require_new(dest)
     files, receipt, frozen = _build(role, display_name)
@@ -203,7 +199,7 @@ def stage_subchat_scopes(destination: Path, role: str, *, display_name: str | No
         raise ValueError("SUBCHAT_SOURCE_PIN_MISMATCH")
     dest.mkdir(exist_ok=False)
     marker = dest / "STAGING_INCOMPLETE"
-    _write_new(marker, b"LOCAL_DRAFT_STAGE_INCOMPLETE_RECONCILE_NO_RETRY\n")
+    _write_new(marker, b"CONTEXT_CREATION_INCOMPLETE_REVIEW_BEFORE_RESUMING\n")
     (dest / "subchats").mkdir()
     (dest / "config").mkdir()
     for relative in sorted(files):

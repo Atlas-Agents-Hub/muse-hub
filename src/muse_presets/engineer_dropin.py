@@ -1,8 +1,4 @@
-"""Create-only native-format Software Engineer bundle with REAL local Claim Gate.
-
-This never authenticates a personal Muse host, registers a native skill,
-spawns a chat, installs hooks or modifies an existing owner's files.
-"""
+"""Create a Software Engineer profile and verification toolkit."""
 from __future__ import annotations
 
 import hashlib
@@ -113,9 +109,9 @@ HOOKS = {
     "scheduler_enabled": False,
 }
 EXTRA_SYSTEM = {
-    "CONNECTORS.md": "# Optional connectors\n\nOnly install and grant receiving-owner-approved connectors through the actual host. No connected accounts or token secrets are included. Refuse unsupported write permissions.\n",
-    "BROWSER.md": "# Browser boundaries\n\nBrowser actions require a supported authenticated receiving-host browser, explicit scope and fresh page observations. No credential extraction, unknown targets, or automatic publication.\n",
-    "VOICE.md": "# Voice boundaries\n\nNo voice identity, private recordings or speech device is included. Voice is optional and off until receiving-owner configuration and supported client acceptance.\n",
+    "CONNECTORS.md": "# Connect your tools\n\nChoose the connectors needed for your task, set them up through the host, and grant the required permissions. Keep credentials in the host's account settings.\n",
+    "BROWSER.md": "# Work in the browser\n\nUse the intended account and target site. Inspect the current page before acting, stay within the requested task, and verify the result before reporting completion. Publishing and other consequential actions follow the user's authorization.\n",
+    "VOICE.md": "# Use voice\n\nConfigure your preferred microphone, speaker, and voice settings in the supported client. Check a short recording and playback before beginning the task.\n",
 }
 
 RUNNER = r'''#!/usr/bin/env python3
@@ -477,7 +473,7 @@ def stage_engineer_dropin(destination: Path) -> dict:
     target = _require_new(Path(destination))
     target.mkdir(exist_ok=False)
     (target / "STAGING_INCOMPLETE").write_text(
-        "Do not install: source-only staging incomplete.\n", encoding="utf-8"
+        "Package creation was interrupted. Inspect the existing files before resuming.\n", encoding="utf-8"
     )
     engine = target / "engine"
     stage_engineer_pack(engine)
@@ -498,7 +494,7 @@ def stage_engineer_dropin(destination: Path) -> dict:
     if inspect_engineer_dropin(target)["status"] != "LOCAL_DROPIN_MATCH":
         raise ValueError("SOURCE_READBACK_REFUSED")
     return {
-        "status": "SOURCE_ONLY_NATIVE_FORMAT_STAGED",
+        "status": "ENGINEER_FILES_CREATED",
         "role_id": "software-engineer",
         "custom_skills": sorted(name for name, _ in SKILLS.values()),
         "subchats": sorted(SUBCHATS),
