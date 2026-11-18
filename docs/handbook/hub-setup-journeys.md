@@ -38,6 +38,12 @@ The tool is a **read-only source planner**, not a second installer, Claim Gate, 
 
 The original TaskGuard terminal/retention durable-witness holds and H12 real-recipient authentication remain open. A local hash or fixture is not native exactly-once evidence.
 
+## Local Companion Notebook path
+
+The [Companion Home guide](../COMPANION_HOME.md#use-the-real-local-notebook) now gives an explicit local launch, session entry, saved-note health check, revision-conflict recovery, stop/restart and database-preserving uninstall path. Use `examples/space_starter.py --serve --companion-home` with an owner-controlled absolute database path. This is one usable **local** journey, not completion of the CLI, coding bridge, desktop, five-door or authenticated Family Link setup paths.
+
+H03 and H14?H17 now expose their existing named source tests through the journey tool. `SOURCE_TEST_AVAILABLE_NOT_RUN` means exactly that: displaying a test command does not execute it or prove native acceptance. The interactive Notebook's additional real HTTP tests are named in its guide.
+
 ## Failure and restart policy
 
 Keep original packages, customization, memory, credentials and generated outputs separate. On recovery, inspect source and the original host before acting. Preserve unknown-effect evidence rather than replaying it. If source rights or integrity are uncertain, stop distribution. Do not modify the Atlas Origins website as part of Muse Hub deployment.

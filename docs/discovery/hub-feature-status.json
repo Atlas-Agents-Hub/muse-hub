@@ -333,7 +333,7 @@
       ],
       "evidence_status": "TESTED_MACHINEB_SOURCE_PREVIEW_NOT_NATIVE",
       "id": "H17",
-      "minimum_acceptance": "Room-prefixed owner/Space SQLite, revisions, reopening, empty-store restore and scope/duplicate/malformed refusals.",
+      "minimum_acceptance": "Room-prefixed owner/Space SQLite, explicit default-OFF loopback browser CRUD, revision conflicts, uncertain-response readback without retry, restart and new-store restoration; native identity remains unverified.",
       "native_runtime_verified": false,
       "next_verification": "Host-authenticated Muse identity, real callback fencing and cross-device sync remain NOT VERIFIED.",
       "priority": "P1",
@@ -341,7 +341,10 @@
       "source_paths": [
         "src/muse_presets/personal_companion.py",
         "src/muse_presets/room_notebook.py",
-        "examples/companion_home_notebook_demo.py"
+        "examples/companion_home_notebook_demo.py",
+        "src/muse_presets/companion_web.py",
+        "src/muse_presets/companion_assets/notebook.js",
+        "src/muse_presets/space_server.py"
       ],
       "status": "SOURCE_TESTED_LOCAL_SQLITE",
       "title": "Notebook persistence"
