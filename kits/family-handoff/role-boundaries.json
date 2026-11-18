@@ -25,7 +25,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/adversarial-verifier/preset.json",
-      "profile_sha256": "319d0dcd9651c8735bc98d4309371a91dd70da2ed539ad3e9075f617f6f71fbe",
+      "profile_sha256": "9d8f6fba05d2398d10b2d09cf47dd8ad06f88168a399ddc5ea0c6711c6cdc732",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "claims-adjudicator",
@@ -37,7 +37,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/automation-engineer/preset.json",
-      "profile_sha256": "af24ba98e7a99b41dad430273bed1f87b575319590aa88fab06a8d1ec0e6b1af",
+      "profile_sha256": "dee0d21cc084530b7273505dad496d2fcb2d43b098a0bab6b1770df5a6cfadcc",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "coordinator",
@@ -51,7 +51,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/claims-adjudicator/preset.json",
-      "profile_sha256": "0d9205ec0e107baf4600106d8b0815a9e2ab8ce1923cf869408ada75ececaca7",
+      "profile_sha256": "256b02fa961aa27561fa1a252c36cc023cc297825d65d485fbdb8c1b3bff3a29",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "evidence-finder",
@@ -63,7 +63,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/coordinator/preset.json",
-      "profile_sha256": "8ccb1cfb93d1c96241380d986d98bdf3c78cb48c5fcc789a38bb8d2e99e1edca",
+      "profile_sha256": "8de5decae4de3f106393dae46a447cccbb062ea94a00a20345026eefc285602c",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "software-engineer",
@@ -77,7 +77,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/creative-studio/preset.json",
-      "profile_sha256": "d6b89a7f0851258af12afcbc224f822e4b0ec76e26e58ee993c789ee4b4ccd48",
+      "profile_sha256": "c88aebc47eb4cdd88622a7335bcefa836a279d4f6928a96e91fc289c65ca16f6",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "adversarial-verifier",
@@ -89,7 +89,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/data-engineering-architect/preset.json",
-      "profile_sha256": "309a87c089f7df118e67f5534c7f4d836d7aa2cae1deb2529a4503eb839f408b",
+      "profile_sha256": "711af6cc6bba03be6891e79af679fda0411fee6d4e84d4cc953afc74b0c7d5e0",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "research-evaluator",
@@ -103,7 +103,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/garden-companion/preset.json",
-      "profile_sha256": "8fa1478f149bc1a7a9cd7690d370266f245f982aeff5fd9c4bd018718784c7fe",
+      "profile_sha256": "a17cebd32f4b91bf063fd3dee37349da3d1b44f06f9f42f971d26dd108d8ad8a",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "evidence-finder",
@@ -115,7 +115,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/infrastructure-reliability-engineer/preset.json",
-      "profile_sha256": "5f90c6933687e4fdc40544a45c2946dded8caad6588308a9377e121eab2ff3b6",
+      "profile_sha256": "2a1ea9f2e4097a27f257fe036c28267623cb8dde63f46b601e0d172d4e3f11e7",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "coordinator",
@@ -129,7 +129,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/learning-coach/preset.json",
-      "profile_sha256": "11ac7532685fdf00e037f69401bf9b5e72a87aec16b31b557335e9313b1a0c84",
+      "profile_sha256": "ee6abb91860348085be2def86b224560148b349a804542223998fd9a6299c836",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "research-evaluator",
@@ -141,7 +141,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/model-builder/preset.json",
-      "profile_sha256": "2633fa6710c913af8a6d3d1314aa087f12774bf86d407d15a24ab52cccfd32cd",
+      "profile_sha256": "a7282f147723f9d7d92c2161fdb57750b79a16f732f5aefbc6206a1aa36fc9a4",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "research-evaluator",
@@ -153,7 +153,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/personal-companion/preset.json",
-      "profile_sha256": "c6ffcc014a50319e16ccef442b389d1feeffdfefed25a19e3dc11a0b4b1a317f",
+      "profile_sha256": "0e1c62bd9fdb969040ffed6bdb3919e448eee9335500988dee7b85a04714198d",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "evidence-finder",
@@ -165,7 +165,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/product-interface-designer/preset.json",
-      "profile_sha256": "45127a557bcd56d2a6856a37bf043cfcb0e9e49947913b6b0507cc3de9db3622",
+      "profile_sha256": "eda17bdfc2af0814f86546e11bc62bc1627ca2889ba397fe53d432f3552cc7d4",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "creative-studio",
@@ -179,7 +179,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/research-evaluator/preset.json",
-      "profile_sha256": "418b0ba914eba8adaa05379124e73e692b786ba6c27fd63bd4e4effc3387e6de",
+      "profile_sha256": "44b71797e388adab8dc25ecbddd034a4a6424f901e38a55628db7a22242850fd",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "model-builder",
@@ -192,7 +192,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/reverse-engineering-researcher/preset.json",
-      "profile_sha256": "a8d0933de95103e512339aefed4a1fc4f18c1c73a4d0d49c7c14ba00759ebdf1",
+      "profile_sha256": "f4b34287ed03dcfd1a59cdb1caa7ebb98e8ac096efade5d6ef15cca641c0e3ab",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "evidence-finder",
@@ -205,7 +205,7 @@
       "effect_authorized": false,
       "enabled": false,
       "profile_path": "presets/software-engineer/preset.json",
-      "profile_sha256": "ec17acb58001b70a1ba3a0e7bedf66dc98a53a53fab923712a83d66c67cd17db",
+      "profile_sha256": "6d0c183e6a38048feeb195c40efc5a3177b87f07b9e2e78679b99993d49e72c6",
       "recipient_authenticated": false,
       "suggested_receivers": [
         "adversarial-verifier",

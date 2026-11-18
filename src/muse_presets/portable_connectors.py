@@ -169,7 +169,7 @@ def reconcile_fixture(plan:dict,observations:Any,reported:Any)->dict:
     expected=run_offline_fixture(plan,observations)
     if type(reported) is not dict or reported!=expected:
         raise ConnectorRefusal("FIXTURE_RECEIPT_MISMATCH")
-    return {"status":"CONSISTENT_OFFLINE_FIXTURE_ONLY",
+    return {"status":"CONNECTOR_FIXTURE_PASSED",
             "request_id":expected["request_id"],
             "source_sha256":expected["source_sha256"],
             "provider_authenticated":False,

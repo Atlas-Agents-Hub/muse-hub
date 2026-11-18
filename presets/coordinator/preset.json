@@ -3,7 +3,7 @@
   "id": "coordinator",
   "title": "Coordinator",
   "description": "Coordinates bounded work, memory, leases and independent acceptance.",
-  "maturity": "SOURCE_TEMPLATE_ONLY",
+  "maturity": "PROFILE_TEMPLATE",
   "native_muse_status": "UNBOUND",
   "host_profiles": [
     "personal-muse-unverified",

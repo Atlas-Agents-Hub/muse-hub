@@ -33,8 +33,8 @@ class GenericHostCanaryTests(unittest.TestCase):
             for role in roles:
                 with self.subTest(host=host, role=role):
                     location = self.root / host / role
-                    self.assertEqual(stage_canary(location, role, host)["status"], "SOURCE_ONLY_STAGED")
-                    self.assertEqual(inspect_canary(location)["status"], "SOURCE_ONLY_MATCH")
+                    self.assertEqual(stage_canary(location, role, host)["status"], "HOST_PACKAGE_CREATED")
+                    self.assertEqual(inspect_canary(location)["status"], "FILES_VERIFIED")
                     spec = json.loads((location / "GENERIC_CANARY.json").read_text())
                     self.assertEqual(spec["role_id"], role)
                     self.assertEqual(spec["host_kind"], host)

@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Independently score a frozen toy classifier on a blinded, source-disjoint set.",
     "observable_result": "Held-out rubric, metric table, controlled rerun and conflict declaration.",
     "negative_test": "Supply self-authored examiner text or leaked final cases and require examiner refusal."

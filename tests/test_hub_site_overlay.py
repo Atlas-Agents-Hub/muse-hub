@@ -19,7 +19,7 @@ class MuseHubOverlay(unittest.TestCase):
         cls.catalog = json.loads((SITE / 'public' / 'catalog.json').read_text('utf8'))
 
     def test_brand_identity_and_local_navigation(self):
-        self.assertTrue(self.html.find('<title>Muse Hub') >= 0)
+        self.assertRegex(self.html,r'<title>[^<]*Muse Hub[^<]*</title>')
         self.assertEqual(self.html.count('class="role-card"'), 15)
         self.assertIn('href="public/index.html"', self.html)
         self.assertIn('href="../index.html"', self.explore)
@@ -48,15 +48,15 @@ class MuseHubOverlay(unittest.TestCase):
         for slug, asset, body in cards:
             with self.subTest(role=slug):
                 self.assertEqual(asset, aliases.get(slug, slug))
-                expected = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/muse-" + asset + "-v1.4.0.zip"
+                expected = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-" + asset + "-v1.5.0.zip"
                 self.assertIn('class="role-card-download" href="' + expected + '"', body)
         self.assertIn('aria-live="polite"', self.html)
 
     def test_catalog_is_rights_filtered_without_native_runtime_authority(self):
         self.assertEqual(self.catalog['count'], 63)
         self.assertEqual(len(self.catalog['items']), 63)
-        self.assertFalse(self.catalog['native_muse_connected'])
-        self.assertEqual(self.catalog['publication'], 'PUBLIC_DIRECTORY')
+        self.assertEqual(self.catalog['schema'], 'muse-resource-directory/v2')
+        self.assertNotIn('native_muse_connected',self.catalog)
         self.assertEqual(len(self.catalog['routes']), 6)
         self.assertIn('connect-src \'none\'', self.html)
         self.assertIn('connect-src \'none\'', self.explore)

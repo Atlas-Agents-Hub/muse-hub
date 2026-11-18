@@ -1,8 +1,4 @@
-"""One reviewed synthetic repair case shared by the R55 demo and source-kit export.
-
-The example is deterministic, offline, nonclinical, source-only, and requires no
-model, live repository, provider identity, or external effects.
-"""
+"""A deterministic clamp repair example shared by the workflow demo and package exporter."""
 from __future__ import annotations
 
 import hashlib

@@ -1,24 +1,21 @@
 {
-  "applied_to_github": false,
-  "claims_live_hub_runtime": false,
-  "description": "Get more out of Muse: specialists, skills, workflows, Companion spaces, notes, computer tools, and a curated resource library.",
+  "description": "Muse AI skills, specialist assistants, workflows and connectors. Explore terminal tools, creative workspaces, planning guides and community projects.",
   "homepage": "https://atlas-origins.github.io/muse-ai-agent-presets/",
   "product_name": "Muse Hub",
   "repository": "atlas-origins/muse-ai-agent-presets",
-  "requires_owner_approval_to_apply": true,
-  "schema": "muse-hub/github-metadata-proposal/v1",
+  "schema": "muse-hub/github-metadata/v2",
   "topics": [
     "muse-hub",
     "muse-ai",
-    "ai-agents",
+    "meta-ai",
+    "ai-assistants",
     "ai-agent-skills",
     "agent-workflows",
-    "ai-assistants",
     "assistant-templates",
+    "mcp",
+    "automation",
     "developer-tools",
     "python",
-    "agent-automation",
-    "agent-memory",
     "open-source"
   ]
 }

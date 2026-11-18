@@ -16,16 +16,19 @@ README=ROOT/"README.md"
 
 
 class MuseHubBrandLaunch(unittest.TestCase):
-    def test_readme_is_owner_accurate_and_front_door_is_compact(self):
+    def test_readme_has_clear_product_identity_and_current_inventory(self):
         text=README.read_text(encoding="utf-8")
         hero=text.split("\n## ",1)[0]
         self.assertLess(len(hero.encode("utf-8")),1100)
         self.assertTrue(text.startswith("# Muse Hub\n"))
-        self.assertIn("Independently developed",hero)
-        for label in ("15 independent assistants","three subchats","75 skills",
-                      "25 workflows","100 task starters","151 connectors"):
+        self.assertIn("Muse Hub is an open-source resource hub",hero)
+        self.assertIn("Meta's Muse AI",hero)
+        counts=json.loads((ROOT/"collections/muse-starters-v1/COUNTS.json").read_text(encoding="utf-8"))
+        for label in (f"{counts['specialists']} independent assistants","three subchats",
+                      f"{counts['skills']} skills",f"{counts['workflows']} workflows",
+                      f"{counts['task_starters']} task starters","151 connectors"):
             self.assertIn(label,hero)
-        for action in ("Choose an assistant","Download v1.4.0",
+        for action in ("Choose an assistant","Download v1.5.0",
                        "Visit Muse Hub","Get started"):
             self.assertIn(action,hero)
         self.assertEqual(text.count("<details>"),4)
@@ -43,10 +46,10 @@ class MuseHubBrandLaunch(unittest.TestCase):
                      "docs/COMPANION_HOME.md",
                      "docs/handbook/specialists-by-task.md",
                      "https://atlas-origins.github.io/muse-ai-agent-presets/",
-                     "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.4.0"):
+                     "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0"):
             self.assertIn(path,text)
         self.assertNotRegex(text, r"\b[HS]\d{2}\b")
-        for stale in ("v1.4.0 draft", "source-only", "not deployed"):
+        for stale in ("v1.5.0 draft", "source-only", "not deployed"):
             self.assertNotIn(stale,text.lower())
         self.assertIn("quickstart.py --role personal-companion --to",text)
 
@@ -59,7 +62,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
                      "docs/GETTING_STARTED.md",
                      "docs/TERMINAL.md",
                      "docs/COMPANION_HOME.md",
-                     "releases/download/v1.4.0/"):
+                     "releases/download/v1.5.0/"):
             self.assertIn(path,html)
         self.assertNotRegex(html, r"\b[HS]\d{2}\b")
         self.assertNotIn("COMMUNITY SOURCE PROJECT",html)
@@ -75,7 +78,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
             "README.md", "index.html", "site.css", "site.js", "roles.json",
             "downloads.html", "downloads.js", "downloads.json",
             "public/index.html", "public/styles.css", "public/app.js",
-            "public/catalog.json",
+            "public/catalog.json", "sitemap.xml",
         })
         selected=select_public_files(ROOT,verify_manifest=False)
         for path,row in meta["files"].items():

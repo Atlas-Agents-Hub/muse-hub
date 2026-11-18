@@ -1,28 +1,27 @@
-# Security, privacy and responsible use
+# Security and privacy
 
-This repository is a collection of **source files and local examples**. It is not a hosted agent or an OS sandbox, and it does not grant access to any account or computer.
+Keep your assistant instructions, saved records, and connected accounts under your control. Muse Hub packages preserve existing files, check imported data, and provide setup steps for the tools you choose.
 
-## Safe defaults
+## Protect your workspace
 
-- Generated packages refuse to overwrite existing user or assistant data.
-- Optional connectors, native skills, Family Link transport and scheduling are disabled or unconfigured.
-- Local SHA-256 hashes detect changes to supplied bytes; they are not publisher signatures or authenticated user consent.
-- Source descriptions and synthetic fixtures are not proof that a model executed a tool or that a recipient received a message.
+- Extract new kits into their own folders and keep your personal databases and project files separately.
+- Run Python tools from a source you trust, using an account with the filesystem and network permissions required for the task.
+- Configure each connector's account and permissions before using it. Check the recipient and destination before sharing data or changing a service.
+- Compare the downloaded package with the checksum on its release page. Review the publisher and release history when deciding which software to run.
+- After an interrupted external action, check the original service before retrying it.
 
 ## Protect your data
 
-Do not publish API keys, access tokens, host identifiers, private memory, private chat transcripts, full user profiles, personal contacts or local operation receipts. Keep actual owner credentials and machine-specific settings in separately protected storage.
+Keep API keys, access tokens, private notes, chat transcripts, personal contacts, and device settings in protected storage. Review files before sharing them and remove personal data from examples and support requests.
 
-Only run Python programs from sources you trust. Some examples execute repository tests under the invoking OS account: they can access that account's filesystem and network. **This toolkit does not provide an isolation sandbox.**
+Daily Desk and Companion Home save records in a SQLite database you choose. Protect that directory and its backups with your operating system's access controls. Use the same database path to reopen saved work, and back it up before an update.
 
-## Source and distribution
+## Updates
 
-The original public files are offered under the [MIT license](../LICENSE). The project's first-party code is published for reuse; third-party packages, media and SDKs have their own applicable terms. Private development repositories and histories are not bundled in this public distribution.
-
-A source release should contain only its intended files, accurate instructions and validated examples. Changing public documentation does not modify the bytes of previously published release ZIPs. Refer to [Releases](RELEASES.md) for distribution details.
+Use the [current release](RELEASES.md) for its matching packages, instructions, and checksums. Extract updates into a separate folder and keep your saved data until you have checked the new version.
 
 ## Report a vulnerability
 
-Follow the [security policy](../SECURITY.md) rather than placing exploitable details or credentials in a public issue. Avoid using this project to test systems without authorization.
+Follow the [security policy](../SECURITY.md) to report vulnerabilities privately. Include the affected version, steps to reproduce the issue, and a small example with sensitive data removed. Test only systems you own or are authorized to assess.
 
 [Get started](GITHUB_QUICKSTART.md) · [Connectors](CONNECTORS.md) · [Capabilities](CAPABILITIES.md)

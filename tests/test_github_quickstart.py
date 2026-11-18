@@ -1,4 +1,4 @@
-"""T30: executable GitHub zero-to-one onboarding with truthful role grades."""
+"""Create and verify specialist packages from the documented quickstart."""
 from __future__ import annotations
 from contextlib import redirect_stdout
 import importlib.util
@@ -33,39 +33,35 @@ class GitHubQuickstartTests(unittest.TestCase):
             result=load().main(argv)
         return result,json.loads(out.getvalue())
 
-    def test_all_eleven_roles_in_disposable_source_only_mode(self):
+    def test_all_fifteen_roles_in_temporary_directories(self):
         result,data=self.call(["--all"])
         self.assertEqual(result,0)
         self.assertEqual(data["schema"],"r45/github-quickstart-v1")
-        self.assertEqual(data["mode"],"DISPOSABLE_SOURCE_CHECK")
+        self.assertEqual(data["mode"],"PACKAGE_CHECK")
         self.assertEqual(data["role_count"],15)
         self.assertEqual(set(data["roles"]),set(load_registry()["presets"]))
         self.assertEqual(data["total_subchat_scopes"],45)
         self.assertEqual(data["total_disabled_skills"],120)
-        self.assertFalse(data["native_installed"])
-        self.assertFalse(data["can_publish"])
         for role,item in data["roles"].items():
             self.assertEqual(item["source_inspection"],"LOCAL_STANDALONE_MATCH",role)
-            self.assertEqual(item["offline_example"],"CONSISTENT_OFFLINE_FIXTURE_ONLY")
+            self.assertEqual(item["example_result"],"CONNECTOR_FIXTURE_PASSED")
             self.assertRegex(item["profile_source_sha256"],r"^[0-9a-f]{64}$")
             self.assertEqual(item["subchats"],3)
             self.assertEqual(item["disabled_skills"],8)
-            self.assertFalse(item["real_model_invocation"])
         self.assertEqual(list(self.folder.iterdir()),[])
 
     def test_create_one_role_in_an_absent_directory(self):
         target=self.folder/"fresh-coordinator"
         rc,output=self.call(["--role","coordinator","--to",str(target)])
         self.assertEqual(rc,0)
-        self.assertEqual(output["mode"],"CREATE_ONLY_SOURCE_PACKAGE")
+        self.assertEqual(output["mode"],"PACKAGE_CREATED")
         self.assertEqual(output["role_count"],1)
         self.assertEqual(inspect_standalone_pack(target)["status"],"LOCAL_STANDALONE_MATCH")
-        self.assertFalse(output["native_installed"])
 
     def test_no_target_creates_no_cwd_files(self):
         rc,output=self.call(["--role","garden-companion"])
         self.assertEqual(rc,0)
-        self.assertEqual(output["mode"],"DISPOSABLE_SOURCE_CHECK")
+        self.assertEqual(output["mode"],"PACKAGE_CHECK")
         self.assertEqual(list(self.folder.iterdir()),[])
 
     def test_preexisting_target_never_overwritten(self):
@@ -116,7 +112,7 @@ class GitHubQuickstartTests(unittest.TestCase):
         guide=(ROOT/"docs/EXTENDING_GENERIC_AGENTS.md").read_text(encoding="utf-8")
         for text in ("presets/catalog.json","presets/ROLE/playbook.json",
                      "src/muse_presets/role_skills.py","src/muse_presets/portable_connectors.py",
-                     "test", "default", "owner", "recovery"):
+                     "test", "permissions", "owner", "recovery"):
             self.assertIn(text,guide)
 
     def test_new_docs_exclude_private_identifiers_and_live_grants(self):
@@ -132,10 +128,8 @@ class GitHubQuickstartTests(unittest.TestCase):
 
     def test_quickstart_smoke_requires_no_secrets_or_provider(self):
         _,result=self.call(["--role","personal-companion"])
-        self.assertEqual(result["roles"]["personal-companion"]["offline_example"],
-                         "CONSISTENT_OFFLINE_FIXTURE_ONLY")
-        self.assertFalse(result["native_installed"])
-        self.assertEqual(result["provider_access"],"NONE")
+        self.assertEqual(result["roles"]["personal-companion"]["example_result"],
+                         "CONNECTOR_FIXTURE_PASSED")
         self.assertFalse(result["external_effect_authorized"])
 
     def test_quickstart_local_links_resolve_to_real_files(self):

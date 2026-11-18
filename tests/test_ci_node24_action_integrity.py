@@ -24,7 +24,7 @@ class HostedActionIntegrity(unittest.TestCase):
     def test_still_runs_all_existing_protected_platform_and_privacy_checks(self):
         for required in (
             "permissions:\n  contents: read",
-            "matrix:\n        os: [ubuntu-latest, windows-latest, macos-latest]",
+            "matrix:\n        os: [ubuntu-latest, windows-latest]",
             "fail-fast: false",
             "if: ${{ always() }}",
             "needs: [source-tests, public-quality]",
@@ -40,6 +40,16 @@ class HostedActionIntegrity(unittest.TestCase):
         self.assertNotIn("continue-on-error: true",WORKFLOW)
         self.assertNotIn("pull_request_target:",WORKFLOW)
         self.assertNotIn("id-token: write",WORKFLOW)
+
+    def test_macos_is_an_independent_manual_check(self):
+        macos=(ROOT/".github/workflows/macos.yml").read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch:",macos)
+        self.assertIn("runs-on: macos-latest",macos)
+        self.assertIn("python -B -m unittest discover -s tests -v",macos)
+        self.assertIn("python -B scripts/check_public.py",macos)
+        self.assertNotIn("macos",WORKFLOW)
+        for action,ref in re.findall(r"^\s*- uses:\s+(actions/(?:checkout|setup-python))@([^\s#]+)",macos,re.M):
+            self.assertEqual(ref,{"actions/checkout":CHECKOUT,"actions/setup-python":SETUP}[action])
 
 
 if __name__=="__main__":unittest.main()

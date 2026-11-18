@@ -8,7 +8,7 @@ Turn a creative brief into shot specifications, an exact frame timeline, asset d
 | --- | --- |
 | Normalized creative brief | Keep project settings, assets, scenes, and stable shot IDs together. |
 | Frame timeline and shot list | Coordinate shot order, duration, and asset use. |
-| Asset and task graph | Identify dependencies before production. |
+| Asset and production dependencies | Plan the order of work before production. |
 | Continuity checks | Catch contradictions in declared character and scene states. |
 | Textual HTML storyboard | Review shot descriptions in a browser. |
 | Revision comparison | See changed assets, scenes, shots, timing, and order. |
@@ -76,7 +76,7 @@ Verification reconstructs the expected artifacts from the brief and checks their
 
 An interrupted export leaves its partial output in place. Inspect it before choosing a new destination. Keep earlier briefs and outputs, and compile a revised brief into a new folder to compare versions.
 
-The runner checks its source files and input paths before execution. Use a private workspace and reviewed Python installation; isolated import mode is not an operating-system sandbox. Updates use a new verified kit while your project files stay in their existing location.
+The runner checks its source files and input paths before execution. Run reviewed code in a private workspace with the permissions you intend it to have. Updates use a new verified kit while your project files stay in their existing location.
 
 ## Developer checks
 

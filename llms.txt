@@ -1,8 +1,9 @@
 # Muse Hub
 
-> An independently developed, open-source resource hub for exploring and extending Muse. Includes 15 independent Muse assistants, each with Main and three subchats; 75 skills, 25 workflows, 100 task starters, 151 connectors, Companion Home, persistent notes, Studio, Arcade, and a 63-resource library.
+> Muse Hub is an open-source resource hub for Meta's Muse AI. Download 15 specialist assistants with Main and three subchats, choose from 461 skills, 58 workflows and 100 task starters, and browse 151 connector guides. Explore Companion Home, persistent notes, Studio, Arcade, terminal tools, and a 63-resource library.
 
 ## Start here
+
 - [All downloads](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html)
 - [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)
 - [Repository](https://github.com/atlas-origins/muse-ai-agent-presets)
@@ -11,10 +12,11 @@
 - [Terminal guide](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/TERMINAL.md)
 - [Documentation](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/README.md)
 - [Current release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest)
-- [v1.4.0 packages](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.4.0)
-- [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/SHA256SUMS)
+- [v1.5.0 packages](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0)
+- [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/SHA256SUMS)
 
 ## Journeys and discovery
+
 - [Organize your day](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/journeys/ORGANIZE_YOUR_DAY.md)
 - [Build and automate](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/journeys/BUILD_AND_AUTOMATE.md)
 - [Create something](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/journeys/CREATE_SOMETHING.md)
@@ -23,6 +25,7 @@
 - [Companion projects](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html?route=companion)
 
 ## Individual specialist homes
+
 - [Software Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/software-engineer/INSTALL.md)
 - [Data Engineering & Database Architect](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/data-engineering-architect/INSTALL.md)
 - [Automation Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/automation-engineer/INSTALL.md)
@@ -40,8 +43,9 @@
 - [Coordinator](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/coordinator/INSTALL.md)
 
 ## Skills, workflows, and tools
-- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/SKILLS.md)
-- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/WORKFLOWS.md)
+
+- [Muse AI skills](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/SKILLS.md)
+- [Muse workflows](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/WORKFLOWS.md)
 - [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/collections/muse-starters-v1/CATALOG.md)
 - [Specialist tools](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/collection/SPECIALIST_QUICKSTART.md)
 - [Connector directory](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/connectors/README.md)
@@ -52,3 +56,8 @@
 - [Guide for assistants](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/discovery/AI_AGENT_GUIDE.md)
 - [Capabilities](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/CAPABILITIES.md)
 - [Security](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/SECURITY.md)
+## Choose a resource
+
+Specialist ZIPs include instructions, subchat guides, selected skills, workflows, and a first task. Use the guides directly in Muse; use Python 3.12+ for the optional toolkit commands.
+
+The website labels resources by where you use them: Inside Muse, Included with Muse Hub, and Community project. Start with a journey for the task, then follow the setup guide for each tool or service you choose.

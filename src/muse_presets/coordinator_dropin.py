@@ -1,8 +1,4 @@
-"""Source-only portable Coordinator role pack with offline graph/evidence review.
-
-Never installs into Muse, starts an agent, creates a scheduler, assumes Omnium
-placement authority, or changes an owner's existing system files.
-"""
+"""Create a Coordinator package with project and review tools."""
 from __future__ import annotations
 
 import hashlib
@@ -243,7 +239,7 @@ def main():
             record["role_id"]!="coordinator" or
             any(record[key] is not False for key in
                 ("native_installed","native_authenticated","external_effect_authorized")) or
-            record["evidence_grade"]!="LOCAL_SOURCE_ONLY"):
+            record["evidence_grade"]!="PACKAGE_FILES"):
             return reject()
         expected=record["files_sha256"]
         if type(expected) is not dict or len(expected)>150:
@@ -406,18 +402,18 @@ def _receipt(root: Path, extras: dict[str, bytes]) -> dict:
         "native_installed":False,
         "native_authenticated":False,
         "external_effect_authorized":False,
-        "evidence_grade":"LOCAL_SOURCE_ONLY",
+        "evidence_grade":"PACKAGE_FILES",
     }
 
 
 def stage_coordinator_dropin(destination: Path) -> dict:
-    """Create a standalone source-only role bundle; no live owner state."""
+    """Create a standalone Coordinator package in a new directory."""
     target=Path(destination)
     _admitted_destination(target)
     source=_source_runtime()  # snapshot source bytes before writing destination
     target.mkdir(exist_ok=False)
     marker=target/"STAGING_INCOMPLETE"
-    marker.write_text("Local source stage incomplete; do not install.\n",encoding="utf-8")
+    marker.write_text("Package creation was interrupted. Inspect the existing files before resuming.\n",encoding="utf-8")
     render_preset("coordinator",target/"profile",display_name="Coordinator")
     extras={**source,**_sidecars(target/"profile")}
     for relative,body in sorted(extras.items()):
@@ -436,7 +432,7 @@ def stage_coordinator_dropin(destination: Path) -> dict:
     if inspect_coordinator_dropin(target)["status"]!="LOCAL_COORDINATOR_MATCH":
         raise ValueError("LOCAL_PACK_READBACK_REFUSED")
     return {
-        "status":"SOURCE_ONLY_COORDINATOR_STAGED",
+        "status":"COORDINATOR_FILES_CREATED",
         "role_id":"coordinator",
         "subchat_count":len(ROOMS),
         "custom_skill_count":len(SKILLS),

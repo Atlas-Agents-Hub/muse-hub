@@ -1,8 +1,4 @@
-"""Read-only local Muse custom-skill catalog reconciliation.
-
-A skill's source and local registry are not a provider-issued skill-search hit,
-model tool call, owner grant, or recipient receipt. No host writes are possible.
-"""
+"""Inspect custom skill files and prepare registration proposals."""
 from __future__ import annotations
 
 import hashlib
@@ -29,7 +25,7 @@ def _unsafe_source_path(path: Path) -> bool:
 
     Check lexical components before absolute normalization; the only aliases
     allowed are the standard root-owned macOS paths verified by the shared
-    source-only filesystem predicate. This is not an atomic openat guarantee.
+    filesystem inspection. This is not an atomic openat guarantee.
     """
     if '..' in path.parts:
         return True
@@ -247,7 +243,7 @@ def inspect_skill_bindings(
         "schema": "r32/skill-binding-audit-v1",
         "host_kind": "personal-hatch",
         "status": status,
-        "evidence_grade": "UNATTESTED_LOCAL_SOURCE_ONLY",
+        "evidence_grade": "FILES_INSPECTED",
         "registry_sha256": registry_sha,
         "skills": rows,
         "authority": {

@@ -1,258 +1,139 @@
-"""Read-only compatibility check for two preserved instruction collections.
-
-Checks source consistency, not publisher identity, native installation or model
-performance. This is not a registry writer, installer, dispatcher or new catalog.
-"""
+"""Validate specialist procedure IDs, role aliases, and links to the skill library."""
 from __future__ import annotations
 import argparse
-import hashlib
 import importlib.util
 import json
 from pathlib import Path
-import re
 import sys
 
-ROOT=Path(__file__).resolve().parents[1]
-SPEC=importlib.util.spec_from_file_location('collection_source_reader',ROOT/'tools/muse_collection.py')
-if SPEC is None or SPEC.loader is None:raise RuntimeError('COLLECTION_READER_UNAVAILABLE')
-_collection=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(_collection)
-read_json=_collection.read_json
-HEX=re.compile(r'^[0-9a-f]{64}$')
-SHA=re.compile(r'^[0-9a-f]{40}$')
-ALIASES={'data-engineer':'data-engineering-architect','reliability-engineer':'infrastructure-reliability-engineer'}
-SHARED={'evidence_audit','safe_resume','research_verification','consent_and_effects','quality_handoff'}
-REVISION_MANIFEST='collections/muse-starters-v1/PUBLIC_REVISIONS.json'
-# An edited local manifest cannot authorize a new current source hash.
-REVISION_MANIFEST_SHA256='c1668f5caf0c32d7db46be84aadeebf74643181bd913fffb8eb02d7d763afd80'
-PREVIOUS_REVISION_PATH='docs/history/public-revisions-v1.1.0.json.txt'
-PREVIOUS_REVISION_SHA256='e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324'
-PUBLIC_BASELINE_SHA256='755ffbbf3bdb8abeb97bd69a6b59f616d4acd535a292b3228afff8e8e7cfe589'
-PROMOTION_PROVENANCE_SHA256='f8bde97a22c6002d38efc5d8c5edf96afdf3fa93585333fd1702e8b44e2324b5'
+ROOT = Path(__file__).resolve().parents[1]
+SPEC = importlib.util.spec_from_file_location("collection_source_reader", ROOT / "tools/muse_collection.py")
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError("COLLECTION_READER_UNAVAILABLE")
+_collection = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(_collection)
+read_json = _collection.read_json
+ALIASES = {"data-engineer": "data-engineering-architect", "reliability-engineer": "infrastructure-reliability-engineer"}
+SHARED = {"evidence_audit", "safe_resume", "research_verification", "consent_and_effects", "quality_handoff"}
+SCHEMA = "muse-collection-public-compatibility/v2"
 
-class CompatibilityError(ValueError):pass
 
-def require(condition:bool,reason:str)->None:
-    if not condition:raise CompatibilityError(reason)
+class CompatibilityError(ValueError):
+    pass
 
-def validate_mapping(value:dict,legacy_ids:set[str],canonical_ids:set[str])->None:
-    fields={'schema','public_base','collection_skill_count','legacy_procedure_count',
-      'combined_unique_capability_count','role_count','starter_configurations',
-      'workflow_recipes','native_installation','model_comparisons','role_aliases','procedure_links'}
-    require(type(value) is dict and set(value)==fields,'SCHEMA')
-    require(value['schema']=='muse-collection-public-compatibility/v1','SCHEMA')
-    require(type(value['public_base']) is str and bool(SHA.fullmatch(value['public_base'])),'SCHEMA')
-    for key,n in [('collection_skill_count',75),('legacy_procedure_count',50),
-                  ('role_count',15),('starter_configurations',100),('workflow_recipes',25)]:
-        require(type(value[key]) is int and value[key]==n,'COUNT')
-    require(value['combined_unique_capability_count'] is None,'COUNT')
-    require(len(legacy_ids)==50 and len(canonical_ids)==75,'COUNT')
-    require(value['native_installation']=='NOT_PERFORMED' and
-            value['model_comparisons']=='NOT_PERFORMED_BY_THIS_PROMOTION','NATIVE')
-    require(value['role_aliases']==ALIASES,'ALIAS')
-    links=value['procedure_links']
-    require(type(links) is list and len(links)==50,'LEGACY')
-    keys={'legacy_id','role','method','disposition','related_collection_skills',
-          'claims_behavioral_equivalence','reason'}
-    seen=set()
+
+def require(condition: bool, reason: str) -> None:
+    if not condition:
+        raise CompatibilityError(reason)
+
+
+def validate_mapping(value: dict, procedure_ids: set[str], skill_ids: set[str]) -> None:
+    require(type(value) is dict and set(value) == {"schema", "role_aliases", "procedure_links"}, "SCHEMA")
+    require(value["schema"] == SCHEMA, "SCHEMA")
+    require(value["role_aliases"] == ALIASES, "ALIAS")
+    links = value["procedure_links"]
+    require(type(links) is list and len(links) == len(procedure_ids), "PROCEDURE_COUNT")
+    seen = set()
     for row in links:
-        require(type(row) is dict and set(row)==keys,'SCHEMA')
-        sid=row['legacy_id'];require(type(sid) is str and sid in legacy_ids and sid not in seen,'LEGACY');seen.add(sid)
-        require(row['claims_behavioral_equivalence'] is False,'EQUIVALENCE')
-        disposition='KEEP_COMPATIBILITY' if sid in SHARED else 'KEEP_ROLE_METHOD'
-        require(row['disposition']==disposition,'DISPOSITION')
-        related=row['related_collection_skills']
-        require(type(related) is list and 1<=len(related)<=5 and
-                all(type(x) is str for x in related),'RELATED')
-        require(len(related)==len(set(related)) and set(related)<=canonical_ids,'RELATED')
-        require(type(row['reason']) is str and 20<=len(row['reason'])<=800,'REASON')
-        require(type(row['role']) is str and type(row['method']) is str,'SCHEMA')
-    require(seen==legacy_ids,'LEGACY')
+        require(type(row) is dict and set(row) == {"procedure_id", "role", "method", "related_collection_skills"}, "SCHEMA")
+        identifier = row["procedure_id"]
+        require(type(identifier) is str and identifier in procedure_ids and identifier not in seen, "PROCEDURE_ID")
+        seen.add(identifier)
+        require(type(row["role"]) is str and bool(row["role"]) and type(row["method"]) is str and bool(row["method"]), "PROCEDURE_FIELDS")
+        related = row["related_collection_skills"]
+        require(type(related) is list and 1 <= len(related) <= 64 and all(type(x) is str for x in related), "RELATED")
+        require(len(related) == len(set(related)) and set(related) <= skill_ids, "RELATED")
+    require(seen == procedure_ids, "PROCEDURE_ID")
 
-def _relative(root:Path,name:str)->Path:
-    require(type(name) is str and name and not name.startswith('/') and
-            '\\' not in name and ':' not in name and
-            all(x not in ('','.','..') for x in name.split('/')),'UNSAFE_PATH')
-    p=root/name
-    _collection._safe_path(p)
-    require(p.resolve().is_relative_to(root.resolve()),'UNSAFE_PATH')
-    return p
 
-def _bytes(root:Path,name:str)->bytes:
-    return _collection._bounded_source(_relative(root,name),2_000_000)
+def _relative(root: Path, name: str) -> Path:
+    require(type(name) is str and bool(name) and not name.startswith("/") and "\\" not in name and ":" not in name and all(x not in ("", ".", "..") for x in name.split("/")), "UNSAFE_PATH")
+    path = root / name
+    _collection._safe_path(path)
+    require(path.resolve().is_relative_to(root.resolve()), "UNSAFE_PATH")
+    return path
 
-def _digest(raw:bytes)->str:return hashlib.sha256(raw).hexdigest()
 
-def validate_revisions(value:dict,baseline:dict,provenance:dict)->dict[str,dict]:
-    """Validate the closed historical/current mapping; bytes are checked below."""
-    fields={'schema','historical_source_commit','review_base_commit',
-            'public_baseline_sha256','promotion_provenance_sha256',
-            'reviewed_file_count','entries','previous_revision_path','previous_revision_sha256'}
-    require(type(value) is dict and set(value)==fields,'REVIEWED_REVISIONS_SCHEMA')
-    require(value['schema']=='muse-collection-reviewed-source-revisions/v2',
-            'REVIEWED_REVISIONS_SCHEMA')
-    require(value['historical_source_commit']=='491d6ceeb9a76fd1350f06d645dc0ed6131dda30'
-            and value['review_base_commit']=='49fb71a162173ac2dfb2c0f805e36109c34ac042',
-            'REVIEWED_REVISIONS_LINEAGE')
-    require(value['previous_revision_path']==PREVIOUS_REVISION_PATH and
-            value['previous_revision_sha256']==PREVIOUS_REVISION_SHA256,
-            'REVIEWED_REVISIONS_PREVIOUS')
-    require(value['public_baseline_sha256']==PUBLIC_BASELINE_SHA256 and
-            value['promotion_provenance_sha256']==PROMOTION_PROVENANCE_SHA256,
-            'REVIEWED_REVISIONS_LEDGER')
-    entries=value['entries']
-    require(type(entries) is list and type(value['reviewed_file_count']) is int
-            and value['reviewed_file_count']==len(entries)
-            and 1<=len(entries)<=len(baseline['files'])+len(provenance['incoming_files']),
-            'REVIEWED_REVISIONS_COUNT')
-    result={'public':{},'promotion':{}}
-    pins={'public':baseline['files'],
-          'promotion':{name:row['sha256'] for name,row in provenance['incoming_files'].items()}}
-    seen=set()
-    keys={'ledger','original_path','archive_path','historical_sha256',
-          'current_sha256','change_kind'}
-    kinds={'CURRENT_RELEASE_METADATA','INSTRUCTION_PRESENTATION',
-           'PUBLIC_GUIDE_COPY','RELEASE_PACKAGE_COMPOSITION','GENERATED_COLLECTION_OUTPUT',
-           'REVIEWED_SOURCE_PIN_UPDATE','REVIEWED_TEST_EXPECTATIONS'}
-    for row in entries:
-        require(type(row) is dict and set(row)==keys,'REVIEWED_REVISIONS_SCHEMA')
-        ledger=row['ledger'];name=row['original_path']
-        require(type(ledger) is str and ledger in result,'REVIEWED_REVISIONS_LEDGER')
-        require(type(name) is str and name not in seen,'REVIEWED_REVISIONS_PATH')
-        require(name in pins[ledger] and row['historical_sha256']==pins[ledger][name],
-                'REVIEWED_REVISIONS_HISTORY')
-        require(row['archive_path']=='docs/history/source-revisions/'+name+'.txt',
-                'REVIEWED_REVISIONS_ARCHIVE')
-        require(all(type(row[key]) is str and HEX.fullmatch(row[key])
-                    for key in ('historical_sha256','current_sha256')) and
-                row['current_sha256']!=row['historical_sha256'],
-                'REVIEWED_REVISIONS_HASH')
-        require(type(row['change_kind']) is str and row['change_kind'] in kinds,
-                'REVIEWED_REVISIONS_KIND')
-        seen.add(name);result[ledger][name]=row
+def verify_current_manifest(root: Path) -> int:
+    """Check the current distribution after its manifest has been refreshed."""
+    source = str(ROOT / "src")
+    if source not in sys.path:
+        sys.path.insert(0, source)
+    from muse_presets.public_export import select_public_files
+    _relative(root, "PUBLIC_SOURCE_MANIFEST.json")
+    require((root / "PUBLIC_SOURCE_MANIFEST.json").is_file(), "PUBLIC_MANIFEST_MISSING")
+    return len(select_public_files(root))
+
+
+def current_inventory(data: dict) -> dict:
+    """Count the collection entries and worked practice artifacts actually present."""
+    cases = data.get("depth_cases", [])
+    specialists = data.get("specialists", [])
+    return {
+        "schema": "muse-hub/library-inventory/v1",
+        "skills": len(data["skills"]),
+        "workflows": len(data["workflows"]),
+        "task_starters": len(data["starters"]),
+        "specialists": len(specialists),
+        "skills_with_practice_cases": len({case["skill_id"] for case in cases}),
+        "practice_cases": len(cases),
+        "positive_practice_examples": sum("reference_output" in case for case in cases),
+        "negative_practice_examples": sum("wrong_output" in case for case in cases),
+        "task_evaluation_specs": len(data.get("evaluation_cases", [])),
+        "executable_specialist_extensions": sum(role.get("kind") == "executable-extension" for role in specialists),
+    }
+
+
+def check_repository(root: Path = ROOT, *, verify_manifest: bool = False) -> dict:
+    root = Path(root)
+    require(root.resolve() == ROOT.resolve(), "SOURCE_ROOT_MISMATCH")
+    prefix = "collections/muse-starters-v1/"
+    data = _collection.load_collection(root / prefix)
+    mapping = read_json(root / (prefix + "PUBLIC_COMPATIBILITY.json"))
+    registry = read_json(root / "presets/catalog.json")
+    roles = registry["presets"]
+    require(type(roles) is list and all(type(x) is str for x in roles) and len(roles) == len(set(roles)) == 15, "ROLE_COUNT")
+    source = str(root / "src")
+    if source not in sys.path:
+        sys.path.insert(0, source)
+    from muse_presets.role_skills import skill_id, SHARED_SKILLS
+    require(set(SHARED_SKILLS) == SHARED, "SHARED_IDS_CHANGED")
+    expected = {identifier: ("shared", identifier) for identifier in SHARED_SKILLS}
+    for role in roles:
+        book = read_json(_relative(root, "presets/" + role + "/playbook.json"))
+        methods = book.get("methods")
+        require(book.get("role_id") == role and type(methods) is list and len(methods) == 3, "ROLE_METHOD_COUNT")
+        for method in methods:
+            require(type(method) is dict and type(method.get("id")) is str, "ROLE_METHOD_ID")
+            identifier = skill_id(role, method["id"])
+            require(identifier not in expected, "DUPLICATE_PROCEDURE")
+            expected[identifier] = (role, method["id"])
+    skills = {item["id"] for item in data["skills"]}
+    validate_mapping(mapping, set(expected), skills)
+    for row in mapping["procedure_links"]:
+        require((row["role"], row["method"]) == expected[row["procedure_id"]], "PROCEDURE_SOURCE_JOIN")
+    result = {"status": "COLLECTION_COMPATIBILITY_VERIFIED", "roles": len(roles),
+              "collection_skills": len(skills), "procedures": len(expected),
+              "starters": len(data["starters"]), "workflows": len(data["workflows"])}
+    if verify_manifest:
+        result["verified_source_files"] = verify_current_manifest(root)
     return result
 
 
-def _reviewed_revisions(root:Path,baseline:dict,provenance:dict)->dict[str,dict]:
-    raw=_bytes(root,REVISION_MANIFEST)
-    require(_digest(raw)==REVISION_MANIFEST_SHA256,'REVIEWED_REVISIONS_MANIFEST_DRIFT')
-    require(_digest(_bytes(root,PREVIOUS_REVISION_PATH))==PREVIOUS_REVISION_SHA256,
-            'REVIEWED_REVISIONS_PREVIOUS_DRIFT')
-    # Parse the same byte sequence that passed the code-pinned digest check.
-    value=json.loads(raw.decode('utf-8'))
-    require(_digest(_bytes(root,'collections/muse-starters-v1/PUBLIC_BASELINE.json'))
-            ==PUBLIC_BASELINE_SHA256,'PUBLIC_BASELINE_LEDGER_DRIFT')
-    require(_digest(_bytes(root,'collections/muse-starters-v1/PROMOTION_PROVENANCE.json'))
-            ==PROMOTION_PROVENANCE_SHA256,'PROMOTION_PROVENANCE_LEDGER_DRIFT')
-    revisions=validate_revisions(value,baseline,provenance)
-    # Every declared historical archive is verified, including role-guide
-    # copies also retained by the earlier migration manifests below.
-    for ledger,rows in revisions.items():
-        for name,row in rows.items():
-            require(_digest(_bytes(root,row['archive_path']))==row['historical_sha256'],
-                    ('PUBLIC_SOURCE_DRIFT:' if ledger=='public' else 'IMPORTED_SOURCE_DRIFT:')+name)
-    return revisions
-
-
-def check_repository(root:Path=ROOT)->dict:
-    root=Path(root)
-    # Never execute modules from a caller-selected tree. The checked source must
-    # be the tree containing this program; an extracted copy is checked in place.
-    require(root.resolve()==ROOT.resolve(),'SOURCE_ROOT_MISMATCH')
-    prefix='collections/muse-starters-v1/'
-    data=_collection.load_collection(root/prefix)
-    mapping=read_json(root/(prefix+'PUBLIC_COMPATIBILITY.json'))
-    registry=read_json(root/'presets/catalog.json');roles=registry['presets']
-    require(type(roles) is list and len(roles)==len(set(roles))==15,'ROLE_COUNT')
-    source=str(root/'src')
-    if source not in sys.path:sys.path.insert(0,source)
-    from muse_presets.role_skills import skill_id,SHARED_SKILLS
-    require(set(SHARED_SKILLS)==SHARED,'SHARED_IDS_CHANGED')
-    expected={sid:('shared',sid) for sid in SHARED_SKILLS}
-    for role in roles:
-        book=read_json(_relative(root,'presets/'+role+'/playbook.json'))
-        require(book['role_id']==role and len(book['methods'])==3,'ROLE_METHOD_COUNT')
-        for method in book['methods']:
-            sid=skill_id(role,method['id']);require(sid not in expected,'DUPLICATE_LEGACY')
-            expected[sid]=(role,method['id'])
-    validate_mapping(mapping,set(expected),{s['id'] for s in data['skills']})
-    for row in mapping['procedure_links']:
-        require((row['role'],row['method'])==expected[row['legacy_id']],'LEGACY_SOURCE_JOIN')
-    baseline=read_json(root/(prefix+'PUBLIC_BASELINE.json'))
-    provenance=read_json(root/(prefix+'PROMOTION_PROVENANCE.json'))
-    require(baseline['schema']=='muse-collection-public-baseline/v1' and
-            baseline['source_commit']==mapping['public_base'],'PUBLIC_BASELINE')
-    require(type(baseline['files']) is dict and len(baseline['files'])==198,'PUBLIC_BASELINE')
-    revisions=_reviewed_revisions(root,baseline,provenance)
-    # The original role guides are retained byte-for-byte in versioned
-    # archives; current user-facing READMEs/INSTALLs may evolve.
-    historical={}
-    for folder,leaf in (('v1-install','INSTALL.md'),
-                        ('v1-role-readmes','README.md')):
-        manifest=read_json(root/('docs/history/'+folder+'/MIGRATION_MANIFEST.json'))
-        entries=manifest.get('entries') if type(manifest) is dict else None
-        require(type(entries) is list and len(entries)==15,
-                'HISTORICAL_MIGRATION_MISSING:'+folder)
-        for entry in entries:
-            require(type(entry) is dict,'HISTORICAL_ENTRY_INVALID')
-            original=entry.get('original_path')
-            archived=entry.get('archive_path')
-            require(type(original) is str and type(archived) is str,
-                    'HISTORICAL_ENTRY_INVALID')
-            role=original.removeprefix('presets/').removesuffix('/'+leaf)
-            require(role in roles and original=='presets/'+role+'/'+leaf
-                    and archived=='docs/history/'+folder+'/'+role+'.txt'
-                    and entry.get('sha256')==baseline['files'].get(original)
-                    and original not in historical,
-                    'HISTORICAL_ENTRY_INVALID')
-            historical[original]=archived
-    require(len(historical)==30,'HISTORICAL_MIGRATION_COUNT')
-    for name,h in baseline['files'].items():
-        require(type(h) is str and bool(HEX.fullmatch(h)),'PUBLIC_BASELINE')
-        revision=revisions['public'].get(name)
-        checked=historical.get(name,revision['archive_path'] if revision else name)
-        require(_digest(_bytes(root,checked))==h,'PUBLIC_SOURCE_DRIFT:'+name)
-        if revision:
-            require(_digest(_bytes(root,name))==revision['current_sha256'],
-                    'REVIEWED_SOURCE_DRIFT:'+name)
-    require(set(provenance)=={'schema','source_kind','private_history_included','upstream_code_imported','scope','incoming_files'},'PROVENANCE_SCHEMA')
-    require(provenance['schema']=='muse-collection-promotion/v1' and
-            provenance['source_kind']=='OWNER_AUTHORIZED_FIRST_PARTY','PROVENANCE_KIND')
-    require(provenance['private_history_included'] is False and
-            provenance['upstream_code_imported'] is False,'PROVENANCE_AUTHORITY')
-    rows=provenance['incoming_files'];require(type(rows) is dict and 1<=len(rows)<=750,'PROVENANCE_COUNT')
-    for name,row in rows.items():
-        require(type(row) is dict and set(row)=={'sha256','source_sha256','rights','disposition'},'PROVENANCE_SCHEMA')
-        require(all(type(row[k]) is str and HEX.fullmatch(row[k]) for k in ['sha256','source_sha256']),'PROVENANCE_HASH')
-        require(row['rights'] in {'PROJECT_MIT_ORIGINAL','REFERENCE_ONLY_PUBLIC_SOURCE_METADATA'},'PROVENANCE_RIGHTS')
-        require(row['disposition'] in {'BYTE_PRESERVED','REVIEWED_PUBLIC_ADAPTATION'},'PROVENANCE_DISPOSITION')
-        # Pin the accepted promotion bytes separately from its revised,
-        # current reader-facing example guide.
-        revision=revisions['promotion'].get(name)
-        archived=('docs/history/promotion-source/SPECIALIST_QUICKSTART.txt'
-                  if name=='docs/collection/SPECIALIST_QUICKSTART.md'
-                  else revision['archive_path'] if revision else name)
-        require(_digest(_bytes(root,archived))==row['sha256'],
-                'IMPORTED_SOURCE_DRIFT:'+name)
-        if archived!=name:
-            require((root/name).is_file(),'CURRENT_PROMOTION_GUIDE_MISSING')
-        if revision:
-            require(_digest(_bytes(root,name))==revision['current_sha256'],
-                    'REVIEWED_SOURCE_DRIFT:'+name)
-        if row['disposition']=='BYTE_PRESERVED':require(row['sha256']==row['source_sha256'],'PROVENANCE_HASH')
-    return {'status':'COLLECTION_COMPATIBILITY_VERIFIED','role_count':15,
-            'collection_skills':len(data['skills']),'legacy_procedures':len(expected),
-            'combined_unique_capabilities':None,'starters':len(data['starters']),
-            'workflows':len(data['workflows']),'preserved_public_files':len(baseline['files']),
-            'incoming_files_verified':len(rows),'native_installed':False,
-            'reviewed_source_revisions':sum(len(items) for items in revisions.values()),
-            'model_called':False,'external_effects':False,
-            'proof_limit':'SOURCE_SELF_CONSISTENCY_NOT_PUBLISHER_IDENTITY_OR_BEHAVIORAL_EQUIVALENCE'}
-
-def main(argv=None)->int:
-    argparse.ArgumentParser(description=__doc__).parse_args(argv)
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--verify-manifest", action="store_true", help="Also verify current public file hashes after refreshing the release manifest")
+    mode.add_argument("--inventory", action="store_true", help="Print the current library and practice counts")
+    args = parser.parse_args(argv)
     try:
-        print(json.dumps(check_repository(),sort_keys=True,indent=2));return 0
-    except (ValueError,OSError,KeyError,TypeError,UnicodeError) as exc:
-        print(json.dumps({'status':'REVIEW_REQUIRED','reason':str(exc),'native_installed':False}),file=sys.stderr);return 2
+        result = current_inventory(_collection.load_collection()) if args.inventory else check_repository(verify_manifest=args.verify_manifest)
+        print(json.dumps(result, sort_keys=True, indent=2))
+        return 0
+    except (ValueError, OSError, KeyError, TypeError, UnicodeError) as exc:
+        print(json.dumps({"status": "FAIL", "reason": str(exc)}), file=sys.stderr)
+        return 2
 
-if __name__=='__main__':raise SystemExit(main())
+
+if __name__ == "__main__":
+    raise SystemExit(main())

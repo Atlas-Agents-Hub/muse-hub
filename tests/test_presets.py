@@ -1,3 +1,4 @@
+import hashlib
 import json
 import tempfile
 import unittest
@@ -7,7 +8,7 @@ from muse_presets.catalog import load_registry, load_preset, validate_catalog, r
 from muse_presets.family import propose_handoff, verify_finding, FamilyLinkRefusal
 
 class PresetCatalogTests(unittest.TestCase):
-    def test_eleven_unique_specialists_and_one_service(self):
+    def test_fifteen_unique_specialists_and_one_service(self):
         reg = load_registry()
         self.assertEqual(len(reg['presets']), 15)
         self.assertEqual(len(set(reg['presets'])), 15)
@@ -36,7 +37,14 @@ class PresetCatalogTests(unittest.TestCase):
             self.assertEqual({x.name for x in target.iterdir()}, expected)
             self.assertIn('My Garden Guide', (target/'IDENTITY.md').read_text())
             self.assertEqual(json.loads((target/'FAMILY_LINK.json').read_text())['enabled'], False)
-            self.assertIn('NOT an installed Muse runtime', (target/'RECEIPT.json').read_text())
+            receipt = json.loads((target/'RECEIPT.json').read_text())
+            self.assertEqual(receipt['status'], 'PROFILE_CREATED')
+            self.assertEqual(receipt['preset_id'], 'garden-companion')
+            self.assertEqual(receipt['display_name'], 'My Garden Guide')
+            self.assertEqual(receipt['rendered_sha256'], {
+                name: hashlib.sha256((target/name).read_bytes()).hexdigest()
+                for name in expected - {'RECEIPT.json'}
+            })
 
     def test_render_does_not_overwrite_private_user_data(self):
         with tempfile.TemporaryDirectory() as tmp:

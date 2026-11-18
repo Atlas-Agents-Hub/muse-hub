@@ -1,9 +1,4 @@
-"""Source-only Coordinator graph and evidence assertion reviewer.
-
-Consumes an already proposed workgraph. It is NOT a mission compiler,
-scheduler, allocator, grant issuer, provider receipt service or remote sender.
-No effects, mutations, network access, or owner identities are created.
-"""
+"""Validate a proposed workgraph, dependencies, and evidence assertions."""
 from __future__ import annotations
 
 import hashlib

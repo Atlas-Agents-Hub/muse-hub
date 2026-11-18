@@ -29,7 +29,7 @@ class InstallerDistributionTests(unittest.TestCase):
                                    timeout=30,cwd=extracted)
             self.assertEqual(created.returncode,0,created.stdout+created.stderr)
             info=json.loads(created.stdout)
-            self.assertEqual(info['status'],'SOURCE_ONLY_TOY_EXTENSION_STAGED')
+            self.assertEqual(info['status'],'TOY_EXTENSION_FILES_CREATED')
             self.assertFalse(info['training_started'])
             inspect=subprocess.run([sys.executable,'-I','-B',str(cli),'inspect','--root',str(stage),
                                     '--stage-sha256',info['stage_receipt_sha256']],

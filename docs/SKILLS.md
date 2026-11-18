@@ -1,6 +1,8 @@
 # Skills and workflows
 
-Choose a method for your current task. Muse Hub includes **75 skills**, **25 workflows**, and **100 task starters** covering engineering, research, data, design, creative work, and everyday planning.
+Choose a method for your current task. Muse Hub includes **461 skills**, **58 workflows**, and **100 task starters** covering engineering, research, data, design, creative work, and everyday planning.
+
+[Browse every skill](../collections/muse-starters-v1/SKILL_INDEX.md) · [Find skills by specialist](collection/SPECIALIST_LIBRARY.md) · [Tool guides](tools/README.md)
 
 ## Choose and use a skill
 

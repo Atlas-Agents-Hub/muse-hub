@@ -2,7 +2,8 @@ from pathlib import Path
 import json,copy,importlib.util,unittest,tempfile,subprocess,sys,os
 ROOT=Path(__file__).resolve().parents[1];C=ROOT/'collections/muse-starters-v1/r4'
 spec=importlib.util.spec_from_file_location('r4_adverse_checks',C/'r4_checks.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
-CASES={c['id']:c for c in json.loads((C/'R4_CASES.json').read_text(encoding='utf-8'))}
+SKILL_IDS={row['id'] for row in json.loads((C.parent/'skills.json').read_text(encoding='utf-8')) if row.get('depth',{}).get('revision')=='R4'}
+CASES={c['id']:c for c in json.loads((C.parent/'depth_cases.json').read_text(encoding='utf-8')) if c['skill_id'] in SKILL_IDS}
 def case(sid):return copy.deepcopy(CASES[sid+'-r4-standard'])
 class Adverse(unittest.TestCase):
  def test_boolean_not_capacity(self):

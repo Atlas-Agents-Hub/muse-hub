@@ -1,8 +1,4 @@
-"""Build an independent, history-free public GitHub source snapshot.
-
-Excludes private execution-control files and their tests; preserves the generic
-product code and consumer regression tests. Export is not publication approval.
-"""
+"""Build a reproducible Muse Hub source package and verify its file inventory."""
 from __future__ import annotations
 import hashlib
 import json
@@ -11,14 +7,12 @@ import tempfile
 import zipfile
 from .neutrality import REVIEWED_TEXT_FILES, audit_public_tree
 
-SCHEMA="r46/public-source-snapshot-v1"
+SCHEMA="muse-source-package/v2"
 PUBLIC_DIRS=frozenset({
     ".github", "docs", "examples", "presets", "scripts",
     "services", "src", "templates", "tests", "skills", "collections", "tools", "hub", "kits",
 })
-# Only the source-reviewed static website may accompany the existing Hub
-# scope document. No dynamic server, private donor, image, credential or binary
-# is admitted by a directory-prefix rule.
+# Website and kit assets have explicit file inventories.
 PUBLIC_HUB_FILES=frozenset({
     "hub/README.md",
     "hub/site/INTEGRITY.json",
@@ -34,9 +28,9 @@ PUBLIC_HUB_FILES=frozenset({
     "hub/site/roles.json",
     "hub/site/site.css",
     "hub/site/site.js",
+    "hub/site/sitemap.xml",
 })
-# Only H12's separately source-reviewed, proposal-only contract files.
-# Other kit families must be admitted through their own explicit review.
+# Kit files have explicit package entrypoints and dependency manifests.
 PUBLIC_KITS_FILES=frozenset({
     "kits/family-handoff/README.md",
     "kits/family-handoff/envelope-contract.json",
@@ -86,8 +80,8 @@ SENSITIVE_SUFFIX=frozenset({
     ".log",".bak",".backup",".tar",".gz",".7z",
 })
 MAX_FILE_BYTES=2_000_000
-MAX_FILES=2048  # Bounded expansion for source-reviewed Hub kits; other privacy/size gates unchanged.
-MAX_TOTAL_BYTES=20_000_000
+MAX_FILES=12000
+MAX_TOTAL_BYTES=80_000_000
 
 class PublicExportError(ValueError):
     pass
@@ -175,8 +169,8 @@ def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
             if any(part in PRIVATE_EXCLUDED_DIRS for part in relative.parts):
                 continue
             name=relative.as_posix()
-            if ((entry.name=="collections" and not name.startswith("collections/muse-starters-v1/"))
-                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py", "tools/hub_journeys.py", "tools/prioritize.py", "tools/accessibility_check.py"})
+            if ((entry.name=="collections" and not (name.startswith(("collections/muse-starters-v1/","collections/library/")) or name=='collections/tool-guides.json'))
+                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/skill_library.py", "tools/tool_guides.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py", "tools/hub_journeys.py", "tools/prioritize.py", "tools/accessibility_check.py"})
                 or (entry.name=="hub" and name not in PUBLIC_HUB_FILES)
                 or (entry.name=="kits" and name not in PUBLIC_KITS_FILES)):
                 raise PublicExportError("UNAPPROVED_COLLECTION_PATH")
@@ -194,7 +188,8 @@ def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
             or existing_manifest.get("schema")!=SCHEMA
             or existing_manifest.get("files")!=expected_files
             or existing_manifest.get("source_file_count")!=len(expected_files)
-            or existing_manifest.get("private_git_history_excluded") is not True):
+            or set(existing_manifest)!={'schema','release_kind','source_file_count','files'}
+            or existing_manifest.get('release_kind')!='SOURCE_PACKAGE'):
             raise PublicExportError("STALE_OR_FORGED_PUBLIC_MANIFEST")
     return values
 
@@ -212,15 +207,9 @@ def export_public_snapshot(root:Path,destination:Path,*,
     files=select_public_files(root)
     manifest={
         "schema":SCHEMA,
-        "release_kind":"GITHUB_SOURCE_ONLY",
+        "release_kind":"SOURCE_PACKAGE",
         "source_file_count":len(files),
         "files":{name:_sha(raw) for name,raw in files.items()},
-        "native_host_verified":False,
-        "public_git_pushed":False,
-        "private_git_history_excluded":True,
-        "internal_control_plane_excluded":True,
-        "owner_state_included":False,
-        "publisher_approval_granted":False,
     }
     with tempfile.TemporaryDirectory(prefix="generic-public-audit-") as scratch:
         stage=Path(scratch)
@@ -258,12 +247,8 @@ def export_public_snapshot(root:Path,destination:Path,*,
         if observed!=manifest:
             raise PublicExportError("PUBLIC_MANIFEST_MISMATCH")
     return {
-        "status":"CLEAN_GITHUB_SOURCE_EXPORTED",
+        "status":"SOURCE_PACKAGE_CREATED",
         "sha256":_sha(destination.read_bytes()),
         "bytes":destination.stat().st_size,
         "file_count":len(files),
-        "history_omitted":True,
-        "native_host_verified":False,
-        "public_git_pushed":False,
-        "approval":"SOURCE_INTEGRITY_ONLY_NOT_PUBLICATION_AUTHORITY",
     }

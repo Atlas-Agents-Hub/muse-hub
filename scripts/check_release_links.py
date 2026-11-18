@@ -96,7 +96,7 @@ def check_proof(release: dict, directory: dict, manifest_raw: bytes, checksums_r
             raise ValueError('Package manifest hash or size mismatch: ' + name)
     records = manifest['downloads']
     all_records = []
-    for kind, key in (('specialist', 'specialists'), ('skill', 'skills'), ('workflow', 'workflows')):
+    for kind, key in (('specialist', 'specialists'), ('skill', 'skills'), ('workflow', 'workflows'), ('tool-guide','tool-guides')):
         rows = records[key]
         expected = {row['id']: row['asset'] for row in directory['items'] if row['kind'] == kind}
         actual = {row['id']: row['asset'] for row in rows}

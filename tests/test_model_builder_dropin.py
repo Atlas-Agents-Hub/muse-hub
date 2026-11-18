@@ -24,7 +24,7 @@ class ModelBuilderDropinTests(unittest.TestCase):
     def stage(self):
         p=self.root/"model-builder"
         r=stage_model_builder_dropin(p)
-        self.assertEqual(r["status"],"SOURCE_ONLY_MODEL_BUILDER_STAGED")
+        self.assertEqual(r["status"],"MODEL_BUILDER_FILES_CREATED")
         return p
 
     def execute(self,pack,skill,operation,data=None):

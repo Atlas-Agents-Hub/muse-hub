@@ -7,12 +7,7 @@
       "The result serves the user’s actual goal rather than a substituted infrastructure project.",
       "Already answered questions are not repeated.",
       "No missing optional service blocks unrelated work."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "source-and-custody",
@@ -22,12 +17,7 @@
       "Every important factual claim has a supporting location or an explicit inference label.",
       "A hash is not represented as proof of authorship or permission.",
       "Private data and unrelated source content are excluded from the handoff."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "bounded-review",
@@ -37,12 +27,7 @@
       "Every blocking finding changes the user’s outcome or a real requirement.",
       "The review does not claim independence merely because the same model changed roles.",
       "Passing structural checks is not described as proof of task quality."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "resume-without-replay",
@@ -52,12 +37,7 @@
       "Unknown is not silently converted to failed.",
       "A retry is justified by observed state, not by a missing local receipt alone.",
       "User-owned files and memory remain intact."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "daily-briefing",
@@ -67,12 +47,7 @@
       "Overlapping commitments and time zones are handled explicitly.",
       "The plan leaves realistic buffers and does not invent urgency.",
       "Proposed tasks are not presented as existing calendar events."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "weekly-reset",
@@ -82,12 +57,7 @@
       "Completed work does not reappear as unfinished.",
       "The total proposed workload fits a stated capacity range.",
       "Ambiguous commitments are not silently accepted on the user’s behalf."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "inbox-triage",
@@ -97,12 +67,7 @@
       "Already resolved threads are not reopened.",
       "Drafts do not invent availability, promises or attachments.",
       "No message is sent or moved merely because a draft was produced."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "meeting-to-actions",
@@ -112,12 +77,7 @@
       "Every decision is supported by the record.",
       "Suggested dates and owners are labeled as suggestions.",
       "The summary preserves disagreement that affects execution."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "household-project",
@@ -127,12 +87,7 @@
       "Prices or measurements not supplied are marked as estimates.",
       "Electrical, structural and other hazardous work is not treated as casual do-it-yourself instruction.",
       "The first step is useful without committing the user to purchases."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "decision-budget",
@@ -142,12 +97,7 @@
       "Units and billing intervals match.",
       "Taxes, fees or future savings are not invented.",
       "The user retains control of every account or payment action."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "lecture-map",
@@ -157,12 +107,7 @@
       "No outside facts are added when the task is source-only.",
       "Numbers preserve their units, context and exceptions.",
       "The overview does not replace the distinctions the exam material emphasizes."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "source-flashcards",
@@ -172,12 +117,7 @@
       "Every answer can be located in the source.",
       "A card does not hide multiple unrelated learning objectives.",
       "Unsupported visual interpretation is not silently turned into an answer key."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "retrieval-practice",
@@ -187,12 +127,7 @@
       "No score is recorded twice for the same attempt.",
       "Correct alternative wording is accepted when it matches the source.",
       "Hints and answer exposure are recorded when they affect interpretation."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "misconception-clinic",
@@ -202,12 +137,7 @@
       "The explanation addresses the learner’s actual error.",
       "Analogies do not contradict the underlying mechanism.",
       "A correct repeated phrase is not treated as evidence of understanding by itself."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "exam-plan",
@@ -217,12 +147,7 @@
       "All required topics are represented.",
       "The schedule fits the available blocks without fabricated free time.",
       "Weak areas receive practice rather than only more summaries."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "teach-back",
@@ -232,12 +157,7 @@
       "The learner does meaningful explanatory work.",
       "Simpler wording does not introduce false equivalence.",
       "Uncertainty is identified rather than concealed by polished prose."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "question-to-evidence",
@@ -247,12 +167,7 @@
       "Alternative explanations receive an explicit search.",
       "Publication date and event date are not conflated.",
       "Search coverage is not described as exhaustive without evidence."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "literature-triage",
@@ -262,12 +177,7 @@
       "Duplicate cohorts are not counted as independent replication.",
       "Missing methods remain unknown.",
       "Study limitations survive the summary."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "claim-audit",
@@ -277,12 +187,7 @@
       "The verdict does not exceed the evidence scope.",
       "A self-authored receipt is not treated as independent authority.",
       "Unsupported does not automatically mean false."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "competing-explanations",
@@ -292,12 +197,7 @@
       "Correlation is not silently converted to causation.",
       "A preferred explanation is tested against adverse evidence.",
       "Unknown facts are not filled in to make a story coherent."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "change-brief",
@@ -307,12 +207,7 @@
       "Old developments are not described as new.",
       "Announcement and availability are distinguished.",
       "No background watch is implied by a one-time comparison."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "interview-synthesis",
@@ -322,12 +217,7 @@
       "Quotes retain their original meaning.",
       "One vocal participant does not become a majority.",
       "Sample limitations remain visible."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "bug-reproduction",
@@ -337,12 +227,7 @@
       "The observed failure matches the reported defect.",
       "An unrelated setup failure is not mislabeled reproduction.",
       "The test fails for the intended reason before a fix."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "minimal-repair",
@@ -352,12 +237,7 @@
       "The original failing case now passes.",
       "Nearby valid behavior remains intact.",
       "Skips and unrun integration tests are not reported as passed."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "code-review",
@@ -367,12 +247,7 @@
       "Every defect finding has a plausible input-to-failure path.",
       "The review does not claim test execution without output.",
       "Style preferences do not obscure correctness risks."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "api-contract",
@@ -382,12 +257,7 @@
       "Failure responses are distinguishable without parsing prose.",
       "Retry behavior does not duplicate consequential actions.",
       "Compatibility claims include existing callers."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "accessible-ui",
@@ -397,12 +267,7 @@
       "A screenshot is not treated as proof of screen-reader behavior.",
       "The main task remains usable at the requested viewport.",
       "Fixes are checked in the rendered interface, not source alone."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "release-readiness",
@@ -412,12 +277,7 @@
       "Test evidence matches the candidate bytes.",
       "Build success is not called deployment success.",
       "Publication is not performed as a side effect of review."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "creative-brief",
@@ -427,12 +287,7 @@
       "The direction serves the intended audience.",
       "Reference constraints are preserved.",
       "The brief describes visible or audible choices, not only vague qualities."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "visual-reference",
@@ -442,12 +297,7 @@
       "The reference exists and was actually inspected.",
       "Fixed subject details are not silently replaced.",
       "Style words map to observable properties."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "storyboard",
@@ -457,12 +307,7 @@
       "Shot durations fit the requested runtime.",
       "Every shot advances the intended story or information.",
       "A textual board is not described as a rendered film."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "continuity-review",
@@ -472,12 +317,7 @@
       "Findings identify the actual frame or transition.",
       "Intentional changes are not marked defects.",
       "Unseen frames are not assumed correct."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "edit-and-export",
@@ -487,12 +327,7 @@
       "The delivered file opens in the intended format.",
       "Timing and dimensions match the brief.",
       "A successful export log is not substituted for inspecting the result."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "prose-revision",
@@ -502,12 +337,7 @@
       "No new factual claims are introduced without support.",
       "The requested voice survives.",
       "The revision is finished prose, not merely advice about prose."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "customer-discovery",
@@ -517,12 +347,7 @@
       "Questions do not assume the proposed solution is desirable.",
       "Hypothetical enthusiasm is not called purchase evidence.",
       "Outreach remains a draft unless actually authorized and sent."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "offer-design",
@@ -532,12 +357,7 @@
       "Promises match actual delivery capability.",
       "Costs and exclusions are visible.",
       "Unsupported superiority claims are removed."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "content-system",
@@ -547,12 +367,7 @@
       "Claims retain their source meaning across formats.",
       "The production load fits the stated capacity.",
       "No post is represented as published without a real result."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "service-playbook",
@@ -562,12 +377,7 @@
       "Each handoff has an owner and useful context.",
       "Exceptions do not vanish into a generic escalation bucket.",
       "The workflow does not grant new account authority."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "project-prioritization",
@@ -577,12 +387,7 @@
       "The chosen batch fits available capacity.",
       "Scores do not hide unverified assumptions.",
       "Parallel work does not assign two writers to the same artifact."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "metrics-review",
@@ -592,12 +397,7 @@
       "Like-for-like periods are compared.",
       "Percent changes include relevant counts.",
       "An action recommendation is distinguished from a proven causal explanation."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "dataset-intake",
@@ -607,12 +407,7 @@
       "Raw input remains unchanged.",
       "Missing values are not silently treated as zero.",
       "Permitted use and technical suitability are separate questions."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "spreadsheet-reconcile",
@@ -622,12 +417,7 @@
       "Formulas are not replaced by hardcoded results without request.",
       "Units and signs are consistent.",
       "Reconciliation explains residual differences rather than hiding them."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "analysis-notebook",
@@ -637,12 +427,7 @@
       "Results match actually executed computations.",
       "Transformations do not conceal exclusions.",
       "Uncertainty and sample limits survive presentation."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "chart-story",
@@ -652,12 +437,7 @@
       "The chart does not distort magnitude through an unexplained scale.",
       "Labels remain readable in the target medium.",
       "Color is not the only carrier of important meaning."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "model-comparison",
@@ -667,12 +447,7 @@
       "The candidate did not tune on protected final answers.",
       "All candidates received equivalent inputs and resources.",
       "A configured evaluation is not reported as an executed improvement."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "data-quality-review",
@@ -682,12 +457,7 @@
       "Every dropped row has an explicit reason.",
       "Key collisions are not silently resolved.",
       "A successful script exit is not treated as semantic correctness."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "portfolio-story",
@@ -697,12 +467,7 @@
       "The person’s contribution is not conflated with team or model output.",
       "Metrics are supported or omitted.",
       "Limitations are explained without burying the demonstrated achievement."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "role-fit",
@@ -712,12 +477,7 @@
       "Unsupported experience is not invented.",
       "Current vacancy and terms are checked when possible.",
       "Fit is not presented as guaranteed hiring probability."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "resume-tailor",
@@ -727,12 +487,7 @@
       "Every credential and outcome comes from the person’s record.",
       "Keywords do not replace substantive evidence.",
       "Formatting remains readable rather than crowded."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "interview-rehearsal",
@@ -742,12 +497,7 @@
       "Feedback addresses the actual answer.",
       "The improved response preserves truthful experience.",
       "Practice performance is not called a hiring prediction."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "difficult-message",
@@ -757,12 +507,7 @@
       "The ask is concrete.",
       "The message does not invent motives or threats.",
       "The person’s intended relationship and boundaries are respected."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "negotiation-prep",
@@ -772,12 +517,7 @@
       "Invented competing offers are excluded.",
       "Costs and nonmonetary terms are considered.",
       "The plan leaves room for the other party’s response."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "itinerary-plan",
@@ -787,12 +527,7 @@
       "Transit time and opening hours are compatible.",
       "Accessibility assumptions are explicit.",
       "No reservation is claimed without a booking result."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "meal-plan",
@@ -802,12 +537,7 @@
       "Known allergens are excluded and cross-contact needs are not assumed solved.",
       "Quantities fit the household.",
       "The plan is realistic for the available time and equipment."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "garden-observe",
@@ -817,12 +547,7 @@
       "Uncertain identification remains uncertain.",
       "Image appearance alone does not establish a pathogen.",
       "Physical actions and chemical treatment are not automatically performed."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "hobby-practice",
@@ -832,12 +557,7 @@
       "The exercise targets the stated difficulty.",
       "Progress is judged from actual attempts.",
       "The plan does not create unnecessary purchases or unsafe physical demands."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "event-plan",
@@ -847,12 +567,7 @@
       "Tasks fit the available people and time.",
       "Accessibility and dietary needs are not forgotten.",
       "Proposed responsibilities are not reported as accepted commitments."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "purchase-compare",
@@ -862,12 +577,7 @@
       "Current claims have current sources.",
       "Total cost is not reduced to sticker price when recurring costs matter.",
       "Sponsored claims or reviews are not treated as independent measurement."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "appointment-prep",
@@ -877,12 +587,7 @@
       "The timeline matches the supplied record.",
       "Professional instructions are not changed.",
       "Urgent concerns are not handled as routine scheduling problems."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "care-coordination",
@@ -892,12 +597,7 @@
       "No clinical instruction is modified.",
       "Sensitive details are shared only within the requested scope.",
       "Proposed responsibilities are not labeled confirmed."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "accessibility-routine",
@@ -907,12 +607,7 @@
       "Adaptations follow stated needs rather than stereotypes.",
       "The person retains control of decisions.",
       "Simpler presentation does not omit important safety information."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "reflection-journal",
@@ -922,12 +617,7 @@
       "The person’s interpretation is not replaced by a confident diagnosis.",
       "Emotional validation does not affirm unsupported factual beliefs.",
       "Private material is not added to shared records without permission."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "habit-experiment",
@@ -937,12 +627,7 @@
       "The experiment fits the person’s constraints.",
       "Tracking is optional and proportionate.",
       "Health or performance benefits are not guaranteed."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "family-archive",
@@ -952,12 +637,7 @@
       "Unknown people and dates remain unknown.",
       "Originals are preserved.",
       "Sharing boundaries are respected for living people and sensitive records."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "schema-evolution",
@@ -967,12 +647,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "incremental-pipeline",
@@ -982,12 +657,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "query-plan-review",
@@ -997,12 +667,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "service-objectives",
@@ -1012,12 +677,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "capacity-planning",
@@ -1027,12 +687,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "incident-triage",
@@ -1042,12 +697,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "automation-contract",
@@ -1057,12 +707,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "selector-resilience",
@@ -1072,12 +717,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "effect-reconciliation",
@@ -1087,12 +727,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "design-token-audit",
@@ -1102,12 +737,7 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   },
   {
     "skill_id": "interaction-state-coverage",
@@ -1117,11 +747,6 @@
       "Ground each conclusion in the supplied source and declared calculation.",
       "Return a usable, complete artifact rather than an instruction-only promise.",
       "Distinguish actual tool outputs from model performance and external effects."
-    ],
-    "results": {
-      "baseline": null,
-      "upstream": null,
-      "candidate": null
-    }
+    ]
   }
 ]

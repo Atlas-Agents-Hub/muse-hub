@@ -1,4 +1,4 @@
-"""Fictional offline examples for the four source-expanded specialist roles."""
+"""Run example calculations for data, reliability, automation, and interface specialists."""
 from __future__ import annotations
 import argparse
 import json
@@ -18,13 +18,12 @@ FIXTURES = {
 }
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Four strictly offline specialist demonstrations")
+    parser = argparse.ArgumentParser(description="Run a specialist calculation example")
     parser.add_argument("--role", choices=sorted(ROLES), required=True)
     args = parser.parse_args(argv)
     result = run_fixture(args.role, FIXTURES[args.role])
-    if (result["grade"] != "OFFLINE_FIXTURE_ONLY"
-            or result["external_effect_authorized"]
-            or result["native_registered"]):
+    if (result["grade"] != "EXAMPLE_RESULT"
+            or result["external_effect_authorized"]):
         raise ValueError("UNSAFE_LOCAL_RESULT")
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0

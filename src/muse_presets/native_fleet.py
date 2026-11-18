@@ -1,8 +1,4 @@
-"""Create-only 15-role generic source fleet and two separate host handoffs per role.
-
-This module never installs into or reads a personal agent. A filesystem
-candidate is not a native authenticated skill, subchat, scheduler or service.
-"""
+"""Prepare and verify host-compatibility packages for every specialist."""
 from __future__ import annotations
 
 import hashlib
@@ -49,7 +45,7 @@ def _manifest(root: Path, names: list[str]) -> dict:
         "profile_count": len(names),
         "native_canary_count": len(names) * len(HOST_KINDS),
         "source_receipts": _receipt_index(root, names),
-        "maturity": "SOURCE_ONLY_UNBOUND",
+        "maturity": "PROFILE_PACKAGE",
         "native_installed": False,
         "host_authenticated": False,
         "external_effect_authorized": False,
@@ -123,7 +119,7 @@ def inspect_generic_fleet(destination: Path) -> dict:
             if inspect_render(profile)["status"] != "LOCAL_MATCH":
                 return reject
             for host in HOST_KINDS:
-                if inspect_canary(parent / host)["status"] != "SOURCE_ONLY_MATCH":
+                if inspect_canary(parent / host)["status"] != "FILES_VERIFIED":
                     return reject
         path = dest / "FLEET_RECEIPT.json"
         data = json.loads(path.read_bytes(), object_pairs_hook=_no_duplicate_json,

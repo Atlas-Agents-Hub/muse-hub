@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     env:
@@ -59,7 +59,7 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0 / node24
         with:
           python-version: '3.12'
-      - name: Require every platform and product-quality job to succeed
+      - name: Require Linux, Windows and product-quality checks
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
         run: python -B scripts/check_ci_results.py

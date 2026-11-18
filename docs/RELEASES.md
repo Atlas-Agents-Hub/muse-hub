@@ -1,26 +1,29 @@
 # Muse Hub downloads and versions
 
-**Current release: [v1.4.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.4.0)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/SHA256SUMS)
+**Current release: [v1.5.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/SHA256SUMS)
 
-## v1.4.0 - plans you can reuse, checks you can run
+## v1.5.0 — a larger library for your work
 
 [Choose one of the 15 assistants](DOWNLOAD_A_SPECIALIST.md). Each ZIP brings together its Main instructions, three subchat guides, selected skills, workflows, examples, and `START_HERE.md`.
 
-The collection includes 75 skills, 25 workflows, 100 task starters, and setup references for 151 connectors. The current toolkit also includes Companion Home and its room notebook, Daily Desk, specialist tools, and command-line guides.
+The collection includes 461 skills, 58 workflows, 100 task starters, and setup references for 151 connectors. The current toolkit also includes Companion Home and its room notebook, Daily Desk, specialist tools, and command-line guides.
 
 Extract your package into a new folder and start with its included guide. Assistant instructions require no Python. Optional local programs state their requirements beside their commands; repository examples use Python 3.12+.
 
-This update adds ready-to-copy [reminder](../collections/muse-starters-v1/skills/daily-briefing/REMINDERS.md), [calendar](../collections/muse-starters-v1/skills/daily-briefing/CALENDAR_REVIEW.md) and [goal](../collections/muse-starters-v1/skills/weekly-reset/GOAL_REVIEW.md) worksheets to the existing planning kits. Each includes a blank template, a filled example and a recovery case.
+This update adds **386 skills** across engineering, research, design, data, operations, creative work and personal planning. Each skill ZIP contains its instructions and supporting files. The [skill index](../collections/muse-starters-v1/SKILL_INDEX.md) groups them by subject.
 
-The [HTML source checker](../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) checks five kinds of markup that affect accessibility, with precise locations and suggested repairs. Run it with Python 3.10 or newer from the Accessible UI download, then continue with the guide's keyboard and browser checks. The relevant specialist, workflow and starter packages include the tool and both example pages.
+The **33 new workflows** combine methods into complete tasks: build a cited research brief, evaluate a RAG system, prepare a mobile release, audit cloud costs, improve a design system, organize interviews or plan a garden. Every stage names its input, output and result check. [Browse all 58 workflows](../collections/library/WORKFLOWS.md).
+
+**51 tool guides** provide setup steps, practical examples and checks for engineering, search, design, automation, data, research and creative tools. Relevant guides and workflows are included in every [specialist package](collection/SPECIALIST_LIBRARY.md). The [download page](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html) filters by type, specialist and subject, and lets you share a filtered selection.
 
 ## Complete collections
 
-- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/muse-specialist-toolkit-v1.4.0.zip)
-- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/muse-specialists-v1.4.0.zip)
-- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/muse-skills-v1.4.0.zip)
-- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/muse-workflows-v1.4.0.zip)
-- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/muse-starters-v1.4.0.zip)
+- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-specialist-toolkit-v1.5.0.zip)
+- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-specialists-v1.5.0.zip)
+- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-skills-v1.5.0.zip)
+- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-workflows-v1.5.0.zip)
+- [Tool guides](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-tool-guides-v1.5.0.zip)
+- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-starters-v1.5.0.zip)
 
 ## Verify your download
 
@@ -29,24 +32,29 @@ Download `SHA256SUMS` from the same release. Calculate the archive's SHA-256 and
 **Windows PowerShell:**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.4.0.zip
+Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.5.0.zip
 ```
 
 **macOS:**
 
 ```sh
-shasum -a 256 muse-personal-companion-v1.4.0.zip
+shasum -a 256 muse-personal-companion-v1.5.0.zip
 ```
 
 **Linux:**
 
 ```sh
-sha256sum muse-personal-companion-v1.4.0.zip
+sha256sum muse-personal-companion-v1.5.0.zip
 ```
 
 Keep the original ZIP and your customized working copy separately. [Setup and saved data](INSTALL_AND_PERSISTENCE.md) explains updates and backup.
 
 ## Earlier releases
+
+### v1.4.0 — reusable plans and accessibility checks
+
+The [v1.4.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.4.0) added reminder, calendar and goal worksheets plus an HTML accessibility checker, with examples included in the relevant downloads.
+
 
 ### v1.3.0 - choose work that fits
 

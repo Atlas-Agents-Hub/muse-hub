@@ -1,8 +1,4 @@
-"""Read-only, self-reported comparison of an offline rendered Muse draft.
-
-This is not native Muse loading, authentication, a safe auto-merge or a signature.
-Never opens a symlinked managed path or writes to the destination.
-"""
+"""Inspect rendered profile files and identify changes that need review."""
 from __future__ import annotations
 
 import hashlib
@@ -22,11 +18,11 @@ def _sha(data: bytes) -> str:
 
 
 def inspect_render(destination: Path) -> dict:
-    """Classify a local draft against its original, unauthenticated receipt.
+    """Compare a profile with the file hashes saved when it was created.
 
     User-modified identity and memory files are expected customizations. Changed
     Family Link policy, missing files and changed upstream template source need
-    owner review. This method never installs, reconciles or regenerates files.
+    review before an update.
     """
     path = Path(destination)
     if path.is_symlink() or not path.is_dir():
@@ -39,14 +35,12 @@ def inspect_render(destination: Path) -> dict:
         raise ValueError('INVALID_RECEIPT')
 
     base = {
-        'native_muse_status': 'NOT_CHECKED',
-        'evidence_grade': 'UNAUTHENTICATED_LOCAL_ONLY',
+        'inspection': 'PROFILE_FILES',
         'effects_performed': False,
         'owner_modified': [],
         'policy_modified': [],
         'missing': [],
         'source_changed': [],
-        'warning': 'Self-reported hashes are not signatures or native admission; no files were changed',
     }
     if receipt.get('schema') == 'muse-presets/render-v1':
         return {**base, 'status': 'LEGACY_UNVERIFIABLE'}

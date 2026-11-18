@@ -35,7 +35,7 @@ const catalog = JSON.parse(fs.readFileSync(path.join(site, 'public/catalog.json'
 const routes = new Map(catalog.routes.map(route => [route.id, route]));
 assert.deepEqual([...routes.keys()].sort(), ['cli', 'companion', 'desktop', 'doors', 'family', 'watch']);
 const report = { schema: 'muse-hub/experience-browser/v1', started_at: new Date().toISOString(), site, chrome: chromePath, node: process.version, require_journeys: flags.includes('--require-journeys'), harness_sha256: sha256(fs.readFileSync(__filename)), source_files: {}, checks: [], screenshots: [], errors: [], blocked_external_requests: [], requests: [] };
-for (const name of ['index.html', 'site.js', 'site.css', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json']) {
+for (const name of ['index.html', 'site.js', 'site.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json']) {
   const bytes = fs.readFileSync(path.join(site, name));
   report.source_files[name] = { bytes: bytes.length, sha256: sha256(bytes) };
 }
@@ -157,7 +157,7 @@ async function start() {
   chrome.on('error', error => { report.errors.push({ kind: 'chrome', message: error.message }); });
   for (const stream of [chrome.stdout, chrome.stderr]) stream.on('data', chunk => { chromeLog = (chromeLog + chunk).slice(-16000); });
   const activePort = path.join(profile, 'DevToolsActivePort');
-  const until = Date.now() + 15000;
+  const until = Date.now() + 30000;
   let port;
   while (Date.now() < until && chrome.exitCode === null) {
     try {
@@ -200,6 +200,33 @@ async function start() {
 }
 
 async function runChecks() {
+  const downloads = JSON.parse(fs.readFileSync(path.join(site, 'downloads.json'), 'utf8'));
+  await check('download inventory, specialist filters and shareable search', async () => {
+    await navigate('downloads.html');
+    const links = await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
+    assert.equal(links.length, downloads.items.length);
+    assert.deepEqual(new Set(links), new Set(downloads.items.map(item => item.url)));
+    const sample = downloads.items.find(row => row.kind === 'skill' && row.roles.includes('software-engineer'));
+    assert(sample, 'Software engineering skill must be discoverable');
+    await navigate('downloads.html?type=skill&role=software-engineer&q=' + encodeURIComponent(sample.id));
+    const visible = await evaluate('[...document.querySelectorAll(".download-card:not([hidden]) a[aria-label]")].map(a=>a.href)');
+    assert(visible.includes(sample.url));
+    assert(visible.every(url => downloads.items.find(row => row.url === url).roles.includes('software-engineer')));
+    await type('#download-search', 'no-matching-download-39715');
+    assert.equal(await evaluate('document.querySelector("#download-empty").hidden'), false);
+    await click('#download-clear-empty');
+    assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), downloads.items.length);
+    assert.equal(new URL(await evaluate('location.href')).searchParams.has('role'), false);
+    return {individual_downloads:links.length, specialist_search:true, empty_state_reset:true};
+  });
+  await check('invalid download filters recover without reflected markup', async () => {
+    for (const query of ['type=bad&role=bad', 'type=skill&type=workflow', 'role=%3Cimg%20src=x%3E', 'q='+'x'.repeat(3000)]) {
+      await navigate('downloads.html?' + query);
+      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), downloads.items.length);
+      assert.equal(await evaluate('document.querySelectorAll("#download-role img").length'), 0);
+    }
+    return {invalid_queries:4};
+  });
   await check('all resources without a route', async () => { await navigate('public/index.html'); return assertRoute(null); });
   for (const id of routes.keys()) await check('shareable route: ' + id, async () => {
     await navigate('public/index.html?route=' + id + '#browse-results');
@@ -286,9 +313,15 @@ async function runChecks() {
   });
   for (const viewport of [320, 375, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
-    for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion']]) {
+    for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
       await screenshot(name + '-' + viewport + '.png');
+      if (name === 'downloads') {
+        await click('a[href="#download-search"]');
+        await wait('document.activeElement.id === "download-search"');
+        rows.push({page:'download filters',...await layout()});
+        await screenshot('download-filters-' + viewport + '.png');
+      }
     }
     return rows;
   });
@@ -312,6 +345,15 @@ async function runChecks() {
       await layout(); await screenshot('resources-no-javascript-375.png');
       return { visible_project_links: links.length };
     } finally { await call('Emulation.setScriptExecutionDisabled', { value: false }); }
+  });
+  await check('downloads remain usable without JavaScript', async () => {
+    await call('Emulation.setScriptExecutionDisabled', { value: true });
+    try {
+      await navigate('downloads.html?role=software-engineer', false);
+      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden]) a[aria-label]").length'), downloads.items.length);
+      await layout();
+      return {visible_downloads:downloads.items.length};
+    } finally { await call('Emulation.setScriptExecutionDisabled', { value:false }); }
   });
 }
 

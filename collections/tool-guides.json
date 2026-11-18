@@ -1,0 +1,4166 @@
+{
+  "schema_version": 1,
+  "title": "Tools for your specialists",
+  "description": "Practical setup and workflows for research, engineering, design, data, creative work, and everyday projects.",
+  "guides": [
+    {
+      "id": "atlas-continuum",
+      "name": "Atlas Continuum",
+      "title": "Resume a project with its decisions intact",
+      "category": "coordination",
+      "specialist_ids": [
+        "software-engineer",
+        "data-engineering-architect",
+        "automation-engineer",
+        "infrastructure-reliability-engineer",
+        "research-evaluator",
+        "claims-adjudicator",
+        "adversarial-verifier",
+        "reverse-engineering-researcher",
+        "creative-studio",
+        "product-interface-designer",
+        "model-builder",
+        "learning-coach",
+        "personal-companion",
+        "garden-companion",
+        "coordinator"
+      ],
+      "summary": "Keep long projects moving across sessions with a concise work record, clear acceptance checks, and an exact next action.",
+      "setup": [
+        "Open the project workspace and its saved handoff; select the Continuum skills in the host assistant."
+      ],
+      "inputs": [
+        "Goal and acceptance checks",
+        "Current files or repository",
+        "Last handoff and test results"
+      ],
+      "steps": [
+        "Compare the saved handoff with the current files, branch, and working changes.",
+        "Choose the next incomplete dependency and record the expected result before editing.",
+        "Run the relevant check against the changed artifact and save the result with its revision.",
+        "Save decisions, failed attempts, current files, and the next executable step in the handoff."
+      ],
+      "outputs": [
+        "Updated work record",
+        "Verified deliverable",
+        "Restart instructions"
+      ],
+      "checks": [
+        "The handoff identifies the actual current revision and changes.",
+        "A fresh session can locate the deliverable and run the next step without reconstructing chat history."
+      ],
+      "sources": [],
+      "cost": "Local tools",
+      "recipe_id": "atlas-continuum-workflow",
+      "related_guide_ids": [
+        "atlas-omnium",
+        "codex-dev-workflows",
+        "endor-labs",
+        "promptfoo",
+        "superpowers"
+      ],
+      "starter_prompt": "Use Atlas Continuum to resume a project with its decisions intact. Start from the inputs I provide, follow the setup and workflow, and return updated work record, verified deliverable, restart instructions. Verify: The handoff identifies the actual current revision and changes. A fresh session can locate the deliverable and run the next step without reconstructing chat history.",
+      "featured": true,
+      "doc_path": "docs/tools/atlas-continuum.md",
+      "when_to_use": "Keep long projects moving across sessions with a concise work record, clear acceptance checks, and an exact next action.",
+      "requirements": [
+        "Open the project workspace and its saved handoff; select the Continuum skills in the host assistant."
+      ],
+      "supported_functions": [
+        {
+          "name": "atlas-resume-recovery",
+          "kind": "skill",
+          "purpose": "Reconcile the saved handoff with current files"
+        },
+        {
+          "name": "atlas-execution-cycle",
+          "kind": "skill",
+          "purpose": "Complete a focused unit of work"
+        },
+        {
+          "name": "atlas-verification",
+          "kind": "skill",
+          "purpose": "Verify the delivered result"
+        }
+      ]
+    },
+    {
+      "id": "atlas-omnium",
+      "name": "Atlas Omnium",
+      "title": "Choose the right connection for each job",
+      "category": "coordination",
+      "specialist_ids": [
+        "software-engineer",
+        "data-engineering-architect",
+        "automation-engineer",
+        "infrastructure-reliability-engineer",
+        "research-evaluator",
+        "claims-adjudicator",
+        "adversarial-verifier",
+        "reverse-engineering-researcher",
+        "creative-studio",
+        "product-interface-designer",
+        "model-builder",
+        "learning-coach",
+        "personal-companion",
+        "garden-companion",
+        "coordinator"
+      ],
+      "summary": "Route a task to the appropriate connected service, then confirm the resulting file, record, or application state.",
+      "setup": [
+        "Select the requested service connection in the host assistant and confirm the intended project or account."
+      ],
+      "inputs": [
+        "Task and desired result",
+        "Service or resource identifier",
+        "Existing authorization and budget"
+      ],
+      "steps": [
+        "Find the smallest available operation that can produce the requested result.",
+        "Read the current resource and match its identity to the task.",
+        "Use the chosen service operation within the existing scope.",
+        "Read back the resulting resource and attach its link or identifier to the handoff."
+      ],
+      "outputs": [
+        "Completed service operation",
+        "Result link or resource identifier",
+        "Concise handoff"
+      ],
+      "checks": [
+        "The connection and destination match the task.",
+        "A read-back confirms the intended change or retrieved result."
+      ],
+      "sources": [],
+      "cost": "Connected service plans",
+      "recipe_id": "atlas-omnium-workflow",
+      "related_guide_ids": [
+        "atlas-continuum",
+        "codex-dev-workflows",
+        "endor-labs",
+        "promptfoo",
+        "superpowers"
+      ],
+      "starter_prompt": "Use Atlas Omnium to choose the right connection for each job. Start from the inputs I provide, follow the setup and workflow, and return completed service operation, result link or resource identifier, concise handoff. Verify: The connection and destination match the task. A read-back confirms the intended change or retrieved result.",
+      "featured": true,
+      "doc_path": "docs/tools/atlas-omnium.md",
+      "when_to_use": "Route a task to the appropriate connected service, then confirm the resulting file, record, or application state.",
+      "requirements": [
+        "Select the requested service connection in the host assistant and confirm the intended project or account."
+      ],
+      "supported_functions": [
+        {
+          "name": "omnium-control",
+          "kind": "skill",
+          "purpose": "Select and coordinate the appropriate connected service"
+        },
+        {
+          "name": "omnium-wolfram-analysis",
+          "kind": "skill",
+          "purpose": "Use computation for quantitative decisions"
+        }
+      ]
+    },
+    {
+      "id": "keyword-tool",
+      "name": "Keyword Tool: Free SEO Ideas",
+      "title": "Turn search phrases into useful pages",
+      "category": "discovery",
+      "specialist_ids": [
+        "product-interface-designer",
+        "creative-studio",
+        "coordinator"
+      ],
+      "summary": "Find the language people use for a product and assign useful search topics to clear page titles and headings.",
+      "setup": [
+        "Choose the target country, language, search platform, and a short list of seed phrases.",
+        "Check the guest quota before making requests."
+      ],
+      "inputs": [
+        "Seed phrases",
+        "Audience and locale",
+        "Current page inventory"
+      ],
+      "steps": [
+        "Request suggestions for one seed and the chosen market.",
+        "Group relevant phrases by user intent and discard unrelated results.",
+        "Assign each group to an existing page or a specific missing guide.",
+        "Write a title, description, and opening sentence that answer the intent naturally."
+      ],
+      "outputs": [
+        "Keyword-to-page map",
+        "Proposed titles and descriptions"
+      ],
+      "checks": [
+        "Every selected phrase has an intended page and a useful user question.",
+        "Metric values retain their platform, locale, and retrieval date."
+      ],
+      "sources": [
+        "https://keywordtool.io/api.md?scope=mcp"
+      ],
+      "cost": "Guest quota; paid plans for additional data",
+      "recipe_id": "keyword-tool-workflow",
+      "related_guide_ids": [
+        "aioscan",
+        "brand-strategist",
+        "openseo",
+        "product-design"
+      ],
+      "starter_prompt": "Use Keyword Tool: Free SEO Ideas to turn search phrases into useful pages. Start from the inputs I provide, follow the setup and workflow, and return keyword-to-page map, proposed titles and descriptions. Verify: Every selected phrase has an intended page and a useful user question. Metric values retain their platform, locale, and retrieval date.",
+      "featured": true,
+      "doc_path": "docs/tools/keyword-tool.md",
+      "when_to_use": "Find the language people use for a product and assign useful search topics to clear page titles and headings.",
+      "requirements": [
+        "Choose the target country, language, search platform, and a short list of seed phrases.",
+        "Check the guest quota before making requests."
+      ],
+      "supported_functions": [
+        {
+          "name": "keywordtool_quota_guest",
+          "kind": "tool",
+          "purpose": "Read the guest request quota"
+        },
+        {
+          "name": "keywordtool_suggestions_guest",
+          "kind": "tool",
+          "purpose": "Find keyword ideas for a market and platform"
+        }
+      ]
+    },
+    {
+      "id": "openseo",
+      "name": "OpenSEO",
+      "title": "Fix the pages that search engines struggle to use",
+      "category": "discovery",
+      "specialist_ids": [
+        "product-interface-designer",
+        "infrastructure-reliability-engineer",
+        "creative-studio"
+      ],
+      "summary": "Turn crawl findings into targeted fixes for page titles, indexing, canonical URLs, internal links, and content coverage.",
+      "setup": [
+        "Select the website and its existing OpenSEO project.",
+        "Check account limits before adding paid keyword or SERP research."
+      ],
+      "inputs": [
+        "Public website URL",
+        "Key pages",
+        "Existing crawl or search data"
+      ],
+      "steps": [
+        "Inspect the latest crawl and affected URLs.",
+        "Group duplicate findings by the template or component that owns them.",
+        "Fix the highest-impact cause and rebuild the affected pages.",
+        "Recheck those URLs and compare the result with the original findings."
+      ],
+      "outputs": [
+        "Prioritized page fixes",
+        "Updated metadata and links",
+        "Before-and-after audit"
+      ],
+      "checks": [
+        "Canonical and indexability checks pass on the intended pages.",
+        "Each claimed fix is supported by a refreshed result or direct page inspection."
+      ],
+      "sources": [
+        "https://openseo.so",
+        "https://github.com/every-app/open-seo"
+      ],
+      "cost": "Account plan and research credits",
+      "recipe_id": "openseo-workflow",
+      "related_guide_ids": [
+        "aioscan",
+        "brand-strategist",
+        "keyword-tool",
+        "product-design"
+      ],
+      "starter_prompt": "Use OpenSEO to fix the pages that search engines struggle to use. Start from the inputs I provide, follow the setup and workflow, and return prioritized page fixes, updated metadata and links, before-and-after audit. Verify: Canonical and indexability checks pass on the intended pages. Each claimed fix is supported by a refreshed result or direct page inspection.",
+      "featured": true,
+      "doc_path": "docs/tools/openseo.md",
+      "when_to_use": "Turn crawl findings into targeted fixes for page titles, indexing, canonical URLs, internal links, and content coverage.",
+      "requirements": [
+        "Select the website and its existing OpenSEO project.",
+        "Check account limits before adding paid keyword or SERP research."
+      ],
+      "supported_functions": [
+        {
+          "name": "seo-audit",
+          "kind": "skill",
+          "purpose": "Review technical and on-page search issues"
+        },
+        {
+          "name": "keyword-clustering",
+          "kind": "skill",
+          "purpose": "Group search intent and map it to pages"
+        },
+        {
+          "name": "keyword-research",
+          "kind": "skill",
+          "purpose": "Evaluate topic and query opportunities"
+        }
+      ]
+    },
+    {
+      "id": "brand-strategist",
+      "name": "Brand Strategist",
+      "title": "Make the product promise clear and consistent",
+      "category": "design",
+      "specialist_ids": [
+        "creative-studio",
+        "product-interface-designer",
+        "coordinator"
+      ],
+      "summary": "Develop a concise brand strategy from real audience needs, product benefits, positioning, and a consistent voice.",
+      "setup": [
+        "Gather the product description, audience, examples, and approved business facts."
+      ],
+      "inputs": [
+        "Audience and problem",
+        "Product strengths",
+        "Tone and reference examples"
+      ],
+      "steps": [
+        "Load the strategy framework and answer its sections using the supplied facts.",
+        "Resolve contradictions between the audience, promise, and reasons to believe.",
+        "Review the wording and validate it against the presentation layout.",
+        "Render the approved strategy and use its voice rules in the website and onboarding copy."
+      ],
+      "outputs": [
+        "Brand strategy",
+        "Voice and messaging rules",
+        "Editable presentation"
+      ],
+      "checks": [
+        "Every product claim has a supplied fact or example.",
+        "The approved text fits the presentation without truncation."
+      ],
+      "sources": [
+        "https://brandstrategist.ai"
+      ],
+      "cost": "Provider access",
+      "recipe_id": "brand-strategist-workflow",
+      "related_guide_ids": [
+        "aioscan",
+        "designly",
+        "keyword-tool",
+        "magicpath",
+        "openseo",
+        "pablooo",
+        "product-design",
+        "wixel"
+      ],
+      "starter_prompt": "Use Brand Strategist to make the product promise clear and consistent. Start from the inputs I provide, follow the setup and workflow, and return brand strategy, voice and messaging rules, editable presentation. Verify: Every product claim has a supplied fact or example. The approved text fits the presentation without truncation.",
+      "featured": true,
+      "doc_path": "docs/tools/brand-strategist.md",
+      "when_to_use": "Develop a concise brand strategy from real audience needs, product benefits, positioning, and a consistent voice.",
+      "requirements": [
+        "Gather the product description, audience, examples, and approved business facts."
+      ],
+      "supported_functions": [
+        {
+          "name": "get_brand_framework",
+          "kind": "tool",
+          "purpose": "Load the strategy questions and presentation structure"
+        },
+        {
+          "name": "validate_brand_strategy",
+          "kind": "tool",
+          "purpose": "Check approved wording against the presentation frames"
+        },
+        {
+          "name": "render_brand_presentation",
+          "kind": "tool",
+          "purpose": "Render the strategy as an editable presentation"
+        }
+      ]
+    },
+    {
+      "id": "superpowers",
+      "name": "Superpowers",
+      "title": "Repair a bug and prove the behavior changed",
+      "category": "engineering",
+      "specialist_ids": [
+        "software-engineer",
+        "data-engineering-architect",
+        "automation-engineer",
+        "infrastructure-reliability-engineer",
+        "research-evaluator",
+        "claims-adjudicator",
+        "adversarial-verifier",
+        "reverse-engineering-researcher",
+        "creative-studio",
+        "product-interface-designer",
+        "model-builder",
+        "learning-coach",
+        "personal-companion",
+        "garden-companion",
+        "coordinator"
+      ],
+      "summary": "Use a focused reproduce, fix, and review cycle for implementation work, with checks tied to the requested behavior.",
+      "setup": [
+        "Open the relevant project and choose the debugging, implementation, or review skill that matches the work."
+      ],
+      "inputs": [
+        "Expected behavior",
+        "Failing example",
+        "Relevant source and test command"
+      ],
+      "steps": [
+        "Reproduce the failure and identify the component responsible.",
+        "Add a focused regression check when the failure warrants one.",
+        "Implement the smallest maintainable correction and run the relevant checks.",
+        "Review the diff and report the observed result with the exact verification command."
+      ],
+      "outputs": [
+        "Focused repair",
+        "Regression evidence",
+        "Review notes"
+      ],
+      "checks": [
+        "The original failing case succeeds.",
+        "The check tests user-visible behavior and catches the original defect."
+      ],
+      "sources": [
+        "https://github.com/obra/superpowers"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "superpowers-workflow",
+      "related_guide_ids": [
+        "atlas-continuum",
+        "atlas-omnium",
+        "codex-dev-workflows",
+        "endor-labs",
+        "promptfoo"
+      ],
+      "starter_prompt": "Use Superpowers to repair a bug and prove the behavior changed. Start from the inputs I provide, follow the setup and workflow, and return focused repair, regression evidence, review notes. Verify: The original failing case succeeds. The check tests user-visible behavior and catches the original defect.",
+      "featured": true,
+      "doc_path": "docs/tools/superpowers.md",
+      "when_to_use": "Use a focused reproduce, fix, and review cycle for implementation work, with checks tied to the requested behavior.",
+      "requirements": [
+        "Open the relevant project and choose the debugging, implementation, or review skill that matches the work."
+      ],
+      "supported_functions": [
+        {
+          "name": "systematic-debugging",
+          "kind": "skill",
+          "purpose": "Reproduce and isolate a defect"
+        },
+        {
+          "name": "test-driven-development",
+          "kind": "skill",
+          "purpose": "Use a regression case to guide a repair"
+        },
+        {
+          "name": "verification-before-completion",
+          "kind": "skill",
+          "purpose": "Verify the final behavior before reporting completion"
+        }
+      ]
+    },
+    {
+      "id": "team-30",
+      "name": "TEAM 30 — AI Company OS",
+      "title": "Give each part of a project a clear owner",
+      "category": "coordination",
+      "specialist_ids": [
+        "coordinator",
+        "automation-engineer",
+        "software-engineer",
+        "creative-studio"
+      ],
+      "summary": "Match a project to useful specialist roles and create a practical sequence of deliverables and review points.",
+      "setup": [
+        "Provide the project goal, constraints, available people or assistants, and desired finish date."
+      ],
+      "inputs": [
+        "Project brief",
+        "Constraints and dependencies",
+        "Available specialists"
+      ],
+      "steps": [
+        "Route the goal to the most relevant role.",
+        "Build a plan with deliverables, dependencies, and a clear completion check for each phase.",
+        "Assign each workstream to one owner and define the handoff artifact.",
+        "Check consequential actions against the existing authorization when they become ready."
+      ],
+      "outputs": [
+        "Project plan",
+        "Specialist assignments",
+        "Handoff checklist"
+      ],
+      "checks": [
+        "Every deliverable has an owner and a completion check.",
+        "The next action can begin with the available inputs."
+      ],
+      "sources": [
+        "https://team30-ai-company-os.fly.dev/"
+      ],
+      "cost": "Provider access",
+      "recipe_id": "team-30-workflow",
+      "related_guide_ids": [],
+      "starter_prompt": "Use TEAM 30 — AI Company OS to give each part of a project a clear owner. Start from the inputs I provide, follow the setup and workflow, and return project plan, specialist assignments, handoff checklist. Verify: Every deliverable has an owner and a completion check. The next action can begin with the available inputs.",
+      "featured": false,
+      "doc_path": "docs/tools/team-30.md",
+      "when_to_use": "Match a project to useful specialist roles and create a practical sequence of deliverables and review points.",
+      "requirements": [
+        "Provide the project goal, constraints, available people or assistants, and desired finish date."
+      ],
+      "supported_functions": [
+        {
+          "name": "team30_route_task",
+          "kind": "tool",
+          "purpose": "Choose a suitable specialist role"
+        },
+        {
+          "name": "team30_build_project_plan",
+          "kind": "tool",
+          "purpose": "Define a project sequence and completion criteria"
+        },
+        {
+          "name": "team30_check_action_gate",
+          "kind": "tool",
+          "purpose": "Assess the authorization needed for a proposed action"
+        }
+      ]
+    },
+    {
+      "id": "codex-dev-workflows",
+      "name": "Codex Dev Workflows",
+      "title": "Carry a feature from brief to review",
+      "category": "engineering",
+      "specialist_ids": [
+        "software-engineer",
+        "infrastructure-reliability-engineer",
+        "automation-engineer",
+        "coordinator",
+        "adversarial-verifier"
+      ],
+      "summary": "Structure feature development, bug investigation, code review, and interrupted-session recovery around the actual repository.",
+      "setup": [
+        "Open the repository in a compatible coding assistant and identify its build and test commands."
+      ],
+      "inputs": [
+        "Feature or defect brief",
+        "Current repository",
+        "Acceptance cases"
+      ],
+      "steps": [
+        "Inspect the current implementation and the repository instructions.",
+        "Write a focused change plan with affected files and behavior checks.",
+        "Implement and test the change, then inspect the final diff.",
+        "Save a review summary and a restart note when work spans sessions."
+      ],
+      "outputs": [
+        "Implemented change",
+        "Targeted test results",
+        "Review and handoff"
+      ],
+      "checks": [
+        "Acceptance cases map to implemented behavior.",
+        "The handoff identifies the tested revision and remaining work."
+      ],
+      "sources": [
+        "https://github.com/srajpal/codex-dev-workflows"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "codex-dev-workflows-workflow",
+      "related_guide_ids": [
+        "atlas-continuum",
+        "atlas-omnium",
+        "endor-labs",
+        "promptfoo",
+        "superpowers"
+      ],
+      "starter_prompt": "Use Codex Dev Workflows to carry a feature from brief to review. Start from the inputs I provide, follow the setup and workflow, and return implemented change, targeted test results, review and handoff. Verify: Acceptance cases map to implemented behavior. The handoff identifies the tested revision and remaining work.",
+      "featured": true,
+      "doc_path": "docs/tools/codex-dev-workflows.md",
+      "when_to_use": "Structure feature development, bug investigation, code review, and interrupted-session recovery around the actual repository.",
+      "requirements": [
+        "Open the repository in a compatible coding assistant and identify its build and test commands."
+      ],
+      "supported_functions": [
+        {
+          "name": "feature-development",
+          "kind": "skill",
+          "purpose": "Implement a repository feature"
+        },
+        {
+          "name": "code-review",
+          "kind": "skill",
+          "purpose": "Review a concrete change"
+        },
+        {
+          "name": "resume-interrupted-task",
+          "kind": "skill",
+          "purpose": "Recover an interrupted development session"
+        }
+      ]
+    },
+    {
+      "id": "empire-llm",
+      "name": "Empire LLM for Codex",
+      "title": "Get a focused second opinion on a change",
+      "category": "engineering",
+      "specialist_ids": [
+        "software-engineer",
+        "adversarial-verifier",
+        "model-builder",
+        "research-evaluator"
+      ],
+      "summary": "Request an independent model review of a small diff or compare model choices against a defined workload.",
+      "setup": [
+        "Use an installed Empire environment with its supported host, configured provider, and an explicit review budget."
+      ],
+      "inputs": [
+        "Review objective",
+        "Small diff or selected files",
+        "Model constraints and budget"
+      ],
+      "steps": [
+        "Select only the files needed to answer the review question.",
+        "Choose the review profile and spending limit.",
+        "Run one focused review and retain the provider result.",
+        "Reproduce each actionable finding before changing the implementation."
+      ],
+      "outputs": [
+        "Second-opinion report",
+        "Confirmed findings",
+        "Review cost record"
+      ],
+      "checks": [
+        "Every accepted finding names a file and reproducible behavior.",
+        "The review stays within the selected evidence and budget."
+      ],
+      "sources": [
+        "https://empirellm.com/",
+        "https://github.com/web5labs/empire-llm-codex"
+      ],
+      "cost": "Provider inference credits",
+      "recipe_id": "empire-llm-workflow",
+      "related_guide_ids": [],
+      "starter_prompt": "Use Empire LLM for Codex to get a focused second opinion on a change. Start from the inputs I provide, follow the setup and workflow, and return second-opinion report, confirmed findings, review cost record. Verify: Every accepted finding names a file and reproducible behavior. The review stays within the selected evidence and budget.",
+      "featured": false,
+      "doc_path": "docs/tools/empire-llm.md",
+      "when_to_use": "Request an independent model review of a small diff or compare model choices against a defined workload.",
+      "requirements": [
+        "Use an installed Empire environment with its supported host, configured provider, and an explicit review budget."
+      ],
+      "supported_functions": [
+        {
+          "name": "empire-review",
+          "kind": "skill",
+          "purpose": "Request a bounded partner-model code review"
+        },
+        {
+          "name": "empire-benchmarks",
+          "kind": "skill",
+          "purpose": "Compare model candidates using current benchmark metadata"
+        },
+        {
+          "name": "empire-cost-policy",
+          "kind": "skill",
+          "purpose": "Apply the chosen spending policy"
+        }
+      ]
+    },
+    {
+      "id": "aioscan",
+      "name": "AIOScan: AI Visibility Check",
+      "title": "Make public pages easier for AI systems to read",
+      "category": "discovery",
+      "specialist_ids": [
+        "product-interface-designer",
+        "infrastructure-reliability-engineer",
+        "creative-studio"
+      ],
+      "summary": "Check whether a public page is accessible to AI crawlers and whether its content and metadata are clear.",
+      "setup": [
+        "Choose the public page to inspect and retain access to its source or site settings."
+      ],
+      "inputs": [
+        "Public URL",
+        "Important page content"
+      ],
+      "steps": [
+        "Scan the page and retain the report URL.",
+        "Inspect failed fetch, content, robots, title, heading, and structured-data checks.",
+        "Fix the owning page template or site setting.",
+        "Scan the same URL again and compare the individual checks."
+      ],
+      "outputs": [
+        "Visibility report",
+        "Specific page fixes",
+        "Comparison of checks"
+      ],
+      "checks": [
+        "The intended content is present in the fetched page.",
+        "Fixed findings improve on a repeated scan of the same URL."
+      ],
+      "sources": [
+        "https://aioscan.com"
+      ],
+      "cost": "Provider access",
+      "recipe_id": "aioscan-workflow",
+      "related_guide_ids": [
+        "brand-strategist",
+        "keyword-tool",
+        "openseo",
+        "product-design"
+      ],
+      "starter_prompt": "Use AIOScan: AI Visibility Check to make public pages easier for AI systems to read. Start from the inputs I provide, follow the setup and workflow, and return visibility report, specific page fixes, comparison of checks. Verify: The intended content is present in the fetched page. Fixed findings improve on a repeated scan of the same URL.",
+      "featured": true,
+      "doc_path": "docs/tools/aioscan.md",
+      "when_to_use": "Check whether a public page is accessible to AI crawlers and whether its content and metadata are clear.",
+      "requirements": [
+        "Choose the public page to inspect and retain access to its source or site settings."
+      ],
+      "supported_functions": [
+        {
+          "name": "scan_website",
+          "kind": "tool",
+          "purpose": "Check page access, content, and AI-readability findings"
+        }
+      ]
+    },
+    {
+      "id": "darling-runtime",
+      "name": "Darling Runtime",
+      "title": "Try a macOS command-line utility on Linux",
+      "category": "computing",
+      "specialist_ids": [
+        "software-engineer",
+        "reverse-engineering-researcher",
+        "infrastructure-reliability-engineer"
+      ],
+      "summary": "Inspect a Mach-O command-line tool and test a defined compiler or utility workflow with Darling on a compatible Linux host.",
+      "setup": [
+        "Use a compatible Linux host and follow the Darling package setup for the target architecture.",
+        "Keep a representative input and expected command-line output."
+      ],
+      "inputs": [
+        "Authorized Mach-O utility",
+        "Arguments and fixture",
+        "Host architecture"
+      ],
+      "steps": [
+        "Inspect the binary architecture and linked dependencies.",
+        "Select the matching Darling components and record their versions.",
+        "Run a small fixture in the compatibility environment.",
+        "Compare exit status and output with the expected result and retain diagnostic logs."
+      ],
+      "outputs": [
+        "Compatibility result",
+        "Reproduction command",
+        "Diagnostic log"
+      ],
+      "checks": [
+        "The tested command produces the expected output for the fixture.",
+        "Host, runtime, binary, and invocation are recorded together."
+      ],
+      "sources": [
+        "https://tarekwasfy01.github.io/Darling-MacOS-for-ChatGPT-Plugin/"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "darling-runtime-workflow",
+      "related_guide_ids": [],
+      "starter_prompt": "Use Darling Runtime to try a macOS command-line utility on Linux. Start from the inputs I provide, follow the setup and workflow, and return compatibility result, reproduction command, diagnostic log. Verify: The tested command produces the expected output for the fixture. Host, runtime, binary, and invocation are recorded together.",
+      "featured": false,
+      "doc_path": "docs/tools/darling-runtime.md",
+      "when_to_use": "Inspect a Mach-O command-line tool and test a defined compiler or utility workflow with Darling on a compatible Linux host.",
+      "requirements": [
+        "Use a compatible Linux host and follow the Darling package setup for the target architecture.",
+        "Keep a representative input and expected command-line output."
+      ],
+      "supported_functions": [
+        {
+          "name": "darling-runtime",
+          "kind": "skill",
+          "purpose": "Set up and investigate a Mach-O command-line workflow on Linux"
+        }
+      ]
+    },
+    {
+      "id": "windowisp",
+      "name": "Windowisp",
+      "title": "Add a desktop companion to a focus session",
+      "category": "companion",
+      "specialist_ids": [
+        "personal-companion",
+        "learning-coach",
+        "creative-studio"
+      ],
+      "summary": "Use a Windows desktop pet, its playroom, and simple status reactions during personal work and learning sessions.",
+      "setup": [
+        "Use the Windowisp launcher on a Windows desktop and choose the requested mode."
+      ],
+      "inputs": [
+        "Requested pet mode",
+        "Optional supported status event"
+      ],
+      "steps": [
+        "Launch or connect to the existing pet through its supported launcher.",
+        "Choose a single mode such as playroom, movement control, or a status reaction.",
+        "Check the visible state and the relevant keyboard controls.",
+        "Pause or close the companion when the session ends."
+      ],
+      "outputs": [
+        "Configured desktop companion",
+        "Session controls"
+      ],
+      "checks": [
+        "The selected mode appears on the desktop.",
+        "Status reactions use the supported event names and leave task content private."
+      ],
+      "sources": [
+        "https://caiuto-ai.caiuto.chatgpt.site"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "windowisp-workflow",
+      "related_guide_ids": [
+        "flowchart-maker",
+        "formula-genius",
+        "mindmap",
+        "tinyfish"
+      ],
+      "starter_prompt": "Use Windowisp to add a desktop companion to a focus session. Start from the inputs I provide, follow the setup and workflow, and return configured desktop companion, session controls. Verify: The selected mode appears on the desktop. Status reactions use the supported event names and leave task content private.",
+      "featured": false,
+      "doc_path": "docs/tools/windowisp.md",
+      "when_to_use": "Use a Windows desktop pet, its playroom, and simple status reactions during personal work and learning sessions.",
+      "requirements": [
+        "Use the Windowisp launcher on a Windows desktop and choose the requested mode."
+      ],
+      "supported_functions": [
+        {
+          "name": "game-mode",
+          "kind": "skill",
+          "purpose": "Choose desktop-pet, playroom, and supported status-reaction modes"
+        }
+      ]
+    },
+    {
+      "id": "tinyfish",
+      "name": "TinyFish",
+      "title": "Collect a consistent set of web research results",
+      "category": "research",
+      "specialist_ids": [
+        "research-evaluator",
+        "automation-engineer",
+        "claims-adjudicator",
+        "coordinator",
+        "personal-companion",
+        "garden-companion"
+      ],
+      "summary": "Find relevant pages, extract comparable fields, and complete a defined browser task with a clear final result.",
+      "setup": [
+        "Specify the sites, fields, and number of results; select a browser profile only for a task that needs that account."
+      ],
+      "inputs": [
+        "Research question or browser task",
+        "Allowed sites",
+        "Required output fields"
+      ],
+      "steps": [
+        "Search for the most relevant pages or open the provided URLs.",
+        "Fetch the supporting content and retain page URLs for each result.",
+        "For interactive work, define the exact destination and observable completion state before starting the browser run.",
+        "Collect the results, deduplicate them, and inspect a sample against the original pages."
+      ],
+      "outputs": [
+        "Cited research table or completed browser result",
+        "Source URLs",
+        "Run identifier when used"
+      ],
+      "checks": [
+        "Required fields are present and trace to their source pages.",
+        "Interactive work ends in the requested observable state."
+      ],
+      "sources": [
+        "https://github.com/tinyfish-io/tinyfish-mcp-server",
+        "https://docs.tinyfish.ai/"
+      ],
+      "cost": "Free search and fetch; browser automation and monitoring use the account wallet",
+      "recipe_id": "tinyfish-workflow",
+      "related_guide_ids": [
+        "flowchart-maker",
+        "formula-genius",
+        "gum",
+        "katex-error-fixer",
+        "mindmap",
+        "ndot-physics",
+        "windowisp",
+        "wolfram"
+      ],
+      "starter_prompt": "Use TinyFish to collect a consistent set of web research results. Start from the inputs I provide, follow the setup and workflow, and return cited research table or completed browser result, source urls, run identifier when used. Verify: Required fields are present and trace to their source pages. Interactive work ends in the requested observable state.",
+      "featured": true,
+      "doc_path": "docs/tools/tinyfish.md",
+      "when_to_use": "Find relevant pages, extract comparable fields, and complete a defined browser task with a clear final result.",
+      "requirements": [
+        "Specify the sites, fields, and number of results; select a browser profile only for a task that needs that account."
+      ],
+      "supported_functions": [
+        {
+          "name": "search",
+          "kind": "tool",
+          "purpose": "Find relevant public web pages"
+        },
+        {
+          "name": "fetch_content",
+          "kind": "tool",
+          "purpose": "Read and extract information from a specified page"
+        },
+        {
+          "name": "run_web_automation",
+          "kind": "tool",
+          "purpose": "Carry out a defined browser interaction"
+        }
+      ]
+    },
+    {
+      "id": "promptfoo",
+      "name": "Promptfoo",
+      "title": "Evaluate prompts with repeatable examples",
+      "category": "models",
+      "specialist_ids": [
+        "model-builder",
+        "adversarial-verifier",
+        "software-engineer",
+        "research-evaluator",
+        "automation-engineer"
+      ],
+      "summary": "Compare prompts or model-backed applications against representative examples and explicit pass criteria.",
+      "setup": [
+        "Install the Promptfoo CLI, choose a target provider, and set credentials in the environment when required."
+      ],
+      "inputs": [
+        "Prompt or application endpoint",
+        "Representative and regression cases",
+        "Expected outcomes and budget"
+      ],
+      "steps": [
+        "Connect one representative request and verify the response parser.",
+        "Create test cases with expected answers or source records.",
+        "Use deterministic assertions for exact requirements and a defined rubric for semantic quality.",
+        "Run the suite, inspect failures, and compare the candidate with the baseline on the same cases."
+      ],
+      "outputs": [
+        "Evaluation configuration",
+        "Case results",
+        "Baseline comparison"
+      ],
+      "checks": [
+        "The suite catches an intentionally incorrect output.",
+        "The candidate meets the declared thresholds without changing the expected answers."
+      ],
+      "sources": [
+        "https://www.promptfoo.dev/docs/integrations/agent-skill",
+        "https://www.promptfoo.dev",
+        "https://github.com/promptfoo/promptfoo"
+      ],
+      "cost": "Local CLI; model-provider usage varies",
+      "recipe_id": "promptfoo-workflow",
+      "related_guide_ids": [
+        "amd",
+        "atlas-continuum",
+        "atlas-omnium",
+        "codex-dev-workflows",
+        "deepbom",
+        "endor-labs",
+        "hugging-face",
+        "modal",
+        "nvidia",
+        "prompt-injection",
+        "rag-genai",
+        "superpowers"
+      ],
+      "starter_prompt": "Use Promptfoo to evaluate prompts with repeatable examples. Start from the inputs I provide, follow the setup and workflow, and return evaluation configuration, case results, baseline comparison. Verify: The suite catches an intentionally incorrect output. The candidate meets the declared thresholds without changing the expected answers.",
+      "featured": true,
+      "doc_path": "docs/tools/promptfoo.md",
+      "when_to_use": "Compare prompts or model-backed applications against representative examples and explicit pass criteria.",
+      "requirements": [
+        "Install the Promptfoo CLI, choose a target provider, and set credentials in the environment when required."
+      ],
+      "supported_functions": [
+        {
+          "name": "promptfoo-provider-setup",
+          "kind": "skill",
+          "purpose": "Connect and smoke-test the target"
+        },
+        {
+          "name": "promptfoo-evals",
+          "kind": "skill",
+          "purpose": "Run cases and evaluate their assertions"
+        },
+        {
+          "name": "promptfoo-redteam-setup",
+          "kind": "skill",
+          "purpose": "Select adversarial cases for the authorized target"
+        }
+      ]
+    },
+    {
+      "id": "pablooo",
+      "name": "Pablooo.club Benchmark library",
+      "title": "Find proven interface patterns for a screen",
+      "category": "design",
+      "specialist_ids": [
+        "product-interface-designer",
+        "creative-studio"
+      ],
+      "summary": "Explore real product screenshots to understand useful layouts, interactions, and content patterns for a specific user task.",
+      "setup": [
+        "Describe the screen as a user task and choose mobile or desktop when it matters."
+      ],
+      "inputs": [
+        "Screen goal",
+        "Audience",
+        "Target device"
+      ],
+      "steps": [
+        "Search by the user task without facet filters on the first request.",
+        "Select a few relevant screenshots and inspect their details.",
+        "Compare information hierarchy, primary action, empty states, and error handling.",
+        "Translate the useful principles into an original design brief for the product."
+      ],
+      "outputs": [
+        "Reference shortlist",
+        "Pattern comparison",
+        "Original screen brief"
+      ],
+      "checks": [
+        "Each design decision connects to the product task.",
+        "Reference imagery is used for analysis and the delivered interface uses original assets and copy."
+      ],
+      "sources": [
+        "https://pablooo.club/mcp"
+      ],
+      "cost": "Free screenshot search and reference library",
+      "recipe_id": "pablooo-workflow",
+      "related_guide_ids": [
+        "brand-strategist",
+        "designly",
+        "magicpath",
+        "product-design",
+        "wixel"
+      ],
+      "starter_prompt": "Use Pablooo.club Benchmark library to find proven interface patterns for a screen. Start from the inputs I provide, follow the setup and workflow, and return reference shortlist, pattern comparison, original screen brief. Verify: Each design decision connects to the product task. Reference imagery is used for analysis and the delivered interface uses original assets and copy.",
+      "featured": true,
+      "doc_path": "docs/tools/pablooo.md",
+      "when_to_use": "Explore real product screenshots to understand useful layouts, interactions, and content patterns for a specific user task.",
+      "requirements": [
+        "Describe the screen as a user task and choose mobile or desktop when it matters."
+      ],
+      "supported_functions": [
+        {
+          "name": "search_screenshots",
+          "kind": "tool",
+          "purpose": "Find screen references for a user task"
+        },
+        {
+          "name": "get_screenshot_base64data",
+          "kind": "tool",
+          "purpose": "Inspect a selected screenshot"
+        },
+        {
+          "name": "search_facet_values",
+          "kind": "tool",
+          "purpose": "Discover valid filters when a search needs refinement"
+        }
+      ]
+    },
+    {
+      "id": "hugging-face",
+      "name": "Hugging Face",
+      "title": "Choose a model and dataset for the actual task",
+      "category": "models",
+      "specialist_ids": [
+        "model-builder",
+        "research-evaluator",
+        "data-engineering-architect",
+        "adversarial-verifier"
+      ],
+      "summary": "Compare candidate models, datasets, and Spaces using their documented tasks, requirements, licenses, and evaluation evidence.",
+      "setup": [
+        "Define the task, hardware limit, data sensitivity, and acceptable license terms."
+      ],
+      "inputs": [
+        "Task and evaluation examples",
+        "Hardware and latency needs",
+        "License constraints"
+      ],
+      "steps": [
+        "Search the Hub for a small set of relevant models and datasets.",
+        "Read repository details and model or dataset cards.",
+        "Record exact revisions, requirements, evaluation conditions, and any access steps.",
+        "Select candidates for a reproducible comparison using the same test inputs."
+      ],
+      "outputs": [
+        "Model and dataset shortlist",
+        "Revision-pinned evaluation inputs",
+        "Selection rationale"
+      ],
+      "checks": [
+        "Every candidate has a source repository and a checked license.",
+        "Comparison results use the same task, inputs, and metrics."
+      ],
+      "sources": [
+        "https://huggingface.co/docs/hub/index"
+      ],
+      "cost": "Public discovery; hosted compute and inference use provider plans",
+      "recipe_id": "hugging-face-workflow",
+      "related_guide_ids": [
+        "amd",
+        "deepbom",
+        "modal",
+        "nvidia",
+        "prompt-injection",
+        "promptfoo",
+        "rag-genai"
+      ],
+      "starter_prompt": "Use Hugging Face to choose a model and dataset for the actual task. Start from the inputs I provide, follow the setup and workflow, and return model and dataset shortlist, revision-pinned evaluation inputs, selection rationale. Verify: Every candidate has a source repository and a checked license. Comparison results use the same task, inputs, and metrics.",
+      "featured": true,
+      "doc_path": "docs/tools/hugging-face.md",
+      "when_to_use": "Compare candidate models, datasets, and Spaces using their documented tasks, requirements, licenses, and evaluation evidence.",
+      "requirements": [
+        "Define the task, hardware limit, data sensitivity, and acceptable license terms."
+      ],
+      "supported_functions": [
+        {
+          "name": "model_search",
+          "kind": "tool",
+          "purpose": "Find relevant models"
+        },
+        {
+          "name": "dataset_search",
+          "kind": "tool",
+          "purpose": "Find relevant datasets"
+        },
+        {
+          "name": "hub_repo_details",
+          "kind": "tool",
+          "purpose": "Read repository metadata and model or dataset cards"
+        },
+        {
+          "name": "hf_doc_search",
+          "kind": "tool",
+          "purpose": "Find current official implementation guidance"
+        }
+      ]
+    },
+    {
+      "id": "product-design",
+      "name": "Product Design",
+      "title": "Audit and improve an important user journey",
+      "category": "design",
+      "specialist_ids": [
+        "product-interface-designer",
+        "creative-studio",
+        "software-engineer"
+      ],
+      "summary": "Find the points where people lose context, struggle to act, or cannot access a feature, then verify the improved journey.",
+      "setup": [
+        "Choose one user journey and provide its URL, app, or runnable project."
+      ],
+      "inputs": [
+        "User goal",
+        "Current flow",
+        "Target devices and accessibility needs"
+      ],
+      "steps": [
+        "Capture the starting screen and follow the complete task.",
+        "Record friction with screenshots, concrete consequences, and severity.",
+        "Implement the most useful correction while preserving the established design language.",
+        "Repeat the task on the relevant screen sizes and check keyboard and focus behavior."
+      ],
+      "outputs": [
+        "Evidence-based findings",
+        "Improved screens",
+        "Verified user journey"
+      ],
+      "checks": [
+        "The user can complete the target task.",
+        "The final rendered screens match the intended layout and accessible interaction."
+      ],
+      "sources": [
+        "https://github.com/openai/openai/tree/master/chatgpt/oai-maintained-plugins/plugins/product-design"
+      ],
+      "cost": "Host tools and optional generation services",
+      "recipe_id": "product-design-workflow",
+      "related_guide_ids": [
+        "aioscan",
+        "brand-strategist",
+        "designly",
+        "expo",
+        "keyword-tool",
+        "magicpath",
+        "openseo",
+        "pablooo",
+        "test-android-apps",
+        "testing-react-native",
+        "wixel"
+      ],
+      "starter_prompt": "Use Product Design to audit and improve an important user journey. Start from the inputs I provide, follow the setup and workflow, and return evidence-based findings, improved screens, verified user journey. Verify: The user can complete the target task. The final rendered screens match the intended layout and accessible interaction.",
+      "featured": true,
+      "doc_path": "docs/tools/product-design.md",
+      "when_to_use": "Find the points where people lose context, struggle to act, or cannot access a feature, then verify the improved journey.",
+      "requirements": [
+        "Choose one user journey and provide its URL, app, or runnable project."
+      ],
+      "supported_functions": [
+        {
+          "name": "audit",
+          "kind": "skill",
+          "purpose": "Review a rendered user journey"
+        },
+        {
+          "name": "research",
+          "kind": "skill",
+          "purpose": "Investigate high-impact product friction"
+        },
+        {
+          "name": "image-to-code",
+          "kind": "skill",
+          "purpose": "Implement an approved visual reference"
+        }
+      ]
+    },
+    {
+      "id": "descope",
+      "name": "Descope",
+      "title": "Review sign-in and application access rules",
+      "category": "security",
+      "specialist_ids": [
+        "software-engineer",
+        "adversarial-verifier",
+        "infrastructure-reliability-engineer"
+      ],
+      "summary": "Trace a login flow and its roles, permissions, tenant boundaries, and audit evidence before changing access behavior.",
+      "setup": [
+        "Connect the intended Descope project and prepare test users for the allowed and denied cases."
+      ],
+      "inputs": [
+        "Application routes",
+        "Role and tenant matrix",
+        "Expected access decisions"
+      ],
+      "steps": [
+        "Confirm the project and discover the relevant management operations.",
+        "Read the flow and access-control definitions needed for the task.",
+        "Compare the configured rules with an allow-and-deny test matrix.",
+        "Apply the requested change through the supported project workflow and repeat both positive and negative cases."
+      ],
+      "outputs": [
+        "Access-control matrix",
+        "Flow or policy update",
+        "Authentication regression results"
+      ],
+      "checks": [
+        "Authorized users reach the intended routes.",
+        "Wrong-role and wrong-tenant cases are rejected without exposing protected data."
+      ],
+      "sources": [
+        "https://docs.descope.com/api/management"
+      ],
+      "cost": "Descope project plan",
+      "recipe_id": "descope-workflow",
+      "related_guide_ids": [
+        "authorised-osint",
+        "endor-labs",
+        "prompt-injection",
+        "reverse-engineering"
+      ],
+      "starter_prompt": "Use Descope to review sign-in and application access rules. Start from the inputs I provide, follow the setup and workflow, and return access-control matrix, flow or policy update, authentication regression results. Verify: Authorized users reach the intended routes. Wrong-role and wrong-tenant cases are rejected without exposing protected data.",
+      "featured": true,
+      "doc_path": "docs/tools/descope.md",
+      "when_to_use": "Trace a login flow and its roles, permissions, tenant boundaries, and audit evidence before changing access behavior.",
+      "requirements": [
+        "Connect the intended Descope project and prepare test users for the allowed and denied cases."
+      ],
+      "supported_functions": [
+        {
+          "name": "session",
+          "kind": "tool",
+          "purpose": "Confirm the account and selected project"
+        },
+        {
+          "name": "list_operations",
+          "kind": "tool",
+          "purpose": "Discover the current management operations"
+        },
+        {
+          "name": "flows_read",
+          "kind": "tool",
+          "purpose": "Read authentication flow definitions"
+        },
+        {
+          "name": "access_control_read",
+          "kind": "tool",
+          "purpose": "Read roles, permissions, and relationship rules"
+        }
+      ]
+    },
+    {
+      "id": "planetscale",
+      "name": "PlanetScale",
+      "title": "Improve a slow query with production evidence",
+      "category": "data",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "infrastructure-reliability-engineer",
+        "software-engineer"
+      ],
+      "summary": "Use schema, query insights, and workload context to prepare a focused database improvement and verify it safely.",
+      "setup": [
+        "Connect the intended organization, database, and branch with the access needed for the task."
+      ],
+      "inputs": [
+        "Database and branch",
+        "Slow query or error fingerprint",
+        "Application access pattern"
+      ],
+      "steps": [
+        "Read schema, query insights, and relevant branch metrics.",
+        "Identify the query shape and application route responsible for the cost.",
+        "Prepare an index, query, or schema change with a rollback path.",
+        "Compare query results and query-plan or timing evidence on a representative branch before release."
+      ],
+      "outputs": [
+        "Query diagnosis",
+        "Reviewed change",
+        "Before-and-after evidence"
+      ],
+      "checks": [
+        "Result rows and totals stay equivalent.",
+        "Performance comparisons use the same input and workload conditions."
+      ],
+      "sources": [
+        "https://planetscale.com"
+      ],
+      "cost": "PlanetScale database plan",
+      "recipe_id": "planetscale-workflow",
+      "related_guide_ids": [
+        "formula-genius",
+        "preset",
+        "sql-copilot",
+        "sql-expert",
+        "wowsql"
+      ],
+      "starter_prompt": "Use PlanetScale to improve a slow query with production evidence. Start from the inputs I provide, follow the setup and workflow, and return query diagnosis, reviewed change, before-and-after evidence. Verify: Result rows and totals stay equivalent. Performance comparisons use the same input and workload conditions.",
+      "featured": true,
+      "doc_path": "docs/tools/planetscale.md",
+      "when_to_use": "Use schema, query insights, and workload context to prepare a focused database improvement and verify it safely.",
+      "requirements": [
+        "Connect the intended organization, database, and branch with the access needed for the task."
+      ],
+      "supported_functions": [
+        {
+          "name": "get_branch_schema",
+          "kind": "tool",
+          "purpose": "Read the selected branch schema"
+        },
+        {
+          "name": "get_insights",
+          "kind": "tool",
+          "purpose": "Inspect query performance"
+        },
+        {
+          "name": "execute_read_query",
+          "kind": "tool",
+          "purpose": "Run a query through the read-only role"
+        },
+        {
+          "name": "list_schema_recommendations",
+          "kind": "tool",
+          "purpose": "Inspect proposed schema improvements"
+        }
+      ]
+    },
+    {
+      "id": "katex-error-fixer",
+      "name": "KaTeX Error Fixer",
+      "title": "Keep equations correct from source to screen",
+      "category": "learning",
+      "specialist_ids": [
+        "learning-coach",
+        "research-evaluator",
+        "product-interface-designer",
+        "software-engineer"
+      ],
+      "summary": "Repair broken mathematical notation at the layer that owns it and check the resulting learning page.",
+      "setup": [
+        "Provide the approved mathematical source, affected content, and a runnable page or build."
+      ],
+      "inputs": [
+        "Approved equations",
+        "Failing page or data item",
+        "Build and renderer configuration"
+      ],
+      "steps": [
+        "Compare the source notation with the stored content and rendered page.",
+        "Separate prose and currency from inline and display mathematics.",
+        "Correct the responsible source, transformation, or renderer and rebuild.",
+        "Inspect the page for missing equations, raw TeX, malformed delimiters, and layout clipping."
+      ],
+      "outputs": [
+        "Corrected math content",
+        "Rendered verification",
+        "Regression fixture"
+      ],
+      "checks": [
+        "Symbols and equation order match the approved source.",
+        "Currency, prose, inline equations, and display equations render correctly."
+      ],
+      "sources": [
+        "https://academy.ivypath.io/"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "katex-error-fixer-workflow",
+      "related_guide_ids": [
+        "gum",
+        "mindmap",
+        "ndot-physics",
+        "tinyfish",
+        "wolfram"
+      ],
+      "starter_prompt": "Use KaTeX Error Fixer to keep equations correct from source to screen. Start from the inputs I provide, follow the setup and workflow, and return corrected math content, rendered verification, regression fixture. Verify: Symbols and equation order match the approved source. Currency, prose, inline equations, and display equations render correctly.",
+      "featured": false,
+      "doc_path": "docs/tools/katex-error-fixer.md",
+      "when_to_use": "Repair broken mathematical notation at the layer that owns it and check the resulting learning page.",
+      "requirements": [
+        "Provide the approved mathematical source, affected content, and a runnable page or build."
+      ],
+      "supported_functions": [
+        {
+          "name": "math-content-integrity",
+          "kind": "skill",
+          "purpose": "Find and repair equation rendering defects across the content pipeline"
+        }
+      ]
+    },
+    {
+      "id": "gum",
+      "name": "Gum",
+      "title": "Create a precise editable technical figure",
+      "category": "visualization",
+      "specialist_ids": [
+        "research-evaluator",
+        "learning-coach",
+        "creative-studio",
+        "data-engineering-architect",
+        "product-interface-designer"
+      ],
+      "summary": "Build diagrams, plots, mathematical figures, and slides from editable JSX with reproducible exports.",
+      "setup": [
+        "Install the Gum renderer and select the required SVG, PNG, or PDF output."
+      ],
+      "inputs": [
+        "Figure purpose",
+        "Verified data or equations",
+        "Dimensions and labels"
+      ],
+      "steps": [
+        "Choose the figure type and define units, axes, labels, and relationships.",
+        "Write the Gum JSX using its supported drawing components.",
+        "Render the figure and inspect label placement, bounds, and visual hierarchy.",
+        "Export the source and final figure together."
+      ],
+      "outputs": [
+        "Editable JSX",
+        "Rendered figure",
+        "Export files"
+      ],
+      "checks": [
+        "Numbers, units, and relationships match the inputs.",
+        "Text remains readable and unclipped at the intended display size."
+      ],
+      "sources": [
+        "https://github.com/CompendiumLabs/gum-jsx"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "gum-workflow",
+      "related_guide_ids": [
+        "diagram-maker",
+        "flowchart-maker",
+        "katex-error-fixer",
+        "lucid",
+        "mindmap",
+        "ndot-physics",
+        "tinyfish",
+        "wolfram"
+      ],
+      "starter_prompt": "Use Gum to create a precise editable technical figure. Start from the inputs I provide, follow the setup and workflow, and return editable jsx, rendered figure, export files. Verify: Numbers, units, and relationships match the inputs. Text remains readable and unclipped at the intended display size.",
+      "featured": false,
+      "doc_path": "docs/tools/gum.md",
+      "when_to_use": "Build diagrams, plots, mathematical figures, and slides from editable JSX with reproducible exports.",
+      "requirements": [
+        "Install the Gum renderer and select the required SVG, PNG, or PDF output."
+      ],
+      "supported_functions": [
+        {
+          "name": "gum-jsx",
+          "kind": "skill",
+          "purpose": "Author and render editable technical figures"
+        }
+      ]
+    },
+    {
+      "id": "nvidia",
+      "name": "NVIDIA Skills",
+      "title": "Select the right NVIDIA workflow for the hardware",
+      "category": "models",
+      "specialist_ids": [
+        "model-builder",
+        "infrastructure-reliability-engineer",
+        "data-engineering-architect",
+        "creative-studio",
+        "software-engineer"
+      ],
+      "summary": "Find the relevant NVIDIA workflow for inference, data processing, simulation, or device work and measure the result on the target system.",
+      "setup": [
+        "Identify the exact GPU or device, driver, operating system, and task.",
+        "Use the current NVIDIA skills catalog to select the applicable package."
+      ],
+      "inputs": [
+        "Hardware and software versions",
+        "Workload and baseline",
+        "Performance or correctness goal"
+      ],
+      "steps": [
+        "Match the task to the specific NVIDIA product and skill.",
+        "Check its prerequisites against the target hardware.",
+        "Run the smallest representative workload and retain its configuration.",
+        "Change one relevant setting and compare accuracy, latency, throughput, or memory against the baseline."
+      ],
+      "outputs": [
+        "Selected NVIDIA workflow",
+        "Environment record",
+        "Measured comparison"
+      ],
+      "checks": [
+        "The chosen skill supports the actual hardware and product.",
+        "Improvements are measured under the same workload conditions."
+      ],
+      "sources": [
+        "https://build.nvidia.com/skills/",
+        "https://github.com/NVIDIA/skills"
+      ],
+      "cost": "Local hardware; hosted services use their own plans",
+      "recipe_id": "nvidia-workflow",
+      "related_guide_ids": [
+        "amd",
+        "deepbom",
+        "game-development-studio",
+        "hugging-face",
+        "modal",
+        "promptfoo",
+        "unity-essentials",
+        "wixel"
+      ],
+      "starter_prompt": "Use NVIDIA Skills to select the right NVIDIA workflow for the hardware. Start from the inputs I provide, follow the setup and workflow, and return selected nvidia workflow, environment record, measured comparison. Verify: The chosen skill supports the actual hardware and product. Improvements are measured under the same workload conditions.",
+      "featured": false,
+      "doc_path": "docs/tools/nvidia.md",
+      "when_to_use": "Find the relevant NVIDIA workflow for inference, data processing, simulation, or device work and measure the result on the target system.",
+      "requirements": [
+        "Identify the exact GPU or device, driver, operating system, and task.",
+        "Use the current NVIDIA skills catalog to select the applicable package."
+      ],
+      "supported_functions": [
+        {
+          "name": "nvidia-skill-finder",
+          "kind": "skill",
+          "purpose": "Select the relevant NVIDIA skill from the current product catalog"
+        }
+      ]
+    },
+    {
+      "id": "amd",
+      "name": "AMD",
+      "title": "Run and tune AI workloads on AMD hardware",
+      "category": "models",
+      "specialist_ids": [
+        "model-builder",
+        "infrastructure-reliability-engineer",
+        "creative-studio",
+        "automation-engineer"
+      ],
+      "summary": "Use local media inference or an AMD GPU serving workflow with a repeatable task, a known baseline, and a useful quality check.",
+      "setup": [
+        "Identify the AMD device and supported runtime; select Lemonade for local media tasks or the appropriate Instinct serving workflow."
+      ],
+      "inputs": [
+        "Model and representative input",
+        "Hardware and runtime",
+        "Quality and performance target"
+      ],
+      "steps": [
+        "Confirm device and runtime compatibility.",
+        "Run a baseline image, audio, or inference task with a fixed input.",
+        "Apply a focused configuration change or selected optimization.",
+        "Compare output quality, elapsed time, memory, and throughput where relevant."
+      ],
+      "outputs": [
+        "Working local or GPU workflow",
+        "Configuration",
+        "Comparison results"
+      ],
+      "checks": [
+        "The expected output is produced and inspected.",
+        "The recorded gain includes the device, runtime, model, and workload."
+      ],
+      "sources": [
+        "https://github.com/amd/skills"
+      ],
+      "cost": "Local hardware or chosen compute service",
+      "recipe_id": "amd-workflow",
+      "related_guide_ids": [
+        "deepbom",
+        "game-development-studio",
+        "hugging-face",
+        "modal",
+        "nvidia",
+        "promptfoo",
+        "unity-essentials",
+        "wixel"
+      ],
+      "starter_prompt": "Use AMD to run and tune AI workloads on AMD hardware. Start from the inputs I provide, follow the setup and workflow, and return working local or gpu workflow, configuration, comparison results. Verify: The expected output is produced and inspected. The recorded gain includes the device, runtime, model, and workload.",
+      "featured": false,
+      "doc_path": "docs/tools/amd.md",
+      "when_to_use": "Use local media inference or an AMD GPU serving workflow with a repeatable task, a known baseline, and a useful quality check.",
+      "requirements": [
+        "Identify the AMD device and supported runtime; select Lemonade for local media tasks or the appropriate Instinct serving workflow."
+      ],
+      "supported_functions": [
+        {
+          "name": "local-ai-use",
+          "kind": "skill",
+          "purpose": "Run supported media tasks through a local Lemonade server"
+        },
+        {
+          "name": "serving-llms-on-instinct",
+          "kind": "skill",
+          "purpose": "Set up the selected AMD Instinct serving workload"
+        },
+        {
+          "name": "hyperloom-workload-optimizer",
+          "kind": "skill",
+          "purpose": "Explore and measure focused inference optimizations"
+        }
+      ]
+    },
+    {
+      "id": "wixel",
+      "name": "Wixel",
+      "title": "Create a coordinated set of visual assets",
+      "category": "creative",
+      "specialist_ids": [
+        "creative-studio",
+        "product-interface-designer",
+        "personal-companion"
+      ],
+      "summary": "Generate or refine logos, images, presentations, invitations, and other visual assets using a clear brief and consistent style.",
+      "setup": [
+        "Choose the intended asset type, dimensions, and brand kit; check available generation credits."
+      ],
+      "inputs": [
+        "Creative brief",
+        "Approved text",
+        "Brand assets and output size"
+      ],
+      "steps": [
+        "Send one complete brief and retain the returned conversation and task identifiers.",
+        "Answer any required style or content question.",
+        "Review the generated result and request a precise revision when necessary.",
+        "Download the delivered assets and inspect the final dimensions and typography."
+      ],
+      "outputs": [
+        "Visual asset set",
+        "Editable or exported files",
+        "Approved variations"
+      ],
+      "checks": [
+        "Required text is legible and correct.",
+        "Assets use the requested dimensions, style, and brand elements."
+      ],
+      "sources": [
+        "https://www.wix.com/wixel",
+        "https://support.wix.com/en/article/wixel-an-overview"
+      ],
+      "cost": "Generation credits; image conversion is free",
+      "recipe_id": "wixel-workflow",
+      "related_guide_ids": [
+        "amd",
+        "brand-strategist",
+        "designly",
+        "game-development-studio",
+        "magicpath",
+        "nvidia",
+        "pablooo",
+        "product-design",
+        "unity-essentials"
+      ],
+      "starter_prompt": "Use Wixel to create a coordinated set of visual assets. Start from the inputs I provide, follow the setup and workflow, and return visual asset set, editable or exported files, approved variations. Verify: Required text is legible and correct. Assets use the requested dimensions, style, and brand elements.",
+      "featured": false,
+      "doc_path": "docs/tools/wixel.md",
+      "when_to_use": "Generate or refine logos, images, presentations, invitations, and other visual assets using a clear brief and consistent style.",
+      "requirements": [
+        "Choose the intended asset type, dimensions, and brand kit; check available generation credits."
+      ],
+      "supported_functions": [
+        {
+          "name": "send_wixel_message",
+          "kind": "tool",
+          "purpose": "Create or revise the requested visual asset"
+        },
+        {
+          "name": "get_wixel_asset_result",
+          "kind": "tool",
+          "purpose": "Display the produced asset"
+        },
+        {
+          "name": "wixel_convert_image",
+          "kind": "tool",
+          "purpose": "Convert an image to PNG or JPEG"
+        }
+      ]
+    },
+    {
+      "id": "sql-copilot",
+      "name": "SQL Copilot",
+      "title": "Fix a query with a small example dataset",
+      "category": "data",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "software-engineer",
+        "adversarial-verifier"
+      ],
+      "summary": "Debug joins, nulls, dates, duplicate rows, and aggregates using explicit expected results before optimizing the query.",
+      "setup": [
+        "Provide the SQL dialect, schema, failing query, and a small representative dataset."
+      ],
+      "inputs": [
+        "Query and schema",
+        "Example rows",
+        "Expected result table"
+      ],
+      "steps": [
+        "Translate the request into explicit row-selection and aggregation rules.",
+        "Build a small dataset with duplicates, nulls, and relevant time boundaries.",
+        "Inspect join cardinality and intermediate row counts.",
+        "Correct the query and compare exact results with the expected table."
+      ],
+      "outputs": [
+        "Corrected query",
+        "Representative SQL fixture",
+        "Result comparison"
+      ],
+      "checks": [
+        "The query returns the expected rows and totals.",
+        "Duplicate and null cases behave intentionally."
+      ],
+      "sources": [
+        "https://tekrislabs.com/"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "sql-copilot-workflow",
+      "related_guide_ids": [
+        "formula-genius",
+        "planetscale",
+        "preset",
+        "sql-expert",
+        "wowsql"
+      ],
+      "starter_prompt": "Use SQL Copilot to fix a query with a small example dataset. Start from the inputs I provide, follow the setup and workflow, and return corrected query, representative sql fixture, result comparison. Verify: The query returns the expected rows and totals. Duplicate and null cases behave intentionally.",
+      "featured": true,
+      "doc_path": "docs/tools/sql-copilot.md",
+      "when_to_use": "Debug joins, nulls, dates, duplicate rows, and aggregates using explicit expected results before optimizing the query.",
+      "requirements": [
+        "Provide the SQL dialect, schema, failing query, and a small representative dataset."
+      ],
+      "supported_functions": [
+        {
+          "name": "join-cardinality",
+          "kind": "skill",
+          "purpose": "Check whether joins multiply or drop rows"
+        },
+        {
+          "name": "null-and-time-semantics",
+          "kind": "skill",
+          "purpose": "Review null, date, and time behavior"
+        },
+        {
+          "name": "test-sql-logic",
+          "kind": "skill",
+          "purpose": "Compare query behavior with explicit fixtures"
+        }
+      ]
+    },
+    {
+      "id": "sql-expert",
+      "name": "SQL Expert",
+      "title": "Design a schema that fits the application",
+      "category": "data",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "software-engineer",
+        "learning-coach"
+      ],
+      "summary": "Turn application requirements into clear tables, keys, constraints, indexes, and a maintainable migration.",
+      "setup": [
+        "Choose the database dialect and provide the core application reads and writes."
+      ],
+      "inputs": [
+        "Entities and relationships",
+        "Access patterns",
+        "Existing schema when present"
+      ],
+      "steps": [
+        "Model the entities, cardinalities, and lifecycle rules.",
+        "Choose keys, data types, constraints, and indexes from the access patterns.",
+        "Write a migration and representative insert and query examples.",
+        "Verify valid records succeed and invalid relationships or duplicates fail as intended."
+      ],
+      "outputs": [
+        "Schema and relationship model",
+        "Migration",
+        "Example queries"
+      ],
+      "checks": [
+        "Constraints encode the stated data rules.",
+        "The migration works against the intended database version and preserves existing data."
+      ],
+      "sources": [
+        "https://github.com/Fasih38/plugin-pages/blob/main/README.md"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "sql-expert-workflow",
+      "related_guide_ids": [
+        "formula-genius",
+        "planetscale",
+        "preset",
+        "sql-copilot",
+        "wowsql"
+      ],
+      "starter_prompt": "Use SQL Expert to design a schema that fits the application. Start from the inputs I provide, follow the setup and workflow, and return schema and relationship model, migration, example queries. Verify: Constraints encode the stated data rules. The migration works against the intended database version and preserves existing data.",
+      "featured": true,
+      "doc_path": "docs/tools/sql-expert.md",
+      "when_to_use": "Turn application requirements into clear tables, keys, constraints, indexes, and a maintainable migration.",
+      "requirements": [
+        "Choose the database dialect and provide the core application reads and writes."
+      ],
+      "supported_functions": [
+        {
+          "name": "schema-design",
+          "kind": "skill",
+          "purpose": "Design tables and relationships"
+        },
+        {
+          "name": "sql-query-writer",
+          "kind": "skill",
+          "purpose": "Write a query for the supplied schema"
+        },
+        {
+          "name": "query-optimization",
+          "kind": "skill",
+          "purpose": "Review a query and its access pattern"
+        }
+      ]
+    },
+    {
+      "id": "rag-genai",
+      "name": "RAG & GenAI Copilot",
+      "title": "Build answers that stay connected to their sources",
+      "category": "models",
+      "specialist_ids": [
+        "model-builder",
+        "data-engineering-architect",
+        "research-evaluator",
+        "adversarial-verifier",
+        "claims-adjudicator"
+      ],
+      "summary": "Design and evaluate retrieval, ingestion, citations, and operational checks for a knowledge assistant.",
+      "setup": [
+        "Identify the corpus, update cadence, access rules, and representative user questions."
+      ],
+      "inputs": [
+        "Source corpus",
+        "Question-and-answer examples",
+        "Access and latency requirements"
+      ],
+      "steps": [
+        "Define document identity, chunking, metadata, and update behavior.",
+        "Evaluate retrieval on questions with known supporting passages.",
+        "Evaluate answer accuracy, citation support, and unanswerable questions.",
+        "Add monitoring for retrieval failures, stale content, latency, and access violations."
+      ],
+      "outputs": [
+        "Retrieval design",
+        "Evaluation dataset",
+        "Cited answer results",
+        "Operational checks"
+      ],
+      "checks": [
+        "Citations support the answer they accompany.",
+        "Restricted documents stay outside unauthorized queries and unsupported questions are handled correctly."
+      ],
+      "sources": [
+        "https://tekrislabs.com/"
+      ],
+      "cost": "Chosen model, embedding, and storage services",
+      "recipe_id": "rag-genai-workflow",
+      "related_guide_ids": [
+        "deepbom",
+        "hugging-face",
+        "prompt-injection",
+        "promptfoo"
+      ],
+      "starter_prompt": "Use RAG & GenAI Copilot to build answers that stay connected to their sources. Start from the inputs I provide, follow the setup and workflow, and return retrieval design, evaluation dataset, cited answer results, operational checks. Verify: Citations support the answer they accompany. Restricted documents stay outside unauthorized queries and unsupported questions are handled correctly.",
+      "featured": true,
+      "doc_path": "docs/tools/rag-genai.md",
+      "when_to_use": "Design and evaluate retrieval, ingestion, citations, and operational checks for a knowledge assistant.",
+      "requirements": [
+        "Identify the corpus, update cadence, access rules, and representative user questions."
+      ],
+      "supported_functions": [
+        {
+          "name": "design-ingestion-indexing",
+          "kind": "skill",
+          "purpose": "Plan document ingestion and updates"
+        },
+        {
+          "name": "design-retrieval",
+          "kind": "skill",
+          "purpose": "Choose retrieval and ranking behavior"
+        },
+        {
+          "name": "evaluate-rag",
+          "kind": "skill",
+          "purpose": "Measure retrieval and answer quality"
+        },
+        {
+          "name": "audit-citations",
+          "kind": "skill",
+          "purpose": "Check whether citations support the answer"
+        }
+      ]
+    },
+    {
+      "id": "test-android-apps",
+      "name": "Test Android Apps",
+      "title": "Verify an Android feature on an emulator",
+      "category": "apps",
+      "specialist_ids": [
+        "software-engineer",
+        "adversarial-verifier",
+        "product-interface-designer"
+      ],
+      "summary": "Exercise a real Android flow and capture the screenshots, logs, and performance evidence needed to explain failures.",
+      "setup": [
+        "Prepare the Android SDK, adb target, and application build."
+      ],
+      "inputs": [
+        "APK or project",
+        "User-flow steps",
+        "Expected screen states"
+      ],
+      "steps": [
+        "Install and launch the specified build on the chosen emulator.",
+        "Run the flow with adb interactions and inspect the UI tree at key steps.",
+        "Capture screenshots and relevant logcat errors.",
+        "For a measured performance issue, capture the appropriate frame, CPU, or memory trace and compare a repeatable baseline."
+      ],
+      "outputs": [
+        "Flow result",
+        "Screenshots and logs",
+        "Performance trace when needed"
+      ],
+      "checks": [
+        "The expected final screen and persisted state are present.",
+        "Failures include exact steps, target details, and the tested build."
+      ],
+      "sources": [
+        "https://github.com/openai/plugins"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "test-android-apps-workflow",
+      "related_guide_ids": [
+        "expo",
+        "product-design",
+        "testing-react-native"
+      ],
+      "starter_prompt": "Use Test Android Apps to verify an Android feature on an emulator. Start from the inputs I provide, follow the setup and workflow, and return flow result, screenshots and logs, performance trace when needed. Verify: The expected final screen and persisted state are present. Failures include exact steps, target details, and the tested build.",
+      "featured": true,
+      "doc_path": "docs/tools/test-android-apps.md",
+      "when_to_use": "Exercise a real Android flow and capture the screenshots, logs, and performance evidence needed to explain failures.",
+      "requirements": [
+        "Prepare the Android SDK, adb target, and application build."
+      ],
+      "supported_functions": [
+        {
+          "name": "android-emulator-qa",
+          "kind": "skill",
+          "purpose": "Run and inspect a real Android flow"
+        },
+        {
+          "name": "android-performance",
+          "kind": "skill",
+          "purpose": "Capture appropriate CPU, frame, or memory evidence"
+        }
+      ]
+    },
+    {
+      "id": "deepbom",
+      "name": "DEEPBOM Artifact Evidence",
+      "title": "Inspect a model artifact before deployment",
+      "category": "models",
+      "specialist_ids": [
+        "model-builder",
+        "adversarial-verifier",
+        "reverse-engineering-researcher",
+        "infrastructure-reliability-engineer"
+      ],
+      "summary": "Inspect model structure, operators, tensor metadata, and findings in a serialized deployment artifact.",
+      "setup": [
+        "Prepare a supported TFLite, ONNX, GGUF, SafeTensors, Core ML, or ExecuTorch artifact and select the required inspection depth."
+      ],
+      "inputs": [
+        "Model artifact",
+        "Format and intended runtime",
+        "Inspection question"
+      ],
+      "steps": [
+        "Confirm supported format and begin structural analysis.",
+        "Retain the artifact hash and model representation.",
+        "Query the relevant layers, findings, or tensor payloads for the specific question.",
+        "Export the evidence and use the findings to choose a separate runtime test."
+      ],
+      "outputs": [
+        "Model structure report",
+        "Artifact findings",
+        "Model BOM or visualization"
+      ],
+      "checks": [
+        "The report identifies the exact analyzed artifact.",
+        "Each finding references a specific layer, operator, or tensor."
+      ],
+      "sources": [
+        "https://deepbom.org/"
+      ],
+      "cost": "Provider access",
+      "recipe_id": "deepbom-workflow",
+      "related_guide_ids": [
+        "amd",
+        "hugging-face",
+        "modal",
+        "nvidia",
+        "prompt-injection",
+        "promptfoo",
+        "rag-genai"
+      ],
+      "starter_prompt": "Use DEEPBOM Artifact Evidence to inspect a model artifact before deployment. Start from the inputs I provide, follow the setup and workflow, and return model structure report, artifact findings, model bom or visualization. Verify: The report identifies the exact analyzed artifact. Each finding references a specific layer, operator, or tensor.",
+      "featured": true,
+      "doc_path": "docs/tools/deepbom.md",
+      "when_to_use": "Inspect model structure, operators, tensor metadata, and findings in a serialized deployment artifact.",
+      "requirements": [
+        "Prepare a supported TFLite, ONNX, GGUF, SafeTensors, Core ML, or ExecuTorch artifact and select the required inspection depth."
+      ],
+      "supported_functions": [
+        {
+          "name": "deepbom_capabilities",
+          "kind": "tool",
+          "purpose": "Check supported artifact formats and analysis options"
+        },
+        {
+          "name": "deepbom_analyze_file",
+          "kind": "tool",
+          "purpose": "Inspect the attached deployment artifact"
+        },
+        {
+          "name": "deepbom_query_file",
+          "kind": "tool",
+          "purpose": "Explore its layers, findings, or requested tensor analysis"
+        }
+      ]
+    },
+    {
+      "id": "build-macos-apps",
+      "name": "Build macOS Apps",
+      "title": "Build and test a native macOS application",
+      "category": "apps",
+      "specialist_ids": [
+        "software-engineer",
+        "adversarial-verifier",
+        "product-interface-designer",
+        "infrastructure-reliability-engineer"
+      ],
+      "summary": "Develop SwiftUI or AppKit features, diagnose Xcode and SwiftPM failures, and prepare a working macOS app package.",
+      "setup": [
+        "Use a macOS host with the required Xcode or Swift toolchain and the project dependencies."
+      ],
+      "inputs": [
+        "Xcode project or Swift package",
+        "Feature or failing case",
+        "Target macOS version"
+      ],
+      "steps": [
+        "Select the correct scheme or package target and reproduce the build or runtime behavior.",
+        "Implement the feature using the project’s scene, state, and window patterns.",
+        "Run relevant tests and inspect the resulting application.",
+        "For distribution work, inspect signing, entitlements, packaging, and notarization results."
+      ],
+      "outputs": [
+        "Working app or package",
+        "Test and build results",
+        "Distribution checks when requested"
+      ],
+      "checks": [
+        "The target builds with the specified toolchain.",
+        "The feature works in the running macOS app."
+      ],
+      "sources": [
+        "https://github.com/openai/plugins"
+      ],
+      "cost": "macOS host; distribution account requirements vary",
+      "recipe_id": "build-macos-apps-workflow",
+      "related_guide_ids": [],
+      "starter_prompt": "Use Build macOS Apps to build and test a native macOS application. Start from the inputs I provide, follow the setup and workflow, and return working app or package, test and build results, distribution checks when requested. Verify: The target builds with the specified toolchain. The feature works in the running macOS app.",
+      "featured": false,
+      "doc_path": "docs/tools/build-macos-apps.md",
+      "when_to_use": "Develop SwiftUI or AppKit features, diagnose Xcode and SwiftPM failures, and prepare a working macOS app package.",
+      "requirements": [
+        "Use a macOS host with the required Xcode or Swift toolchain and the project dependencies."
+      ],
+      "supported_functions": [
+        {
+          "name": "build-run-debug",
+          "kind": "skill",
+          "purpose": "Build and inspect the running macOS app"
+        },
+        {
+          "name": "test-triage",
+          "kind": "skill",
+          "purpose": "Narrow a failing Xcode or SwiftPM test"
+        },
+        {
+          "name": "signing-entitlements",
+          "kind": "skill",
+          "purpose": "Inspect signing and entitlement issues"
+        },
+        {
+          "name": "packaging-notarization",
+          "kind": "skill",
+          "purpose": "Validate distribution packaging"
+        }
+      ]
+    },
+    {
+      "id": "modal",
+      "name": "Modal",
+      "title": "Move a defined Python workload to cloud compute",
+      "category": "models",
+      "specialist_ids": [
+        "model-builder",
+        "data-engineering-architect",
+        "infrastructure-reliability-engineer",
+        "automation-engineer"
+      ],
+      "summary": "Package a Python task for an explicitly sized compute environment and retain its inputs, logs, outputs, and usage.",
+      "setup": [
+        "Set up and authenticate the Modal SDK through the supported host workflow.",
+        "Select the compute type, timeout, and budget for the task."
+      ],
+      "inputs": [
+        "Python workload",
+        "Dependencies and input fixture",
+        "Resource and time limits"
+      ],
+      "steps": [
+        "Reproduce the task with a small input and record its expected output.",
+        "Define the cloud image, dependencies, resources, and timeout.",
+        "Run the configured job and retain the job identifier and logs.",
+        "Download the output and compare it with the fixture or declared metric."
+      ],
+      "outputs": [
+        "Packaged workload",
+        "Job logs",
+        "Result artifact",
+        "Usage record"
+      ],
+      "checks": [
+        "The job uses the declared resources and completes within its limit.",
+        "The output passes the same check as the local fixture."
+      ],
+      "sources": [
+        "https://modal.com/docs",
+        "https://modal.com",
+        "https://github.com/modal-labs/modal-client"
+      ],
+      "cost": "Metered cloud compute",
+      "recipe_id": "modal-workflow",
+      "related_guide_ids": [
+        "amd",
+        "deepbom",
+        "hugging-face",
+        "nvidia",
+        "promptfoo"
+      ],
+      "starter_prompt": "Use Modal to move a defined Python workload to cloud compute. Start from the inputs I provide, follow the setup and workflow, and return packaged workload, job logs, result artifact, usage record. Verify: The job uses the declared resources and completes within its limit. The output passes the same check as the local fixture.",
+      "featured": false,
+      "doc_path": "docs/tools/modal.md",
+      "when_to_use": "Package a Python task for an explicitly sized compute environment and retain its inputs, logs, outputs, and usage.",
+      "requirements": [
+        "Set up and authenticate the Modal SDK through the supported host workflow.",
+        "Select the compute type, timeout, and budget for the task."
+      ],
+      "supported_functions": [
+        {
+          "name": "onboard-modal",
+          "kind": "skill",
+          "purpose": "Prepare the supported local Modal SDK and authentication workflow"
+        }
+      ]
+    },
+    {
+      "id": "game-development-studio",
+      "name": "Game Development Studio",
+      "title": "Bring a game asset into a tested scene",
+      "category": "games",
+      "specialist_ids": [
+        "creative-studio",
+        "software-engineer",
+        "product-interface-designer"
+      ],
+      "summary": "Produce or select a game asset, check its formats and materials, and verify it in a reproducible scene.",
+      "setup": [
+        "Prepare the local game-dev tools and the target engine or asset pipeline."
+      ],
+      "inputs": [
+        "Asset brief",
+        "Target formats and budgets",
+        "Reference scene"
+      ],
+      "steps": [
+        "Create or select the asset and check the usage rights for included materials.",
+        "Normalize scale, orientation, textures, and file formats.",
+        "Package the asset with the metadata the project needs.",
+        "Render the reference scene and compare appearance and performance with the declared target."
+      ],
+      "outputs": [
+        "Validated asset package",
+        "Preview scene or capture",
+        "Asset metadata"
+      ],
+      "checks": [
+        "The asset loads with expected materials and scale.",
+        "The scene meets its agreed visual and performance limits."
+      ],
+      "sources": [
+        "https://github.com/theisegoria/game-development-studio-skills"
+      ],
+      "cost": "Local tools; optional generation providers use credits",
+      "recipe_id": "game-development-studio-workflow",
+      "related_guide_ids": [
+        "amd",
+        "nvidia",
+        "unity-essentials",
+        "wixel"
+      ],
+      "starter_prompt": "Use Game Development Studio to bring a game asset into a tested scene. Start from the inputs I provide, follow the setup and workflow, and return validated asset package, preview scene or capture, asset metadata. Verify: The asset loads with expected materials and scale. The scene meets its agreed visual and performance limits.",
+      "featured": false,
+      "doc_path": "docs/tools/game-development-studio.md",
+      "when_to_use": "Produce or select a game asset, check its formats and materials, and verify it in a reproducible scene.",
+      "requirements": [
+        "Prepare the local game-dev tools and the target engine or asset pipeline."
+      ],
+      "supported_functions": [
+        {
+          "name": "game-asset-production",
+          "kind": "skill",
+          "purpose": "Create and normalize game assets"
+        },
+        {
+          "name": "game-asset-vendoring",
+          "kind": "skill",
+          "purpose": "Admit a checked asset package into a project"
+        },
+        {
+          "name": "game-visual-debugging",
+          "kind": "skill",
+          "purpose": "Compare a reproducible rendered scene"
+        },
+        {
+          "name": "game-performance-optimization",
+          "kind": "skill",
+          "purpose": "Measure a focused performance change"
+        }
+      ]
+    },
+    {
+      "id": "uniwire",
+      "name": "uniwire",
+      "title": "Turn an electrical plan into a reviewable diagram",
+      "category": "visualization",
+      "specialist_ids": [
+        "research-evaluator",
+        "creative-studio",
+        "garden-companion"
+      ],
+      "summary": "Create a structured electrical diagram, inspect rule findings, and export a drawing and materials list for professional review.",
+      "setup": [
+        "Provide the supply, circuits, loads, cable details, and applicable rule profile from the project specification."
+      ],
+      "inputs": [
+        "Electrical specification",
+        "Circuit and cable data",
+        "Drawing requirements"
+      ],
+      "steps": [
+        "Read the relevant format types and start from the closest example.",
+        "Build the document with stable circuit and device identifiers.",
+        "Validate the structure and run the selected rule checks.",
+        "Resolve missing input or findings with the project designer, then render the diagram and materials list."
+      ],
+      "outputs": [
+        "Single-line or multi-line drawing",
+        "Rule findings",
+        "Materials and wiring lists"
+      ],
+      "checks": [
+        "All references and circuit identifiers resolve.",
+        "Ratings and cable details match the approved project specification."
+      ],
+      "sources": [
+        "https://uniwire.sh",
+        "https://github.com/uniwire-dev/uniwire"
+      ],
+      "cost": "Provider access or self-hosted tools",
+      "recipe_id": "uniwire-workflow",
+      "related_guide_ids": [],
+      "starter_prompt": "Use uniwire to turn an electrical plan into a reviewable diagram. Start from the inputs I provide, follow the setup and workflow, and return single-line or multi-line drawing, rule findings, materials and wiring lists. Verify: All references and circuit identifiers resolve. Ratings and cable details match the approved project specification.",
+      "featured": false,
+      "doc_path": "docs/tools/uniwire.md",
+      "when_to_use": "Create a structured electrical diagram, inspect rule findings, and export a drawing and materials list for professional review.",
+      "requirements": [
+        "Provide the supply, circuits, loads, cable details, and applicable rule profile from the project specification."
+      ],
+      "supported_functions": [
+        {
+          "name": "get_reference_card",
+          "kind": "tool",
+          "purpose": "Read the diagram format and node definitions"
+        },
+        {
+          "name": "check",
+          "kind": "tool",
+          "purpose": "Validate the diagram and apply the chosen rule profile"
+        },
+        {
+          "name": "render",
+          "kind": "tool",
+          "purpose": "Render single-line or multi-line drawings"
+        },
+        {
+          "name": "bom",
+          "kind": "tool",
+          "purpose": "Create a materials list from specified products"
+        }
+      ]
+    },
+    {
+      "id": "unity-essentials",
+      "name": "Unity Essentials",
+      "title": "Implement a Unity feature with a reproducible scene",
+      "category": "games",
+      "specialist_ids": [
+        "software-engineer",
+        "creative-studio",
+        "adversarial-verifier"
+      ],
+      "summary": "Investigate gameplay defects or add features with a small scene, stable project settings, and an actual build check.",
+      "setup": [
+        "Open the Unity project with its recorded editor version and required packages."
+      ],
+      "inputs": [
+        "Project and editor version",
+        "Scene and reproduction steps",
+        "Expected gameplay behavior"
+      ],
+      "steps": [
+        "Inspect the project settings, scene objects, and relevant scripts.",
+        "Reproduce the feature or defect in a small scene.",
+        "Implement the focused change and check editor logs and play behavior.",
+        "Run the project’s relevant tests and validate the intended build target."
+      ],
+      "outputs": [
+        "Working Unity feature",
+        "Reproduction scene",
+        "Test or build results"
+      ],
+      "checks": [
+        "The behavior works after reopening the scene.",
+        "The intended build completes and retains the tested behavior."
+      ],
+      "sources": [
+        "https://ninquiet.com/projects/unity-essentials/"
+      ],
+      "cost": "Unity plan and target platform requirements",
+      "recipe_id": "unity-essentials-workflow",
+      "related_guide_ids": [
+        "amd",
+        "game-development-studio",
+        "nvidia",
+        "wixel"
+      ],
+      "starter_prompt": "Use Unity Essentials to implement a Unity feature with a reproducible scene. Start from the inputs I provide, follow the setup and workflow, and return working unity feature, reproduction scene, test or build results. Verify: The behavior works after reopening the scene. The intended build completes and retains the tested behavior.",
+      "featured": false,
+      "doc_path": "docs/tools/unity-essentials.md",
+      "when_to_use": "Investigate gameplay defects or add features with a small scene, stable project settings, and an actual build check.",
+      "requirements": [
+        "Open the Unity project with its recorded editor version and required packages."
+      ],
+      "supported_functions": [
+        {
+          "name": "unity-project-onboarding",
+          "kind": "skill",
+          "purpose": "Inspect the project and editor requirements"
+        },
+        {
+          "name": "unity-feature-implementation",
+          "kind": "skill",
+          "purpose": "Implement a focused gameplay feature"
+        },
+        {
+          "name": "unity-build-validation",
+          "kind": "skill",
+          "purpose": "Check the target build"
+        }
+      ]
+    },
+    {
+      "id": "ndot-physics",
+      "name": "nDot Physics Research",
+      "title": "Trace a physics claim through its derivation",
+      "category": "research",
+      "specialist_ids": [
+        "research-evaluator",
+        "claims-adjudicator",
+        "learning-coach",
+        "model-builder"
+      ],
+      "summary": "Read a published nDot research result together with its assumptions, equations, versions, and review history.",
+      "setup": [
+        "Identify the topic or equation to investigate and the comparison question."
+      ],
+      "inputs": [
+        "Research question",
+        "Topic or equation identifier",
+        "Comparison sources when relevant"
+      ],
+      "steps": [
+        "Find the relevant topic and research package.",
+        "Read the question, assumptions, and full derivation for the selected version.",
+        "Follow referenced equations and inspect reviews attached to that same version.",
+        "Compare the reasoning with independent literature and state the result at the level supported by the evidence."
+      ],
+      "outputs": [
+        "Versioned derivation summary",
+        "Equation and assumption map",
+        "Comparison notes"
+      ],
+      "checks": [
+        "Equation references and review versions match the analyzed derivation.",
+        "The summary distinguishes the project’s result from independent confirmation."
+      ],
+      "sources": [
+        "https://physics.ndot.io/",
+        "https://ndot-physics-research.cleverhaven4.chatgpt.site/"
+      ],
+      "cost": "Published research access",
+      "recipe_id": "ndot-physics-workflow",
+      "related_guide_ids": [
+        "gum",
+        "katex-error-fixer",
+        "mindmap",
+        "tinyfish",
+        "wolfram"
+      ],
+      "starter_prompt": "Use nDot Physics Research to trace a physics claim through its derivation. Start from the inputs I provide, follow the setup and workflow, and return versioned derivation summary, equation and assumption map, comparison notes. Verify: Equation references and review versions match the analyzed derivation. The summary distinguishes the project’s result from independent confirmation.",
+      "featured": false,
+      "doc_path": "docs/tools/ndot-physics.md",
+      "when_to_use": "Read a published nDot research result together with its assumptions, equations, versions, and review history.",
+      "requirements": [
+        "Identify the topic or equation to investigate and the comparison question."
+      ],
+      "supported_functions": [
+        {
+          "name": "listtopics",
+          "kind": "tool",
+          "purpose": "Find published research topics"
+        },
+        {
+          "name": "getderivation",
+          "kind": "tool",
+          "purpose": "Read a versioned derivation"
+        },
+        {
+          "name": "getequation",
+          "kind": "tool",
+          "purpose": "Follow an equation and its references"
+        },
+        {
+          "name": "getreview",
+          "kind": "tool",
+          "purpose": "Read a review for the specific derivation version"
+        }
+      ]
+    },
+    {
+      "id": "flowchart-maker",
+      "name": "Flowchart Maker",
+      "title": "Explain a process with clear decision branches",
+      "category": "visualization",
+      "specialist_ids": [
+        "coordinator",
+        "automation-engineer",
+        "learning-coach",
+        "personal-companion",
+        "software-engineer"
+      ],
+      "summary": "Convert a procedure into a flowchart with meaningful decisions, outcomes, and recovery paths.",
+      "setup": [
+        "Provide the current process, start and finish conditions, and intended audience."
+      ],
+      "inputs": [
+        "Procedure or step list",
+        "Decision conditions",
+        "Exceptions"
+      ],
+      "steps": [
+        "Identify the entry point, actions, decisions, and terminal outcomes.",
+        "Give every decision a labeled branch and include the common exception path.",
+        "Render the diagram in the chosen format.",
+        "Walk a normal case and an exception case through the diagram and revise ambiguous steps."
+      ],
+      "outputs": [
+        "Editable flowchart",
+        "Rendered diagram",
+        "Process walkthrough"
+      ],
+      "checks": [
+        "Every branch reaches an intended outcome.",
+        "The diagram agrees with the written procedure."
+      ],
+      "sources": [
+        "https://github.com/Fasih38/plugin-pages/blob/main/README.md"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "flowchart-maker-workflow",
+      "related_guide_ids": [
+        "diagram-maker",
+        "formula-genius",
+        "gum",
+        "lucid",
+        "mindmap",
+        "tinyfish",
+        "windowisp"
+      ],
+      "starter_prompt": "Use Flowchart Maker to explain a process with clear decision branches. Start from the inputs I provide, follow the setup and workflow, and return editable flowchart, rendered diagram, process walkthrough. Verify: Every branch reaches an intended outcome. The diagram agrees with the written procedure.",
+      "featured": false,
+      "doc_path": "docs/tools/flowchart-maker.md",
+      "when_to_use": "Convert a procedure into a flowchart with meaningful decisions, outcomes, and recovery paths.",
+      "requirements": [
+        "Provide the current process, start and finish conditions, and intended audience."
+      ],
+      "supported_functions": [
+        {
+          "name": "process-flowchart",
+          "kind": "skill",
+          "purpose": "Map actions and decisions in a process"
+        },
+        {
+          "name": "flowchart-review",
+          "kind": "skill",
+          "purpose": "Inspect a chart for gaps and ambiguity"
+        },
+        {
+          "name": "mermaid-flowchart",
+          "kind": "skill",
+          "purpose": "Create an editable text-based flowchart"
+        }
+      ]
+    },
+    {
+      "id": "diagram-maker",
+      "name": "Diagram Maker",
+      "title": "Choose the diagram that explains the system",
+      "category": "visualization",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "software-engineer",
+        "product-interface-designer",
+        "research-evaluator",
+        "coordinator"
+      ],
+      "summary": "Represent system structure or behavior with an appropriate diagram and consistent labels.",
+      "setup": [
+        "Provide the source architecture, schema, interactions, or data that the diagram must explain."
+      ],
+      "inputs": [
+        "Source material",
+        "Question to answer",
+        "Required notation and format"
+      ],
+      "steps": [
+        "Choose a diagram type based on the relationship being explained.",
+        "Extract only the relevant entities, connections, and boundaries from the source.",
+        "Lay out the diagram with readable labels and a clear visual hierarchy.",
+        "Check each relationship against the source and export the editable form."
+      ],
+      "outputs": [
+        "Editable system diagram",
+        "Rendered export"
+      ],
+      "checks": [
+        "Every shown relationship is supported by the source.",
+        "The diagram remains readable at its intended size."
+      ],
+      "sources": [
+        "https://github.com/Fasih38/plugin-pages/blob/main/README.md"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "diagram-maker-workflow",
+      "related_guide_ids": [
+        "flowchart-maker",
+        "gum",
+        "lucid"
+      ],
+      "starter_prompt": "Use Diagram Maker to choose the diagram that explains the system. Start from the inputs I provide, follow the setup and workflow, and return editable system diagram, rendered export. Verify: Every shown relationship is supported by the source. The diagram remains readable at its intended size.",
+      "featured": false,
+      "doc_path": "docs/tools/diagram-maker.md",
+      "when_to_use": "Represent system structure or behavior with an appropriate diagram and consistent labels.",
+      "requirements": [
+        "Provide the source architecture, schema, interactions, or data that the diagram must explain."
+      ],
+      "supported_functions": [
+        {
+          "name": "diagram-maker",
+          "kind": "skill",
+          "purpose": "Choose a suitable diagram for the relationship being explained"
+        }
+      ]
+    },
+    {
+      "id": "designly",
+      "name": "Designly",
+      "title": "Develop a coherent visual campaign",
+      "category": "creative",
+      "specialist_ids": [
+        "creative-studio",
+        "product-interface-designer",
+        "coordinator"
+      ],
+      "summary": "Turn a brand brief into a consistent art direction, typography, composition, and set of campaign assets.",
+      "setup": [
+        "Provide approved brand material, audience, format requirements, and usable reference images."
+      ],
+      "inputs": [
+        "Campaign objective",
+        "Brand and audience",
+        "Asset list and dimensions"
+      ],
+      "steps": [
+        "Define the campaign idea and the visual rules that express it.",
+        "Choose typography, palette, composition, and image treatment for each format.",
+        "Produce the selected asset variations while preserving the shared direction.",
+        "Review consistency, text legibility, cropping, and export quality across the complete set."
+      ],
+      "outputs": [
+        "Art-direction brief",
+        "Campaign asset set",
+        "Visual review"
+      ],
+      "checks": [
+        "Every asset expresses the same approved campaign idea.",
+        "Text, colors, and spacing remain consistent across formats."
+      ],
+      "sources": [
+        "https://app.prepilot-system-agency.space/"
+      ],
+      "cost": "Host design tools and chosen generation services",
+      "recipe_id": "designly-workflow",
+      "related_guide_ids": [
+        "brand-strategist",
+        "magicpath",
+        "pablooo",
+        "product-design",
+        "wixel"
+      ],
+      "starter_prompt": "Use Designly to develop a coherent visual campaign. Start from the inputs I provide, follow the setup and workflow, and return art-direction brief, campaign asset set, visual review. Verify: Every asset expresses the same approved campaign idea. Text, colors, and spacing remain consistent across formats.",
+      "featured": false,
+      "doc_path": "docs/tools/designly.md",
+      "when_to_use": "Turn a brand brief into a consistent art direction, typography, composition, and set of campaign assets.",
+      "requirements": [
+        "Provide approved brand material, audience, format requirements, and usable reference images."
+      ],
+      "supported_functions": [
+        {
+          "name": "creative-strategy",
+          "kind": "skill",
+          "purpose": "Develop the creative direction"
+        },
+        {
+          "name": "typography-director",
+          "kind": "skill",
+          "purpose": "Choose and review typography"
+        },
+        {
+          "name": "composition-director",
+          "kind": "skill",
+          "purpose": "Shape the layout and visual hierarchy"
+        },
+        {
+          "name": "visual-qa",
+          "kind": "skill",
+          "purpose": "Review the completed asset set"
+        }
+      ]
+    },
+    {
+      "id": "testing-react-native",
+      "name": "Testing React Native Apps",
+      "title": "Test a mobile feature from component to device",
+      "category": "apps",
+      "specialist_ids": [
+        "software-engineer",
+        "adversarial-verifier",
+        "product-interface-designer"
+      ],
+      "summary": "Combine React Native component assertions with a real device or simulator walkthrough of the user flow.",
+      "setup": [
+        "Use the project’s React Native Testing Library version and an available simulator or device."
+      ],
+      "inputs": [
+        "Feature and acceptance cases",
+        "App build",
+        "Target platform"
+      ],
+      "steps": [
+        "Write a component test using accessible queries and realistic user interactions.",
+        "Cover loading, success, and failure states relevant to the feature.",
+        "Run the same user journey on the selected device and capture key screens.",
+        "Reproduce any issue with exact steps and attach the relevant logs or recording."
+      ],
+      "outputs": [
+        "Component tests",
+        "Device walkthrough",
+        "Reproducible issue report"
+      ],
+      "checks": [
+        "Tests assert the behavior a user can observe.",
+        "The target device reaches the expected final state."
+      ],
+      "sources": [
+        "https://github.com/callstackincubator/agent-skills/tree/main/plugins/testing-react-native-apps",
+        "https://github.com/callstackincubator/agent-skills"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "testing-react-native-workflow",
+      "related_guide_ids": [
+        "expo",
+        "product-design",
+        "test-android-apps"
+      ],
+      "starter_prompt": "Use Testing React Native Apps to test a mobile feature from component to device. Start from the inputs I provide, follow the setup and workflow, and return component tests, device walkthrough, reproducible issue report. Verify: Tests assert the behavior a user can observe. The target device reaches the expected final state.",
+      "featured": true,
+      "doc_path": "docs/tools/testing-react-native.md",
+      "when_to_use": "Combine React Native component assertions with a real device or simulator walkthrough of the user flow.",
+      "requirements": [
+        "Use the project’s React Native Testing Library version and an available simulator or device."
+      ],
+      "supported_functions": [
+        {
+          "name": "react-native-testing",
+          "kind": "skill",
+          "purpose": "Test components with realistic user interactions"
+        },
+        {
+          "name": "agent-device",
+          "kind": "skill",
+          "purpose": "Inspect and operate the target simulator or device"
+        },
+        {
+          "name": "dogfood",
+          "kind": "skill",
+          "purpose": "Explore the app and collect reproducible issues"
+        }
+      ]
+    },
+    {
+      "id": "mindmap",
+      "name": "MindMap",
+      "title": "Organize a topic into a navigable outline",
+      "category": "visualization",
+      "specialist_ids": [
+        "learning-coach",
+        "personal-companion",
+        "coordinator",
+        "research-evaluator",
+        "garden-companion"
+      ],
+      "summary": "Turn a topic, study plan, or project brief into a clear interactive hierarchy that is easy to explore.",
+      "setup": [
+        "Choose one root topic and provide the notes or ideas to organize."
+      ],
+      "inputs": [
+        "Topic or notes",
+        "Desired depth",
+        "Audience"
+      ],
+      "steps": [
+        "Group related ideas under a small set of meaningful branches.",
+        "Write one root heading and a consistently indented bullet hierarchy.",
+        "Render the interactive mind map.",
+        "Check that every source idea has an appropriate place and remove duplicate branches."
+      ],
+      "outputs": [
+        "Interactive mind map",
+        "Reusable Markdown outline"
+      ],
+      "checks": [
+        "The input contains one root and a valid hierarchy.",
+        "Branch labels are concise and preserve the meaning of the notes."
+      ],
+      "sources": [
+        "https://chatgpt.com/plugins/mindmap"
+      ],
+      "cost": "Provider access",
+      "recipe_id": "mindmap-workflow",
+      "related_guide_ids": [
+        "flowchart-maker",
+        "formula-genius",
+        "gum",
+        "katex-error-fixer",
+        "ndot-physics",
+        "tinyfish",
+        "windowisp",
+        "wolfram"
+      ],
+      "starter_prompt": "Use MindMap to organize a topic into a navigable outline. Start from the inputs I provide, follow the setup and workflow, and return interactive mind map, reusable markdown outline. Verify: The input contains one root and a valid hierarchy. Branch labels are concise and preserve the meaning of the notes.",
+      "featured": false,
+      "doc_path": "docs/tools/mindmap.md",
+      "when_to_use": "Turn a topic, study plan, or project brief into a clear interactive hierarchy that is easy to explore.",
+      "requirements": [
+        "Choose one root topic and provide the notes or ideas to organize."
+      ],
+      "supported_functions": [
+        {
+          "name": "interactive_mind_map_for_visual_plans",
+          "kind": "tool",
+          "purpose": "Render a Markdown hierarchy as an interactive mind map"
+        }
+      ]
+    },
+    {
+      "id": "lucid",
+      "name": "Lucid",
+      "title": "Maintain an editable architecture or process diagram",
+      "category": "visualization",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "software-engineer",
+        "product-interface-designer",
+        "coordinator",
+        "automation-engineer",
+        "research-evaluator"
+      ],
+      "summary": "Create or update a shared diagram from real architecture, database, or process information and keep its editable source useful.",
+      "setup": [
+        "Connect Lucid and choose the intended document or destination."
+      ],
+      "inputs": [
+        "Source architecture, schema, or process",
+        "Document or destination",
+        "Required notation"
+      ],
+      "steps": [
+        "Read the existing diagram or select the appropriate supported diagram format.",
+        "Build or update the diagram using the source relationships.",
+        "Validate layout and text before finalizing the document.",
+        "Export a preview and inspect the result while retaining the editable document link."
+      ],
+      "outputs": [
+        "Editable Lucid document",
+        "Preview export",
+        "Source-to-diagram notes"
+      ],
+      "checks": [
+        "Entities and connections match the supplied source.",
+        "The exported preview is legible and complete."
+      ],
+      "sources": [
+        "https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server",
+        "https://lucid.co/",
+        "https://github.com/lucidsoftware/lucid-mcp-server"
+      ],
+      "cost": "Lucid account plan",
+      "recipe_id": "lucid-workflow",
+      "related_guide_ids": [
+        "diagram-maker",
+        "flowchart-maker",
+        "gum"
+      ],
+      "starter_prompt": "Use Lucid to maintain an editable architecture or process diagram. Start from the inputs I provide, follow the setup and workflow, and return editable lucid document, preview export, source-to-diagram notes. Verify: Entities and connections match the supplied source. The exported preview is legible and complete.",
+      "featured": false,
+      "doc_path": "docs/tools/lucid.md",
+      "when_to_use": "Create or update a shared diagram from real architecture, database, or process information and keep its editable source useful.",
+      "requirements": [
+        "Connect Lucid and choose the intended document or destination."
+      ],
+      "supported_functions": [
+        {
+          "name": "fetch",
+          "kind": "tool",
+          "purpose": "Read an existing document"
+        },
+        {
+          "name": "lucid_create_diagram_from_specification",
+          "kind": "tool",
+          "purpose": "Create an editable diagram from a structured specification"
+        },
+        {
+          "name": "lucid_validate_diagram_specification",
+          "kind": "tool",
+          "purpose": "Check text and layout before document creation"
+        },
+        {
+          "name": "lucid_export_document_as_png",
+          "kind": "tool",
+          "purpose": "Export a rendered preview"
+        }
+      ]
+    },
+    {
+      "id": "endor-labs",
+      "name": "Endor Labs Agent Kit",
+      "title": "Turn a dependency finding into a verified repair",
+      "category": "security",
+      "specialist_ids": [
+        "adversarial-verifier",
+        "infrastructure-reliability-engineer",
+        "software-engineer",
+        "reverse-engineering-researcher"
+      ],
+      "summary": "Investigate dependency and code findings, choose a practical remediation, and verify the affected build and behavior.",
+      "setup": [
+        "Connect the relevant Endor organization and project or prepare the supported CLI environment."
+      ],
+      "inputs": [
+        "Finding and affected component",
+        "Repository and lockfile",
+        "Application use of the dependency"
+      ],
+      "steps": [
+        "Read the finding and identify the affected version and code path.",
+        "Check available fixes, upgrade impact, and any relevant reachability evidence.",
+        "Apply the smallest suitable dependency or code repair.",
+        "Run the affected tests and refresh the finding against the changed revision."
+      ],
+      "outputs": [
+        "Remediation patch",
+        "Dependency change record",
+        "Verification result"
+      ],
+      "checks": [
+        "The affected component is fixed in the resolved dependency graph.",
+        "The application behavior and relevant tests still pass."
+      ],
+      "sources": [
+        "https://github.com/endorlabs/ai-plugins",
+        "https://www.endorlabs.com/"
+      ],
+      "cost": "Endor Labs account plan",
+      "recipe_id": "endor-labs-workflow",
+      "related_guide_ids": [
+        "atlas-continuum",
+        "atlas-omnium",
+        "authorised-osint",
+        "codex-dev-workflows",
+        "descope",
+        "prompt-injection",
+        "promptfoo",
+        "reverse-engineering",
+        "superpowers"
+      ],
+      "starter_prompt": "Use Endor Labs Agent Kit to turn a dependency finding into a verified repair. Start from the inputs I provide, follow the setup and workflow, and return remediation patch, dependency change record, verification result. Verify: The affected component is fixed in the resolved dependency graph. The application behavior and relevant tests still pass.",
+      "featured": true,
+      "doc_path": "docs/tools/endor-labs.md",
+      "when_to_use": "Investigate dependency and code findings, choose a practical remediation, and verify the affected build and behavior.",
+      "requirements": [
+        "Connect the relevant Endor organization and project or prepare the supported CLI environment."
+      ],
+      "supported_functions": [
+        {
+          "name": "findings-browser",
+          "kind": "skill",
+          "purpose": "Find and inspect relevant security findings"
+        },
+        {
+          "name": "dependency-reviewer",
+          "kind": "skill",
+          "purpose": "Review dependency changes"
+        },
+        {
+          "name": "sca-remediation",
+          "kind": "skill",
+          "purpose": "Prepare and verify a dependency repair"
+        }
+      ]
+    },
+    {
+      "id": "reverse-engineering",
+      "name": "reverse engineering anything",
+      "title": "Explain how an authorized software artifact works",
+      "category": "security",
+      "specialist_ids": [
+        "reverse-engineering-researcher",
+        "adversarial-verifier",
+        "software-engineer",
+        "research-evaluator"
+      ],
+      "summary": "Choose an appropriate inspection workflow for a binary, application package, JavaScript bundle, firmware image, or recorded trace.",
+      "setup": [
+        "Identify the authorized artifact, the question to answer, and the available REA analysis tools."
+      ],
+      "inputs": [
+        "Artifact and hash",
+        "Investigation scope",
+        "Expected platform or format"
+      ],
+      "steps": [
+        "Classify the artifact and select the relevant static or recorded-trace inspection.",
+        "Inspect package structure, metadata, and the code paths relevant to the question.",
+        "Trace specific findings to offsets, files, functions, or recorded events.",
+        "Write a concise explanation with reproduction steps and clearly identified unresolved questions."
+      ],
+      "outputs": [
+        "Artifact analysis",
+        "Evidence references",
+        "Reproduction notes"
+      ],
+      "checks": [
+        "Findings reference the exact artifact and location.",
+        "The explanation separates direct observations from inferred behavior."
+      ],
+      "sources": [
+        "https://github.com/morluto/rea",
+        "https://thedoersfirm.com/"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "reverse-engineering-workflow",
+      "related_guide_ids": [
+        "authorised-osint",
+        "descope",
+        "endor-labs",
+        "prompt-injection"
+      ],
+      "starter_prompt": "Use reverse engineering anything to explain how an authorized software artifact works. Start from the inputs I provide, follow the setup and workflow, and return artifact analysis, evidence references, reproduction notes. Verify: Findings reference the exact artifact and location. The explanation separates direct observations from inferred behavior.",
+      "featured": false,
+      "doc_path": "docs/tools/reverse-engineering.md",
+      "when_to_use": "Choose an appropriate inspection workflow for a binary, application package, JavaScript bundle, firmware image, or recorded trace.",
+      "requirements": [
+        "Identify the authorized artifact, the question to answer, and the available REA analysis tools."
+      ],
+      "supported_functions": [
+        {
+          "name": "rea-target-routing",
+          "kind": "skill",
+          "purpose": "Select the inspection workflow for an artifact"
+        },
+        {
+          "name": "rea-javascript-electron",
+          "kind": "skill",
+          "purpose": "Inspect a JavaScript or Electron application"
+        },
+        {
+          "name": "rea-mobile-and-firmware",
+          "kind": "skill",
+          "purpose": "Plan an authorized APK or firmware inspection"
+        },
+        {
+          "name": "rea-evidence-and-reporting",
+          "kind": "skill",
+          "purpose": "Explain findings with reproducible evidence"
+        }
+      ]
+    },
+    {
+      "id": "expo",
+      "name": "Expo",
+      "title": "Ship a tested mobile feature with the right update path",
+      "category": "apps",
+      "specialist_ids": [
+        "software-engineer",
+        "product-interface-designer",
+        "infrastructure-reliability-engineer",
+        "adversarial-verifier"
+      ],
+      "summary": "Build an Expo feature, verify it on its target platform, and choose the correct build or update workflow.",
+      "setup": [
+        "Open the Expo project, record its SDK and dependencies, and select the target device or simulator."
+      ],
+      "inputs": [
+        "Feature and user flow",
+        "Project and SDK version",
+        "Build or update destination"
+      ],
+      "steps": [
+        "Inspect navigation, native dependencies, and the development-client requirements.",
+        "Implement the feature using the project’s data and UI patterns.",
+        "Run component checks and the target-device walkthrough.",
+        "Choose the matching build or update route and verify the resulting artifact or preview."
+      ],
+      "outputs": [
+        "Working mobile feature",
+        "Device test results",
+        "Build or update artifact"
+      ],
+      "checks": [
+        "The target user flow works on the selected platform.",
+        "The distribution method matches the native dependency changes."
+      ],
+      "sources": [
+        "https://docs.expo.dev/skills/",
+        "https://expo.dev/",
+        "https://github.com/expo/skills/tree/main/plugins/expo"
+      ],
+      "cost": "Local tools; EAS and store services use their plans",
+      "recipe_id": "expo-workflow",
+      "related_guide_ids": [
+        "product-design",
+        "test-android-apps",
+        "testing-react-native"
+      ],
+      "starter_prompt": "Use Expo to ship a tested mobile feature with the right update path. Start from the inputs I provide, follow the setup and workflow, and return working mobile feature, device test results, build or update artifact. Verify: The target user flow works on the selected platform. The distribution method matches the native dependency changes.",
+      "featured": true,
+      "doc_path": "docs/tools/expo.md",
+      "when_to_use": "Build an Expo feature, verify it on its target platform, and choose the correct build or update workflow.",
+      "requirements": [
+        "Open the Expo project, record its SDK and dependencies, and select the target device or simulator."
+      ],
+      "supported_functions": [
+        {
+          "name": "expo-overview",
+          "kind": "skill",
+          "purpose": "Choose the appropriate Expo workflow"
+        },
+        {
+          "name": "expo-native-ui",
+          "kind": "skill",
+          "purpose": "Build the mobile interface"
+        },
+        {
+          "name": "expo-dev-client",
+          "kind": "skill",
+          "purpose": "Prepare the development client"
+        },
+        {
+          "name": "eas-update",
+          "kind": "skill",
+          "purpose": "Choose and verify the appropriate application update"
+        }
+      ]
+    },
+    {
+      "id": "preset",
+      "name": "Preset API Skills",
+      "title": "Build a dashboard with tested data access",
+      "category": "data",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "software-engineer",
+        "adversarial-verifier",
+        "coordinator"
+      ],
+      "summary": "Connect a dataset, define useful metrics, build a dashboard, and check what each viewer is allowed to see.",
+      "setup": [
+        "Select the Preset workspace and connection; prepare representative viewer roles."
+      ],
+      "inputs": [
+        "Dataset and business questions",
+        "Metric definitions",
+        "Viewer and tenant rules"
+      ],
+      "steps": [
+        "Inspect the database connection, dataset columns, and existing metrics.",
+        "Build charts around the agreed definitions and filters.",
+        "Arrange a dashboard that answers the primary questions.",
+        "Test filters, row-level access, and embedded views with representative roles."
+      ],
+      "outputs": [
+        "Dataset and metric configuration",
+        "Dashboard",
+        "Access test results"
+      ],
+      "checks": [
+        "Dashboard totals agree with a reference query.",
+        "Each viewer sees the intended rows and controls."
+      ],
+      "sources": [
+        "https://github.com/preset-io/agent-skills",
+        "https://preset.io/"
+      ],
+      "cost": "Preset workspace plan; Superset hosting varies",
+      "recipe_id": "preset-workflow",
+      "related_guide_ids": [
+        "formula-genius",
+        "planetscale",
+        "sql-copilot",
+        "sql-expert",
+        "wowsql"
+      ],
+      "starter_prompt": "Use Preset API Skills to build a dashboard with tested data access. Start from the inputs I provide, follow the setup and workflow, and return dataset and metric configuration, dashboard, access test results. Verify: Dashboard totals agree with a reference query. Each viewer sees the intended rows and controls.",
+      "featured": true,
+      "doc_path": "docs/tools/preset.md",
+      "when_to_use": "Connect a dataset, define useful metrics, build a dashboard, and check what each viewer is allowed to see.",
+      "requirements": [
+        "Select the Preset workspace and connection; prepare representative viewer roles."
+      ],
+      "supported_functions": [
+        {
+          "name": "preset-datasets",
+          "kind": "skill",
+          "purpose": "Configure the dataset and metrics"
+        },
+        {
+          "name": "preset-dashboards",
+          "kind": "skill",
+          "purpose": "Build a dashboard"
+        },
+        {
+          "name": "preset-embedded-rls",
+          "kind": "skill",
+          "purpose": "Review access rules for embedded dashboards"
+        }
+      ]
+    },
+    {
+      "id": "formula-genius",
+      "name": "Formula Genius",
+      "title": "Build a spreadsheet formula that survives edge cases",
+      "category": "data",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "personal-companion",
+        "coordinator",
+        "learning-coach",
+        "garden-companion"
+      ],
+      "summary": "Create or debug spreadsheet formulas using explicit examples, application compatibility, and a checked workbook when needed.",
+      "setup": [
+        "Identify Excel or Google Sheets, its version and locale, and the cells involved."
+      ],
+      "inputs": [
+        "Formula or calculation request",
+        "Sample rows",
+        "Expected results"
+      ],
+      "steps": [
+        "State the calculation rule and choose the appropriate formula for the application version.",
+        "Generate or repair the formula.",
+        "Check normal, blank, duplicate, and boundary cases with expected results.",
+        "Place the formula in the intended workbook and inspect the surrounding totals or references."
+      ],
+      "outputs": [
+        "Working formula",
+        "Sample-case results",
+        "Workbook when requested"
+      ],
+      "checks": [
+        "The formula matches the supplied expected results.",
+        "Separators, functions, and references work in the target application."
+      ],
+      "sources": [
+        "https://www.formulagenius.co"
+      ],
+      "cost": "Guest examples and account credits; features vary by plan",
+      "recipe_id": "formula-genius-workflow",
+      "related_guide_ids": [
+        "flowchart-maker",
+        "mindmap",
+        "planetscale",
+        "preset",
+        "sql-copilot",
+        "sql-expert",
+        "tinyfish",
+        "windowisp",
+        "wowsql"
+      ],
+      "starter_prompt": "Use Formula Genius to build a spreadsheet formula that survives edge cases. Start from the inputs I provide, follow the setup and workflow, and return working formula, sample-case results, workbook when requested. Verify: The formula matches the supplied expected results. Separators, functions, and references work in the target application.",
+      "featured": true,
+      "doc_path": "docs/tools/formula-genius.md",
+      "when_to_use": "Create or debug spreadsheet formulas using explicit examples, application compatibility, and a checked workbook when needed.",
+      "requirements": [
+        "Identify Excel or Google Sheets, its version and locale, and the cells involved."
+      ],
+      "supported_functions": [
+        {
+          "name": "generate_formula",
+          "kind": "tool",
+          "purpose": "Write a formula for the stated application and ranges"
+        },
+        {
+          "name": "check_formula_samples",
+          "kind": "tool",
+          "purpose": "Compare the formula with supplied expected samples"
+        },
+        {
+          "name": "check_workbook_health",
+          "kind": "tool",
+          "purpose": "Inspect a workbook for common structural problems"
+        },
+        {
+          "name": "build_workbook",
+          "kind": "tool",
+          "purpose": "Create a workbook with checked sample formulas"
+        }
+      ]
+    },
+    {
+      "id": "wolfram",
+      "name": "Wolfram",
+      "title": "Check a quantitative result with reproducible computation",
+      "category": "research",
+      "specialist_ids": [
+        "research-evaluator",
+        "learning-coach",
+        "model-builder",
+        "data-engineering-architect",
+        "claims-adjudicator",
+        "garden-companion"
+      ],
+      "summary": "Evaluate equations, units, data, or optimization questions and keep the inputs and assumptions attached to the result.",
+      "setup": [
+        "State the mathematical question, units, assumptions, and required precision."
+      ],
+      "inputs": [
+        "Equation or data",
+        "Units and domain",
+        "Desired result and tolerance"
+      ],
+      "steps": [
+        "Retrieve the relevant computational context.",
+        "Formulate the calculation with explicit units and assumptions.",
+        "Evaluate it with Wolfram|Alpha or Wolfram Language.",
+        "Check limiting cases, dimensional consistency, or an independent numerical example."
+      ],
+      "outputs": [
+        "Computed result",
+        "Reusable expression",
+        "Assumptions and validation"
+      ],
+      "checks": [
+        "Units and domains are consistent.",
+        "A boundary or independent calculation agrees within the stated tolerance."
+      ],
+      "sources": [
+        "https://www.wolfram.com/"
+      ],
+      "cost": "Connected Wolfram service",
+      "recipe_id": "wolfram-workflow",
+      "related_guide_ids": [
+        "gum",
+        "katex-error-fixer",
+        "mindmap",
+        "ndot-physics",
+        "tinyfish"
+      ],
+      "starter_prompt": "Use Wolfram to check a quantitative result with reproducible computation. Start from the inputs I provide, follow the setup and workflow, and return computed result, reusable expression, assumptions and validation. Verify: Units and domains are consistent. A boundary or independent calculation agrees within the stated tolerance.",
+      "featured": false,
+      "doc_path": "docs/tools/wolfram.md",
+      "when_to_use": "Evaluate equations, units, data, or optimization questions and keep the inputs and assumptions attached to the result.",
+      "requirements": [
+        "State the mathematical question, units, assumptions, and required precision."
+      ],
+      "supported_functions": [
+        {
+          "name": "wolframcontext",
+          "kind": "tool",
+          "purpose": "Find relevant computational context"
+        },
+        {
+          "name": "wolframalpha",
+          "kind": "tool",
+          "purpose": "Evaluate a natural-language computational question"
+        },
+        {
+          "name": "wolframlanguageevaluator",
+          "kind": "tool",
+          "purpose": "Evaluate an explicit Wolfram Language expression"
+        }
+      ]
+    },
+    {
+      "id": "wowsql",
+      "name": "WoWSQL",
+      "title": "Explore a PostgreSQL project and validate a query",
+      "category": "data",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "software-engineer",
+        "automation-engineer"
+      ],
+      "summary": "Inspect the selected PostgreSQL schema, run a focused query, and verify results against the application’s data rules.",
+      "setup": [
+        "Select the intended WoWSQL project and define the query’s expected effect."
+      ],
+      "inputs": [
+        "Project and schema",
+        "Question or SQL query",
+        "Expected rows or aggregate"
+      ],
+      "steps": [
+        "Read the selected project and table structure.",
+        "Write a query for the stated question using the actual schema.",
+        "Run a limited read and inspect row counts, nulls, and duplicate behavior.",
+        "For a requested data change, review the affected rows and verify the result after execution."
+      ],
+      "outputs": [
+        "SQL query",
+        "Result table",
+        "Validation notes"
+      ],
+      "checks": [
+        "The query targets the selected project and tables.",
+        "Returned rows or totals match the expected data rule."
+      ],
+      "sources": [
+        "https://wowsql.com/database"
+      ],
+      "cost": "WoWSQL project plan",
+      "recipe_id": "wowsql-workflow",
+      "related_guide_ids": [
+        "formula-genius",
+        "planetscale",
+        "preset",
+        "sql-copilot",
+        "sql-expert"
+      ],
+      "starter_prompt": "Use WoWSQL to explore a PostgreSQL project and validate a query. Start from the inputs I provide, follow the setup and workflow, and return sql query, result table, validation notes. Verify: The query targets the selected project and tables. Returned rows or totals match the expected data rule.",
+      "featured": false,
+      "doc_path": "docs/tools/wowsql.md",
+      "when_to_use": "Inspect the selected PostgreSQL schema, run a focused query, and verify results against the application’s data rules.",
+      "requirements": [
+        "Select the intended WoWSQL project and define the query’s expected effect."
+      ],
+      "supported_functions": [
+        {
+          "name": "get_project",
+          "kind": "tool",
+          "purpose": "Read the selected project"
+        },
+        {
+          "name": "list_tables",
+          "kind": "tool",
+          "purpose": "Inspect its table structure"
+        },
+        {
+          "name": "execute_sql",
+          "kind": "tool",
+          "purpose": "Execute the requested PostgreSQL statement"
+        }
+      ]
+    },
+    {
+      "id": "authorised-osint",
+      "name": "Authorised OSINT Toolkit",
+      "title": "Review an organization’s public exposure",
+      "category": "security",
+      "specialist_ids": [
+        "adversarial-verifier",
+        "reverse-engineering-researcher",
+        "research-evaluator",
+        "infrastructure-reliability-engineer"
+      ],
+      "summary": "Build a defensible view of an authorized organization’s public assets, email-domain posture, and exposed services.",
+      "setup": [
+        "Define the owned or authorized organization, domains, allowed sources, and the assessment question."
+      ],
+      "inputs": [
+        "Scope and domains",
+        "Known asset list",
+        "Evidence requirements"
+      ],
+      "steps": [
+        "Confirm the assessment scope and collect public asset references.",
+        "Check the relevant domain, email, cloud, and service exposure.",
+        "Corroborate important findings with direct records and retrieval dates.",
+        "Prioritize repairs by evidence, likely impact, and the responsible asset owner."
+      ],
+      "outputs": [
+        "Public exposure inventory",
+        "Source-backed findings",
+        "Remediation priorities"
+      ],
+      "checks": [
+        "Every finding concerns an authorized asset and retains its source.",
+        "High-impact findings have corroborating evidence and a practical next action."
+      ],
+      "sources": [
+        "https://github.com/elementalsouls/Claude-OSINT"
+      ],
+      "cost": "Public sources; optional providers may require accounts",
+      "recipe_id": "authorised-osint-workflow",
+      "related_guide_ids": [
+        "descope",
+        "endor-labs",
+        "prompt-injection",
+        "reverse-engineering"
+      ],
+      "starter_prompt": "Use Authorised OSINT Toolkit to review an organization’s public exposure. Start from the inputs I provide, follow the setup and workflow, and return public exposure inventory, source-backed findings, remediation priorities. Verify: Every finding concerns an authorized asset and retains its source. High-impact findings have corroborating evidence and a practical next action.",
+      "featured": false,
+      "doc_path": "docs/tools/authorised-osint.md",
+      "when_to_use": "Build a defensible view of an authorized organization’s public assets, email-domain posture, and exposed services.",
+      "requirements": [
+        "Define the owned or authorized organization, domains, allowed sources, and the assessment question."
+      ],
+      "supported_functions": [
+        {
+          "name": "org-attack-surface",
+          "kind": "skill",
+          "purpose": "Inspect an authorized organization’s public assets"
+        },
+        {
+          "name": "email-domain-security",
+          "kind": "skill",
+          "purpose": "Review email-domain configuration"
+        },
+        {
+          "name": "cloud-saas-exposure",
+          "kind": "skill",
+          "purpose": "Review relevant cloud and SaaS exposure"
+        }
+      ]
+    },
+    {
+      "id": "prompt-injection",
+      "name": "Prompt Injection Security",
+      "title": "Test whether untrusted content can redirect an assistant",
+      "category": "security",
+      "specialist_ids": [
+        "adversarial-verifier",
+        "model-builder",
+        "software-engineer",
+        "research-evaluator",
+        "automation-engineer"
+      ],
+      "summary": "Examine documents, retrieved passages, tool results, and memory for paths that could change an assistant’s authorized behavior.",
+      "setup": [
+        "Use a test environment with a defined task, tool permissions, and synthetic sensitive values."
+      ],
+      "inputs": [
+        "Assistant workflow",
+        "Untrusted content channels",
+        "Expected tool boundaries"
+      ],
+      "steps": [
+        "Map where untrusted text enters the workflow and which actions it could influence.",
+        "Create controlled cases that attempt to override the task or misuse a tool.",
+        "Record whether each case changes the output or triggers an unauthorized operation.",
+        "Apply input handling or action-boundary fixes and repeat both normal and adversarial cases."
+      ],
+      "outputs": [
+        "Injection test cases",
+        "Boundary findings",
+        "Mitigation regression results"
+      ],
+      "checks": [
+        "Untrusted content cannot authorize a new destination or action.",
+        "Normal tasks still succeed after the mitigation."
+      ],
+      "sources": [
+        "https://thedoersfirm.com/",
+        "https://thedoersfirm.com/gpts"
+      ],
+      "cost": "Local tools",
+      "recipe_id": "prompt-injection-workflow",
+      "related_guide_ids": [
+        "authorised-osint",
+        "deepbom",
+        "descope",
+        "endor-labs",
+        "hugging-face",
+        "promptfoo",
+        "rag-genai",
+        "reverse-engineering"
+      ],
+      "starter_prompt": "Use Prompt Injection Security to test whether untrusted content can redirect an assistant. Start from the inputs I provide, follow the setup and workflow, and return injection test cases, boundary findings, mitigation regression results. Verify: Untrusted content cannot authorize a new destination or action. Normal tasks still succeed after the mitigation.",
+      "featured": true,
+      "doc_path": "docs/tools/prompt-injection.md",
+      "when_to_use": "Examine documents, retrieved passages, tool results, and memory for paths that could change an assistant’s authorized behavior.",
+      "requirements": [
+        "Use a test environment with a defined task, tool permissions, and synthetic sensitive values."
+      ],
+      "supported_functions": [
+        {
+          "name": "indirect-injection-review",
+          "kind": "skill",
+          "purpose": "Inspect untrusted documents and retrieval inputs"
+        },
+        {
+          "name": "agent-tool-boundaries",
+          "kind": "skill",
+          "purpose": "Review tool arguments, permissions, and action boundaries"
+        },
+        {
+          "name": "mitigation-regression-tests",
+          "kind": "skill",
+          "purpose": "Turn confirmed findings into repeatable checks"
+        }
+      ]
+    },
+    {
+      "id": "magicpath",
+      "name": "MagicPath",
+      "title": "Turn a canvas design into a working component",
+      "category": "design",
+      "specialist_ids": [
+        "product-interface-designer",
+        "creative-studio",
+        "software-engineer"
+      ],
+      "summary": "Develop a selected canvas component, inspect its rendered result, and install it with its required assets and dependencies.",
+      "setup": [
+        "Choose the MagicPath project or selected component and confirm the available API quota."
+      ],
+      "inputs": [
+        "Design or selected component",
+        "Target interaction",
+        "Host framework and constraints"
+      ],
+      "steps": [
+        "Read the selected component, theme, and current code context.",
+        "Create a scoped component revision for the requested change.",
+        "Build and inspect the rendered preview, then refine any layout or interaction defects.",
+        "Retrieve the install plan and integrate the files, assets, imports, and dependencies into the host project."
+      ],
+      "outputs": [
+        "Working component",
+        "Rendered preview",
+        "Integration files and instructions"
+      ],
+      "checks": [
+        "The preview satisfies the requested interaction and layout.",
+        "The installed component builds and works in the host application."
+      ],
+      "sources": [
+        "https://www.magicpath.ai/"
+      ],
+      "cost": "MagicPath account quota",
+      "recipe_id": "magicpath-workflow",
+      "related_guide_ids": [
+        "brand-strategist",
+        "designly",
+        "pablooo",
+        "product-design",
+        "wixel"
+      ],
+      "starter_prompt": "Use MagicPath to turn a canvas design into a working component. Start from the inputs I provide, follow the setup and workflow, and return working component, rendered preview, integration files and instructions. Verify: The preview satisfies the requested interaction and layout. The installed component builds and works in the host application.",
+      "featured": false,
+      "doc_path": "docs/tools/magicpath.md",
+      "when_to_use": "Develop a selected canvas component, inspect its rendered result, and install it with its required assets and dependencies.",
+      "requirements": [
+        "Choose the MagicPath project or selected component and confirm the available API quota."
+      ],
+      "supported_functions": [
+        {
+          "name": "get_component_code_context",
+          "kind": "tool",
+          "purpose": "Read the current component files and constraints"
+        },
+        {
+          "name": "start_component_code_session",
+          "kind": "tool",
+          "purpose": "Start a scoped component revision"
+        },
+        {
+          "name": "view_component",
+          "kind": "tool",
+          "purpose": "Inspect the rendered component"
+        },
+        {
+          "name": "get_component_install_plan",
+          "kind": "tool",
+          "purpose": "Retrieve its files, imports, assets, and dependencies"
+        }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "id": "quality-feature-delivery",
+      "title": "Build, review, and finish a feature",
+      "specialist_ids": [
+        "software-engineer",
+        "automation-engineer",
+        "infrastructure-reliability-engineer",
+        "adversarial-verifier",
+        "coordinator"
+      ],
+      "guide_ids": [
+        "atlas-continuum",
+        "atlas-omnium",
+        "superpowers",
+        "codex-dev-workflows",
+        "promptfoo",
+        "endor-labs"
+      ],
+      "inputs": [
+        "Repository and acceptance cases",
+        "Current failure or feature brief"
+      ],
+      "steps": [
+        "Resume the project with Atlas Continuum and select the required connection with Atlas Omnium.",
+        "Use Superpowers and Codex Dev Workflows to reproduce the problem or implement the bounded feature.",
+        "Use Promptfoo when the feature depends on model output; use Endor Labs when dependencies or security findings are affected.",
+        "Review the change, run its relevant tests, and save the working result and next handoff."
+      ],
+      "outputs": [
+        "Implemented feature or repair",
+        "Acceptance results",
+        "Review and handoff"
+      ],
+      "checks": [
+        "The requested behavior works and the original failure stays fixed.",
+        "The delivered revision matches the recorded verification."
+      ],
+      "doc_path": "docs/tools/workflows.md#quality-feature-delivery"
+    },
+    {
+      "id": "search-ready-product",
+      "title": "Make a useful product easy to find",
+      "specialist_ids": [
+        "product-interface-designer",
+        "creative-studio",
+        "infrastructure-reliability-engineer",
+        "coordinator"
+      ],
+      "guide_ids": [
+        "brand-strategist",
+        "keyword-tool",
+        "openseo",
+        "aioscan",
+        "product-design"
+      ],
+      "inputs": [
+        "Website and product brief",
+        "Audience, locale, and important user journeys"
+      ],
+      "steps": [
+        "Use Brand Strategist to state the product promise and useful reasons to choose it.",
+        "Use Keyword Tool to map relevant search intent to useful pages.",
+        "Use OpenSEO and AIOScan to find concrete crawl, metadata, content, and access issues.",
+        "Use Product Design to verify that visitors can find the feature and complete the intended journey.",
+        "Recheck the changed pages and retain the resulting audit links."
+      ],
+      "outputs": [
+        "Clear page messaging",
+        "Keyword-to-page map",
+        "Search and journey fixes"
+      ],
+      "checks": [
+        "Titles and descriptions accurately describe each page.",
+        "Both the crawler checks and the user journey succeed."
+      ],
+      "doc_path": "docs/tools/workflows.md#search-ready-product"
+    },
+    {
+      "id": "retrieval-quality",
+      "title": "Build and evaluate a knowledge assistant",
+      "specialist_ids": [
+        "model-builder",
+        "data-engineering-architect",
+        "research-evaluator",
+        "adversarial-verifier",
+        "claims-adjudicator"
+      ],
+      "guide_ids": [
+        "hugging-face",
+        "rag-genai",
+        "promptfoo",
+        "prompt-injection",
+        "deepbom"
+      ],
+      "inputs": [
+        "Source corpus",
+        "Questions with supporting passages",
+        "Access rules and budget"
+      ],
+      "steps": [
+        "Use Hugging Face to select suitable model and dataset candidates.",
+        "Use RAG & GenAI Copilot to define ingestion, retrieval, citations, and update behavior.",
+        "Use Promptfoo to compare retrieval-backed answers on normal, unanswerable, and known failure cases.",
+        "Use Prompt Injection Security to test untrusted-document and tool-boundary cases.",
+        "Use DEEPBOM when the selected deployment includes an inspectable model artifact."
+      ],
+      "outputs": [
+        "Knowledge-assistant design",
+        "Evaluation suite and results",
+        "Access and injection regression cases"
+      ],
+      "checks": [
+        "Answers cite passages that support them.",
+        "Restricted or malicious content cannot redirect authorized behavior."
+      ],
+      "doc_path": "docs/tools/workflows.md#retrieval-quality"
+    },
+    {
+      "id": "database-and-dashboard",
+      "title": "Deliver trustworthy data and dashboards",
+      "specialist_ids": [
+        "data-engineering-architect",
+        "software-engineer",
+        "adversarial-verifier"
+      ],
+      "guide_ids": [
+        "sql-copilot",
+        "sql-expert",
+        "planetscale",
+        "preset",
+        "formula-genius",
+        "wowsql"
+      ],
+      "inputs": [
+        "Schema and business rules",
+        "Representative rows and expected totals",
+        "Viewer roles"
+      ],
+      "steps": [
+        "Use SQL Expert to align schema and constraints with the application.",
+        "Use SQL Copilot to verify joins, time boundaries, nulls, and aggregates on a small fixture.",
+        "Use PlanetScale or WoWSQL for the project’s actual database.",
+        "Use Preset to build the dashboard from the verified metrics.",
+        "Use Formula Genius when stakeholders also need a spreadsheet calculation or reconciliation."
+      ],
+      "outputs": [
+        "Validated queries and metrics",
+        "Dashboard or workbook",
+        "Viewer access results"
+      ],
+      "checks": [
+        "Dashboard and workbook totals agree with the reference data.",
+        "Each viewer can access exactly the intended records."
+      ],
+      "doc_path": "docs/tools/workflows.md#database-and-dashboard"
+    },
+    {
+      "id": "mobile-feature-quality",
+      "title": "Build and verify a mobile experience",
+      "specialist_ids": [
+        "software-engineer",
+        "product-interface-designer",
+        "adversarial-verifier",
+        "infrastructure-reliability-engineer"
+      ],
+      "guide_ids": [
+        "expo",
+        "testing-react-native",
+        "test-android-apps",
+        "product-design"
+      ],
+      "inputs": [
+        "Mobile project and feature",
+        "Target devices",
+        "Acceptance cases"
+      ],
+      "steps": [
+        "Use Expo to implement the feature with the correct native and navigation requirements.",
+        "Use Testing React Native Apps for component behavior and device interaction.",
+        "Use Test Android Apps for the Android flow and any measured performance issue.",
+        "Use Product Design to inspect the complete flow, accessible controls, and screen layouts.",
+        "Verify the resulting build or update on the target platform."
+      ],
+      "outputs": [
+        "Working feature",
+        "Component and device results",
+        "Screenshots and build artifact"
+      ],
+      "checks": [
+        "Loading, success, and failure states work in the component and on the device.",
+        "The intended user journey completes on every selected platform."
+      ],
+      "doc_path": "docs/tools/workflows.md#mobile-feature-quality"
+    },
+    {
+      "id": "creative-product-experience",
+      "title": "Design a coherent product experience",
+      "specialist_ids": [
+        "product-interface-designer",
+        "creative-studio",
+        "software-engineer"
+      ],
+      "guide_ids": [
+        "pablooo",
+        "product-design",
+        "designly",
+        "magicpath",
+        "wixel",
+        "brand-strategist"
+      ],
+      "inputs": [
+        "Audience and product journey",
+        "Brand material",
+        "Required screens and assets"
+      ],
+      "steps": [
+        "Use Brand Strategist to settle the product promise and voice.",
+        "Use Pablooo.club to compare relevant interface patterns.",
+        "Use Product Design and Designly to define an original interface and consistent art direction.",
+        "Use MagicPath for components and Wixel for the selected visual assets.",
+        "Inspect the assembled experience and verify its key interaction on the intended screen sizes."
+      ],
+      "outputs": [
+        "Original interface design",
+        "Working components",
+        "Coherent visual assets"
+      ],
+      "checks": [
+        "The primary action is obvious and usable.",
+        "Layout, typography, and brand treatment remain consistent across the finished experience."
+      ],
+      "doc_path": "docs/tools/workflows.md#creative-product-experience"
+    },
+    {
+      "id": "model-performance",
+      "title": "Choose and measure a model deployment",
+      "specialist_ids": [
+        "model-builder",
+        "infrastructure-reliability-engineer",
+        "data-engineering-architect"
+      ],
+      "guide_ids": [
+        "hugging-face",
+        "deepbom",
+        "promptfoo",
+        "nvidia",
+        "amd",
+        "modal"
+      ],
+      "inputs": [
+        "Model task and evaluation cases",
+        "Target hardware",
+        "Latency, memory, and quality limits"
+      ],
+      "steps": [
+        "Use Hugging Face to choose candidates and record their exact revisions.",
+        "Use DEEPBOM to inspect available deployment artifacts.",
+        "Use Promptfoo to establish a quality baseline.",
+        "Use NVIDIA or AMD workflows for the actual hardware and Modal when the chosen workload needs cloud compute.",
+        "Compare the same quality and performance cases after each focused change."
+      ],
+      "outputs": [
+        "Model selection",
+        "Artifact inspection",
+        "Quality and performance comparison"
+      ],
+      "checks": [
+        "Performance gains preserve the required output quality.",
+        "Results record the model, hardware, runtime, and workload."
+      ],
+      "doc_path": "docs/tools/workflows.md#model-performance"
+    },
+    {
+      "id": "security-review",
+      "title": "Review access, dependencies, and agent boundaries",
+      "specialist_ids": [
+        "adversarial-verifier",
+        "software-engineer",
+        "reverse-engineering-researcher",
+        "infrastructure-reliability-engineer"
+      ],
+      "guide_ids": [
+        "descope",
+        "endor-labs",
+        "prompt-injection",
+        "authorised-osint",
+        "reverse-engineering"
+      ],
+      "inputs": [
+        "Authorized application or organization",
+        "Repository and roles",
+        "Threat questions"
+      ],
+      "steps": [
+        "Use Descope to examine sign-in, permissions, and tenant boundaries.",
+        "Use Endor Labs to inspect dependency and code findings.",
+        "Use Prompt Injection Security for assistant and retrieval boundaries.",
+        "Use Authorised OSINT Toolkit for relevant public exposure and reverse engineering anything for supplied software artifacts.",
+        "Fix confirmed issues and repeat the affected normal and negative test cases."
+      ],
+      "outputs": [
+        "Prioritized findings",
+        "Verified repairs",
+        "Repeatable security checks"
+      ],
+      "checks": [
+        "Every finding has a specific target and reproducible evidence.",
+        "The remediation closes the failure while retaining intended access and behavior."
+      ],
+      "doc_path": "docs/tools/workflows.md#security-review"
+    },
+    {
+      "id": "research-and-explanation",
+      "title": "Research a question and explain the result",
+      "specialist_ids": [
+        "research-evaluator",
+        "claims-adjudicator",
+        "learning-coach",
+        "model-builder"
+      ],
+      "guide_ids": [
+        "tinyfish",
+        "ndot-physics",
+        "wolfram",
+        "gum",
+        "katex-error-fixer",
+        "mindmap"
+      ],
+      "inputs": [
+        "Research question",
+        "Source requirements",
+        "Audience and output format"
+      ],
+      "steps": [
+        "Use TinyFish to find and read relevant primary material.",
+        "Use nDot Physics Research for a question about its published physics work.",
+        "Use Wolfram to check the quantitative part with explicit assumptions and units.",
+        "Use Gum for precise figures and MindMap for a navigable conceptual outline.",
+        "Use KaTeX Error Fixer when equations need to appear in a rendered learning page."
+      ],
+      "outputs": [
+        "Cited explanation",
+        "Reproducible calculation",
+        "Readable figure or learning page"
+      ],
+      "checks": [
+        "Each substantive claim can be traced to its source or calculation.",
+        "The rendered equations and figures preserve the verified content."
+      ],
+      "doc_path": "docs/tools/workflows.md#research-and-explanation"
+    },
+    {
+      "id": "game-production",
+      "title": "Create and test a game feature",
+      "specialist_ids": [
+        "creative-studio",
+        "software-engineer",
+        "product-interface-designer",
+        "adversarial-verifier"
+      ],
+      "guide_ids": [
+        "game-development-studio",
+        "unity-essentials",
+        "wixel",
+        "nvidia",
+        "amd"
+      ],
+      "inputs": [
+        "Game feature or asset brief",
+        "Unity project",
+        "Target performance budget"
+      ],
+      "steps": [
+        "Use Game Development Studio to create or select and validate the asset.",
+        "Use Wixel for any requested visual reference or supporting graphic.",
+        "Use Unity Essentials to implement the feature in a reproducible scene.",
+        "Use the relevant NVIDIA or AMD workflow when the task specifically depends on that hardware.",
+        "Run the scene and intended build and compare both appearance and measured performance."
+      ],
+      "outputs": [
+        "Playable feature",
+        "Validated asset package",
+        "Scene and build evidence"
+      ],
+      "checks": [
+        "Assets load correctly and the feature works after reopening the project.",
+        "The scene meets the declared visual and performance target."
+      ],
+      "doc_path": "docs/tools/workflows.md#game-production"
+    },
+    {
+      "id": "personal-projects",
+      "title": "Organize personal projects and learning",
+      "specialist_ids": [
+        "personal-companion",
+        "learning-coach",
+        "garden-companion",
+        "coordinator"
+      ],
+      "guide_ids": [
+        "mindmap",
+        "formula-genius",
+        "tinyfish",
+        "flowchart-maker",
+        "windowisp"
+      ],
+      "inputs": [
+        "Personal project or study goal",
+        "Dates and constraints",
+        "Reference information"
+      ],
+      "steps": [
+        "Use MindMap to organize the goal into useful topics and next actions.",
+        "Use TinyFish to gather any current facts needed to make a decision.",
+        "Use Formula Genius for a tracker or calculation with explicit example rows.",
+        "Use Flowchart Maker for a recurring decision or process.",
+        "Use Windowisp for an optional Windows focus-session companion."
+      ],
+      "outputs": [
+        "Project or study outline",
+        "Useful tracker",
+        "Clear next actions"
+      ],
+      "checks": [
+        "Every immediate action has the information needed to begin.",
+        "Tracker calculations match the supplied examples."
+      ],
+      "doc_path": "docs/tools/workflows.md#personal-projects"
+    },
+    {
+      "id": "explain-architecture",
+      "title": "Turn architecture into an editable visual",
+      "specialist_ids": [
+        "software-engineer",
+        "data-engineering-architect",
+        "coordinator",
+        "product-interface-designer",
+        "research-evaluator"
+      ],
+      "guide_ids": [
+        "lucid",
+        "diagram-maker",
+        "flowchart-maker",
+        "gum"
+      ],
+      "inputs": [
+        "Source code, schema, or process",
+        "Question the diagram must answer",
+        "Audience"
+      ],
+      "steps": [
+        "Choose the view with Diagram Maker: structure, sequence, data, or process.",
+        "Use Flowchart Maker for a decision process and Lucid for a shared editable architecture document.",
+        "Use Gum when the deliverable needs a precise figure or reproducible export.",
+        "Compare every displayed entity and relationship with the actual source.",
+        "Review the exported diagram at its intended viewing size."
+      ],
+      "outputs": [
+        "Editable diagram",
+        "Readable export",
+        "Source relationship notes"
+      ],
+      "checks": [
+        "The diagram answers the stated question without invented relationships.",
+        "Labels and connections remain readable in the final export."
+      ],
+      "doc_path": "docs/tools/workflows.md#explain-architecture"
+    }
+  ],
+  "schema": "muse-tool-guides/v1"
+}

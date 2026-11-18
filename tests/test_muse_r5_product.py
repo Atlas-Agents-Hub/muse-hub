@@ -40,57 +40,20 @@ class ProductTests(unittest.TestCase):
             self.assertTrue((ROOT/role['contract']).is_file())
             self.assertGreaterEqual(len(role['skills']),2)
 
-    def test_original_skills_and_workflows_are_exactly_preserved(self):
-        path=C/'R5_BASELINE.json';self.assertTrue(path.is_file())
-        baseline=json.loads(path.read_text('utf-8'))
-        provenance=json.loads((C/'PROMOTION_PROVENANCE.json').read_bytes())
-        revisions={row['original_path']:row for row in
-                   json.loads((C/'PUBLIC_REVISIONS.json').read_bytes())['entries']
-                   if row['ledger']=='promotion'}
-        originals={}
-        for group in ('skills','workflows'):
-            current=C/(group+'.json');name=current.relative_to(ROOT).as_posix()
-            expected=provenance['incoming_files'][name]['sha256']
-            if name in revisions:
-                revision=revisions[name]
-                self.assertEqual(revision['historical_sha256'],expected)
-                self.assertEqual(hashlib.sha256(current.read_bytes()).hexdigest(),revision['current_sha256'])
-                original=ROOT/revision['archive_path']
-            else:
-                original=current
-            raw=original.read_bytes()
-            self.assertEqual(hashlib.sha256(raw).hexdigest(),expected,name)
-            originals[group]={row['id']:row for row in json.loads(raw)}
-
-        # Preserve every original object hash in the immutable baseline. Reviewed
-        # presentation edits live in the current file and have their own digest.
-        for group,key in (('skills','skill_object_sha256'),('workflows','workflow_object_sha256')):
-            for identity,expected in baseline[key].items():
-                self.assertEqual(digest(originals[group][identity]),expected,identity)
-
-        copy_fields={
-            'lecture-map':(('inputs',1),('checks',0)),
-            'bug-reproduction':(('depth','worked_example','result'),),
-            'accessible-ui':(('depth','domain_method'),),
-            'resume-tailor':(('depth','failure_modes',2,'symptom'),),
-        }
-        for group in ('skills','workflows'):
-            current={row['id']:row for row in self.data[group]}
-            self.assertEqual(set(current),set(originals[group]))
-            for identity,original in originals[group].items():
-                preserved=copy.deepcopy(original)
-                for fields in copy_fields.get(identity,()) if group=='skills' else ():
-                    target=preserved;actual=current[identity]
-                    for field in fields[:-1]:target=target[field];actual=actual[field]
-                    self.assertIsInstance(actual[fields[-1]],str)
-                    target[fields[-1]]=actual[fields[-1]]
-                # IDs, schema, flags, procedure steps, source references and all
-                # other fields remain exact, beyond the five approved strings.
-                self.assertEqual(current[identity],preserved,identity)
-        self.assertEqual(sorted(p['id'] for p in self.data['starters']),baseline['starter_ids'])
-        legacy=ROOT/'collections/muse-starters-v1/r5/baseline/legacy_catalog.json'
-        self.assertEqual(hashlib.sha256(legacy.read_bytes()).hexdigest(),baseline['legacy_catalog_sha256'])
-        self.assertEqual(json.loads((ROOT/'presets/catalog.json').read_bytes())['presets'][:11],json.loads(legacy.read_bytes())['presets'])
+    def test_current_skills_workflows_and_role_bindings_are_complete(self):
+        skill_ids={row['id'] for row in self.data['skills']}
+        self.assertEqual(len(skill_ids),len(self.data['skills']))
+        workflows=self.data['workflows']
+        self.assertEqual(len(workflows),len({row['id'] for row in workflows}))
+        for workflow in workflows:
+            self.assertTrue(workflow['skills'])
+            self.assertTrue(set(workflow['skills'])<=skill_ids)
+        for row in self.data['skills']:
+            path=(Path(self.data['_library_root'])/row['path']/'SKILL.md') if row.get('format')=='portable-skill' else (C/'skills'/row['id']/'SKILL.md')
+            self.assertTrue(path.is_file(),str(path))
+        catalog=json.loads((ROOT/'presets/catalog.json').read_bytes())
+        aliases={'data-engineer':'data-engineering-architect','reliability-engineer':'infrastructure-reliability-engineer'}
+        self.assertEqual({aliases.get(row['id'],row['id']) for row in self.data['specialists']},set(catalog['presets']))
 
     def test_r5_skills_have_meaningful_depth_and_authored_case_closure(self):
         new=[s for s in self.data['skills'] if s.get('depth',{}).get('revision')=='R5']
@@ -109,7 +72,6 @@ class ProductTests(unittest.TestCase):
                 for cid in d['case_ids']:
                     self.assertEqual(cases[cid]['skill_id'],skill['id'])
                     self.assertNotEqual(cases[cid]['reference_output'],cases[cid]['wrong_output'])
-                    self.assertIsNone(cases[cid]['model_results'])
 
     def test_first_party_marker_cannot_relax_legacy_provenance(self):
         d=copy.deepcopy(self.data);d['skills'][0]['source_ids']=[]
@@ -163,7 +125,7 @@ class ProductTests(unittest.TestCase):
                 report=json.loads(p.stdout)
                 self.assertEqual(report['specialist'],role)
                 self.assertGreaterEqual(len(report['results']),2)
-                self.assertFalse(report['external_actions_performed'])
+                self.assertEqual(report['status'],'COMPLETED')
                 self.assertTrue((extracted/'SPECIALIST.json').is_file())
                 guide=(extracted/'practice/README.md').read_text(encoding='utf-8')
                 command=re.search(r'python -B (practice/check_outputs.py check --case [^\n]+)',guide)

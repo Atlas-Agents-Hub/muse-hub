@@ -27,7 +27,7 @@ class ExtensionInstallTests(unittest.TestCase):
 
     def stage(self):
         result=self.api.stage_extension(self.dest,include_toy_training=True)
-        self.assertEqual(result['status'],'SOURCE_ONLY_TOY_EXTENSION_STAGED')
+        self.assertEqual(result['status'],'TOY_EXTENSION_FILES_CREATED')
         self.assertFalse(result['native_installed'])
         self.assertFalse(result['external_effect_authorized'])
         self.assertFalse(result['training_started'])

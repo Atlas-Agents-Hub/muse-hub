@@ -18,7 +18,7 @@ def _module(name, path):
 collection = _module("release_collection", ROOT / "tools/muse_collection.py")
 legacy = _module("release_source_checks", ROOT / "scripts/build_v1_release.py")
 REPOSITORY = "https://github.com/atlas-origins/muse-ai-agent-presets"
-DEFAULT_VERSION = "v1.4.0"
+DEFAULT_VERSION = "v1.5.0"
 ALIASES = {"data-engineering-architect":"data-engineer",
            "infrastructure-reliability-engineer":"reliability-engineer"}
 ROLE_WORKFLOWS = {
@@ -47,7 +47,7 @@ root = Path(__file__).resolve().parent
 try:
     manifest = json.loads((root / 'MANIFEST.json').read_bytes())
     members = manifest['files']
-    if not isinstance(members,dict) or not 1 <= len(members) <= 1000:
+    if not isinstance(members,dict) or not 1 <= len(members) <= 12000:
         raise ValueError('INVALID_FILE_ROSTER')
     seen = set()
     for name, expected in members.items():
@@ -119,8 +119,14 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
     entry=next((s for s in data["specialists"] if s["id"]==alias),None)
     if entry is None: raise ValueError("SPECIALIST_COLLECTION_MAPPING_MISSING")
     preset,book=load_preset(role),load_playbook(role)
-    workflows=ROLE_WORKFLOWS[role]
-    files=collection.instruction_files(data,entry["skills"],workflows)
+    workflows=list(dict.fromkeys(ROLE_WORKFLOWS[role]+entry.get('library_workflows',[])))
+    files=collection.instruction_files(data,entry["skills"]+entry.get('library_skills',[]),workflows)
+    import tool_guides
+    guides=tool_guides.load_guides()
+    flow_index={w['id']:w for w in data['workflows']}
+    guide_ids=sorted(set(tool_guides.selected_ids(guides,role=alias))|
+        {gid for key in workflows for gid in flow_index[key].get('tool_guides',[])})
+    files.update(tool_guides.package_files(guides,ids=guide_ids))
     files.update({"assistant/"+name:raw for name,raw in standalone_files(role).items()})
     selected=sorted(name.split("/")[1] for name in files
                     if name.startswith("skills/") and name.endswith("/SKILL.md"))
@@ -136,6 +142,8 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
     if workflows:
         profile+="\n## Workflows\n\n"+"\n".join("- ["+flows[k]["title"]+"](workflows/"+k+".md)" for k in workflows)+"\n"
     profile+="\n## First task\n\nRead [FIRST_TASK.md](FIRST_TASK.md), or start with your current request.\n"
+    if guide_ids:
+        profile+="\n## Recommended tools\n\nRead [the tool guides](TOOL_GUIDES.md) for setup, practical recipes and result checks.\n"
     files["PROFILE.md"]=profile.encode()
     files["ROLE_PLAYBOOK.md"]=render_playbook(book,display_name=title,role_title=title).encode()
     first=book["first_canary"]
@@ -152,8 +160,7 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
         "For the current task, Muse can read AGENTS.md, PROFILE.md and the selected skills directly.\n")
     files["START_HERE.md"]=start.encode()
     files["SPECIALIST.json"]=_json({"id":role,"collection_id":alias,"title":title,"skills":selected,
-        "workflows":workflows,"methods":[m["id"] for m in book["methods"]],
-        "native_installed":False,"external_effect_authorized":False})
+        "workflows":workflows,"methods":[m["id"] for m in book["methods"]],"tool_guides":guide_ids})
     return _seal(files,"specialist",role,version,skills=selected,workflows=workflows)
 
 def skill_files(data,identity,version=DEFAULT_VERSION):
@@ -161,9 +168,9 @@ def skill_files(data,identity,version=DEFAULT_VERSION):
     if entry is None: raise ValueError("UNKNOWN_SKILL")
     files=collection.instruction_files(data,[identity],[])
     files["START_HERE.md"]=_use_text(entry["title"],"skills/"+identity+"/SKILL.md",files=files).encode()
+    detail=(" and [DEPTH.md](skills/"+identity+"/DEPTH.md) when you need examples or recovery steps" if entry.get('depth') else '')
     files["AGENTS.md"]=("# "+entry["title"]+"\n\nRead [SKILL.md](skills/"+identity+
-        "/SKILL.md) for this task and [DEPTH.md](skills/"+identity+
-        "/DEPTH.md) when you need examples or recovery steps. "
+        "/SKILL.md) for this task"+detail+". "
         "Keep the existing assistant preferences, memory and tool permissions.\n").encode()
     return _seal(files,"developed-skill",identity,version,skills=[identity])
 
@@ -201,10 +208,11 @@ def _bundle(title,identity,members,version):
 
 def compose_downloads(data,version=DEFAULT_VERSION):
     _version(version)
-    if tuple(len(data[k]) for k in ("specialists","skills","workflows","starters"))!=(15,75,25,100):
-        raise ValueError("REVIEW_CHANGED_COLLECTION_INVENTORY")
-    archives={};records={"specialists":[],"skills":[],"workflows":[],"bundles":[]}
-    groups={"specialists":{},"skills":{},"workflows":{},"starters":{}}
+    collection.validate(data)
+    if len(data['specialists'])!=15 or len(data['starters'])!=100:
+        raise ValueError("COLLECTION_INVENTORY_MISMATCH")
+    archives={};records={"specialists":[],"skills":[],"workflows":[],"tool-guides":[],"bundles":[]}
+    groups={"specialists":{},"skills":{},"workflows":{},"starters":{},"tool-guides":{}}
     for role in load_registry()["presets"]:
         name=specialist_asset(role,version);raw=_zip(specialist_files(data,role,version))
         archives[name]=groups["specialists"][name]=raw;manifest=verify_archive(raw)
@@ -224,7 +232,18 @@ def compose_downloads(data,version=DEFAULT_VERSION):
         files=collection.package_files(data,row["id"]);files.pop("MANIFEST.json")
         groups["starters"]["muse-starter-"+row["id"]+"-"+version+".zip"]=_zip(
             _seal(files,"starter",row["id"],version))
+    import tool_guides
+    guides=tool_guides.load_guides()
+    for row in guides['guides']:
+        name='muse-tool-'+row['id']+'-'+version+'.zip'
+        files=tool_guides.package_files(guides,ids=[row['id']])
+        files['START_HERE.md']=_use_text(row['name']+' guide','TOOL_GUIDES.md',files=files).encode()
+        raw=_zip(_seal(files,'tool-guide',row['id'],version))
+        archives[name]=groups['tool-guides'][name]=raw
+        records['tool-guides'].append({'id':row['id'],'title':row['name'],'summary':row['summary'],
+            'asset':name,'url':asset_url(name,version),'bytes':len(raw),'sha256':_sha(raw)})
     for category in groups:
+        if not groups[category]:continue
         name="muse-"+category+"-"+version+".zip";raw=_bundle("Muse "+category,category,groups[category],version)
         archives[name]=raw
         records["bundles"].append({"id":category,"asset":name,"url":asset_url(name,version),
@@ -268,9 +287,9 @@ def build_release(destination,expected_head,version=DEFAULT_VERSION):
         "SPECIALIST_DOWNLOADS.json":_json({"schema":"muse-specialist-downloads/v2","version":version,
             "source_head":expected_head,"role_count":15,"specialists":records["specialists"]}),
         "SKILL_DOWNLOADS.json":_json({"schema":"muse-skill-downloads/v1","version":version,
-            "source_head":expected_head,"skill_count":75,"skills":records["skills"]}),
+            "source_head":expected_head,"skill_count":len(records['skills']),"skills":records["skills"]}),
         "WORKFLOW_DOWNLOADS.json":_json({"schema":"muse-workflow-downloads/v1","version":version,
-            "source_head":expected_head,"workflow_count":25,"workflows":records["workflows"]}),
+            "source_head":expected_head,"workflow_count":len(records['workflows']),"workflows":records["workflows"]}),
         "RELEASE_MANIFEST.json":_json({"schema":"muse-release/v2","version":version,"source":state,
             "downloads":records,"assets":{n:{"bytes":len(b),"sha256":_sha(b)} for n,b in sorted(archives.items())}}),
     }
@@ -288,7 +307,8 @@ def build_release(destination,expected_head,version=DEFAULT_VERSION):
         if (target/name).read_bytes()!=raw: raise ValueError("ARTIFACT_READBACK_FAILED")
     (target/"SHA256SUMS").write_text(sums,encoding="ascii",newline="\n")
     result={"status":"COMPLETE","version":version,"source":state,"zip_count":len(archives),
-        "specialists":15,"developed_skills":75,"workflows":25,"starters_in_bundle":100,
+        "specialists":15,"developed_skills":len(records['skills']),"workflows":len(records['workflows']),
+        "tool_guides":len(records['tool-guides']),"starters_in_bundle":100,
         "separate_role_procedures":50,"published":False,
         "artifacts":{n:{"bytes":len(b),"sha256":_sha(b)} for n,b in sorted(all_files.items())}}
     (target/"BUILD_RECEIPT.json").write_bytes(_json(result));marker.unlink()

@@ -1,9 +1,4 @@
-"""Portable T04 profiles and read-only change previews; never a host installer.
-
-Reuse existing neutral templates and role playbook rendering. Freeze source
-bytes before writing, preserve partial stages, and compare against trusted
-repository source rather than trusting a candidate's editable manifest.
-"""
+"""Create specialist profiles and preview file changes."""
 from __future__ import annotations
 
 import hashlib
@@ -67,7 +62,7 @@ def _binding(role: str) -> dict:
         'external_effect_authorized': False,
         'schedule_enabled': False, 'hooks_enabled': False,
         'family_link_enabled': False, 'voice_enabled': False,
-        'instruction_precedence': 'DECLARED_ONLY_HOST_POLICY_ALWAYS_PRECEDES_DRAFT',
+        'instruction_precedence': 'HOST_POLICY_PRECEDES_PROFILE',
         'profile_directory': 'profile',
         'host_apply': 'NOT_IMPLEMENTED_REQUIRES_SUPPORTED_OWNER_SCOPED_PROVIDER',
         'state_policy': 'PRESERVE_RECEIVING_OWNER_MEMORY_AND_PREFERENCES',
@@ -142,7 +137,7 @@ def _write_new(path: Path, data: bytes) -> None:
 
 def stage_system_profile(destination: Path, role: str, *, display_name: str | None = None,
                          expected_source_sha256: str | None = None) -> dict:
-    """Create a new source draft only. Keep interrupted work fenced, never erase it."""
+    """Create a new profile and preserve interrupted work for recovery."""
     dest = Path(destination)
     _new_destination(dest)
     content, receipt, frozen = _build(role, display_name)
@@ -187,7 +182,7 @@ def _closed_tree(dest: Path, expected: set[str]) -> bool:
 
 
 def inspect_system_profile(destination: Path) -> dict:
-    """Compare source and draft bytes; do not trust editable receipt assertions."""
+    """Compare profile files with their expected content and file manifest."""
     dest = Path(destination)
     base = {'status': 'REVIEW_REQUIRED', 'native_loaded': False,
             'external_effect_authorized': False, 'owner_modified': [],

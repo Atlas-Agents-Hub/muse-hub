@@ -1,0 +1,1737 @@
+{
+  "schema": "muse-skill-workflows/v1",
+  "workflows": [
+    {
+      "id": "cited-research-brief",
+      "title": "Build a Cited Research Brief",
+      "goal": "Turn a defined question into a defensible explanation with a reproducible search trail.",
+      "roles": [
+        "research-evaluator",
+        "learning-coach",
+        "model-builder",
+        "claims-adjudicator"
+      ],
+      "skills": [
+        "litreview",
+        "qualitative-analysis",
+        "scientific-argumentation"
+      ],
+      "steps": [
+        {
+          "title": "Literature Reviews",
+          "skill_id": "litreview",
+          "action": "Search the question and record inclusion criteria, source dates, and findings.",
+          "output": "An included-source table with stable identifiers and exclusions.",
+          "check": "Every included claim has an inspectable source and meets the stated criteria."
+        },
+        {
+          "title": "Qualitative Analysis",
+          "skill_id": "qualitative-analysis",
+          "action": "Code the included-source table for themes and conflicting findings.",
+          "output": "A theme matrix with source excerpts and alternative explanations.",
+          "check": "Themes can be traced to source passages; disagreement is retained."
+        },
+        {
+          "title": "Scientific Argumentation",
+          "skill_id": "scientific-argumentation",
+          "action": "Use the theme matrix to write the brief with claim-level support.",
+          "output": "A cited brief, uncertainty statement, and next evidence question.",
+          "check": "The conclusion follows from the cited evidence and does not exceed the search scope."
+        }
+      ],
+      "inputs": [
+        "Research question and decision",
+        "Scope, date range, and available sources"
+      ],
+      "checks": [
+        "Every included claim has an inspectable source and meets the stated criteria.",
+        "Themes can be traced to source passages; disagreement is retained.",
+        "The conclusion follows from the cited evidence and does not exceed the search scope."
+      ],
+      "finish": "A cited brief, uncertainty statement, and next evidence question. The conclusion follows from the cited evidence and does not exceed the search scope.",
+      "tool_guides": [
+        "atlas-omnium",
+        "tinyfish"
+      ]
+    },
+    {
+      "id": "paper-submission",
+      "title": "Prepare a Research Paper",
+      "goal": "Develop the manuscript, figures, and abstract into a consistent submission set.",
+      "roles": [
+        "research-evaluator",
+        "learning-coach",
+        "claims-adjudicator"
+      ],
+      "skills": [
+        "paper-structure",
+        "publication-figures",
+        "abstract-writing",
+        "peer-review-checklist"
+      ],
+      "steps": [
+        {
+          "title": "Paper Structure",
+          "skill_id": "paper-structure",
+          "action": "Map the study question, method, and results to the target article structure.",
+          "output": "A section outline and evidence-to-section map.",
+          "check": "Every central result has a location and the structure follows the journal requirements."
+        },
+        {
+          "title": "Publication Figures",
+          "skill_id": "publication-figures",
+          "action": "Build figures from the mapped results with units, uncertainty, and captions.",
+          "output": "Exported figures and a figure-data manifest.",
+          "check": "Plotted values match the source data and labels remain legible at publication size."
+        },
+        {
+          "title": "Abstract Writing",
+          "skill_id": "abstract-writing",
+          "action": "Write the abstract from the final outline and figures.",
+          "output": "A journal-length abstract with the reported numerical findings.",
+          "check": "Every abstract result appears in the manuscript and its wording preserves the study limits."
+        },
+        {
+          "title": "Peer Review Checklist",
+          "skill_id": "peer-review-checklist",
+          "action": "Review the complete submission for methodological and reporting gaps.",
+          "output": "A corrected submission set and resolved review checklist.",
+          "check": "Methods, results, figures, references, and required declarations agree."
+        }
+      ],
+      "inputs": [
+        "Study methods and results",
+        "Target journal instructions"
+      ],
+      "checks": [
+        "Every central result has a location and the structure follows the journal requirements.",
+        "Plotted values match the source data and labels remain legible at publication size.",
+        "Every abstract result appears in the manuscript and its wording preserves the study limits.",
+        "Methods, results, figures, references, and required declarations agree."
+      ],
+      "finish": "A corrected submission set and resolved review checklist. Methods, results, figures, references, and required declarations agree.",
+      "tool_guides": [
+        "ndot-physics",
+        "wolfram",
+        "katex-error-fixer"
+      ]
+    },
+    {
+      "id": "grant-application",
+      "title": "Develop a Grant Application",
+      "goal": "Connect a research aim to a feasible work plan, evidence, and justified budget.",
+      "roles": [
+        "research-evaluator",
+        "learning-coach"
+      ],
+      "skills": [
+        "specific-aims-page",
+        "grant-story-arc",
+        "budget-justification"
+      ],
+      "steps": [
+        {
+          "title": "Specific Aims Page",
+          "skill_id": "specific-aims-page",
+          "action": "Write aims against the funding call and define measurable success.",
+          "output": "An aims page with hypotheses, outcomes, and alternatives.",
+          "check": "Aims are distinct, testable, and aligned with the call."
+        },
+        {
+          "title": "Grant Story Arc",
+          "skill_id": "grant-story-arc",
+          "action": "Turn the aims into a coherent need, approach, and impact narrative.",
+          "output": "A narrative outline with evidence and reviewer questions.",
+          "check": "Each proposed activity supports an aim and has a plausible outcome."
+        },
+        {
+          "title": "Budget Justification",
+          "skill_id": "budget-justification",
+          "action": "Cost the activities using actual staffing, equipment, and timeline assumptions.",
+          "output": "A line-item budget and narrative justification.",
+          "check": "Totals reconcile and each cost traces to an activity and applicable funder rule."
+        }
+      ],
+      "inputs": [
+        "Funding call and eligibility",
+        "Research idea, team capacity, and cost inputs"
+      ],
+      "checks": [
+        "Aims are distinct, testable, and aligned with the call.",
+        "Each proposed activity supports an aim and has a plausible outcome.",
+        "Totals reconcile and each cost traces to an activity and applicable funder rule."
+      ],
+      "finish": "A line-item budget and narrative justification. Totals reconcile and each cost traces to an activity and applicable funder rule.",
+      "tool_guides": [
+        "atlas-omnium",
+        "team-30"
+      ]
+    },
+    {
+      "id": "quantitative-practice",
+      "title": "Practice Scientific Computing",
+      "goal": "Build and check a numerical solution while making the mathematical choices explicit.",
+      "roles": [
+        "research-evaluator",
+        "learning-coach"
+      ],
+      "skills": [
+        "linear-algebra-practice",
+        "numerical-optimization",
+        "interactive-science-plots"
+      ],
+      "steps": [
+        {
+          "title": "Linear Algebra Practice",
+          "skill_id": "linear-algebra-practice",
+          "action": "Represent the problem as a linear system and inspect scale, rank, and conditioning.",
+          "output": "A matrix formulation with a selected decomposition.",
+          "check": "Dimensions, rank assumptions, and the decomposition match the problem."
+        },
+        {
+          "title": "Numerical Optimization",
+          "skill_id": "numerical-optimization",
+          "action": "Solve the formulation with a baseline and a documented stopping rule.",
+          "output": "A reproducible solver configuration and convergence record.",
+          "check": "The solution meets the stopping rule and respects constraints."
+        },
+        {
+          "title": "Interactive Science Plots",
+          "skill_id": "interactive-science-plots",
+          "action": "Visualize residuals and sensitivity to the important assumptions.",
+          "output": "A plot set and a short explanation of sensitivity.",
+          "check": "Residuals and limiting cases support the claimed accuracy."
+        }
+      ],
+      "inputs": [
+        "A concrete numerical problem",
+        "Input data, units, and accuracy target"
+      ],
+      "checks": [
+        "Dimensions, rank assumptions, and the decomposition match the problem.",
+        "The solution meets the stopping rule and respects constraints.",
+        "Residuals and limiting cases support the claimed accuracy."
+      ],
+      "finish": "A plot set and a short explanation of sensitivity. Residuals and limiting cases support the claimed accuracy.",
+      "tool_guides": [
+        "wolfram",
+        "formula-genius",
+        "ndot-physics"
+      ]
+    },
+    {
+      "id": "garden-weather-records",
+      "title": "Understand Local Growing Conditions",
+      "goal": "Combine site observations with weather records to support seasonal garden planning.",
+      "roles": [
+        "research-evaluator",
+        "learning-coach",
+        "garden-companion"
+      ],
+      "skills": [
+        "gis-workflows",
+        "climate-data-analysis",
+        "time-series-analysis"
+      ],
+      "steps": [
+        {
+          "title": "Gis Workflows",
+          "skill_id": "gis-workflows",
+          "action": "Locate the site and align the observation records to a consistent spatial reference.",
+          "output": "A site map and a location-checked observation table.",
+          "check": "Coordinates, dates, and spatial resolution match the intended site."
+        },
+        {
+          "title": "Climate Data Analysis",
+          "skill_id": "climate-data-analysis",
+          "action": "Summarize local temperature, precipitation, and extremes for the planning period.",
+          "output": "Seasonal summaries with units, missing-data notes, and historical context.",
+          "check": "Records cover the site and period; missing observations are handled explicitly."
+        },
+        {
+          "title": "Time Series Analysis",
+          "skill_id": "time-series-analysis",
+          "action": "Compare the garden observations with the seasonal summaries.",
+          "output": "A trend and anomaly report for the next planning review.",
+          "check": "Time alignment is correct and associations are distinguished from causes."
+        }
+      ],
+      "inputs": [
+        "Site location and observation log",
+        "Weather records and the planning period"
+      ],
+      "checks": [
+        "Coordinates, dates, and spatial resolution match the intended site.",
+        "Records cover the site and period; missing observations are handled explicitly.",
+        "Time alignment is correct and associations are distinguished from causes."
+      ],
+      "finish": "A trend and anomaly report for the next planning review. Time alignment is correct and associations are distinguished from causes.",
+      "tool_guides": [
+        "wolfram",
+        "preset"
+      ]
+    },
+    {
+      "id": "database-migration",
+      "title": "Plan and Check a Database Migration",
+      "goal": "Move a schema forward while preserving application behavior and data integrity.",
+      "roles": [
+        "data-engineer",
+        "model-builder",
+        "software-engineer"
+      ],
+      "skills": [
+        "database-designer",
+        "migration-architect",
+        "postgres-pro"
+      ],
+      "steps": [
+        {
+          "title": "Database Designer",
+          "skill_id": "database-designer",
+          "action": "Inspect keys, relationships, constraints, and query patterns in the current and target schemas.",
+          "output": "A schema change plan and invariants.",
+          "check": "The target supports the required queries and preserves required relationships."
+        },
+        {
+          "title": "Migration Architect",
+          "skill_id": "migration-architect",
+          "action": "Turn the change plan into an expand, backfill, transition, and rollback sequence.",
+          "output": "A migration runbook with checkpoints and recovery actions.",
+          "check": "The sequence maintains compatibility during deployment and bounds lock duration."
+        },
+        {
+          "title": "PostgreSQL Engineering",
+          "skill_id": "postgres-pro",
+          "action": "Exercise the migration and critical queries on representative data.",
+          "output": "Verified migration results, row reconciliations, and query plans.",
+          "check": "Rows, constraints, query behavior, and rollback match the declared invariants."
+        }
+      ],
+      "inputs": [
+        "Current and target schema",
+        "Critical queries and deployment constraints"
+      ],
+      "checks": [
+        "The target supports the required queries and preserves required relationships.",
+        "The sequence maintains compatibility during deployment and bounds lock duration.",
+        "Rows, constraints, query behavior, and rollback match the declared invariants."
+      ],
+      "finish": "Verified migration results, row reconciliations, and query plans. Rows, constraints, query behavior, and rollback match the declared invariants.",
+      "tool_guides": [
+        "planetscale",
+        "sql-expert",
+        "sql-copilot"
+      ]
+    },
+    {
+      "id": "data-pipeline-review",
+      "title": "Build a Reliable Data Pipeline",
+      "goal": "Define a repeatable pipeline with measurable data quality and recovery behavior.",
+      "roles": [
+        "data-engineer",
+        "model-builder"
+      ],
+      "skills": [
+        "senior-data-engineer",
+        "data-quality-auditor",
+        "spark-engineer"
+      ],
+      "steps": [
+        {
+          "title": "Data Pipeline Engineering",
+          "skill_id": "senior-data-engineer",
+          "action": "Design the ingestion and transformation boundaries, keys, and retry behavior.",
+          "output": "A pipeline specification and representative transformations.",
+          "check": "Each transformation has an input schema, output schema, and update rule."
+        },
+        {
+          "title": "Data Quality Auditor",
+          "skill_id": "data-quality-auditor",
+          "action": "Check source and transformed data against the specification.",
+          "output": "A quality report covering nulls, uniqueness, types, and reconciliation.",
+          "check": "Quality failures are tied to specific records and cannot silently pass."
+        },
+        {
+          "title": "Spark Engineer",
+          "skill_id": "spark-engineer",
+          "action": "Implement or tune the distributed stages using the quality checks.",
+          "output": "A pipeline run with partitioning, resource use, and recovery results.",
+          "check": "The output reconciles and rerunning a bounded batch preserves the intended data."
+        }
+      ],
+      "inputs": [
+        "Input schemas and sample records",
+        "Destination model and freshness requirement"
+      ],
+      "checks": [
+        "Each transformation has an input schema, output schema, and update rule.",
+        "Quality failures are tied to specific records and cannot silently pass.",
+        "The output reconciles and rerunning a bounded batch preserves the intended data."
+      ],
+      "finish": "A pipeline run with partitioning, resource use, and recovery results. The output reconciles and rerunning a bounded batch preserves the intended data.",
+      "tool_guides": [
+        "sql-copilot",
+        "preset",
+        "wowsql"
+      ]
+    },
+    {
+      "id": "forecast-evaluation",
+      "title": "Evaluate a Forecast",
+      "goal": "Compare forecasts with temporal validation and useful uncertainty estimates.",
+      "roles": [
+        "research-evaluator",
+        "learning-coach",
+        "garden-companion",
+        "model-builder",
+        "claims-adjudicator"
+      ],
+      "skills": [
+        "time-series-analysis",
+        "statistical-modeling",
+        "statistical-review-checklist"
+      ],
+      "steps": [
+        {
+          "title": "Time Series Analysis",
+          "skill_id": "time-series-analysis",
+          "action": "Inspect seasonality, trend, gaps, and changes in measurement.",
+          "output": "A cleaned series and temporal split plan.",
+          "check": "The split preserves time order and prevents information leakage."
+        },
+        {
+          "title": "Statistical Modeling",
+          "skill_id": "statistical-modeling",
+          "action": "Fit a baseline and candidate models on the split plan.",
+          "output": "Forecasts, fitted assumptions, and error estimates.",
+          "check": "Each candidate uses the same training and evaluation windows."
+        },
+        {
+          "title": "Statistical Review Checklist",
+          "skill_id": "statistical-review-checklist",
+          "action": "Review the comparison, uncertainty, and failure periods.",
+          "output": "A model choice with limits and a monitoring trigger.",
+          "check": "The selected model improves the relevant decision metric over the baseline."
+        }
+      ],
+      "inputs": [
+        "Time-stamped observations",
+        "Forecast horizon and decision cost"
+      ],
+      "checks": [
+        "The split preserves time order and prevents information leakage.",
+        "Each candidate uses the same training and evaluation windows.",
+        "The selected model improves the relevant decision metric over the baseline."
+      ],
+      "finish": "A model choice with limits and a monitoring trigger. The selected model improves the relevant decision metric over the baseline.",
+      "tool_guides": [
+        "wolfram",
+        "preset"
+      ]
+    },
+    {
+      "id": "retrieval-quality",
+      "title": "Improve Document Search",
+      "goal": "Build a retrieval pipeline whose answer context can be measured against a fixed query set.",
+      "roles": [
+        "model-builder",
+        "research-evaluator"
+      ],
+      "skills": [
+        "chunking-strategies",
+        "rag-architect",
+        "hybrid-search"
+      ],
+      "steps": [
+        {
+          "title": "Chunking Strategies",
+          "skill_id": "chunking-strategies",
+          "action": "Inspect document structure and select chunk boundaries with preserved identifiers.",
+          "output": "Chunked documents and a corpus inspection summary.",
+          "check": "Chunks preserve context and point back to their exact source locations."
+        },
+        {
+          "title": "RAG Architect",
+          "skill_id": "rag-architect",
+          "action": "Configure indexing, retrieval, filtering, and reranking from the corpus and query requirements.",
+          "output": "A retrieval design and repeatable evaluation inputs.",
+          "check": "The design satisfies access filters and uses the stated latency and quality targets."
+        },
+        {
+          "title": "Hybrid Search",
+          "skill_id": "hybrid-search",
+          "action": "Compare lexical, vector, and combined retrieval on the fixed queries.",
+          "output": "Per-query retrieval results and a selected configuration.",
+          "check": "The same judgments and cutoffs are used for every candidate; regressions are reviewed."
+        }
+      ],
+      "inputs": [
+        "Document corpus",
+        "Representative queries and relevance judgments"
+      ],
+      "checks": [
+        "Chunks preserve context and point back to their exact source locations.",
+        "The design satisfies access filters and uses the stated latency and quality targets.",
+        "The same judgments and cutoffs are used for every candidate; regressions are reviewed."
+      ],
+      "finish": "Per-query retrieval results and a selected configuration. The same judgments and cutoffs are used for every candidate; regressions are reviewed.",
+      "tool_guides": [
+        "rag-genai",
+        "hugging-face",
+        "promptfoo"
+      ]
+    },
+    {
+      "id": "fine-tuning-evaluation",
+      "title": "Fine-Tune and Evaluate a Model",
+      "goal": "Improve a model on a defined task while keeping evaluation independent of training.",
+      "roles": [
+        "model-builder",
+        "research-evaluator",
+        "software-engineer"
+      ],
+      "skills": [
+        "data-labeling",
+        "fine-tuning-expert",
+        "agent-regression-evals"
+      ],
+      "steps": [
+        {
+          "title": "Data Labeling",
+          "skill_id": "data-labeling",
+          "action": "Define the labels or response rubric and review ambiguous examples.",
+          "output": "A versioned dataset with labeling rules and held-out split.",
+          "check": "Labels follow the rubric and duplicates do not cross the split."
+        },
+        {
+          "title": "Fine Tuning",
+          "skill_id": "fine-tuning-expert",
+          "action": "Choose and run the training method within the compute budget.",
+          "output": "A model checkpoint, training configuration, and loss history.",
+          "check": "Training stays within budget and the checkpoint can be loaded reproducibly."
+        },
+        {
+          "title": "Agent Regression Evaluation",
+          "skill_id": "agent-regression-evals",
+          "action": "Compare the checkpoint with the baseline on the held-out tasks.",
+          "output": "A paired evaluation report and deployment recommendation.",
+          "check": "Measured improvement and regressions are reported with appropriate uncertainty."
+        }
+      ],
+      "inputs": [
+        "Training examples and permitted use",
+        "Held-out tasks, baseline model, and compute budget"
+      ],
+      "checks": [
+        "Labels follow the rubric and duplicates do not cross the split.",
+        "Training stays within budget and the checkpoint can be loaded reproducibly.",
+        "Measured improvement and regressions are reported with appropriate uncertainty."
+      ],
+      "finish": "A paired evaluation report and deployment recommendation. Measured improvement and regressions are reported with appropriate uncertainty.",
+      "tool_guides": [
+        "hugging-face",
+        "nvidia",
+        "amd",
+        "modal",
+        "promptfoo"
+      ]
+    },
+    {
+      "id": "model-serving",
+      "title": "Serve a Model Efficiently",
+      "goal": "Choose a serving configuration from measured latency, throughput, and cost.",
+      "roles": [
+        "model-builder",
+        "research-evaluator"
+      ],
+      "skills": [
+        "ml-pipeline",
+        "vllm-serving",
+        "llm-cost-optimizer"
+      ],
+      "steps": [
+        {
+          "title": "Machine Learning Pipelines",
+          "skill_id": "ml-pipeline",
+          "action": "Define the model artifact, preprocessing, version, and serving input contract.",
+          "output": "A versioned deployment artifact and request contract.",
+          "check": "The serving inputs reproduce the evaluated preprocessing and model version."
+        },
+        {
+          "title": "Vllm Serving",
+          "skill_id": "vllm-serving",
+          "action": "Benchmark serving configurations against the representative workload.",
+          "output": "Latency, throughput, memory, and error measurements.",
+          "check": "Measurements include warm-up, concurrency, and the relevant sequence lengths."
+        },
+        {
+          "title": "LLM Cost Optimizer",
+          "skill_id": "llm-cost-optimizer",
+          "action": "Compare the benchmarked configurations using actual provider or hardware costs.",
+          "output": "A costed serving choice and operating limits.",
+          "check": "The selected configuration meets the target and its prices have an as-of date."
+        }
+      ],
+      "inputs": [
+        "Model and representative workload",
+        "Latency target and resource budget"
+      ],
+      "checks": [
+        "The serving inputs reproduce the evaluated preprocessing and model version.",
+        "Measurements include warm-up, concurrency, and the relevant sequence lengths.",
+        "The selected configuration meets the target and its prices have an as-of date."
+      ],
+      "finish": "A costed serving choice and operating limits. The selected configuration meets the target and its prices have an as-of date.",
+      "tool_guides": [
+        "nvidia",
+        "amd",
+        "modal",
+        "hugging-face"
+      ]
+    },
+    {
+      "id": "api-service",
+      "title": "Build an API Service",
+      "goal": "Deliver an API with explicit schemas, access checks, and behavioral tests.",
+      "roles": [
+        "software-engineer"
+      ],
+      "skills": [
+        "fastapi-expert",
+        "secure-code-guardian",
+        "api-test-suite-builder"
+      ],
+      "steps": [
+        {
+          "title": "FastAPI",
+          "skill_id": "fastapi-expert",
+          "action": "Implement routes, schemas, validation, and error responses for the use cases.",
+          "output": "A runnable API and its documented request/response contract.",
+          "check": "Valid and invalid requests produce the documented behavior."
+        },
+        {
+          "title": "Secure Code Guardian",
+          "skill_id": "secure-code-guardian",
+          "action": "Review trust boundaries, authentication, authorization, and sensitive data handling.",
+          "output": "Security corrections tied to concrete failure cases.",
+          "check": "Unauthorized access and unsafe input cases are rejected."
+        },
+        {
+          "title": "API Test Suite Builder",
+          "skill_id": "api-test-suite-builder",
+          "action": "Exercise the contract and corrected failure cases through integration tests.",
+          "output": "A repeatable API test suite and results.",
+          "check": "Tests cover success, invalid input, access control, and dependency failure."
+        }
+      ],
+      "inputs": [
+        "API use cases and data model",
+        "Authentication and operational requirements"
+      ],
+      "checks": [
+        "Valid and invalid requests produce the documented behavior.",
+        "Unauthorized access and unsafe input cases are rejected.",
+        "Tests cover success, invalid input, access control, and dependency failure."
+      ],
+      "finish": "A repeatable API test suite and results. Tests cover success, invalid input, access control, and dependency failure.",
+      "tool_guides": [
+        "superpowers",
+        "codex-dev-workflows",
+        "descope"
+      ]
+    },
+    {
+      "id": "accessible-web-product",
+      "title": "Build an Accessible Web Interface",
+      "goal": "Turn a product flow into a responsive interface with consistent components and states.",
+      "roles": [
+        "product-interface-designer",
+        "creative-studio",
+        "software-engineer"
+      ],
+      "skills": [
+        "ui-design-system",
+        "react-expert",
+        "design-qa"
+      ],
+      "steps": [
+        {
+          "title": "UI Design System",
+          "skill_id": "ui-design-system",
+          "action": "Define the tokens, component states, and page structure for the journey.",
+          "output": "A component specification and state inventory.",
+          "check": "Tokens and states support the actual content and interaction needs."
+        },
+        {
+          "title": "React Development",
+          "skill_id": "react-expert",
+          "action": "Implement the journey using the agreed components and data boundaries.",
+          "output": "A working interface with loading, empty, success, and error behavior.",
+          "check": "State transitions and data updates match the specification."
+        },
+        {
+          "title": "Design QA",
+          "skill_id": "design-qa",
+          "action": "Inspect the rendered interface at narrow and wide sizes and with keyboard navigation.",
+          "output": "Resolved visual and accessibility findings with captured results.",
+          "check": "The key journey completes without clipping, inaccessible controls, or broken recovery."
+        }
+      ],
+      "inputs": [
+        "User journey and content",
+        "Existing components, browser targets, and accessibility needs"
+      ],
+      "checks": [
+        "Tokens and states support the actual content and interaction needs.",
+        "State transitions and data updates match the specification.",
+        "The key journey completes without clipping, inaccessible controls, or broken recovery."
+      ],
+      "finish": "Resolved visual and accessibility findings with captured results. The key journey completes without clipping, inaccessible controls, or broken recovery.",
+      "tool_guides": [
+        "product-design",
+        "designly",
+        "magicpath",
+        "tinyfish"
+      ]
+    },
+    {
+      "id": "mobile-release-flow",
+      "title": "Prepare a Mobile App Release",
+      "goal": "Take a mobile feature through interaction checks and a controlled release package.",
+      "roles": [
+        "software-engineer"
+      ],
+      "skills": [
+        "react-native-expert",
+        "test-master",
+        "mobile-release"
+      ],
+      "steps": [
+        {
+          "title": "React Native",
+          "skill_id": "react-native-expert",
+          "action": "Implement the feature with platform-aware navigation, data, and permissions.",
+          "output": "A working feature and device test plan.",
+          "check": "The feature handles loading, denial, interrupted use, and navigation correctly."
+        },
+        {
+          "title": "Software Test Design",
+          "skill_id": "test-master",
+          "action": "Run the relevant unit, integration, and device journey checks.",
+          "output": "A release candidate with reproducible test results.",
+          "check": "The main journey and its failure cases pass on the target configurations."
+        },
+        {
+          "title": "Mobile Release",
+          "skill_id": "mobile-release",
+          "action": "Prepare versioning, artifacts, rollout, monitoring, and rollback actions.",
+          "output": "A release package and channel-specific rollout checklist.",
+          "check": "The artifact, version, signing configuration, and release notes agree."
+        }
+      ],
+      "inputs": [
+        "Feature requirements and app project",
+        "Supported devices and release channel"
+      ],
+      "checks": [
+        "The feature handles loading, denial, interrupted use, and navigation correctly.",
+        "The main journey and its failure cases pass on the target configurations.",
+        "The artifact, version, signing configuration, and release notes agree."
+      ],
+      "finish": "A release package and channel-specific rollout checklist. The artifact, version, signing configuration, and release notes agree.",
+      "tool_guides": [
+        "expo",
+        "testing-react-native",
+        "test-android-apps"
+      ]
+    },
+    {
+      "id": "macos-feature",
+      "title": "Build a macOS Feature",
+      "goal": "Implement a native feature and verify it against the application’s interaction and security requirements.",
+      "roles": [
+        "software-engineer"
+      ],
+      "skills": [
+        "swift-expert",
+        "secure-code-guardian",
+        "test-master"
+      ],
+      "steps": [
+        {
+          "title": "Swift",
+          "skill_id": "swift-expert",
+          "action": "Implement the feature using the project architecture and supported Swift APIs.",
+          "output": "A buildable feature with documented state and concurrency boundaries.",
+          "check": "The target builds and the feature handles expected state changes."
+        },
+        {
+          "title": "Secure Code Guardian",
+          "skill_id": "secure-code-guardian",
+          "action": "Review file access, permissions, data storage, and external inputs.",
+          "output": "Corrections for concrete security and privacy issues.",
+          "check": "Access is limited to the required resources and invalid inputs fail safely."
+        },
+        {
+          "title": "Software Test Design",
+          "skill_id": "test-master",
+          "action": "Exercise the main interaction, cancellation, and recovery cases.",
+          "output": "A tested feature and reproducible macOS build instructions.",
+          "check": "The feature passes its behavior checks on the stated macOS target."
+        }
+      ],
+      "inputs": [
+        "Swift project and feature brief",
+        "macOS target and required permissions"
+      ],
+      "checks": [
+        "The target builds and the feature handles expected state changes.",
+        "Access is limited to the required resources and invalid inputs fail safely.",
+        "The feature passes its behavior checks on the stated macOS target."
+      ],
+      "finish": "A tested feature and reproducible macOS build instructions. The feature passes its behavior checks on the stated macOS target.",
+      "tool_guides": [
+        "build-macos-apps",
+        "superpowers"
+      ]
+    },
+    {
+      "id": "game-performance",
+      "title": "Build and Profile a Game Feature",
+      "goal": "Deliver a playable feature with measurable frame-time and resource targets.",
+      "roles": [
+        "creative-studio",
+        "software-engineer",
+        "reliability-engineer"
+      ],
+      "skills": [
+        "3d-designer",
+        "game-developer",
+        "performance-profiler"
+      ],
+      "steps": [
+        {
+          "title": "3D Design",
+          "skill_id": "3d-designer",
+          "action": "Prepare assets with scale, materials, topology, and export settings suited to the engine.",
+          "output": "Engine-ready assets and an import specification.",
+          "check": "Scale, pivots, materials, and file formats survive import."
+        },
+        {
+          "title": "Game Developer",
+          "skill_id": "game-developer",
+          "action": "Implement the feature and connect the prepared assets to gameplay.",
+          "output": "A playable scene with defined success and failure states.",
+          "check": "Gameplay behavior and collision or physics responses match the brief."
+        },
+        {
+          "title": "Performance Profiler",
+          "skill_id": "performance-profiler",
+          "action": "Measure the feature under the target scene load and address the largest bottleneck.",
+          "output": "Before-and-after frame-time and memory results.",
+          "check": "The target budget is met without changing the intended gameplay."
+        }
+      ],
+      "inputs": [
+        "Game design brief and engine project",
+        "Target hardware and performance budget"
+      ],
+      "checks": [
+        "Scale, pivots, materials, and file formats survive import.",
+        "Gameplay behavior and collision or physics responses match the brief.",
+        "The target budget is met without changing the intended gameplay."
+      ],
+      "finish": "Before-and-after frame-time and memory results. The target budget is met without changing the intended gameplay.",
+      "tool_guides": [
+        "game-development-studio",
+        "unity-essentials",
+        "ndot-physics"
+      ]
+    },
+    {
+      "id": "legacy-modernization",
+      "title": "Modernize a Legacy Component",
+      "goal": "Replace a bounded component while preserving the behavior users rely on.",
+      "roles": [
+        "software-engineer",
+        "claims-adjudicator"
+      ],
+      "skills": [
+        "legacy-modernizer",
+        "tdd-guide",
+        "dependency-auditor"
+      ],
+      "steps": [
+        {
+          "title": "Legacy Modernizer",
+          "skill_id": "legacy-modernizer",
+          "action": "Identify the replacement boundary and the behavior that must remain stable.",
+          "output": "A staged migration plan with compatibility cases.",
+          "check": "The boundary can be migrated independently and rollback is defined."
+        },
+        {
+          "title": "Tdd Guide",
+          "skill_id": "tdd-guide",
+          "action": "Capture the compatibility cases and implement the replacement incrementally.",
+          "output": "A replacement with regression tests and a migration adapter.",
+          "check": "Tests preserve required behavior and expose the intended changes."
+        },
+        {
+          "title": "Dependency Auditor",
+          "skill_id": "dependency-auditor",
+          "action": "Inspect the replacement dependencies and their compatibility.",
+          "output": "A dependency report and resolved upgrade or license issues.",
+          "check": "The final dependency set builds, is supported, and satisfies the project constraints."
+        }
+      ],
+      "inputs": [
+        "Legacy component and observed behavior",
+        "Target stack and compatibility constraints"
+      ],
+      "checks": [
+        "The boundary can be migrated independently and rollback is defined.",
+        "Tests preserve required behavior and expose the intended changes.",
+        "The final dependency set builds, is supported, and satisfies the project constraints."
+      ],
+      "finish": "A dependency report and resolved upgrade or license issues. The final dependency set builds, is supported, and satisfies the project constraints.",
+      "tool_guides": [
+        "codex-dev-workflows",
+        "superpowers"
+      ]
+    },
+    {
+      "id": "infrastructure-delivery",
+      "title": "Deliver a Service Environment",
+      "goal": "Create a repeatable environment with deployment and operational checks.",
+      "roles": [
+        "reliability-engineer",
+        "software-engineer"
+      ],
+      "skills": [
+        "docker-development",
+        "terraform-patterns",
+        "observability-designer"
+      ],
+      "steps": [
+        {
+          "title": "Docker Development",
+          "skill_id": "docker-development",
+          "action": "Package the service with reproducible build inputs and runtime settings.",
+          "output": "A service image and container run configuration.",
+          "check": "The image starts correctly and contains only the required runtime material."
+        },
+        {
+          "title": "Terraform Patterns",
+          "skill_id": "terraform-patterns",
+          "action": "Describe the required infrastructure and review the proposed changes.",
+          "output": "An infrastructure plan with state and rollback considerations.",
+          "check": "Resource permissions, network exposure, and destructive changes are reviewed."
+        },
+        {
+          "title": "Observability Designer",
+          "skill_id": "observability-designer",
+          "action": "Add service indicators, dashboards, and actionable alerts.",
+          "output": "An observable environment with documented incident entry points.",
+          "check": "A controlled failure is visible and routes to a clear recovery action."
+        }
+      ],
+      "inputs": [
+        "Service build and environment requirements",
+        "Cloud account scope and operating targets"
+      ],
+      "checks": [
+        "The image starts correctly and contains only the required runtime material.",
+        "Resource permissions, network exposure, and destructive changes are reviewed.",
+        "A controlled failure is visible and routes to a clear recovery action."
+      ],
+      "finish": "An observable environment with documented incident entry points. A controlled failure is visible and routes to a clear recovery action.",
+      "tool_guides": [
+        "codex-dev-workflows",
+        "atlas-continuum",
+        "deepbom"
+      ]
+    },
+    {
+      "id": "incident-to-prevention",
+      "title": "Investigate and Recover from an Incident",
+      "goal": "Coordinate response, establish the cause, and improve the recovery procedure.",
+      "roles": [
+        "reliability-engineer",
+        "software-engineer"
+      ],
+      "skills": [
+        "incident-commander",
+        "incident-response",
+        "runbook-generator"
+      ],
+      "steps": [
+        {
+          "title": "Incident Commander",
+          "skill_id": "incident-commander",
+          "action": "Establish the timeline, impact, ownership, and immediate stabilization actions.",
+          "output": "A shared incident record and response plan.",
+          "check": "Actions address observed impact and ownership is unambiguous."
+        },
+        {
+          "title": "Incident Response",
+          "skill_id": "incident-response",
+          "action": "Investigate the evidence, contain the fault, and verify recovery.",
+          "output": "A causal account with containment and recovery results.",
+          "check": "The recovery resolves the observed failure and related systems are checked."
+        },
+        {
+          "title": "Runbook Generator",
+          "skill_id": "runbook-generator",
+          "action": "Turn the confirmed recovery into an operational procedure.",
+          "output": "A tested runbook with symptoms, commands, checks, and escalation.",
+          "check": "Another operator can follow the procedure and recognize success or failure."
+        }
+      ],
+      "inputs": [
+        "Incident symptoms and service context",
+        "Logs, metrics, and response authority"
+      ],
+      "checks": [
+        "Actions address observed impact and ownership is unambiguous.",
+        "The recovery resolves the observed failure and related systems are checked.",
+        "Another operator can follow the procedure and recognize success or failure."
+      ],
+      "finish": "A tested runbook with symptoms, commands, checks, and escalation. Another operator can follow the procedure and recognize success or failure.",
+      "tool_guides": [
+        "atlas-continuum",
+        "atlas-omnium"
+      ]
+    },
+    {
+      "id": "ai-security-review",
+      "title": "Evaluate an AI System’s Defenses",
+      "goal": "Test prompt injection and unsafe tool behavior against an explicit threat model.",
+      "roles": [
+        "model-builder",
+        "research-evaluator",
+        "adversarial-verifier",
+        "reverse-engineering-researcher",
+        "software-engineer"
+      ],
+      "skills": [
+        "prompt-injection-defense",
+        "red-teaming-llms",
+        "agent-regression-evals"
+      ],
+      "steps": [
+        {
+          "title": "Prompt Injection Defense",
+          "skill_id": "prompt-injection-defense",
+          "action": "Identify untrusted inputs and the actions they could influence.",
+          "output": "A trust-boundary map and defense requirements.",
+          "check": "The map distinguishes user intent, retrieved content, tool results, and privileged actions."
+        },
+        {
+          "title": "Red Teaming Language Models",
+          "skill_id": "red-teaming-llms",
+          "action": "Run bounded adversarial cases against the mapped boundaries.",
+          "output": "A case-level result set and reproducible failures.",
+          "check": "Each failure demonstrates an actual boundary violation within the authorized scope."
+        },
+        {
+          "title": "Agent Regression Evaluation",
+          "skill_id": "agent-regression-evals",
+          "action": "Retest the fixes against attack and normal-use cases.",
+          "output": "A regression report covering both protection and task success.",
+          "check": "The fixes block the demonstrated failure without unacceptable normal-task regressions."
+        }
+      ],
+      "inputs": [
+        "Authorized test environment and tool inventory",
+        "Trust boundaries and allowed evaluation cases"
+      ],
+      "checks": [
+        "The map distinguishes user intent, retrieved content, tool results, and privileged actions.",
+        "Each failure demonstrates an actual boundary violation within the authorized scope.",
+        "The fixes block the demonstrated failure without unacceptable normal-task regressions."
+      ],
+      "finish": "A regression report covering both protection and task success. The fixes block the demonstrated failure without unacceptable normal-task regressions.",
+      "tool_guides": [
+        "prompt-injection",
+        "promptfoo",
+        "endor-labs"
+      ]
+    },
+    {
+      "id": "access-control-review",
+      "title": "Implement and Check Access Control",
+      "goal": "Define identity and authorization rules and prove them at the application boundary.",
+      "roles": [
+        "software-engineer",
+        "adversarial-verifier",
+        "reverse-engineering-researcher"
+      ],
+      "skills": [
+        "auth-pro",
+        "rbac-designer",
+        "secure-code-guardian"
+      ],
+      "steps": [
+        {
+          "title": "Auth",
+          "skill_id": "auth-pro",
+          "action": "Define the authentication flow, session lifecycle, and identity claims.",
+          "output": "An authentication design with failure and recovery paths.",
+          "check": "The design covers expiration, revocation, and account recovery."
+        },
+        {
+          "title": "Role Based Access Designer",
+          "skill_id": "rbac-designer",
+          "action": "Map roles and ownership to resource operations.",
+          "output": "An authorization matrix and enforcement points.",
+          "check": "Every sensitive operation has a clear decision rule and default behavior."
+        },
+        {
+          "title": "Secure Code Guardian",
+          "skill_id": "secure-code-guardian",
+          "action": "Exercise the implementation against the authorization matrix.",
+          "output": "Access-control tests and resolved findings.",
+          "check": "Cross-account access, escalation, and invalid-session cases are denied."
+        }
+      ],
+      "inputs": [
+        "User roles and resource ownership model",
+        "Application routes and identity provider"
+      ],
+      "checks": [
+        "The design covers expiration, revocation, and account recovery.",
+        "Every sensitive operation has a clear decision rule and default behavior.",
+        "Cross-account access, escalation, and invalid-session cases are denied."
+      ],
+      "finish": "Access-control tests and resolved findings. Cross-account access, escalation, and invalid-session cases are denied.",
+      "tool_guides": [
+        "descope",
+        "superpowers"
+      ]
+    },
+    {
+      "id": "software-supply-chain",
+      "title": "Review a Software Supply Chain",
+      "goal": "Connect dependency, license, and security evidence to release decisions.",
+      "roles": [
+        "software-engineer",
+        "claims-adjudicator",
+        "adversarial-verifier",
+        "reverse-engineering-researcher"
+      ],
+      "skills": [
+        "dependency-auditor",
+        "license-auditor",
+        "adversarial-reviewer"
+      ],
+      "steps": [
+        {
+          "title": "Dependency Auditor",
+          "skill_id": "dependency-auditor",
+          "action": "Inventory direct and transitive dependencies from the actual lockfiles.",
+          "output": "A versioned dependency inventory with risk findings.",
+          "check": "The inventory reflects the built application rather than uninstalled candidates."
+        },
+        {
+          "title": "License Auditor",
+          "skill_id": "license-auditor",
+          "action": "Inspect the relevant licenses and redistribution obligations.",
+          "output": "A license inventory and required notice set.",
+          "check": "Every distributed component has a reviewed license and the necessary notices."
+        },
+        {
+          "title": "Adversarial Reviewer",
+          "skill_id": "adversarial-reviewer",
+          "action": "Review unresolved findings against the planned release behavior.",
+          "output": "A prioritized remediation list and release recommendation.",
+          "check": "Critical findings have a concrete fix or a documented release decision with an owner."
+        }
+      ],
+      "inputs": [
+        "Dependency manifests and lockfiles",
+        "Distribution requirements and release candidate"
+      ],
+      "checks": [
+        "The inventory reflects the built application rather than uninstalled candidates.",
+        "Every distributed component has a reviewed license and the necessary notices.",
+        "Critical findings have a concrete fix or a documented release decision with an owner."
+      ],
+      "finish": "A prioritized remediation list and release recommendation. Critical findings have a concrete fix or a documented release decision with an owner.",
+      "tool_guides": [
+        "endor-labs",
+        "deepbom"
+      ]
+    },
+    {
+      "id": "binary-investigation",
+      "title": "Investigate a Binary or Protocol",
+      "goal": "Explain observed software behavior and turn findings into practical defensive action.",
+      "roles": [
+        "adversarial-verifier",
+        "reverse-engineering-researcher",
+        "claims-adjudicator"
+      ],
+      "skills": [
+        "forensics-pro",
+        "reverse-engineer",
+        "vulnerability-management"
+      ],
+      "steps": [
+        {
+          "title": "Forensics",
+          "skill_id": "forensics-pro",
+          "action": "Preserve the sample identity and collect the initial evidence.",
+          "output": "A hashed sample record and observation timeline.",
+          "check": "The evidence can be traced to the supplied sample and handling steps."
+        },
+        {
+          "title": "Binary and Protocol Analysis",
+          "skill_id": "reverse-engineer",
+          "action": "Use static and bounded dynamic analysis to answer the specific question.",
+          "output": "Annotated behavior, structures, and confirmed hypotheses.",
+          "check": "Critical conclusions are supported by observable behavior or instruction-level evidence."
+        },
+        {
+          "title": "Vulnerability Management",
+          "skill_id": "vulnerability-management",
+          "action": "Assess any confirmed weakness and define remediation and retest.",
+          "output": "A finding with affected versions, impact, fix, and retest procedure.",
+          "check": "The report supports a practical defensive decision without overstating untested impact."
+        }
+      ],
+      "inputs": [
+        "Authorized binary or protocol sample",
+        "Analysis question and isolated environment"
+      ],
+      "checks": [
+        "The evidence can be traced to the supplied sample and handling steps.",
+        "Critical conclusions are supported by observable behavior or instruction-level evidence.",
+        "The report supports a practical defensive decision without overstating untested impact."
+      ],
+      "finish": "A finding with affected versions, impact, fix, and retest procedure. The report supports a practical defensive decision without overstating untested impact.",
+      "tool_guides": [
+        "reverse-engineering",
+        "authorised-osint"
+      ]
+    },
+    {
+      "id": "detection-validation",
+      "title": "Validate a Security Detection",
+      "goal": "Build a detection from a concrete behavior and measure it against representative events.",
+      "roles": [
+        "adversarial-verifier",
+        "reverse-engineering-researcher"
+      ],
+      "skills": [
+        "threat-detection",
+        "siem-engineer",
+        "purple-team"
+      ],
+      "steps": [
+        {
+          "title": "Threat Detection",
+          "skill_id": "threat-detection",
+          "action": "Define the behavior, telemetry, and detection hypothesis.",
+          "output": "A detection specification and event requirements.",
+          "check": "Required fields are available and the hypothesis is tied to observable behavior."
+        },
+        {
+          "title": "SIEM Engineer",
+          "skill_id": "siem-engineer",
+          "action": "Implement the query or rule and inspect representative events.",
+          "output": "A detection rule with example matches and exclusions.",
+          "check": "The rule parses the actual schema and handles missing or malformed events."
+        },
+        {
+          "title": "Detection Validation",
+          "skill_id": "purple-team",
+          "action": "Exercise the scenario and compare intended signals with observed alerts.",
+          "output": "A validation report with false positives, missed events, and improvements.",
+          "check": "The alert fires for the intended behavior and benign cases are measured."
+        }
+      ],
+      "inputs": [
+        "Authorized detection scenario",
+        "Logs, event schemas, and expected benign activity"
+      ],
+      "checks": [
+        "Required fields are available and the hypothesis is tied to observable behavior.",
+        "The rule parses the actual schema and handles missing or malformed events.",
+        "The alert fires for the intended behavior and benign cases are measured."
+      ],
+      "finish": "A validation report with false positives, missed events, and improvements. The alert fires for the intended behavior and benign cases are measured.",
+      "tool_guides": [
+        "endor-labs",
+        "atlas-omnium"
+      ]
+    },
+    {
+      "id": "product-discovery-to-roadmap",
+      "title": "Turn Product Research into a Roadmap",
+      "goal": "Convert customer and market evidence into a focused product sequence.",
+      "roles": [
+        "research-evaluator",
+        "learning-coach",
+        "coordinator",
+        "product-interface-designer"
+      ],
+      "skills": [
+        "market-research",
+        "product-strategist",
+        "roadmap-communicator"
+      ],
+      "steps": [
+        {
+          "title": "Market Research",
+          "skill_id": "market-research",
+          "action": "Collect the evidence relevant to the product question and alternatives.",
+          "output": "A market and customer evidence brief.",
+          "check": "Sources, dates, and uncertainty are visible for consequential findings."
+        },
+        {
+          "title": "Product Strategist",
+          "skill_id": "product-strategist",
+          "action": "Choose the target outcome and evaluate feasible approaches.",
+          "output": "A product direction with success measures and tradeoffs.",
+          "check": "The chosen approach addresses the evidence and states what would change the decision."
+        },
+        {
+          "title": "Roadmap Communicator",
+          "skill_id": "roadmap-communicator",
+          "action": "Sequence the chosen work by dependency, capacity, and learning value.",
+          "output": "A roadmap with outcomes, owners, and review dates.",
+          "check": "The sequence is feasible and each item advances a stated outcome."
+        }
+      ],
+      "inputs": [
+        "Product question and target users",
+        "Available customer and market evidence"
+      ],
+      "checks": [
+        "Sources, dates, and uncertainty are visible for consequential findings.",
+        "The chosen approach addresses the evidence and states what would change the decision.",
+        "The sequence is feasible and each item advances a stated outcome."
+      ],
+      "finish": "A roadmap with outcomes, owners, and review dates. The sequence is feasible and each item advances a stated outcome.",
+      "tool_guides": [
+        "product-design",
+        "team-30",
+        "mindmap"
+      ]
+    },
+    {
+      "id": "search-discovery",
+      "title": "Improve Search Discovery",
+      "goal": "Improve site discovery with useful pages, crawlable structure, and accurate metadata.",
+      "roles": [
+        "coordinator",
+        "product-interface-designer",
+        "data-engineer",
+        "model-builder"
+      ],
+      "skills": [
+        "seo-audit",
+        "site-architecture",
+        "schema-markup"
+      ],
+      "steps": [
+        {
+          "title": "SEO Audit",
+          "skill_id": "seo-audit",
+          "action": "Inspect crawlability, indexation, content intent, and on-page metadata.",
+          "output": "A prioritized SEO finding list tied to real pages.",
+          "check": "Each finding has observable evidence and a proposed user or discovery benefit."
+        },
+        {
+          "title": "Site Architecture",
+          "skill_id": "site-architecture",
+          "action": "Organize the pages and internal links around the priority questions.",
+          "output": "A page and internal-link plan with canonical routes.",
+          "check": "Important pages are reachable and duplicate intent is handled deliberately."
+        },
+        {
+          "title": "Schema Markup",
+          "skill_id": "schema-markup",
+          "action": "Add structured data that matches the visible page content.",
+          "output": "Validated metadata and structured data for the revised pages.",
+          "check": "Markup is truthful, syntax-valid, and consistent with the rendered page."
+        }
+      ],
+      "inputs": [
+        "Site URL and priority user questions",
+        "Available analytics and search-console evidence"
+      ],
+      "checks": [
+        "Each finding has observable evidence and a proposed user or discovery benefit.",
+        "Important pages are reachable and duplicate intent is handled deliberately.",
+        "Markup is truthful, syntax-valid, and consistent with the rendered page."
+      ],
+      "finish": "Validated metadata and structured data for the revised pages. Markup is truthful, syntax-valid, and consistent with the rendered page.",
+      "tool_guides": [
+        "keyword-tool",
+        "openseo",
+        "aioscan"
+      ]
+    },
+    {
+      "id": "brand-campaign",
+      "title": "Create and Measure a Brand Campaign",
+      "goal": "Turn a clear message into channel-ready creative and a measurable campaign.",
+      "roles": [
+        "coordinator",
+        "creative-studio",
+        "product-interface-designer"
+      ],
+      "skills": [
+        "brand-guidelines",
+        "ad-creative",
+        "campaign-analytics"
+      ],
+      "steps": [
+        {
+          "title": "Brand Guidelines",
+          "skill_id": "brand-guidelines",
+          "action": "Define the message, visual rules, and tone for the audience.",
+          "output": "A concise brand and campaign brief.",
+          "check": "The brief is specific enough to guide copy and design consistently."
+        },
+        {
+          "title": "Ad Creative",
+          "skill_id": "ad-creative",
+          "action": "Create channel-specific variants from the approved brief.",
+          "output": "Creative variants with a stated audience and hypothesis.",
+          "check": "Variants follow channel requirements and differ in a testable way."
+        },
+        {
+          "title": "Campaign Analytics",
+          "skill_id": "campaign-analytics",
+          "action": "Define measurement and compare observed outcomes against the hypotheses.",
+          "output": "A campaign measurement plan and evidence-based iteration decision.",
+          "check": "Tracking and denominators are consistent and results are not attributed beyond the evidence."
+        }
+      ],
+      "inputs": [
+        "Audience, offer, and brand references",
+        "Channels, budget, and success measure"
+      ],
+      "checks": [
+        "The brief is specific enough to guide copy and design consistently.",
+        "Variants follow channel requirements and differ in a testable way.",
+        "Tracking and denominators are consistent and results are not attributed beyond the evidence."
+      ],
+      "finish": "A campaign measurement plan and evidence-based iteration decision. Tracking and denominators are consistent and results are not attributed beyond the evidence.",
+      "tool_guides": [
+        "brand-strategist",
+        "wixel",
+        "gum"
+      ]
+    },
+    {
+      "id": "video-production",
+      "title": "Produce a Captioned Video",
+      "goal": "Take a scene plan through editing and a checked final export.",
+      "roles": [
+        "creative-studio"
+      ],
+      "skills": [
+        "cinematic-shot-prompting",
+        "video-editor",
+        "subtitle-pro"
+      ],
+      "steps": [
+        {
+          "title": "Cinematic Shot Prompting",
+          "skill_id": "cinematic-shot-prompting",
+          "action": "Describe shots, camera choices, and continuity from the brief.",
+          "output": "A shot plan with required assets and scene transitions.",
+          "check": "Shots serve the narrative and can be produced with the available material."
+        },
+        {
+          "title": "Video Editor",
+          "skill_id": "video-editor",
+          "action": "Assemble the sequence and refine pacing, sound, and continuity.",
+          "output": "An edited video and export settings.",
+          "check": "The sequence preserves meaning and is free of unintended visual or audio discontinuities."
+        },
+        {
+          "title": "Subtitle",
+          "skill_id": "subtitle-pro",
+          "action": "Add and verify captions against the final cut.",
+          "output": "A captioned export and subtitle file.",
+          "check": "Timing, spelling, reading speed, and speaker changes match the audio."
+        }
+      ],
+      "inputs": [
+        "Video brief and source media",
+        "Target format, duration, and audience"
+      ],
+      "checks": [
+        "Shots serve the narrative and can be produced with the available material.",
+        "The sequence preserves meaning and is free of unintended visual or audio discontinuities.",
+        "Timing, spelling, reading speed, and speaker changes match the audio."
+      ],
+      "finish": "A captioned export and subtitle file. Timing, spelling, reading speed, and speaker changes match the audio.",
+      "tool_guides": [
+        "wixel",
+        "game-development-studio"
+      ]
+    },
+    {
+      "id": "print-production",
+      "title": "Prepare Artwork for Print",
+      "goal": "Deliver artwork that matches the printer’s actual production requirements.",
+      "roles": [
+        "creative-studio"
+      ],
+      "skills": [
+        "graphic-designer",
+        "typography-expert",
+        "print-designer"
+      ],
+      "steps": [
+        {
+          "title": "Graphic Designer",
+          "skill_id": "graphic-designer",
+          "action": "Develop the composition and asset hierarchy for the physical format.",
+          "output": "An artwork layout with linked source assets.",
+          "check": "The message hierarchy works at the intended reading distance."
+        },
+        {
+          "title": "Typography",
+          "skill_id": "typography-expert",
+          "action": "Refine type, spacing, and text flow for the paper and audience.",
+          "output": "A checked typographic layout.",
+          "check": "Text remains legible and critical content fits within the agreed safe areas."
+        },
+        {
+          "title": "Print Designer",
+          "skill_id": "print-designer",
+          "action": "Preflight and export using the printer’s profile, bleed, and proof requirements.",
+          "output": "A press PDF, production specification, and proof approval.",
+          "check": "The exported file passes the printer-specific checks and matches the approved proof."
+        }
+      ],
+      "inputs": [
+        "Approved message and artwork",
+        "Printer specification sheet and intended physical format"
+      ],
+      "checks": [
+        "The message hierarchy works at the intended reading distance.",
+        "Text remains legible and critical content fits within the agreed safe areas.",
+        "The exported file passes the printer-specific checks and matches the approved proof."
+      ],
+      "finish": "A press PDF, production specification, and proof approval. The exported file passes the printer-specific checks and matches the approved proof.",
+      "tool_guides": [
+        "wixel",
+        "product-design"
+      ]
+    },
+    {
+      "id": "personal-knowledge-system",
+      "title": "Organize a Personal Knowledge System",
+      "goal": "Make useful information easy to capture, retrieve, and develop over time.",
+      "roles": [
+        "personal-companion",
+        "coordinator"
+      ],
+      "skills": [
+        "file-organizer",
+        "para-method",
+        "zettelkasten"
+      ],
+      "steps": [
+        {
+          "title": "File Organizer",
+          "skill_id": "file-organizer",
+          "action": "Inventory the collection and group files by purpose while preserving originals.",
+          "output": "A proposed folder map and duplicate review list.",
+          "check": "Files remain traceable and ambiguous duplicates are not discarded."
+        },
+        {
+          "title": "Para Method",
+          "skill_id": "para-method",
+          "action": "Organize active projects, responsibilities, resources, and archives.",
+          "output": "A working information structure with clear filing rules.",
+          "check": "A representative item can be filed and retrieved without guessing."
+        },
+        {
+          "title": "Zettelkasten",
+          "skill_id": "zettelkasten",
+          "action": "Turn selected useful material into linked notes with source references.",
+          "output": "A small linked-note set and a repeatable capture routine.",
+          "check": "Links express meaningful relationships and source context remains available."
+        }
+      ],
+      "inputs": [
+        "A bounded collection of files and notes",
+        "Current projects and retrieval needs"
+      ],
+      "checks": [
+        "Files remain traceable and ambiguous duplicates are not discarded.",
+        "A representative item can be filed and retrieved without guessing.",
+        "Links express meaningful relationships and source context remains available."
+      ],
+      "finish": "A small linked-note set and a repeatable capture routine. Links express meaningful relationships and source context remains available.",
+      "tool_guides": [
+        "atlas-continuum",
+        "mindmap"
+      ]
+    },
+    {
+      "id": "business-close-review",
+      "title": "Reconcile and Review a Business Period",
+      "goal": "Connect reconciled accounts to a clear operational financial review.",
+      "roles": [
+        "coordinator",
+        "claims-adjudicator"
+      ],
+      "skills": [
+        "month-end-close",
+        "financial-analyst",
+        "saas-metrics-coach"
+      ],
+      "steps": [
+        {
+          "title": "Month End Close",
+          "skill_id": "month-end-close",
+          "action": "Reconcile the period and classify timing items and required corrections.",
+          "output": "A reconciliation with explained differences and sign-off items.",
+          "check": "Opening balance, movements, and closing balance reconcile to the source records."
+        },
+        {
+          "title": "Financial Analyst",
+          "skill_id": "financial-analyst",
+          "action": "Analyze the reconciled statements and explain material movements.",
+          "output": "A financial review with calculation inputs and assumptions.",
+          "check": "Ratios and comparisons use consistent periods and reconciled figures."
+        },
+        {
+          "title": "Saas Metrics Coach",
+          "skill_id": "saas-metrics-coach",
+          "action": "Connect the financial review to the applicable operating metrics.",
+          "output": "A metric review with definitions and the next management questions.",
+          "check": "Metric definitions, cohorts, and denominators are explicit and consistent."
+        }
+      ],
+      "inputs": [
+        "General ledger and bank statement exports",
+        "Reporting period, policies, and operating metrics"
+      ],
+      "checks": [
+        "Opening balance, movements, and closing balance reconcile to the source records.",
+        "Ratios and comparisons use consistent periods and reconciled figures.",
+        "Metric definitions, cohorts, and denominators are explicit and consistent."
+      ],
+      "finish": "A metric review with definitions and the next management questions. Metric definitions, cohorts, and denominators are explicit and consistent.",
+      "tool_guides": [
+        "formula-genius",
+        "sql-expert"
+      ]
+    },
+    {
+      "id": "customer-support-system",
+      "title": "Build a Customer Support System",
+      "goal": "Turn recurring support work into a usable service process and knowledge base.",
+      "roles": [
+        "coordinator"
+      ],
+      "skills": [
+        "customer-success-manager",
+        "support-ops",
+        "knowledge-ops"
+      ],
+      "steps": [
+        {
+          "title": "Customer Success Manager",
+          "skill_id": "customer-success-manager",
+          "action": "Identify customer needs, recurring friction, and escalation expectations.",
+          "output": "A customer outcome and escalation map.",
+          "check": "The map reflects actual support evidence and service commitments."
+        },
+        {
+          "title": "Support Ops",
+          "skill_id": "support-ops",
+          "action": "Design routing, coverage, and response measures for the mapped needs.",
+          "output": "A support operating plan with ownership and thresholds.",
+          "check": "Coverage fits capacity and escalation rules handle urgent or uncertain cases."
+        },
+        {
+          "title": "Knowledge Ops",
+          "skill_id": "knowledge-ops",
+          "action": "Turn resolved cases into searchable, maintained support procedures.",
+          "output": "A knowledge base with owners, review dates, and feedback paths.",
+          "check": "A new team member can find and follow a representative procedure."
+        }
+      ],
+      "inputs": [
+        "Support requests and service commitments",
+        "Team capacity and existing knowledge"
+      ],
+      "checks": [
+        "The map reflects actual support evidence and service commitments.",
+        "Coverage fits capacity and escalation rules handle urgent or uncertain cases.",
+        "A new team member can find and follow a representative procedure."
+      ],
+      "finish": "A knowledge base with owners, review dates, and feedback paths. A new team member can find and follow a representative procedure.",
+      "tool_guides": [
+        "team-30",
+        "atlas-continuum"
+      ]
+    },
+    {
+      "id": "browser-data-collection",
+      "title": "Collect Structured Data from the Web",
+      "goal": "Extract a bounded set of web records and turn it into a checked dataset.",
+      "roles": [
+        "automation-engineer",
+        "software-engineer",
+        "data-engineer",
+        "model-builder"
+      ],
+      "skills": [
+        "browser-automation",
+        "data-quality-auditor",
+        "sql-database-assistant"
+      ],
+      "steps": [
+        {
+          "title": "Browser Automation",
+          "skill_id": "browser-automation",
+          "action": "Inspect the actual pages and extract the required fields with source URLs and collection times.",
+          "output": "A structured record set with source locations and extraction errors.",
+          "check": "The extract covers the intended records and retains enough evidence to inspect any value."
+        },
+        {
+          "title": "Data Quality Auditor",
+          "skill_id": "data-quality-auditor",
+          "action": "Check types, completeness, duplicate records, and field consistency in the extract.",
+          "output": "A quality report and corrected dataset.",
+          "check": "Invalid records are reported explicitly and corrections can be traced to the source."
+        },
+        {
+          "title": "SQL Database Assistant",
+          "skill_id": "sql-database-assistant",
+          "action": "Load the checked dataset into the chosen schema and answer the original query.",
+          "output": "A reproducible import and query result.",
+          "check": "Imported counts and query totals reconcile with the checked dataset."
+        }
+      ],
+      "inputs": [
+        "Target pages and fields to collect",
+        "Authorized browsing context and expected record structure"
+      ],
+      "checks": [
+        "The extract covers the intended records and retains enough evidence to inspect any value.",
+        "Invalid records are reported explicitly and corrections can be traced to the source.",
+        "Imported counts and query totals reconcile with the checked dataset."
+      ],
+      "finish": "A reproducible import and query result. Imported counts and query totals reconcile with the checked dataset.",
+      "tool_guides": [
+        "tinyfish",
+        "atlas-omnium",
+        "sql-copilot"
+      ]
+    }
+  ]
+}

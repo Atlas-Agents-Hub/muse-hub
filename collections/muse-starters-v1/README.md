@@ -1,6 +1,6 @@
 # Muse Specialist Collection
 
-**15 specialists · 75 reusable skills · 25 workflows · 100 task starters**
+**15 specialists · 461 reusable skills · 58 workflows · 100 task starters**
 
 Choose a specialist for your work, apply a focused method with your current assistant, or run an included Python tool. Each package brings together instructions, examples, and a start guide.
 
@@ -18,8 +18,8 @@ Assistant instructions need no Python. The [getting-started guide](../../docs/GE
 | Component | Use it for |
 | --- | --- |
 | 15 specialists | Engineering, research, data, creative work, design, planning, and everyday tasks. |
-| 75 skills | A focused procedure with inputs, decisions, examples, and an output checklist. |
-| 25 workflows | A sequence of methods with clear inputs, handoffs, and expected results. |
+| 461 skills | A focused procedure with inputs, decisions, examples, and an output checklist. |
+| 58 workflows | A sequence of methods with clear inputs, handoffs, and expected results. |
 | 100 task starters | A useful selection of methods and context for a specific task. |
 | 225 practice cases | Worked exercises for trying the methods and checking recovery from common problems. |
 | Python tools | Reproducible calculations, data checks, local records, and package exports. |
@@ -51,8 +51,8 @@ Read the report to see which calculations ran and which handoffs need your next 
 
 Preserve your assistant's preferences, memory, and project files. Keep personal data outside the toolkit directory. Updates are easier to compare when you retain the original package and your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) covers backup and recovery.
 
-## Development and attribution
+## Development
 
-The [source catalog](SOURCES.md) records references and licenses. [Development](../../docs/DEVELOPMENT.md) explains repository checks and contribution work. The collection's technical data retains stable IDs, source history, and evaluation records for maintainers.
+[Development](../../docs/DEVELOPMENT.md) explains repository checks and contributions. License notices accompany the relevant skill files. Browse [skills and tools by specialist](../../docs/collection/SPECIALIST_LIBRARY.md) to choose a focused collection.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Skills](SKILL_INDEX.md) · [Task starters](CATALOG.md) · [Terminal](../../docs/TERMINAL.md)

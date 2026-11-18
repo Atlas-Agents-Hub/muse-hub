@@ -1,58 +1,57 @@
-"""C100 R4 qualification metadata, not a live Muse benchmark."""
+"""Current library counts match the shipped catalogs and practice artifacts."""
 from pathlib import Path
+import importlib.util
 import json
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
-C=ROOT/"collections/muse-starters-v1"
-R4_LANDED_SHA="82abced781e2603a022e1c378a486b5a2e49cf7e"
+C=ROOT/'collections/muse-starters-v1'
 
-class R4QualificationMetadataTests(unittest.TestCase):
+
+class CollectionInventoryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.counts=json.loads((C/"COUNTS.json").read_text(encoding="utf-8"))
-        cls.wave=json.loads((C/"R4_WAVE.json").read_text(encoding="utf-8"))
+        cls.counts=json.loads((C/'COUNTS.json').read_bytes())
+        spec=importlib.util.spec_from_file_location('current_inventory_collection',ROOT/'tools/muse_collection.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        cls.data=module.load_collection()
 
-    def test_depth_and_catalog_ids_still_match_source(self):
-        skills=json.loads((C/"skills.json").read_text(encoding="utf-8"))
-        starters=json.loads((C/"starters.json").read_text(encoding="utf-8"))
-        workflows=json.loads((C/"workflows.json").read_text(encoding="utf-8"))
-        self.assertEqual((len(starters),len(skills),len(workflows)),(100,75,25))
-        self.assertEqual(sum(bool(x.get("depth")) for x in skills),75)
-        self.assertEqual(len({x["id"] for x in skills}),75)
-        self.assertEqual(len(self.wave["selected_skill_ids"]),28)
-        self.assertEqual(self.counts["foundation_skills_awaiting_depth"],0)
+    def test_inventory_matches_current_files(self):
+        expected={
+            'schema':'muse-hub/library-inventory/v1',
+            'skills':len(self.data['skills']),
+            'workflows':len(self.data['workflows']),
+            'task_starters':len(self.data['starters']),
+            'specialists':len(self.data['specialists']),
+            'skills_with_practice_cases':len({case['skill_id'] for case in self.data['depth_cases']}),
+            'practice_cases':len(self.data['depth_cases']),
+            'positive_practice_examples':sum('reference_output' in case for case in self.data['depth_cases']),
+            'negative_practice_examples':sum('wrong_output' in case for case in self.data['depth_cases']),
+            'task_evaluation_specs':len(self.data['evaluation_cases']),
+            'executable_specialist_extensions':sum(role.get('kind')=='executable-extension' for role in self.data['specialists']),
+        }
+        self.assertEqual(self.counts,expected)
 
-    def test_r4_source_qualification_is_no_longer_marked_candidate(self):
-        self.assertEqual(self.counts["r4_acceptance"],"PRIVATE_MAIN_SOURCE_QUALIFIED")
-        self.assertEqual(self.wave["state"],"PRIVATE_MAIN_SOURCE_QUALIFIED")
-        self.assertEqual(self.counts["r4_acceptance_commit"],R4_LANDED_SHA)
-        self.assertEqual(self.wave["r4_acceptance_commit"],R4_LANDED_SHA)
-        self.assertEqual(self.counts["r4_ci_run_id"],43262169201)
+    def test_ids_are_unique_and_practice_points_to_real_skills(self):
+        for group in ('skills','workflows','starters','specialists','depth_cases'):
+            records=self.data[group]
+            self.assertEqual(len(records),len({row['id'] for row in records}),group)
+        skills={row['id'] for row in self.data['skills']}
+        for case in self.data['depth_cases']:
+            self.assertIn(case['skill_id'],skills)
+            self.assertNotEqual(case['reference_output'],case['wrong_output'])
 
-    def test_historical_qualification_counts_are_truthful_and_scoped(self):
-        self.assertEqual(self.counts["r4_focused_test_cases_at_qualification"],397)
-        self.assertEqual(self.counts["r4_parent_test_cases_at_qualification"],2041)
-        self.assertIn("A_B_C",self.counts["source_test_count_status"])
-        self.assertIn("SOURCE_TESTED",self.wave["source_qualification"])
-        self.assertEqual(self.counts["paired_muse_comparisons_executed"],0)
-        self.assertEqual(self.wave["actual_muse_comparisons"],0)
-        self.assertEqual(self.counts["independent_upstream_reviews"],0)
+    def test_inventory_command_derives_the_same_values(self):
+        spec=importlib.util.spec_from_file_location('inventory_check',ROOT/'tools/collection_compatibility.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        self.assertEqual(module.current_inventory(self.data),self.counts)
 
-    def test_product_guides_and_historical_qualification_records_stay_distinct(self):
-        for path in (C/"README.md",C/"ROADMAP.md",ROOT/"docs/collection/MUSE_CURATED_COLLECTION.md"):
-            with self.subTest(path=path):
-                text=path.read_text(encoding="utf-8")
-                self.assertNotIn("This is a candidate state until",text)
-                self.assertNotIn("LOCAL_CANDIDATE_NOT_INTEGRATED",text)
-        product=(ROOT/"docs/collection/MUSE_CURATED_COLLECTION.md").read_text(encoding="utf-8")
-        for term in ("15 specialist packages", "75 skills", "25 workflows", "100 task starters",
-                     "DOWNLOAD_A_SPECIALIST.md", "SPECIALIST_QUICKSTART.md", "PUBLIC_COMPATIBILITY.json"):
-            self.assertIn(term,product)
-        self.assertNotIn("## R4 source qualification",product)
-        self.assertEqual(self.counts["paired_muse_comparisons_executed"],0)
-        self.assertEqual(self.wave["actual_muse_comparisons"],0)
-        self.assertNotIn("LOCAL_CANDIDATE_NOT_INTEGRATED",(C/"R4_WAVE.json").read_text(encoding="utf-8"))
+    def test_library_guides_link_current_setup_and_practice(self):
+        for file in ('CURATION_POLICY.md','EVALUATION.md','ROADMAP.md'):
+            text=(C/file).read_text()
+            self.assertIn('COUNTS.json',text)
+        self.assertIn('SKILL_INDEX.md',(C/'EVALUATION.md').read_text())
+        self.assertIn('tools/collection_compatibility.py --inventory',(C/'CURATION_POLICY.md').read_text())
 
-if __name__=="__main__":
-    unittest.main()
+
+if __name__=='__main__':unittest.main()

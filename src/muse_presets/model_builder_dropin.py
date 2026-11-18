@@ -1,8 +1,4 @@
-"""Create-only Model Builder pack with bounded offline evaluation and toy training.
-
-Opt-in integer perceptron experiments are local and finite; no LLM/GPU trainer
-or Muse installation is included. Native skills/hooks and grants stay disabled.
-"""
+"""Create a Model Builder profile, experiments, and evaluation toolkit."""
 from __future__ import annotations
 
 import hashlib
@@ -424,7 +420,7 @@ def _receipt(root: Path, files: dict[str,bytes]) -> dict:
             "files_sha256":dict(sorted(observed.items())),
             "directories":sorted(directories),
             "native_installed":False,"native_authenticated":False,
-            "external_effect_authorized":False,"evidence_grade":"LOCAL_SOURCE_ONLY"}
+            "external_effect_authorized":False,"evidence_grade":"PACKAGE_FILES"}
 
 
 def stage_model_builder_dropin(destination: Path) -> dict:
@@ -433,7 +429,7 @@ def stage_model_builder_dropin(destination: Path) -> dict:
     frozen=_runtime_sources()
     target.mkdir(exist_ok=False)
     marker=target/"STAGING_INCOMPLETE"
-    marker.write_text("Local pack incomplete; do not install or retry blindly.\n")
+    marker.write_text("Package creation was interrupted. Inspect the existing files before resuming.\n")
     render_preset("model-builder",target/"profile",display_name="Model Builder")
     files={**frozen,**_sidecars(target/"profile")}
     for relative,raw in sorted(files.items()):
@@ -451,7 +447,7 @@ def stage_model_builder_dropin(destination: Path) -> dict:
     marker.unlink()
     if inspect_model_builder_dropin(target)["status"]!="LOCAL_MODEL_BUILDER_MATCH":
         raise ValueError("PACK_SELF_READBACK_FAILED")
-    return {"status":"SOURCE_ONLY_MODEL_BUILDER_STAGED",
+    return {"status":"MODEL_BUILDER_FILES_CREATED",
             "role_id":"model-builder","custom_skill_count":len(SKILLS),
             "subchat_count":len(ROOMS),
             "native_installed":False,"external_effect_authorized":False}

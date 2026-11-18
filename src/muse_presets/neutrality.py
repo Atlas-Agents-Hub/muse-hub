@@ -1,17 +1,12 @@
-"""Bounded, read-only privacy audit of the entire public source distribution.
+"""Check source files for credentials, private paths and unsafe assets.
 
-Detects common secrets, local host paths, unsafe assets and filesystem links.
-Outputs ONLY relative paths and categorical reasons, never matched values.
-The private contributor/agent denylist is deliberately NOT shipped here:
-a release operator may inject private names via forbidden_terms and must
-also review the entire public Git history separately.
-
-This is a heuristic source gate, not a license review, cryptographic source
-attestation, complete PII detector, malware analysis or native Muse proof.
+Reports contain relative file paths and reason codes. Callers can supply
+additional private terms for a specific release review.
 """
 from __future__ import annotations
 
 import os
+import hashlib
 import re
 from pathlib import Path
 
@@ -31,6 +26,25 @@ _TEXT_NAMES = frozenset((
 ))
 REVIEWED_TEXT_FILES = frozenset({
     "collections/muse-starters-v1/skills/project-prioritization/backlog.csv",
+    "collections/library/skills/cloud-finops/assets/focus_export.example.csv",
+    "collections/library/skills/commit-craft/assets/commit-craft-allow.example",
+    "collections/library/skills/commit-craft/assets/hooks/commit-msg",
+    "collections/library/skills/commit-craft/assets/hooks/pre-commit",
+    "collections/library/skills/commit-craft/assets/hooks/pre-push",
+    "collections/library/skills/database-designer/assets/sample_schema.sql",
+    "collections/library/skills/dependency-auditor/assets/sample_go.mod",
+    "collections/library/skills/design-qa/assets/states.example.csv",
+    "collections/library/skills/design-qa/assets/waivers.example.csv",
+    "collections/library/skills/i18n-localization/assets/i18n-allow.example",
+    "collections/library/skills/kubernetes-operator/assets/reconcile_skeleton.go",
+    "collections/library/skills/linkedin-analytics/assets/example_post_export.csv",
+    "collections/library/skills/mobile-release/assets/rollout.example.csv",
+    "collections/library/skills/month-end-close/assets/bank_statement.example.csv",
+    "collections/library/skills/month-end-close/assets/flux_input.example.csv",
+    "collections/library/skills/month-end-close/assets/gl_cash.example.csv",
+    "collections/library/skills/support-ops/assets/intervals.example.csv",
+    "collections/library/skills/support-ops/assets/tickets.example.csv",
+    "collections/library/skills/tdd-guide/assets/sample_coverage_report.lcov",
 })
 _SENSITIVE_NAMES = frozenset((
     ".env", ".env.local", ".env.production", ".env.development",
@@ -65,6 +79,42 @@ _PERSONAL_EMAIL = re.compile(
     r"[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b", re.I
 )
 _MAX_BYTES = 2_000_000
+
+# Reviewed API routes, cloud resource paths and credential-detector expressions.
+# Exact hashes keep new private content subject to the normal scanner.
+REVIEWED_EXAMPLE_TEXT = {'collections/library/skills/aws-solution-architect/references/best_practices.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                                    'sha256': '4db8f6c550aa959537feab6dcdd4a6d16dbfd4a0ec8dd3ad964a2d5b7e948661'},
+ 'collections/library/skills/code-to-prd/assets/sample-analysis.json': {'reason': 'PRIVATE_HOST_PATH',
+                                                                        'sha256': 'db88ba2cb560173db5d83155ee9a064e70154248407ee0d2d10e14a87f873016'},
+ 'collections/library/skills/javascript-pro/references/async-patterns.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                            'sha256': '0a4e9a195d3f7f2d4e8b6c8a8c8a80c886733968e5d6aa3043900ae7975d8f52'},
+ 'collections/library/skills/laravel-specialist/references/routing.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                         'sha256': '108ebc7524de46262914bbfe3a754252858d5029dcc0b91be980fc15329986e1'},
+ 'collections/library/skills/migration-architect/assets/sample_service_migration.json': {'reason': 'PRIVATE_HOST_PATH',
+                                                                                         'sha256': '09a7084eb3d15cfa00a158c26c5778a5f4798c40cd1ba6fe340455512022f9bd'},
+ 'collections/library/skills/nextjs-developer/references/app-router.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                          'sha256': '6ad5dcb2db0c98b13e87846936670c861da27346edebe75bf096cb08b78f6330'},
+ 'collections/library/skills/nextjs-developer/references/data-fetching.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                             'sha256': 'abbea7c3351c7ad77ca820e48e6f27cd68f29638b82e39dc65560a75f5151255'},
+ 'collections/library/skills/security-pen-testing/references/attack_patterns.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                                   'sha256': '66898510c8f672b7efad7b6a3ace8bbf58508f7903cec3ebbfd5e1fe00c1346c'},
+ 'collections/library/skills/security-pen-testing/references/owasp_top_10_checklist.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                                          'sha256': '524e9e3109ede2d01c41eab68063a669d5846f0210e66c67e5361489447000e9'},
+ 'collections/library/skills/senior-backend/references/api_design_patterns.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                                 'sha256': 'b474416e963f7538af0d60d28f570e20b5bbb4bf546c1ae5627c2b8c9132d845'},
+ 'collections/library/skills/senior-backend/references/backend_security_practices.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                                        'sha256': 'af4a48e93978bb772c3585b3ed5ecd347b37cc6cd656ec7c7f37cece2095d6c7'},
+ 'collections/library/skills/senior-fullstack/references/architecture_patterns.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                                     'sha256': 'a4efd7bf910148c9792aafd4263aa8a90db7b0d4b102e49d6909847b3e946877'},
+ 'collections/library/skills/senior-fullstack/references/tech_stack_guide.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                                'sha256': '883e6f19db2e6043f95233766ceb2554a2a2221cbcc0c929800c276cd1f7c4c3'},
+ 'collections/library/skills/senior-security/scripts/secret_scanner.py': {'reason': 'POSSIBLE_SECRET',
+                                                                          'sha256': '066fe3d2d53e72648c113474a20cdc72c5892bbddb19139eaa03fd0d4122c1ec'},
+ 'collections/library/skills/test-master/references/security-testing.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                           'sha256': '47833ae4c258f1d729ac747006d29b56621a6f9323253ececc2ae1931323b7ab'},
+ 'collections/library/skills/typescript-pro/references/advanced-types.md': {'reason': 'PRIVATE_HOST_PATH',
+                                                                            'sha256': '273042ee8dba7fe809085856cea8e71eaa363d2cd19d2ba021d852d971777f20'}}
+
 
 
 def audit_public_tree(root: Path, *,
@@ -141,9 +191,11 @@ def audit_public_tree(root: Path, *,
             except (OSError, UnicodeError):
                 add(path, "UNREADABLE_OR_NON_UTF8")
                 continue
-            if _PRIVATE_HOST_PATH.search(content):
+            reviewed=REVIEWED_EXAMPLE_TEXT.get(path.relative_to(root).as_posix(),{})
+            accepted_reason=reviewed.get("reason") if reviewed.get("sha256")==hashlib.sha256(raw).hexdigest() else None
+            if _PRIVATE_HOST_PATH.search(content) and accepted_reason!="PRIVATE_HOST_PATH":
                 add(path, "PRIVATE_HOST_PATH")
-            if _POSSIBLE_SECRET.search(content) or _POSSIBLE_PASSWORD.search(content):
+            if (_POSSIBLE_SECRET.search(content) or _POSSIBLE_PASSWORD.search(content)) and accepted_reason!="POSSIBLE_SECRET":
                 add(path, "POSSIBLE_SECRET")
             if _PERSONAL_EMAIL.search(content):
                 add(path, "PERSONAL_EMAIL_REVIEW_REQUIRED")

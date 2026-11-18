@@ -1,12 +1,7 @@
-"""Neutral Iron Ledger consumer of the existing Evidence Finder receipt chain.
+"""Index Evidence Finder receipts and reject stale chain heads.
 
-Ported *behavioral contract*, not private donor code: read-only derived
-receipt indexing, explicit head-staleness refusal, no duplicated persistence,
-no task claim, and no implicit host authority.
-
-The caller supplies an already opened EvidenceLedger-like read interface.
-Its trust/identity is NOT independently authenticated by this module.
-"""
+The caller supplies an opened EvidenceLedger-compatible read interface.
+Host policy controls access to that interface."""
 from __future__ import annotations
 
 import hashlib
@@ -238,7 +233,7 @@ def verify_local_receipt_index(reader: Any, index: object) -> dict:
 
 
 
-# R32.2b — LOCAL READ-ONLY TaskGuard compatibility layer. Claim Gate remains
+# LOCAL READ-ONLY TaskGuard compatibility layer. Claim Gate remains
 # the only idempotency writer; original donor claim/release methods are NEVER
 # copied. Nothing here grants a new claim, resumes an effect or deletes state.
 _TASK_RUN_PREFIX = "tg_"
@@ -383,7 +378,7 @@ def review_local_task_runs(
 
 
 
-# R32.2c — LOCAL cross-reader observation only. The native Muse host and a
+# LOCAL cross-reader observation only. The native Muse host and a
 # real target MUST independently authenticate their own callers/receipts.
 # This adapter never interprets caller-supplied assertions as authority.
 _OBSERVED_ACTOR_FIELDS = {

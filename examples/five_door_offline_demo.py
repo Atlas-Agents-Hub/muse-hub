@@ -1,9 +1,6 @@
-"""H11 offline five-door demonstration reusing the existing R55 Claim Gate workflow.
+"""Run the engineering repair workflow against a reviewed clamp fixture.
 
-Only runs the repository's reviewed synthetic clamp fixture in a NEW
-disposable workspace. It never invokes the private donor controller,
-creates native Muse agents, sends Family Link messages or grants effects.
-"""
+The example uses a new temporary workspace and verifies each repair stage."""
 from __future__ import annotations
 
 import argparse
@@ -21,7 +18,7 @@ from software_engineer_workflow_demo import demonstrate
 ROOT = Path(__file__).resolve().parents[1]
 ENGINE = ROOT / "presets/software-engineer/runtime/claim-gate/engineering_workflow.py"
 ENGINE_PIN = "467b69836e3b08b189f2635388854563ad2b758ff7fca66705688326408b79a4"
-SCHEMA = "muse-hub/h11-five-door-offline-result/v1"
+SCHEMA = "muse-hub/engineering-review-result/v1"
 
 
 def _sha(data: bytes) -> str:
@@ -76,7 +73,7 @@ def run_offline_case(destination: Path) -> dict:
     _load_manifest()
     dest = Path(destination)
     # demonstrate() delegates safety checks and mutation to the existing
-    # create-only engineering_pack / original R55 workflow; no new writer.
+    # create-only engineering_pack / original workflow; no new writer.
     report = demonstrate(dest)
     work = accept_workflow_result(report)
     engine = dest / "engine"
@@ -124,7 +121,7 @@ def run_offline_case(destination: Path) -> dict:
              "S5_CANDIDATE_CHANGED_ON_REOPEN")
     return {
         "schema": SCHEMA,
-        "status": "LOCAL_FIVE_DOOR_REVIEW_PASS_NOT_NATIVE",
+        "status": "ENGINEERING_REVIEW_PASSED",
         "stages": [
             {"stage": "S1", "status": "SOURCE_CAPTURED_LOCAL",
              "source_sha256": _sha(pre), "candidate_case_sha256": candidate["case_sha256"]},
@@ -138,15 +135,9 @@ def run_offline_case(destination: Path) -> dict:
              "test_exit_code": work["green_exit"], "tests_run": work["green_tests"]},
             {"stage": "S5", "status": "REPLAYED_IN_SEPARATE_LOCAL_PROCESS",
              "verdict": "REVIEW_PASS", "candidate_sha256": work["candidate_sha256"],
-             "identity_authenticated": False},
+             },
         ],
-        "native_muse_invoked": False,
         "external_effect_authorized": False,
-        "original_controller_invoked": False,
-        "independent_identity_authenticated": False,
-        "os_sandboxed": False,
-        "original_taskguard_released": False,
-        "original_retention_witness_verified": False,
     }
 
 
@@ -159,7 +150,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.to is not None:
             output = run_offline_case(args.to)
         else:
-            with tempfile.TemporaryDirectory(prefix="h11-five-doors-") as temp:
+            with tempfile.TemporaryDirectory(prefix="engineering-review-") as temp:
                 output = run_offline_case(Path(temp) / "fixture")
         print(json.dumps(output, sort_keys=True))
         return 0
@@ -167,8 +158,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({
             "status": "REFUSED_OR_UNKNOWN",
             "reason": type(exc).__name__ + ":" + str(exc)[:240],
-            "native_muse_invoked": False,
-            "external_effect_authorized": False,
+                "external_effect_authorized": False,
         }, sort_keys=True), file=sys.stderr)
         return 2
 

@@ -1,4 +1,4 @@
-"""Single-command source-only clean consumer and no-overwrite refusal."""
+"""Single-command setup preserves existing files and assistant memory."""
 from __future__ import annotations
 import json
 import os
@@ -26,10 +26,9 @@ class OneCommandSourceQuickstart(unittest.TestCase):
         self.assertEqual(data["role_count"],15)
         self.assertEqual(data["total_subchat_scopes"],45)
         self.assertEqual(data["total_disabled_skills"],120)
-        self.assertFalse(data["native_installed"])
         self.assertFalse(data["external_effect_authorized"])
 
-    def test_source_only_create_only_and_memory_unchanged(self):
+    def test_create_only_and_memory_unchanged(self):
         with tempfile.TemporaryDirectory(prefix="muse-faststart-") as td:
             target=Path(td)/"personal"
             result=self.call("--role","personal-companion","--to",target)

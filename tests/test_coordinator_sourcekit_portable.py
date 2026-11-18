@@ -18,7 +18,7 @@ class PortableCoordinatorSourceKitTests(unittest.TestCase):
         folder=self.root/"source"
         archive=self.root/"coordinator.zip"
         result=stage_coordinator_dropin(folder)
-        self.assertEqual(result["status"],"SOURCE_ONLY_COORDINATOR_STAGED")
+        self.assertEqual(result["status"],"COORDINATOR_FILES_CREATED")
         exported=export_coordinator_sourcekit(folder,archive)
         self.assertEqual(exported["status"],"LOCAL_COORDINATOR_SOURCEKIT_EXPORTED")
         with zipfile.ZipFile(archive) as z:
@@ -33,7 +33,7 @@ class PortableCoordinatorSourceKitTests(unittest.TestCase):
                 name=="coordinator/receipts/COORDINATOR_RECEIPT.json"):
                 self.assertNotIn(b"\r\n",data,name)
         # Reviewed v1.1.0 neutral profile bytes, after portable LF normalization.
-        # R58's historical macOS pin remains in git history; this release has new copy.
+        # 's historical macOS pin remains in git history; this release has new copy.
         release_profile_sha="21d620f75c721d0865f9e008ba7a2624774805b3ef95c283449c2b3319210aaa"
         profile=contents["coordinator/profile/AGENTS.md"]
         self.assertEqual(hashlib.sha256(profile).hexdigest(),release_profile_sha)

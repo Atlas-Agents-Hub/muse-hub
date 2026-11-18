@@ -1,9 +1,4 @@
-"""Portable, create-only host acceptance canaries for every generic role.
-
-This source library NEVER opens a native Muse session or calls a remote host.
-The separately documented personal-Hatch and Muse Code bindings require their
-own authenticated provider SDK and user-approved installation route.
-"""
+"""Create and verify disposable host-compatibility test packages."""
 from __future__ import annotations
 
 import hashlib
@@ -27,7 +22,7 @@ ROLE_PATTERN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 
 
 class NativeHostUnavailable(RuntimeError):
-    """No supported, authenticated provider binding is installed."""
+    """The selected host needs a configured provider connection."""
 
 
 def _sha(raw: bytes) -> str:
@@ -59,7 +54,7 @@ def _role_sources(role_id: str) -> dict[str, bytes]:
     config = load_preset(role_id)
     if (config.get("id") != role_id or
         config.get("native_muse_status") != "UNBOUND" or
-        config.get("maturity") != "SOURCE_TEMPLATE_ONLY"):
+        config.get("maturity") != "PROFILE_TEMPLATE"):
         raise ValueError("GENERIC_SOURCE_NOT_DEFAULT_DENIED")
     files = {}
     for name in ("preset.json", "playbook.json"):
@@ -73,7 +68,7 @@ def _role_sources(role_id: str) -> dict[str, bytes]:
 
 
 def make_canary(role_id: str, host_kind: str, *, challenge: str | None = None) -> dict:
-    """Build a source-pinned, disposable TEST PLAN, never a live host action."""
+    """Build a disposable compatibility test with the current profile hashes."""
     if host_kind not in HOST_KINDS:
         raise ValueError("UNKNOWN_HOST_PROFILE")
     sources = _role_sources(role_id)
@@ -90,7 +85,7 @@ def make_canary(role_id: str, host_kind: str, *, challenge: str | None = None) -
         "disposable_only": True,
         "challenge": challenge,
         "source_pins": {key: _sha(raw) for key, raw in sources.items()},
-        "source_grade": "LOCAL_SOURCE_ONLY",
+        "source_grade": "PACKAGE_FILES",
         "native_acceptance": "NOT_RUN",
         "provider_session_id": None,
         "owner_grant_id": None,
@@ -112,22 +107,18 @@ def unsupported_native_invoke(canary: dict) -> None:
 def _handoff(canary: dict) -> bytes:
     role, host = canary["role_id"], canary["host_kind"]
     return (
-        "# Disposable generic native acceptance handoff\n\n"
-        f"Generic specialist: `{role}`. Target provider profile: `{host}`.\n\n"
-        f"Suggested skill ID: `{canary['skill_id']}` (NOT registered).\n"
-        "The challenge in GENERIC_CANARY.json is a correlation marker, not an access token.\n\n"
-        "The local host adapter is deliberately UNBOUND. Never run a model/connector\n"
-        "or claim provider authentication from this file. The receiving owner must\n"
-        "establish a documented first-party authenticated skill-discovery interface,\n"
-        "grant the exact disposable scope, and inspect provider-issued identifiers.\n\n"
-        "Accepted native evidence, IN THIS ORDER, requires: owner-native session,\n"
-        "provider skill discovery, actual model-selected skill invocation,\n"
-        "wrong-principal refusal from a separately authorized disposable account,\n"
-        "and independent original-recipient readback. An offline test transcript\n"
-        "may establish FIXTURE_CONSISTENT_ONLY but never WIRED, USED or USEFUL.\n"
-        "Personal Hatch and Muse Code do not share an assumed auth/session API.\n"
-        "If the host interface is missing, STOP: HOST_UNSUPPORTED or UNVERIFIED.\n"
-        "Never install in a donor VM or rewrite any owner's memory or skill catalog.\n"
+        "# Host compatibility check\n\n"
+        f"Specialist: `{role}`. Host: `{host}`.\n\n"
+        f"Use `{canary['skill_id']}` as the test skill identifier.\n"
+        "Keep the challenge in GENERIC_CANARY.json with the test results so each\n"
+        "invocation can be matched to its response.\n\n"
+        "1. Connect the intended account through the host's documented interface.\n"
+        "2. Grant the temporary test scope and confirm the available skill.\n"
+        "3. Invoke the skill and capture the returned identifiers and result.\n"
+        "4. Check access restrictions using a separately authorized test account.\n"
+        "5. Read the result from the intended recipient and compare the challenge.\n\n"
+        "Use the setup and authentication procedure for the selected host. Keep\n"
+        "existing profile, memory, and catalog files intact during the check.\n"
     ).encode("utf-8")
 
 
@@ -157,7 +148,7 @@ def _expected_bytes(canary: dict) -> dict[str, bytes]:
 
 
 def stage_canary(destination: Path, role_id: str, host_kind: str) -> dict:
-    """Create one closed-tree offline handoff; refuse ANY pre-existing target."""
+    """Create a complete host test package in a new directory."""
     canary = make_canary(role_id, host_kind)
     dest = Path(destination)
     _admitted_destination(dest)
@@ -176,7 +167,7 @@ def stage_canary(destination: Path, role_id: str, host_kind: str) -> dict:
         dest.rmdir()
         raise
     return {
-        "status": "SOURCE_ONLY_STAGED",
+        "status": "HOST_PACKAGE_CREATED",
         "role_id": role_id,
         "host_kind": host_kind,
         "destination": str(dest),
@@ -211,7 +202,7 @@ def inspect_canary(destination: Path) -> dict:
     except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError):
         return rejected
     return {
-        "status": "SOURCE_ONLY_MATCH",
+        "status": "FILES_VERIFIED",
         "role_id": data["role_id"],
         "host_kind": data["host_kind"],
         "native_installed": False,

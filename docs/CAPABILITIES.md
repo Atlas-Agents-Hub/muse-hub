@@ -1,6 +1,6 @@
 # Tools for your specialist
 
-Muse Hub brings together 15 assistants, 75 skills, 25 workflows, 100 task starters, and 151 connector guides. [Choose an assistant](DOWNLOAD_A_SPECIALIST.md), [run a tool](collection/SPECIALIST_QUICKSTART.md), or [connect a service](connectors/README.md).
+Muse Hub brings together 15 assistants, 461 skills, 58 workflows, 100 task starters, and 151 connector guides. [Choose an assistant](DOWNLOAD_A_SPECIALIST.md), [run a tool](collection/SPECIALIST_QUICKSTART.md), or [connect a service](connectors/README.md).
 
 ## Find the right tools
 

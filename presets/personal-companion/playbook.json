@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Create a fictional household day plan with a story and a disabled reminder.",
     "observable_result": "A readable day plan and story in the selected workspace, with the reminder kept off until the user enables it.",
     "negative_test": "Reuse a different fictional household memory and require isolation refusal."

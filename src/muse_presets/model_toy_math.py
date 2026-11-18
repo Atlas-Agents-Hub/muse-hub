@@ -1,8 +1,6 @@
-"""Bounded, genuine synthetic linear-model learning; no LLM or provider runtime.
+"""Train a bounded linear model with reproducible decimal arithmetic.
 
-This additive engine does not change the original R33 model_eval.py contract.
-Decimal strings and an explicit context make the arithmetic reproducible without
-BLAS, GPUs, pickle, executables or platform-dependent floating-point reductions.
+An explicit decimal context keeps calculations stable across platforms.
 The protected final partition contains identifiers only and is never scored.
 """
 from __future__ import annotations

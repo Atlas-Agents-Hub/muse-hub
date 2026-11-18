@@ -20,13 +20,13 @@ Verify the archive digest from a separately trusted release record before extrac
 
 The demo creates a temporary SQLite database, proposes and approves a date shift with fictional users, reopens the saved state, and recovers the operation receipt. It removes the sample database when finished. Follow the [calendar integration guide](../GARDEN_LOCAL_CALENDAR.md) to store your own records in an application. The original bundled tests cover local owner/specialist separation, cross-owner isolation, wrong decisions, stale events, transaction rollback and interrupted/repeated operations. The source-pinned runner refuses modified source, rehashed altered manifests, extra import-shadow files and linked kit paths before importing package code.
 
-The bundled `muse_presets.garden_calendar` API is reusable for an independently reviewed local integration. Its authority resolver must come from the host; a caller-created GardenScope is not authentication. Do not make that resolver a model/browser parameter. Keep user databases outside the immutable kit. SQLite storage is unencrypted and host permissions apply. Python isolated mode is not an operating-system sandbox.
+Use the bundled `muse_presets.garden_calendar` API in your application. Resolve accounts and permissions through a trusted host callback, and keep that callback separate from model or browser input. Keep user databases outside the kit, protect the database directory, and run reviewed code with the permissions you intend it to have. SQLite stores readable data.
 
-## Boundaries and updates
+## Connect services and update
 
 The kit records and reviews local garden plans. To connect an external calendar or weather service, follow its [connector setup](../connectors/README.md) and choose the account and permissions needed for that task.
 
-Package checksums detect drift; they are not publisher signatures or grants. Updates use a fresh reviewed kit and preserve existing user databases. No auto-update, database migration or destructive uninstall is bundled.
+Use the release page to check the publisher and the package checksum to verify your download. For an update, extract the new kit into a separate folder and keep your existing database. Back it up and check storage compatibility before moving your records.
 
 Run packaging and original engine regressions:
 

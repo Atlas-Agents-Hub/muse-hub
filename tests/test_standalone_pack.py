@@ -229,7 +229,7 @@ class StandaloneInstallTests(unittest.TestCase):
         self.assertEqual(plan["status"],"UNINSTALL_PREVIEW_ONLY")
         self.assertFalse(plan["can_delete"])
         self.assertTrue(plan["requires_owner_confirmation"])
-        self.assertEqual(plan["grade"],"LOCAL_SOURCE_ONLY")
+        self.assertEqual(plan["grade"],"PACKAGE_FILES")
         after={p.relative_to(d).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
                for p in d.rglob("*") if p.is_file()}
         self.assertEqual(before,after)

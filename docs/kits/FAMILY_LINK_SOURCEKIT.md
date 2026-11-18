@@ -23,7 +23,7 @@ Extract into a new directory and open a terminal there:
 PYTHONPATH=src python3 -B examples/family_offline_handoff_demo.py
 ```
 
-Use the PowerShell import-path setting above on Windows. The example prepares a fictional task and reviews it in a separate process. Its report includes `LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED`, `separate_process_verified`, and `replayed_id_refused` so you can inspect exactly what happened.
+Use the PowerShell import-path setting above on Windows. The example prepares a sample task, reviews it in a separate process, and checks that a repeated handoff ID is refused. Read the report to see the receiving role, review result, and replay check.
 
 For your work, choose the receiving specialist, provide the task and relevant sources, and review the proposed handoff. Send it through the account or communication route you selected, then check delivery and the returned result in that service. Keep the operation ID so an interrupted action can be reconciled before another send.
 

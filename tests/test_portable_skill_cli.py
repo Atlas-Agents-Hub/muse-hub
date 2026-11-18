@@ -22,7 +22,7 @@ class PortableSkillCLITests(unittest.TestCase):
         self.assertEqual(result.returncode,0,result.stderr)
         doc=json.loads(result.stdout)
         self.assertEqual(doc['unique_skills'],50)
-        self.assertFalse(doc['native_installed'])
+        self.assertNotIn('native_installed',doc)
 
     def test_create_inspect_then_refuse_overwrite(self):
         with tempfile.TemporaryDirectory() as tmp:

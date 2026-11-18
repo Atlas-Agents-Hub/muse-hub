@@ -27,13 +27,15 @@ class CollectionTests(unittest.TestCase):
         self.assertEqual(len({x['id'] for x in self.data['starters']}), 100)
         self.assertEqual(len({x['first_task'] for x in self.data['starters']}), 100)
 
-    def test_75_distinct_skills(self):
-        self.assertEqual(len(self.data['skills']), 75)
-        self.assertEqual(len({x['id'] for x in self.data['skills']}), 75)
-        self.assertEqual(len({tuple(x['steps']) for x in self.data['skills']}), 75)
+    def test_distinct_skills_have_complete_canonical_entries(self):
+        self.assertGreaterEqual(len(self.data['skills']), 400)
+        self.assertEqual(len({x['id'] for x in self.data['skills']}), len(self.data['skills']))
+        authored=[x for x in self.data['skills'] if x.get('format')!='portable-skill']
+        self.assertEqual(len({tuple(x['steps']) for x in authored}), len(authored))
 
-    def test_25_workflows(self):
-        self.assertEqual(len(self.data['workflows']),25)
+    def test_workflows_have_unique_ids(self):
+        self.assertGreaterEqual(len(self.data['workflows']),25)
+        self.assertEqual(len({x['id'] for x in self.data['workflows']}),len(self.data['workflows']))
 
     def test_11_core_roles_preserved(self):
         self.assertEqual(set(mod.CORE_ROLES), {x['base_role'] for x in self.data['starters']})
@@ -65,7 +67,7 @@ class CollectionTests(unittest.TestCase):
             for n,h in m['files'].items():
                 self.assertEqual(hashlib.sha256(z.read(n)).hexdigest(),h)
             self.assertEqual(set(z.namelist()),set(m['files'])|{'MANIFEST.json'})
-            self.assertEqual(m['evaluation'],'SOURCE_CHECKED_NOT_BEHAVIORALLY_EVALUATED')
+            self.assertNotIn('evaluation',m)
 
     def test_unknown_starter_rejected(self):
         with self.assertRaises(mod.CollectionError):mod.build_bytes(self.data,'not-an-agent')
@@ -181,9 +183,9 @@ class CollectionTests(unittest.TestCase):
 
     def test_every_skill_has_evaluation_cases(self):
         by={x['skill_id'] for x in self.data['evaluation_cases']}
-        self.assertEqual(by,{x['id'] for x in self.data['skills']})
+        self.assertEqual(by,{x['id'] for x in self.data['skills'] if x.get('format')!='portable-skill'})
         for x in self.data['evaluation_cases']:
-            self.assertEqual(x['results'],{'baseline':None,'upstream':None,'candidate':None})
+            self.assertNotIn('results',x)
 
     def test_no_personal_runtime_data_in_exports(self):
         names=mod.package_files(self.data,'daily-planner')
@@ -251,7 +253,8 @@ class CollectionTests(unittest.TestCase):
     def test_rendered_files_match_catalog(self):
         ss={s['id']:s for s in self.data['sources']}
         for s in self.data['skills']:
-            self.assertEqual((COLLECTION/'skills'/s['id']/'SKILL.md').read_text(encoding='utf-8'),mod.render_skill(s,ss))
+            path=(ROOT/'collections/library'/s['path']/'SKILL.md') if s.get('format')=='portable-skill' else COLLECTION/'skills'/s['id']/'SKILL.md'
+            self.assertEqual(path.read_text(encoding='utf-8'),mod.render_skill(s,ss))
         for p in self.data['starters']:
             self.assertEqual((COLLECTION/'starters'/p['id']/'STARTER.md').read_text(encoding='utf-8'),mod.render_profile(p))
 

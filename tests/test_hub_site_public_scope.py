@@ -6,12 +6,12 @@ from muse_presets.public_export import select_public_files, PublicExportError
 
 SITE_FILES = (
     "README.md", "index.html", "site.css", "site.js", "roles.json",
-    "downloads.html", "downloads.js", "downloads.json",
+    "downloads.html", "downloads.js", "downloads.json", "sitemap.xml",
     "public/index.html", "public/styles.css", "public/app.js",
     "public/catalog.json", "INTEGRITY.json"
 )
 SITE_URL = "https://atlas-origins.github.io/muse-ai-agent-presets/"
-RELEASE_URL = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.4.0"
+RELEASE_URL = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0"
 
 class HubSitePublicAdmission(unittest.TestCase):
     def setUp(self):

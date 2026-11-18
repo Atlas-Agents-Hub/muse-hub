@@ -23,6 +23,14 @@ class DistributionPolicyTests(unittest.TestCase):
   with tempfile.TemporaryDirectory() as td:
    r=Path(td);(r/'docs').mkdir();(r/'docs/USAGE.md').write_text('# Usage\nA checkpoint stores local progress.\n')
    self.assertEqual(self.engine().product_findings(r),[])
+ def test_domain_identifier_review_expires_when_file_changes(self):
+  d=self.engine();name=next(iter(d.REVIEWED_DOMAIN_TEXT))
+  with tempfile.TemporaryDirectory() as td:
+   r=Path(td);p=r/name;p.parent.mkdir(parents=True)
+   p.write_bytes((ROOT/name).read_bytes())
+   self.assertNotIn('INTERNAL_WORK_LANGUAGE',{x['reason'] for x in d.product_findings(r)})
+   p.write_bytes(p.read_bytes()+b'\nInternal task T99.\n')
+   self.assertIn('INTERNAL_WORK_LANGUAGE',{x['reason'] for x in d.product_findings(r)})
  def test_nested_milestones_and_case_variants_rejected(self):
   for name in ('docs/R77_STATUS.md','docs/guide/r777_handoff.md','docs/nested/FINAL_CHECKPOINT.json','control/WORKGRAPH.json','.atlas/receipts/proof.json','scratch/plan.md'):
    with self.subTest(name=name),tempfile.TemporaryDirectory() as td:

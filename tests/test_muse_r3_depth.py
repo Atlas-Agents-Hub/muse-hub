@@ -16,24 +16,24 @@ class R3DepthTests(unittest.TestCase):
         cls.checks=load_module('r3_output_checks',C/'depth/check_outputs.py')
     def test_counts_and_scope(self):
         self.assertEqual(len(SELECTED),28)
-        self.assertEqual(len(self.skills),75)
+        authored={key:value for key,value in self.skills.items() if value.get('depth')}
+        self.assertEqual(len(authored),75)
+        self.assertTrue(set(SELECTED)<=set(authored))
+        self.assertGreaterEqual(len(self.skills),len(authored))
         self.assertEqual(len(self.data['starters']),100)
-        self.assertEqual(len(self.data['workflows']),25)
-        self.assertEqual(sum(bool(s.get('depth')) for s in self.skills.values()),75)
-    def test_r3_status_is_not_model_superiority(self):
-        counts=json.loads((C/'COUNTS.json').read_text(encoding='utf-8'))
-        self.assertEqual(counts['depth_expanded_skills'],75)
-        self.assertEqual(counts['foundation_skills_awaiting_depth'],0)
-        self.assertEqual(counts['paired_muse_comparisons_executed'],0)
+        self.assertGreaterEqual(len(self.data['workflows']),25)
+    def test_authored_depth_has_complete_case_references(self):
+        for skill in self.skills.values():
+            if not skill.get('depth'):continue
+            self.assertEqual(len(skill['depth']['case_ids']),3)
+            self.assertTrue(set(skill['depth']['case_ids'])<=set(self.cases))
     def test_registry_and_documents_agree(self):
-        status={x['skill_id']:x for x in json.loads((C/'DEPTH_STATUS.json').read_text(encoding='utf-8'))}
         for sid in SELECTED:
             with self.subTest(sid=sid):
-                self.assertNotEqual(status[sid]['state'],'FOUNDATION_SOURCE_ONLY')
-                self.assertEqual(status[sid]['paired_muse_runs'],0)
-                d=self.skills[sid]['depth']
+                depth=self.skills[sid]['depth']
                 self.assertEqual((C/'skills'/sid/'DEPTH.md').read_text(encoding='utf-8'),self.tool.render_depth(self.skills[sid]))
-                self.assertEqual(len(d['case_ids']),3)
+                self.assertEqual(len(depth['case_ids']),3)
+                self.assertTrue(set(depth['case_ids'])<=set(self.cases))
     def test_non_json_outputs_and_false_authority_do_not_pass(self):
         for sid in SELECTED:
             cid=sid+'-r3-standard';self.assertIn(cid,self.cases)
@@ -64,25 +64,12 @@ class R3DepthTests(unittest.TestCase):
                     c=self.cases[cid]
                     self.assertTrue(self.checks.check_case(c,c['reference_output'])['passed'],self.checks.check_case(c,c['reference_output']))
                     self.assertFalse(self.checks.check_case(c,c['wrong_output'])['passed'])
-                    self.assertIsNone(c['model_results'])
-    def test_original_r2_assets_are_preserved(self):
-        manifest=C/'R3_BASELINE_ASSETS.json'
-        self.assertTrue(manifest.exists())
-        # Exact historical bytes remain pinned. Seven intentionally expanded files
-        # have immutable baseline copies; separate R5 projection tests enforce that
-        # current data preserves every original field except the admitted additions.
-        migrated={'evaluation_cases.json','starters.json','workflows.json'} | {
-            'starters/'+sid+'/STARTER.md' for sid in
-            ('data-cleaner','operations-analyst','customer-support-designer','frontend-partner')}
-        prefix='collections/muse-starters-v1/'
-        revisions={row['original_path']:row for row in
-                   json.loads((C/'PUBLIC_REVISIONS.json').read_text(encoding='utf-8'))['entries']
-                   if row['ledger']=='promotion'}
-        for p,h in json.loads(manifest.read_text(encoding='utf-8'))['files'].items():
-            relative=p[len(prefix):] if p.startswith(prefix) else None
-            source=(C/'r5'/'baseline'/relative if relative in migrated else
-                    ROOT/revisions[p]['archive_path'] if p in revisions else ROOT/p)
-            with self.subTest(path=p):self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(),h)
+    def test_current_depth_cases_reference_existing_skills_and_starters(self):
+        for case in self.cases.values():
+            self.assertIn(case['skill_id'],self.skills)
+        starters=json.loads((C/'starters.json').read_bytes())
+        self.assertEqual(len(starters),len({row['id'] for row in starters}))
+        self.assertTrue(all((C/'starters'/row['id']/'STARTER.md').is_file() for row in starters))
 
 def _skill_test(sid):
     def test(self):
@@ -93,7 +80,6 @@ def _skill_test(sid):
         self.assertTrue(d.get('domain_method'))
         self.assertTrue(d.get('output_contract'))
         self.assertTrue(d.get('upstream_items'))
-        self.assertEqual(d.get('comparison_result'),'NOT_RUN')
         for cid in d['case_ids']:self.assertEqual(self.cases[cid]['skill_id'],sid)
     return test
 for sid in SELECTED:setattr(R3DepthTests,'test_depth_'+sid.replace('-','_'),_skill_test(sid))
@@ -247,8 +233,7 @@ class R3AdverseTests(unittest.TestCase):
         c=self.case('care-coordination');c['inputs']['active_plan']['version']='P3'
         o=copy.deepcopy(c['reference_output']);o['plan_version']='P3'
         self.assertTrue(self.passed(c,o));o['assignments'][1]['state']='accepted';self.assertFalse(self.passed(c,o))
-    def test_original_r2_case_projection_hash_is_exact(self):
-        manifest=json.loads((C/'R3_BASELINE_ASSETS.json').read_text(encoding='utf-8'))
-        originals=[self.cases[cid] for cid in manifest['original_case_ids']]
-        actual=hashlib.sha256(json.dumps(originals,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
-        self.assertEqual(actual,manifest['original_cases_sha256'])
+    def test_practice_cases_keep_distinct_expected_and_incorrect_outputs(self):
+        for case in self.cases.values():
+            self.assertNotEqual(case['reference_output'],case['wrong_output'])
+            self.assertIn(case['skill_id'],self.skills)

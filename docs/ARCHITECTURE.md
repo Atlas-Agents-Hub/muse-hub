@@ -1,24 +1,24 @@
 # Architecture
 
-The toolkit separates assistant instructions, local programs and host integrations. You can run a local program without installing an assistant, or adapt a role profile to a host you configure separately.
+Muse Hub combines assistant profiles, a skill and workflow library, Python tools, browser workspaces, and guides for connecting services. Use the components together or choose the ones that fit your task.
 
 ## Collection and engine layers
 
-The current source includes **75 developed task skills**, **25 workflows** and **100 task starters** alongside the original **50 unique procedures** (45 role-specific methods plus five shared). The original procedure layer overlaps the larger collection; it is not 50 more independently authored skills. The catalogs keep those relationships explicit.
+The current source includes **461 task skills**, **58 workflows** and **100 task starters** alongside the original **50 unique procedures** (45 role-specific methods plus five shared). The catalogs map the original procedure layer to the larger collection so related methods stay easy to find.
 
-Different specialists include different executable engines. [Specialist scope and source engines](collection/SPECIALIST_SCOPE_AND_ENGINES.md) describes what each role handles and which local operations are available. [Specialists by task](handbook/specialists-by-task.md) is the user-facing directory. These are the same roles; the tool depth varies by specialist.
+Different specialists include different executable engines. [Specialist methods and tools](collection/SPECIALIST_SCOPE_AND_ENGINES.md) describes what each role handles and which local operations are available. Browse [specialists by task](handbook/specialists-by-task.md) to choose the right role and tools.
 
 ## Role profiles
 
 `presets/catalog.json` lists the 15 source roles. Each role has a `preset.json` for its settings and a `playbook.json` for its working methods. The files in `templates/profile/` provide editable instructions, preferences and memory placeholders.
 
-The renderer creates a new folder rather than replacing an existing assistant. Its receipt records the source and output hashes so later inspection can distinguish unchanged files, personal edits and missing files. A receipt is an integrity record, not proof of identity or permission.
+The renderer creates a new folder and preserves existing assistants. Its receipt records source and output hashes so you can identify unchanged files, personal edits, and missing files.
 
 ## Generated profiles and procedures
 
-`quickstart.py` composes three inspectable parts: `system-profile/profile/` for editable assistant instructions, `subchat-scopes/` for three method-specific contexts with separate blank memory, and `role-skills/` for disabled descriptors. Identity, preferences, voice, and prompt defaults are editable in the working copy.
+`quickstart.py` composes three inspectable parts: `system-profile/profile/` for editable assistant instructions, `subchat-scopes/` for three method-specific contexts with separate blank memory, and `role-skills/` for skill definitions. Identity, preferences, voice, and prompt defaults are editable in the working copy.
 
-The catalog has **45 role-specific methods plus five shared procedures = 50 unique procedures**. Reusing the shared procedures across all roles yields 120 descriptor instances, not additional unique skills. The separate `portable_skill_export` adapter emits 50 hyphen-named folders with matching frontmatter without renaming the native-style registry IDs. The receiving host loads the selected format and manages tool permissions.
+The catalog has **45 role-specific methods plus five shared procedures = 50 unique procedures**. These procedures are assigned across the roles as 120 reusable skill definitions. The separate `portable_skill_export` adapter emits 50 hyphen-named folders with matching frontmatter without renaming the native-style registry IDs. The receiving host loads the selected format and manages tool permissions.
 
 ## Local tools
 
@@ -33,19 +33,19 @@ The catalog has **45 role-specific methods plus five shared procedures = 50 uniq
 | Evidence Finder | Preserve findings and their local receipt history for other tools to read. |
 | Role packaging | Combine profiles, working methods and supported local tools into inspectable packages. |
 
-These responsibilities are separate. A plan reviewer does not dispatch workers; a quotation match does not establish scientific truth; and an evidence record does not authorize an external action.
+Combine components through their documented inputs and outputs. Review the evidence for each result, and use the connected service to authorize and confirm external actions.
 
 ## Host integration
 
-A host supplies the model, authenticated identity, tool permissions and live service connections. The repository's host and connector checks inspect local configuration. Configure skills, hooks, and connectors through the host when adding them to a workflow; their defaults remain disabled.
+A host supplies the model, authenticated identity, tool permissions and live service connections. The host and connector checks inspect your configuration. Enable selected skills, hooks, and connectors through the host as you add them to a workflow.
 
-Personal Muse/Hatch and Muse Code are distinct targets. A manifest for one does not prove compatibility with the other. Read [Host compatibility](HOST_COMPATIBILITY.md) before attempting an integration.
+Choose the matching configuration for Personal Muse/Hatch or Muse Code in [Host compatibility](HOST_COMPATIBILITY.md), then test the integration in that host.
 
 ## Data and permissions
 
 Keep personal memory, credentials and host configuration outside the repository. The package owns its defaults; you own your working copies; the host owns its authentication and registrations. Do not merge these into one shared file.
 
-Local programs run under your operating-system account. The toolkit is **not a sandbox**. Review code before execution and validate permissions again at the point of any external action. Hash checks detect changed bytes; they do not provide authentication.
+Local programs use your operating-system account's permissions. Review code before running it and verify permissions for external actions through the connected service. Use package hashes to check file integrity.
 
 ## Where to make a change
 

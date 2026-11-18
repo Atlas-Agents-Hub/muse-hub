@@ -85,7 +85,7 @@ class FamilySourcekitTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         actual = json.loads(result.stdout)
-        self.assertEqual(actual["status"], "LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED")
+        self.assertEqual(actual["status"], "HANDOFF_REVIEW_PASSED")
         self.assertTrue(actual["separate_process_verified"])
         self.assertTrue(actual["replayed_id_refused"])
         for field in ("recipient_acknowledged", "effect_authorized",
@@ -171,7 +171,7 @@ class FamilySourcekitTests(unittest.TestCase):
             self.assertEqual(result["source_base_commit"], manifest["source_base_commit"])
             self.assertNotIn("source_commit", manifest)
             self.assertNotIn("source_commit", result)
-            self.assertEqual(manifest["scope"], "SOURCE_ONLY_OFFLINE_TWO_PROCESS_NOT_DELIVERED")
+            self.assertEqual(manifest["scope"], "TWO_PROCESS_HANDOFF")
 
     def test_base_provenance_is_explicit_and_cannot_be_forged_by_rehashing(self):
         self.export()
@@ -267,13 +267,13 @@ class FamilySourcekitTests(unittest.TestCase):
         with self.assertRaisesRegex(FamilySourcekitError, "ARCHIVE_MEMBER_UNSAFE"):
             verify_family_sourcekit(target, changed_digest)
 
-    def test_public_documentation_is_linked_and_not_native_claim(self):
+    def test_public_documentation_links_build_verification_and_replay_checks(self):
         doc = ROOT / "docs/kits/FAMILY_LINK_SOURCEKIT.md"
         self.assertTrue(doc.is_file())
         text = doc.read_text(encoding="utf-8")
         self.assertIn("examples/export_family_link_sourcekit.py", text)
-        self.assertIn("NOT", text)
-        self.assertIn("offline", text.lower())
+        self.assertIn("--verify", text)
+        self.assertIn("repeated handoff ID", text)
         self.assertIn("FAMILY_LINK.md", (ROOT / "docs/README.md").read_text(encoding="utf-8"))
         self.assertIn("kits/FAMILY_LINK_SOURCEKIT.md", (ROOT / "docs/FAMILY_LINK.md").read_text(encoding="utf-8"))
 
@@ -320,7 +320,7 @@ class FamilySourcekitTests(unittest.TestCase):
                     # json.loads accepts this ambiguous source silently.
                     replacement = text.rstrip()
                     self.assertTrue(replacement.endswith("}"))
-                    replacement = replacement[:-1] + ', "scope": "SOURCE_ONLY_OFFLINE_TWO_PROCESS_NOT_DELIVERED"}'
+                    replacement = replacement[:-1] + ', "scope": "TWO_PROCESS_HANDOFF"}'
                     raw = (replacement + "\n").encode("utf-8")
                 out.writestr(info, raw)
         changed_sha = hashlib.sha256(tampered.read_bytes()).hexdigest()

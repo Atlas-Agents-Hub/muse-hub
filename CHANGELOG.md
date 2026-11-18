@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.0 — a larger skill library, organized around your work
+
+- Choose from 461 skills covering engineering, research, data, design, creative work and everyday projects.
+- Combine methods into workflows with clear inputs, outputs and checks at each step.
+- Use 51 tool guides with setup steps, examples and recommendations for relevant specialists.
+- Download complete skill, workflow and specialist ZIPs, including supporting programs, examples and references.
+- Filter downloads by specialist, subject and type, then share the filtered page.
+- Find the whole Hub through clearer product guides, searchable indexes and improved page metadata.
+- Keep macOS compatibility checks available separately from the required release checks.
+
 ## v1.4.0 - plans you can reuse, checks you can run
 
 - Start from reusable reminder, calendar and goal worksheets, with filled examples and recovery steps.
@@ -48,21 +58,18 @@
 
 - Publish the complete toolkit, specialist collection and connector directory with checksums.
 
-## v0.4.1-alpha — Creative Studio offline production planning
+## v0.4.1-alpha — Creative Studio production planning
 
 - Add an executable Creative Studio planner for authored briefs, frame-accurate shot lists, asset tasks and textual storyboards.
 - Add local symbolic continuity checks, revision reports, create-only JSON/CSV/HTML exports and deterministic verification.
-- Keep animation rendering, image generation, native Muse use and independent rights approval out of scope.
 
 
 ## v0.4.0-alpha — independently runnable specialist kits
 
-- Add independently runnable Claims, Garden, Learning and offline observation-comparison packages with source verification and self-tests.
+- Add independently runnable Claims, Garden, Learning and observation-comparison packages with file verification and self-tests.
 - Add optional source-pinned local adapter inspection and explicitly opted-in demonstrations.
-- Harden archive, manifest, linked-path and import boundaries; retain disabled native integrations.
-- Preserve bounded process logs and explicit HOLD state when owned-process cleanup cannot be confirmed; never retry automatically.
-
-This file records published features rather than internal engineering work. Exact release assets remain available under [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases).
+- Check archive inventories, file hashes, linked paths and imports.
+- Preserve process logs and reconcile interrupted operations before retrying them.
 
 ## v0.3.1-alpha — portable release quality
 
@@ -77,26 +84,26 @@ This file records published features rather than internal engineering work. Exac
 - Portable engineering repairs and opt-in disposable builder tests.
 - Deterministic model training examples, installation and richer source kits.
 - Exact research citations, held-out numerical metrics and leakage checks.
-- Offline restart verification and context-bound handoff envelopes.
+- Restart verification and context-bound handoff envelopes.
 - Recursive product-quality checks and a machine-readable capability catalog.
 
 These features ship in the complete toolkit source. Starter profiles and three executable runtime kits are available separately. Older release ZIPs retain their original contents.
 
-## Generic Specialist Source Kits — v0.2.0-alpha
+## Specialist kits — v0.2.0-alpha
 
 - Eleven individually downloadable neutral specialist starter kits.
-- Editable role methods, source profile templates and offline package inspection.
+- Editable role methods, profile templates and package inspection.
 - Standard-library local examples for Garden Companion, Learning Coach, Evidence Finder and selected engineering utilities.
-- A source-only quickstart for Windows, macOS and Linux.
+- A quickstart for Windows, macOS and Linux.
 - Disabled-by-default optional connectors and local scope validation.
 
 [Download the eleven kits](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.2.0-alpha).
 
-## Extended Software Engineer Source Kit — alpha
+## Extended Software Engineer kit — alpha
 
 - Separate downloadable engineering source package.
 - Local Claim Gate, evidence and recovery utilities plus reproducible disposable Git tests.
-- Source-package verification and platform-specific limitation notes.
+- Package verification and platform setup notes.
 
 [Download the extended kit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/software-engineer-sourcekit-r56-alpha).
 
@@ -106,4 +113,4 @@ These features ship in the complete toolkit source. Starter profiles and three e
 
 [View the archive](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.1.0-alpha).
 
-The repository is an unofficial source toolkit, not a connected native Muse installation. Refer to [Capabilities](docs/CAPABILITIES.md) for executable examples and to [Security](docs/SECURITY.md) for important boundaries.
+Explore [Capabilities](docs/CAPABILITIES.md) for current tools and examples. Previous downloads remain available under [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases).

@@ -1,6 +1,6 @@
 # Workflows you can use
 
-Bring a goal, the relevant files, and a result to check. The [25-workflow collection](collection/MUSE_CURATED_COLLECTION.md) connects specialist methods for engineering, research, data, design, and planning. The commands below run worked examples from the toolkit.
+Bring a goal, the relevant files, and a result to check. The [58-workflow library](../collections/library/WORKFLOWS.md) connects specialist methods for engineering, research, data, design, and planning. The commands below run worked examples from the toolkit.
 
 ## Run the examples
 

@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Attempt a seeded authorization bypass in a disposable local fixture.",
     "observable_result": "Reproducible mutation result, root cause and tested remediation gate.",
     "negative_test": "Give reviewer a forged successful test log; require source/receipt mismatch detection."

@@ -1,9 +1,4 @@
-"""T19 source-only reusable Coordinator ZIP with existing R33 graph reviewer.
-
-Wraps existing coordinator_dropin staging, not a new Omnium planner/compiler,
-scheduler, state ledger, allocator or provider. Every exported file must equal
-a fresh canonical source-generated pack, regardless of mutable local receipts.
-"""
+"""Build and verify a portable Coordinator toolkit."""
 from __future__ import annotations
 
 import hashlib
@@ -122,7 +117,7 @@ def _canonical_source_bytes()->dict[str,bytes]:
     with tempfile.TemporaryDirectory(prefix="r58-coordinator-canonical-") as scratch:
         d=Path(scratch)/"coordinator"
         receipt=stage_coordinator_dropin(d)
-        if (receipt["status"]!="SOURCE_ONLY_COORDINATOR_STAGED"
+        if (receipt["status"]!="COORDINATOR_FILES_CREATED"
             or inspect_coordinator_dropin(d)["status"]!="LOCAL_COORDINATOR_MATCH"):
             raise ValueError("COORDINATOR_CANONICAL_SOURCE_NOT_QUALIFIED")
         members={}

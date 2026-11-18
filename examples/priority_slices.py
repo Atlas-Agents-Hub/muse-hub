@@ -1,7 +1,6 @@
-"""Five source-only specialist micro-examples. No native Muse or network calls.
+"""Run five small specialist examples.
 
-Run from the repository root with: PYTHONPATH=src python examples/priority_slices.py
-"""
+Run from the repository root with: PYTHONPATH=src python examples/priority_slices.py"""
 from __future__ import annotations
 
 import json

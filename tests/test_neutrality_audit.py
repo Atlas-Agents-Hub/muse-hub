@@ -1,5 +1,7 @@
 """The public preset intake must reject host-specific configuration and secrets."""
 import tempfile
+import hashlib
+from unittest.mock import patch
 import unittest
 from pathlib import Path
 
@@ -8,6 +10,29 @@ from muse_presets.catalog import ROOT
 
 
 class NeutralityAuditTests(unittest.TestCase):
+    def test_reviewed_api_example_is_bound_to_its_exact_bytes(self):
+        from muse_presets import neutrality
+        name=next(name for name,row in neutrality.REVIEWED_EXAMPLE_TEXT.items()
+                  if row['reason']=='PRIVATE_HOST_PATH')
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);path=root/name;path.parent.mkdir(parents=True)
+            path.write_bytes((ROOT/name).read_bytes())
+            self.assertEqual(audit_public_tree(root),[])
+            path.write_bytes(path.read_bytes()+b'\nChanged example.\n')
+            self.assertIn('PRIVATE_HOST_PATH',{row['reason'] for row in audit_public_tree(root)})
+
+    def test_reviewed_api_path_does_not_exempt_credential_checks(self):
+        from muse_presets import neutrality
+        name=next(name for name,row in neutrality.REVIEWED_EXAMPLE_TEXT.items()
+                  if row['reason']=='PRIVATE_HOST_PATH')
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);path=root/name;path.parent.mkdir(parents=True)
+            raw=(ROOT/name).read_bytes()+('\n'+'sk-proj-'+('Z'*32)).encode()
+            path.write_bytes(raw)
+            reviewed={name:{'sha256':hashlib.sha256(raw).hexdigest(),'reason':'PRIVATE_HOST_PATH'}}
+            with patch.object(neutrality,'REVIEWED_EXAMPLE_TEXT',reviewed):
+                self.assertIn('POSSIBLE_SECRET',{row['reason'] for row in audit_public_tree(root)})
+
     def test_current_distributable_assets_are_generic(self):
         self.assertEqual(audit_public_tree(ROOT), [])
 

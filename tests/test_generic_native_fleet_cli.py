@@ -27,7 +27,7 @@ class GenericFleetCliTests(unittest.TestCase):
         self.assertEqual(status,0)
         self.assertEqual(receipt["profile_count"],15)
         self.assertEqual(receipt["native_canary_count"],30)
-        self.assertFalse(receipt["native_installed"])
+        self.assertNotIn('native_installed',receipt)
         status,report=self.call(["generic-native-fleet-inspect","--path",str(path)])
         self.assertEqual(status,0)
         self.assertEqual(report["status"],"LOCAL_FLEET_MATCH")

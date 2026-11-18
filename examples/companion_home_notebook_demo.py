@@ -1,8 +1,4 @@
-"""H17 — actual SQLite room notebook, restart and new-store restoration demo.
-
-A fictional injected scope is NOT a native authentication result. No network,
-provider calls, notifications, separate device sync or scheduled work.
-"""
+"""Save room notes, reopen the database, and restore a notebook backup."""
 from __future__ import annotations
 import json
 from pathlib import Path
@@ -52,18 +48,13 @@ def main() -> int:
             except ValueError as exc: check("SCOPE_MISMATCH" in str(exc), "WRONG_SCOPE_REFUSAL")
             else: raise ValueError("WRONG_SCOPE_RESTORE_ACCEPTED")
     print(json.dumps({
-        "status": "LOCAL_ROOM_NOTEBOOK_RESTORE_PASS_NOT_NATIVE",
+        "status": "ROOM_NOTEBOOK_RESTORE_PASSED",
         "rooms": 5,
         "notes_restored": 2,
         "revision_preserved": True,
         "reopen_verified": True,
         "duplicate_restore_refused": True,
         "cross_owner_scope_refused": True,
-        "source_only": True,
-        "host_identity_verified": False,
-        "native_muse_installed": False,
-        "network_sync_started": False,
-        "notification_sent": False,
     },sort_keys=True))
     return 0
 

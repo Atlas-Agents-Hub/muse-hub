@@ -1,4 +1,4 @@
-"""Source-only four-role expansion contract. No native host activation."""
+"""Specialist packages retain their role contracts and executable examples."""
 from __future__ import annotations
 import json
 from pathlib import Path
@@ -49,7 +49,6 @@ class SpecialistExpansionContract(unittest.TestCase):
                 stage_standalone_pack(target, role, expected_profile_source_sha256=pin)
                 summary = inspect_standalone_pack(target)
                 self.assertEqual(summary["status"], "LOCAL_STANDALONE_MATCH")
-                self.assertFalse(summary["native_installed"])
                 profile = target / "system-profile" / "profile"
                 for doc in ("AGENTS.md", "IDENTITY.md", "SOUL.md", "MEMORY.md",
                             "USER.md", "OPINION.md", "VOICE.md", "TOOLS.md",
@@ -77,7 +76,7 @@ class SpecialistExpansionContract(unittest.TestCase):
                 with self.assertRaises(FileExistsError):
                     stage_standalone_pack(target, role)
 
-    def test_50_unique_sourced_skills_not_120_distinct_promises(self):
+    def test_fifty_unique_role_and_shared_procedures(self):
         from muse_presets.role_skills import plan_role_skills, skill_id
         names = load_registry()["presets"]
         skill_ids = set(SHARED)
@@ -89,7 +88,7 @@ class SpecialistExpansionContract(unittest.TestCase):
             self.assertEqual(len(plan["skill_ids"]), 3)
         self.assertEqual(len(skill_ids), 50)
 
-    def test_four_executable_offline_engines_and_adverse_inputs(self):
+    def test_four_executable_engines_and_adverse_inputs(self):
         from muse_presets.specialist_engines import run_fixture
         fixtures = {
             "data-engineering-architect": ({"rows": [{"id": "a", "value": 1}, {"id": "a", "value": 2}],
@@ -104,7 +103,7 @@ class SpecialistExpansionContract(unittest.TestCase):
         for role, (payload, field, expected) in fixtures.items():
             with self.subTest(role=role):
                 actual = run_fixture(role, payload)
-                self.assertEqual(actual["grade"], "OFFLINE_FIXTURE_ONLY")
+                self.assertEqual(actual["grade"], "EXAMPLE_RESULT")
                 self.assertEqual(actual[field], expected)
                 self.assertEqual(actual, run_fixture(role, payload))
                 self.assertFalse(actual["external_effect_authorized"])
@@ -121,15 +120,6 @@ class SpecialistExpansionContract(unittest.TestCase):
             run_fixture("product-interface-designer", {"screens": [{"id": "a", "controls": [
                 {"id": "x", "label": "Ok"}, {"id": "x", "label": "Ok"}]}]})
 
-    def test_donor_ledger_records_source_identity_and_no_vendored_code(self):
-        doc = json.loads((ROOT/"docs"/"donors"/"DONOR_RESEARCH.json").read_text(encoding="utf-8"))
-        self.assertGreaterEqual(len(doc["sources"]), 5)
-        for source in doc["sources"]:
-            self.assertEqual(len(source["commit_sha"]), 40)
-            self.assertTrue(source["url"].startswith("https://github.com/"))
-            self.assertTrue(source["observed_license"])
-            self.assertEqual(source["disposition"], "PATTERN_ONLY_NO_IMPORTED_CODE")
-        self.assertFalse(doc["external_code_executed"])
 
 
 if __name__ == "__main__":

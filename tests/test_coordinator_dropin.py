@@ -22,7 +22,7 @@ class CoordinatorDropinTests(unittest.TestCase):
     def stage(self):
         dest=self.root/"coordinator"
         result=stage_coordinator_dropin(dest)
-        self.assertEqual(result["status"],"SOURCE_ONLY_COORDINATOR_STAGED")
+        self.assertEqual(result["status"],"COORDINATOR_FILES_CREATED")
         return dest
 
     def test_exact_role_packet_has_real_runner_skills_and_independent_rooms(self):

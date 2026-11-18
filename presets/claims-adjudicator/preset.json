@@ -3,7 +3,7 @@
   "id": "claims-adjudicator",
   "title": "Claims Adjudicator",
   "description": "Judges claims against exact evidence and preserves limiting conditions.",
-  "maturity": "SOURCE_TEMPLATE_ONLY",
+  "maturity": "PROFILE_TEMPLATE",
   "native_muse_status": "UNBOUND",
   "host_profiles": [
     "personal-muse-unverified",

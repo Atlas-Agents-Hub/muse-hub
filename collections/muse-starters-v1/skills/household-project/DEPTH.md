@@ -1,6 +1,6 @@
-# Break Down a Household Project — operational depth
+# Break Down a Household Project — examples and decisions
 
-Read only the branch needed for the current task. These are working methods, not a demand for additional approvals on ordinary reading or drafting.
+Choose the branch that fits the current task, then use its result checks.
 
 ## Domain method
 
@@ -84,7 +84,7 @@ Preserve measurements with units and dates, completed tasks, contractor and purc
 
 ## Practice and mechanical checks
 
-Three authored public exercises cover a routine case, a constraint or ambiguity, and a changed-evidence recovery. Their answers are teaching and regression material, not hidden benchmarks. The checker tests supplied structured records only; a person must still assess usefulness, source fidelity and actual visual or interpersonal quality.
+Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.
 
 Practice case IDs: `household-project-r4-standard`, `household-project-r4-edge`, `household-project-r4-recovery`.
-Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
+Exercises live under `practice/`. Run `practice/check_outputs.py` on a supplied JSON response, then review its reasoning and presentation.

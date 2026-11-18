@@ -3,10 +3,10 @@ name: engineering-source-provenance
 description: Local source custody, bounded archives, and read-only dependent-quarantine drift reviews.
 version: 0.6.0
 scope: software-engineer
-authority: local-source-only; native-muse-not-registered; no-external-effects
+authority: host-permissions-required
 ---
 
-# Source Provenance — local capability
+# Source Provenance
 
 Inventory, pin, and inspect files in an approved local workspace. Keep
 the source version and receipt history together when reviewing a dependency
@@ -53,7 +53,7 @@ or preparing a new quarantine directory.
     without checking the original effect.
 12. For synthetic, owner-approved local quarantine only, call
     `export_local_quarantine_archive(quarantine_dir, archive_path=unused_zip,
-    authorize_local_export=guard)` to create an OFFLINE local ZIP with bounded,
+    authorize_local_export=guard)` to create a portable ZIP with bounded,
     uncompressed, digest-pinned members. A local checksum is not a signature.
 13. Require the exact resulting SHA-256 when calling
     `inspect_local_quarantine_archive(archive, expected_sha256=digest)` or

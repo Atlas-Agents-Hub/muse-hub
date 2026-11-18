@@ -1,29 +1,40 @@
-# Curation and count policy
+# Skill library standards
 
-## Select for usefulness, not volume
+Each skill should help someone complete a distinct task. It should explain when to use it, what to provide, how to work through the task, what a useful result contains, and how to recover when a step fails.
 
-A skill earns a place when it addresses a distinct job, specifies usable inputs and outputs, provides a concrete procedure, handles a meaningful failure, and improves at least one identified weakness in the reference approach. A title change, language translation, platform alias or niche label does not create another skill. Several starters may share the same skill without increasing the skill count.
+## Choose the right level
 
-The 100 starters are configurations of skills for distinct first tasks. They are not represented as 100 independently implemented engines. The 20 recipes are compositions, not extra skills. Source candidates and public share links are discovery inventory, not shipped capability.
+Use a **skill** for one reusable method, a **workflow** for a sequence of related methods, and a **task starter** for a ready-to-use selection with a first task. Connect each addition to the specialists whose work it improves.
 
-## Source intake
+Prefer a clear existing method over another entry with a similar name. Combine overlapping instructions when they lead to the same output. Keep specialist identities and personal preferences separate from the selected task methods.
 
-Record the original repository, exact commit, item path, content digest, observed date, license and nested attribution. Repository-level licenses do not automatically cover imported files or linked bot contents. Unknown or incompatible rights mean reference-only treatment unless permission is obtained. Preserve applicable notices whenever copying or adapting protected expression is actually authorized.
+## Make the instructions useful
 
-This batch copies no upstream skill prose or executable source. It uses pinned references for comparison and authors its own instructions. Do not describe it as a license-cleared redistribution of every upstream item. No upstream install script, hook, prompt, agent definition or nested instruction has been executed.
+- Name the inputs and give a concrete example.
+- Explain how to choose between meaningful alternatives.
+- Identify the required tools and provide a useful fallback when an optional tool is unavailable.
+- Describe the expected output and a practical way to check it.
+- Include common failures and recovery steps that preserve completed work.
+- Keep instructions concise enough to load only what the task needs.
 
-## Item decisions
+## Include working tools
 
-Use one of: candidate, reference-only, authored, source-checked, behavior-evaluated, admitted, held or retired. Each change needs a concrete design delta, tests or evaluation appropriate to its type, and a rollback/update owner. A scanner finding no suspicious phrase is not sufficient evidence that instructions are safe or useful.
+When a skill contains a script, include its required local files, dependency instructions, and a representative input. Check the output and at least one relevant failure case. Keep generated files in a new destination, preserve user data, and document the command needed to run it.
 
-During review, reject credential requests, undisclosed network destinations, automatic spending, instructions to ignore host or user authority, private-memory export, fabricated tools, false background-work promises and unsupported claims of independent review. Legitimate code or reference snippets remain inert research data until separately authorized for execution.
+## Respect source licenses
 
-## Improvement assessment
+Keep applicable license and attribution notices with redistributed material. Check the terms of individual files and dependencies as well as the enclosing package. Use references for material whose terms permit linking but not redistribution.
 
-Prefer a paired task comparison on the same Muse capabilities: ordinary Muse, an applicable upstream skill, and the candidate. Compare output correctness, usefulness, source fidelity, tool/effect discipline, interruption behavior and user effort. A simpler workflow can beat a more elaborate one. Record a loss or tie honestly and keep the best version, including upstream material when lawful and demonstrably better.
+## Keep the catalog consistent
 
-## Counting gate
+Every skill, workflow, starter, and specialist has a stable ID. Workflow and specialist references must resolve to entries in the current library. The [inventory](COUNTS.json) reports counts calculated from the shipped catalogs and practice files.
 
-Publish separate counts for discovery candidates, distinct authored skills, source-checked skills, behavior-evaluated skills, admitted skills, workflow compositions and starter configurations. Never turn a future target into a current badge. Semantic duplicates require human or model-assisted comparison of purpose, outputs and failure behavior; exact-string checks alone are insufficient.
+Run the collection and compatibility checks after an update:
 
-The current deterministic tests detect exact duplicate procedures and unresolved references. They do not establish global semantic uniqueness, comprehensive domain correctness or superiority.
+```sh
+python -B tools/muse_collection.py check
+python -B tools/collection_compatibility.py
+python -B tools/collection_compatibility.py --inventory
+```
+
+Use [practice and evaluation](EVALUATION.md) to check an actual result, and [choose an expansion](ROADMAP.md) when a task needs more coverage.

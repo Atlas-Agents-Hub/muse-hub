@@ -7,15 +7,15 @@ Each kit is intentionally editable. Start with a new role package and preserve t
 - `presets/catalog.json` indexes the fifteen source roles.
 - `presets/ROLE/playbook.json` represents the methods and optional tool categories for a chosen role. Replace `ROLE` with a real slug such as `garden-companion`.
 - `src/muse_presets/role_skills.py` stages and inspects local skill descriptions.
-- `src/muse_presets/portable_connectors.py` describes disabled provider contracts and offline observations.
+- `src/muse_presets/portable_connectors.py` defines connector configuration, permissions, and recorded results.
 - `src/muse_presets/` contains the executable modules supplied by the toolkit.
 - `tests/` contains examples of positive and refusal tests.
 
-## A safe extension workflow
+## Add a capability
 
 1. Create a new source folder using [Get started](GITHUB_QUICKSTART.md). Never overwrite an owner's saved data.
-2. Define one method, its inputs, outputs, default-denied effects and an explicit stopping condition.
-3. Add a narrow local function only if the capability needs executable source. A skill description by itself does not install a tool.
+2. Define one method, its inputs, outputs, required permissions, and a clear stopping condition.
+3. Add a focused function when the capability needs executable code, and document its dependencies and setup.
 4. Add a test with a valid fixture and at least one negative case (changed hash, invalid scope, replay or unsupported platform).
 5. Run the doctor and complete test suite, then inspect the resulting package.
 6. Keep source changes and recovery instructions in your development workspace; publish only clean, supported files.
@@ -24,7 +24,7 @@ Each kit is intentionally editable. Start with a new role package and preserve t
 
 Role kits include editable profiles, three focused subchat guides, and skill descriptors. Use the [skills reference](SKILLS.md) for formats and validation, and the [connector guide](CONNECTORS.md) when the extension needs an account or service.
 
-For an actual host integration, configure and authenticate it separately. Only enable an external action after verifying the receiving owner, tool permissions and result. There is no default cron scheduler or auto-deployment.
+For a host integration, configure its account and permissions. Verify the recipient before an external action and check the returned result. Use the host's scheduling and deployment tools when your extension needs them.
 
 ## Validate the extension
 

@@ -1,21 +1,21 @@
 {
-  "schema": "software-engineer/iron-ledger-consumer-runtime-v1",
-  "role_id": "software-engineer",
-  "source_grade": "LOCAL_ORIGINAL_INTERFACE_GUIDED_CANDIDATE",
-  "native_muse_status": "UNBOUND",
   "external_effects_enabled": false,
-  "registered_native_tools": [],
-  "original_owner_state_included": false,
-  "redistribution_rights_verified": false,
-  "local_evidence_only": true,
-  "second_persistent_evidence_ledger_created": false,
-  "original_task_claims_enabled": false,
-  "source_file": "src/muse_presets/iron_ledger_consumer.py",
   "files": {
-    "iron_ledger_consumer.py": "9f914cf674128c7a89cb513c4a96c742375ff2c6197f7594cc9beb56ffdf3112"
+    "iron_ledger_consumer.py": "cee4539d9329705c9f31d8add296be0fd2d27e95133a59b38f5b05448e220f9f"
   },
+  "local_evidence_only": true,
+  "native_muse_status": "UNBOUND",
+  "original_owner_state_included": false,
+  "original_task_claims_enabled": false,
+  "redistribution_rights_verified": false,
+  "registered_native_tools": [],
+  "role_id": "software-engineer",
+  "schema": "software-engineer/iron-ledger-consumer-runtime-v1",
+  "second_persistent_evidence_ledger_created": false,
   "skills": {
-    "SKILL.md": "1523ce2a8d56254b1082be222d0d17c3f4a988b02fa825fbb285d9d72b1374cf",
+    "SKILL.md": "22beafd757eec018e32cb6090bd4bcaf6eea7d74d56449872d7d5253545d0a3b",
     "skill.yaml": "1278e0ec6c9f0d7ccebca6acc516b5f1ec7f7d71f6cf3c6a22ad37989e26d7e8"
-  }
+  },
+  "source_file": "src/muse_presets/iron_ledger_consumer.py",
+  "source_grade": "LOCAL_ORIGINAL_INTERFACE_GUIDED_CANDIDATE"
 }

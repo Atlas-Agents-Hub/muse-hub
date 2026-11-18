@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Assess a release report that claims a production fix after 40 local tests.",
     "observable_result": "Record the passing local tests, identify the missing production verification, and preserve that distinction in each summary.",
     "negative_test": "Remove the missing production verification from a summary and require the review to catch it."

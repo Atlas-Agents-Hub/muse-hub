@@ -1,0 +1,59 @@
+{
+  "capabilities": {
+    "animation": {
+      "files_sha256": {},
+      "grade": "REFERENCE_GUIDE",
+      "role": "creative-studio"
+    },
+    "claims": {
+      "files_sha256": {
+        "src/muse_presets/claims.py": "af6e5558024cbca4099d1f65ef2f68ae6d062df105db22eb34aa17da7d79a1e9"
+      },
+      "grade": "EXECUTABLE_COMPONENT",
+      "role": "claims-adjudicator"
+    },
+    "evaluation": {
+      "files_sha256": {
+        "examples/research_evaluator_demo.py": "4a44d2ed0b922e477c96e41664536020bdb1e37c88102a20aaea8489894c2348",
+        "src/muse_presets/catalog.py": "685a1c393f8581a4741e40da47fa31accd3577a94a0185a5ca5008e4b690ca48",
+        "src/muse_presets/database_paths.py": "86849fb3fc770109e868d533acd567980681570d4d7218734b56090506feca38",
+        "src/muse_presets/finder.py": "ac843e87c679f43f9aa1068874ba035cbb79aa938ef80f5dacdc60ad3b08fe23",
+        "src/muse_presets/native_canary.py": "41dfa48d79dda1891e5b6a203d20eb1e722bc1e2b8121f87f2dc6a5effc06399",
+        "src/muse_presets/native_skill_binding.py": "d1bae9a45041a9481450836858908d69b1adaf3ca0a05e4ceef40337c138f976",
+        "src/muse_presets/neutrality.py": "38119ac763825c5c4c3a313b20c8122d787b06d4ebcd30aec015cdcb8bff5e8c",
+        "src/muse_presets/playbooks.py": "c3abac0812efe26fbf34698e24fcdc18ebbd0d756bdc771092353b1859e04774",
+        "src/muse_presets/research_evaluator.py": "6af1da789cc31bf7cb2b0044de327c5fbd5c03a76757b262074befd4db05f262"
+      },
+      "grade": "EXECUTABLE_COMPONENT",
+      "role": "research-evaluator"
+    },
+    "garden": {
+      "files_sha256": {
+        "examples/garden_calendar_demo.py": "19c1cd3703bbd48aef210c4a2f5cad540c5efd2827c6add7fba791bf18b41344",
+        "src/muse_presets/database_paths.py": "86849fb3fc770109e868d533acd567980681570d4d7218734b56090506feca38",
+        "src/muse_presets/garden_calendar.py": "af982eb2cdba413e6cb7fcaa04ac3235e37af45fc855e66377b1ca99a9fb662f"
+      },
+      "grade": "EXECUTABLE_COMPONENT",
+      "role": "garden-companion"
+    },
+    "security": {
+      "files_sha256": {
+        "src/muse_presets/reverse.py": "3d5b4ff667ec996397f85a5a5746913d8aaff03801a864f1bbde5ffbe7dcc800"
+      },
+      "grade": "EXECUTABLE_COMPONENT",
+      "role": "reverse-engineering-researcher"
+    },
+    "study": {
+      "files_sha256": {
+        "examples/learning_session_demo.py": "4600987556e80ad06c27e8fe0a35d916618635ff5cfaaa49705cd6b9bab014ce",
+        "src/muse_presets/database_paths.py": "86849fb3fc770109e868d533acd567980681570d4d7218734b56090506feca38",
+        "src/muse_presets/learning_session.py": "f81e1e786b6956f1f48acc0437e782c5eabe674f65d16322a0b8f3395dae7d3b"
+      },
+      "grade": "EXECUTABLE_COMPONENT",
+      "role": "learning-coach"
+    }
+  },
+  "schema": "muse-presets/component-source-pins-v1",
+  "source_baseline": "generic-first-party-source-v1",
+  "source_repo": "muse-ai-agent-presets"
+}

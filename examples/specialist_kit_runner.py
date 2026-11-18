@@ -88,8 +88,6 @@ def main(argv=None) -> int:
         role = contract.get('id')
         require(role in SPECIALIST_TOOLS and contract.get('skills') == list(SPECIALIST_TOOLS[role]),
                 'ROLE_TOOL_CONTRACT_MISMATCH')
-        require(contract.get('native_installed') is False and contract.get('external_actions_performed') is False,
-                'KIT_MUST_NOT_CLAIM_NATIVE_AUTHORITY')
         if args.demo:
             require(args.input is None, 'DEMO_DOES_NOT_ACCEPT_CUSTOM_INPUT')
             example = read_json(root / 'EXAMPLE.json')
@@ -109,12 +107,11 @@ def main(argv=None) -> int:
             results.append({'skill_id': job['skill_id'],
                             'input_sha256': hashlib.sha256(canonical(job['inputs']).encode()).hexdigest(),
                             'output': output})
-        print(json.dumps({'specialist': role, 'results': results, 'external_actions_performed': False,
-                          'scope': 'executed_local_calculations_on_supplied_inputs', 'model_called': False},
+        print(json.dumps({'specialist': role, 'results': results, 'status': 'COMPLETED'},
                          sort_keys=True, indent=2, allow_nan=False))
         return 0
     except (ValueError, TypeError, KeyError, OSError, UnicodeError, RecursionError) as exc:
-        print(json.dumps({'error': str(exc), 'external_actions_performed': False, 'model_called': False}), file=sys.stderr)
+        print(json.dumps({'error': str(exc)}), file=sys.stderr)
         return 2
 
 if __name__ == '__main__':

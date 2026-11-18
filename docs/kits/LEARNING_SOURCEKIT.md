@@ -34,7 +34,7 @@ Follow the [study-session integration guide](../LEARNING_LOCAL_STUDY.md) to add 
 
 Resolve users and sessions through the application's trusted host callback. Keep owner review and learner access separate; browser fields and model text cannot authenticate a person. Store personal databases outside the kit in a protected directory, with suitable backup and retention controls. SQLite stores readable source text and answers, so use a system with the required protections for confidential examinations or sensitive information.
 
-Run reviewed Python code in a workspace you control; isolated import mode is not an operating-system sandbox. Updates use a newly verified kit while your records remain in their own location. Review storage compatibility before moving existing data.
+Run reviewed Python code in a workspace you control, with the permissions you intend it to have. Updates use a newly verified kit while your records remain in their own location. Review storage compatibility before moving existing data.
 
 ## Developer checks
 

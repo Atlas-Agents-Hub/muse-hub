@@ -107,7 +107,7 @@ class OfflineFamilyH12Tests(unittest.TestCase):
         checked = review_local_envelope(
             envelope, fictional_finding(), digest, [], [], NOW, "research-evaluator",
         )
-        self.assertEqual(checked["status"], "LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED")
+        self.assertEqual(checked["status"], "HANDOFF_REVIEW_PASSED")
         for flag in ("effect_authorized", "sender_authenticated", "recipient_authenticated",
                      "recipient_acknowledged", "durable_replay_fence_verified",
                      "native_transport_invoked"):

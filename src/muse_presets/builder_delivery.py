@@ -1,14 +1,8 @@
-"""Create-only repo-scoped test worktrees for neutral Appwright/Swiftwright.
+"""Create isolated test worktrees within an authorized repository.
 
-This *does not* implement, access or duplicate the original Appwright or
-Swiftwright engines. It supplies a thin source-only Git/test delivery seam.
-No native account, simulator, Xcode project, deployment or external effect.
-
-IMPORTANT: Running reviewed repository tests executes arbitrary code under
-the invoking user's OS privileges, not a sandbox. Only run trusted synthetic
-or independently isolated source; --allow-reviewed-execution is an assertion,
-not permission, isolation, identity or a safety guarantee.
-"""
+Running repository tests executes code with the invoking user's OS privileges.
+Use reviewed code or a separately isolated environment.
+The --allow-reviewed-execution flag records the caller's review decision."""
 from __future__ import annotations
 
 import hashlib

@@ -1,37 +1,20 @@
 #!/usr/bin/env python3
-"""H19: read-only Muse Hub installation/recovery journeys.
-
-Reads the preserved H00-H21 development register and validates its referenced
-files and role install guides in the current checkout.
-It never stages files, authenticates providers, installs agents or invokes effects.
-"""
+"""Find Muse Hub setup, testing, recovery, and update instructions."""
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 import re
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = "muse-hub/h19-source-journeys/v1"
-FEATURE_REGISTER = "docs/history/hub-feature-status-2026-11-16.json.txt"
-FEATURE_REGISTER_SHA256 = "487f25e98f24b22218d24a8f62567d60dcec8212493c57949f20ab809afddbaf"
+SCHEMA = "muse-hub/setup-journeys/v2"
+FEATURE_REGISTER = "docs/discovery/setup-journeys.json"
 PHASES = ("install", "configure", "health", "named_test", "failure", "stop", "uninstall")
-IDS = tuple(f"H{i:02d}" for i in range(22))
-ROLE_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
-TESTS = {
-    "H02": "tests/test_hub_site_overlay.py",
-    "H03": "tests/test_muse_route_compat_h03.py",
-    "H11": "tests/test_h11_engineering_doors.py",
-    "H12": "tests/test_family_sourcekit.py",
-    "H14": "tests/test_companion_home_h14_h17.py",
-    "H15": "tests/test_companion_home_h14_h17.py",
-    "H16": "tests/test_companion_home_h14_h17.py",
-    "H17": "tests/test_companion_home_h14_h17.py",
-    "H19": "tests/test_hub_journeys.py",
-}
+INSTRUCTIONS = set(PHASES) - {"named_test"}
+SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+TEST_PATH = re.compile(r"tests/test_[a-z0-9_]+\.py\Z")
+MAX_DOCUMENT_BYTES = 1_000_000
 
 
 def _pairs(items: list[tuple[str, object]]) -> dict:
@@ -43,28 +26,32 @@ def _pairs(items: list[tuple[str, object]]) -> dict:
     return result
 
 
-def _read_json(path: Path, *, expected_sha256: str | None = None) -> dict:
+def _constant(value: str) -> None:
+    raise ValueError("INVALID_JSON_CONSTANT:" + value)
+
+
+def _read_json(path: Path) -> dict:
     if path.is_symlink() or not path.is_file():
         raise ValueError("SOURCE_DOCUMENT_MISSING")
+    if path.stat().st_size > MAX_DOCUMENT_BYTES:
+        raise ValueError("SOURCE_DOCUMENT_SIZE")
     data = path.read_bytes()
-    if expected_sha256 is not None and hashlib.sha256(data).hexdigest() != expected_sha256:
-        raise ValueError("SOURCE_DOCUMENT_HASH_MISMATCH")
-    result = json.loads(data.decode("utf-8"), object_pairs_hook=_pairs)
-    if not isinstance(result, dict):
+    if len(data) > MAX_DOCUMENT_BYTES:
+        raise ValueError("SOURCE_DOCUMENT_SIZE")
+    result = json.loads(data.decode("utf-8"), object_pairs_hook=_pairs, parse_constant=_constant)
+    if type(result) is not dict:
         raise ValueError("SOURCE_DOCUMENT_SHAPE")
     return result
 
 
 def _safe_file(root: Path, name: str) -> Path:
-    if (not isinstance(name, str) or not name
-            or "\\" in name or ":" in name or name.startswith("/")
-            or name.startswith("//")):
+    if (type(name) is not str or not name or "\\" in name or ":" in name
+            or any(part in ("", ".", "..") for part in name.split("/"))):
         raise ValueError("SOURCE_PATH_UNSAFE")
-    relative = Path(name)
-    if relative.is_absolute() or any(part in ("", ".", "..") for part in relative.parts):
+    if root.is_symlink() or (hasattr(root, "is_junction") and root.is_junction()):
         raise ValueError("SOURCE_PATH_UNSAFE")
     target = root
-    for part in relative.parts:
+    for part in name.split("/"):
         target = target / part
         if target.is_symlink() or (hasattr(target, "is_junction") and target.is_junction()):
             raise ValueError("SOURCE_PATH_UNSAFE")
@@ -73,214 +60,125 @@ def _safe_file(root: Path, name: str) -> Path:
     return target
 
 
-def validate_features(tasks: list[dict], root: Path = ROOT) -> None:
-    if not isinstance(tasks, list) or len(tasks) != len(IDS):
-        raise ValueError("FEATURE_IDS")
-    names = [x.get("id") if isinstance(x, dict) else None for x in tasks]
-    if names != list(IDS):
-        raise ValueError("FEATURE_IDS")
-    known = set(names)
-    graph = {}
-    for task in tasks:
-        ident = task["id"]
-        deps = task.get("dependencies")
-        if not isinstance(deps, list) or len(deps) != len(set(deps)):
-            raise ValueError("DEPENDENCY_SHAPE")
-        if any(x not in known for x in deps):
-            raise ValueError("DEPENDENCY_UNKNOWN")
-        graph[ident] = deps
-        if (not isinstance(task.get("title"), str) or not task["title"]
-                or not isinstance(task.get("status"), str)
-                or not isinstance(task.get("next_verification"), str)
-                or not task["next_verification"]):
-            raise ValueError("FEATURE_METADATA_MISSING")
-        if task.get("native_runtime_verified") is not False or task.get("site_deployed") is not False:
-            raise ValueError("UNVERIFIED_RUNTIME_CLAIM_REFUSED")
-        paths = task.get("source_paths")
-        if not isinstance(paths, list) or len(paths) != len(set(paths)):
+def validate_features(features: list[dict], root: Path = ROOT) -> None:
+    if type(features) is not list or not 1 <= len(features) <= 128:
+        raise ValueError("FEATURE_COUNT")
+    seen = set()
+    fields = {"id", "title", "summary", "guide", "source_paths", "tests", "instructions"}
+    for feature in features:
+        if type(feature) is not dict or set(feature) != fields:
+            raise ValueError("FEATURE_SCHEMA")
+        identifier = feature["id"]
+        if type(identifier) is not str or not SLUG.fullmatch(identifier) or identifier in seen:
+            raise ValueError("FEATURE_ID")
+        seen.add(identifier)
+        for key in ("title", "summary"):
+            if type(feature[key]) is not str or not 1 <= len(feature[key]) <= 500:
+                raise ValueError("FEATURE_METADATA")
+        _safe_file(root, feature["guide"])
+        paths = feature["source_paths"]
+        if (type(paths) is not list or not 1 <= len(paths) <= 32
+                or not all(type(path) is str for path in paths)
+                or len(paths) != len(set(paths))):
             raise ValueError("SOURCE_PATH_SHAPE")
         for path in paths:
             _safe_file(root, path)
-    visiting, visited = set(), set()
-
-    def visit(node: str) -> None:
-        if node in visiting:
-            raise ValueError("DEPENDENCY_CYCLE")
-        if node in visited:
-            return
-        visiting.add(node)
-        for parent in graph[node]:
-            visit(parent)
-        visiting.remove(node)
-        visited.add(node)
-
-    for node in names:
-        visit(node)
+        tests = feature["tests"]
+        if (type(tests) is not list or len(tests) > 16
+                or not all(type(path) is str and TEST_PATH.fullmatch(path) for path in tests)
+                or len(tests) != len(set(tests))):
+            raise ValueError("TEST_PATH_SHAPE")
+        for path in tests:
+            _safe_file(root, path)
+        instructions = feature["instructions"]
+        if (type(instructions) is not dict or set(instructions) != INSTRUCTIONS
+                or not all(type(text) is str and 1 <= len(text) <= 1200 for text in instructions.values())):
+            raise ValueError("INSTRUCTION_SHAPE")
 
 
 def load_features(root: Path = ROOT) -> list[dict]:
-    # Customer discovery describes current releases; this graph records development history.
-    path = _safe_file(root, FEATURE_REGISTER)
-    doc = _read_json(path, expected_sha256=FEATURE_REGISTER_SHA256)
-    if doc.get("schema") != "muse-hub/h00-h21-feature-readiness/v1":
+    doc = _read_json(_safe_file(root, FEATURE_REGISTER))
+    if set(doc) != {"schema", "features"} or doc["schema"] != "muse-hub/setup-guides/v1":
         raise ValueError("FEATURE_SCHEMA")
-    tasks = doc.get("tasks")
-    validate_features(tasks, root)
-    return tasks
+    validate_features(doc["features"], root)
+    return doc["features"]
 
 
 def load_roles(root: Path = ROOT) -> list[dict]:
-    doc = _read_json(root / "hub/site/roles.json")
+    doc = _read_json(_safe_file(root, "hub/site/roles.json"))
     if doc.get("schema") != "muse-hub-site/role-directory/v1":
         raise ValueError("ROLE_SCHEMA")
     roles = doc.get("roles")
-    if not isinstance(roles, list) or len(roles) != 15:
+    if type(roles) is not list or len(roles) != 15:
         raise ValueError("ROLE_COUNT")
-    ids = []
+    seen = set()
     for item in roles:
-        if not isinstance(item, dict) or not isinstance(item.get("id"), str):
+        if type(item) is not dict or type(item.get("id")) is not str or not SLUG.fullmatch(item["id"]):
             raise ValueError("ROLE_SHAPE")
-        slug = item["id"]
-        if not ROLE_RE.fullmatch(slug):
-            raise ValueError("ROLE_SLUG")
-        ids.append(slug)
-        _safe_file(root, "presets/" + slug + "/INSTALL.md")
-    if len(ids) != len(set(ids)):
-        raise ValueError("ROLE_DUPLICATE")
+        if item["id"] in seen:
+            raise ValueError("ROLE_DUPLICATE")
+        seen.add(item["id"])
+        _safe_file(root, "presets/" + item["id"] + "/INSTALL.md")
     return roles
 
 
 def verify_inventory(root: Path = ROOT) -> dict:
-    tasks = load_features(root)
+    features = load_features(root)
     roles = load_roles(root)
-    return {
-        "schema": SCHEMA,
-        "status": "SOURCE_INVENTORY_VALID_NOT_RUNTIME_VERIFIED",
-        "features": len(tasks),
-        "roles": len(roles),
-        "native_installed": False,
-        "external_effect_authorized": False,
-        "site_deployed": False,
-        "source_verification_only": True,
-    }
+    return {"schema": SCHEMA, "status": "SETUP_GUIDES_VALID", "features": len(features), "roles": len(roles)}
 
 
-def _phase(status: str, instruction: str, **extra: object) -> dict:
-    return {"status": status, "instruction": instruction, **extra}
-
-
-def build_journeys(root: Path = ROOT, *, feature: str | None = None,
-                   role: str | None = None) -> dict:
-    tasks = load_features(root)
-    roles = load_roles(root)
-    by_role = {item["id"]: item for item in roles}
-    if feature is not None and feature not in IDS:
+def build_journeys(root: Path = ROOT, *, feature: str | None = None, role: str | None = None) -> dict:
+    features = load_features(root)
+    roles = {item["id"]: item for item in load_roles(root)}
+    if feature is not None and feature not in {item["id"] for item in features}:
         raise ValueError("FEATURE_UNKNOWN")
-    if role is not None and role not in by_role:
+    if role is not None and role not in roles:
         raise ValueError("ROLE_UNKNOWN")
-    chosen = [x for x in tasks if feature is None or x["id"] == feature]
-    guide = "presets/" + role + "/INSTALL.md" if role else None
-    result = []
-    for item in chosen:
-        paths = item["source_paths"]
-        test_path = TESTS.get(item["id"])
-        if test_path is not None:
-            _safe_file(root, test_path)
-        name = test_path or item["id"] + "_HOST_ACCEPTANCE_NOT_VERIFIED"
-        phases = {
-            "install": _phase(
-                "SOURCE_GUIDE_ONLY" if paths else "BLOCKED_NO_PUBLIC_SOURCE",
-                "Read reviewed source files; do not treat them as installed agents."
-                if paths else "No reviewed standalone source installer for this feature.",
-                source_paths=paths),
-            "configure": _phase(
-                "OWNER_ACTION_REQUIRED" if guide else "NO_ROLE_SELECTED",
-                "Review " + guide + " and the host compatibility guide; no automatic account registration."
-                if guide else "Choose a specialist and consult its INSTALL.md; host registration is separate.",
-                role_guide=guide),
-            "health": _phase(
-                "READ_ONLY_SOURCE_PATHS_PRESENT" if paths else "NO_PUBLIC_SOURCE",
-                "Verified paths exist locally; provider, device and native execution remain unverified.",
-                checked_paths=paths),
-            "named_test": _phase(
-                "SOURCE_TEST_AVAILABLE_NOT_RUN" if test_path else "NOT_VERIFIED",
-                "Run the named local source test independently; it cannot prove native host behavior."
-                if test_path else "No qualified host test exists; do not claim operational acceptance.",
-                name=name,
-                command=("python -B scripts/run_source_test.py " +
-                         Path(test_path).name) if test_path else None),
-            "failure": _phase(
-                "HOLD_UNKNOWN",
-                "Do not retry an ambiguous external action. Next required evidence: " +
-                item["next_verification"]),
-            "stop": _phase(
-                "NO_EXTERNAL_EFFECT",
-                "This tool starts no process or connection; stop only an owned local run, never a third-party worker."),
-            "uninstall": _phase(
-                "MANUAL_OWNER_VERIFICATION",
-                "Remove only verified disposable output you own; native revocation and remote jobs require original host authorization."),
-        }
-        result.append({
-            "id": item["id"], "title": item["title"], "priority": item["priority"],
-            "dependencies": item["dependencies"], "readiness_status": item["status"],
-            "source_paths": paths, "next_verification": item["next_verification"],
-            "phases": phases, "native_runtime_verified": False, "site_deployed": False,
-        })
-    return {
-        "schema": SCHEMA,
-        "status": "SOURCE_JOURNEY_PLAN_NOT_INSTALLATION",
-        "role": {"id": role, "guide": guide} if role else None,
-        "journeys": result,
-        "native_installed": False,
-        "external_effect_authorized": False,
-        "site_deployed": False,
-    }
+    selected = [item for item in features if feature is None or item["id"] == feature]
+    role_guide = "presets/" + role + "/INSTALL.md" if role else None
+    journeys = []
+    for item in selected:
+        commands = ["python -B scripts/run_source_test.py " + Path(path).name for path in item["tests"]]
+        phases = {key: {"instruction": item["instructions"][key]} for key in PHASES if key != "named_test"}
+        phases["named_test"] = {"instruction": "Run the listed checks, then try the guide's example." if commands else "Follow the guide's connection and readback steps.", "commands": commands}
+        journeys.append({"id": item["id"], "title": item["title"], "summary": item["summary"],
+                         "guide": item["guide"], "source_paths": item["source_paths"], "phases": phases})
+    return {"schema": SCHEMA, "status": "SETUP_GUIDES_READY", "role": {"id": role, "guide": role_guide} if role else None, "journeys": journeys}
 
 
 def _markdown(result: dict) -> str:
     if "journeys" not in result:
-        return ("# Muse Hub source inventory\n\n"
-                "Source checked: " + str(result["features"]) + " features, " +
-                str(result["roles"]) + " roles. Native Muse: NOT VERIFIED.\n")
-    lines = [
-        "# Muse Hub installation and recovery journeys",
-        "",
-        "SOURCE ONLY — native Muse, recipient effects and hosted site: NOT VERIFIED.",
-        "",
-        "| Feature | Source status | Named source test | Native |",
-        "| --- | --- | --- | --- |",
-    ]
+        return "# Muse Hub setup guides\n\nChecked " + str(result["features"]) + " feature guides and " + str(result["roles"]) + " specialist setup paths.\n"
+    lines = ["# Muse Hub setup and recovery", ""]
+    if result["role"]:
+        lines.extend(["Specialist guide: `" + result["role"]["guide"] + "`", ""])
+    headings = {"install": "Get started", "configure": "Configure", "health": "Try it", "named_test": "Check it", "failure": "Recover", "stop": "Stop", "uninstall": "Remove or update"}
     for item in result["journeys"]:
-        lines.append("| " + item["id"] + " — " + item["title"].replace("|", "/") +
-                     " | " + item["readiness_status"] + " | " +
-                     item["phases"]["named_test"]["name"] + " | NOT VERIFIED |")
-    lines.extend(["", "Each journey has install, configure, health, named_test, failure, stop and uninstall phases.",
-                  "No host action, deployment or release is performed."])
-    return "\n".join(lines) + "\n"
+        lines.extend(["## " + item["title"], "", item["summary"], "", "Guide: `" + item["guide"] + "`", ""])
+        for phase in PHASES:
+            block = item["phases"][phase]
+            lines.extend(["### " + headings[phase], "", block["instruction"], ""])
+            if block.get("commands"):
+                lines.extend(["```sh", *block["commands"], "```", ""])
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Read-only H00-H21 source journeys; not a native installer")
+    parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--feature")
+    group.add_argument("--feature", help="feature ID such as daily-desk or companion-home")
     group.add_argument("--all", action="store_true")
     group.add_argument("--verify", action="store_true")
-    parser.add_argument("--role", help="one of the 15 public specialist slugs")
+    parser.add_argument("--role", help="specialist ID such as learning-coach")
     parser.add_argument("--format", choices=("json", "markdown"), default="json")
     args = parser.parse_args(argv)
     try:
-        if args.verify:
-            result = verify_inventory()
-        else:
-            result = build_journeys(feature=args.feature, role=args.role)
-        print(json.dumps(result, indent=2, sort_keys=True) if args.format == "json"
-              else _markdown(result))
+        result = verify_inventory() if args.verify else build_journeys(feature=args.feature, role=args.role)
+        print(json.dumps(result, indent=2, sort_keys=True) if args.format == "json" else _markdown(result))
         return 0
     except (ValueError, OSError, TypeError, KeyError) as exc:
-        print(json.dumps({"status": "REFUSED", "reason": str(exc),
-                          "native_installed": False,
-                          "external_effect_authorized": False}))
+        print(json.dumps({"status": "FAIL", "reason": str(exc)}))
         return 2
 
 

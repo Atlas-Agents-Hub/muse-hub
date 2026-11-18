@@ -37,19 +37,19 @@ class RoleDirectoryDepth(unittest.TestCase):
                       cwd=R,capture_output=True,timeout=30)
   self.assertEqual(proc.returncode,0,proc.stderr.decode("utf8","replace"))
   self.assertIn(b"DIRECTORY_CURRENT_15_ROLES",proc.stdout)
- def test_original_catalog_is_preserved_and_current_catalog_has_fifteen_roles(self):
-     historical=R/"docs/history/source-revisions/docs/collection/SPECIALIST_CATALOG.md.txt"
-     self.assertEqual(hashlib.sha256(historical.read_bytes()).hexdigest(),
-         "344bee762887fc1fe0b8161d36a3a6e2760cdbbc29998ce0d4846478fb965bd5")
-     current=FROZEN.read_text(encoding="utf8")
-     roles=json.loads((R/"collections/muse-starters-v1/specialists.json").read_bytes())
+ def test_current_catalog_lists_all_registered_roles(self):
+     current=FROZEN.read_text(encoding='utf8')
+     roles=json.loads((R/'collections/muse-starters-v1/specialists.json').read_bytes())
      self.assertEqual(len(roles),15)
-     for role in roles:self.assertIn(role["id"],current)
- def test_unpublished_security_engine_not_advertised_as_released(self):
+     for role in roles:self.assertIn(role['id'],current)
+ def test_security_directory_links_existing_methods(self):
   text=PAGE.read_text("utf8")
   self.assertNotIn("security_assistance.py",text)
   self.assertNotIn("muse_security.py",text)
   data=json.loads(INDEX.read_bytes())
-  self.assertEqual(data["native_muse_activation"],"NOT_ASSERTED")
-  self.assertEqual(next(x for x in data["roles"] if x["id"]=="adversarial-verifier")["source_engines"],[])
+  role=next(x for x in data["roles"] if x["id"]=="adversarial-verifier")
+  self.assertTrue((R/role["playbook"]).is_file())
+  self.assertTrue(role["real_work"])
+  for path in role["source_engines"]:
+   self.assertTrue((R/path).is_file())
 if __name__=="__main__":unittest.main()

@@ -1,6 +1,5 @@
-/* Muse Hub Companion Home — neutral rooms, deterministic motion, original game.
- * All source-only. No Muse API, room chat, network, task scheduler or permissions.
- * Only the original game's non-personal score/turn/seed may use localStorage.
+/* Muse Hub Companion Home: focused rooms, adjustable motion, and Signal Trail.
+ * The game saves its score, turn, and seed in localStorage.
  */
 (() => {
   'use strict';
@@ -134,7 +133,7 @@
       'Ready for your next focus.';
   });
 
-  // H15: deterministic neutral poses, reduced-motion support, no media assets.
+  // Deterministic poses with reduced-motion support.
   const shape = document.getElementById('pose-shape');
   const motionButton = document.querySelector('[data-action="motion"]');
   const frameButton = document.querySelector('[data-action="next-pose"]');
@@ -210,8 +209,7 @@
   }
   renderPose();
 
-  // H16: an original small browser game. localStorage keeps only numeric
-  // progress for this game, never notes, identities, credentials or chat.
+  // Signal Trail stores its numeric progress separately from room notes.
   const GAME_KEY = 'muse-hub/signal-trail/v1';
   const PADS = Array.from(document.querySelectorAll('[data-pad]'));
   const scoreLabel = document.getElementById('arcade-score');

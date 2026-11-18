@@ -1,6 +1,6 @@
 # Practice and worked examples
 
-The collection includes 75 skills and 225 practice cases. Each skill has a procedure, decision branches, recovery steps, worked examples, and a result checklist. Start with the [skill index](../SKILL_INDEX.md), then read the selected skill's `SKILL.md` and `DEPTH.md` for the task at hand.
+These practice files cover 75 skills through 225 worked cases. Each skill has a procedure, decision branches, recovery steps, worked examples, and a result checklist. Start with the [skill index](../SKILL_INDEX.md), then read the selected skill's `SKILL.md` and `DEPTH.md` for the task at hand.
 
 ## Choose an exercise
 

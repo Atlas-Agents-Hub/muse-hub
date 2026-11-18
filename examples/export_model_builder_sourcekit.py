@@ -1,4 +1,4 @@
-"""Create one self-contained source-only Model Builder ZIP, never a live installation."""
+"""Create a self-contained Model Builder ZIP."""
 from __future__ import annotations
 import argparse
 import json

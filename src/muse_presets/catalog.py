@@ -1,7 +1,4 @@
-"""Validate and render neutral, create-only Muse assistant profile templates.
-
-This module never reads private Muse state or changes an installed account.
-"""
+"""Validate and create Muse specialist profiles."""
 from __future__ import annotations
 
 import hashlib
@@ -53,7 +50,7 @@ def validate_catalog() -> list[str]:
                 config = load_preset(slug)
                 fam = config['family_link']
                 if config['id'] != slug: errors.append(f'{slug}:ID_MISMATCH')
-                if config.get('schema') != 'muse-presets/preset-v1' or config.get('maturity') != 'SOURCE_TEMPLATE_ONLY' or config.get('native_muse_status') != 'UNBOUND':
+                if config.get('schema') != 'muse-presets/preset-v1' or config.get('maturity') != 'PROFILE_TEMPLATE' or config.get('native_muse_status') != 'UNBOUND':
                     errors.append(f'{slug}:UNSUPPORTED_NATIVE_CLAIM')
                 if (config.get('requirements') != {'permissions': [], 'external_services': [], 'secret_values': []}
                         or fam.get('mode') != 'proposal-only' or fam.get('trusted_signer') is not None
@@ -80,7 +77,7 @@ def validate_catalog() -> list[str]:
 
 
 def render_preset(slug: str, destination: Path, *, display_name: str | None = None) -> Path:
-    """Create a new offline draft only. Never install, merge or overwrite Muse files."""
+    """Create a specialist profile in a new destination directory."""
     config = load_preset(slug)
     name = display_name or config['title']
     if not isinstance(name, str) or not DISPLAY.fullmatch(name):
@@ -112,9 +109,8 @@ def render_preset(slug: str, destination: Path, *, display_name: str | None = No
                    'template_sha256': {filename:hashlib.sha256((ROOT/'templates'/'profile'/filename).read_bytes()).hexdigest() for filename in DOCUMENTS},
                    'playbook_sha256': hashlib.sha256((ROOT/'presets'/slug/'playbook.json').read_bytes()).hexdigest(),
                    'rendered_sha256': {filename:hashlib.sha256((destination/filename).read_bytes()).hexdigest() for filename in (*DOCUMENTS,'FAMILY_LINK.json','ROLE_PLAYBOOK.md')},
-                   'grade':'LOCAL_DRAFT_ONLY',
-                   'warning':'NOT an installed Muse runtime; no host identity, connector, hook, scheduler or native tool is bound',
-                   'source':'local source-controlled preset'}
+                   'status':'PROFILE_CREATED',
+                   'source':'specialist profile'}
         (destination/'RECEIPT.json').write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8')
     except Exception:
         # The destination was created by this function; remove only our own outputs.

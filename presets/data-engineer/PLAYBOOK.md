@@ -1,6 +1,6 @@
 # Data Engineering & Database Architect
 
-Design safe data contracts, reconcile incremental records and review query access paths with reproducible offline tools.
+Design safe data contracts, reconcile incremental records and review query access paths with reproducible database tools.
 
 ## Operating contract
 Start with the current task and supplied evidence. These tools produce local reports, not a new assistant identity, scheduler, credential, or permission grant.

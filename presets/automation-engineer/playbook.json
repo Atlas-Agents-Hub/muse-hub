@@ -61,7 +61,7 @@
     }
   ],
   "first_canary": {
-    "grade": "SOURCE_ONLY",
+    "grade": "EXAMPLE_TASK",
     "task": "Plan synthetic build-before-test steps.",
     "observable_result": "Return stable order without executing.",
     "negative_test": "Create a cycle and require refusal."
