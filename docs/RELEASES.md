@@ -1,8 +1,8 @@
 # Muse Hub downloads and versions
 
-**Current release: [v1.1.2](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/SHA256SUMS)
+**Current release: [v1.2.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/SHA256SUMS)
 
-## v1.1.2 - consistent release labels
+## v1.2.0 - explore the whole Hub
 
 [Choose one of the 15 assistants](DOWNLOAD_A_SPECIALIST.md). Each ZIP brings together its Main instructions, three subchat guides, selected skills, workflows, examples, and `START_HERE.md`.
 
@@ -10,15 +10,15 @@ The collection includes 75 skills, 25 workflows, 100 task starters, and setup re
 
 Extract your package into a new folder and start with its included guide. Assistant instructions require no Python. Optional local programs state their requirements beside their commands; repository examples use Python 3.12+.
 
-This update keeps the homepage, selected-specialist panel, download page, and release links on the same version. Release labels are generated from the catalog and checked before publication.
+This update opens six paths into Muse Hub and adds practical guides to [organize your day](journeys/ORGANIZE_YOUR_DAY.md), [build and automate](journeys/BUILD_AND_AUTOMATE.md), and [create something](journeys/CREATE_SOMETHING.md). Explore Muse features, Companion spaces, connections, computer tools, and community resources alongside the specialist collection. Resource-library filters now have shareable links that work with browser Back and Forward.
 
 ## Complete collections
 
-- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-specialist-toolkit-v1.1.2.zip)
-- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-specialists-v1.1.2.zip)
-- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skills-v1.1.2.zip)
-- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflows-v1.1.2.zip)
-- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-starters-v1.1.2.zip)
+- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-specialist-toolkit-v1.2.0.zip)
+- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-specialists-v1.2.0.zip)
+- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-skills-v1.2.0.zip)
+- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-workflows-v1.2.0.zip)
+- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-starters-v1.2.0.zip)
 
 ## Verify your download
 
@@ -27,24 +27,28 @@ Download `SHA256SUMS` from the same release. Calculate the archive's SHA-256 and
 **Windows PowerShell:**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.1.2.zip
+Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.2.0.zip
 ```
 
 **macOS:**
 
 ```sh
-shasum -a 256 muse-personal-companion-v1.1.2.zip
+shasum -a 256 muse-personal-companion-v1.2.0.zip
 ```
 
 **Linux:**
 
 ```sh
-sha256sum muse-personal-companion-v1.1.2.zip
+sha256sum muse-personal-companion-v1.2.0.zip
 ```
 
 Keep the original ZIP and your customized working copy separately. [Setup and saved data](INSTALL_AND_PERSISTENCE.md) explains updates and backup.
 
 ## Earlier releases
+
+### v1.1.2 - consistent release labels
+
+The [v1.1.2 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2) generates homepage, specialist and Downloads version labels from the release catalog. Its archives and checksums remain available.
 
 ### v1.1.1 - smoother setup and navigation
 

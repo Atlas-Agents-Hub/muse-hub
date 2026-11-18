@@ -29,8 +29,8 @@ ROLE = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*\Z")
 SOURCE_PINS = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "examples/family_offline_handoff_demo.py": "cd830ada0c87a72586ce5265b52e748bee89c14916bb3f224a4b6e8805f30a43",
-    "presets/catalog.json": "8a4e30213da152e9f6ea9458df65c351d781c39d18e1011790f14b30bd60532f",
-    "src/muse_presets/__init__.py": "4427224611622561df8be8ab308b29cf57774eb08f4283d076822223ee9ba72f",
+    "presets/catalog.json": "89071cffeebc554317405e0a22b9352f85697dbcc3db4f06b2e9d315fb78d5f5",
+    "src/muse_presets/__init__.py": "f89ec296d543dcd19a79e895543370e0f250ee823d68b1cf32312cdea95075bf",
     "src/muse_presets/catalog.py": "8d2f49924dbdf538c61c5b3fc25d588812309ec4901d3f289ae0f387ca76c445",
     "src/muse_presets/family.py": "af043cc6edc7e0670d2ec098bdd94f7064f4998d58e784f5669cc740bb23780b",
     "src/muse_presets/family_envelope.py": "ac0aaa563db8e26ebf0fe023970130fba491872984ec3a6bdd2e168f3f901efb",

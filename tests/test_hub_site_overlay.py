@@ -5,6 +5,7 @@ import json
 import re
 import unittest
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / 'hub' / 'site'
@@ -47,7 +48,7 @@ class MuseHubOverlay(unittest.TestCase):
         for slug, asset, body in cards:
             with self.subTest(role=slug):
                 self.assertEqual(asset, aliases.get(slug, slug))
-                expected = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-" + asset + "-v1.1.2.zip"
+                expected = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.2.0/muse-" + asset + "-v1.2.0.zip"
                 self.assertIn('class="role-card-download" href="' + expected + '"', body)
         self.assertIn('aria-live="polite"', self.html)
 
@@ -83,8 +84,14 @@ class MuseHubOverlay(unittest.TestCase):
                     self.assertTrue(ref.endswith('#setup'), ref)
                     self.assertTrue(dirname.joinpath('index.html').is_file(), ref)
                     continue
-                self.assertNotIn('..', Path(ref).parts[1:], ref)
-                self.assertTrue((dirname/ref.split('#', 1)[0]).resolve().exists(), ref)
+                parsed = urlsplit(ref)
+                self.assertFalse(parsed.scheme or parsed.netloc, ref)
+                path = Path(unquote(parsed.path))
+                self.assertFalse(path.is_absolute(), ref)
+                self.assertNotIn('..', path.parts[1:], ref)
+                target = (dirname/path).resolve()
+                self.assertTrue(target.is_relative_to(SITE.resolve()), ref)
+                self.assertTrue(target.is_file(), ref)
 
     def test_all_sealed_bytes_match(self):
         meta = json.loads((SITE/'INTEGRITY.json').read_text('utf8'))

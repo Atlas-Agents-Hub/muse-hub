@@ -1,8 +1,14 @@
 # Muse Hub
 
-[Open the website](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Download Muse Hub](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2) · [Get started](../docs/GETTING_STARTED.md)
+[Open the website](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Download Muse Hub](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0) · [Get started](../docs/GETTING_STARTED.md)
 
-Choose from 15 Muse specialists, add skills and workflows, and build a workspace around the work you do.
+Get more out of Muse. Explore its features, customize an assistant, connect your tools, and build a workspace around the work you do.
+
+## Start with a goal
+
+- [Organize your day](../docs/journeys/ORGANIZE_YOUR_DAY.md): goals, reminders, calendar review, and a place to keep your notes.
+- [Build and automate](../docs/journeys/BUILD_AND_AUTOMATE.md): engineering, computer tools, service connections, and review handoffs.
+- [Create something](../docs/journeys/CREATE_SOMETHING.md): a brief, production planning, media tools, and the Studio.
 
 ## Find your starting point
 
@@ -11,7 +17,10 @@ Choose from 15 Muse specialists, add skills and workflows, and build a workspace
 - [100 task starters](../docs/collection/MUSE_CURATED_COLLECTION.md): project starting points with clear goals.
 - [Muse in your terminal](../docs/TERMINAL.md): installation, account setup and everyday commands.
 - [Connector guides](../docs/connectors/README.md): setup information for 151 services and integrations.
-- [Companion Home](../docs/COMPANION_HOME.md): tasks, notes and daily routines.
+- [Companion Home](../docs/COMPANION_HOME.md): five rooms, persistent notes, Studio motion controls, and Signal Trail in the Arcade.
+- [Daily Desk](../docs/spaces/DAILY_DESK.md): tasks and notes with backup and restore.
+- [Family Link](../docs/FAMILY_LINK.md): prepare a focused handoff for another specialist.
+- [Resource library](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html): 63 tools and projects, grouped by how you want to use Muse.
 
 ## Website files
 

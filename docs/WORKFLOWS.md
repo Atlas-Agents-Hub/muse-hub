@@ -17,7 +17,7 @@ Examples supply their own sample data. For personal Muse chat and the simpler to
 PYTHONPATH=src python3 -B examples/software_engineer_workflow_demo.py
 ```
 
-This creates a temporary Git repository, reproduces a failing assertion, applies a focused repair, runs the passing tests, and reviews the result in a separate process. Claim Gate coordinates the case. Run reviewed code in a workspace you control; local programs use your operating-system permissions.
+This creates a temporary Git repository, reproduces a failing assertion, applies a focused repair, and runs the passing tests. Add `--to /absolute/new-candidate-folder` to keep the candidate, then use [Family Link](FAMILY_LINK.md) to prepare an independent review. The [build and automate guide](journeys/BUILD_AND_AUTOMATE.md) walks through both steps. Run reviewed code in a workspace you control; local programs use your operating-system permissions.
 
 ## Research quotations and evaluation
 

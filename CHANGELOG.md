@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.0 - explore the whole Hub
+
+- Find Muse features, specialists, connections, Companion spaces, computer tools, and community resources from six homepage paths.
+- Follow three practical guides to organize your day, build and automate, or create something.
+- Discover Companion Home, persistent notes, Studio motion controls, Signal Trail in the Arcade, and Family Link.
+- Share a filtered resource-library link and use Back or Forward to return to a selection.
+- Keep navigation working across Home and Downloads, with browser checks for mobile layouts and keyboard use.
+
 ## v1.1.2 - consistent release labels
 
 - Generate homepage, selected-specialist and download-page version labels from the release catalog.

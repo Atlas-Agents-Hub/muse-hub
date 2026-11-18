@@ -11,7 +11,7 @@ SITE_FILES = (
     "public/catalog.json", "INTEGRITY.json"
 )
 SITE_URL = "https://atlas-origins.github.io/muse-ai-agent-presets/"
-RELEASE_URL = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2"
+RELEASE_URL = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.2.0"
 
 class HubSitePublicAdmission(unittest.TestCase):
     def setUp(self):

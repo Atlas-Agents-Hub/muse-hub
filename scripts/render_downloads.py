@@ -134,9 +134,15 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
         home = render_homepage(data, root)
     favicon = home[home.index('  <link rel="icon"'):home.index('\n',home.index('  <link rel="icon"'))]
     header = home[home.index('  <header'):home.index('  <main')]
-    header = header.replace('href="#top"','href="index.html"').replace('href="#specialists"','href="index.html#specialists"').replace('href="#setup"','href="index.html#setup"')
+    # Shared navigation belongs to Home, even when a new section is added.
+    # Only rewrite these inherited regions; download group jumps stay local.
+    def home_links(region: str) -> str:
+        return re.sub(r'href="#([a-zA-Z][a-zA-Z0-9_-]*)"',
+                      lambda match: 'href="index.html' +
+                      ('' if match[1] == 'top' else '#' + match[1]) + '"', region)
+    header = home_links(header)
     footer = home[home.index('  <footer'):home.index('\n</body>')]
-    footer = footer.replace('href="#top"','href="index.html"').replace('href="#specialists"','href="index.html#specialists"')
+    footer = home_links(footer)
     esc = html.escape
     bundle_html = '\n'.join(
         f'<a class="bundle-card" href="{esc(row["url"])}"><span>{esc(row["title"])}</span><p>{esc(row["description"])}</p><strong>Download ZIP ↓</strong></a>'

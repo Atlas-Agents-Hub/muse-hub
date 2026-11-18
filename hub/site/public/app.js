@@ -72,7 +72,25 @@
   const detail = byId('detail-panel'), detailBody = byId('detail-content');
   const detailClose = byId('detail-close'), backdrop = byId('detail-backdrop');
   const routes = new Map(data.routes.map(route => [route.id, route]));
-  const queryState = { search: '', category: '', route: null };
+  // A shared URL selects one reviewed route. Search and category remain local.
+  // Reject ambiguous or oversized input before it can affect the directory.
+  const routeFromLocation = () => {
+    if (window.location.search.length > 2048) return null;
+    const incoming = new URLSearchParams(window.location.search).getAll('route');
+    return incoming.length === 1 && routes.has(incoming[0]) ? incoming[0] : null;
+  };
+  const queryState = { search: '', category: '', route: routeFromLocation() };
+  const updateRouteUrl = () => {
+    const url = new URL(window.location.href);
+    // A new selection must produce a usable link even after oversized input.
+    if (url.search.length > 2048) url.search = '';
+    url.searchParams.delete('route');
+    if (queryState.route) url.searchParams.set('route', queryState.route);
+    const next = url.pathname + url.search + url.hash;
+    if (next !== window.location.pathname + window.location.search + window.location.hash) {
+      window.history.pushState(null, '', next);
+    }
+  };
   let selectedId = data.items[0].id;
   let returnFocus = null;
   let lastDetailFocus = null;
@@ -232,12 +250,14 @@
     queryState.search = ''; queryState.category = ''; queryState.route = null;
     input.value = ''; select.value = '';
     selectedId = data.items[0].id;
+    updateRouteUrl();
     render();
   };
   buttons.forEach(button => button.addEventListener('click', () => {
     const id = button.dataset.route;
     if (!routes.has(id)) return;
     queryState.route = queryState.route === id ? null : id;
+    updateRouteUrl();
     render();
     byId('browse-results').scrollIntoView({block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
   }));
@@ -251,6 +271,10 @@
   });
   form.addEventListener('reset', event => { event.preventDefault(); clear(); });
   byId('clear-empty').addEventListener('click', () => { clear(); input.focus(); });
+  window.addEventListener('popstate', () => {
+    queryState.route = routeFromLocation();
+    render();
+  });
   detailClose.addEventListener('click', () => closeDetail());
   backdrop.addEventListener('click', () => closeDetail());
   document.addEventListener('focusin', event => {
