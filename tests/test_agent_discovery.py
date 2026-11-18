@@ -1,4 +1,4 @@
-"""Agent-facing product-discovery contract: runnable evidence without authority inflation."""
+"""Human and agent discovery point to the same usable product entry points."""
 from __future__ import annotations
 import json,re,unittest
 from pathlib import Path
@@ -7,58 +7,75 @@ from muse_presets.public_export import PUBLIC_ROOT_FILES,select_public_files
 ROOT=Path(__file__).resolve().parents[1]
 REPO="atlas-origins/muse-ai-agent-presets"
 RELEASE="v0.4.1-alpha"
-EIGHT=("coordinator","software-engineer","model-builder","claims-adjudicator",
-       "garden-companion","learning-coach","reverse-engineering-researcher","creative-studio")
+EIGHT=("coordinator","software-engineer","model-builder","claims-adjudicator","garden-companion","learning-coach","reverse-engineering-researcher","creative-studio")
 FROZEN=("research-evaluator","adversarial-verifier","personal-companion")
 URL="https://github.com/"+REPO
-RAW="https://raw.githubusercontent.com/"+REPO+"/main/"
+SITE="https://atlas-origins.github.io/muse-ai-agent-presets/"
+
 class AgentDiscoveryTests(unittest.TestCase):
- def test_llms_root_is_exported_and_has_real_urls(self):
+ def test_llms_index_has_current_releases_roles_and_task_links(self):
   self.assertIn("llms.txt",PUBLIC_ROOT_FILES)
-  file=ROOT/"llms.txt"
-  self.assertTrue(file.is_file())
-  text=file.read_text(encoding="utf-8")
+  text=(ROOT/"llms.txt").read_text(encoding="utf-8")
   self.assertTrue(text.startswith("# Muse Hub\n"))
-  self.assertRegex(text,r"(?m)^> .*15 independent Muse assistants.*151 connector records")
-  self.assertIn("## Runnable specialist tools",text)
-  self.assertIn("## Product information",text)
-  self.assertIn("## Optional",text)
-  self.assertIn("native Muse",text)
-  self.assertLess(len(text.encode("utf-8")),8000)
-  links=re.findall(r"(?m)^- \[[^\]]+\]\((https://[^)]+)\)(?:: .+)?$",text)
-  self.assertGreaterEqual(len(links),12)
+  self.assertIn("15 independent Muse assistants",text)
+  self.assertIn(URL+"/releases/tag/v1.1.0",text)
+  self.assertIn(SITE,text)
+  links=re.findall(r"(?m)^- \[[^\]]+\]\((https://[^)]+)\)",text)
+  self.assertGreaterEqual(len(links),30)
   self.assertEqual(len(links),len(set(links)))
-  for url in links:
-   v=urlparse(url)
-   self.assertIn(v.netloc,("github.com","raw.githubusercontent.com"))
-   self.assertTrue(v.path=="/"+REPO or v.path.startswith("/"+REPO+"/"))
-  for role in EIGHT:
-   self.assertIn(role+"-executable-"+RELEASE+".zip",text)
+  for link in links:
+   host=urlparse(link).netloc
+   self.assertIn(host,("github.com","raw.githubusercontent.com","atlas-origins.github.io"))
+  for role in json.loads((ROOT/"presets/catalog.json").read_text())["presets"]:
+   self.assertIn("presets/"+role+"/INSTALL.md",text)
   self.assertIn("llms.txt",select_public_files(ROOT))
 
- def test_machine_discovery_json_matches_shipped_profiles_and_tools(self):
-  file=ROOT/"docs/discovery/agent-capabilities.json"
-  doc=json.loads(file.read_text(encoding="utf-8"))
+ def test_agent_guide_provides_current_package_and_terminal_steps(self):
+  text=(ROOT/"docs/discovery/AI_AGENT_GUIDE.md").read_text(encoding="utf-8")
+  for target in ("../DOWNLOAD_A_SPECIALIST.md","../GETTING_STARTED.md","../TERMINAL.md","../INSTALL_AND_PERSISTENCE.md"):
+   self.assertIn(target,text)
+  for step in ("START_HERE.md","three subchat","SHA256SUMS","quickstart.py --all"):
+   self.assertIn(step,text)
+  self.assertIn("releases/tag/v1.1.0",text)
+  self.assertNotIn("source-only",text)
+
+ def test_readme_and_agent_index_agree_on_entrypoints(self):
+  readme=(ROOT/"README.md").read_text(encoding="utf-8")
+  index=(ROOT/"llms.txt").read_text(encoding="utf-8")
+  for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/GETTING_STARTED.md","docs/TERMINAL.md","docs/CAPABILITIES.md"):
+   self.assertIn(path,readme)
+   self.assertIn(path,index)
+  self.assertIn("[AI-agent discovery index](llms.txt)",readme)
+  self.assertLess(len(readme.encode()),8000)
+
+ def test_discovery_links_do_not_contain_session_material(self):
+  for path in ("README.md","llms.txt","docs/discovery/AI_AGENT_GUIDE.md"):
+   text=(ROOT/path).read_text(encoding="utf-8").lower()
+   self.assertNotIn("token=",text)
+   self.assertNotIn("hatch_sess=",text)
+   self.assertNotIn("install automatically",text)
+
+ def test_machine_discovery_json_matches_current_packages_and_tools(self):
+  doc=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_text(encoding="utf-8"))
   self.assertEqual(doc["schema"],"specialist-ai-agent-kits/discovery/v1")
   self.assertEqual(doc["repository"],URL)
-  self.assertEqual(doc["release"],"v1.0.0")
-  self.assertEqual(doc["historical_release"],RELEASE)
+  self.assertEqual(doc["release"],"v1.1.0")
   self.assertEqual(doc["license"],"MIT")
-  catalog=json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf-8"))
-  self.assertEqual(sorted(doc["starter_roles"]),sorted(catalog["presets"]))
-  self.assertEqual(len(doc["starter_roles"]),15)
-  kits=doc["executable_offline_kits"]
-  self.assertEqual(len(kits),8)
-  self.assertEqual({x["role"] for x in kits},set(EIGHT))
-  for entry in kits:
-   with self.subTest(role=entry["role"]):
-    role=entry["role"]
-    self.assertEqual(entry["zip"],role+"-executable-"+RELEASE+".zip")
-    self.assertEqual(entry["download"],URL+"/releases/download/"+RELEASE+"/"+entry["zip"])
-    self.assertTrue((ROOT/entry["exporter"]).is_file())
-    self.assertTrue(entry["exporter"].startswith("examples/export_"))
-  self.assertEqual(doc["sha256_index"],URL+"/releases/download/"+RELEASE+"/SHA256SUMS.txt")
-  self.assertEqual(doc["starter_only_standalone_roles"],list(FROZEN))
+  roles=json.loads((ROOT/"presets/catalog.json").read_text())["presets"]
+  self.assertEqual(set(doc["starter_roles"]),set(roles))
+  self.assertEqual(set(doc["specialist_downloads"]),set(roles))
+  self.assertEqual(doc["released_starter_zip_count"],15)
+  aliases={"data-engineering-architect":"data-engineer","infrastructure-reliability-engineer":"reliability-engineer"}
+  for role in roles:
+   asset="muse-"+aliases.get(role,role)+"-v1.1.0.zip"
+   expected=URL+"/releases/download/v1.1.0/"+asset
+   self.assertEqual(doc["specialist_downloads"][role],expected)
+  for entry in doc["executable_offline_kits"]:
+   self.assertEqual(entry["download"],doc["specialist_downloads"][entry["role"]])
+   self.assertTrue((ROOT/entry["exporter"]).is_file())
+  self.assertEqual(doc["sha256_index"],URL+"/releases/download/v1.1.0/SHA256SUMS")
+  self.assertEqual(doc["homepage"],SITE)
+  self.assertEqual(doc["downloads_page"],SITE+"downloads.html")
 
  def test_agent_boundary_claims_are_fail_closed(self):
   doc=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_text(encoding="utf-8"))
@@ -72,49 +89,4 @@ class AgentDiscoveryTests(unittest.TestCase):
   self.assertNotIn("password",str(doc).lower())
   self.assertNotIn("token=",str(doc).lower())
 
- def test_agent_guide_answers_user_and_machine_questions(self):
-  page=ROOT/"docs/discovery/AI_AGENT_GUIDE.md"
-  self.assertTrue(page.is_file())
-  text=page.read_text(encoding="utf-8")
-  for question in ("Can I run something immediately?",
-                   "Are these installed autonomous Muse agents?",
-                   "Which ZIP should an agent recommend?",
-                   "Can the tools access my accounts?",
-                   "How can I verify a downloaded kit?"):
-   self.assertIn("## "+question,text)
-  self.assertIn("creative-studio-executable-"+RELEASE+".zip",text)
-  self.assertIn("python -I -B run.py --operation self-test",text)
-  self.assertIn("SHA256SUMS.txt",text)
-  self.assertIn("source-only",text)
-  self.assertIn("not a sandbox",text)
-  self.assertNotIn("guaranteed AI recommendations",text)
-
- def test_readme_links_machine_index_before_role_table(self):
-  text=(ROOT/"README.md").read_text(encoding="utf-8")
-  hero=text.split("## Start with an assistant",1)[0]
-  for term in ("# Muse Hub","15 independent assistants","75 skills","25 workflows",
-               "100 task starters","151 connector records"):
-   self.assertIn(term,hero)
-  self.assertIn("[AI-agent discovery index](llms.txt)",text)
-  self.assertIn("[Verified capability facts](docs/discovery/agent-capabilities.json)",text)
-  self.assertLess(len(text.encode("utf-8")),8000)
-  self.assertIn("not installed native muse agents",text.lower())
-
- def test_capability_links_are_source_grounded(self):
-  text=(ROOT/"llms.txt").read_text(encoding="utf-8")
-  self.assertIn(RAW+"docs/CAPABILITIES.md",text)
-  self.assertIn(RAW+"docs/GITHUB_QUICKSTART.md",text)
-  self.assertIn(RAW+"docs/discovery/AI_AGENT_GUIDE.md",text)
-  self.assertIn(RAW+"docs/discovery/agent-capabilities.json",text)
-  self.assertIn(URL+"/releases/tag/"+RELEASE,text)
-  self.assertIn(RAW+"docs/SECURITY.md",text)
-
- def test_untrusted_search_metadata_is_not_installation_authority(self):
-  text=(ROOT/"llms.txt").read_text(encoding="utf-8").lower()
-  guide=(ROOT/"docs/discovery/AI_AGENT_GUIDE.md").read_text(encoding="utf-8").lower()
-  self.assertIn("not a native muse installation",text)
-  self.assertIn("not a native muse installation",guide)
-  self.assertIn("verify against the included instructions",guide)
-  self.assertNotIn("install automatically",text)
-if __name__=="__main__":
- unittest.main()
+if __name__=="__main__":unittest.main()

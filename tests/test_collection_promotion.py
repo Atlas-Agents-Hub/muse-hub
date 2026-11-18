@@ -41,6 +41,7 @@ class CollectionPromotion(unittest.TestCase):
   self.assertEqual(x['starter_configurations'],100)
  def test_existing_public_source_bytes_stay_frozen(self):
   p=json.loads((C/'PUBLIC_BASELINE.json').read_bytes())
+  revisions={row['original_path']:row for row in json.loads((C/'PUBLIC_REVISIONS.json').read_bytes())['entries'] if row['ledger']=='public'}
   self.assertEqual(p['source_commit'],'b75ef3091b8195dbbc090a8ab308c9d9130fd585')
   self.assertEqual(len(p['files']),198)
   archived=0
@@ -52,9 +53,11 @@ class CollectionPromotion(unittest.TestCase):
     elif name.startswith('presets/') and name.endswith('/README.md'):
      path=R/'docs/history/v1-role-readmes'/(pathlib.Path(name).parent.name+'.txt')
      archived+=1
+    elif name in revisions:
+     path=R/revisions[name]['archive_path'];archived+=1
     else:path=R/name
     self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),expected)
-  self.assertEqual(archived,30)
+  self.assertEqual(archived,30+len(revisions))
   for archive,count in [('v1-install',15),('v1-role-readmes',15)]:
    history=json.loads((R/'docs/history'/archive/'MIGRATION_MANIFEST.json').read_text())
    self.assertEqual(len(history['entries']),count)
@@ -63,19 +66,28 @@ class CollectionPromotion(unittest.TestCase):
                      p['files'][entry['original_path']])
  def test_public_projection_has_closed_origin_and_no_private_ledger(self):
   x=json.loads((C/'PROMOTION_PROVENANCE.json').read_bytes())
+  revisions={row['original_path']:row for row in json.loads((C/'PUBLIC_REVISIONS.json').read_bytes())['entries'] if row['ledger']=='promotion'}
   self.assertEqual(x['source_kind'],'OWNER_AUTHORIZED_FIRST_PARTY')
   self.assertFalse(x['private_history_included']);self.assertFalse(x['upstream_code_imported'])
   self.assertTrue(x['incoming_files'])
   preserved=0
   for name,row in x['incoming_files'].items():
    path=(R/'docs/history/promotion-source/SPECIALIST_QUICKSTART.txt'
-         if name=='docs/collection/SPECIALIST_QUICKSTART.md' else R/name)
+         if name=='docs/collection/SPECIALIST_QUICKSTART.md' else
+         R/revisions[name]['archive_path'] if name in revisions else R/name)
    if path!=R/name:preserved+=1
    self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),row['sha256'])
    self.assertIn(row['rights'],('PROJECT_MIT_ORIGINAL','REFERENCE_ONLY_PUBLIC_SOURCE_METADATA'))
-  self.assertEqual(preserved,1)
+  self.assertEqual(preserved,1+len(revisions))
   self.assertTrue((R/'docs/collection/SPECIALIST_QUICKSTART.md').is_file())
   self.assertNotIn('private_repository',x)
+ def test_reviewed_current_files_are_pinned_independently_of_history(self):
+  revisions=json.loads((C/'PUBLIC_REVISIONS.json').read_bytes())
+  self.assertEqual(revisions['reviewed_file_count'],len(revisions['entries']))
+  for row in revisions['entries']:
+   with self.subTest(path=row['original_path']):
+    self.assertEqual(hashlib.sha256((R/row['original_path']).read_bytes()).hexdigest(),row['current_sha256'])
+    self.assertNotEqual(row['current_sha256'],row['historical_sha256'])
  def test_invalid_origin_and_false_native_badges_are_rejected(self):
   tool=load_tool();d=tool.load_collection()
   for change in ['license','native','duplicate']:
@@ -104,16 +116,23 @@ class CollectionPromotion(unittest.TestCase):
     self.assertGreaterEqual(len(out['results']),2)
     self.assertEqual(out,tool.specialist_demo(d,role))
  def test_five_operating_guides_and_daily_desk_contract_exist(self):
-  for name in ['context-loading','skill-setup','subchat-workrooms','durable-documents','source-and-host-capabilities']:
+  guides={
+   'context-loading':['## First useful result','context-demo-v1','## Verify','## Failure and recovery'],
+   'skill-setup':['START_HERE.md','examples/export_portable_skills.py --plan','## Check the result','## Update and recover'],
+   'subchat-workrooms':['Main','three subchats','quickstart.py --role personal-companion','## Resume after an interruption','INSTALL.md'],
+   'durable-documents':['## First useful result','## Verify','## Failure and recovery','restore'],
+   'source-and-host-capabilities':['## Try the local tools','workflow-demo pipeline-validation','## Check the intended result','TERMINAL.md'],
+  }
+  for name,required in guides.items():
    p=R/'docs/handbook'/f'{name}.md';body=p.read_text(encoding='utf8')
-   self.assertGreater(len(body),1700)
-   for title in ['## First useful result','## Verify','## Failure and recovery','## Scope and evidence']:self.assertIn(title,body)
+   self.assertGreaterEqual(body.count('\n## '),3)
+   for token in required:self.assertIn(token,body)
   body=(R/'docs/handbook/daily-desk-design.md').read_text(encoding='utf8')
-  for word in ['SpaceCompanion','PersonalCompanion','NOT_IMPLEMENTED','stale','restore','3 tasks','2 notes']:
+  for word in ['SpaceCompanion','PersonalCompanion','../spaces/DAILY_DESK.md','stale','restore','3 tasks','2 notes']:
    self.assertIn(word,body)
  def test_documentation_routes_do_not_silently_replace_profile_install(self):
   body=(R/'docs/collection/MUSE_CURATED_COLLECTION.md').read_text(encoding='utf8')
-  for s in ['75','100','25','existing','identity','memory','quickstart.py','portable','not 125']:
+  for s in ['15','75','100','25','existing','memory','portable','overlap','DOWNLOAD_A_SPECIALIST.md','tools/muse_collection.py']:
    self.assertIn(s,body)
 
 if __name__=='__main__':unittest.main(verbosity=2)

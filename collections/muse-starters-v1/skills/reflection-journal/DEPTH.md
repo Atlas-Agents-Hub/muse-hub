@@ -39,7 +39,7 @@ Shift to timely human support appropriate to the situation.
 
 **Avoid:** Do not let the journal structure delay safety or promise confidentiality beyond the actual system.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** The record includes an event, a feeling and an interpretation, and the person asks for listening.
 
@@ -47,7 +47,7 @@ Shift to timely human support appropriate to the situation.
 
 **Result:** Reflect the experience without diagnosing or adding an action plan; the interpretation remains an interpretation.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The person later asks for a practical next step.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `reflection-journal-r4-standard`, `reflection-journal-r4-edge`, `reflection-journal-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

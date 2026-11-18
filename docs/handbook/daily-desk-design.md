@@ -1,6 +1,6 @@
 # Daily Desk — reusable full-stack design contract
 
-**State: the first local Daily Desk slice is implemented** with three tasks/two notes, editing, reopen, stale-revision refusal and create-only export/restore. [Run Daily Desk](../spaces/DAILY_DESK.md). Native Muse deployment, connector effects and the remaining dashboard families are NOT_IMPLEMENTED by this slice. This is a local toolbench on the existing backend, not a new hosted service.
+Daily Desk combines task and note editing, saved revisions, reopening, and backup restoration in a local browser workspace. [Open Daily Desk](../spaces/DAILY_DESK.md) for the current launch and usage guide. This page describes its design.
 
 ## Existing baseline to recover, not recreate
 

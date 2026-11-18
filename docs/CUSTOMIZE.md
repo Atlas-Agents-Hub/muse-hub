@@ -1,38 +1,27 @@
-# Customize an assistant
+# Customize your assistant
 
-A role kit is a starting point, not a fixed persona. Copy it into a **new** folder before editing. Keep your original assistant files and private memory outside this repository.
+Make a working copy of the specialist package and adapt it to your tasks. Keep the original download for comparison when updating.
 
 ## What you can change
 
-- **Name and identity:** adjust the blank profile and user-facing identity fields.
-- **Methods:** refine the role playbook to match the tasks you actually want completed.
-- **Preferences and memory:** add only your own data in your private working copy.
-- **Subchats:** use the three method-scoped source contracts as patterns for focused tasks.
-- **Tools:** choose optional connectors explicitly; the default is disconnected.
+- **Name and identity:** choose how the assistant introduces itself and works with you.
+- **Methods:** refine the playbook for your projects and expected outputs.
+- **Preferences and memory:** keep your own context in the private working copy.
+- **Subchats:** give each of the three focused workrooms a current task and useful files.
+- **Tools:** add the connectors and local programs the work requires.
 
-The source includes method and skill descriptions, not live native registrations. A native chat ID must come from an authorized receiving host—not a generated template.
+## Prepare a separate role copy
 
-## Build a separate role copy
+From the toolkit root with Python 3.12+:
 
-From the repository root:
-
-```bash
-PYTHONPATH=src python3 -B examples/github_quickstart.py --role coordinator --to "$HOME/my-coordinator"
+```sh
+python -B quickstart.py --role coordinator --to "$HOME/my-coordinator"
 ```
 
-Read the new folder's `INSTALL.md` and editable configuration. The command refuses an occupied destination, so owner memory and existing agent state are not overwritten.
+Read the generated `INSTALL.md`. The destination must be new, so your existing files and memory are preserved. Use the assistant's supported setup to apply the Main and subchat instructions.
 
-## Subchats and skills
+## Choose skills and connections
 
-A kit contains three **source-only** scoped subchat methods, each with a distinct context and source-linked skills. The role index remains the source of truth for generated drafts. These folders do not create a native Muse subchat or install an executable skill.
+[Select a skill](SKILLS.md) for the task at hand, or use a starter's selection. Follow the service's [connector guide](connectors/README.md) when the task needs account access. Keep credentials in the supported secure setup flow and keep private conversations and memory out of public repositories.
 
-For local skill inspection, see [Skills](SKILLS.md). To add actual source logic, follow [Extend the toolkit](EXTENDING_GENERIC_AGENTS.md).
-
-## Personalization boundaries
-
-- Do not commit private conversations, secrets, addresses or owner-specific IDs to public GitHub.
-- A local receipt or file hash does not prove native owner authentication.
-- Native installation, remote connectors and scheduling are **optional**, separately authorized integrations.
-- Never equate a successful local fixture with a message delivered to another account.
-
-[Get started](GITHUB_QUICKSTART.md) · [Capabilities](CAPABILITIES.md) · [Security](SECURITY.md)
+[Get started](GETTING_STARTED.md) · [Workrooms](handbook/subchat-workrooms.md) · [Updates and saved data](INSTALL_AND_PERSISTENCE.md)

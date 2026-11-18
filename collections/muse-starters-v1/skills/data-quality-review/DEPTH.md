@@ -37,7 +37,7 @@ Report the precise invariants exercised and remaining production assumptions.
 
 **Avoid:** Do not claim distributed exactly-once behavior from a single-process example.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Key A has version 2 payload20; a late version 1 payload10 arrives, then an identical version 2 payload20 replay.
 
@@ -45,7 +45,7 @@ Report the precise invariants exercised and remaining production assumptions.
 
 **Result:** Final A remains version 2 with payload 20; the older event is ignored and the identical replay adds no record.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Another version 2 event carries payload 25.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `data-quality-review-r3-standard`, `data-quality-review-r3-edge`, `data-quality-review-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

@@ -114,7 +114,11 @@ class ProductHardeningTests(unittest.TestCase):
             self.assertFalse(result['external_actions_performed'])
             self.assertTrue(result['unexecuted_skills'])
             text=self.collection.render_workflow(workflow,{s['id']:s for s in self.data['skills']})
-            self.assertIn('muse_presets.specialist_extensions.evaluate',text)
+            self.assertIn('python -B tools/run.py --demo',text)
+            self.assertIn('python -B tools/run.py --tool SKILL_ID --input input.json',text)
+            files=self.collection.instruction_files(self.data,[],[workflow['id']])
+            self.assertIn('tools/run.py',files)
+            self.assertIn('tools/specialist_extensions/__init__.py',files)
 
     def unpack(self,temp):
         files=self.collection.specialist_kit_files(self.data,'data-engineer')

@@ -1,3 +1,3 @@
 # Proactive preferences
 
-Default: notifications OFF. Owner sets quiet hours, channels, permitted recurring tasks and explicit stop behavior. Never claim that a reminder will fire without a verified native scheduler registration.
+Use the user's existing notification and scheduling preferences. Ask for quiet hours, channels and stop behavior when setting up a new recurring task needs that information. Confirm the saved schedule before promising a reminder.

@@ -1,3 +1,3 @@
-# Optional custom instructions for $display_name
+# Custom instructions for $display_name
 
-This is user-editable custom instruction TEXT, not the platform system prompt. Host policy and permissions take precedence. Describe $role_title obligations and exact evidence required before claiming completion.
+Use these instructions in the host's supported custom-instruction field when desired. Follow $role_title responsibilities and the user's current task. Describe the expected result and verify it before claiming completion. Existing platform rules and permissions continue to apply.

@@ -37,7 +37,7 @@ Use editorial judgment and retain it when it serves the brief.
 
 **Avoid:** Do not optimize a detector score at the expense of meaning or authenticity.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Source: "The pilot may reduce setup time in small teams. Run `make setup --safe` to try it." Request: shorten without changing meaning.
 
@@ -45,7 +45,7 @@ Use editorial judgment and retain it when it serves the brief.
 
 **Result:** Revision: "The pilot may shorten setup for small teams. Try `make setup --safe`." No quantified benefit or causal certainty has been added.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A proposed revision says "The pilot cuts setup time by 40%. Run `make setup`".
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `prose-revision-r3-standard`, `prose-revision-r3-edge`, `prose-revision-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

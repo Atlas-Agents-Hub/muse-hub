@@ -37,7 +37,7 @@ Use passive evidence, supplied records or a safe simulation within the authorize
 
 **Avoid:** Do not extend the investigation into an unapproved target.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A job runs slowly. H1 predicts slow behavior on both small and large inputs; H2 predicts only large inputs are slow. Both predict the same log message.
 
@@ -45,7 +45,7 @@ Use passive evidence, supplied records or a safe simulation within the authorize
 
 **Result:** Choose the small-input timing check. A fast small control contradicts H1 under the stated model but is compatible with H2; the log message alone eliminates neither.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** No small-input timing was collected, yet a report says H1 is ruled out.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `competing-explanations-r3-standard`, `competing-explanations-r3-edge`, `competing-explanations-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

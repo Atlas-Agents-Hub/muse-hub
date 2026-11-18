@@ -12,15 +12,19 @@ Write what someone can do, what they need and what the result looks like. Name t
 
 Be specific about how the tool behaves. Don't compare the project to imaginary inferior products or start paragraphs with what it "is more than."
 
+## Keep product language useful
+
+Describe the task, included files, and next action. Keep internal acceptance IDs, source grades, test chronology, and repeated non-installation disclaimers in engineering records. Prerequisites belong beside the action that needs them. Published links must resolve to the package and website readers are being offered.
+
 ## Keep claims grounded
 
-- **Released:** Link to the exact GitHub tag and asset. Treat source-only features and published ZIPs separately.
+- **Released:** Link to the exact GitHub tag and asset. Keep the linked version and actual archive contents in agreement.
 - **Runnable:** Give a command, requirements and an expected result that has been observed.
-- **Configuration:** A role, starter or skill descriptor is not another installed assistant or an account grant.
+- **Setup:** Explain the instructions to load, the first task to try, and any account setup needed for that action.
 - **Connectors:** A directory entry is a service guide; the user completes setup through the supported host flow.
 - **Tests:** State which suite ran, on which revision, and whether skips or limitations apply.
 
-Use verified counts consistently: 15 specialist profiles; 100 task starters; 75 developed skills; 25 workflows; 151 connector records. The 50 original role/shared procedures overlap the developed skills. Update claims only with source and test evidence.
+Use current counts consistently: 15 specialists; 100 task starters; 75 skills; 25 workflows; 151 connectors. The 50 original role/shared procedures overlap the developed skills. Update claims only with source and test evidence.
 
 ## Write for people and retrieval tools
 
@@ -32,7 +36,7 @@ Do not use promotional filler such as "unlock the power," "seamless experience,"
 
 ## Describe specialists at the right depth
 
-A specialist description covers the **field of work**, not only the first CLI demonstration. Name its scope, representative tasks, and major working methods. Then separately identify the included Python engines or workbenches and the operations they actually run. Host-provided rendering, browsers or service connectors can extend a role, but should not be described as bundled or natively installed.
+A specialist description covers the **field of work**, not only the first CLI demonstration. Name its scope, representative tasks, and major working methods. Then separately identify the included Python engines or workbenches and the operations they actually run. Describe the included tools clearly and place setup requirements for optional renderers, browsers, and services beside the step that uses them.
 
 For source and engine links, use the organization-owned canonical repository: `atlas-origins/muse-ai-agent-presets`. Historical files pinned by the 198-file compatibility baseline must remain byte-identical; their older GitHub links are preserved as historical evidence and currently redirect. Do not rewrite those original files merely to clear a link audit. Current README, discovery and setup guides should use the new organization links.
 

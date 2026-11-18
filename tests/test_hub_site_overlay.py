@@ -38,13 +38,24 @@ class MuseHubOverlay(unittest.TestCase):
         self.assertEqual({slug for slug, role in card_links if slug == role}, slugs)
         self.assertTrue(all(slug == role for slug, role in card_links))
         self.assertIn('id="setup-role-result"', self.html)
-        self.assertNotIn('/'.join(('releases','download','v1.1.0'))+'/', self.html)
+        self.assertIn('id="setup-role-download"', self.html)
+        cards = re.findall(r'<article class="role-card" data-role="([^"]+)" data-asset="([^"]+)"[^>]*>(.*?)</article>', self.html, re.S)
+        self.assertEqual(len(cards), 15)
+        self.assertEqual({slug for slug, _, _ in cards}, slugs)
+        aliases = {"data-engineering-architect": "data-engineer",
+                   "infrastructure-reliability-engineer": "reliability-engineer"}
+        for slug, asset, body in cards:
+            with self.subTest(role=slug):
+                self.assertEqual(asset, aliases.get(slug, slug))
+                expected = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-" + asset + "-v1.1.0.zip"
+                self.assertIn('class="role-card-download" href="' + expected + '"', body)
         self.assertIn('aria-live="polite"', self.html)
 
-    def test_catalog_is_rights_filtered_and_source_only(self):
+    def test_catalog_is_rights_filtered_without_native_runtime_authority(self):
         self.assertEqual(self.catalog['count'], 63)
         self.assertEqual(len(self.catalog['items']), 63)
         self.assertFalse(self.catalog['native_muse_connected'])
+        self.assertEqual(self.catalog['publication'], 'PUBLIC_DIRECTORY')
         self.assertEqual(len(self.catalog['routes']), 6)
         self.assertIn('connect-src \'none\'', self.html)
         self.assertIn('connect-src \'none\'', self.explore)
@@ -52,13 +63,15 @@ class MuseHubOverlay(unittest.TestCase):
         self.assertTrue(all(row['url'].startswith('https://') for row in self.catalog['items']))
 
     def test_no_dead_local_code_assets_and_no_network_scripts(self):
-        for file in ('index.html','site.css','site.js','roles.json','public/index.html','public/styles.css','public/app.js','public/catalog.json','README.md'):
+        for file in ('index.html','site.css','site.js','roles.json','downloads.html','downloads.js','downloads.json','public/index.html','public/styles.css','public/app.js','public/catalog.json','README.md'):
             self.assertTrue((SITE/file).is_file(), file)
-        for script in ('site.js','public/app.js'):
+        for script in ('site.js','downloads.js','public/app.js'):
             text = (SITE/script).read_text('utf8')
             for blocked in ('fetch(', 'XMLHttpRequest', 'localStorage', 'innerHTML'):
                 self.assertNotIn(blocked, text)
-        for page, dirname in ((self.html,SITE), (self.explore,SITE/'public')):
+        downloads = (SITE/'downloads.html').read_text('utf8')
+        self.assertIn("connect-src 'none'", downloads)
+        for page, dirname in ((self.html,SITE), (self.explore,SITE/'public'), (downloads,SITE)):
             for ref in re.findall(r'(?:src|href)="([^"]+)"', page):
                 if ref.startswith(('https://', '#')): continue
                 if ref.startswith('data:image/svg+xml,'):
@@ -71,11 +84,12 @@ class MuseHubOverlay(unittest.TestCase):
                     self.assertTrue(dirname.joinpath('index.html').is_file(), ref)
                     continue
                 self.assertNotIn('..', Path(ref).parts[1:], ref)
-                self.assertTrue((dirname/ref).resolve().exists(), ref)
+                self.assertTrue((dirname/ref.split('#', 1)[0]).resolve().exists(), ref)
 
     def test_all_sealed_bytes_match(self):
         meta = json.loads((SITE/'INTEGRITY.json').read_text('utf8'))
         self.assertEqual(meta['schema'], 'muse-hub/public-website-overlay/v1')
+        self.assertEqual(meta['source_kind'], 'STATIC_WEBSITE')
         for rel, row in meta['files'].items():
             file = SITE / rel
             self.assertTrue(file.is_file(), rel)

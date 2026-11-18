@@ -37,7 +37,7 @@ Read the original reservation reference or account state before retrying.
 
 **Avoid:** Do not place a second booking merely because a confirmation message was lost.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A fictional arrival is 14:00-05:00 and the next departure is 15:00-05:00; the required transfer buffer is 75 minutes.
 
@@ -45,7 +45,7 @@ Read the original reservation reference or account state before retrying.
 
 **Result:** Reject the connection as 15 minutes short. Do not call it feasible because the departure clock is later.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** An arrival is 10:00+01:00 and departure is 10:30+02:00 on the same date.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `itinerary-plan-r3-standard`, `itinerary-plan-r3-edge`, `itinerary-plan-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

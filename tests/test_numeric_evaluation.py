@@ -282,18 +282,20 @@ class NumericHeldoutTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"UNSAFE_NUMERIC_CASE_FILE"):
                 numeric.load_numeric_file(p)
 
-    def test_R53_docs_and_role_setup_link_numeric_engine(self):
+    def test_numeric_commands_and_role_setup_link_the_actual_engine(self):
         root=Path(__file__).resolve().parents[1]
         guide=(root/"docs/WORKFLOWS.md").read_text(encoding="utf-8")
         install=(root/"presets/research-evaluator/INSTALL.md").read_text(encoding="utf-8")
-        acceptance=(root/"docs/CAPABILITIES.md").read_text(encoding="utf-8")
-        status=(root/"docs/CAPABILITIES.md").read_text(encoding="utf-8")
-        self.assertIn("research-numeric",guide)
-        self.assertIn("numeric_evaluation_demo.py",install)
-        self.assertIn("research-numeric",acceptance)
-        self.assertIn("LOCAL_NUMERIC_HELDOUT_EVALUATED",status)
-        self.assertIn("not historical timing",guide.lower())
-        self.assertIn("scientific",guide)
+        capabilities=(root/"docs/CAPABILITIES.md").read_text(encoding="utf-8")
+        methods=(root/"docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md").read_text(encoding="utf-8")
+        self.assertIn("research-numeric --file /absolute/predictions.json",guide)
+        self.assertIn("examples/numeric_evaluation_demo.py",guide)
+        self.assertTrue((root/"examples/numeric_evaluation_demo.py").is_file())
+        self.assertIn("../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md",install)
+        self.assertIn("src/muse_presets/numeric_evaluation.py",methods)
+        self.assertIn("numerical evaluation",capabilities)
+        self.assertIn("group separation",guide)
+        self.assertIn("study design",guide)
 
     def test_untrusted_feature_instructions_are_inert_data(self):
         case=make_case()

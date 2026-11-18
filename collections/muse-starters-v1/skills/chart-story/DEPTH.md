@@ -39,7 +39,7 @@ Inspect labels, contrast, overlap and the final reading order in that output.
 
 **Avoid:** Do not certify visual quality from the code alone.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Four category values are shown with a bar axis beginning at 50.
 
@@ -47,7 +47,7 @@ Inspect labels, contrast, overlap and the final reading order in that output.
 
 **Result:** Use a bar comparison with a corrected baseline and explicit units; do not infer causation from the differences.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The same records instead describe paired measurements and units are missing.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `chart-story-r4-standard`, `chart-story-r4-edge`, `chart-story-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

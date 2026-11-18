@@ -37,7 +37,7 @@ Use an abbreviated pass: capacity, hard commitments, top executable outcome and 
 
 **Avoid:** Do not demand a full productivity interview before returning a workable next step.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A week has 600 available minutes, 120 reserved, and priority-ordered actions A=180, B=240, C=120. None has prerequisites.
 
@@ -45,7 +45,7 @@ Use an abbreviated pass: capacity, hard commitments, top executable outcome and 
 
 **Result:** Select A and B; reserve 120 minutes; leave 60 minutes unallocated; defer C with a 60-minute capacity shortfall. Start A. No calendar was changed.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A is already complete; only 300 minutes remain, including 60 reserve. B needs approval that has not arrived; C requires 120 minutes.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `weekly-reset-r3-standard`, `weekly-reset-r3-edge`, `weekly-reset-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

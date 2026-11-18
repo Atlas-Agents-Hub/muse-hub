@@ -2,23 +2,27 @@
 
 Reconstruct the incident, calculate its service budget and size a measured capacity hypothesis while preserving original response authority.
 
-1. **Reconstruct One Incident From Dated Evidence** — load `skills/incident-triage/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-2. **Calculate an Event-Based Reliability Budget** — load `skills/service-objectives/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-3. **Size Capacity With Explicit Utilization and Reserve** — load `skills/capacity-planning/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-4. **Resume Work Without Duplicating Effects** — load `skills/resume-without-replay/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
+1. **Reconstruct One Incident From Dated Evidence** — load `skills/incident-triage/SKILL.md`, then carry the previous step's output forward.
+2. **Calculate an Event-Based Reliability Budget** — load `skills/service-objectives/SKILL.md`, then carry the previous step's output forward.
+3. **Size Capacity With Explicit Utilization and Reserve** — load `skills/capacity-planning/SKILL.md`, then carry the previous step's output forward.
+4. **Resume Work Without Duplicating Effects** — load `skills/resume-without-replay/SKILL.md`, then carry the previous step's output forward.
 
 ## Finish
 Return the dated incident timeline, event-ratio budget and capacity calculation with hypotheses, observed effects and a precise next authorized action.
 
-A workflow is a sequence for Muse to follow, not a background service or dispatch permission.
+## Included local tools
 
-## Executable local stages
+Run the included examples from the extracted package folder:
 
-Use `muse_presets.specialist_extensions.evaluate(skill_id, inputs)` with the task-specific input contract for each bound stage. These are real local calculations, not provider dispatch.
+```sh
+python -B tools/run.py --demo
+```
 
-- `incident-triage` → preserve its actual returned JSON for the next relevant stage.
-- `service-objectives` → preserve its actual returned JSON for the next relevant stage.
-- `capacity-planning` → preserve its actual returned JSON for the next relevant stage.
+For your own JSON input: `python -B tools/run.py --tool SKILL_ID --input input.json`. Python 3.10 or newer is required for these optional tools.
+
+- `incident-triage`: carry its returned JSON into the next relevant step.
+- `service-objectives`: carry its returned JSON into the next relevant step.
+- `capacity-planning`: carry its returned JSON into the next relevant step.
 
 ## Input artifacts
 - Incident events
@@ -29,5 +33,3 @@ Use `muse_presets.specialist_extensions.evaluate(skill_id, inputs)` with the tas
 - Timeline
 - Error-budget report
 - Capacity estimate
-
-Try the authored local-stage demonstration: `python tools/muse_collection.py workflow-demo incident-recovery`. The report names unexecuted host/human handoffs and does not claim the complete external workflow ran.

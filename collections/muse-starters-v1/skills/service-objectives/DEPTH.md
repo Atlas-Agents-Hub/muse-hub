@@ -37,7 +37,7 @@ Use the correct time-based measurement contract instead of this event-ratio calc
 
 **Avoid:** Do not reuse a request ratio as an uptime percentage.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A window contains 1000 eligible requests, 998 good, with target 0.999.
 
@@ -45,7 +45,7 @@ Use the correct time-based measurement contract instead of this event-ratio calc
 
 **Result:** The remaining budget is -1 event and burn rate is 2; the tool marks the budget exhausted without configuring alerts.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A 60-minute window has zero good and zero total requests.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `service-objectives-r5-standard`, `service-objectives-r5-edge`, `service-objectives-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

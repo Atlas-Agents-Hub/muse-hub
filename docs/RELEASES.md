@@ -1,67 +1,69 @@
 # Muse Hub downloads and versions
 
-**Current published release:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). **Latest published version:** [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest).
+**Current release: [v1.1.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.0)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS)
 
-**Individual specialist ZIPs: v1.1.0 is still a draft.** All 15 packages and a checksum index have been staged for review, but direct download links under `releases/download/v1.1.0/` will not work until the release is published. Do not present them as available now.
+## v1.1.0 — specialist packages
 
-[Choose an assistant](DOWNLOAD_A_SPECIALIST.md) · [Set up Main and three subchats](INSTALL_AND_PERSISTENCE.md) · [Muse Hub scope](../hub/README.md)
+[Choose one of the 15 assistants](DOWNLOAD_A_SPECIALIST.md). Each ZIP brings together its Main instructions, three subchat guides, selected skills, workflows, examples, and `START_HERE.md`.
 
-## v1.1.0 — pending publication
+The collection includes 75 skills, 25 workflows, 100 task starters, and setup references for 151 connectors. The current toolkit also includes Companion Home and its room notebook, Daily Desk, specialist tools, and command-line guides.
 
-Each ZIP is intended to contain a separate Muse assistant home: Main instructions, three subchat profiles, selected skills and workflows. A ZIP is not a created Muse account, active connector, or installed native tool. Use the [15-role index](DOWNLOAD_A_SPECIALIST.md) for the exact filenames and links once the release becomes public. Use `SHA256SUMS.txt` to verify downloaded files.
+Extract your package into a new folder and start with its included guide. Assistant instructions require no Python. Optional local programs state their requirements beside their commands; repository examples use Python 3.12+.
 
-## Current published source
+## Complete collections
 
-## Muse Hub v1.0.0 (originally released as Muse Specialist Toolkit)
-
-The V1 source covers 15 specialists, 100 task starters, 75 developed skills, 25 workflows and 151 connector records. The 50 original role/shared procedures remain available and overlap the developed skills.
-
-[**Download V1.0.0 on GitHub**](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0)
-
-Choose the package for what you want to do:
-
-- [**Complete toolkit — source and examples**](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip): The complete public source tree, specialist profiles, runnable tools and Daily Desk.
-- [**Specialist collection — skills and starters**](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip): 100 task starter configurations, specialist kits and worked example reports.
-- [**Custom connectors — searchable directory**](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip): All 151 connector records, setup guides and a local HTML directory.
-- [**SHA256SUMS.txt**](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt): Checksums for the published assets.
-
-For a quick test, extract the **complete toolkit**, open a terminal in its project directory and run:
-
-```sh
-python -B examples/daily_desk.py
-```
-
-The demonstration creates three tasks and two notes, checks stale edits, reopens the store and verifies a separate restored copy. Python 3.12+ is required for current source examples. No paid API is needed for these local demonstrations.
-
-Use the [V1 start guide](v1/START_HERE.md) for specialist instructions, data tools, Daily Desk and custom connectors. The [capability guide](CAPABILITIES.md) explains what each package can execute.
+- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-specialist-toolkit-v1.1.0.zip)
+- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-specialists-v1.1.0.zip)
+- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-skills-v1.1.0.zip)
+- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-workflows-v1.1.0.zip)
+- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-starters-v1.1.0.zip)
 
 ## Verify your download
 
-Download the checksum file alongside the asset. Calculate its SHA-256 and compare the digest with the matching line in ``SHA256SUMS.txt``. Then extract the archive and run its documented self-test or first-use example.
+Download `SHA256SUMS` from the same release. Calculate the archive's SHA-256 and compare it with the line for that exact filename.
 
-Checksums verify that the downloaded bytes match the published index; they do not grant permissions or install tools into your Muse account.
+**Windows PowerShell:**
+
+```powershell
+Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.1.0.zip
+```
+
+**macOS:**
+
+```sh
+shasum -a 256 muse-personal-companion-v1.1.0.zip
+```
+
+**Linux:**
+
+```sh
+sha256sum muse-personal-companion-v1.1.0.zip
+```
+
+Keep the original ZIP and your customized working copy separately. [Setup and saved data](INSTALL_AND_PERSISTENCE.md) explains updates and backup.
 
 ## Earlier releases
 
+### v1.0.0 — toolkit, collection, and connectors
+
+The [v1.0.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0) contains the earlier complete toolkit, specialist collection, and connector directory. Use its included instructions when working with those archives.
+
+- [Toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip)
+- [Specialist collection](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip)
+- [Connector directory](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip)
+- [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt)
+
 ### v0.4.1-alpha — eight runnable tools and eleven starter ZIPs
 
-The [historical v0.4.1-alpha release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.4.1-alpha) provides eight standalone executable Python tools and 11 starter profiles. Its assets and checksums have not been replaced.
+The [v0.4.1-alpha release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.4.1-alpha) preserves eight standalone Python tools and eleven starter profiles with their original guides and checksums.
 
-An **executable kit** runs a local program on supplied data. A **starter profile** gives you editable instructions; it is not a model-backed autonomous assistant.
-
-For the Creative Studio executable, download the [ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip), verify its [checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/SHA256SUMS.txt), extract and run:
+For the archived Creative Studio executable, its extracted runner accepts:
 
 ```sh
 python -I -B run.py --operation self-test
 python -I -B run.py --operation demo --to "$HOME/creative-production-demo"
 ```
 
-This writes JSON, CSV and a textual HTML storyboard. It does not render a film. Other packages may require Git or optional components; check their included instructions.
+That command writes a production plan, shot-list CSV, and textual HTML storyboard. Current specialist downloads are listed at the top of this page.
 
-[Eleven starter profiles — v0.2.0-alpha](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.2.0-alpha) · [Software Engineer sourcekit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/software-engineer-sourcekit-r56-alpha) · [Initial source — v0.1.0-alpha](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.1.0-alpha)
-
-## Source code and Muse access
-
-No native Muse installation is performed by downloading a source ZIP or starter configuration. A Muse account is not required to run local examples; use a clean extraction and keep private account credentials outside the source package. They do not enable connectors, credentials, remote services or accounts. Use Muse's supported customization and connector setup when applying source instructions to an existing assistant.
-
-Local programs run under your OS account and are not operating-system sandboxes. For platform requirements, see [installation](GITHUB_QUICKSTART.md) and [security](SECURITY.md).
+[Get started](GETTING_STARTED.md) · [Terminal](TERMINAL.md) · [Security](SECURITY.md)

@@ -37,7 +37,7 @@ Compare the same failure at the parent revision and distinguish unchanged debt f
 
 **Avoid:** Do not erase the failure or claim an all-green suite.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** At revision r1, an inclusive range parser omits the final value. The regression expects [2, 3, 4] for 2..4; an empty-input control already passes.
 
@@ -45,7 +45,7 @@ Compare the same failure at the parent revision and distinguish unchanged debt f
 
 **Result:** The candidate changes parser.py, passes the reproduced case and both controls, and reports broader tests separately. No deployment is implied by the local repair.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Before applying the patch, HEAD becomes r2 and parser.py has another owner's edit.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `minimal-repair-r3-standard`, `minimal-repair-r3-edge`, `minimal-repair-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

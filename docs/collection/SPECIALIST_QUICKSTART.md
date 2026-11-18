@@ -1,6 +1,6 @@
 # Start with a useful result
 
-**Want a complete Muse specialist without commands?** [Download an individual specialist ZIP](../DOWNLOAD_A_SPECIALIST.md). This page is for advanced source and development workflows.
+[Download an assistant](../DOWNLOAD_A_SPECIALIST.md) to use its instructions in Muse, or follow this guide to run the included specialist tools.
 
 
 ## Run a specialist locally
@@ -24,7 +24,7 @@ Use `python3` in place of `python` where that is the installed interpreter name.
 | Automation | Dependency/approval declaration review, locator observation selection and supplied effect-evidence consistency checks. |
 | Interface design | Opaque sRGB contrast calculations and deterministic declared-state graph coverage. |
 
-Each demonstration prints JSON containing the exact skill ID, input digest, actual calculated output and scope. The inputs are authored examples, not live account data. No model, API, database mutation, browser action or infrastructure change is performed.
+Each demonstration prints a JSON report with the skill, inputs, calculated output, and scope. Start with these worked inputs, then supply your own data using the example below.
 
 ## Take an executable kit with you
 
@@ -70,7 +70,7 @@ python tools/muse_collection.py show data-cleaner
 python tools/muse_collection.py build data-cleaner --to ./data-cleaner-starter.zip
 ```
 
-A starter ZIP contains the relevant instructions and public practice materials. It is not a new assistant identity or automatic native installation. Give your assistant the selected playbook and relevant skills, then ask it to apply them to your current task with its actual supported tools. Its existing preferences, memory and permissions stay intact.
+A starter ZIP contains the relevant instructions and practice materials. Give your assistant the selected playbook, skills, and your current task. Keep your existing preferences and memory.
 
 Four starters now select the new toolkits: `data-cleaner`, `operations-analyst`, `customer-support-designer` and `frontend-partner`. Their original base-role IDs remain compatible.
 
@@ -84,7 +84,7 @@ python tools/muse_collection.py workflow-demo automation-readiness
 python tools/muse_collection.py workflow-demo product-to-implementation
 ```
 
-These commands execute the registered local calculation/review stages. The JSON explicitly lists `unexecuted_skills` for existing host or human handoffs and keeps `full_workflow_executed` false. To complete a real task, use those outputs with the original qualified executor, actual target permissions and observed result readback.
+These commands run the registered calculation and review stages. Each report lists completed outputs and remaining handoffs so you can continue with the tools and people needed for your project.
 
 ## Save a report without overwriting work
 
@@ -100,9 +100,8 @@ The parent directory must already exist and the destination must be new. A colli
 python -B examples/export_specialist_collection.py --to ./Muse_Specialist_Collection.zip
 ```
 
-This builds and reopens all 100 starter archives and the four new executable kits, then includes nine actual local demonstration reports. The original eleven engine sourcekits keep their existing export routes; the bundle does not claim to rebuild them or install 15 native assistants.
+This builds all 100 starter archives, four executable kits, and nine worked reports. Follow the included start guide after extracting the collection.
 
-The earlier development CI retained collection artifacts; this promotion does not change the public CI workflow or promise a retained download. Build the exact bundle locally with the command above. Older public release assets do not change automatically. The command above reproduces a fresh bundle locally without a hosted service.
 
 ## Common problems
 
@@ -112,6 +111,6 @@ The earlier development CI retained collection artifacts; this promotion does no
 
 **The kit says a member changed:** compare it with the original export and preserve your edits separately. Do not rewrite the manifest merely to make an unknown package pass.
 
-**You need a live operation:** the local reports do not grant access or execute that operation. Use the existing supported host and its actual approval, target and effect controls.
+**You need a connected service:** follow its [connector setup](../connectors/README.md), select the intended account and permissions, and use the report as input to your next step.
 
-Continue with the [15-specialist catalog](SPECIALIST_CATALOG.md), [original role quickstart](../GITHUB_QUICKSTART.md) or [source-versus-host guide](../handbook/source-and-host-capabilities.md).
+Continue with the [15-specialist catalog](SPECIALIST_CATALOG.md), [original role quickstart](../GITHUB_QUICKSTART.md) or [tools and connections guide](../handbook/source-and-host-capabilities.md).

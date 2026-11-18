@@ -1,62 +1,43 @@
 # Skills and workflows
 
-The task collection contains **75 developed skills**, **25 workflows** and **100 task starter configurations**. Start with the [task catalog](../collections/muse-starters-v1/CATALOG.md) or [choose a specialist by scope and included engines](handbook/specialists-by-task.md). The [original role contracts](collection/SPECIALIST_CATALOG.md) remain available as a compatibility reference.
+Choose a method for your current task. Muse Hub includes **75 skills**, **25 workflows**, and **100 task starters** covering engineering, research, data, design, creative work, and everyday planning.
 
-The toolkit also retains **50 distinct role/shared procedures**: three methods for each of 15 specialists, plus five reusable methods. These overlap the developed task skills rather than adding 50 unrelated integrations.
+## Choose and use a skill
 
-Each exported role includes eight source descriptors (three role-specific and five shared). `SKILL.md` and `skill.yaml` describe methods; actual native tool availability depends on the receiving host. These are source-only descriptions until that host configures the corresponding skill.
+1. Browse the [skill index](../collections/muse-starters-v1/SKILL_INDEX.md) or pick a [task starter](../collections/muse-starters-v1/CATALOG.md).
+2. Read its `SKILL.md` for inputs, steps, and expected output.
+3. Give your assistant the selected instructions and your task material.
+4. Check the result against the skill's output checklist and keep the useful artifact.
 
-| Role | Source kit |
-| --- | --- |
-| `coordinator` | [Open](../presets/coordinator/) |
-| `software-engineer` | [Open](../presets/software-engineer/) |
-| `model-builder` | [Open](../presets/model-builder/) |
-| `research-evaluator` | [Open](../presets/research-evaluator/) |
-| `creative-studio` | [Open](../presets/creative-studio/) |
-| `adversarial-verifier` | [Open](../presets/adversarial-verifier/) |
-| `personal-companion` | [Open](../presets/personal-companion/) |
-| `garden-companion` | [Open](../presets/garden-companion/) |
-| `learning-coach` | [Open](../presets/learning-coach/) |
-| `claims-adjudicator` | [Open](../presets/claims-adjudicator/) |
-| `reverse-engineering-researcher` | [Open](../presets/reverse-engineering-researcher/) |
-| `data-engineering-architect` | [Open](../presets/data-engineering-architect/) |
-| `infrastructure-reliability-engineer` | [Open](../presets/infrastructure-reliability-engineer/) |
-| `automation-engineer` | [Open](../presets/automation-engineer/) |
-| `product-interface-designer` | [Open](../presets/product-interface-designer/) |
+You can ask: “Use this method for my current task. Keep my existing preferences and memory, and use the files I supplied.” The [skill setup guide](handbook/skill-setup.md) covers longer projects and host-specific skill discovery.
 
-Some roles provide local Python engines and executable examples; others provide source descriptions and review methods only. See [Capabilities](CAPABILITIES.md) for the actual distinction.
+## Start with a bundle
 
-## Five shared source skills
+Each [specialist package](DOWNLOAD_A_SPECIALIST.md) includes a relevant selection of skills and workflows. For a smaller task, export a starter from the toolkit with Python 3.12+:
 
-[Evidence Audit](../skills/shared/evidence-audit/SKILL.md), [Safe Resume](../skills/shared/safe-resume/SKILL.md), [Research Verification](../skills/shared/research-verification/SKILL.md), [Consent And Effects](../skills/shared/consent-and-effects/SKILL.md), [Quality Handoff](../skills/shared/quality-handoff/SKILL.md). These are original source guidance, disabled until the receiving host grants real permissions.
-
-## Verify source kits
-
-```bash
-PYTHONPATH=src python3 -B examples/verify_role_packages.py --all
-PYTHONPATH=src python3 -B -m muse_presets.cli doctor
+```sh
+python -B tools/muse_collection.py show daily-planner
+python -B tools/muse_collection.py build daily-planner --to "$HOME/daily-planner.zip"
 ```
 
-The role verifier tests clean local package creation, receipt consistency and synthetic source exercises. It does not confirm native host credentials or tool registration. The default `skills.yaml` registries are disabled.
+Choose a new destination, then open the ZIP's `START_HERE.md`. No Python is needed to use the exported instructions with your assistant.
 
-For real permissions and provider APIs, use the receiving platform's documented installation and review process. Generated role/skill metadata alone is not an authorization or a successful invocation.
+## Connect steps with a workflow
 
-[Customize](CUSTOMIZE.md) · [Connectors](CONNECTORS.md) · [Extend](EXTENDING_GENERIC_AGENTS.md)
+The [workflow guide](WORKFLOWS.md) covers research checks, engineering repair, planning, and saved-data recovery. Each workflow names the inputs, outputs, and handoffs between steps. Add the tools or service connections needed by the task through your host's supported setup.
 
 ## Portable instruction library
 
-Native-style descriptor IDs use underscores for compatibility with their receiving registry. They are **not** automatically valid Agent Skills folder names. Use the separate standard-format exporter for other compatible assistants:
+The toolkit also provides 50 role and shared procedures. These overlap the task collection and can be exported as standard `SKILL.md` folders:
 
-```bash
+```sh
 python -B examples/export_portable_skills.py --plan
 python -B examples/export_portable_skills.py --to "$HOME/my-portable-skills"
 python -B examples/export_portable_skills.py --inspect "$HOME/my-portable-skills"
 ```
 
-No PYTHONPATH setting, dependency install or account is needed. The new directory contains 50 unique hyphen-named folders, each with matching name/description frontmatter and a license declaration. It contains instruction text, not installed native tools or model weights. The exporter preserves all existing owner files and refuses reuse of a destination. Import or read one skill through the receiving assistant's supported flow and verify a harmless task; persistence, routing and native permissions remain host-specific. Standard-format inspection is not evidence that a model selected or executed a skill.
+The export contains 50 folders with matching names, descriptions, and license information. It creates a new destination and preserves existing work. Use the import or instruction-loading flow supported by your assistant.
 
-The source [donor ledger](donors/DONOR_RESEARCH.json) records exact primary files and the compatibility decision. No external donor code is executed or redistributed by the exporter.
+Five shared procedures support work across roles: [Evidence Audit](../skills/shared/evidence-audit/SKILL.md), [Safe Resume](../skills/shared/safe-resume/SKILL.md), [Research Verification](../skills/shared/research-verification/SKILL.md), [Consent and Effects](../skills/shared/consent-and-effects/SKILL.md), and [Quality Handoff](../skills/shared/quality-handoff/SKILL.md).
 
-## Task-oriented collection: 75 curated skills
-
-The [curated collection](collection/MUSE_CURATED_COLLECTION.md) offers 75 deeper task procedures selected into 100 starters and 25 workflows. It preserves the original 50 procedure IDs and portable exporter above; related entries are mapped in [PUBLIC_COMPATIBILITY.json](../collections/muse-starters-v1/PUBLIC_COMPATIBILITY.json), not added together as 125 unique capabilities. Start with `python -B tools/muse_collection.py show daily-planner` and select only what the current task needs. [Skill setup](handbook/skill-setup.md) distinguishes reading instructions, exporting a kit, host discovery and actual execution.
+[Specialists by task](handbook/specialists-by-task.md) · [Workflows](WORKFLOWS.md) · [Connectors](connectors/README.md) · [Customize](CUSTOMIZE.md)

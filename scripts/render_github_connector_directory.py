@@ -89,9 +89,9 @@ def render() -> dict[str, bytes]:
         "",
     ]
     homepage = [
-        "# Muse Hub connector directory — 151 records",
+        "# Muse Hub connector directory",
         "",
-        "Browse source records and original setup instructions. Listing a connector here does not install it, authenticate an account, grant access, or establish native Muse tool availability.",
+        "Find the services you want to use with Muse. Open a setup guide, choose your account and permissions, and try the connection with a small task.",
         "",
         "## Connect a service",
         "",

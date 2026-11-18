@@ -23,6 +23,9 @@ PUBLIC_HUB_FILES=frozenset({
     "hub/README.md",
     "hub/site/INTEGRITY.json",
     "hub/site/README.md",
+    "hub/site/downloads.html",
+    "hub/site/downloads.js",
+    "hub/site/downloads.json",
     "hub/site/index.html",
     "hub/site/public/app.js",
     "hub/site/public/catalog.json",
@@ -44,7 +47,7 @@ PUBLIC_KITS_FILES=frozenset({
 })
 PUBLIC_ROOT_FILES=frozenset({
     ".gitattributes", ".gitignore", "CHANGELOG.md",
-    "CONTRIBUTING.md", "LICENSE", "README.md", "SECURITY.md", "llms.txt",
+    "CONTRIBUTING.md", "LICENSE", "README.md", "SECURITY.md", "START_HERE.md", "llms.txt",
     "quickstart.py",
 })
 PRIVATE_EXCLUDED_DIRS=frozenset({

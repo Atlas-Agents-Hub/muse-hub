@@ -196,12 +196,15 @@ class ConnectorTests(unittest.TestCase):
                        "--request-id","p1","--file",str(self.base/"missing.json")])
         self.assertNotEqual(code,0)
 
-    def test_operator_documentation_has_no_private_host_id(self):
-        doc=(Path(__file__).resolve().parents[1]/"docs/CONNECTORS.md").read_text(encoding="utf-8")
-        for role in load_registry()["presets"]:
-            self.assertIn(role,doc)
-        self.assertIn("GitHub",doc)
-        self.assertIn("not connected",doc.casefold())
+    def test_operator_documentation_routes_to_setup_without_private_host_ids(self):
+        root=Path(__file__).resolve().parents[1]
+        doc=(root/"docs/CONNECTORS.md").read_text(encoding="utf-8")
+        self.assertIn("connectors/README.md",doc)
+        for term in ("account", "permissions", "credentials", "original service status"):
+            self.assertIn(term,doc.casefold())
+        directory=(root/"docs/connectors/README.md").read_text(encoding="utf-8")
+        self.assertIn("151",directory)
+        self.assertIn("CATALOG.md",directory)
         for word in ("example-owner-user","example-private-host","legacy-role-alpha","legacy-role-eta","example-private-network"):
             self.assertNotIn(word,doc.casefold())
 
@@ -244,12 +247,16 @@ class ConnectorTests(unittest.TestCase):
         with self.assertRaises(pc.ConnectorRefusal):
             pc.run_offline_fixture(p,[record])
 
-    def test_github_source_release_contract_is_clear(self):
+    def test_current_release_and_historical_downloads_are_clear(self):
         doc=(Path(__file__).resolve().parents[1]/"docs/RELEASES.md").read_text(encoding="utf-8")
-        for phrase in ("GitHub", "source", "not required", "native", "clean", "private"):
-            self.assertIn(phrase,doc)
-        self.assertIn("11",doc)
-        self.assertIn("v0.2.0-alpha",doc)
+        for target in ("releases/tag/v1.1.0", "releases/download/v1.1.0/SHA256SUMS",
+                       "muse-specialist-toolkit-v1.1.0.zip", "DOWNLOAD_A_SPECIALIST.md",
+                       "v1.0.0", "v0.4.1-alpha"):
+            self.assertIn(target,doc)
+        self.assertIn("15 assistants",doc)
+        self.assertIn("START_HERE.md",doc)
+        self.assertIn("Python 3.12+",doc)
+        self.assertIn("exact filename",doc)
 
 
 if __name__=="__main__":

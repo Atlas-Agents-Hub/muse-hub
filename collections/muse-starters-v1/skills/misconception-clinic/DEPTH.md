@@ -37,7 +37,7 @@ Present the competing readings with exact locations and hold the contested grade
 
 **Avoid:** Do not resolve a course-specific conflict from unsupported memory.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** The learner says a larger denominator always makes a fraction larger, because 1/8 looks larger than 1/4.
 
@@ -45,7 +45,7 @@ Present the competing readings with exact locations and hold the contested grade
 
 **Result:** Correction: for positive fractions with equal positive numerator, increasing the denominator reduces the value. The original rule is rejected; transfer remains untested until the new comparison is answered.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The learner instead writes 3/4=0.75 correctly but accidentally copies 0.57 into the answer.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `misconception-clinic-r3-standard`, `misconception-clinic-r3-edge`, `misconception-clinic-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

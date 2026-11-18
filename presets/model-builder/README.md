@@ -2,20 +2,18 @@
 
 **Muse Hub specialist:** Plan model training, artifact inspection, and evaluation.
 
-**[Set up Model Builder](INSTALL.md)** — one dedicated Muse assistant, its Main documents and three subchats. The 15 roles are not combined into one shared Muse account.
+**[Download the assistant](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-model-builder-v1.1.0.zip)** · **[Set up Model Builder](INSTALL.md)**
+
+Give this specialist its own Main conversation and three subchats. Its package brings together the role's instructions, selected skills, workflows, and examples so you can begin with your own task.
 
 ## First task
 
 "Compare these model candidates and define a held-out evaluation plan."
 
-## Methods, skills, and local tools
+## Methods and tools
 
-This role has a broader working scope than any single command-line demo. [Read the verified scope and engine guide](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) or [compare source-backed capabilities](../../docs/CAPABILITIES.md).
+[Explore the specialist's working methods](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [included tools](../../docs/CAPABILITIES.md). Add the services you need through the [connector directory](../../docs/connectors/README.md), choosing their account and permissions during setup.
 
-The current public source release is [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0). An individual v1.1.0 assistant ZIP is staged as a draft and is not yet a public download. [See release status](../../docs/RELEASES.md).
+Keep the original download and your customized working copy separately so updates preserve your preferences and memory. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) covers the details.
 
-## Privacy and runtime
-
-Profile documents are editable source, not loaded native Muse instructions or verified model sessions. Local tools require their own runtime and permissions. Keep personal memory and credentials outside public GitHub. Any connections to other assistants or services require separate authorization.
-
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Muse Hub product scope](../../hub/README.md)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.1.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)

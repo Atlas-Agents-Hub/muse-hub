@@ -2,23 +2,27 @@
 
 Check a dependency plan, review unique observed targets and reconcile uncertain prior operations before handing off to the existing executor.
 
-1. **Review a Bounded Automation Plan Before Execution** — load `skills/automation-contract/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-2. **Choose a Locator From Actual Target Observations** — load `skills/selector-resilience/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-3. **Reconcile an Uncertain Operation Without Replaying It** — load `skills/effect-reconciliation/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-4. **Review Against the Actual Brief** — load `skills/bounded-review/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
+1. **Review a Bounded Automation Plan Before Execution** — load `skills/automation-contract/SKILL.md`, then carry the previous step's output forward.
+2. **Choose a Locator From Actual Target Observations** — load `skills/selector-resilience/SKILL.md`, then carry the previous step's output forward.
+3. **Reconcile an Uncertain Operation Without Replaying It** — load `skills/effect-reconciliation/SKILL.md`, then carry the previous step's output forward.
+4. **Review Against the Actual Brief** — load `skills/bounded-review/SKILL.md`, then carry the previous step's output forward.
 
 ## Finish
 Return a source-bound execution proposal and concrete blockers; do not dispatch, authenticate supplied evidence or authorize retries.
 
-A workflow is a sequence for Muse to follow, not a background service or dispatch permission.
+## Included local tools
 
-## Executable local stages
+Run the included examples from the extracted package folder:
 
-Use `muse_presets.specialist_extensions.evaluate(skill_id, inputs)` with the task-specific input contract for each bound stage. These are real local calculations, not provider dispatch.
+```sh
+python -B tools/run.py --demo
+```
 
-- `automation-contract` → preserve its actual returned JSON for the next relevant stage.
-- `selector-resilience` → preserve its actual returned JSON for the next relevant stage.
-- `effect-reconciliation` → preserve its actual returned JSON for the next relevant stage.
+For your own JSON input: `python -B tools/run.py --tool SKILL_ID --input input.json`. Python 3.10 or newer is required for these optional tools.
+
+- `automation-contract`: carry its returned JSON into the next relevant step.
+- `selector-resilience`: carry its returned JSON into the next relevant step.
+- `effect-reconciliation`: carry its returned JSON into the next relevant step.
 
 ## Input artifacts
 - Target-scoped step graph
@@ -29,5 +33,3 @@ Use `muse_presets.specialist_extensions.evaluate(skill_id, inputs)` with the tas
 - Plan review
 - Target review
 - Effect-reconciliation report
-
-Try the authored local-stage demonstration: `python tools/muse_collection.py workflow-demo automation-readiness`. The report names unexecuted host/human handoffs and does not claim the complete external workflow ran.

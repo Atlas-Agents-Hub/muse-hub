@@ -10,7 +10,7 @@ Creative Studio is the specialist for **original images, animation, video and in
 - **Render and continuity review:** Examine real images, frames, video or browser output for composition, motion, safe areas, legibility and consistency.
 - **Production handoff:** Preserve source and asset hashes, rendering requirements, review decisions and what the target consumer actually opened.
 
-These describe the specialist's **role methods**, including stages that use host-provided rendering or design tools. The source-only role profile does not automatically connect those tools.
+These methods cover the creative workflow from brief to delivery. Use the rendering or design tools available in your workspace for the production steps.
 
 ## What the bundled Python tool does today
 

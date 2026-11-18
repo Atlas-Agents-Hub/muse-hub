@@ -37,7 +37,7 @@ Return the main questions, dependencies and contrasts; reserve detailed notes fo
 
 **Avoid:** Do not transform a short orientation into a complete textbook chapter.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A fictional lecture has P1: flow depends on pressure difference and resistance; P2: resistance rises when a tube narrows; P3: compare two tubes at the same pressure difference.
 
@@ -45,7 +45,7 @@ Return the main questions, dependencies and contrasts; reserve detailed notes fo
 
 **Result:** Read P1, then P2, then P3. Contrast pressure difference with absolute pressure. Comparison conclusion remains conditional on the same pressure difference; no unsupported numeric law is added.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** P3 is an unreadable diagram and the caption only says two configurations.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `lecture-map-r3-standard`, `lecture-map-r3-edge`, `lecture-map-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

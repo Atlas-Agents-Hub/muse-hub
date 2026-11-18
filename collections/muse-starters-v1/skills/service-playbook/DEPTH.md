@@ -39,7 +39,7 @@ Preserve it, explain the affected scope and seek the proper decision owner when 
 
 **Avoid:** Do not route through another account to evade the restriction.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A draft is complete, sending has an unknown outcome, and an independent chart is planned with an accepted owner.
 
@@ -47,7 +47,7 @@ Preserve it, explain the affected scope and seek the proper decision owner when 
 
 **Result:** Reuse the draft, reconcile the original send, and proceed with the independent chart. Do not resend.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The original service later confirms the send completed.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `service-playbook-r4-standard`, `service-playbook-r4-edge`, `service-playbook-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

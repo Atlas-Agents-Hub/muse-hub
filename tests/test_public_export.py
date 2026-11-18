@@ -209,9 +209,10 @@ class CleanPublicExportTests(unittest.TestCase):
         entry=(ROOT/"README.md").read_text(encoding="utf-8")
         self.assertIn("MIT",security)
         self.assertIn("private development repositories",security.lower())
-        self.assertIn("source",release.lower())
-        self.assertIn("no native muse installation",release.lower())
-        self.assertIn("v0.4.1-alpha",entry)
+        for term in ("v1.1.0", "SHA256SUMS", "muse-specialist-toolkit-v1.1.0.zip", "START_HERE.md"):
+            self.assertIn(term,release)
+        self.assertIn("docs/DOWNLOAD_A_SPECIALIST.md",entry)
+        self.assertIn("docs/GETTING_STARTED.md",entry)
         self.assertNotIn("Verify source ownership and licensing rights before copying",security)
         self.assertNotIn("Host doctor: determine supported personal Muse",release)
 

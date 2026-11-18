@@ -39,7 +39,7 @@ Use their qualified clinician’s supplied instructions and clarify unresolved t
 
 **Avoid:** Do not invent a therapeutic diet or replace clinical advice.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Five portions are needed, each batch yields two, each batch uses three units, and four units are in the pantry.
 
@@ -47,7 +47,7 @@ Use their qualified clinician’s supplied instructions and clarify unresolved t
 
 **Result:** Buy five units. Exclude the recipe with a stated conflicting allergen; no medical safety certification is implied.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The apparently compatible recipe’s ingredient label is unavailable.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `meal-plan-r4-standard`, `meal-plan-r4-edge`, `meal-plan-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

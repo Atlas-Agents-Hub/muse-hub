@@ -37,7 +37,7 @@ Use it directly and verify the answer against the existing rule.
 
 **Avoid:** Do not reopen an unnecessary research interview or alter the criterion after seeing outcomes.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A nonprofit asks which grant it qualifies for. S1 is current Program A guidance, allowing organizations older than one year. S2 is old Program B guidance requiring two years; S3 is its authoritative update requiring three. The nonprofit is 2.5 years old.
 
@@ -45,7 +45,7 @@ Use it directly and verify the answer against the existing rule.
 
 **Result:** A meets the supplied age criterion; B does not. Award comparisons remain unresolved if no award data was supplied. Cite S1 and S3, with S2 retained as superseded history.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The user instead asks whether the grant caused organizations to grow, but supplies only a press release about successful recipients.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `question-to-evidence-r3-standard`, `question-to-evidence-r3-edge`, `question-to-evidence-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

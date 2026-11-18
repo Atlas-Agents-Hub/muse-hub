@@ -39,7 +39,7 @@ Discuss evidence, competition and unknowns without a fabricated probability.
 
 **Avoid:** Do not present a deterministic hiring forecast.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** R1 has direct evidence, R2 has transferable evidence, and nonnegotiable R3 has none.
 
@@ -47,7 +47,7 @@ Discuss evidence, competition and unknowns without a fabricated probability.
 
 **Result:** Emphasize R1, explain R2’s transfer, and clarify R3 before treating eligibility as established. No hiring probability is assigned.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** An authoritative update confirms the person satisfies R3.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `role-fit-r4-standard`, `role-fit-r4-edge`, `role-fit-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

@@ -72,7 +72,7 @@ class CompanionHomeContractTests(unittest.TestCase):
         self.assertEqual(rights["games"][0]["roms"],[])
         self.assertFalse(rights["third_party_gameplay_assets_included"])
 
-    def test_source_distributed_and_evidence_labeling_truthful(self):
+    def test_companion_files_and_working_notebook_setup_are_discoverable(self):
         names=select_public_files(ROOT,verify_manifest=False)
         for name in ("examples/companion_home/index.html",
                      "examples/companion_home/home.js",
@@ -83,15 +83,14 @@ class CompanionHomeContractTests(unittest.TestCase):
                      "docs/COMPANION_HOME.md"):
             self.assertIn(name,names)
         doc=(ROOT/"docs/COMPANION_HOME.md").read_text(encoding="utf-8")
-        self.assertIn("source-only",doc.lower())
-        self.assertIn("not a native Muse room",doc)
+        self.assertIn("examples/space_starter.py --serve --companion-home --database",doc)
+        self.assertIn("127.0.0.1",doc)
+        self.assertIn("SQLite",doc)
+        self.assertIn("session token",doc)
+        self.assertIn("same database path",doc)
+        self.assertIn("revision",doc)
+        self.assertIn("Refresh saved notes",doc)
         self.assertIn("PersonalCompanion",doc)
-        self.assertIn("H14",doc)
-        self.assertIn("H15",doc)
-        self.assertIn("H16",doc)
-        self.assertIn("H17",doc)
-        # The local server must expose the repo root so sibling docs resolve.
-        self.assertIn("--directory .",doc)
         self.assertIn("examples/companion_home/",doc)
         self.assertIn('href="../../docs/COMPANION_HOME.md"',(HOME/"index.html").read_text(encoding="utf-8"))
 

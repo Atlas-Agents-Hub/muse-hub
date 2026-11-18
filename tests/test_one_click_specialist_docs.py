@@ -1,54 +1,49 @@
-"""Every current Muse role must have a mobile-readable direct ZIP path."""
+"""Every current specialist has a usable package and setup path."""
 from pathlib import Path
 import json
 import re
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 RELEASE="https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/"
-ALIAS={"data-engineering-architect":"data-engineer",
-       "infrastructure-reliability-engineer":"reliability-engineer"}
+ALIAS={"data-engineering-architect":"data-engineer","infrastructure-reliability-engineer":"reliability-engineer"}
 
 class OneClickDocs(unittest.TestCase):
-    def test_every_specialist_has_one_staged_filename_without_dead_link(self):
-        catalog=json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf-8"))
-        roles=catalog["presets"]
+    def test_all_15_specialists_have_current_direct_downloads_and_setup(self):
+        roles=json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf-8"))["presets"]
         self.assertEqual(len(roles),15)
         downloads=(ROOT/"docs/DOWNLOAD_A_SPECIALIST.md").read_text(encoding="utf-8")
-        self.assertIn("one muse assistant",downloads.lower())
+        self.assertIn("one Muse assistant",downloads)
         for role in roles:
             asset="muse-"+ALIAS.get(role,role)+"-v1.1.0.zip"
             link=RELEASE+asset
             with self.subTest(role=role):
                 install=(ROOT/"presets"/role/"INSTALL.md").read_text(encoding="utf-8")
-                self.assertIn(chr(96)+asset+chr(96),install)
-                self.assertIn(chr(96)+asset+chr(96),downloads)
-                self.assertNotIn(link,install)
-                self.assertNotIn(link,downloads)
-                self.assertIn("No Python",install)
-                self.assertIn("three subchats",install)
-                self.assertNotIn("This public starter",install)
-                self.assertNotIn("The source wrapper delegates",install)
-                self.assertIn("draft",install.lower())
+                self.assertIn(link,install)
+                self.assertEqual(downloads.count(link),1)
+                for step in ("START_HERE.md","Main","three subchats","First task to try","No Python"):
+                    self.assertIn(step,install)
+                self.assertIn("separate Muse assistant",install)
+                self.assertIn("account and permissions",install)
                 self.assertLess(len(install.splitlines()),47)
-        self.assertEqual(downloads.count("-v1.1.0.zip"+chr(96)),15)
+        self.assertNotIn("draft",downloads.lower())
 
-    def test_readme_and_release_make_downloads_primary(self):
+    def test_readme_and_release_make_current_downloads_primary(self):
         readme=(ROOT/"README.md").read_text(encoding="utf-8")
         self.assertIn("docs/DOWNLOAD_A_SPECIALIST.md",readme[:750])
         release=(ROOT/"docs/RELEASES.md").read_text(encoding="utf-8")
-        self.assertIn("## v1.1.0 — pending publication",release)
+        self.assertIn("releases/tag/v1.1.0",release)
+        self.assertLess(release.index("v1.1.0"),release.index("## Earlier releases"))
         self.assertIn("v1.0.0",release)
         self.assertIn("v0.4.1-alpha",release)
-        self.assertIn("SHA256SUMS.txt",release)
+        self.assertIn(RELEASE+"SHA256SUMS",release)
 
-    def test_role_packages_do_not_claim_account_or_tool_activation(self):
-        catalog=json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf-8"))
-        for role in catalog["presets"]:
-            text=(ROOT/"presets"/role/"INSTALL.md").read_text(encoding="utf-8").lower()
-            with self.subTest(role=role):
-                self.assertIn("separate muse assistant",text)
-                self.assertIn("not automatically",text)
-                self.assertNotIn("download and sign in",text)
+    def test_current_guides_link_the_same_release(self):
+        for path in ("README.md","docs/DOWNLOAD_A_SPECIALIST.md","docs/RELEASES.md","llms.txt"):
+            with self.subTest(path=path):
+                text=(ROOT/path).read_text(encoding="utf-8")
+                self.assertIn("releases/tag/v1.1.0",text)
+                self.assertNotIn("not publicly downloadable",text)
+                self.assertNotIn("still a draft",text)
 
     def test_original_install_text_archives_remain_byte_identical(self):
         import hashlib
@@ -66,20 +61,6 @@ class OneClickDocs(unittest.TestCase):
         from muse_presets.distribution import product_findings
         self.assertFalse(any(x["reason"]=="HISTORICAL_INSTALL_CHANGED"
                              for x in product_findings(ROOT)))
-
-    def test_draft_release_has_no_dead_public_download_links(self):
-        # GitHub draft assets are not publicly downloadable. Until v1.1.0
-        # publishes, show exact filenames as plain text, not broken links.
-        docs=(ROOT/"docs/DOWNLOAD_A_SPECIALIST.md").read_text(encoding="utf-8")
-        self.assertNotIn("releases/download/v1.1.0/", docs)
-        self.assertNotIn("releases/tag/v1.1.0", docs)
-        for role in json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf-8"))["presets"]:
-            with self.subTest(role=role):
-                guide=(ROOT/"presets"/role/"INSTALL.md").read_text(encoding="utf-8")
-                self.assertNotIn("releases/download/v1.1.0/", guide)
-                self.assertIn("v1.1.0", guide)
-        llms=(ROOT/"llms.txt").read_text(encoding="utf-8")
-        self.assertNotIn("releases/tag/v1.1.0", llms)
 
     def test_direct_download_page_has_no_404_local_links(self):
         page=ROOT/"docs/DOWNLOAD_A_SPECIALIST.md"

@@ -22,7 +22,7 @@ class GitHubMobileNavigation(unittest.TestCase):
   body=doc(README);hero=body.split("\n## ",1)[0]
   self.assertLess(len(hero.encode("utf8")),1100)
   for claim in ["# Muse Hub","15 independent assistants","three subchats",
-                "75 skills","25 workflows","100 task starters","151 connector records"]:
+                "75 skills","25 workflows","100 task starters","151 connectors"]:
    self.assertIn(claim,hero)
   self.assertNotIn("Muse Specialist Toolkit",body)
   self.assertNotIn("atlas-origins.github.io/kits",body)
@@ -31,16 +31,17 @@ class GitHubMobileNavigation(unittest.TestCase):
 
  def test_homepage_has_four_obvious_actions_before_technical_details(self):
   body=doc(README);first=body.split("## The 15 specialists",1)[0]
-  for phrase in ("Choose an assistant","Get the current published release",
-                 "Browse tools","Explore connector records"):
+  for phrase in ("Choose an assistant","Download v1.1.0",
+                 "Visit Muse Hub","Get started"):
    self.assertIn(phrase,first)
   for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/connectors/README.md",
-               "docs/CAPABILITIES.md","docs/RELEASES.md","docs/v1/START_HERE.md",
+               "docs/CAPABILITIES.md","docs/RELEASES.md","docs/GETTING_STARTED.md",
                "docs/spaces/DAILY_DESK.md","docs/README.md"):
    self.assertIn(path,body)
   self.assertIn("tools/muse_collection.py demo data-engineer",body)
   self.assertIn("[AI-agent discovery index](llms.txt)",body)
-  self.assertIn("not installed native muse agents",body.lower())
+  self.assertIn("docs/TERMINAL.md",body)
+  self.assertNotIn("source-only",body.lower())
 
  def test_all_specialists_are_visible_in_use_case_groups(self):
   body=doc(README)

@@ -39,7 +39,7 @@ Reduce, reorder or defer work while retaining essential outcomes.
 
 **Avoid:** Do not silently raise the person’s budget to make the plan fit.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** The person requests seated options. Step A supports seated work with effort two; step B does not. The budget is three.
 
@@ -47,7 +47,7 @@ Reduce, reorder or defer work while retaining essential outcomes.
 
 **Result:** A is compatible and within budget. B requires adaptation; its incompatibility is not hidden by the low total.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** B is adapted to seated use but adds effort three.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `accessibility-routine-r4-standard`, `accessibility-routine-r4-edge`, `accessibility-routine-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

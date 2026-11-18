@@ -29,7 +29,7 @@ Keep the denial and explain the exact affected action. Complete useful independe
 
 **Avoid:** Do not use another agent or machine to evade a refusal.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A report draft is saved. A send request mail-42 timed out with unknown outcome. A chart was planned but never started.
 
@@ -70,7 +70,3 @@ Public regression exercises. Worked answers are for learning; exclude them from 
 
 Practice case IDs: `resume-without-replay-standard`, `resume-without-replay-denied`, `resume-without-replay-resolved`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-More explicit procedures and checkable examples; comparative Muse performance has not been measured.

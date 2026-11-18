@@ -1,77 +1,27 @@
 # Muse Hub — first use
 
-**Muse Hub setup:** [choose a specialist](../DOWNLOAD_A_SPECIALIST.md), give it its own Muse assistant, then configure its Main and three subchats. Individual v1.1.0 ZIPs are a draft; v1.0.0 remains the current published source release. The local source and tool steps below still apply to development workflows.
+## Choose your starting point
 
-Choose a specialist configuration, run a Python tool, open Daily Desk or find a custom connector. Each section below has a command or a setup guide.
+- **Configure an assistant:** [download a specialist](../DOWNLOAD_A_SPECIALIST.md), open `START_HERE.md`, and follow [Get started](../GETTING_STARTED.md).
+- **Use the terminal:** [chat with Muse or run a toolkit command](../TERMINAL.md).
+- **Use a method with your current assistant:** [choose a task starter](../../collections/muse-starters-v1/CATALOG.md) or [select a skill](../SKILLS.md).
+- **Open a personal workspace:** [Companion Home](../COMPANION_HOME.md) has room notes, Studio, and Arcade; [Daily Desk](../spaces/DAILY_DESK.md) has tasks and notes.
+- **Connect a service:** browse the [151 connector guides](../connectors/README.md) and choose its account and permissions.
 
-Local repository examples use Python 3.12+ on Windows, macOS or Linux. Use `python3` where appropriate. No paid API or signed-in Muse account is needed for local example runs.
+## Try the local tools
 
-For additional guides by task, see the [documentation index](../README.md).
+From a toolkit checkout, use Python 3.12+ on Windows, macOS, or Linux:
 
-## 1. Use with Muse
-
-Select a role from the [specialist catalog](../handbook/specialists-by-task.md) or a task from the [100 starter configurations](../../collections/muse-starters-v1/CATALOG.md). A selected starter adds methods to your existing Muse assistant; it preserves your existing identity, memory and access permissions.
-
-From the repository root:
-
-```bash
-python -B tools/muse_collection.py specialists
-python -B tools/muse_collection.py show frontend-partner
-python -B tools/muse_collection.py build frontend-partner --to "$HOME/frontend-partner.zip"
-python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
+```sh
 python -B quickstart.py --all
-python -B examples/export_portable_skills.py --plan
-```
-
-To see the wider work each role supports and the bundled engines, see [Specialist scopes and engines](../collection/SPECIALIST_SCOPE_AND_ENGINES.md).
-
-Read the exported playbook or SKILL.md files and apply the relevant instructions through your Muse's supported customization flow. The source exporter does not sign in, install native agents or change live account settings.
-
-## 2. Run specialist tools
-
-Run the included data check and inspect its output:
-
-```bash
-python -B tools/muse_collection.py check
 python -B tools/muse_collection.py demo data-engineer
-python -B tools/muse_collection.py workflow-demo pipeline-validation
-python -B tools/muse_collection.py kit data-engineer --to "$HOME/data-engineer.zip"
-```
-
-The portable kit includes its own runner and example data. It declares which local stages executed and which external or human steps remain. Outputs are reproducible; your current host determines any online integrations.
-
-For a no-clone historical executable, see [release downloads](../RELEASES.md). Git may be required for some engineering executables; Creative Studio's simple local example needs Python 3.12+, but not Git.
-
-## 3. Open Personal Companion
-
-Daily Desk stores tasks and notes in SQLite. You can edit them, reopen the database, resolve stale-write conflicts and restore a backup into a new store.
-
-Run the entire disposable first-use flow:
-
-```bash
 python -B examples/daily_desk.py
 ```
 
-Expected result: `DAILY_DESK_VERTICAL_SLICE_PASS`, including three tasks, two notes, edited records and a successful restored copy.
+The first checks the 15 assistant packages, the second prints a data-engineering report, and the third exercises task and note storage with a restored copy. See the [developer quickstart](../GITHUB_QUICKSTART.md) for downloads, setup, and more examples.
 
-To open its actual browser UI on this computer, choose an absolute database path in an existing private directory:
+## Keep working
 
-```bash
-python -B examples/daily_desk.py --serve --database "$HOME/daily-desk.sqlite"
-```
+Bring your own task and source material to the specialist. Keep your customized instructions and memory in a private working folder. [Setup and saved data](../INSTALL_AND_PERSISTENCE.md) covers updates and recovery; the [operating handbook](../handbook/README.md) helps with context, skills, workrooms, and documents.
 
-The foreground launcher prints a loopback URL and temporary local-session token. Open that URL on **the same computer**, enter the token and work with your records. On Windows use a real absolute Windows path. For backup and recovery, follow the [Daily Desk guide](../spaces/DAILY_DESK.md). SQLite files and exported archives are plaintext, and this local web interface is not a deployed native Muse Space.
-
-## 4. Explore connectors
-
-[Browse all 151 connectors on GitHub](../connectors/CATALOG.md). To search the directory interactively, open `docs/connectors/index.html` from a checkout or a downloaded toolkit, keeping `app.css` and `app.js` alongside it.
-
-Search by name, service, category or specialist. Each card includes the original version-pinned guide, access prerequisites, and a copy-ready setup message.
-
-Connect through Muse's supported secure custom-connector workflow, not by sharing credentials in chat. Review service permissions and approve important actions when requested. [Full connector guide](../connectors/README.md).
-
-## Troubleshooting
-
-Confirm the Python version, current working directory and writable output directory. Create-only exporters refuse existing paths. A configuration is not account authorization; the receiving host determines which operations are available. Consult the [capability guide](../CAPABILITIES.md), [full repository quickstart](../GITHUB_QUICKSTART.md), or the [issue tracker](https://github.com/atlas-origins/muse-ai-agent-presets/issues).
-
-After the release, review the [30-day adoption assessment](POST_RELEASE.md) before expanding the catalog or commissioning fourteen more specialist workbenches.
+[Documentation](../README.md) · [Downloads and checksums](../RELEASES.md)

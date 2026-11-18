@@ -94,12 +94,12 @@ def validate_playbook(book: object, preset: dict) -> list[str]:
 
 def render_playbook(book: dict, *, display_name: str, role_title: str) -> str:
     """Generate a human-readable local policy document, not an executable hook."""
-    lines = [f'# Operational playbook — {display_name}', '',
+    lines = [f'# {display_name} playbook', '',
              f'**Preset:** {role_title} (`{book["role_id"]}`)',
-             '**Grade:** SOURCE-ONLY guidance; no native Muse tool, subchat, model or connector is installed.', '',
+             'Use this playbook with your current Muse assistant and the tools available for your task.', '',
              '## Mission', '', book['purpose'], '', '## Preferred optional tool categories', '',
              ', '.join(f'`{x}`' for x in book['optional_tool_categories']),
-             '', 'These are capability categories, not tool registrations. Discover real permissions and schemas before use.',
+             '', 'Choose the available tools that fit the task and follow their current permissions.',
              '', '## Required limits', '']
     lines.extend(f'- {entry}' for entry in book['hard_boundaries'])
     lines.extend(['', '## Specialist methods', ''])
@@ -111,10 +111,10 @@ def render_playbook(book: dict, *, display_name: str, role_title: str) -> str:
         lines.extend(['', f'**Stop condition:** {method["stop_rule"]}',
                       f'**Suggested handoff:** `{method["handoff_to"]}` (proposal only, never an automatic send)', ''])
     canary = book['first_canary']
-    lines.extend(['## First acceptance exercise', '',
-                  f'**Toy task:** {canary["task"]}',
+    lines.extend(['## Try a first task', '',
+                  f'**Example task:** {canary["task"]}',
                   f'**Expected observable result:** {canary["observable_result"]}',
                   f'**Negative case:** {canary["negative_test"]}',
-                  '', 'Passing a local example does not establish the role is wired, used, useful, or independently verified in Muse.',
-                  'Family Link is off unless a real receiving account separately grants it.', ''])
+                  '', 'Compare the returned artifact with the expected result before using the method on a larger task.',
+                  'Use the current authorized recipient and delivery route for any handoff.', ''])
     return '\n'.join(lines)

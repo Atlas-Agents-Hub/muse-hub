@@ -39,7 +39,7 @@ Check the specific asset’s rights and consent separately from the design analy
 
 **Avoid:** Do not treat public visibility or an inspiration link as a redistribution license.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Reference one is visible and supports generous spacing; reference two is unavailable but supposedly supplies a typeface.
 
@@ -47,7 +47,7 @@ Check the specific asset’s rights and consent separately from the design analy
 
 **Result:** Spacing rule supported; typeface choice unverified. Produce a provisional layout without claiming faithful typography.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Reference two becomes available but its narrow type conflicts with the readability requirement.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `visual-reference-r4-standard`, `visual-reference-r4-edge`, `visual-reference-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

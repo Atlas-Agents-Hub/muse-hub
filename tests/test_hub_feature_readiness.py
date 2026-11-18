@@ -99,18 +99,20 @@ class FeatureReadinessContract(unittest.TestCase):
             })
         self.assertIn("NO_NATIVE_GRANTS", record["boundary_notes"])
 
-    def test_reader_table_matches_exact_machine_readable_ids_and_statuses(self):
+    def test_reader_guide_links_working_setup_and_separate_technical_register(self):
         text = README.read_text(encoding="utf-8")
-        for row in load()["tasks"]:
-            lines = [line for line in text.splitlines()
-                     if line.startswith("| " + row["id"] + " |")]
-            self.assertEqual(len(lines), 1, row["id"])
-            self.assertIn(row["title"], lines[0])
-            self.assertIn(row["status"], lines[0])
-        self.assertIn("HUB_FEATURE_READINESS.md", (ROOT / "docs/README.md").read_text(encoding="utf-8"))
-        self.assertIn("H11", text)
-        self.assertIn("T12", text)
-        self.assertIn("NOT", text)
+        for target in ("DOWNLOAD_A_SPECIALIST.md", "GETTING_STARTED.md", "SKILLS.md",
+                       "WORKFLOWS.md", "TERMINAL.md", "connectors/README.md",
+                       "FAMILY_LINK.md", "COMPANION_HOME.md", "spaces/DAILY_DESK.md",
+                       "handbook/hub-setup-journeys.md", "RELEASES.md",
+                       "discovery/hub-feature-status.json"):
+            with self.subTest(target=target):
+                self.assertIn("(" + target + ")", text)
+                self.assertTrue((README.parent / target).is_file())
+        self.assertIn("https://atlas-origins.github.io/muse-ai-agent-presets/", text)
+        # Technical statuses remain in the verified register, not a marketing table.
+        self.assertEqual(DOC, README.parent / "discovery/hub-feature-status.json")
+        self.assertEqual(len(load()["tasks"]), 22)
 
 
 if __name__ == "__main__":

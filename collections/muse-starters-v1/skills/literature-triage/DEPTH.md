@@ -37,7 +37,7 @@ Bound the claim to that corpus and state the single-screening limitation.
 
 **Avoid:** Do not label the result exhaustive or PRISMA-complete merely because a flow table exists.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Records R1 and R2 share DOI D1. R3 has DOI D2 but reports the same registered cohort K1 at 12 months. R4 is a distinct eligible cohort K2.
 
@@ -45,7 +45,7 @@ Bound the claim to that corpus and state the single-screening limitation.
 
 **Result:** There are three unique reports and two independent study families, not four studies. K1 has multiple reports; K2 is an independent contribution.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** R4 has only an abstract and the protocol requires a verified adult population from full text.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `literature-triage-r3-standard`, `literature-triage-r3-edge`, `literature-triage-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

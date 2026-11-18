@@ -29,7 +29,7 @@ Separate plan generation from the particular authorized calendar/message operati
 
 **Avoid:** Do not treat a proposed block as a booked event or install a recurring schedule implicitly.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Work window 09:00–12:00, a 10:00–11:00 meeting, a 60-minute report due 10:00, a 20-minute call due noon, and 30 minutes of shopping preparation. All times have the same UTC offset.
 
@@ -70,7 +70,3 @@ Public regression exercises. Worked answers are for learning; exclude them from 
 
 Practice case IDs: `daily-briefing-standard`, `daily-briefing-overload`, `daily-briefing-buffer`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-More explicit procedures and checkable examples; comparative Muse performance has not been measured.

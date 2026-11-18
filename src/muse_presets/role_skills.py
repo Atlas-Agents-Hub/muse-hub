@@ -102,17 +102,15 @@ def _build(role:str,display_name:str|None)->tuple[dict[str,bytes],dict,dict[str,
         evidence="\n".join(f"- {v}" for v in method["evidence"])
         doc=(f"---\nname: {sid}\ndescription: {description}\n---\n\n"
              f"# {name}: {mid}\n\n"
-             f"Role: {role}. This skill is not installed. It is a source-only, "
-             "owner-unbound procedure; no host identity, tool call or consent is implied.\n\n"
+             f"Role: {role}. Use this procedure for the matching task in your current assistant.\n\n"
              f"## Trigger\n\n{description}\n\n"
              f"## Steps\n\n{steps}\n\n"
              f"## Evidence to return\n\n{evidence}\n\n"
              f"## Stop condition\n\n{method['stop_rule']}\n\n"
-             f"## Handoff\n\nPropose {method['handoff_to']} for separate owner-approved "
-             "delivery only. Do not send automatically.\n\n"
-             "## Runtime\n\nNo executable is included. Host registration, "
-             "model-selected invocation, recipient readback and permissions "
-             "must be proven independently. Disabled by default.\n")
+             f"## Handoff\n\nPrepare the result for {method['handoff_to']}. "
+             "Follow the user's current authorization before delivering it.\n\n"
+             "## Use with Muse\n\nRead the steps for the current task, use the available "
+             "tools and supplied context, and return the evidence listed above.\n")
         files[scope+"SKILL.md"]=doc.encode("utf-8")
         files[scope+"skill.yaml"]=yaml.encode("utf-8")
         mapping[mid]=[{

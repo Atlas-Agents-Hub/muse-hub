@@ -4,7 +4,7 @@ The toolkit separates assistant instructions, local programs and host integratio
 
 ## Collection and engine layers
 
-The current source includes **75 developed task skills**, **25 workflows** and **100 task starters** alongside the original **50 unique procedures** (45 role-specific methods plus five shared). The original procedure layer overlaps the larger collection; it is not 50 more independently authored skills. Configuration counts do not create additional native assistants.
+The current source includes **75 developed task skills**, **25 workflows** and **100 task starters** alongside the original **50 unique procedures** (45 role-specific methods plus five shared). The original procedure layer overlaps the larger collection; it is not 50 more independently authored skills. The catalogs keep those relationships explicit.
 
 Different specialists include different executable engines. [Specialist scope and source engines](collection/SPECIALIST_SCOPE_AND_ENGINES.md) describes what each role handles and which local operations are available. [Specialists by task](handbook/specialists-by-task.md) is the user-facing directory. These are the same roles; the tool depth varies by specialist.
 
@@ -16,9 +16,9 @@ The renderer creates a new folder rather than replacing an existing assistant. I
 
 ## Generated profiles and procedures
 
-`quickstart.py` composes three inspectable parts: `system-profile/profile/` for editable agent-home drafts, `subchat-scopes/` for three method-specific contexts with separate blank memory, and `role-skills/` for disabled descriptors. Identity, soul, user, opinion, voice and prompt defaults are not imported private personas or host registrations.
+`quickstart.py` composes three inspectable parts: `system-profile/profile/` for editable agent-home drafts, `subchat-scopes/` for three method-specific contexts with separate blank memory, and `role-skills/` for disabled descriptors. Identity, preferences, voice, and prompt defaults are editable in the working copy.
 
-The catalog has **45 role-specific methods plus five shared procedures = 50 unique procedures**. Reusing the shared procedures across all roles yields 120 descriptor instances, not additional unique skills. The separate `portable_skill_export` adapter emits 50 hyphen-named folders with matching frontmatter without renaming the native-style registry IDs. Neither representation installs a skill or grants a tool.
+The catalog has **45 role-specific methods plus five shared procedures = 50 unique procedures**. Reusing the shared procedures across all roles yields 120 descriptor instances, not additional unique skills. The separate `portable_skill_export` adapter emits 50 hyphen-named folders with matching frontmatter without renaming the native-style registry IDs. The receiving host loads the selected format and manages tool permissions.
 
 ## Local tools
 
@@ -37,7 +37,7 @@ These responsibilities are separate. A plan reviewer does not dispatch workers; 
 
 ## Host integration
 
-A host supplies the model, authenticated identity, tool permissions and live service connections. The repository's host and connector checks help inspect those boundaries, but do not grant access or register an assistant. Generated profiles are not installed agents. Skills, hooks and connectors are disabled until an integration explicitly enables them.
+A host supplies the model, authenticated identity, tool permissions and live service connections. The repository's host and connector checks inspect local configuration. Configure skills, hooks, and connectors through the host when adding them to a workflow; their defaults remain disabled.
 
 Personal Muse/Hatch and Muse Code are distinct targets. A manifest for one does not prove compatibility with the other. Read [Host compatibility](HOST_COMPATIBILITY.md) before attempting an integration.
 

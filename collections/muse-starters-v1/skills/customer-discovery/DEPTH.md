@@ -39,7 +39,7 @@ Narrow, revise or stop the hypothesis and retain the disconfirming observations.
 
 **Avoid:** Do not discard inconvenient interviews to rescue the original story.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Two quotes come from P1 expressing interest; P2 shows a recurring manual workaround.
 
@@ -47,7 +47,7 @@ Narrow, revise or stop the hypothesis and retain the disconfirming observations.
 
 **Result:** Two participants, one with observed workaround behavior, zero observed paying customers. This is a useful problem signal, not proven market demand.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** P2 later pays for a small pilot.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `customer-discovery-r4-standard`, `customer-discovery-r4-edge`, `customer-discovery-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

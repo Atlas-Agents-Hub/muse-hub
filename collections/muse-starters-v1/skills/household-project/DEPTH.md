@@ -39,7 +39,7 @@ Reconcile the existing booking and update only dependent tasks.
 
 **Avoid:** Do not duplicate appointments or erase completed work.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Measure the room, arrange electrical work, and paint. The professional is not yet confirmed; paint depends on measurement.
 
@@ -47,7 +47,7 @@ Reconcile the existing booking and update only dependent tasks.
 
 **Result:** Measure first. Hold electrical work for the professional. Paint can proceed only after the relevant measurement and readiness checks.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Measurement is complete, but professional scheduling is still unresolved.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `household-project-r4-standard`, `household-project-r4-edge`, `household-project-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

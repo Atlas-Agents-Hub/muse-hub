@@ -37,7 +37,7 @@ Recompute capacity and state exactly which commitment is displaced.
 
 **Avoid:** Do not silently add work while preserving the old deadline promise.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A resource has 10 hours. Task A costs 3, B costs 5 and depends on A, C costs 4. The user ranks B above C and requires complete tasks.
 
@@ -45,7 +45,7 @@ Recompute capacity and state exactly which commitment is displaced.
 
 **Result:** Select A then B for 8 hours and defer C. Do not select B alone or squeeze C into the remaining 2 hours.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A depends on B and B depends on A.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `project-prioritization-r3-standard`, `project-prioritization-r3-edge`, `project-prioritization-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

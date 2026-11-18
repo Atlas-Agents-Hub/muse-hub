@@ -37,7 +37,7 @@ Read the original destination and artifact identity before retrying.
 
 **Avoid:** Do not duplicate an external upload or confuse a local path with delivered access.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** The requested output is 1080 × 1920, 30 fps,20 seconds within 0.5 seconds, with audio. The file probes correctly but contains no audio stream.
 
@@ -45,7 +45,7 @@ Read the original destination and artifact identity before retrying.
 
 **Result:** Status is rendered-partial with audio missing. Correct dimensions and duration remain verified; a successful render does not satisfy the absent track.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A repaired file has audio, correct properties and inspected frames, but the share upload times out.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `edit-and-export-r3-standard`, `edit-and-export-r3-edge`, `edit-and-export-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

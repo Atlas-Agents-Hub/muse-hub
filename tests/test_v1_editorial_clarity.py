@@ -26,10 +26,10 @@ class EditorialClarity(unittest.TestCase):
     def test_actions_identify_real_operation_and_expected_result(self):
         body=README.read_text(encoding="utf-8")
         for expected in ("Muse Hub","15 independent assistants","75 skills","25 workflows",
-                         "100 task starters","151 connector records",
-                         "tools/muse_collection.py demo data-engineer","examples/daily_desk.py",
-                         "docs/connectors/README.md","docs/v1/START_HERE.md",
-                         "not installed native Muse agents","v0.4.1-alpha"):
+                         "100 task starters","151 connectors","START_HERE.md",
+                         "tools/muse_collection.py demo data-engineer",
+                         "docs/connectors/README.md","docs/GETTING_STARTED.md", "docs/TERMINAL.md",
+                         "releases/tag/v1.1.0", "https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html"):
             with self.subTest(expected=expected):
                 self.assertIn(expected.lower(),body.lower())
         self.assertLess(len(body.encode("utf-8")),8000)

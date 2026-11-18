@@ -1,8 +1,6 @@
-# Claims Adjudicator — runnable offline source kit
+# Claims review tool
 
-A self-contained source ZIP wraps the existing first-party Claims Adjudicator scope checker, preserving its conservative evidence grades and every limiting condition. It runs actual local Python logic, but **does not authenticate the supplied evidence**, deliver an external opinion, modify accounts, install native Muse skills, or judge factual truth.
-
-The executable kit contains runnable claim-review code; the Claims Adjudicator starter contains editable instructions. It includes two executable Python source files, a disabled role profile, editable playbook, a fictional input, installation directions, license and byte-integrity manifest.
+Review supplied claims against their evidence records and retain the reasoning behind a finding. This portable Python kit includes the claim checker, a role guide, a worked input, a runner, and integrity information.
 
 ## Build, verify and run
 
@@ -19,7 +17,7 @@ After confirming the ZIP digest through a separately trusted release/source reco
 
     python -I -B claims-adjudicator/run.py --operation demo
 
-Expected: LOCAL_CLAIMS_DEMO_PASSED with disposition OVERCLAIM, no native installation, and no authorized external effect. To assess an explicitly reviewed fictional or user-supplied JSON claim, pipe EXAMPLE_CLAIM.json into:
+The example returns `LOCAL_CLAIMS_DEMO_PASSED` with disposition `OVERCLAIM`. To assess an explicitly reviewed fictional or user-supplied JSON claim, pipe EXAMPLE_CLAIM.json into:
 
     python -I -B claims-adjudicator/run.py --operation assess --allow-reviewed-local
 
@@ -27,7 +25,7 @@ Missing opt-in, malformed/duplicate-key JSON, nonfinite values, invalid grades a
 
 ## Operational boundary
 
-The result distinguishes asserted evidence grades from caller-declared evidence grades. It does not search for evidence, prove truth, perform an independent examination, authenticate identities, issue grants, or publish conclusions. No native account, connected model, external effect, Family Link or scheduling is bundled. For these capabilities use their separately authorized original providers.
+The report compares the claim with the supplied evidence criteria. Read it alongside the original sources and record any remaining uncertainty before sharing your conclusion.
 
 The verifier admits the complete member list, regular-file paths, exact expected sizes, compression method, header flags and total unpacked budget before opening any member body. Stored and DEFLATE members are supported; encryption and unsupported ZIP features are refused. Corrupt ZIP containers or compressed data produce a bounded `REFUSED` response and exit code 2, not a successful verification. The external archive digest and canonical source-byte comparisons remain required.
 
@@ -35,4 +33,4 @@ Run both the source-kit and archive-boundary regressions:
 
     PYTHONPATH=src python3 -B -m unittest discover -s tests -p "test_claims*.py" -v
 
-The public release must not present this executable ZIP as an installed native agent. Preserve the original source-kit ZIPs and tags when releasing a newer version.
+Keep the original kit and a separate working copy when updating. [Claims Adjudicator setup](../../presets/claims-adjudicator/INSTALL.md) includes the assistant package and first task.

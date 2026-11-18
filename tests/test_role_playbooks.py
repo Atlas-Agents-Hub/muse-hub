@@ -45,9 +45,10 @@ class RolePlaybookTests(unittest.TestCase):
                     self.assertNotIn(content, documents)
                     documents.add(content)
                     self.assertEqual(inspect_render(dest)['status'], 'LOCAL_MATCH')
-                    self.assertIn('SOURCE-ONLY', content)
+                    self.assertIn('Use this playbook with your current Muse assistant', content)
+                    self.assertNotIn('SOURCE-ONLY', content)
                     self.assertFalse(json.loads((dest/'FAMILY_LINK.json').read_text())['enabled'])
-                    self.assertIn('blank user-owned', (dest/'MEMORY.md').read_text().lower())
+                    self.assertIn('preserve existing memory', (dest/'MEMORY.md').read_text().lower())
 
     def test_fake_native_grade_or_unapproved_receiver_is_rejected(self):
         preset = load_preset('model-builder')

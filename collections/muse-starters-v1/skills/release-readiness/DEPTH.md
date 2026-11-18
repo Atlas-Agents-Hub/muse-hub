@@ -37,7 +37,7 @@ Report ready for the stated scope and leave publication not performed.
 
 **Avoid:** Do not equate readiness with a public release.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Candidate H2 needs unit, package and privacy checks. Unit and privacy pass on H2; package passed on H1. No publication occurred.
 
@@ -45,7 +45,7 @@ Report ready for the stated scope and leave publication not performed.
 
 **Result:** HOLD: package evidence is stale for H2. Unit and privacy remain valid for H2; publication remains not performed. Rerun the package check against H2 rather than repeating unrelated valid checks.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The package check now passes on H2, but an attempted upload timed out.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `release-readiness-r3-standard`, `release-readiness-r3-edge`, `release-readiness-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

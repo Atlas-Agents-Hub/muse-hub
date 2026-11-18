@@ -64,24 +64,33 @@ class ConnectorCatalogTests(unittest.TestCase):
    with self.assertRaises(FileExistsError):m.export_catalog(p)
 
 class V1ProductTests(unittest.TestCase):
- def test_hero_leads_with_specialists_configs_connectors(self):
-  s=(R/'README.md').read_text();hero=s.split('\n## ',1)[0]
-  for value in ('Muse Hub','15 independent assistants','75 skills','25 workflows',
-                '100 task starters','151 connector records'):
-   self.assertIn(value,hero)
-  self.assertNotIn('Muse Specialist Toolkit',s)
-  self.assertLess(len(s.encode()),8000)
+ def test_hero_leads_with_specialists_skills_workflows_and_connectors(self):
+     s=(R/'README.md').read_text();hero=s.split('\n## ',1)[0]
+     for value in ('Muse Hub','15 independent assistants','75 skills','25 workflows',
+                   '100 task starters','151 connectors'):
+         self.assertIn(value,hero)
+     self.assertNotIn('Muse Specialist Toolkit',s)
+     self.assertLess(len(s.encode()),8000)
 
- def test_four_routes_and_current_release_metadata_agree(self):
-  d=json.loads((R/'docs/discovery/agent-capabilities.json').read_bytes())
-  self.assertEqual(d['project'],'Muse Hub');self.assertEqual(d['release'],'v1.0.0')
-  self.assertEqual(d['custom_connector_count'],151);self.assertEqual(d['configuration_count'],115)
-  for p in ['docs/v1/START_HERE.md','docs/v1/POST_RELEASE.md','docs/connectors/README.md','scripts/build_v1_release.py']:
-   self.assertTrue((R/p).is_file(),p)
- def test_v1_documents_preserve_historical_assets_and_identity(self):
-  s=(R/'docs/RELEASES.md').read_text()
-  self.assertIn('v1.0.0',s);self.assertIn('v0.4.1-alpha',s)
-  s=(R/'docs/v1/START_HERE.md').read_text()
-  for value in ['Use with Muse','Run specialist tools','Open Personal Companion','Explore connectors','existing identity','30-day']:self.assertIn(value,s)
+ def test_current_setup_routes_and_release_metadata_agree(self):
+     d=json.loads((R/'docs/discovery/agent-capabilities.json').read_bytes())
+     self.assertEqual(d['project'],'Muse Hub');self.assertEqual(d['release'],'v1.1.0')
+     self.assertEqual(d['custom_connector_count'],151);self.assertEqual(d['configuration_count'],115)
+     self.assertEqual(len(d['specialist_downloads']),15)
+     for p in ['docs/GETTING_STARTED.md','docs/TERMINAL.md','docs/v1/POST_RELEASE.md',
+               'docs/connectors/README.md','scripts/build_v1_release.py']:
+         self.assertTrue((R/p).is_file(),p)
+     for path in d['first_use'].values():
+         self.assertTrue((R/path.split('#')[0]).is_file(),path)
+ def test_first_use_preserves_identity_and_release_history(self):
+     releases=(R/'docs/RELEASES.md').read_text()
+     for version in ('v1.1.0','v1.0.0','v0.4.1-alpha'):
+         self.assertIn(version,releases)
+     s=(R/'docs/v1/START_HERE.md').read_text()
+     for target in ('../DOWNLOAD_A_SPECIALIST.md','../GETTING_STARTED.md','../TERMINAL.md',
+                    '../COMPANION_HOME.md','../connectors/README.md','../INSTALL_AND_PERSISTENCE.md'):
+         self.assertIn(target,s)
+     self.assertIn('customized instructions and memory',s)
+     self.assertIn('account and permissions',s)
 
 if __name__=='__main__':unittest.main(verbosity=2)

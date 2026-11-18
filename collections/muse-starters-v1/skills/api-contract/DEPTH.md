@@ -37,7 +37,7 @@ Deliver the complete proposed contract and executable fixture examples where pos
 
 **Avoid:** Do not simulate a remote success and label it integration proof.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A create operation has key K1 and canonical payload P1. The first request created resource R1. A retry uses K1/P1; another uses K1/P2.
 
@@ -45,7 +45,7 @@ Deliver the complete proposed contract and executable fixture examples where pos
 
 **Result:** K1/P1 returns the original R1 with no new creation. K1/P2 returns a conflict and also creates nothing. Neither retry receives a new resource ID.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** An optional field is added to a response consumed by a strict decoder that rejects unknown properties.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `api-contract-r3-standard`, `api-contract-r3-edge`, `api-contract-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

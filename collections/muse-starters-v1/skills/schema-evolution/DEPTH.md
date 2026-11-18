@@ -37,7 +37,7 @@ Preserve those writes and require an explicit forward-repair or reversible trans
 
 **Avoid:** Do not offer destructive down-migration as a harmless rollback.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A populated customer table has integer id; add nullable text note.
 
@@ -45,7 +45,7 @@ Preserve those writes and require an explicit forward-repair or reversible trans
 
 **Result:** The logical report lists note as added, requires no backfill, and does not claim a database write.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Replace nullable legacy_code with required integer customer_id on 40 existing rows.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `schema-evolution-r5-standard`, `schema-evolution-r5-edge`, `schema-evolution-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

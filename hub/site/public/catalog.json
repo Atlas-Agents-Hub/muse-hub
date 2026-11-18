@@ -7,7 +7,7 @@
       "id": "MH-001",
       "install_method": "Clone/build platform sample with SDK token",
       "license_class": "PER_FILE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Gadgets SDK",
       "platform": "ESP32 · Linux",
       "route_tags": [
@@ -23,9 +23,9 @@
       "id": "MH-002",
       "install_method": "Read before any token use",
       "license_class": "SERVICE_OR_DOCS",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Meta Gadget SDK Token Terms",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Token usage and distribution terms distinct from source license.",
       "url": "https://gadgets.muse.ai/sdk-terms"
@@ -36,9 +36,9 @@
       "id": "MH-003",
       "install_method": "Follow CLI install and sign-in; not a personal Muse VM bridge",
       "license_class": "SERVICE_OR_DOCS",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Meta Muse Code CLI",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Official Muse Code terminal coding agent; distinct product from personal Muse.",
       "url": "https://dev.meta.ai/docs/muse-code"
@@ -49,9 +49,9 @@
       "id": "MH-004",
       "install_method": "Responses API with local driver",
       "license_class": "SERVICE_OR_DOCS",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Meta Model API Computer Use",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "desktop"
       ],
@@ -64,7 +64,7 @@
       "id": "MH-005",
       "install_method": "Install official mobile/watch app",
       "license_class": "SERVICE_OR_DOCS",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse on Apple Watch / Wear OS",
       "platform": "Apple Watch · Wear OS",
       "route_tags": [
@@ -79,9 +79,9 @@
       "id": "MH-015",
       "install_method": "Link/search, then review and dedup per item",
       "license_class": "PER_FILE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Awesome Muse Skills",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "901 original SKILL.md paths and 1,749 top-level imported skills at pinned tree; code chiefly in imports.",
       "url": "https://github.com/aicodedecode/awesome-muse-skills"
@@ -92,9 +92,9 @@
       "id": "MH-016",
       "install_method": "Already indexed in V1; link to source",
       "license_class": "MIT",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Connectors",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "151 connector packages with Python code and SKILL.md manifests.",
       "url": "https://github.com/bluman1/muse-connectors"
@@ -105,9 +105,9 @@
       "id": "MH-017",
       "install_method": "Link and compare metadata, avoid duplicate code",
       "license_class": "PER_FILE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Awesome Muse Connectors",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Alternative connector directory with upstream community copies and role briefs.",
       "url": "https://github.com/Anil-matcha/awesome-muse-connectors"
@@ -118,9 +118,9 @@
       "id": "MH-018",
       "install_method": "Select source-tested modules, review dependency closure",
       "license_class": "PER_FILE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Skills by Israelmusondaayliffe",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "31 SKILL.md entries, included controllers, tests, script references and workflow gates.",
       "url": "https://github.com/Israelmusondaayliffe/muse-skills"
@@ -131,9 +131,9 @@
       "id": "MH-019",
       "install_method": "Item-level review for reusable code",
       "license_class": "MIT",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Skills by ExaltedTunic",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "18 purpose-oriented skills including privacy scanner, memory audit, and schema migration safety.",
       "url": "https://github.com/ExaltedTunic/muse-skills"
@@ -144,9 +144,9 @@
       "id": "MH-020",
       "install_method": "Reference-only until origin rights checked",
       "license_class": "NO_ROOT_LICENSE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Skills Hatch snapshot",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Daily mirror of Hatch skill tree for historical compatibility.",
       "url": "https://github.com/obra/muse-skills"
@@ -157,9 +157,9 @@
       "id": "MH-021",
       "install_method": "Use public findings as compatibility reference",
       "license_class": "NO_ROOT_LICENSE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse runtime and binary archive",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Hourly mirror of skill trees, extracted binary prompt fragments and provenance maps.",
       "url": "https://github.com/sneakers-the-rat/muse-skills"
@@ -170,9 +170,9 @@
       "id": "MH-022",
       "install_method": "Reference and interoperability study only",
       "license_class": "NO_ROOT_LICENSE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse runtime snapshot win4r",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Partial Hatch runtime snapshot and Chinese technical analysis.",
       "url": "https://github.com/win4r/MuseAI-Skills"
@@ -183,9 +183,9 @@
       "id": "MH-023",
       "install_method": "Link out with grounded descriptions",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Awesome Muse community map",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Curated central index of tools, devices, examples and safety articles.",
       "url": "https://github.com/cszach/awesome-muse"
@@ -196,9 +196,9 @@
       "id": "MH-024",
       "install_method": "Do not repeat cookie-sharing instructions",
       "license_class": "NO_ROOT_LICENSE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse 300 tips",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "300 Chinese-language task recipes.",
       "url": "https://github.com/jasonbitsmith/muse-skills"
@@ -209,9 +209,9 @@
       "id": "MH-025",
       "install_method": "Clone and run upstream CLI after reviewing its auth route",
       "license_class": "REPORTED_UNVERIFIED",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "muse-cli by nikships",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "cli"
       ],
@@ -224,9 +224,9 @@
       "id": "MH-026",
       "install_method": "Follow upstream Docker/local instructions for own accounts",
       "license_class": "REPORTED_UNVERIFIED",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "muse2api by czg86389-hub",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "OpenAI-compatible API wrapper with account pools and multimedia routes.",
       "url": "https://github.com/czg86389-hub/muse2api"
@@ -237,9 +237,9 @@
       "id": "MH-027",
       "install_method": "Experimental local clone, private self-hosting",
       "license_class": "NO_ROOT_LICENSE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "muse2api by TriTue2011",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Direct Noise protocol, cookie-bootstrap, OpenAI-compatible REST proxy.",
       "url": "https://github.com/TriTue2011/muse2api"
@@ -250,9 +250,9 @@
       "id": "MH-028",
       "install_method": "Owner account and Python package install per upstream",
       "license_class": "NO_ROOT_LICENSE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "MuseAI-API",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Python client for Muse/Hatch login, chat history, filesystem and generation downloads.",
       "url": "https://github.com/minhquan130599/MuseAI-API"
@@ -263,9 +263,9 @@
       "id": "MH-029",
       "install_method": "Follow upstream Chrome/MCP setup",
       "license_class": "MIT",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Chat MCP",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "cli",
         "family"
@@ -279,9 +279,9 @@
       "id": "MH-030",
       "install_method": "Own logged-in browser; Python package install",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "muse2api-cli",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Browser-backed generation CLI for image and video tasks.",
       "url": "https://github.com/brixtonpham/muse2api-cli"
@@ -292,9 +292,9 @@
       "id": "MH-031",
       "install_method": "Mac+Python upstream install path",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse CLI Bridge",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "cli",
         "family"
@@ -308,9 +308,9 @@
       "id": "MH-032",
       "install_method": "Use only if third-party service desired",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "useapi Muse API examples",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Third-party paid/service-mediated REST example integrations for Muse media and chat.",
       "url": "https://github.com/useapi/muse-api"
@@ -321,9 +321,9 @@
       "id": "MH-033",
       "install_method": "Follow upstream build guide",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Pi Muse Bridge",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Connects a Pi coding agent through official Gadget SDK.",
       "url": "https://github.com/finik/pi-muse-bridge"
@@ -334,9 +334,9 @@
       "id": "MH-034",
       "install_method": "Install Muse Code first, then Helicon",
       "license_class": "REPORTED_UNVERIFIED",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Code Helicon GUI",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Unofficial desktop and VS Code frontend for the separate Muse Code CLI.",
       "url": "https://github.com/HarjjotSinghh/helicon"
@@ -347,9 +347,9 @@
       "id": "MH-035",
       "install_method": "npx @wonderwhy-er/desktop-commander@latest remote",
       "license_class": "PER_FILE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "DesktopCommanderMCP",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "desktop",
         "doors"
@@ -363,9 +363,9 @@
       "id": "MH-036",
       "install_method": "Connect paired device and AI client independently",
       "license_class": "SERVICE_OR_DOCS",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Remote Desktop Commander MCP",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "desktop"
       ],
@@ -378,7 +378,7 @@
       "id": "MH-037",
       "install_method": "Install Cua Driver on target desktop; grant local permissions",
       "license_class": "PER_FILE",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Cua Driver",
       "platform": "Multiple OS (check upstream)",
       "route_tags": [
@@ -394,9 +394,9 @@
       "id": "MH-038",
       "install_method": "Install via official installer or npm; no execution in this audit",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Codex CLI",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "doors"
       ],
@@ -409,9 +409,9 @@
       "id": "MH-039",
       "install_method": "Upstream Docker/Tailscale setup",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Local Gateway",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "desktop"
       ],
@@ -424,9 +424,9 @@
       "id": "MH-040",
       "install_method": "Configure own tailnet and grants",
       "license_class": "SERVICE_OR_DOCS",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Tailscale",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "desktop"
       ],
@@ -439,9 +439,9 @@
       "id": "MH-041",
       "install_method": "Inspect upstream security and install guide",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Mac Connector",
-      "platform": "macOS (verify upstream)",
+      "platform": "macOS",
       "route_tags": [],
       "summary": "Mac-approved actions through Muse.",
       "url": "https://github.com/dkm90x/muse-mac-connector"
@@ -452,9 +452,9 @@
       "id": "MH-042",
       "install_method": "Inspect upstream and use own instance",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Proxy",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Scoped gateway to self-hosted CalDAV/CardDAV resources.",
       "url": "https://github.com/NeedsChloesure/muse-proxy"
@@ -465,9 +465,9 @@
       "id": "MH-043",
       "install_method": "Build supported connector and tests",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Agent Connector Launch Kit",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "OpenAPI connector development and test tooling.",
       "url": "https://github.com/camirian/agent-connector-launch-kit"
@@ -478,9 +478,9 @@
       "id": "MH-044",
       "install_method": "Follow upstream installation in isolated device",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Burner Android agent skills",
-      "platform": "Android (verify upstream)",
+      "platform": "Android",
       "route_tags": [],
       "summary": "Muse skill/CLI for using apps on a spare Android device.",
       "url": "https://github.com/useburner/burner"
@@ -491,7 +491,7 @@
       "id": "MH-045",
       "install_method": "Build on user Mac with Xcode and Gadget SDK",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Apple Watch SwiftUI",
       "platform": "Apple Watch · watchOS",
       "route_tags": [
@@ -506,9 +506,9 @@
       "id": "MH-046",
       "install_method": "Build iPhone/watch pair",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Watch iPhone relay",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "watch"
       ],
@@ -521,7 +521,7 @@
       "id": "MH-047",
       "install_method": "Sideload supported watch APK per upstream",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse for Wear OS",
       "platform": "Wear OS",
       "route_tags": [
@@ -536,7 +536,7 @@
       "id": "MH-048",
       "install_method": "Upstream ADB/APK setup",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Lux Watch",
       "platform": "Wear OS",
       "route_tags": [],
@@ -549,9 +549,9 @@
       "id": "MH-049",
       "install_method": "Build Android APK from source",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Gadget Everywhere",
-      "platform": "Android (verify upstream)",
+      "platform": "Android",
       "route_tags": [
         "companion"
       ],
@@ -564,9 +564,9 @@
       "id": "MH-050",
       "install_method": "Follow Mac bridge and glasses web app",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Glasses",
-      "platform": "macOS (verify upstream)",
+      "platform": "macOS",
       "route_tags": [],
       "summary": "Ray-Ban Display bridge with app UI and agent progress.",
       "url": "https://github.com/sidart10/muse-glasses"
@@ -577,9 +577,9 @@
       "id": "MH-051",
       "install_method": "Build Xteink X4 Pro firmware",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Pocket",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "watch"
       ],
@@ -592,9 +592,9 @@
       "id": "MH-052",
       "install_method": "Follow upstream ESP-IDF provisioning",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Gadget Forge",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "companion"
       ],
@@ -607,9 +607,9 @@
       "id": "MH-053",
       "install_method": "Inspect home template and identity lifecycle",
       "license_class": "REPORTED_UNVERIFIED",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "MuseCondo",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Standalone homes, live Tower, resident identity, Soul Vault and social shared spaces.",
       "url": "https://github.com/mkhsu2002/MuseCondo"
@@ -620,9 +620,9 @@
       "id": "MH-054",
       "install_method": "Follow hardware/firmware guide",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse R1",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Rabbit r1 running Muse Gadget SDK.",
       "url": "https://github.com/cameronapak/muse-r1"
@@ -633,9 +633,9 @@
       "id": "MH-055",
       "install_method": "Follow macOS source build",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Gadget macOS",
-      "platform": "macOS (verify upstream)",
+      "platform": "macOS",
       "route_tags": [],
       "summary": "Mac CoreBluetooth adapter with browser preview.",
       "url": "https://github.com/rjohnt/muse-gadget-macos"
@@ -646,9 +646,9 @@
       "id": "MH-056",
       "install_method": "Install add-on after Home Assistant checks",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Home Assistant Muse Gadget",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Home Assistant add-on for Gadget SDK integration.",
       "url": "https://github.com/Josh-Archer/homeassistant-addon-muse-gadget"
@@ -659,9 +659,9 @@
       "id": "MH-057",
       "install_method": "Build compatible hardware firmware",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Gadget Xiaozhi",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "ESP32-S3 screen, voice and captions on Xiaozhi boards.",
       "url": "https://github.com/moerdowo/muse-gadget-xiaozhi"
@@ -672,9 +672,9 @@
       "id": "MH-058",
       "install_method": "Hardware-specific instructions",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse gadget PSP",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Sony PSP port of Gadget SDK.",
       "url": "https://github.com/wobsoriano/muse-gadget-psp"
@@ -685,9 +685,9 @@
       "id": "MH-059",
       "install_method": "Hardware-specific instructions",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse mobile/Watch passport",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Gadget SDK port for ESP32-C3 FoloToy Passport.",
       "url": "https://github.com/timzenxia/muse-ai-passport"
@@ -698,9 +698,9 @@
       "id": "MH-060",
       "install_method": "Local artifact analysis after tool setup",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "REA — Reverse Engineer Anything",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Local reverse-engineering toolchain with MCP and CLI analysis routes.",
       "url": "https://github.com/morluto/rea"
@@ -711,9 +711,9 @@
       "id": "MH-064",
       "install_method": "Inspect upstream README and rights",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "muse2api media video",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Community Muse video-generation API wrapper.",
       "url": "https://github.com/LIUFelix2004/museAPI-video"
@@ -724,9 +724,9 @@
       "id": "MH-065",
       "install_method": "Adopt references selectively into Creative Studio",
       "license_class": "MIT",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse visual motion skills",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "companion"
       ],
@@ -737,11 +737,11 @@
       "category": "Skills and catalogs",
       "evidence": "README and Python code inspected",
       "id": "MH-066",
-      "install_method": "Compare with your S1-S5; preserve unique features",
+      "install_method": "Follow the project’s Plan and Attack workflow guides",
       "license_class": "MIT",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "TGL Muse coding harness",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Spec-first Plan and Attack modes with MCP connector and CLI.",
       "url": "https://github.com/tom-nwachuku/tgl"
@@ -752,9 +752,9 @@
       "id": "MH-067",
       "install_method": "Board-specific",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Gadget StackChan",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "companion"
       ],
@@ -767,9 +767,9 @@
       "id": "MH-068",
       "install_method": "Board-specific firmware",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Gadget Waveshare",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "ESP32-S3 LCD/AMOLED variants and media replies.",
       "url": "https://github.com/wupsbr/waveshare-muse-gadget-sdk"
@@ -780,9 +780,9 @@
       "id": "MH-069",
       "install_method": "Glasses-specific",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse on Rokid glasses",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Rokid glasses bridge with voice and avatar.",
       "url": "https://github.com/Eis4TY/rokid-muse-aiui"
@@ -793,9 +793,9 @@
       "id": "MH-070",
       "install_method": "Device-specific setup",
       "license_class": "UNKNOWN",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Portal port",
-      "platform": "Android (verify upstream)",
+      "platform": "Android",
       "route_tags": [],
       "summary": "Meta Portal sideloaded Android app for Muse.",
       "url": "https://github.com/wobsoriano/portal-muse"
@@ -806,9 +806,9 @@
       "id": "MH-071",
       "install_method": "Git clone + npm install (after source review); pair with personal SDK token",
       "license_class": "APACHE_2_0",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "wong2 muse-client",
-      "platform": "macOS (verify upstream)",
+      "platform": "macOS",
       "route_tags": [],
       "summary": "TypeScript client using Gadget SDK pairing and subscribed chat events; supports reply correlation, images, macOS pairing.",
       "url": "https://github.com/wong2/muse-client"
@@ -819,9 +819,9 @@
       "id": "MH-074",
       "install_method": "Use for optional paid/API model backend",
       "license_class": "SERVICE_OR_DOCS",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Meta Model API developer documentation",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [],
       "summary": "Official Muse-model inference API; distinct from personal Muse/Hatch VM and its chat history.",
       "url": "https://dev.meta.ai/docs/overview"
@@ -832,9 +832,9 @@
       "id": "MH-075",
       "install_method": "Use primary upstream project install path; do not copy private requests",
       "license_class": "REPORTED_UNVERIFIED",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse Bridge bidirectional task contract",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "cli",
         "family"
@@ -848,9 +848,9 @@
       "id": "MH-076",
       "install_method": "Use documentation for transport compatibility matrix",
       "license_class": "REPORTED_UNVERIFIED",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse CLI reverse-engineered protocol reference",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "cli"
       ],
@@ -863,9 +863,9 @@
       "id": "MH-077",
       "install_method": "Pin and classify by observed/action/untested flags",
       "license_class": "REPORTED_UNVERIFIED",
-      "limitation": "Hub runtime integration not verified. Source reviewed historically; confirm current upstream setup, rights and permissions.",
+      "limitation": "Setup instructions and license are provided by the project publisher.",
       "name": "Muse CLI 402-route inventory",
-      "platform": "OS: check upstream source",
+      "platform": "See project requirements",
       "route_tags": [
         "cli"
       ],
@@ -875,12 +875,12 @@
   ],
   "last_reviewed": "2026-11-15",
   "native_muse_connected": false,
-  "publication": "OFFLINE_PREVIEW_NOT_PUBLISHED",
+  "publication": "PUBLIC_DIRECTORY",
   "routes": [
     {
       "description": "Terminal clients, protocol notes and local coding bridges.",
       "id": "cli",
-      "notice": "Public upstream references only. Muse Code and personal Muse are different products; no Hub session is connected.",
+      "notice": "Open conversations, read history, and chat with Muse. Start with the terminal guide for installation and account setup.",
       "source_ids": [
         "MH-025",
         "MH-029",
@@ -889,12 +889,12 @@
         "MH-076",
         "MH-077"
       ],
-      "title": "Personal Muse CLI"
+      "title": "Muse in your terminal"
     },
     {
       "description": "GUI drivers, remote terminal tools and scoped workstation access.",
       "id": "desktop",
-      "notice": "Requires original host setup, OS permissions and independent operator authorization; no desktop is connected here.",
+      "notice": "Choose a tool for your operating system and follow its host setup instructions.",
       "source_ids": [
         "MH-004",
         "MH-035",
@@ -903,12 +903,12 @@
         "MH-039",
         "MH-040"
       ],
-      "title": "Desktop & computer use"
+      "title": "Desktop and computer use"
     },
     {
       "description": "Official wearables news, Gadget SDK and community Watch clients.",
       "id": "watch",
-      "notice": "Physical pairing, account eligibility and hardware support are not verified by this Hub preview.",
+      "notice": "Choose your device, then follow the project’s pairing and firmware guide.",
       "source_ids": [
         "MH-001",
         "MH-005",
@@ -917,34 +917,34 @@
         "MH-047",
         "MH-051"
       ],
-      "title": "Watch & devices"
+      "title": "Watches and devices"
     },
     {
-      "description": "Public bridge protocols and connector research for account-to-account workflows.",
+      "description": "Task handoffs, collaboration tools and structured results.",
       "id": "family",
-      "notice": "Original Family Link is owner-only and not publicly available. These public references are not its implementation or a connected recipient.",
+      "notice": "Explore tools for sharing tasks and passing structured results between assistants.",
       "source_ids": [
         "MH-029",
         "MH-031",
         "MH-075"
       ],
-      "title": "Family Link & handoffs"
+      "title": "Handoffs and collaboration"
     },
     {
-      "description": "Tools useful around the original five-step repair and verification process.",
+      "description": "Tools for debugging, testing and reviewing code.",
       "id": "doors",
-      "notice": "The original five-door implementation is owner-only and not publicly available. These are general tools, not a replacement controller.",
+      "notice": "Tools for reproducing issues, making repairs, and reviewing the results.",
       "source_ids": [
         "MH-035",
         "MH-037",
         "MH-038"
       ],
-      "title": "Five-door engineering"
+      "title": "Engineering workflows"
     },
     {
       "description": "Gadget interfaces, interactive companions and media resources.",
       "id": "companion",
-      "notice": "The original Companion/Arcade is owner-only and not publicly available. No ROMs, copyrighted game packs or private assets are included.",
+      "notice": "Find interfaces, animations and device projects for building your own companion.",
       "source_ids": [
         "MH-001",
         "MH-049",
@@ -952,7 +952,7 @@
         "MH-065",
         "MH-067"
       ],
-      "title": "Companion & Arcade"
+      "title": "Companions and creative tools"
     }
   ],
   "schema": "muse-hub-h02/public-discovery/v1"

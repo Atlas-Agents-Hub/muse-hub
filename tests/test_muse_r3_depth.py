@@ -75,9 +75,13 @@ class R3DepthTests(unittest.TestCase):
             'starters/'+sid+'/STARTER.md' for sid in
             ('data-cleaner','operations-analyst','customer-support-designer','frontend-partner')}
         prefix='collections/muse-starters-v1/'
+        revisions={row['original_path']:row for row in
+                   json.loads((C/'PUBLIC_REVISIONS.json').read_text(encoding='utf-8'))['entries']
+                   if row['ledger']=='promotion'}
         for p,h in json.loads(manifest.read_text(encoding='utf-8'))['files'].items():
             relative=p[len(prefix):] if p.startswith(prefix) else None
-            source=C/'r5'/'baseline'/relative if relative in migrated else ROOT/p
+            source=(C/'r5'/'baseline'/relative if relative in migrated else
+                    ROOT/revisions[p]['archive_path'] if p in revisions else ROOT/p)
             with self.subTest(path=p):self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(),h)
 
 def _skill_test(sid):

@@ -39,7 +39,7 @@ Keep versions and conditions separate and ask which governs the task only if unr
 
 **Avoid:** Do not invent a merged exam fact.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** The learner explains cause and gives an example but omits the rule’s limit.
 
@@ -47,7 +47,7 @@ Keep versions and conditions separate and ask which governs the task only if unr
 
 **Result:** Feedback: cause and example demonstrated; limit needs repair. Ask a contrasting example instead of reteaching everything.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** After a hint the learner answers the new example correctly.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `teach-back-r4-standard`, `teach-back-r4-edge`, `teach-back-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

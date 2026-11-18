@@ -98,20 +98,19 @@ class GitHubQuickstartTests(unittest.TestCase):
             path=ROOT/"presets"/role/"INSTALL.md"
             doc=path.read_text(encoding="utf-8")
             self.assertIn(role,doc)
-            self.assertIn("github_quickstart.py",doc)
-            self.assertIn("GITHUB_QUICKSTART.md",doc)
-            self.assertIn("source",doc.lower())
+            self.assertIn("START_HERE.md",doc)
+            self.assertIn("TERMINAL.md",doc)
+            self.assertIn("three subchats",doc)
         self.assertEqual(len(load_registry()["presets"]),15)
 
-    def test_release_guide_has_os_commands_and_truthful_tiers(self):
+    def test_release_guide_has_os_commands_and_first_use(self):
         guide=(ROOT/"docs/GITHUB_QUICKSTART.md").read_text(encoding="utf-8")
         for text in ("PowerShell","Windows","macOS","Linux","--all","--role",
-                     "PYTHONPATH","not connected","local","native","GitHub"):
+                     "PYTHONPATH","INSTALL.md","TERMINAL.md"):
             self.assertIn(text,guide)
-        self.assertIn("software-engineer",guide)
-        self.assertIn("reverse-engineering-researcher",guide)
-        self.assertIn("source-only",guide)
-        self.assertIn("unsupported",guide.lower())
+        self.assertIn("quickstart.py",guide)
+        self.assertIn("tools/muse_collection.py demo data-engineer",guide)
+        self.assertIn("new absolute output path",guide)
 
     def test_extension_guide_references_real_modules_and_stop_rules(self):
         guide=(ROOT/"docs/EXTENDING_GENERIC_AGENTS.md").read_text(encoding="utf-8")
@@ -161,7 +160,9 @@ class GitHubQuickstartTests(unittest.TestCase):
         paths=set()
         for guide in guides:
             paths.update(re.findall(r"examples/[a-z0-9_]+\.py",guide.read_text(encoding="utf-8")))
-        self.assertIn("examples/github_quickstart.py",paths)
+        self.assertIn("examples/daily_desk.py",paths)
+        self.assertIn("quickstart.py --all",(ROOT/"docs/GITHUB_QUICKSTART.md").read_text(encoding="utf-8"))
+        self.assertTrue((ROOT/"quickstart.py").is_file())
         for path in sorted(paths):
             self.assertTrue((ROOT/path).is_file(),path)
 

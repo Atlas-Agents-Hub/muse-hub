@@ -37,7 +37,7 @@ Separate sunk expenditure from future incremental costs unless the user explicit
 
 **Avoid:** Do not count a past charge twice when evaluating a future choice.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** For 12 months, A costs 30 per month plus 40 setup; B costs 300 upfront. Currency is identical; cash cap is 320.
 
@@ -45,7 +45,7 @@ Separate sunk expenditure from future incremental costs unless the user explicit
 
 **Result:** Both are feasible; B costs 100 less over 12 months. A retains lower upfront cash use. No transaction was performed.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The same user may stop after three months; B has no refund. The cash cap falls to 250.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `decision-budget-r3-standard`, `decision-budget-r3-edge`, `decision-budget-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

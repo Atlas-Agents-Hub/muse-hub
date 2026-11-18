@@ -37,7 +37,7 @@ Report both measurements and decide against the actual workload objective.
 
 **Avoid:** Do not publish a universal speedup from a single query sample.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Plan rows include SCAN users, SEARCH orders USING INDEX order_id, and a temporary ordering B-tree.
 
@@ -45,7 +45,7 @@ Report both measurements and decide against the actual workload objective.
 
 **Result:** The report contains one table scan, one search and one temporary sort; performance is not declared proven.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A plan contains SCAN tags USING COVERING INDEX tag_name plus an unknown future-format row.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `query-plan-review-r5-standard`, `query-plan-review-r5-edge`, `query-plan-review-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

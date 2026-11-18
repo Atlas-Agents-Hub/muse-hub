@@ -37,7 +37,7 @@ Return ready_for_host_review while leaving execution_authorized false.
 
 **Avoid:** Do not treat self-reported plan fields as authenticated execution authority.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A read step feeds a send step whose approval is false and whose idempotency key is once.
 
@@ -45,7 +45,7 @@ Return ready_for_host_review while leaving execution_authorized false.
 
 **Result:** The report orders read then send, blocks send for approval_missing and grants no execution authority.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The same plan declares approval true and a stable operation key.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `automation-contract-r5-standard`, `automation-contract-r5-edge`, `automation-contract-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

@@ -1,3 +1,3 @@
-# Private memory (new installation)
+# Private memory
 
-This is a blank user-owned memory template. Do not auto-fill from another assistant. Distinguish observation, inference, user preference and verified decisions. Back up before any migration; preserve later user edits.
+Record useful preferences and verified decisions in the user's chosen memory system. Distinguish observations and inferences. Preserve existing memory and later user edits when adding or updating this kit; back up before a requested migration.

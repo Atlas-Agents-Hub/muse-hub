@@ -37,7 +37,7 @@ Preserve its numbers and return calculation disputes to the analysis owner.
 
 **Avoid:** Do not silently recompute or change governed analysis while polishing a chart.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Tickets fall from 100 to90 while active accounts fall from 1000 to600.
 
@@ -45,7 +45,7 @@ Preserve its numbers and return calculation disputes to the analysis owner.
 
 **Result:** Ticket count fell 10%; tickets per account rose 50%, an increase of 0.05 per account. This does not establish that a redesign helped or harmed users.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The prior period has zero incidents and the current period has three.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `metrics-review-r3-standard`, `metrics-review-r3-edge`, `metrics-review-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

@@ -23,10 +23,10 @@ class MuseHubBrandLaunch(unittest.TestCase):
         self.assertTrue(text.startswith("# Muse Hub\n"))
         self.assertIn("Independently developed",hero)
         for label in ("15 independent assistants","three subchats","75 skills",
-                      "25 workflows","100 task starters","151 connector records"):
+                      "25 workflows","100 task starters","151 connectors"):
             self.assertIn(label,hero)
-        for action in ("Choose an assistant","Get the current published release",
-                       "Browse tools","Explore connector records"):
+        for action in ("Choose an assistant","Download v1.1.0",
+                       "Visit Muse Hub","Get started"):
             self.assertIn(action,hero)
         self.assertEqual(text.count("<details>"),4)
         self.assertEqual(text.count("</details>"),4)
@@ -35,24 +35,19 @@ class MuseHubBrandLaunch(unittest.TestCase):
         self.assertNotIn("Atlas Origins",text)
         self.assertLess(len(text.encode("utf-8")),8000)
 
-    def test_recent_source_work_is_discoverable_without_native_claims(self):
+    def test_download_and_setup_guides_are_discoverable(self):
         text=README.read_text(encoding="utf-8")
-        for path in ("kits/engineering-doors/README.md",
-                     "kits/family-handoff/README.md",
-                     "docs/discovery/ROUTE_COMPATIBILITY.md",
-                     "docs/HUB_FEATURE_READINESS.md",
+        for path in ("docs/DOWNLOAD_A_SPECIALIST.md",
+                     "docs/GETTING_STARTED.md",
+                     "docs/TERMINAL.md",
+                     "docs/COMPANION_HOME.md",
                      "docs/handbook/specialists-by-task.md",
-                     "docs/discovery/agent-capabilities.json",
-                     "docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md"):
+                     "https://atlas-origins.github.io/muse-ai-agent-presets/",
+                     "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.0"):
             self.assertIn(path,text)
-        self.assertIn("H11",text)
-        self.assertIn("H12",text)
-        self.assertIn("v1.1.0",text)
-        self.assertIn("draft",text.lower())
-        self.assertIn("v1.0.0",text)
-        self.assertIn("source-only",text.lower())
-        self.assertIn("not installed native Muse agents",text)
-        self.assertIn("not deployed",text.lower())
+        self.assertNotRegex(text, r"\b[HS]\d{2}\b")
+        for stale in ("v1.1.0 draft", "source-only", "not deployed"):
+            self.assertNotIn(stale,text.lower())
         self.assertIn("quickstart.py --role personal-companion --to",text)
 
     def test_site_uses_distinct_muse_identity_and_newer_features(self):
@@ -60,13 +55,13 @@ class MuseHubBrandLaunch(unittest.TestCase):
         self.assertIn("<title>Muse Hub",html)
         self.assertIn('class="brand-symbol"',html)
         self.assertIn("INDEPENDENTLY BUILT FOR MUSE",html)
-        self.assertIn("H11 / SOURCE-TESTED",html)
-        self.assertIn("H12 / SOURCE-TESTED",html)
-        self.assertIn("H00–H21 / OPEN GATES",html)
-        for path in ("kits/engineering-doors/README.md",
-                     "kits/family-handoff/README.md",
-                     "docs/HUB_FEATURE_READINESS.md"):
+        for path in ('href="downloads.html"',
+                     "docs/GETTING_STARTED.md",
+                     "docs/TERMINAL.md",
+                     "docs/COMPANION_HOME.md",
+                     "releases/download/v1.1.0/"):
             self.assertIn(path,html)
+        self.assertNotRegex(html, r"\b[HS]\d{2}\b")
         self.assertNotIn("COMMUNITY SOURCE PROJECT",html)
         self.assertNotIn("community-built",html.lower())
         self.assertNotIn("atlas-origins.github.io/kits",html)
@@ -75,9 +70,13 @@ class MuseHubBrandLaunch(unittest.TestCase):
     def test_site_integrity_matches_exact_static_assets(self):
         meta=json.loads((SITE/"INTEGRITY.json").read_text(encoding="utf-8"))
         self.assertEqual(meta["schema"],"muse-hub/public-website-overlay/v1")
-        self.assertEqual(len(meta["files"]),9)
-        self.assertIn("index.html",meta["files"])
-        self.assertIn("public/catalog.json",meta["files"])
+        self.assertEqual(meta["source_kind"],"STATIC_WEBSITE")
+        self.assertEqual(set(meta["files"]),{
+            "README.md", "index.html", "site.css", "site.js", "roles.json",
+            "downloads.html", "downloads.js", "downloads.json",
+            "public/index.html", "public/styles.css", "public/app.js",
+            "public/catalog.json",
+        })
         selected=select_public_files(ROOT,verify_manifest=False)
         for path,row in meta["files"].items():
             content=(SITE/path).read_bytes()

@@ -39,7 +39,7 @@ Distinguish association, assumptions and alternative explanations.
 
 **Avoid:** Do not infer causation from an attractive chart or a correlation alone.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Rows contain values 2, 4 and one missing value.
 
@@ -47,7 +47,7 @@ Distinguish association, assumptions and alternative explanations.
 
 **Result:** Three input rows, two observed, one missing; sum 6 and observed mean 3. No imputation has been performed.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** All values in a group are missing.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `analysis-notebook-r4-standard`, `analysis-notebook-r4-edge`, `analysis-notebook-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

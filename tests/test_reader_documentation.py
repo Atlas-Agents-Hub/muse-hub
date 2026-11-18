@@ -30,18 +30,24 @@ class ReaderDocumentationTests(unittest.TestCase):
   body=(ROOT/'docs/ARCHITECTURE.md').read_text('utf-8')
   for term in ('presets/catalog.json','src/muse_presets/','templates/profile/','Local tools','Host integration'):
    self.assertIn(term,body)
- def test_install_guide_does_not_repeat_obsolete_windows_refusal(self):
-  body=(ROOT/'docs/INSTALL_AND_PERSISTENCE.md').read_text('utf-8')
-  self.assertNotIn('Windows can stage the pack but cannot execute',body)
-  self.assertIn('Windows',body)
-  self.assertIn('does not install',body.lower())
- def test_public_demo_uses_a_new_absolute_destination(self):
-  if not PUBLIC:return
-  for name in ('README.md','docs/GITHUB_QUICKSTART.md','docs/discovery/AI_AGENT_GUIDE.md'):
-   body=(ROOT/name).read_text('utf-8')
-   with self.subTest(path=name):
-    self.assertNotIn('--to ../creative-production-demo',body)
-    self.assertIn('--to "$HOME/creative-production-demo"',body)
+ def test_install_guide_describes_current_setup_on_supported_platforms(self):
+     body=(ROOT/'docs/INSTALL_AND_PERSISTENCE.md').read_text('utf-8')
+     self.assertNotIn('Windows can stage the pack but cannot execute',body)
+     for term in ('Windows','macOS','Linux','START_HERE.md','Main','three focused subchats'):
+         self.assertIn(term,body)
+     self.assertIn('No Python is needed for these instructions',body)
+     self.assertIn('Python 3.12+',body)
+ def test_public_command_guides_use_new_absolute_destinations(self):
+     if not PUBLIC:return
+     for name in ('README.md','docs/GITHUB_QUICKSTART.md'):
+         body=(ROOT/name).read_text('utf-8')
+         with self.subTest(path=name):
+             self.assertNotRegex(body,r'--to\s+\.\./')
+             self.assertIn('--to "$HOME/my-assistant-kit"',body)
+     ai=(ROOT/'docs/discovery/AI_AGENT_GUIDE.md').read_text('utf-8')
+     self.assertIn('../GITHUB_QUICKSTART.md',ai)
+     release=(ROOT/'docs/RELEASES.md').read_text('utf-8')
+     self.assertIn('--to "$HOME/creative-production-demo"',release)
  def test_public_reader_docs_keep_history_out_of_headings(self):
   if not PUBLIC:return
   for page in (ROOT/'docs').rglob('*.md'):
@@ -49,8 +55,11 @@ class ReaderDocumentationTests(unittest.TestCase):
     for line in page.read_text('utf-8').splitlines():
      if line.startswith('#'):
       self.assertNotRegex(line,r'(?i)\.S2|source increment|first richer|\bR\d{2}\b|\bT\d{2}\b')
- def test_source_test_and_permission_limits_stay_explicit(self):
-  joined='\n'.join((ROOT/n).read_text('utf-8').lower() for n in CORE)
-  for term in ('not a sandbox','not installed','disabled','authentication'):
-   self.assertIn(term,joined)
+ def test_setup_describes_permissions_and_private_storage_where_needed(self):
+     joined='\n'.join((ROOT/n).read_text('utf-8').lower() for n in CORE)
+     for term in ('not a sandbox','disabled','authentication','credentials','permissions'):
+         self.assertIn(term,joined)
+     setup=(ROOT/'docs/INSTALL_AND_PERSISTENCE.md').read_text('utf-8').lower()
+     self.assertIn('private workspace',setup)
+     self.assertIn('operating-system permissions',setup)
 if __name__=='__main__':unittest.main()

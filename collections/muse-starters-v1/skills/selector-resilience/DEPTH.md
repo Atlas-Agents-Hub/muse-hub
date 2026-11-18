@@ -37,7 +37,7 @@ Invalidate stale observations and rebind the target through the original browser
 
 **Avoid:** Do not reuse a cached match count as current evidence.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A role locator matches two submit buttons; a unique test ID points to delete instead.
 
@@ -45,7 +45,7 @@ Invalidate stale observations and rebind the target through the original browser
 
 **Result:** No candidate is selected and the report requests more observation without performing a click.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A role locator has one visible stable match bound to submit.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `selector-resilience-r5-standard`, `selector-resilience-r5-edge`, `selector-resilience-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

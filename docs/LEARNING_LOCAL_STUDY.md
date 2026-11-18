@@ -1,6 +1,6 @@
 # Learning Coach — local study ledger
 
-`src/muse_presets/learning_session.py` provides local study sessions and review history using Python and SQLite. It does **not** install a Muse personal assistant, claim approved educational/clinical content, prove model or connector authorization, or create a native reminder. The implementation is first-party code; reference material was not copied.
+Build study sessions from your source material, review proposed questions, score practice, and keep progress in SQLite. The Python implementation is in `src/muse_presets/learning_session.py`.
 
 ## Runnable vertical slice
 
@@ -35,7 +35,7 @@ The demo deletes its fabricated SQLite database when complete. `LearningSession`
 
 The plain SQLite file stores owner-provided study text and protected answers in **unencrypted local storage**. Keep it outside public Git, shared directories and untrusted machines. It is not suitable for PHI, exam secrets, regulated assessment or untrusted user input as an authentication source. A row hash detects some drift but cannot authenticate the person or stop deliberate DB tampering.
 
-Failure cases tested include changed source bytes, modified draft content, stale versions, wrong owner/Space/learner, wrong or changed session, changed operation IDs, duplicate grades, exact expiry, bad clock, hidden extra draft writes, symlinked parent, and mid-transaction SQL errors. Tests are local fixtures, not proof of real native Muse or learner outcomes.
+Failure cases tested include changed source bytes, modified draft content, stale versions, wrong owner/Space/learner, wrong or changed session, changed operation IDs, duplicate grades, exact expiry, bad clock, hidden extra draft writes, symlinked parent, and mid-transaction SQL errors. The regression suite exercises these storage and review operations using controlled inputs.
 
 ## Next original-host gates
 

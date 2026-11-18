@@ -1,4 +1,4 @@
-/* Muse Hub standalone landing: local-only progressive enhancement for role discovery. */
+/* Muse Hub specialist discovery and setup. */
 (() => {
   'use strict';
   const search = document.getElementById('role-search');
@@ -45,8 +45,7 @@
       update();
     }
   });
-  // Source-only role onboarding: all role identifiers originate in the
-  // same validated role set as the public cards. No network activity occurs.
+  // Use only the role and asset identifiers present in the reviewed cards.
   const setupSelect = document.getElementById('setup-role-select');
   const setupResult = document.getElementById('setup-role-result');
   const setupEmpty = document.getElementById('setup-role-empty');
@@ -54,10 +53,12 @@
   const setupDescription = document.getElementById('setup-role-description');
   const setupInstall = document.getElementById('setup-role-install');
   const setupProfile = document.getElementById('setup-role-profile');
+  const setupDownload = document.getElementById('setup-role-download');
+  const roleAssets = new Map(cards.map(card => [card.dataset.role, card.dataset.asset]));
   const knownRoles = new Set(cards.map(card => card.dataset.role));
   const sourceBase = 'https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/';
   const setupReady = setupSelect && setupResult && setupEmpty && setupTitle &&
-    setupDescription && setupInstall && setupProfile && knownRoles.size === 15;
+    setupDescription && setupInstall && setupProfile && setupDownload && knownRoles.size === 15;
 
   function selectSetupRole() {
     if (!setupReady) return;
@@ -67,11 +68,14 @@
       setupEmpty.hidden = false;
       return;
     }
+    const asset = roleAssets.get(slug);
+    if (!asset || !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(asset)) return;
     const option = setupSelect.selectedOptions[0];
     setupTitle.textContent = option.textContent;
     setupDescription.textContent = option.dataset.description || '';
     setupInstall.href = `${sourceBase}${slug}/INSTALL.md`;
     setupProfile.href = `${sourceBase}${slug}/README.md`;
+    setupDownload.href = `https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-${asset}-v1.1.0.zip`;
     setupEmpty.hidden = true;
     setupResult.hidden = false;
   }

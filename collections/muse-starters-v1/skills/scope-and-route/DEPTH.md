@@ -39,7 +39,7 @@ Reopen its artifact and establish current validity before using it as a dependen
 
 **Avoid:** Do not restart completed work merely because the chat or process restarted.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Draft a report, then send it after approval. The mail tool exists, but sending is not yet approved.
 
@@ -47,7 +47,7 @@ Reopen its artifact and establish current validity before using it as a dependen
 
 **Result:** Draft the report now. Hold sending for the exact recipient and approved content; do not call the entire request blocked.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The draft was completed in the previous session and approval to send is now explicit.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `scope-and-route-r4-standard`, `scope-and-route-r4-edge`, `scope-and-route-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

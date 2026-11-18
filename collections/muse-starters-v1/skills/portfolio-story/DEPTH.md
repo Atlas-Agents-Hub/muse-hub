@@ -39,7 +39,7 @@ Update the claim and preserve the relevant historical context.
 
 **Avoid:** Do not quietly retain an obsolete deployment or performance assertion.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Claim C1 says tested and has build/test evidence; C2 says deployed but only build evidence exists.
 
@@ -47,7 +47,7 @@ Update the claim and preserve the relevant historical context.
 
 **Result:** Keep C1. Rewrite C2 as built or mark deployment unverified; the project remains useful portfolio evidence.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A later deployment receipt verifies C2.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `portfolio-story-r4-standard`, `portfolio-story-r4-edge`, `portfolio-story-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

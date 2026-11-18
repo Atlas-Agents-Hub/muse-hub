@@ -37,7 +37,7 @@ Report this incident duration and explain the missing population needed for a me
 
 **Avoid:** Do not label a single observation as a service-level average.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Start at 07:00-05:00, mitigation at 12:05Z and resolution at 12:20Z.
 
@@ -45,7 +45,7 @@ Report this incident duration and explain the missing population needed for a me
 
 **Result:** The incident has 300 seconds to mitigation and 1200 seconds to resolution, not a population-average MTTR.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Only a 12:00Z start exists at an as-of time of 12:10Z.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `incident-triage-r5-standard`, `incident-triage-r5-edge`, `incident-triage-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

@@ -167,7 +167,7 @@ class FamilySourcekitTests(unittest.TestCase):
             self.assertNotIn("services/family-native/server.py", members)
             self.assertNotIn("credentials.json", members)
             self.assertNotIn(".env", members)
-            self.assertEqual(manifest["source_commit"], "7069f0621da0d0ca7f87b1661872e4dbfa805d37")
+            self.assertEqual(manifest["source_commit"], "befa77356804843ce3a056aed21cb14a9a836b3c")
             self.assertEqual(manifest["scope"], "SOURCE_ONLY_OFFLINE_TWO_PROCESS_NOT_DELIVERED")
 
 
@@ -245,7 +245,8 @@ class FamilySourcekitTests(unittest.TestCase):
         self.assertIn("examples/export_family_link_sourcekit.py", text)
         self.assertIn("NOT", text)
         self.assertIn("offline", text.lower())
-        self.assertIn("kits/FAMILY_LINK_SOURCEKIT.md", (ROOT / "docs/README.md").read_text(encoding="utf-8"))
+        self.assertIn("FAMILY_LINK.md", (ROOT / "docs/README.md").read_text(encoding="utf-8"))
+        self.assertIn("kits/FAMILY_LINK_SOURCEKIT.md", (ROOT / "docs/FAMILY_LINK.md").read_text(encoding="utf-8"))
 
 
     def test_nested_unhashable_receiver_policy_refused_without_unhandled_exception(self):

@@ -39,7 +39,7 @@ Evaluate assumptions and tradeoffs against the constraints.
 
 **Avoid:** Do not reject a valid alternative merely because it differs from the model’s preferred solution.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** An answer covers context and action but omits result, using 100 seconds of a 90-second budget.
 
@@ -47,7 +47,7 @@ Evaluate assumptions and tradeoffs against the constraints.
 
 **Result:** Keep the action, shorten setup, and add the actual result; the answer is ten seconds over budget and result coverage is missing.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** After coaching, the answer includes all rubric elements.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `interview-rehearsal-r4-standard`, `interview-rehearsal-r4-edge`, `interview-rehearsal-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

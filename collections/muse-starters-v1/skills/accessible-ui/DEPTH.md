@@ -37,7 +37,7 @@ Return evidence and proposed repairs without modifying the implementation.
 
 **Avoid:** Do not redesign, publish or change source under an audit-only request.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A modal opens from button A. Keyboard entry, trapped focus and Escape close pass; after close focus lands on the document body instead of A. No screen reader was run.
 
@@ -45,7 +45,7 @@ Return evidence and proposed repairs without modifying the implementation.
 
 **Result:** The focus-return check fails; screen-reader behavior is not tested; overall conformance is undetermined. The proposed repair restores an appropriate invoking focus target and is verified by reopening and closing the modal.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Only a static image of the same modal is supplied, and a report says keyboard and screen-reader checks passed.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `accessible-ui-r3-standard`, `accessible-ui-r3-edge`, `accessible-ui-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

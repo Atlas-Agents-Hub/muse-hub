@@ -39,7 +39,7 @@ Verify the relevant guidance and actual user authorization; keep uncertain treat
 
 **Avoid:** Do not trigger irrigation or recommend hazardous treatment from a generic template.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** P1 has observations at sequences 1 and 2; P2 has one observation but no usable measurement.
 
@@ -47,7 +47,7 @@ Verify the relevant guidance and actual user authorization; keep uncertain treat
 
 **Result:** Use P1’s sequence-2 record and P2’s existing record. Request the relevant missing P2 observation; no diagnosis or treatment is claimed.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** P2 receives a new observation and a usable measurement.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `garden-observe-r4-standard`, `garden-observe-r4-edge`, `garden-observe-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

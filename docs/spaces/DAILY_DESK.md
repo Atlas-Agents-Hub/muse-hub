@@ -1,6 +1,6 @@
 # Daily Desk: tasks, notes and a way back
 
-Daily Desk is a small full-stack local workbench on the existing `PersonalCompanion` SQLite backend and `SpaceCompanion` loopback server. It provides task and note editors, exact revision checks, interrupted-write recovery, checked backups and restoration into a new store. It is **not a deployed native Muse Space**, cloud sync service, scheduler or connected account.
+Keep tasks and notes together in Daily Desk. Edit records in your browser, reopen them later, resolve conflicting edits, and back up your work. Daily Desk stores your records in a SQLite database on your computer.
 
 ## First useful result — no setup or account
 
@@ -80,4 +80,4 @@ PYTHONPATH=src python3 -B -m unittest discover -s tests -p 'test_daily_desk*.py'
 
 On PowerShell, set `$env:PYTHONPATH='src'` and use `python`. Tests cover atomic writes and rollback, concurrent/stale edits, duplicate and conflicting operations, owner isolation, migrations, reopen, strict archives, read-only restore inspection, no-overwrite races and actual HTTP refusals. The client fixture tests lost acknowledgments; real browser and cross-platform evidence are separate from those assertions.
 
-See the [original Space starter](OPTIONAL_SPACE_STARTER.md), [durable-document guide](../handbook/durable-documents.md) and [design contract](../handbook/daily-desk-design.md). Official implementation references: [SQLite transactions](https://www.sqlite.org/lang_transaction.html) and [SQLite isolation](https://www.sqlite.org/isolation.html). This slice does not replace native Muse installation or broader connector/device acceptance.
+See the [original Space starter](OPTIONAL_SPACE_STARTER.md), [durable-document guide](../handbook/durable-documents.md) and [design contract](../handbook/daily-desk-design.md). Official implementation references: [SQLite transactions](https://www.sqlite.org/lang_transaction.html) and [SQLite isolation](https://www.sqlite.org/isolation.html).

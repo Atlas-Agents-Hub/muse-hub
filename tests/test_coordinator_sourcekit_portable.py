@@ -32,10 +32,11 @@ class PortableCoordinatorSourceKitTests(unittest.TestCase):
                 name.startswith("coordinator/system-files/") or
                 name=="coordinator/receipts/COORDINATOR_RECEIPT.json"):
                 self.assertNotIn(b"\r\n",data,name)
-        # Independent macOS R58 forensic comparison pin for neutral profile.
-        mac_profile_sha="09ccf155cc6e0562f7c129b21153666848891ec7b8a92d5c09a9ffc8f3468f1a"
+        # Reviewed v1.1.0 neutral profile bytes, after portable LF normalization.
+        # R58's historical macOS pin remains in git history; this release has new copy.
+        release_profile_sha="21d620f75c721d0865f9e008ba7a2624774805b3ef95c283449c2b3319210aaa"
         profile=contents["coordinator/profile/AGENTS.md"]
-        self.assertEqual(hashlib.sha256(profile).hexdigest(),mac_profile_sha)
+        self.assertEqual(hashlib.sha256(profile).hexdigest(),release_profile_sha)
         self.assertEqual(profile,contents["coordinator/system-files/AGENTS.md"])
         receipt=json.loads(contents["coordinator/profile/RECEIPT.json"])
         for name,pin in receipt["rendered_sha256"].items():

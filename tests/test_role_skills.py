@@ -51,7 +51,7 @@ class RoleSkillPackTests(unittest.TestCase):
                 self.assertIn("include_in_prompt: false",descriptor)
                 self.assertIn(method,body)
                 self.assertIn("stop",body.casefold())
-                self.assertIn("not installed",body.casefold())
+                self.assertIn("current assistant",body.casefold())
                 self.assertFalse((folder/"run.py").exists())
             self.assertEqual(api.inspect_role_skills(dest)["status"],"LOCAL_ROLE_SKILLS_MATCH")
             r=(dest/"config/skills.yaml").read_text()
@@ -252,7 +252,7 @@ class RoleSkillPackTests(unittest.TestCase):
             self.assertIn(method["trigger"],text)
             self.assertIn(method["stop_rule"],text)
             self.assertIn(method["handoff_to"],text)
-            self.assertIn("Do not send automatically.",text)
+            self.assertIn("Follow the user's current authorization before delivering it.",text)
             contents.append(text)
         self.assertEqual(len(set(contents)),3)
 
@@ -316,11 +316,14 @@ class RoleSkillPackTests(unittest.TestCase):
     def test_operator_guide_is_neutral_and_states_source_scope(self):
         doc=(Path(__file__).resolve().parents[1]/
              "docs/SKILLS.md").read_text(encoding="utf-8")
+        self.assertIn("DOWNLOAD_A_SPECIALIST.md",doc)
+        directory=(Path(__file__).resolve().parents[1]/
+                   "docs/DOWNLOAD_A_SPECIALIST.md").read_text(encoding="utf-8")
         for role in load_registry()["presets"]:
-            self.assertIn(role,doc)
+            self.assertIn("../presets/"+role+"/INSTALL.md",directory)
         for name in ("legacy-role-alpha","legacy-role-gamma","legacy-role-beta","legacy-role-delta","legacy-role-epsilon","legacy-role-zeta","legacy-role-eta"):
             self.assertNotIn(name,doc.casefold())
-        self.assertIn("source-only",doc)
-        self.assertIn("native",doc.casefold())
+        self.assertIn("skill",doc.casefold())
+        self.assertIn("Muse",doc)
 
 if __name__=="__main__":unittest.main()

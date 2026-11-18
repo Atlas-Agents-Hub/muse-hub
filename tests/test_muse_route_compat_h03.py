@@ -155,14 +155,19 @@ class H03Compatibility(unittest.TestCase):
                 select_public_files(root, verify_manifest=False)
 
 
-    def test_h03_is_discoverable_without_promising_native_access(self):
+    def test_route_reference_links_current_terminal_and_preserves_source_scope(self):
         index = (ROOT / "docs/README.md").read_text(encoding="utf-8")
-        self.assertIn("discovery/ROUTE_COMPATIBILITY.md", index)
+        self.assertIn("TERMINAL.md", index)
         guide = (ROOT / "docs/discovery/ROUTE_COMPATIBILITY.md").read_text(encoding="utf-8")
         self.assertIn("nikships/muse-cli", guide)
         self.assertIn("NOT_TESTED", guide)
-        self.assertIn("not a Muse API client", guide)
+        self.assertIn("[terminal guide](../TERMINAL.md)", guide)
+        self.assertIn("tools/compare_muse_routes.py --expect 258,402,146,2,8", guide)
+        self.assertIn("test_muse_route_compat_h03.py", guide)
         self.assertNotIn(chr(92) + "`", guide)
+        terminal = (ROOT / "docs/TERMINAL.md").read_text(encoding="utf-8")
+        for command in ("muse-cli status", "muse-cli threads", "muse-cli chat"):
+            self.assertIn(command, terminal)
 
 
 if __name__ == "__main__":

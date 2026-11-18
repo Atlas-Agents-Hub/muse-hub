@@ -1,8 +1,8 @@
-# Family Link — offline source handoff kit (H12)
+# Family Link handoff kit
 
-This is a **source-only, independently runnable archive** of Muse Hub's existing `family.py` and `family_envelope.py` policy plus its two-process fictional demonstration. It does not add a transport, scheduler, identity provider, durable replay ledger, agent registration or cross-account messaging controller.
+Prepare and review handoff records with the Family Link kit. It contains the role policies, envelope checks, and a worked two-process example using `family.py` and `family_envelope.py`.
 
-The exporter packages the accepted **15 disabled-by-default assistant role profiles**, local catalog and exact dependency modules, source-level MIT license, and original two-process demo. It does **not** copy secrets, installed accounts, memory, connectors, owner state or private donor files. It leaves the separate original TaskGuard/retention P1 security hold unchanged.
+The archive includes 15 role policies, their required modules, the MIT license, and the example. Keep your personal account configuration and working data in your private workspace.
 
 ## Build and verify from reviewed source
 
@@ -38,7 +38,7 @@ On Windows PowerShell, set `$env:PYTHONPATH = "src"` first and run the same Pyth
 - The input modules, catalog, and all 15 role profiles are pinned to the accepted Muse Hub `7069f062` source by explicit SHA-256. Future changes require deliberate pin review. Exact role IDs and disabled Family Link settings are verified; no role gets native grants.
 - Archive members are fixed, sorted, deterministic and SHA-256 inventoried. The ZIP verifier requires a caller-supplied archive digest, rejects duplicate entries, unsafe paths, symlinks, unreviewed members, modified source pins and oversized content. The manifest is a *record*, never a permission grant.
 - The existing `muse_presets.family_envelope` remains the one metadata/replay-shape implementation. Local declared consent and caller-provided history are untrusted. Real sender and recipient identities, durable replay fences, recipient readback, and policy admission remain **NOT VERIFIED**.
-- Distribution validation and source tests evaluate a portable archive, **not** actual Family Link delivery or native Muse skills installed into a live account.
+- Use the generated handoff proposal as input to the communication route you choose. Check delivery and the returned result in that service.
 
 ## Engineering acceptance
 
@@ -48,4 +48,4 @@ PYTHONPATH=src python -B -m unittest discover -s tests -p test_family_envelope.p
 python -B scripts/check_public.py
 ```
 
-For authoritative product claims, see [Family Link source contract](../FAMILY_LINK.md), [source and host limits](../handbook/source-and-host-capabilities.md), and the repository's [public release status](../RELEASES.md). This kit's presence in Git does **not** imply it is included in the currently published release.
+[Family Link](../FAMILY_LINK.md) · [Tools and connections](../handbook/source-and-host-capabilities.md) · [Downloads](../RELEASES.md)

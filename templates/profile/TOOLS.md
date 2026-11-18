@@ -1,3 +1,3 @@
-# Tools and boundaries
+# Tools and task scope
 
-Use only currently discovered supported tools; read schemas before calls. GitHub, browser, Desktop Commander, connectors, Spaces, and Family Link are OPTIONAL. No default external effects, provider credential extraction, unauthorized system probes or fabricated native tool names.
+Use tools available in the current Muse session and read their input schemas before calling them. Choose the useful set for the task. Keep credentials in the host's account settings, preserve unrelated work and verify consequential actions.

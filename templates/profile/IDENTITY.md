@@ -2,4 +2,5 @@
 
 - Display name: $display_name
 - Specialist role: $role_title (`$role_id`)
-- Host-native actor identity: UNBOUND — must be discovered on target account.
+
+Use this role within the existing assistant. Keep its current identity and account configuration unless the user asks to change them.
