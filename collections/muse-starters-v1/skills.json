@@ -1184,7 +1184,7 @@
     "not_for": "Inventing source facts, supplying answers to a live restricted assessment, or claiming clinical credentialing.",
     "inputs": [
       "The actual lecture material",
-      "The exam or learning objective and any source-only constraint"
+      "The exam or learning objective and whether to use only the provided materials"
     ],
     "steps": [
       "Locate the actual lecture boundaries and read the relevant contiguous material, including diagrams that carry meaning.",
@@ -1200,7 +1200,7 @@
       "Deliver a small concept hierarchy, directional prerequisite edges, slide/page anchors, key contrasts, numeric facts with conditions, and a short reading route. Label inferred teaching links separately from explicit lecture claims. Preserve the original lecture file."
     ],
     "checks": [
-      "No outside facts are added when the task is source-only.",
+      "When the task is limited to provided materials, every factual claim is supported by those materials.",
       "Numbers preserve their units, context and exceptions.",
       "The overview does not replace the distinctions the exam material emphasizes.",
       "The task-specific structured output is checked against source facts or disclosed adjudication, while semantic usefulness still requires human review."
@@ -2658,7 +2658,7 @@
       "worked_example": {
         "input": "A supplied total(items) function returns sum(items[:-1]). The contract says every input item contributes. For [5, 7], expected 12 but observed 5.",
         "method": "Compare [5, 7] with the empty-list control, then run an assertion on the original function. The missing final slice element is a specific causal hypothesis. Repair to sum(items), then check empty, singleton, mixed sign and multi-item cases.",
-        "result": "The original regression fails with 5 != 12. The minimal patch changes one expression; the five-case fixture suite passes after the patch. This is an owned demonstration, not a claim that a Muse model produced the repair."
+        "result": "The original regression fails with 5 != 12. The minimal patch changes one expression; the five-case fixture suite passes after the patch. Keep the failing and passing test results with the patch."
       },
       "failure_modes": [
         {
@@ -3100,7 +3100,7 @@
     "depth": {
       "schema": "muse-skill-depth/v1",
       "revision": "R3",
-      "domain_method": "Accessibility review is evidence about a complete user task across interaction states, not a screenshot score. Separate semantic structure, keyboard operation, focus management, visual perception and assistive-technology observations. Record the actual browser, viewport and assistive technology used. A missing observation is not a pass; an observed barrier is not a claim that every page fails. Use the applicable W3C standard and its exceptions rather than a memorized checklist alone.",
+      "domain_method": "Accessibility review is evidence about a complete user task across interaction states, not a screenshot score. Separate semantic structure, keyboard operation, focus management, visual perception and assistive-technology observations. Record the actual browser, viewport and assistive technology used. Record untested states explicitly and tie each observed barrier to the pages and interactions actually checked. Use the applicable W3C standard and its exceptions rather than a memorized checklist alone.",
       "output_contract": "Deliver a scoped barrier report with reproducible steps, affected task, observed behavior, expected behavior, evidence location, severity and the smallest repair. Include positive controls and an explicit not-tested list. Conformance remains undetermined when required pages, processes or criteria are untested.",
       "decisions": [
         {
@@ -5752,7 +5752,7 @@
           "recheck": "Only actually held credentials appear in the resume."
         },
         {
-          "symptom": "A project bullet claims deployed capability from a source-only test.",
+          "symptom": "A project bullet claims deployment from local tests.",
           "cause": "Maturity labels were collapsed.",
           "repair": "Restore implemented/tested wording and preserve the test evidence.",
           "recheck": "Deployment and adoption claims require their own evidence."

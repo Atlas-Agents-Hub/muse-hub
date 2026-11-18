@@ -24,8 +24,8 @@ Start with an assistant and a task, then add the methods and tools you need.
 - [Companion Home](COMPANION_HOME.md) — five rooms, room notes, Studio, and Arcade.
 - [Daily Desk](spaces/DAILY_DESK.md) — tasks, notes, backup, and restore.
 - [Family Link](FAMILY_LINK.md) — prepare and review handoffs.
-- [Learning sessions](LEARNING_LOCAL_STUDY.md) — study material, practice, and saved progress.
-- [Garden calendar](GARDEN_LOCAL_CALENDAR.md) — observations and seasonal plans.
+- [Learning sessions](LEARNING_LOCAL_STUDY.md) — study methods and a local storage example.
+- [Garden calendar](GARDEN_LOCAL_CALENDAR.md) — observations, planning, and a calendar example.
 
 ## Build and extend
 

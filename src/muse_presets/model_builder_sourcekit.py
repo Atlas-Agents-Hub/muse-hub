@@ -27,64 +27,60 @@ SCHEMA = "r61/model-builder-sourcekit-v1"
 MAX_BYTES = 4 * 1024 * 1024
 MAX_FILES = 160
 
-START_HERE = """# Model Builder — bounded offline toy experiment source kit
+START_HERE = """# Model Builder experiment toolkit
 
-This package actually trains a small integer perceptron, saves/reloads JSON
-numeric weights, computes its predictions, compares a training-only majority
-baseline and recovers baseline checkpoint bytes. It is NOT an LLM/LoRA trainer,
-GPU job, automatic model loader, provider endpoint or native Muse agent.
+Train and replay an integer perceptron or a decimal linear model, compare its
+development results with a baseline, and recover the baseline checkpoint.
+Both engines save numeric weights as JSON.
 
-Requirements: Python 3.12+. No pip packages, Git, downloaded model or account.
-Verify the ZIP SHA-256 from a separate trusted source before extracting into
-an absent directory. The embedded source hashes are unsigned integrity only.
+Use Python 3.12 or newer. Compare the ZIP's SHA-256 with the release checksum
+and extract into a new folder. Run commands from that folder; use python3 if
+that is the Python command on your machine.
 
-From the extracted directory (macOS may use python3):
+## Try the included experiments
 
-python -I -B model-builder/custom-skills/model_development_metrics/run.py --operation toy-demo --allow-local-training
+    python -I -B model-builder/custom-skills/model_development_metrics/run.py --operation toy-demo --allow-local-training
+    python -I -B model-builder/custom-skills/model_development_metrics/run.py --operation linear-demo --allow-local-training
 
-The included opt-in extension installer can stage a separate reviewed source
-copy without training. Run it only with a NEW absolute directory and opt-in:
+The toy example returns LOCAL_TOY_MODEL_DEMO_PASSED, with four correct
+candidate predictions versus two for the baseline, a reloaded checkpoint and
+recovered baseline. The linear example returns LOCAL_LINEAR_MODEL_DEMO_PASSED
+after 64 gradient updates, recomputed results and byte-exact restoration.
+Each demo removes its own temporary files when finished.
 
-python -I -B model-builder/runtime/model_toy_install.py stage --to ABSOLUTE_NEW_EXTENSION --include-toy-training
+## Use your data
 
-Preserve its stage_receipt_sha256. Inspect with the same runtime using the
-inspect verb, --root ABSOLUTE_EXTENSION and --stage-sha256 ORIGINAL_STAGE_SHA.
-No opt-in, source drift, altered receipts, links, extra files or occupied paths
-are refused. Staging starts no optimizer, provider, model, service or native agent.
+Read EXAMPLE_TOY_EXPERIMENT.json, then send a reviewed experiment through stdin
+with --operation toy-train --allow-local-training. Save both the returned JSON
+checkpoint and its SHA-256. toy-evaluate computes predictions from the saved
+weights on development rows; toy-restore returns the original baseline bytes.
 
-The recovered decimal-linear engine is also present:
+For decimal linear experiments, use EXAMPLE_LINEAR_DATASET.json with
+model-builder/runtime/model_toy_bundle.py. Its run, verify and restore-baseline
+commands require explicit dataset or receipt hashes and new output paths.
+Use --help to see the required arguments.
 
-python -I -B model-builder/custom-skills/model_development_metrics/run.py --operation linear-demo --allow-local-training
+Integer experiments accept one to eight features valued -1, 0 or 1, at most
+96 rows, at most 64 rows per partition and one to 32 epochs. Training and
+development families and exact feature vectors must be disjoint. Keep
+protected-final features and labels null. Inputs are bounded JSON records.
+Review data rights and evaluate the intended workload separately before
+promoting a model.
 
-Expected: LOCAL_LINEAR_MODEL_DEMO_PASSED; 64 real gradient updates,
-bundle_recomputed true and baseline_restored_byte_exact true. Its separate
-runtime/model_toy_bundle.py supports run, verify and restore-baseline using
-EXAMPLE_LINEAR_DATASET.json, explicit hashes and a new absolute output path.
-No test of the protected-final set or production model promotion is allowed.
+## Optional separate working copy
 
-For the integer perceptron, expected: LOCAL_TOY_MODEL_DEMO_PASSED; trained_this_call true, candidate_correct
-4 versus baseline_correct 2, checkpoint_reloaded true, baseline_recovered true.
-The demo uses disposable local files and removes only its own temporary files.
+Replace ABSOLUTE_NEW_EXTENSION with a new absolute directory:
 
-To evaluate a supplied bounded experiment, pass EXAMPLE_TOY_EXPERIMENT.json
-through stdin with --operation toy-train --allow-local-training. Without the
-explicit opt-in flag, training is refused. The response includes JSON checkpoint
-text and its exact SHA-256. Preserve both separately. toy-evaluate computes
-predictions from the numeric weights using development rows, not caller
-predictions. toy-restore returns the exact baseline bytes; it does NOT change
-any deployed model. Original evaluate/checkpoint/demo operations remain usable.
+    python -I -B model-builder/runtime/model_toy_install.py stage --to ABSOLUTE_NEW_EXTENSION --include-toy-training
 
-Budget: 1–8 features, each -1/0/1; at most 96 rows, at most 64 per partition,
-and 1–32 epochs (at most 2,048 sample steps). Protected final features/labels
-must be null. Training/dev families and exact feature vectors must be disjoint;
-those guards persist in reloaded checkpoint evaluation. Inputs are strict JSON,
-not pickle, Python expressions, import paths, URLs or shell commands.
+This copies the extension without starting training. Save stage_receipt_sha256
+and inspect the new directory using the same installer with inspect,
+--root ABSOLUTE_EXTENSION and --stage-sha256 ORIGINAL_STAGE_SHA. Preserve an
+incomplete destination and its receipts before deciding how to resume.
 
-All native skills/config remain disabled. Local toy-training opt-in grants no
-external training permission, source rights, publisher authentication, examiner
-independence, final-set approval or deployment authorization. Caller labels and
-claimed lineage remain unverified. Tiny development accuracy is not real-world
-model quality. No network, GPU or provider call is part of this toy engine.
+Use the profile and task contexts with your existing Muse assistant. Local
+training opt-in applies to these bounded examples; external training or model
+promotion follows the user's authorization and the connected host's controls.
 """
 
 

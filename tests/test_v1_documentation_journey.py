@@ -19,9 +19,9 @@ class V1DocumentationJourney(unittest.TestCase):
 
  def test_release_page_starts_with_current_downloads_and_keeps_history(self):
   page=read("docs/RELEASES.md")
-  self.assertIn("releases/tag/v1.1.0",first(page))
-  self.assertIn("releases/download/v1.1.0/SHA256SUMS",page)
-  self.assertLess(page.index("v1.1.0"),page.index("v1.0.0"))
+  self.assertIn("releases/tag/v1.1.1",first(page))
+  self.assertIn("releases/download/v1.1.1/SHA256SUMS",page)
+  self.assertLess(page.index("v1.1.1"),page.index("v1.0.0"))
   self.assertLess(page.index("v1.0.0"),page.index("v0.4.1-alpha"))
   self.assertIn("Get-FileHash",page)
   self.assertIn("sha256sum",page)
@@ -46,7 +46,7 @@ class V1DocumentationJourney(unittest.TestCase):
  def test_ai_index_recommends_current_packages(self):
   for path in ("llms.txt","docs/discovery/AI_AGENT_GUIDE.md"):
    text=read(path)
-   self.assertIn("releases/tag/v1.1.0",text)
+   self.assertIn("releases/tag/v1.1.1",text)
    self.assertIn("TERMINAL.md",text)
    self.assertNotIn("guaranteed ranking",text.lower())
 

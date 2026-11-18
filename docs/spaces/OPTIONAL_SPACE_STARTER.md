@@ -1,4 +1,4 @@
-# Optional fullstack local Space companion starter
+# Build a local Space workspace
 
 Build a local browser workspace with request tracking and saved SQLite state. This example combines a browser UI, loopback HTTP service, and the `space-starter/1` request state machine. Follow the launch steps below, then inspect the integration contract when extending it.
 
@@ -24,7 +24,7 @@ On Windows use an absolute path in an owner-protected directory, for example `C:
 
 The launcher prints a loopback URL and a new random local-session token. Open the URL on **that same computer** and paste the token into the page. The token is not put in a URL, cookie or browser persistent storage. Reloading the page requires the token again. A new launcher session creates a new token. Close the foreground launcher with Ctrl+C. Keep this local listener on the same computer; use an appropriately authenticated host when building a shared deployment.
 
-The browser can read local records, create/edit notes, explicitly enable/disable local requests, queue intentions, cancel requests and refresh receipts. Request handling is OFF by default. Enabling it does not connect a model or execute queued prompts. The page is usable at phone-sized viewports; a phone-to-host network workflow is not implemented or claimed.
+The browser can read local records, create/edit notes, explicitly enable/disable local requests, queue intentions, cancel requests and refresh receipts. Request handling is OFF by default. Enabling it does not connect a model or execute queued prompts. The layout supports narrow browser windows. Open the local URL on the computer running the server.
 
 ## Host adapter boundary
 
@@ -48,19 +48,11 @@ Interrupted claims stay dispatching until the foreground host calls `expire`. UN
 
 **Neither claim nor callback is exposed to the browser HTTP API.** A production integration must inject an actual verifier; the sample's always-true verifier exists only inside its disposable synthetic demonstration. Browser messages and model text cannot act as callback authority.
 
-## Compatibility and deliberate exclusions
+## Requirements and deployment
 
-| Surface | Grade |
-|---|---|
-| Python standard-library local source | Python 3.12+; native platform qualification recorded separately |
-| `space-starter/1` | First-party SDK-independent local adapter contract |
-| PersonalCompanion notebook | Existing accepted owner/space-scoped source component |
-| Browser | Plain HTML/CSS/JavaScript; no CDN, package install or external asset requests |
-| Historical `@hatch/space-sdk` 0.13.0 reference | **NOT QUALIFIED**; no SDK source copied or API shim asserted compatible |
-| Other Muse/Hatch SDK/platform versions | **NOT QUALIFIED**; discover real version and supported schema in a separately authorized native integration |
-| `spawnTask`, managed cron, owner identity and native callbacks | **NOT RUN**; do not infer from local tests |
-| Static publication | Informational assets only; cannot provide authenticated live agent chat |
-| Original production TaskGuard/retention | Separate safety hold, unchanged by this adapter |
+Use Python 3.12+ and a browser on the same computer. The example uses Python's standard library and plain HTML, CSS, and JavaScript. `space-starter/1` defines the request operations above, and PersonalCompanion provides scoped local storage.
+
+For a shared application, connect the current host's documented account, authorization, and callback interfaces. Match the installed SDK version and test the complete request and recovery path before using real task data.
 
 The standard-library HTTP server is for local development, not production. The example restricts its bind address, host/origin, authorization token, content type, JSON keys and request size; denies CORS; sets a restrictive content security policy; avoids HTML injection and logs no session token. These checks are not a replacement for a production framework, TLS, operating-system access controls, provider authentication, rate limits or multi-user isolation.
 

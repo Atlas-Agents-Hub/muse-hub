@@ -570,23 +570,38 @@ def _local_tool_files(data: dict[str,Any], selected: set[str]) -> dict[str,bytes
     files={'tools/'+name:raw for name,raw in _extension_sources().items()}
     files['tools/run.py']=LOCAL_TOOL_RUNNER.encode('utf-8')
     files['tools/EXAMPLES.json']=(json.dumps({'tools':sorted(selected),'jobs':[examples[k] for k in sorted(selected)]},indent=2,ensure_ascii=False)+'\n').encode()
-    files['tools/README.md']=('# Local tools\n\nPython 3.10 or newer is required. From the extracted package folder, run `python -B tools/run.py --demo`. For your JSON input use `python -B tools/run.py --tool SKILL_ID --input input.json`. Available tools: '+', '.join(sorted(selected))+'.\n').encode()
+    first=sorted(selected)[0]
+    files['tools/README.md']=('# Local tools\n\nPython 3.10 or newer is required. From the extracted package folder, run:\n\n'
+        '```sh\npython -B tools/run.py --demo\n```\n\n'
+        '## Use your own input\n\nOpen [EXAMPLES.json](EXAMPLES.json) and find the job whose `skill_id` matches your tool. '
+        'Copy that job\'s `inputs` object into `input.json` in the extracted package folder, then replace its sample values with your records. '
+        'The input file contains that one object, without the `jobs` or `inputs` wrapper.\n\n'
+        'For `'+first+'`, run:\n\n```sh\npython -B tools/run.py --tool '+first+' --input input.json\n```\n\n'
+        'Available tools: '+', '.join(sorted(selected))+'. Choose another listed tool with `--tool` and use its matching input shape.\n').encode()
     return files
 
 def specialist_kit_files(data: dict[str,Any], role_id: str) -> dict[str,bytes]:
     contract,example=_extension_contract(data,role_id)
     root=Path(__file__).resolve().parents[1]
-    files=_extension_sources()
+    # This format keeps its original root-level runner. Reuse the complete
+    # instruction and practice closure, replacing only the alternate tools/ entrypoint.
+    files={name:raw for name,raw in instruction_files(data,contract['skills'],[]).items()
+           if not name.startswith('tools/')}
+    files.update(_extension_sources())
     files['run.py']=_bounded_source(root/'examples'/'specialist_kit_runner.py')
     files['SPECIALIST.json']=(json.dumps(contract,indent=2,ensure_ascii=False)+'\n').encode()
     files['EXAMPLE.json']=(json.dumps(example,indent=2,ensure_ascii=False)+'\n').encode()
     files['README.md']=_bounded_source(root/'presets'/role_id/'COLLECTION_README.md')
     files['PLAYBOOK.md']=_bounded_source(root/'presets'/role_id/'PLAYBOOK.md')
     files['LICENSE']=PROJECT_LICENSE.encode()
-    skills={x['id']:x for x in data['skills']};sources={x['id']:x for x in data['sources']}
-    for key in contract['skills']:
-        files[f'skills/{key}/SKILL.md']=render_skill(skills[key],sources).encode()
-        files[f'skills/{key}/DEPTH.md']=render_depth(skills[key]).encode()
+    title=next(role['title'] for role in data['specialists'] if role['id']==role_id)
+    files['START_HERE.md']=('# Start with '+title+'\n\n'
+        'Give Muse this extracted folder and your current task. Read [README.md](README.md) for the available tools '
+        'and [PLAYBOOK.md](PLAYBOOK.md) for the working method. Keep your existing preferences and memory.\n\n'
+        '## Run an example\n\nWith Python 3.10 or newer, run from the extracted folder:\n\n'
+        '```sh\npython -B run.py --demo\n```\n\n'
+        'For your own records, copy the chosen job\'s `inputs` object from [EXAMPLE.json](EXAMPLE.json) into `input.json` '
+        'and follow the command in README.md. [Practice examples](practice/README.md) include their own check command.\n').encode()
     manifest={'schema':'muse-specialist-kit/v1','specialist':role_id,
               'external_actions_performed':False,'native_installed':False,
               'files':{name:hashlib.sha256(raw).hexdigest() for name,raw in sorted(files.items())}}

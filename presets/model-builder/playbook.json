@@ -41,7 +41,7 @@
         "Real weight/adapter lineage and optimizer receipts",
         "Measured development scores and negative controls"
       ],
-      "stop_rule": "No real optimizer or accepted weights means SOURCE_ONLY, not TRAINED.",
+      "stop_rule": "Report training as complete only after an actual optimizer run and accepted weights are available; otherwise state the remaining training steps.",
       "handoff_to": "research-evaluator"
     },
     {

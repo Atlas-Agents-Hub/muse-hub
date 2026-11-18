@@ -6,7 +6,8 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-DOC = ROOT / "docs/discovery/hub-feature-status.json"
+DOC = ROOT / "docs/history/hub-feature-status-2026-11-16.json.txt"
+CURRENT = ROOT / "docs/discovery/hub-feature-status.json"
 README = ROOT / "docs/HUB_FEATURE_READINESS.md"
 TITLES = (
     "Source and fleet preflight",
@@ -111,8 +112,16 @@ class FeatureReadinessContract(unittest.TestCase):
                 self.assertTrue((README.parent / target).is_file())
         self.assertIn("https://atlas-origins.github.io/muse-ai-agent-presets/", text)
         # Technical statuses remain in the verified register, not a marketing table.
-        self.assertEqual(DOC, README.parent / "discovery/hub-feature-status.json")
+        self.assertEqual(CURRENT, README.parent / "discovery/hub-feature-status.json")
         self.assertEqual(len(load()["tasks"]), 22)
+        import hashlib
+        self.assertEqual(hashlib.sha256(DOC.read_bytes()).hexdigest(), "487f25e98f24b22218d24a8f62567d60dcec8212493c57949f20ab809afddbaf")
+        current=json.loads(CURRENT.read_bytes())
+        catalog=json.loads((ROOT / "presets/catalog.json").read_bytes())
+        self.assertEqual(current["schema"], "muse-hub/distribution-links/v1")
+        self.assertEqual(current["release"], catalog["release"])
+        self.assertEqual(current["release_url"], "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/"+catalog["release"])
+        self.assertEqual((CURRENT.parent/current["historical_feature_register"]).resolve(), DOC.resolve())
 
 
 if __name__ == "__main__":

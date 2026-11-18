@@ -7,6 +7,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import subprocess
 import sys
 import unittest
@@ -42,12 +43,50 @@ class ProductTests(unittest.TestCase):
     def test_original_skills_and_workflows_are_exactly_preserved(self):
         path=C/'R5_BASELINE.json';self.assertTrue(path.is_file())
         baseline=json.loads(path.read_text('utf-8'))
-        skills={s['id']:s for s in self.data['skills']}
-        workflows={w['id']:w for w in self.data['workflows']}
-        for key,expected in baseline['skill_object_sha256'].items():
-            self.assertEqual(digest(skills[key]),expected,key)
-        for key,expected in baseline['workflow_object_sha256'].items():
-            self.assertEqual(digest(workflows[key]),expected,key)
+        provenance=json.loads((C/'PROMOTION_PROVENANCE.json').read_bytes())
+        revisions={row['original_path']:row for row in
+                   json.loads((C/'PUBLIC_REVISIONS.json').read_bytes())['entries']
+                   if row['ledger']=='promotion'}
+        originals={}
+        for group in ('skills','workflows'):
+            current=C/(group+'.json');name=current.relative_to(ROOT).as_posix()
+            expected=provenance['incoming_files'][name]['sha256']
+            if name in revisions:
+                revision=revisions[name]
+                self.assertEqual(revision['historical_sha256'],expected)
+                self.assertEqual(hashlib.sha256(current.read_bytes()).hexdigest(),revision['current_sha256'])
+                original=ROOT/revision['archive_path']
+            else:
+                original=current
+            raw=original.read_bytes()
+            self.assertEqual(hashlib.sha256(raw).hexdigest(),expected,name)
+            originals[group]={row['id']:row for row in json.loads(raw)}
+
+        # Preserve every original object hash in the immutable baseline. Reviewed
+        # presentation edits live in the current file and have their own digest.
+        for group,key in (('skills','skill_object_sha256'),('workflows','workflow_object_sha256')):
+            for identity,expected in baseline[key].items():
+                self.assertEqual(digest(originals[group][identity]),expected,identity)
+
+        copy_fields={
+            'lecture-map':(('inputs',1),('checks',0)),
+            'bug-reproduction':(('depth','worked_example','result'),),
+            'accessible-ui':(('depth','domain_method'),),
+            'resume-tailor':(('depth','failure_modes',2,'symptom'),),
+        }
+        for group in ('skills','workflows'):
+            current={row['id']:row for row in self.data[group]}
+            self.assertEqual(set(current),set(originals[group]))
+            for identity,original in originals[group].items():
+                preserved=copy.deepcopy(original)
+                for fields in copy_fields.get(identity,()) if group=='skills' else ():
+                    target=preserved;actual=current[identity]
+                    for field in fields[:-1]:target=target[field];actual=actual[field]
+                    self.assertIsInstance(actual[fields[-1]],str)
+                    target[fields[-1]]=actual[fields[-1]]
+                # IDs, schema, flags, procedure steps, source references and all
+                # other fields remain exact, beyond the five approved strings.
+                self.assertEqual(current[identity],preserved,identity)
         self.assertEqual(sorted(p['id'] for p in self.data['starters']),baseline['starter_ids'])
         legacy=ROOT/'collections/muse-starters-v1/r5/baseline/legacy_catalog.json'
         self.assertEqual(hashlib.sha256(legacy.read_bytes()).hexdigest(),baseline['legacy_catalog_sha256'])
@@ -109,16 +148,29 @@ class ProductTests(unittest.TestCase):
                 files=self.tool.specialist_kit_files(self.data,role)
                 first=self.tool.build_file_map_bytes(files)
                 self.assertEqual(first,self.tool.build_file_map_bytes(files))
-                with zipfile.ZipFile(io.BytesIO(first)) as z:z.extractall(temp)
+                base=Path(temp);archive=base/'kit.zip';extracted=base/'extracted'
                 env={k:v for k,v in os.environ.items() if k not in ('PYTHONPATH','PYTHONHOME')}
-                p=subprocess.run([sys.executable,'-B','run.py','--demo'],cwd=temp,env=env,
+                exported=subprocess.run([sys.executable,'-B',str(ROOT/'tools/muse_collection.py'),
+                    'kit',role,'--to',str(archive)],cwd=ROOT,env=env,
+                    capture_output=True,text=True,encoding='utf-8',timeout=30)
+                self.assertEqual(exported.returncode,0,exported.stdout+exported.stderr)
+                self.assertEqual(archive.read_bytes(),first)
+                with zipfile.ZipFile(archive) as z:z.extractall(extracted)
+                self.assertTrue((extracted/'START_HERE.md').is_file())
+                p=subprocess.run([sys.executable,'-B','run.py','--demo'],cwd=extracted,env=env,
                     capture_output=True,text=True,timeout=20)
                 self.assertEqual(p.returncode,0,p.stderr)
                 report=json.loads(p.stdout)
                 self.assertEqual(report['specialist'],role)
                 self.assertGreaterEqual(len(report['results']),2)
                 self.assertFalse(report['external_actions_performed'])
-                self.assertTrue((Path(temp)/'SPECIALIST.json').is_file())
+                self.assertTrue((extracted/'SPECIALIST.json').is_file())
+                guide=(extracted/'practice/README.md').read_text(encoding='utf-8')
+                command=re.search(r'python -B (practice/check_outputs.py check --case [^\n]+)',guide)
+                self.assertIsNotNone(command,guide)
+                checked=subprocess.run([sys.executable,'-B',*command.group(1).split()],cwd=extracted,env=env,
+                    capture_output=True,text=True,encoding='utf-8',timeout=20)
+                self.assertEqual(checked.returncode,0,checked.stdout+checked.stderr)
                 manifest=json.loads(files['MANIFEST.json'])
                 for name,expected in manifest['files'].items():
                     self.assertEqual(hashlib.sha256(files[name]).hexdigest(),expected)

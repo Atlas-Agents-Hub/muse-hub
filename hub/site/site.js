@@ -75,7 +75,7 @@
     setupDescription.textContent = option.dataset.description || '';
     setupInstall.href = `${sourceBase}${slug}/INSTALL.md`;
     setupProfile.href = `${sourceBase}${slug}/README.md`;
-    setupDownload.href = `https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-${asset}-v1.1.0.zip`;
+    setupDownload.href = `https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-${asset}-v1.1.1.zip`;
     setupEmpty.hidden = true;
     setupResult.hidden = false;
   }

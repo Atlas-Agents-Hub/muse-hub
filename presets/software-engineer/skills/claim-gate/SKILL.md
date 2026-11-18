@@ -8,15 +8,15 @@ authority: source-only-owner-boundary-required
 
 # Engineering Claim Gate
 
-This is a locally runnable component of the Software Engineer pack, NOT proof of native Muse registration. Original-source derived claim state machinery is included and is executable on Windows and POSIX Python hosts.
+Coordinate an engineering task with local claims, fenced leases, replay checks, and recovery records. The component runs on Windows and POSIX Python hosts.
 
-## Five-seam procedure
+## Task procedure
 
-1. S1 Source: identify exact task, allowed workspace, source SHA and original payload bytes.
-2. S2 Authority: require the host-issued owner, role, task scope, current lease and action-time permission. A local claim is not an authorization.
-3. S3 Execution: only a separately authorized host executor may perform the external task. The public CLI never executes the effect.
-4. S4 Recovery: one claim per task; changed-byte replay refuses; UNKNOWN stays held until original read-only reconciliation. Use target-side fencing to refuse stale owners.
-5. S5 Outcome: independently verify original recipient readback. Never infer success from local claim-state files.
+1. Source: identify exact task, allowed workspace, source SHA and original payload bytes.
+2. Authority: require the host-issued owner, role, task scope, current lease and action-time permission. A local claim is not an authorization.
+3. Execution: only a separately authorized host executor may perform the external task. The public CLI never executes the effect.
+4. Recovery: one claim per task; changed-byte replay refuses; UNKNOWN stays held until original read-only reconciliation. Use target-side fencing to refuse stale owners.
+5. Outcome: independently verify original recipient readback. Never infer success from local claim-state files.
 
 ## Local example (Windows/POSIX Python 3.12+)
 
@@ -33,7 +33,7 @@ For uncertainty, use hold-unknown with a short reason and investigate original r
 ## Pruned-history protection (local, not externally signed)
 
 After an operator explicitly prunes terminal Claim Gate records, the
-source-only engine writes a per-scope digest-log anchor before removing each
+Claim Gate writes a per-scope digest-log anchor before removing each
 terminal claim. A torn, deleted, empty, unreadable or checksum-mismatched
 retention log is held as UNKNOWN and must not authorize a new claim. Do not
 automatically migrate or repair an old unanchored retention log. The local
@@ -50,16 +50,16 @@ aliases are recognized; this does not constitute owner approval.
 
 The source engine uses PORTABLE_LOCAL_FILE_LOCK (Windows msvcrt or POSIX flock).
 On Windows, destructive pruning is disabled and power-loss directory persistence
-is NOT independently attested. It is not a consensus authority by itself, and no native Muse model, identity, signed source owner, permission, recipient, approval or external effect is verified. Real resource writes must enforce fencing independently. No source-only skill can bypass the actual host permission boundary.
+requires a separately verified storage guarantee. Enforce target-side fencing for resource writes and verify the recipient through the authorized host. Local claim records track the operation; the host supplies identity and permission.
 
-All connectors, subchats, hooks, schedulers, and real effects remain disabled by default. Never overwrite recipient memories.
+The generated configuration starts disabled. Enable a supported connection only for the authorized task, and preserve the recipient's memory.
 
-## reviewed-code engineering workflow
+## Review an engineering repair
 
 The source-pinned engineering_workflow.py and workflow_worker.py extend this
 local engine with an actual disposable Git repository RED -> PATCH -> GREEN
-and separately pinned review replay. Keep all three existing host skills
-DISABLED until genuine receiving-host admission; this adds no native grant.
+and separately pinned review replay. Configure the three host skills through
+the receiving environment's supported setup before enabling them.
 
 Use engineering_workflow.py --help for execute, review and complete. Absolute
 paths, exact case/candidate digests, non-test editable-file allowlists and

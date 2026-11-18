@@ -2,14 +2,15 @@
 
 Save exact text findings and linked receipts in a local SQLite evidence ledger.
 
-The public EvidenceLedger extends the existing bounded find_exact_text primitive with local SQLite storage and replay-safe, SHA-256-linked receipts. It uses only the Python standard library and does not import private agent code.
+EvidenceLedger combines exact-text search with local SQLite storage and SHA-256-linked receipts. Use it to keep the source, search result, and operation history together.
 
 ## Quick start
 
-From the repository root:
+From the toolkit root with Python 3.12+:
 
-    PYTHONPATH=src python examples/evidence_ledger_demo.py
-    PYTHONPATH=src python -m unittest discover -s tests -p test_evidence_ledger.py -v
+    PYTHONPATH=src python3 -B examples/evidence_ledger_demo.py
+
+In Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python -B`. The regression command is `PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_evidence_ledger.py -v`; on Windows use the same PowerShell import-path setting.
 
 The example uses only fictional data and an ephemeral temporary directory. It records a complete exact-text finding and an explicit NOT_FOUND, deletes the source, and reopens the recorded evidence in a separate SQLite connection.
 
@@ -17,7 +18,7 @@ A different specialist role uses the same source API:
 
     from muse_presets.evidence_ledger import EvidenceLedger, EvidenceScope
 
-    # Fictional callback, NOT a real Muse login or signed grant.
+    # Example scope; an application resolves its real users in the host callback.
     scope = EvidenceScope('demo-owner', 'demo-workspace',
                           'research-evaluator', 'demo-operator')
     with EvidenceLedger('/absolute/path/to/local.sqlite3',
@@ -37,14 +38,10 @@ Records are partitioned by owner/workspace/role/actor labels, checked through th
 
 The SQLite chain keeps a separate local head. Truncated history, ordinary row deletion and byte modifications are detected. A local chain is NOT a cryptographic signature, immutable ledger or externally anchored anti-rollback system: someone who can rewrite both rows and head can forge another valid-looking history.
 
-## Deliberate boundaries
+## Keep evidence private
 
-- No external messages, signed receipts, court/adjudication, verdict, automatic approval, arbitrary execution or model training.
-- No installed Muse skill, profile, hook, scheduler, Space, native session or permissions.
-- No implicit file-system crawling or private-source access.
-- No source-owner authentication, independent truth verification or live agent execution.
-- No original personal records, owner-specific projects, clinical training material or proprietary creative assets.
+Supply the exact source file and allowed root for the task. Confirm access through the host before capture, and review what the record supports before using it in a conclusion. Delivery, approvals, and other external actions belong to the service handling that task.
 
 SQLite retains actual matched document text. Integrators must keep it in the owning user's protected workspace, apply retention and deletion rules and avoid committing real databases to public repositories.
 
-This is one cross-role capability in the [Capabilities](CAPABILITIES.md). Any native host adapter will require independently proven owner identity, effect admission and recipient readback.
+Use Evidence Finder across [specialist tasks](CAPABILITIES.md). An integrated host must verify the user, permitted sources, and current scope before each operation.

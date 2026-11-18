@@ -18,10 +18,10 @@ muse-cli chat
 
 `status` shows the connected identity and account information. `threads` lists Main and side chats. `history` reads recent messages. `chat` opens an interactive conversation; type `/help` for navigation commands.
 
-To read one side chat, take its session ID from `threads`:
+To read one side chat, take its session ID from `threads` and replace `SESSION_ID` below:
 
 ```sh
-muse-cli history --thread <session-id> --limit 5
+muse-cli history --thread SESSION_ID --limit 5
 ```
 
 ### Install and connect

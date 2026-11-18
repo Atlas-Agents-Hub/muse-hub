@@ -1,51 +1,43 @@
 # Family Link handoff kit
 
-Prepare and review handoff records with the Family Link kit. It contains the role policies, envelope checks, and a worked two-process example using `family.py` and `family_envelope.py`.
+Prepare and review a task handoff with the receiving role, useful context, and an expected result. The kit includes 15 role policies, envelope checks, a worked example that runs in two processes, and the MIT license.
 
-The archive includes 15 role policies, their required modules, the MIT license, and the example. Keep your personal account configuration and working data in your private workspace.
+## Build and verify
 
-## Build and verify from reviewed source
-
-From a checked-out Muse Hub source tree with Python 3.12+:
-
-macOS/Linux:
+From the toolkit root with Python 3.12+:
 
 ```sh
-PYTHONPATH=src python -B examples/export_family_link_sourcekit.py --to /path/to/new-family-offline-kit.zip
-PYTHONPATH=src python -B examples/export_family_link_sourcekit.py --verify /path/to/new-family-offline-kit.zip --sha256 YOUR_VERIFIED_EXTERNAL_SHA256
+PYTHONPATH=src python3 -B examples/export_family_link_sourcekit.py --to "$HOME/family-link-kit.zip"
+PYTHONPATH=src python3 -B examples/export_family_link_sourcekit.py --verify "$HOME/family-link-kit.zip" --sha256 EXPECTED_ZIP_SHA256
 ```
 
-Windows PowerShell:
+In Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python` instead of `python3`. Choose a new destination outside the toolkit in an existing directory. Replace `EXPECTED_ZIP_SHA256` with the expected digest from your trusted release record or retained export result.
 
-```powershell
-$env:PYTHONPATH = "src"
-python -B examples/export_family_link_sourcekit.py --to C:\Temp\new-family-offline-kit.zip
-python -B examples/export_family_link_sourcekit.py --verify C:\Temp\new-family-offline-kit.zip --sha256 YOUR_VERIFIED_EXTERNAL_SHA256
-```
+The exporter preserves existing files. The verifier checks the exact archive digest, member list, paths, and source hashes before you extract the package.
 
-The exporter refuses to overwrite any existing destination or write the ZIP into its own source tree. A valid ZIP digest is printed during export. For external verification, obtain the expected digest from a **trusted, independently supplied source**, not from the candidate archive's embedded manifest. A local hash match detects changed bytes; it is not an operator signature or provider authorization.
+## Try a handoff
 
-Extract the ZIP to a **new directory**. From that extracted root run:
+Extract into a new directory and open a terminal there:
 
 ```sh
-PYTHONPATH=src python -B examples/family_offline_handoff_demo.py
+PYTHONPATH=src python3 -B examples/family_offline_handoff_demo.py
 ```
 
-On Windows PowerShell, set `$env:PYTHONPATH = "src"` first and run the same Python command. The demo uses fictional findings and separate local processes. Its successful output is `LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED` with `separate_process_verified` and `replayed_id_refused` true; all effect, recipient, authentication, and durable-fence flags remain false. No paid API or network service is used.
+Use the PowerShell import-path setting above on Windows. The example prepares a fictional task and reviews it in a separate process. Its report includes `LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED`, `separate_process_verified`, and `replayed_id_refused` so you can inspect exactly what happened.
 
-## Integrity and security boundaries
+For your work, choose the receiving specialist, provide the task and relevant sources, and review the proposed handoff. Send it through the account or communication route you selected, then check delivery and the returned result in that service. Keep the operation ID so an interrupted action can be reconciled before another send.
 
-- The input modules, catalog, and all 15 role profiles are pinned to the accepted Muse Hub `7069f062` source by explicit SHA-256. Future changes require deliberate pin review. Exact role IDs and disabled Family Link settings are verified; no role gets native grants.
-- Archive members are fixed, sorted, deterministic and SHA-256 inventoried. The ZIP verifier requires a caller-supplied archive digest, rejects duplicate entries, unsafe paths, symlinks, unreviewed members, modified source pins and oversized content. The manifest is a *record*, never a permission grant.
-- The existing `muse_presets.family_envelope` remains the one metadata/replay-shape implementation. Local declared consent and caller-provided history are untrusted. Real sender and recipient identities, durable replay fences, recipient readback, and policy admission remain **NOT VERIFIED**.
-- Use the generated handoff proposal as input to the communication route you choose. Check delivery and the returned result in that service.
+## Integrate with your tools
 
-## Engineering acceptance
+`family.py` supplies role policies and `family_envelope.py` checks envelope fields and replay declarations. Use your host's verified account and permission checks for sender and recipient identity. Caller-provided consent fields or history are input records; the receiving service establishes access and delivery.
+
+Package verification checks all 15 role profiles and their current configuration. Source updates require reviewed hash changes. Keep credentials, personal memory, and task data in your private workspace.
+
+## Developer checks
 
 ```sh
-PYTHONPATH=src python -B -m unittest discover -s tests -p test_family_sourcekit.py -v
-PYTHONPATH=src python -B -m unittest discover -s tests -p test_family_envelope.py -v
-python -B scripts/check_public.py
+PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_family_sourcekit.py -v
+PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_family_envelope.py -v
 ```
 
-[Family Link](../FAMILY_LINK.md) · [Tools and connections](../handbook/source-and-host-capabilities.md) · [Downloads](../RELEASES.md)
+[Family Link guide](../FAMILY_LINK.md) · [Tools and connections](../handbook/source-and-host-capabilities.md) · [Downloads](../RELEASES.md)

@@ -56,7 +56,7 @@
         "Final artifacts and source-to-output trace",
         "Consumer acceptance and accessibility limitations"
       ],
-      "stop_rule": "A successful export is not proof of native app integration or user acceptance.",
+      "stop_rule": "Open the export in its intended application, inspect the result, and obtain any requested user review before marking delivery complete.",
       "handoff_to": "claims-adjudicator"
     }
   ],

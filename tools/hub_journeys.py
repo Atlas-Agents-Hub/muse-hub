@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """H19: read-only Muse Hub installation/recovery journeys.
 
-Reuses the public H00-H21 readiness register and existing role install guides.
+Reads the preserved H00-H21 development register and validates its referenced
+files and role install guides in the current checkout.
 It never stages files, authenticates providers, installs agents or invokes effects.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -14,6 +16,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = "muse-hub/h19-source-journeys/v1"
+FEATURE_REGISTER = "docs/history/hub-feature-status-2026-11-16.json.txt"
+FEATURE_REGISTER_SHA256 = "487f25e98f24b22218d24a8f62567d60dcec8212493c57949f20ab809afddbaf"
 PHASES = ("install", "configure", "health", "named_test", "failure", "stop", "uninstall")
 IDS = tuple(f"H{i:02d}" for i in range(22))
 ROLE_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
@@ -39,10 +43,13 @@ def _pairs(items: list[tuple[str, object]]) -> dict:
     return result
 
 
-def _read_json(path: Path) -> dict:
+def _read_json(path: Path, *, expected_sha256: str | None = None) -> dict:
     if path.is_symlink() or not path.is_file():
         raise ValueError("SOURCE_DOCUMENT_MISSING")
-    result = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_pairs)
+    data = path.read_bytes()
+    if expected_sha256 is not None and hashlib.sha256(data).hexdigest() != expected_sha256:
+        raise ValueError("SOURCE_DOCUMENT_HASH_MISMATCH")
+    result = json.loads(data.decode("utf-8"), object_pairs_hook=_pairs)
     if not isinstance(result, dict):
         raise ValueError("SOURCE_DOCUMENT_SHAPE")
     return result
@@ -112,7 +119,9 @@ def validate_features(tasks: list[dict], root: Path = ROOT) -> None:
 
 
 def load_features(root: Path = ROOT) -> list[dict]:
-    doc = _read_json(root / "docs/discovery/hub-feature-status.json")
+    # Customer discovery describes current releases; this graph records development history.
+    path = _safe_file(root, FEATURE_REGISTER)
+    doc = _read_json(path, expected_sha256=FEATURE_REGISTER_SHA256)
     if doc.get("schema") != "muse-hub/h00-h21-feature-readiness/v1":
         raise ValueError("FEATURE_SCHEMA")
     tasks = doc.get("tasks")

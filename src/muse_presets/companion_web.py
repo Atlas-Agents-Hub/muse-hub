@@ -29,8 +29,6 @@ def companion_pages() -> dict:
     page = before + _asset(assets / "notebook.html").decode("utf-8") + after
     page = page.replace("connect-src 'none'", "connect-src 'self'")
     page = page.replace("</head>", '<link rel="stylesheet" href="notebook.css">\n<script defer src="notebook.js"></script>\n</head>')
-    page = page.replace("Source Preview</title>", "Local Notebook</title>")
-    page = page.replace("SOURCE-ONLY / LOCAL PREVIEW", "LOCAL NOTEBOOK / NO MUSE CONNECTION")
     pages = {"/": ("text/html; charset=utf-8", page.encode("utf-8"))}
     for name, folder, mime in (
         ("home.js", home, "text/javascript"), ("rooms.js", home, "text/javascript"),

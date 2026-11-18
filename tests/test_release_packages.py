@@ -50,15 +50,15 @@ class ReleasePackagesTests(unittest.TestCase):
         self.assertEqual(len(self.archives), 120)
         self.assertEqual([len(self.records[k]) for k in ("specialists", "skills", "workflows")],
                          [15, 75, 25])
-        self.assertIn("muse-data-engineer-v1.1.0.zip", self.archives)
-        self.assertIn("muse-reliability-engineer-v1.1.0.zip", self.archives)
+        self.assertIn("muse-data-engineer-v1.1.1.zip", self.archives)
+        self.assertIn("muse-reliability-engineer-v1.1.1.zip", self.archives)
         for rows in self.records.values():
             self.assertEqual(len(rows), len({r["id"] for r in rows}))
             for row in rows:
                 raw = self.archives[row["asset"]]
                 self.assertEqual(len(raw), row["bytes"])
                 self.assertEqual(hashlib.sha256(raw).hexdigest(), row["sha256"])
-                self.assertEqual(row["url"], release.asset_url(row["asset"], "v1.1.0"))
+                self.assertEqual(row["url"], release.asset_url(row["asset"], "v1.1.1"))
 
     def test_archive_roster_integrity_and_portable_paths(self):
         for name, raw in self.archives.items():
@@ -130,6 +130,33 @@ class ReleasePackagesTests(unittest.TestCase):
                         self.assertTrue(destination.is_relative_to(folder.resolve()))
                         self.assertTrue(destination.exists())
 
+    def test_skill_agent_entrypoints_name_the_packaged_depth_document(self):
+        for record in self.records["skills"]:
+            folder = self.extracted[record["asset"]]
+            text = (folder / "AGENTS.md").read_text(encoding="utf-8")
+            with self.subTest(skill=record["id"]):
+                links = re.findall(r"\[[^\]]*\]\(([^)\s]+)\)", text)
+                depth = "skills/" + record["id"] + "/DEPTH.md"
+                self.assertIn(depth, links)
+                self.assertTrue((folder / depth).is_file())
+
+    def test_documented_custom_input_command_runs_with_the_example_shape(self):
+        raw = self.archives["muse-skill-schema-evolution-v1.1.1.zip"]
+        folder = self.base / "documented-custom-input"
+        with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+            archive.extractall(folder)
+        guide = (folder / "tools/README.md").read_text(encoding="utf-8")
+        command = re.search(r"python -B (tools/run.py --tool ([a-z-]+) --input input.json)", guide)
+        self.assertIsNotNone(command, guide)
+        examples = json.loads((folder / "tools/EXAMPLES.json").read_bytes())
+        inputs = next(j["inputs"] for j in examples["jobs"] if j["skill_id"] == command.group(2))
+        (folder / "input.json").write_text(json.dumps(inputs), encoding="utf-8")
+        result = self.run_python(folder, *command.group(1).split())
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(report["results"][0]["skill_id"], command.group(2))
+        self.assertFalse(report["external_actions_performed"])
+
     def test_specialists_keep_the_canonical_components_and_policy(self):
         from muse_presets.standalone_pack import inspect_standalone_pack
         for record in self.records["specialists"]:
@@ -146,7 +173,7 @@ class ReleasePackagesTests(unittest.TestCase):
                 self.assertTrue((folder / "FIRST_TASK.md").is_file())
 
     def test_original_fifty_procedures_remain_distinct(self):
-        raw = self.archives["muse-role-procedures-50-v1.1.0.zip"]
+        raw = self.archives["muse-role-procedures-50-v1.1.1.zip"]
         with zipfile.ZipFile(io.BytesIO(raw)) as archive:
             receipt = json.loads(archive.read("PORTABLE_SKILLS_MANIFEST.json"))
             self.assertEqual(receipt["unique_skills"], 50)
@@ -156,7 +183,7 @@ class ReleasePackagesTests(unittest.TestCase):
 
     def test_bundles_preserve_individual_packages(self):
         for kind, count in (("specialists",15),("skills",75),("workflows",25),("starters",100)):
-            raw = self.archives["muse-" + kind + "-v1.1.0.zip"]
+            raw = self.archives["muse-" + kind + "-v1.1.1.zip"]
             with zipfile.ZipFile(io.BytesIO(raw)) as archive:
                 members = json.loads(archive.read("PACKAGES.json"))["packages"]
                 self.assertEqual(len(members), count)
@@ -179,7 +206,7 @@ class ReleasePackagesTests(unittest.TestCase):
     def test_build_is_deterministic_and_rejects_bad_selection(self):
         first = release._zip(release.skill_files(self.data, "schema-evolution"))
         self.assertEqual(first, release._zip(release.skill_files(self.data, "schema-evolution")))
-        for value in ("../v1.1.0", "v1.1", "v1.1.0/other"):
+        for value in ("../v1.1.1", "v1.1", "v1.1.1/other"):
             with self.assertRaises(ValueError):
                 release._version(value)
         with self.assertRaises(ValueError):
@@ -190,7 +217,7 @@ class ReleasePackagesTests(unittest.TestCase):
             release.collection.instruction_files(self.data, [], ["unknown"])
 
     def test_tampered_tool_is_refused_before_import(self):
-        raw = self.archives["muse-skill-schema-evolution-v1.1.0.zip"]
+        raw = self.archives["muse-skill-schema-evolution-v1.1.1.zip"]
         folder = self.base / "tampered"
         with zipfile.ZipFile(io.BytesIO(raw)) as archive:
             archive.extractall(folder)
@@ -203,7 +230,7 @@ class ReleasePackagesTests(unittest.TestCase):
             self.assertNotIn("TAMPERED_CODE_EXECUTED", result.stderr)
 
     def test_verifier_rejects_unsafe_and_colliding_manifest_names(self):
-        raw = self.archives["muse-skill-schema-evolution-v1.1.0.zip"]
+        raw = self.archives["muse-skill-schema-evolution-v1.1.1.zip"]
         folder = self.base / "invalid-manifest"
         with zipfile.ZipFile(io.BytesIO(raw)) as archive:
             archive.extractall(folder)

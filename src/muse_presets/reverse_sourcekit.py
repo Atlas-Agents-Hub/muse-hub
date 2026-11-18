@@ -34,21 +34,24 @@ SOURCE_MAP = {
     "presets/reverse-engineering-researcher/playbook.json": "playbook.json",
 }
 
-START_HERE = """# Reverse Engineering & Security Researcher — offline comparison kit
+START_HERE = """# Reverse Engineering & Security Researcher: observation comparison
 
-This source-only kit implements deterministic comparison of caller-supplied
-UI observations. It does not reverse binaries, open apps, attach debuggers,
-capture packets, scan hosts, send network messages or run malware.
+Compare recorded UI observations before and after a change. The tool returns
+the changed, added and removed action/target pairs and the input's SHA-256.
 
-Requires Python 3.12+. Verify the ZIP's SHA-256 from a separately trusted
-record before extracting into a NEW directory. Then:
+Use Python 3.12 or newer. Compare the ZIP's SHA-256 with the release checksum
+before extracting into a new folder. Run from the extracted folder:
 
     python -I -B run.py --operation demo
     python -I -B run.py --operation self-test
-    python -I -B run.py --operation compare --fixture /absolute/path/input.json
 
-The compare fixture must be an external regular local file (not in this kit),
-at most 128 KiB, with exactly these JSON keys:
+The demo compares a sample form. The self-test runs ten regression cases for
+the included comparison engine.
+
+## Compare your observations
+
+Save a regular JSON file outside the extracted kit. It must be at most 128 KiB
+and contain exactly these keys:
 
     {
       "schema":"muse-presets/reverse-offline-fixture-input-v1",
@@ -58,25 +61,19 @@ at most 128 KiB, with exactly these JSON keys:
       "after":[{"action":"click","target":"save","outcome":"toast"}]
     }
 
-Only view/click/scroll/hover actions and short symbolic target names are
-supported. Output contains changed/added/removed action:target keys and
-the input SHA-256, not the original outcome strings. The declaration is
-provided by the caller and is NOT verified ownership or a permission grant.
+Replace ABSOLUTE_INPUT_PATH with its full path:
 
-The demo uses a synthetic form before/after fixture and labels a difference,
-not a proven security defect or remediation. The 10 bundled regression cases
-exercise the pinned source engine. The package refuses unknown/modified
-source files, rehashed altered manifests, import shadows, links and
-unsupported Python optimization before importing its engine.
+    python -I -B run.py --operation compare --fixture ABSOLUTE_INPUT_PATH
 
-SHA-256 manifests only attest byte identity, not trusted publisher identity,
-permission, malware safety or code-signing. Python -I is not an OS sandbox.
-No native Muse agent, Family Link transport, network connector, automation,
-exploit or external effect is installed or invoked.
+Use view, click, scroll or hover actions and short symbolic target names. The
+result omits the original outcome text. Collect observations only from targets
+you are authorized to inspect; the declaration records your supplied scope.
 
-Keep personal observations, secrets and user data outside this immutable kit.
-The kit stores no user state. Upgrades are fresh reviewed archives; no
-automatic update, destructive uninstall or data migration is provided.
+Review reported differences with the relevant evidence before calling one a
+defect or a repair. The runner compares supplied observations; use your actual
+browser or application tools to collect them. Keep the package files intact:
+the runner checks their hashes and rejects linked or altered source before
+loading the engine.
 """
 
 RUNNER = r'''"""Bounded, offline-only observation diff; no live target behavior."""
@@ -198,7 +195,7 @@ def demo_case():
     }
 
 def main(argv=None):
-    p = argparse.ArgumentParser(description="Offline supplied-fixture comparison only")
+    p = argparse.ArgumentParser(description="Compare supplied UI observations before and after a change.")
     p.add_argument("--operation", choices=("demo","compare","self-test"), required=True)
     p.add_argument("--fixture", type=str)
     a = p.parse_args(argv)

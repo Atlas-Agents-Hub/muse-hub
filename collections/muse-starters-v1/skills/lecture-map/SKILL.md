@@ -13,7 +13,7 @@ Inventing source facts, supplying answers to a live restricted assessment, or cl
 
 ## Inputs
 - The actual lecture material
-- The exam or learning objective and any source-only constraint
+- The exam or learning objective and whether to use only the provided materials
 
 ## Procedure
 1. Locate the actual lecture boundaries and read the relevant contiguous material, including diagrams that carry meaning.
@@ -29,7 +29,7 @@ Inventing source facts, supplying answers to a live restricted assessment, or cl
 - Deliver a small concept hierarchy, directional prerequisite edges, slide/page anchors, key contrasts, numeric facts with conditions, and a short reading route. Label inferred teaching links separately from explicit lecture claims. Preserve the original lecture file.
 
 ## Check the result
-- No outside facts are added when the task is source-only.
+- When the task is limited to provided materials, every factual claim is supported by those materials.
 - Numbers preserve their units, context and exceptions.
 - The overview does not replace the distinctions the exam material emphasizes.
 - The task-specific structured output is checked against source facts or disclosed adjudication, while semantic usefulness still requires human review.

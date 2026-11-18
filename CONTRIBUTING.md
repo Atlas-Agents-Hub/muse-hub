@@ -20,7 +20,7 @@ On Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python`.
 
 The public repository is a **product source distribution**, not an engineering scratchpad. Do not add milestone-numbered progress documents, internal task trackers, temporary checkpoints or machine-local receipts to its default branch.
 
-Source-only, independently tested, native-ready and deployed are distinct states. Do not claim a live agent or external tool was invoked unless an actual supported host operation was verified.
+In your pull request, describe the changed behavior, commands you ran, observed results, and any remaining checks. Verify external actions through the service that performed them before reporting completion.
 
 For coding conventions and role APIs, see [Extend the toolkit](docs/EXTENDING_GENERIC_AGENTS.md). For sensitive reports, follow [Security](SECURITY.md). Code and documentation contributions must be compatible with the [MIT license](LICENSE).
 

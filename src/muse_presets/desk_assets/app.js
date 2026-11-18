@@ -142,7 +142,7 @@ byId('check-pending').addEventListener('click',()=>run(async()=>{
 }));
 byId('export').addEventListener('click',()=>run(async()=>{
  if(pending)throw Error('RECONCILE_PENDING_WRITE_BEFORE_EXPORT');
- const archive=await api('/api/desk/export');const blob=new Blob([JSON.stringify(archive,null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='daily-desk-backup.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Backup downloaded. Its digest checks consistency, not authorship.');
+ const archive=await api('/api/desk/export');const blob=new Blob([JSON.stringify(archive,null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='daily-desk-backup.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Backup downloaded.');
 }));
 byId('backup-form').addEventListener('submit',event=>{event.preventDefault();run(async()=>{
  if(pending)throw Error('RECONCILE_PENDING_WRITE_BEFORE_RESTORE');
@@ -153,5 +153,5 @@ byId('backup-form').addEventListener('submit',event=>{event.preventDefault();run
  });});
 byId('check-restore').addEventListener('click',()=>run(async()=>{
  const result=await api('/api/desk/restore-status',{name:byId('restore-name').value});
- byId('restore-result').textContent=result.status==='RESTORE_NOT_FOUND'?'No published store at that name. Preserve the original restore request before retrying.':'Verified new store: '+result.tasks+' tasks, '+result.notes+' notes.\n'+result.database+'\nPayload digest: '+result.payload_sha256;status('Restore destination inspected; no restore was replayed.');
+ byId('restore-result').textContent=result.status==='RESTORE_NOT_FOUND'?'No published store at that name. Preserve the original restore request before retrying.':'Verified new store: '+result.tasks+' tasks, '+result.notes+' notes.\n'+result.database+'\nPayload digest: '+result.payload_sha256;status('Restore destination checked.');
 }));

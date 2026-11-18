@@ -8,9 +8,9 @@ authority: local-source-only; native-muse-not-registered; no-external-effects
 
 # Source Provenance — local capability
 
-Use only for files in an owner-admitted local workspace. This is a reviewed
-local source-check candidate, not a license, attestation, native authorization,
-remote source-acquisition service or deployment gate.
+Inventory, pin, and inspect files in an approved local workspace. Keep
+the source version and receipt history together when reviewing a dependency
+or preparing a new quarantine directory.
 
 ## Procedure
 
@@ -23,8 +23,8 @@ remote source-acquisition service or deployment gate.
 2. Build and parse a canonical `name@sha256:<digest>` reference. Never accept a bare mutable name.
 3. Verify the local file's **actual bytes** and basename against that reference;
    reject missing paths, symbolic links, changed sources or digest mismatch.
-4. For donor manifests, require every declared pin to resolve to a previously
-   locally verified donor record, then hash the manifest's own exact bytes.
+4. For source manifests, require every declared pin to resolve to a previously
+   locally verified source record, then hash the manifest's own exact bytes.
 5. Produce a bounded, deterministic read-only source inventory with relative
    paths and source digests. Refuse links, unsupported file types, and excess size.
 6. Obtain an actual, already-authorized EvidenceLedger.verify() observation
@@ -64,7 +64,7 @@ remote source-acquisition service or deployment gate.
     An unexpected archive member, ZIP symlink, compression, changed checksum,
     existing target, or interrupted write must refuse. Never auto-retry a
     directory carrying `STAGING_INCOMPLETE` or any unknown partial archive.
-14. For donor-drift examination, call
+14. For dependency-drift examination, call
     `assess_local_quarantine_dependency(root, preview, seal, fresh_head,
     quarantine_destination=existing_quarantine)`. It rechecks stored custody
     and its dependency pins, original source bytes, the Evidence Finder scope
@@ -104,22 +104,19 @@ function copies only preview-pinned bytes into an exclusively new local
 directory and records the receipt. Inspect the result without the original
 source after a restart. Never point it at an original agent's home, existing
 memory store, external recipient, shared plugin installation or production
-data; no native Muse effect is authorized.
+data. Use a separate approved directory for this local operation.
 
 ## Denials
 
-Fail on missing source, unexpected name, unverified donor, tampered digest,
+Fail on missing source, unexpected name, unverified source, tampered digest,
 symlink, unsupported path, malformed manifest or changed data. A local pin
 is not a cryptographic signature. The local seal has no authenticated
 threshold signers, no externally trusted anchor, and no independently
-verified source ownership. The implemented create-only local quarantine
-writer is NOT the original full Vault adoption authority. Local offline
-ZIP export/restore does not grant redistribution rights or support native
-installation. The original authenticated adoption registry, its WRITING donor
-invalidation/recall protocol, signed export provenance, separate
-transparency-log protocol, native host wiring, external signing and
-independent authorization remain unported. A read-only drift recommendation
-is not proof that a revoked adoption has actually been disabled. The local guard callback is
+verified source ownership. Review source rights and host authorization separately before sharing or
+activating a dependency. The create-only quarantine writer handles the
+approved local copy. Apply any revocation through the registry that owns
+the installed dependency, then verify that operation; a drift recommendation
+alone does not change its state. The local guard callback is
 caller-provided and is not an authenticated security principal.
 
-This skill is opt-in and must not enable scheduled tasks or native tools.
+Run this procedure for the selected task. Configure scheduled work or additional tools only through the host's approved controls.

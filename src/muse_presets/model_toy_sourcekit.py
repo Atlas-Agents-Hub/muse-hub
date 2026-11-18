@@ -1,9 +1,4 @@
-"""Deterministic, source-pinned toy Model Builder extension kit; no publication.
-
-The old Model Builder drop-in and its synthetic-byte verifier remain unchanged.
-This creates a separate opt-in, local toy-model experiment artifact. It is not
-an installed agent, model registry, training service or full T21 acceptance.
-"""
+"""Export and verify the Model Builder's portable small-model experiment toolkit."""
 from __future__ import annotations
 
 import argparse
@@ -58,66 +53,59 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-START = '''# Model Builder — small-model experiment toolkit
+START = """# Model Builder: small-model experiment toolkit
 
-This kit actually learns a small linear model using batch gradient descent.
-It does NOT train an LLM, load a pretrained checkpoint, use a GPU, install an
-agent, authenticate a reviewer, evaluate the protected final set, or call a
-provider. It extends, rather than replaces, the original verifier.
+Train a small linear model with batch gradient descent, compare development
+error with a baseline, and verify or restore the saved experiment. The included
+example learns approximately y=2*x+1 using decimal-valued data.
 
-Requirements: Python 3.12+. No pip dependencies, network, external account,
-model download, subprocess workload, scheduler or service installation.
+Use Python 3.12 or newer; the tools use the standard library. Verify the ZIP's
+SHA-256 against the release checksum and extract into a new folder.
 
-Before extraction: verify the ZIP SHA-256 against a separately trusted value.
-Inspect the exact member set; never extract over an existing owner directory.
-The manifest is unsigned. An archive hash does not authenticate its publisher.
+## Run the example
 
-Optional source-only stage from a verified fresh extraction, never into an
-existing agent directory (this does NOT start training):
+Inspect EXAMPLE_DATASET.json. Replace ABSOLUTE_DATASET_PATH with its full path,
+DATASET_SHA_FROM_MANIFEST with its digest from the manifest, and
+ABSOLUTE_NEW_RUN_DIRECTORY with a new absolute output directory:
 
-python -I -B runtime/model_toy_install.py stage --to ABSOLUTE_NEW_EXTENSION_DIRECTORY --include-toy-training
+    python -I -B runtime/model_toy_bundle.py run --dataset ABSOLUTE_DATASET_PATH --dataset-sha256 DATASET_SHA_FROM_MANIFEST --to ABSOLUTE_NEW_RUN_DIRECTORY --reviewed-data
 
-Use the returned stage_receipt_sha256 for a read-only current-source check:
+Save receipt_sha256 from the response. The output contains baseline.json,
+candidate.json, the dataset, config.json, evaluation.json and MANIFEST.json.
+The evaluation compares development mean squared error; a worse or tied
+candidate leaves the baseline selected. Protected-final rows stay unexamined.
 
-python -I -B runtime/model_toy_install.py inspect --root ABSOLUTE_EXTENSION_DIRECTORY --stage-sha256 ORIGINAL_STAGE_RECEIPT_SHA
+## Verify or restore
 
-The native registry stays DISABLED. A failed/interrupted stage retains its
-STAGING_INCOMPLETE marker; never blindly retry into that destination.
+Use the run directory and the returned receipt hash:
 
-From a fresh extraction or opt-in stage, after inspecting EXAMPLE_DATASET.json:
+    python -I -B runtime/model_toy_bundle.py verify --bundle ABSOLUTE_RUN_DIRECTORY --receipt-sha256 ORIGINAL_RECEIPT_SHA
+    python -I -B runtime/model_toy_bundle.py restore-baseline --bundle ABSOLUTE_RUN_DIRECTORY --receipt-sha256 ORIGINAL_RECEIPT_SHA --to ABSOLUTE_NEW_BASELINE_FILE
 
-python -I -B runtime/model_toy_bundle.py run --dataset ABSOLUTE_DATASET_PATH --dataset-sha256 DATASET_SHA_FROM_MANIFEST --to ABSOLUTE_NEW_RUN_DIRECTORY --reviewed-data
+Verification recomputes training, inference and metrics. Restoration writes
+the original baseline to a new file while preserving the experiment.
 
-The command returns receipt_sha256 and actual optimizer/evaluation results.
-It creates baseline.json, candidate.json, original dataset.json, config.json,
-evaluation.json and MANIFEST.json in the new directory. No final labels exist.
+## Optional separate working copy
 
-Read back by recomputing the bounded training, inference and metrics:
+To stage the extension in a new absolute directory, run:
 
-python -I -B runtime/model_toy_bundle.py verify --bundle ABSOLUTE_RUN_DIRECTORY --receipt-sha256 ORIGINAL_RECEIPT_SHA
+    python -I -B runtime/model_toy_install.py stage --to ABSOLUTE_NEW_EXTENSION_DIRECTORY --include-toy-training
 
-Restore the original baseline to a NEW file, without altering the experiment:
+Keep stage_receipt_sha256 and use it for a subsequent inspection:
 
-python -I -B runtime/model_toy_bundle.py restore-baseline --bundle ABSOLUTE_RUN_DIRECTORY --receipt-sha256 ORIGINAL_RECEIPT_SHA --to ABSOLUTE_NEW_BASELINE_FILE
+    python -I -B runtime/model_toy_install.py inspect --root ABSOLUTE_EXTENSION_DIRECTORY --stage-sha256 ORIGINAL_STAGE_RECEIPT_SHA
 
-The example learns approximately y=2*x+1, compares dev mean squared error
-against a train-mean baseline, and holds final examples UNEVALUATED. A locally
-preferred candidate is advisory; promotion_authorized always remains false.
-A worse or tied candidate leaves the baseline selected.
+Staging copies the tools; run starts training. Preserve an interrupted
+STAGING_INCOMPLETE directory and inspect it before deciding how to resume.
 
-Strict budgets: 1-4 normalized features, at most 128 rows and 128 optimizer
-steps, finite bounded decimal strings, exact schemas and disjoint families.
-No arbitrary Python input, pickle, exec, shell command, URL or model package.
-Data is caller-provided and NOT independently authenticated.
+## Data limits
 
-All native skills are DISABLED. Subchat folders are neutral templates, not
-real host chats. Source/local evidence does not establish production training,
-physical-host parity, OS sandboxing or power-loss durability. If a run fails,
-STAGING_INCOMPLETE is retained; never blindly retry into the same directory.
-
-Status: LOCAL CANDIDATE. Full repository and Windows/macOS fleet review,
-private GitHub integration and any public release are still separate gates.
-'''
+Use one to four normalized features, at most 128 rows and 128 optimizer steps,
+finite decimal strings, exact input fields and disjoint source families. Review
+your data rights and provenance before training. These local development
+results inform evaluation; promotion and external training still require the
+user's authorization and appropriate review of the intended workload.
+"""
 
 
 def _source_members() -> dict[str, bytes]:
@@ -149,7 +137,7 @@ def _source_members() -> dict[str, bytes]:
         ("artifact-review", "Recompute exact evidence and restore the original baseline to a new file only."),
     ):
         result[f"subchats/{name}/ROLE.md"] = (
-            f"# {name}\n\n{purpose}\n\nNeutral template, not a native chat or authenticated role.\n"
+            f"# {name}\n\n{purpose}\n\nUse this context for the matching task in your existing Muse conversation.\n"
         ).encode()
     for name, purpose in (
         ("toy_linear_experiment", "Bounded actual linear-model training on reviewed synthetic data"),
@@ -157,8 +145,8 @@ def _source_members() -> dict[str, bytes]:
     ):
         result[f"skills/{name}/SKILL.md"] = (
             f"---\nname: {name}\ndescription: {purpose}\n---\n\n"
-            "Use runtime/model_toy_bundle.py only with explicit reviewed local inputs.\n"
-            "Native registration and provider effects remain disabled.\n"
+            "Use runtime/model_toy_bundle.py with reviewed local inputs and preserve the returned receipt hashes. "
+            "Follow the user's authorization when taking any external action with the result.\n"
         ).encode()
         result[f"skills/{name}/skill.yaml"] = (
             f"name: {name}\ninclude_in_prompt: false\nstatus: disabled\n"

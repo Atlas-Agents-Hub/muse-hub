@@ -26,43 +26,45 @@ MAX_MEMBERS=20
 SOURCE_SHA={
     "src/muse_presets/claims.py":"af6e5558024cbca4099d1f65ef2f68ae6d062df105db22eb34aa17da7d79a1e9",
     "presets/claims-adjudicator/preset.json":"0d9205ec0e107baf4600106d8b0815a9e2ab8ce1923cf869408ada75ececaca7",
-    "presets/claims-adjudicator/playbook.json":"14934a1fda009f4ce6e822d17a02a2cf345d08ac53945837c08d5c93c57656cf",
+    "presets/claims-adjudicator/playbook.json":"a6f73c7e2558bce6119c4fc35e32e649b8c9276cacf5f589122614ccf7be5ce6",
     "LICENSE":"af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
 }
 EXAMPLE={
-    "statement":"This fictional source kit operates as an independently verified native agent.",
+    "statement":"The reported result has been independently verified.",
     "asserted_grade":"INDEPENDENT_USEFUL",
     "evidence_grade":"LOCAL_TESTED",
-    "conditions":["Only offline source tests passed.","No native owner or independent recipient is authenticated."],
+    "conditions":["The example has local test results.","The claimed independent review has no supporting record."],
 }
-START_HERE="""# Claims Adjudicator — executable local source kit
+START_HERE="""# Claims Adjudicator: evidence scope check
 
-This ZIP includes the original small pure-Python claims/scope checker,
-a standalone command-line runner, role profile, method playbook, example
-and exact per-file SHA-256 receipt. It does not adjudicate factual truth,
-look up sources, authenticate reviewers or install a Muse agent.
+Compare a claim's asserted grade with the evidence grade you supply. The
+result identifies an overclaim and records the conditions that limit it.
+Gather and review the underlying evidence before choosing those grades.
 
-Requirements: Python 3.12+; no pip packages, Git, network or paid API.
-Obtain this ZIP's SHA-256 from the official release page before extraction.
-Extract to a NEW directory. From the extracted directory, run:
+## Run the example
 
-  python -I -B claims-adjudicator/run.py --operation demo
+Use Python 3.12 or newer. Compare the ZIP's SHA-256 with the release checksum,
+extract into a new folder, and run:
 
-Expected status: LOCAL_CLAIMS_DEMO_PASSED, disposition OVERCLAIM.
+    python -I -B claims-adjudicator/run.py --operation demo
 
-For a specific supplied claim, review EXAMPLE_CLAIM.json first; pipe its
-contents to the runner using --operation assess --allow-reviewed-local.
-No flag means REVIEW_REQUIRED, and invalid inputs are refused. The
-runner reads stdin only; it never publishes, downloads, or sends data.
+Expected status: LOCAL_CLAIMS_DEMO_PASSED, with disposition OVERCLAIM.
 
-The role's native config and Family Link remain disabled. A valid
-embedded hash can detect changed local bytes but is NOT a publisher
-signature, reviewer attestation or owner authorization. Verify the ZIP
-digest from a separately trusted release page. Python -I is import
-isolation, not an OS security sandbox. Run reviewed source only.
+## Check your claim
 
-This is a local tool and can assess only an asserted grade against a
-caller-supplied evidence grade; it cannot independently prove evidence.
+Read EXAMPLE_CLAIM.json for the input fields. Send your reviewed JSON through
+stdin to the same runner with --operation assess --allow-reviewed-local.
+The flag records that you have reviewed the local input. Invalid or unreviewed
+input is refused. Use the runner's --help for its command options.
+
+Use the included profile and playbook with your Muse task. The tool compares
+the supplied grades; independently check the factual sources and reviewer
+identity when the conclusion depends on them. Keep the returned conditions
+with the result so the scope remains clear in later reports.
+
+The manifest detects changes to the packaged files. Verify the archive digest
+against the release checksum before running it, and use operating-system
+isolation when evaluating code you do not trust.
 """
 RUNNER=r'''"""Standalone claims-only runner; no account, provider, or native installation."""
 from __future__ import annotations
@@ -112,7 +114,7 @@ def _engine():
     return assess_scope
 
 def main(argv=None):
-    p=argparse.ArgumentParser(description="Local source-only claims scope checker")
+    p=argparse.ArgumentParser(description="Compare a claim with its supplied evidence grade.")
     p.add_argument("--operation",choices=("demo","assess"),required=True)
     p.add_argument("--allow-reviewed-local",action="store_true")
     a=p.parse_args(argv)
@@ -123,9 +125,9 @@ def main(argv=None):
                 "native_installed":False,"external_effect_authorized":False},sort_keys=True))
             return 2
         if a.operation=="demo":
-            claim={"statement":"A fictional local run proves independent native operation",
+            claim={"statement":"The reported result has been independently verified.",
               "asserted_grade":"INDEPENDENT_USEFUL","evidence_grade":"LOCAL_TESTED",
-              "conditions":["Local synthetic source only","No original independent review"]}
+              "conditions":["The example has local test results.","An independent review is still needed."]}
         else:
             source=sys.stdin.buffer.read(16385)
             if not source or len(source)>16384:

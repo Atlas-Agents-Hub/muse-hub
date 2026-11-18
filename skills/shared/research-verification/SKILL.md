@@ -1,16 +1,16 @@
 ---
 name: research-verification
-description: Use to compare external information, donor methods or technical claims with primary sources.
+description: Use to compare external information, reusable methods or technical claims with primary sources.
 license: MIT
 ---
 
 # Research Verification
 
-Select reusable patterns without importing unverified donor instructions or content.
+Select reusable patterns without importing unverified external instructions or content.
 
 ## When to use
 
-Use to compare external information, donor methods or technical claims with primary sources.
+Use to compare external information, reusable methods or technical claims with primary sources.
 
 ## Procedure
 
@@ -28,6 +28,6 @@ Return the exact source identity, measured result, uncertainty and next action. 
 
 Missing rights or unverifiable source identity stops copying; continue using a documented pattern only.
 
-## Installation boundary
+## Use with your assistant
 
-This skill is original source guidance. It is exported in disabled state with each starter, not installed into native Muse, nor permission to run tools, schedule tasks, or access private memory.
+Apply this procedure to the current task using the tools and account access authorized for that work. Preserve the user's preferences and memory. Configure any additional tool through the host's supported setup, and obtain approval when an action needs it.

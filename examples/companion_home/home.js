@@ -130,8 +130,8 @@
     const active = focus.getAttribute('aria-pressed') !== 'true';
     focus.setAttribute('aria-pressed', String(active));
     focusStatus.textContent = active ?
-      'One focus marked in this browser view; nothing was scheduled.' :
-      'Focus cleared. No task or notification was sent.';
+      'Today’s focus is marked for this visit.' :
+      'Ready for your next focus.';
   });
 
   // H15: deterministic neutral poses, reduced-motion support, no media assets.

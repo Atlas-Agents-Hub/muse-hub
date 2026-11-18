@@ -1,50 +1,53 @@
-# Garden Companion: offline, owner-scoped calendar engine
+# Garden observations and planning
 
-Keep garden observations and seasonal plans in a local SQLite calendar. The included Python tools record changes, review schedules, and reopen saved work using the standard library.
+Keep observations, planting dates, and seasonal plans together. Start with the [Garden Companion](../presets/garden-companion/INSTALL.md), give it your garden notes, and ask for a plan you can review. The toolkit also includes a Python calendar library for applications that need saved events and reviewed date changes.
 
-This new, neutral implementation retains the most useful behavior from an existing design brief: bounded seasonal edits, explicit owner review, revision fencing, all-or-nothing SQLite transactions, durable operation IDs and readback after interruption. It is not a copy of the original application, its private assets, user data, migrations, or proprietary runtime code.
+## Try the calendar example
 
-## Run the exact local vertical
+From the toolkit root with Python 3.12+:
 
-From the repository root:
-
-```bash
-PYTHONPATH=src python examples/garden_calendar_demo.py
-PYTHONPATH=src python -m unittest discover -s tests -p 'test_garden_calendar.py' -v
+```sh
+PYTHONPATH=src python3 -B examples/garden_calendar_demo.py
 ```
 
-The demo creates a disposable SQLite file for a fictional owner. The owner records a planting event; a separate, scoped specialist proposes a two-day shift; the owner reviews the exact before/after change and authorizes it; a fresh process context reopens the event and original operation receipt. It prints a *local-only* grade and removes the temporary data.
+In Windows PowerShell, set `$env:PYTHONPATH = "src"` and run `python -B examples/garden_calendar_demo.py`.
 
-## Original trust boundary (not yet connected)
+The example uses a temporary SQLite database and a fictional garden. It creates an event, proposes a two-day shift, reviews the exact change, applies the owner's decision, and reopens the saved result. Read its printed report to follow the sequence. The example removes its sample database when finished.
 
-`GardenCalendar(database, authority=host_resolver)` rejects missing authority, and calls `host_resolver` on every operation. The resolver **must** be supplied by the authenticated Muse server using independently verified current account/Space/garden and actor identities. Do not build it from request JSON, a chat message, a browser-supplied ID, a copied assistant name, or a client token. The local demo's `GardenScope` objects are **simulated fixtures, not secure credentials**. Anyone able to instantiate arbitrary scopes in their own Python process can forge them; therefore this library alone is not a production authorization boundary.
+To run the same example from a separate folder, use the [portable Garden kit](kits/GARDEN_SOURCEKIT.md). Keep your real notes in your chosen workspace; the example is a demonstration, not the place to enter personal records.
 
-`owner_browser=True` is required for direct event edits, cancellation, review, approval, decline and receipt readback. A scoped specialist with `owner_browser=False` may read the correct site's events and **propose**, never approve or mutate an event. The receiving host must enforce this separately before exposing methods.
+## Review a calendar change
 
-The event list returns at most 100 events and includes an explicit `truncated` flag; it never represents a partial result as complete. All records are keyed by the owner, Space and garden identity; changing any one key isolates the entire event/proposal/receipt namespace. Event IDs, proposal IDs, operation IDs, event titles, dates, shifts, and batch sizes are validated. A proposal can shift 1–21 distinct events by at most 30 days per event, and expires after one hour by default (configurable within 1 minute–24 hours). A default per-garden quota holds at most 1,000 active, unexpired pending batch proposals (configurable up to 10,000); declined and expired history does not count toward this limit. No event is changed on proposal or review.
+1. Read the current event and revision.
+2. Prepare a proposal with the original date and requested shift.
+3. Show the owner the before/after dates and any stale or expired records.
+4. Apply the owner's decision to the complete batch.
+5. Read the saved operation receipt before continuing.
 
-## Transaction and recovery rules
+The library updates a batch in one SQLite transaction. A stale event, cancelled event, or storage error rolls back the complete change. A proposal can cover 1–21 events and shift them by up to 30 days. Its default expiry is one hour.
 
-1. Read current event revisions and original dates before writing a proposal. An existing proposal ID with the same digest and proposer is returned without modification; conflicting reuse is refused.
-2. Display the owner's `review_batch()` result with before/after records and explicit stale/expired findings. The review is read-only and **does not lock the future outcome**.
-3. On approval, use one SQLite `BEGIN IMMEDIATE` transaction. Validate *every* event's scope, state, revision and original date; update all event rows; mark the proposal decided; and insert one immutable receipt. Any detected stale/cancelled event or injected SQL failure rolls back the entire transaction.
-4. On lost acknowledgement, use the **original operation ID** and `receipt()` first. Repeating the same operation ID/decision returns the original receipt without repeating effects. Changing its decision, digest or proposal is an `OPERATION_CONFLICT`.
-5. `OUTCOME_UNKNOWN_RECONCILE_BY_OPERATION_ID` is **not** permission to try again under another operation ID. Verify the original receipt and authoritative event revisions before proceeding.
+## Save your own records in an application
 
-The API-level receipt is durable across local reopen; it is not cryptographically signed or protected against someone with direct database-file write access. Direct owner cancellation and seed creation are local demonstrations and need native receipt/authorization review before production use. The schema is intentionally isolated and minimal; this is **not** a drop-in migration for an existing owner's Garden Space. Do not install it over a live database. Host storage, native session authorization, migrations, backup/restore, secure storage, UI approval and device readback require separate qualification.
+Use `GardenCalendar(database, authority=host_resolver)` from [`garden_calendar.py`](../src/muse_presets/garden_calendar.py) with an absolute database path in an existing private directory. Store that database outside the application package and keep the same path when reopening it. SQLite stores readable local data, so protect the directory and back it up before moving or updating the application.
 
-## Evidence to claim all five layers
+The host resolver must supply the current verified user, Space, garden, and actor scope on every operation. Keep it inside the trusted application; never construct account authority from browser JSON, a chat message, or a client-supplied ID. The example uses fictional scopes to exercise the API.
 
-| Layer | Current state / required proof |
-| --- | --- |
-| EXISTS | `src/muse_presets/garden_calendar.py` and the independent regression suite are present |
-| CORRECT | Local SQLite positive, negative, restart and injected-failure tests pass on exact source |
-| WIRED | **Not proven:** real Muse owner/session resolver, managed Space actions and authorized database binding |
-| USED | **Not proven:** original Muse assistant or owner performs the sequence on real persisted records |
-| USEFUL | **Not proven:** independently tested real planting workflow on an authorized receiving account/device |
+Owner sessions can create and cancel events and decide proposals. A scoped specialist can read events and propose changes. The application must preserve this separation when exposing the API. Event lists include an explicit `truncated` flag after the 100-record limit; show that flag when displaying a partial list.
 
-See [host compatibility](HOST_COMPATIBILITY.md), [lifecycle](INSTALL_AND_PERSISTENCE.md) and [Security](SECURITY.md). Family Link remains proposal-only and disabled in every preset.
+Use a new database for a new integration. Review schema and storage compatibility before moving existing records. To connect a calendar or weather service, follow its [connector guide](connectors/README.md) and choose the required account and permissions.
 
-## macOS portability regression
+## Recover after an interruption
 
-A clean iMac run of the R6 source found that the original SQLite file guard rejected macOS's standard root-owned `/var` → `/private/var` temporary-directory alias. The shared `database_paths` validator now recognizes only the fixed, root-owned macOS `/var`, `/tmp` and `/etc` system aliases while retaining rejection of user-controlled file, parent and grandparent symlinks. The existing Garden API and error codes are preserved. This check is not an authentication or filesystem-sandbox grant.
+Keep the original operation ID. Read `receipt()` and the current event revisions before retrying. Repeating the identical operation returns its saved receipt; changing the decision or request under the same ID produces `OPERATION_CONFLICT`. An `OUTCOME_UNKNOWN_RECONCILE_BY_OPERATION_ID` result requires checking the original outcome before another write.
+
+Keep stale and expired findings visible for review. Do not silently replace an event with a newer timestamp or create a new operation ID to bypass an uncertain result.
+
+## Developer checks
+
+```sh
+PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_garden_calendar.py -v
+```
+
+The library validates scope, revisions, paths, batch sizes, and operation IDs. It rejects user-controlled symlink and junction paths while recognizing the operating system's standard macOS directory aliases.
+
+[Garden Companion](../presets/garden-companion/INSTALL.md) · [Portable kit](kits/GARDEN_SOURCEKIT.md) · [Setup and saved data](INSTALL_AND_PERSISTENCE.md)

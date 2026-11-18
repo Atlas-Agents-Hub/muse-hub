@@ -135,7 +135,7 @@ const cases = {
     await f.save('Do not retry');
     assert.equal(f.state().writes, 1, 'A failed follow-up read must not release the write fence');
     f.failList(null); f.get('notebook-refresh').fire('click'); await f.settle();
-    assert.match(f.get('notebook-status').textContent, /saved and read back/i);
+    assert.match(f.get('notebook-status').textContent, /^Note saved\.$/);
     assert.equal(f.state().writes, 1);
   },
   async mutation_conflict_preserves_draft() {
@@ -158,7 +158,7 @@ const cases = {
     const f = fixture(); await f.unlock(); await f.save('😀'.repeat(8000));
     assert.equal(f.state().writes, 1);
     assert.equal(Array.from(f.state().rows[0].text).length, 8000);
-    assert.match(f.get('notebook-status').textContent, /saved and read back/i);
+    assert.match(f.get('notebook-status').textContent, /^Note saved\.$/);
   },
   async unicode_over_limit_refused_locally() {
     const f = fixture(); await f.unlock(); await f.save('😀'.repeat(8001));

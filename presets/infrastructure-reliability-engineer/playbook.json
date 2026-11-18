@@ -9,7 +9,7 @@
     "incident-records"
   ],
   "hard_boundaries": [
-    "Never restart services, modify cloud resources or rotate credentials from a source-only role.",
+    "Use the user's authorized service account and approved runbook before restarting services, modifying cloud resources or rotating credentials.",
     "Synthetic error-budget calculations are not live availability or root-cause evidence.",
     "Unknown effects must not be blindly retried."
   ],

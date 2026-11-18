@@ -8,15 +8,14 @@ authority: local-source-only; native-muse-not-registered; no-external-effects
 
 # Iron Ledger — read-only Evidence Finder consumer
 
-This is a narrowly translated neutral consumer interface, not the
-original full Iron Ledger receipt logger, TaskGuard, persistent registry,
-provenance journal, operator controller or host native wiring.
+Read existing evidence receipts and task records, create a bounded index,
+and identify the original result that needs reconciliation.
 
 ## Preconditions
 
 - Obtain an already-opened, owner-scoped Evidence Finder EvidenceLedger
-  from the actual host. The source-only reference uses an injected authority
-  callback for scope shape; it does not authenticate host-issued user IDs.
+  from the authorized host. Resolve the user and access scope in that host
+  before supplying the injected authority callback.
 - Specify only the exact operation IDs to read (1–32). Do not enumerate
   another owner's records, inspect private source text or write sidecars.
 - Confirm the existing ledger owner/workspace/role/actor at the actual host
@@ -38,7 +37,7 @@ provenance journal, operator controller or host native wiring.
    a separately authorized claim or task. Iron Ledger never grants
    release, deployment, model execution or external provider effects.
 
-## TaskGuard recovery — read-only (not original TaskGuard)
+## Review task recovery
 
 5. Use `task_run_claim_id(task_id,run_id)` for deterministic, bounded
    task/run identity in the **existing** Claim Gate namespace. This merely
@@ -56,7 +55,7 @@ provenance journal, operator controller or host native wiring.
    A human/authorized host must reconcile the actual original outcome
    at its true recipient and enforce fencing separately.
 
-## Actor and recipient observation — (source-only)
+## Compare actor and recipient observations
 
 8. Bind one exact owner/actor/session, task/run, scope, recipient and
    payload SHA-256. Inject three independently scoped *readers*: an
@@ -82,16 +81,13 @@ provenance journal, operator controller or host native wiring.
     invalid session, stale/changed claims and unreadable readers are
     always held. All safe-to-claim/retry/resume/release fields stay false.
 11. Real principal verification and recipient receipt integrity require
-    actual host-issued credentials and separately authenticated native
-    recipient APIs, which this portable source module does not possess.
+    actual host-issued credentials and authenticated recipient APIs.
+    Obtain that verification through the service handling the task.
     Never substitute a self-hash, mock response or another local JSON
     field for that external trust boundary. Do not execute any effect.
 
-The private original Iron Ledger TaskGuard code has known unsafe
-release/reclaim semantics on malformed claims. This is deliberately
-**not a copy** of that writer; the one existing Claim Gate owns state.
-These purely local observations do not prove independently authenticated
-host/owner authority or successful external effects.
+Claim Gate remains the owner of task state. Use the original recipient
+and current host authority to resolve an uncertain external result.
 
 ## Refusal and recovery
 
@@ -100,7 +96,6 @@ ambiguous reader response, duplicate IDs, stale head and forged authority
 must refuse. Unknown/partial external effects remain held for real recipient
 reconciliation; do not create a fresh claim or blindly retry.
 
-This opt-in skill has NO scheduler, subchat, Family Link or native Muse
-registration. Its skill instructions and runtime module are SHA-pinned
-with rights_verified=false. Do not transplant the original agent's private
-receipt chain, identity or worker state.
+The instructions and runtime module are SHA-pinned with
+`rights_verified=false`. Use the selected task's existing receipt chain and
+keep personal identity, private records, and worker state in their original scope.

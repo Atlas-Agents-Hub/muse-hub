@@ -5,6 +5,12 @@
   const raw = byId('catalog-data');
   const status = byId('count');
   if (!raw || !status) return;
+  // Static project links remain useful when JavaScript is unavailable. Once
+  // this renderer starts, catalog validation owns every displayed result.
+  const staticResults = byId('results');
+  if (staticResults) staticResults.replaceChildren();
+  const fallbackNote = byId('directory-fallback-note');
+  if (fallbackNote) fallbackNote.hidden = true;
   let data;
   try { data = JSON.parse(raw.textContent); }
   catch { status.textContent = 'This directory could not load. Try opening a fresh copy.'; return; }
@@ -69,6 +75,9 @@
   const queryState = { search: '', category: '', route: null };
   let selectedId = data.items[0].id;
   let returnFocus = null;
+  let lastDetailFocus = null;
+  let mobileLayout = window.matchMedia('(max-width: 960px)').matches;
+  const inertBackground = new Map();
 
   const categories = [...new Set(data.items.map(x => x.category))].sort((a,b) => a.localeCompare(b));
   categories.forEach(name => {
@@ -96,12 +105,34 @@
     container.append(row);
   };
   const isMobileSheet = () => window.matchMedia('(max-width: 960px)').matches;
+  const isolateDetail = () => {
+    // Isolate siblings at each level, without making the dialog's ancestors
+    // inert. Restore each element's previous state when the sheet closes.
+    let branch = detail;
+    while (branch && branch.parentElement) {
+      for (const sibling of branch.parentElement.children) {
+        if (sibling === branch || sibling === backdrop ||
+            ['SCRIPT', 'STYLE', 'LINK'].includes(sibling.tagName)) continue;
+        if (!inertBackground.has(sibling)) {
+          inertBackground.set(sibling, sibling.inert);
+          sibling.inert = true;
+        }
+      }
+      branch = branch.parentElement;
+      if (branch === document.body) break;
+    }
+  };
+  const restoreBackground = () => {
+    for (const [element, previous] of inertBackground) element.inert = previous;
+    inertBackground.clear();
+  };
   const closeDetail = (restoreFocus = true) => {
     detail.classList.remove('is-open');
     detail.removeAttribute('role');
     detail.removeAttribute('aria-modal');
     backdrop.hidden = true;
     document.body.classList.remove('detail-visible');
+    restoreBackground();
     if (restoreFocus && returnFocus && returnFocus.isConnected) returnFocus.focus();
     returnFocus = null;
   };
@@ -135,6 +166,7 @@
       detail.setAttribute('aria-modal', 'true');
       backdrop.hidden = false;
       document.body.classList.add('detail-visible');
+      isolateDetail();
       // Chromium can ignore focus while the sheet is becoming visible.
       // Try after paint, with a short fallback for throttled animation frames.
       // Both paths refuse to steal focus after a close or another selection.
@@ -190,7 +222,11 @@
     if (route) notice.replaceChildren(elt('strong', '', 'About this route'), elt('span', '', route.notice));
     else notice.replaceChildren();
     if (items.length) showDetails(items.find(item => item.id === selectedId) || items[0]);
-    else detailBody.replaceChildren(elt('h3', '', 'No resource selected'), elt('p', '', 'Try another search to see tools and guides.'));
+    else {
+      const heading = elt('h3', '', 'No resource selected');
+      heading.id = 'detail-heading';
+      detailBody.replaceChildren(heading, elt('p', '', 'Try another search to see tools and guides.'));
+    }
   };
   const clear = () => {
     queryState.search = ''; queryState.category = ''; queryState.route = null;
@@ -207,16 +243,31 @@
   }));
   input.addEventListener('input', () => { queryState.search = input.value; render(); });
   select.addEventListener('change', () => { queryState.category = select.value; render(); });
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    queryState.search = input.value;
+    queryState.category = select.value;
+    render();
+  });
   form.addEventListener('reset', event => { event.preventDefault(); clear(); });
   byId('clear-empty').addEventListener('click', () => { clear(); input.focus(); });
   detailClose.addEventListener('click', () => closeDetail());
   backdrop.addEventListener('click', () => closeDetail());
+  document.addEventListener('focusin', event => {
+    lastDetailFocus = detail.contains(event.target) ? event.target : null;
+  });
   document.addEventListener('keydown', event => {
-    if (event.key === 'Tab' && detail.classList.contains('is-open') && isMobileSheet()) {
+    const modalOpen = detail.classList.contains('is-open') && isMobileSheet();
+    if (modalOpen && event.key === 'Escape') {
+      event.preventDefault(); closeDetail(); return;
+    }
+    if (event.key === 'Tab' && modalOpen) {
       const focusable = Array.from(detail.querySelectorAll('button:not([disabled]), a[href]'));
       const first = focusable[0], last = focusable[focusable.length - 1];
       if (first && last) {
-        if (event.shiftKey && (document.activeElement === first || document.activeElement === detail)) {
+        if (!detail.contains(document.activeElement)) {
+          event.preventDefault(); (event.shiftKey ? last : first).focus();
+        } else if (event.shiftKey && (document.activeElement === first || document.activeElement === detail)) {
           event.preventDefault(); last.focus();
         } else if (!event.shiftKey && document.activeElement === last) {
           event.preventDefault(); first.focus();
@@ -224,6 +275,11 @@
           event.preventDefault(); first.focus();
         }
       }
+      return;
+    }
+    // Directory shortcuts must never move focus behind an open modal sheet.
+    if (modalOpen) {
+      if (event.key === '/') event.preventDefault();
       return;
     }
     if (event.key === 'Escape' && detail.classList.contains('is-open')) {
@@ -234,6 +290,27 @@
       event.preventDefault(); input.focus();
     }
   });
-  window.addEventListener('resize', () => { if (!isMobileSheet()) closeDetail(false); });
+  window.addEventListener('resize', () => {
+    const nextMobileLayout = isMobileSheet();
+    if (nextMobileLayout === mobileLayout) return;
+    const focusWasInside = detail.contains(document.activeElement) ||
+      (document.activeElement === document.body && lastDetailFocus &&
+       detail.contains(lastDetailFocus));
+    closeDetail(false);
+    if (focusWasInside) {
+      if (nextMobileLayout) {
+        const trigger = Array.from(results.querySelectorAll('[data-details]'))
+          .find(button => button.dataset.details === selectedId);
+        if (trigger) trigger.focus();
+      } else if (document.activeElement === document.body ||
+                 document.activeElement === detailClose) {
+        detail.focus({ preventScroll: true });
+      }
+    }
+    mobileLayout = nextMobileLayout;
+  });
   render();
+  document.body.classList.add('directory-ready');
+  const exploreLink = document.querySelector('[data-enhanced-explore]');
+  if (exploreLink) exploreLink.setAttribute('href', '#paths');
 })();

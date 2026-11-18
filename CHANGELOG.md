@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.1.1 — setup and navigation polish
+
+- Fix skill-guide paths and include the practice files referenced by exported kits.
+- Clarify specialist setup, local app screens and generated guides.
+- Improve search, keyboard focus, mobile dialogs and resource links when JavaScript is disabled.
+- Validate input identifiers in current browsers.
+- Verify the full release inventory, package hashes and source commit before website deployment.
+
+## v1.1.0 — individual downloads and the Muse Hub website
+
+- Publish a searchable download page for 15 specialists, 75 skills and 25 workflows.
+- Include setup guides, examples and file verification in individual packages.
+- Provide complete collections and a Python toolkit alongside the published website.
+
+## v1.0.0 — toolkit and collections
+
+- Publish the complete toolkit, specialist collection and connector directory with checksums.
+
 ## v0.4.1-alpha — Creative Studio offline production planning
 
 - Add an executable Creative Studio planner for authored briefs, frame-accurate shot lists, asset tasks and textual storyboards.

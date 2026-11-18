@@ -5,6 +5,7 @@ capability claims. They never publish, activate a provider or grant permission.
 """
 from __future__ import annotations
 import hashlib,json,os,re,tempfile
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -18,8 +19,24 @@ MILESTONE=re.compile(r'^R\d{2,}[_-]',re.I)
 LINK=re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
 MODULE=re.compile(r'^muse_presets\.[a-z][a-z0-9_]*$')
 MAX_TEXT=2_000_000
+RELEASE_JARGON=re.compile(r'\bsource[- ]only\b|\bnot additional agents\b|\bno authenticated cross-account\b|\bnot a claim that\b',re.I)
+ENGINEERING_RECORDS={'CHANGELOG.md','collections/muse-starters-v1/ROADMAP.md',
+                     'collections/muse-starters-v1/EVALUATION.md'}
+
+class _VisibleHTML(HTMLParser):
+ def __init__(self):super().__init__();self.skip=0;self.parts=[]
+ def handle_starttag(self,tag,attrs):
+  if tag in ('script','style'):self.skip+=1
+  if tag=='meta':
+   values=dict(attrs)
+   if values.get('name')=='description':self.parts.append(values.get('content',''))
+ def handle_endtag(self,tag):
+  if tag in ('script','style'):self.skip=max(0,self.skip-1)
+ def handle_data(self,value):
+  if not self.skip:self.parts.append(value)
 
 def _prose(text:str)->str:
+ text=re.sub(r'\A---\r?\n.*?\r?\n---(?:\r?\n|$)','',text,flags=re.S)
  text=re.sub(r'```.*?```|~~~.*?~~~','',text,flags=re.S)
  text=re.sub(r'`[^`]*`','',text)
  return re.sub(r'\]\([^)]+\)',']()',text)
@@ -43,16 +60,24 @@ def product_findings(root:Path)->list[dict[str,str]]:
   for name in files:
    p=base/name;rel=p.relative_to(root).as_posix()
    if p.is_symlink():add(rel,'SYMLINK_REFUSED');continue
-   doc=rel.startswith(('docs/','presets/','services/')) or '/' not in rel
+   doc=rel.startswith(('docs/','presets/','services/','skills/','templates/',
+                       'collections/muse-starters-v1/')) or '/' not in rel
+   ui=rel.startswith(('hub/site/','examples/companion_home/','src/muse_presets/')) and p.suffix.lower()=='.html'
    if rel.startswith('docs/') and (MILESTONE.match(name) or name.upper() in OLD_DOCS or re.search(r'(?:FINAL|CURRENT|RESTART)[_-]CHECKPOINT',name,re.I)):
     add(rel,'INTERNAL_ARTIFACT')
-   if not (doc and p.suffix.lower()=='.md'):continue
+   if rel.startswith('docs/history/') or rel in ENGINEERING_RECORDS:continue
+   if not ((doc and p.suffix.lower()=='.md') or ui):continue
    try:
     if p.stat().st_size>MAX_TEXT:raise ValueError('too large')
     body=p.read_text(encoding='utf-8')
    except (OSError,UnicodeError,ValueError):add(rel,'UNREADABLE_PRODUCT_PAGE');continue
    if '\ufffd' in body or '\u00e2\u20ac' in body:add(rel,'CORRUPTED_PRODUCT_TEXT')
-   if WORK_ID.search(_prose(body)):add(rel,'INTERNAL_WORK_LANGUAGE')
+   if ui:
+    parser=_VisibleHTML();parser.feed(body);prose=' '.join(parser.parts)
+   else:prose=_prose(body)
+   if WORK_ID.search(prose):add(rel,'INTERNAL_WORK_LANGUAGE')
+   if RELEASE_JARGON.search(prose):add(rel,'INTERNAL_RELEASE_LANGUAGE')
+   if ui:continue
    for match in LINK.finditer(body):
     target=match.group(1).strip().split('#',1)[0].split('?',1)[0]
     if not target or re.match(r'^[a-z][a-z0-9+.-]*:',target,re.I) or target.startswith('//'):continue

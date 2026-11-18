@@ -57,6 +57,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .filters { display: grid; grid-template-columns: minmax(200px,1fr) 228px auto; gap: 12px; align-items: end; background: var(--surface); border: 1px solid var(--line-strong); padding: 16px; }
 .filters label { display: block; font-size: 11px; font-weight: 750; margin: 0 0 7px; color: #3f4d4c; }
 .search-field { border: 1px solid var(--line); display: flex; align-items: center; min-height: 53px; background: #fff; }
+.search-field:focus-within { outline: 3px solid var(--focus); outline-offset: 3px; }
 .search-symbol { width: 48px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
 .filter-search input { border: 0; outline: 0; background: none; width: 100%; min-width: 0; height: 51px; padding: 0 5px 0 0; color: var(--ink); }
 .filter-search input::placeholder { color: #606b68; }
@@ -135,6 +136,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .footer-inner { display: flex; align-items: center; gap: 20px; min-height: 79px; font-size: 11px; }
 .footer-brand { margin-right: auto; font-size: 19px; font-weight: 800; letter-spacing: -.07em; color: white; text-decoration: none; }
 .detail-backdrop { display: none; }
+body:not(.directory-ready) .directory-enhanced,
+body:not(.directory-ready) .detail-panel { display: none; }
+body:not(.directory-ready) .catalog-stage { grid-template-columns: minmax(0,1fr); }
+.directory-fallback-note { color: var(--muted); font-size: 13px; margin: 0 0 17px; }
 @media(max-width: 1120px) {
   .shell { padding-inline: 32px; }
   .header-context { display: none; }

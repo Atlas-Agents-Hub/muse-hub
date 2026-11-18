@@ -16,7 +16,7 @@ The renderer creates a new folder rather than replacing an existing assistant. I
 
 ## Generated profiles and procedures
 
-`quickstart.py` composes three inspectable parts: `system-profile/profile/` for editable agent-home drafts, `subchat-scopes/` for three method-specific contexts with separate blank memory, and `role-skills/` for disabled descriptors. Identity, preferences, voice, and prompt defaults are editable in the working copy.
+`quickstart.py` composes three inspectable parts: `system-profile/profile/` for editable assistant instructions, `subchat-scopes/` for three method-specific contexts with separate blank memory, and `role-skills/` for disabled descriptors. Identity, preferences, voice, and prompt defaults are editable in the working copy.
 
 The catalog has **45 role-specific methods plus five shared procedures = 50 unique procedures**. Reusing the shared procedures across all roles yields 120 descriptor instances, not additional unique skills. The separate `portable_skill_export` adapter emits 50 hyphen-named folders with matching frontmatter without renaming the native-style registry IDs. The receiving host loads the selected format and manages tool permissions.
 

@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#151515">
   <meta name="color-scheme" content="dark">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <meta name="description" content="A source-only, configurable five-room Companion Home for Muse Hub. Original arcade, accessible motion, and a local owner-scoped notebook reference.">
-  <title>Companion Home — Muse Hub / Source Preview</title>
+  <meta name="description" content="Five rooms for focus, notes, a quiet pause, play and creative movement. Make room for your day with Muse Hub.">
+  <title>Companion Home — Muse Hub</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="rooms.js"></script>
   <script defer src="home.js"></script>
@@ -23,8 +23,8 @@
         </svg>
         <span>MUSE <strong>HOME</strong></span>
       </a>
-      <div class="topbar-meta"><span class="live-dot" aria-hidden="true"></span> SOURCE-ONLY / LOCAL PREVIEW</div>
-      <a href="../../docs/COMPANION_HOME.md" class="header-link">Source guide <span aria-hidden="true">↗</span></a>
+      <div class="topbar-meta"><span class="live-dot" aria-hidden="true"></span> YOUR SPACE, YOUR PACE</div>
+      <a href="../../docs/COMPANION_HOME.md" class="header-link">Getting started <span aria-hidden="true">↗</span></a>
     </div>
   </header>
 
@@ -35,7 +35,7 @@
         <div class="hero-copy">
           <p class="small-caps">A DIFFERENT KIND OF WORKSPACE</p>
           <h1 id="hero-title">A little room<br>for <em>everything.</em></h1>
-          <p class="hero-intro">Five configurable rooms for focus, notes, calm, play, and creative movement. Built as an independent Muse Hub source experience—not a second assistant or a shared account.</p>
+          <p class="hero-intro">Five rooms for focus, notes, a quiet pause, play and creative movement. Choose the space that fits your moment.</p>
           <a class="explore-link" href="#rooms"><span>Explore the rooms</span><span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero-art" aria-label="Abstract geometric interior with warm light" role="img">
@@ -49,7 +49,7 @@
           <span class="art-caption">MADE FOR THE MOMENTS BETWEEN.</span>
         </div>
       </div>
-      <div class="hero-base"><span>LOCAL BY DEFAULT</span><span>NO NATIVE MUSE CONNECTION IMPLIED</span></div>
+      <div class="hero-base"><span>MAKE YOURSELF AT HOME</span><span>FIVE WAYS TO FIND YOUR FLOW</span></div>
     </section>
 
     <section class="room-section shell" id="rooms" aria-labelledby="rooms-title">
@@ -77,9 +77,9 @@
               <div class="content-copy">
                 <p class="overline">A SIMPLE START</p>
                 <h4>Make one thing<br>matter today.</h4>
-                <p>A little structure can feel like more space. This checklist is a browser-only preview; it never sends a task or starts a reminder.</p>
+                <p>Choose one thing to focus on, then mark it for this visit. A small commitment can make the day feel clearer.</p>
                 <button type="button" class="inline-action" id="focus-check" aria-pressed="false">Mark today’s focus <span aria-hidden="true">↗</span></button>
-                <p id="focus-status" class="subtle-status" aria-live="polite">Nothing has been scheduled or sent.</p>
+                <p id="focus-status" class="subtle-status" aria-live="polite">Ready for your next focus.</p>
               </div>
               <div class="focus-art" aria-hidden="true">
                 <div class="focus-ring"><div class="focus-core"></div></div>
@@ -92,11 +92,11 @@
           <section class="room-content" id="notebook" data-room-panel="notebook" aria-label="Notebook" hidden>
             <div class="content-grid">
               <div class="content-copy">
-                <p class="overline">PRIVATE SOURCE REFERENCE</p>
+                <p class="overline">WORDS TO COME BACK TO</p>
                 <h4>Keep the thought.<br>Leave the noise.</h4>
-                <p>The actual notebook uses the existing <code>PersonalCompanion</code> owner/Space-scoped SQLite backend. This static preview deliberately does not collect or store private notes.</p>
+                <p>Open Companion Home with the notebook launcher to write and save notes in each room. Follow the guide to get started on your computer.</p>
                 <a class="inline-action" href="../../docs/COMPANION_HOME.md#notebook-and-recovery">Open the local notebook guide <span aria-hidden="true">↗</span></a>
-                <p class="subtle-status">Local revisions, restart recovery and a new-store restore are covered by source tests. No cloud sync.</p>
+                <p class="subtle-status">Reopen saved notes, review earlier versions and keep a backup.</p>
               </div>
               <div class="note-art" aria-hidden="true">
                 <div class="note-surface">
@@ -116,7 +116,7 @@
               <div class="content-copy">
                 <p class="overline">A PAUSE CAN BE PRODUCTIVE</p>
                 <h4>There is time<br>to be still.</h4>
-                <p>An original vector-like scene, drawn entirely with CSS shapes. No copied characters, donor artwork, or third-party assets.</p>
+                <p>Take a quiet pause among gentle shapes and warm colors. Stay for a moment, then move on when you are ready.</p>
                 <a href="#studio" class="inline-action" data-room-target="studio">Visit the motion studio <span aria-hidden="true">↗</span></a>
                 <p class="subtle-status">Respects the operating system’s reduced-motion preference.</p>
               </div>
@@ -179,17 +179,17 @@
             </div>
           </section>
         </div>
-        <div class="room-footer"><span id="room-feature">ROOM FEATURE</span><span>LOCAL SOURCE PREVIEW · NO PROVIDER EFFECTS</span></div>
+        <div class="room-footer"><span id="room-feature">ROOM FEATURE</span><span>CHOOSE THE MOMENT YOU NEED</span></div>
       </div>
     </section>
     <section class="disclosure shell" aria-labelledby="scope-title">
       <div>
-        <p class="small-caps">A CLEAR BOUNDARY</p>
-        <h2 id="scope-title">Source is a beginning,<br>not an installed assistant.</h2>
+        <p class="small-caps">MAKE IT PART OF YOUR DAY</p>
+        <h2 id="scope-title">A place to begin.<br>A place to return.</h2>
       </div>
-      <p>Companion Home is a portable, independent source experience. The global Muse assistant remains external. The notebook persists only through a separately run, owner-scoped SQLite source module. No live Muse rooms, provider accounts, cross-device sync, background reminders or effects are implied.</p>
+      <p>Start with a focus, save a thought, take a pause or try a small game. Use the setup guide to open your notebook and keep your work between visits.</p>
     </section>
   </main>
-  <footer class="footer"><div class="shell footer-inner"><span>MUSE HUB / COMPANION HOME</span><span>ORIGINAL UI + GAME · MIT SOURCE</span><a href="../../docs/COMPANION_HOME.md">Read source and limitations ↗</a></div></footer>
+  <footer class="footer"><div class="shell footer-inner"><span>MUSE HUB / COMPANION HOME</span><span>FIVE ROOMS FOR YOUR DAY</span><a href="../../docs/COMPANION_HOME.md">Open the setup guide ↗</a></div></footer>
 </body>
 </html>

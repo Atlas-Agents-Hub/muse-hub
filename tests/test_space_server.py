@@ -24,7 +24,7 @@ class ServerTests(unittest.TestCase):
   finally:c.close()
  def post(self,path,body):return self.call('POST',path,body)
  def test_static_page_no_token_exposed(self):
-  status,h,b=self.call('GET','/',auth=False);self.assertEqual(status,200);self.assertNotIn(self.token.encode(),b);self.assertIn(b'Local companion',b)
+  status,h,b=self.call('GET','/',auth=False);self.assertEqual(status,200);self.assertNotIn(self.token.encode(),b);self.assertIn(b'Companion Workspace',b)
  def test_assets(self):
   for p,mime in [('/app.js','javascript'),('/app.css','css')]:
    status,h,b=self.call('GET',p,auth=False);self.assertEqual(status,200);self.assertIn(mime,h['Content-Type'])

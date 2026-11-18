@@ -27,34 +27,38 @@ MAX_UNPACKED_BYTES = 4 * 1024 * 1024
 MAX_MEMBERS = 96
 HEX = re.compile(r"^[0-9a-f]{64}$")
 
-START_HERE = """# Software Engineer: independent offline source kit
+START_HERE = """# Software Engineer repair toolkit
 
-Contains the actual source-pinned Python Claim Gate, RED/PATCH/GREEN
-workflow, source-only profile, disabled skills and a fictional test fixture.
-No native Muse agent, account connector, paid API, or deployment is installed.
+Run a repair through a failing test, a patch, a passing test and a separate
+review. This kit includes the Claim Gate runtime, profile instructions,
+procedures and EXAMPLE_REPAIR_CASE.json.
 
-Requirements: Python 3.12+ and Git. No Python package installation required.
+## Run the example
 
-1. Extract into a new directory. Preserve any existing user/agent files.
-2. Verify downloaded ZIP SHA-256 against trusted publisher metadata, not
-   just the unsigned SOURCEKIT_MANIFEST.json inside this ZIP.
-3. A reviewed offline fixture is included as EXAMPLE_REPAIR_CASE.json.
-   Its expected digest is in SOURCEKIT_MANIFEST.json.
-4. To execute the fixture, use absolute case/output paths and a NEW output
-   directory that does not exist:
+Requirements: Python 3.12 or newer and Git. The Python tools use the standard
+library. Compare the ZIP's SHA-256 with the release checksum, then extract into
+a new folder.
+
+1. Open EXAMPLE_REPAIR_CASE.json and inspect the code and test it contains.
+2. Find its digest in SOURCEKIT_MANIFEST.json.
+3. In the following command, replace ABSOLUTE_CASE_PATH with the full path to
+   that file, CASE_SHA with its digest, and ABSOLUTE_NEW_WORKSPACE with a new
+   absolute directory that does not exist. Run from the extracted folder:
 
    python -I -B software-engineer/runtime/claim-gate/engineering_workflow.py execute --case ABSOLUTE_CASE_PATH --case-sha256 CASE_SHA --to ABSOLUTE_NEW_WORKSPACE --reviewed-code
 
-5. Check the RED assertion, GREEN test receipt and preserved work evidence.
-   A separate reviewer can run the review verb in a distinct workspace.
+4. Read the RED assertion, GREEN test receipt and preserved work evidence.
+   Use the review command in a separate workspace for an independent check.
+   The runner's --help lists the required review and completion arguments.
 
-IMPORTANT: --reviewed-code is an operator assertion, NOT an OS sandbox.
-Python tests execute with the operating account's permissions and can reach
-its files/network. Never run untrusted source without separate OS isolation.
-Local hashes are not signatures. No independent human or native Muse identity
-is authenticated. Real external effects and schedulers are disabled.
-Windows directory-entry power-loss durability is unproven; Windows destructive
-retention pruning remains disabled. This is source only.
+The --reviewed-code flag records your review of the supplied Python. Tests run
+with your account's file and network permissions; use operating-system
+isolation for code you do not trust. Preserve incomplete workspaces and inspect
+their receipts before resuming. Windows destructive retention pruning remains
+disabled because directory-entry power-loss durability has not been verified.
+
+Use the included profile and procedures with your existing Muse assistant and
+current task. Keep its preferences, memory and authorization controls intact.
 """
 
 
