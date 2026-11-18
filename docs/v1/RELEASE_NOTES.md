@@ -1,14 +1,14 @@
-# Muse Hub v1.3.0
+# Muse Hub v1.4.0
 
 Get more out of Muse: explore its features, customize an assistant, connect tools, and create a useful workspace.
 
 ## Improved in this update
 
-- A [prioritization calculator](../../collections/muse-starters-v1/skills/project-prioritization/PRIORITIZE.md) with exact RICE scoring and stable rankings.
-- A feasible next batch that includes prerequisites, counts shared work once and respects each resource's capacity.
-- JSON and CSV inputs, ranked reports and clear explanations for deferred work.
-- Ready examples and a command guide inside the planning skill, Coordinator, Personal Companion and related workflow or starter downloads.
-- A direct planning-kit download on the homepage and searchable calculator details in Downloads.
+- Reusable [reminder](../../collections/muse-starters-v1/skills/daily-briefing/REMINDERS.md), [calendar](../../collections/muse-starters-v1/skills/daily-briefing/CALENDAR_REVIEW.md) and [goal](../../collections/muse-starters-v1/skills/weekly-reset/GOAL_REVIEW.md) worksheets with blank templates, filled examples and recovery steps.
+- Practical planning for recurring reminders, one occurrence of a calendar series, travel buffers, progress evidence and weekly capacity.
+- An [HTML source checker](../../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) for document language, page titles, duplicate IDs, label references and image text alternatives.
+- A Python command, source-linked findings and two example pages inside the Accessible UI kit and every relevant specialist, workflow or starter download.
+- Worksheet and checker links in the planning and developer journeys, plus the original web application testing guide.
 
 ## What is included
 
@@ -28,6 +28,6 @@ Assistant instructions require no Python. Optional local programs list their req
 
 ## Downloads and updates
 
-Use the [v1.3.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.3.0) and compare each download with its `SHA256SUMS` entry. Keep your original download and customized working copy separately. Preserve preferences, memory, credentials, and saved databases when updating.
+Use the [v1.4.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.4.0) and compare each download with its `SHA256SUMS` entry. Keep your original download and customized working copy separately. Preserve preferences, memory, credentials, and saved databases when updating.
 
 [Get started](../GETTING_STARTED.md) · [Terminal](../TERMINAL.md) · [Setup and saved data](../INSTALL_AND_PERSISTENCE.md) · [Release history](../RELEASES.md)

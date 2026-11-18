@@ -73,6 +73,20 @@ python -B tools/muse_collection.py workflow-demo automation-readiness
 
 This reviews the workflow's dependencies, declared approvals and expected results. Use `python3` where appropriate. The [specialist tool guide](../collection/SPECIALIST_QUICKSTART.md) shows how to run the other tools and supply your own inputs.
 
+### Check a web app in the browser
+
+Start with the [HTML source checker](../../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) included in the [Accessible UI download](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/muse-skill-accessible-ui-v1.4.0.zip). Extract the ZIP and run its included example from that folder with Python 3.10 or newer:
+
+```sh
+python -B tools/accessibility_check.py --input skills/accessible-ui/examples/clean.html
+```
+
+Replace the input path with your own HTML page to check its source. Add `--format text` for a readable report. Follow the source check with keyboard, focus, zoom and rendered-state review of the task.
+
+For reusable browser testing examples, explore Anthropic's [Web Application Testing guide](https://github.com/anthropics/skills/tree/e4bb5d960d87126ff3b3a8af1a104b7db67560ba/skills/webapp-testing). It uses Python, Playwright and an installed browser to inspect pages, exercise interactions and capture screenshots. The linked revision includes its [Apache 2.0 license](https://github.com/anthropics/skills/blob/e4bb5d960d87126ff3b3a8af1a104b7db67560ba/skills/webapp-testing/LICENSE.txt).
+
+Start your application with its own documented command. Check the page title or a distinctive element to confirm you reached the intended app, then wait for the specific state the task needs. Give each check a bounded timeout. Exercise the changed flow and one unaffected flow, and save the results with the change you reviewed.
+
 ## 4. Connect the service your work needs
 
 Browse [development and infrastructure connectors](../connectors/CATALOG.md#development-and-infrastructure) for code hosting, cloud services and monitoring. [Work and productivity connectors](../connectors/CATALOG.md#work-and-productivity) include project tracking and team communication.

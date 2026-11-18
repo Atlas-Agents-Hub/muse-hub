@@ -33,6 +33,8 @@ Review tomorrow's calendar. Identify overlapping events and time I should
 leave for preparation. Suggest changes for me to review.
 ```
 
+Use the [calendar review worksheet](../../collections/muse-starters-v1/skills/daily-briefing/CALENDAR_REVIEW.md) to check the current event, choose a new time and preserve travel or preparation buffers. Its example shows how to move one occurrence of a recurring event and check the result.
+
 ## 3. Set reminders and recurring check-ins in Muse
 
 Muse can send reminders and run recurring tasks. Include the date or recurrence, time and time zone in your request, then read the schedule it confirms. [Muse's reminder guide](https://www.meta.com/help/superintelligence/1484325780075655/) explains how to manage these from your conversation and the **Upcoming** tab.
@@ -50,6 +52,8 @@ For one follow-up:
 On [DATE] at [TIME] in [YOUR TIME ZONE], remind me to [ACTION]. Confirm the
 date, time and reminder text.
 ```
+
+Copy the [reminder worksheet](../../collections/muse-starters-v1/skills/daily-briefing/REMINDERS.md) to keep the task, schedule, confirmation and follow-up together. It includes a weekly review example and a way to recover an interrupted reply.
 
 Manage the schedule as your plans change:
 
@@ -99,6 +103,8 @@ At your weekly check-in, answer four questions:
 - What changed in my time, priorities or constraints?
 - What are the next three useful actions?
 - Which reminders should stay, move or finish?
+
+The [goal review worksheet](../../collections/muse-starters-v1/skills/weekly-reset/GOAL_REVIEW.md) connects your outcome to progress evidence and a week that fits your available time. Its portfolio example shows how to select useful work and carry forward tasks that need more time. All three worksheets are included in the Personal Companion download.
 
 Update the plan, save what matters and adjust the existing schedules. Before closing your workspace, check that your next reminder appears in **Upcoming** and that the task or note you wanted to keep appears in saved records.
 

@@ -22,12 +22,12 @@ class ReaderSourceAlignmentTests(unittest.TestCase):
              self.assertIn('15',body)
              self.assertIn('DOWNLOAD_A_SPECIALIST.md',body)
      catalog=json.loads(self.text('hub/site/downloads.json'))
-     self.assertEqual(catalog['version'],'v1.3.0')
+     self.assertEqual(catalog['version'],'v1.4.0')
      self.assertEqual(catalog['counts'],{'specialist':15,'skill':75,'workflow':25})
      self.assertEqual(len(catalog['items']),115)
      self.assertEqual(len({item['asset'] for item in catalog['items']}),115)
      for item in catalog['items']:
-         self.assertEqual(item['url'],'https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.3.0/'+item['asset'])
+         self.assertEqual(item['url'],'https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/'+item['asset'])
  def test_local_entrypoints_survive_reader_rewrite(self):
      for page in ['README.md','docs/GITHUB_QUICKSTART.md']:
          body=self.text(page)

@@ -50,15 +50,15 @@ class ReleasePackagesTests(unittest.TestCase):
         self.assertEqual(len(self.archives), 120)
         self.assertEqual([len(self.records[k]) for k in ("specialists", "skills", "workflows")],
                          [15, 75, 25])
-        self.assertIn("muse-data-engineer-v1.3.0.zip", self.archives)
-        self.assertIn("muse-reliability-engineer-v1.3.0.zip", self.archives)
+        self.assertIn("muse-data-engineer-v1.4.0.zip", self.archives)
+        self.assertIn("muse-reliability-engineer-v1.4.0.zip", self.archives)
         for rows in self.records.values():
             self.assertEqual(len(rows), len({r["id"] for r in rows}))
             for row in rows:
                 raw = self.archives[row["asset"]]
                 self.assertEqual(len(raw), row["bytes"])
                 self.assertEqual(hashlib.sha256(raw).hexdigest(), row["sha256"])
-                self.assertEqual(row["url"], release.asset_url(row["asset"], "v1.3.0"))
+                self.assertEqual(row["url"], release.asset_url(row["asset"], "v1.4.0"))
 
     def test_archive_roster_integrity_and_portable_paths(self):
         for name, raw in self.archives.items():
@@ -141,7 +141,7 @@ class ReleasePackagesTests(unittest.TestCase):
                 self.assertTrue((folder / depth).is_file())
 
     def test_documented_custom_input_command_runs_with_the_example_shape(self):
-        raw = self.archives["muse-skill-schema-evolution-v1.3.0.zip"]
+        raw = self.archives["muse-skill-schema-evolution-v1.4.0.zip"]
         folder = self.base / "documented-custom-input"
         with zipfile.ZipFile(io.BytesIO(raw)) as archive:
             archive.extractall(folder)
@@ -173,7 +173,7 @@ class ReleasePackagesTests(unittest.TestCase):
                 self.assertTrue((folder / "FIRST_TASK.md").is_file())
 
     def test_original_fifty_procedures_remain_distinct(self):
-        raw = self.archives["muse-role-procedures-50-v1.3.0.zip"]
+        raw = self.archives["muse-role-procedures-50-v1.4.0.zip"]
         with zipfile.ZipFile(io.BytesIO(raw)) as archive:
             receipt = json.loads(archive.read("PORTABLE_SKILLS_MANIFEST.json"))
             self.assertEqual(receipt["unique_skills"], 50)
@@ -183,7 +183,7 @@ class ReleasePackagesTests(unittest.TestCase):
 
     def test_bundles_preserve_individual_packages(self):
         for kind, count in (("specialists",15),("skills",75),("workflows",25),("starters",100)):
-            raw = self.archives["muse-" + kind + "-v1.3.0.zip"]
+            raw = self.archives["muse-" + kind + "-v1.4.0.zip"]
             with zipfile.ZipFile(io.BytesIO(raw)) as archive:
                 members = json.loads(archive.read("PACKAGES.json"))["packages"]
                 self.assertEqual(len(members), count)
@@ -206,7 +206,7 @@ class ReleasePackagesTests(unittest.TestCase):
     def test_build_is_deterministic_and_rejects_bad_selection(self):
         first = release._zip(release.skill_files(self.data, "schema-evolution"))
         self.assertEqual(first, release._zip(release.skill_files(self.data, "schema-evolution")))
-        for value in ("../v1.3.0", "v1.1", "v1.3.0/other"):
+        for value in ("../v1.4.0", "v1.1", "v1.4.0/other"):
             with self.assertRaises(ValueError):
                 release._version(value)
         with self.assertRaises(ValueError):
@@ -217,7 +217,7 @@ class ReleasePackagesTests(unittest.TestCase):
             release.collection.instruction_files(self.data, [], ["unknown"])
 
     def test_tampered_tool_is_refused_before_import(self):
-        raw = self.archives["muse-skill-schema-evolution-v1.3.0.zip"]
+        raw = self.archives["muse-skill-schema-evolution-v1.4.0.zip"]
         folder = self.base / "tampered"
         with zipfile.ZipFile(io.BytesIO(raw)) as archive:
             archive.extractall(folder)
@@ -230,7 +230,7 @@ class ReleasePackagesTests(unittest.TestCase):
             self.assertNotIn("TAMPERED_CODE_EXECUTED", result.stderr)
 
     def test_verifier_rejects_unsafe_and_colliding_manifest_names(self):
-        raw = self.archives["muse-skill-schema-evolution-v1.3.0.zip"]
+        raw = self.archives["muse-skill-schema-evolution-v1.4.0.zip"]
         folder = self.base / "invalid-manifest"
         with zipfile.ZipFile(io.BytesIO(raw)) as archive:
             archive.extractall(folder)

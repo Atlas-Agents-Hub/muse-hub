@@ -2,7 +2,7 @@
 
 **Muse Hub specialist:** Design and review user journeys, interfaces, states, and accessibility.
 
-**[Download the assistant](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.3.0/muse-product-interface-designer-v1.3.0.zip)** · **[Set up Product & Interface Designer](INSTALL.md)**
+**[Download the assistant](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.4.0/muse-product-interface-designer-v1.4.0.zip)** · **[Set up Product & Interface Designer](INSTALL.md)**
 
 Give this specialist its own Main conversation and three subchats. Its package brings together the role's instructions, selected skills, workflows, and examples so you can begin with your own task.
 
@@ -16,4 +16,4 @@ Give this specialist its own Main conversation and three subchats. Its package b
 
 Keep the original download and your customized working copy separately so updates preserve your preferences and memory. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) covers the details.
 
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.3.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.4.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)
