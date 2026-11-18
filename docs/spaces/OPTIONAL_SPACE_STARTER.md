@@ -1,6 +1,6 @@
 # Optional fullstack local Space companion starter
 
-This first-party example joins a browser UI, loopback HTTP service and durable SQLite state. It is a runnable **local reference adapter**, not a deployed Muse Space, native agent registration, SDK compatibility certification or hosted service. The core request state machine uses contract `space-starter/1`; it does not import or redistribute a proprietary SDK.
+Build a local browser workspace with request tracking and saved SQLite state. This example combines a browser UI, loopback HTTP service, and the `space-starter/1` request state machine. Follow the launch steps below, then inspect the integration contract when extending it.
 
 ## Run the disposable offline example
 
@@ -22,7 +22,7 @@ python -B examples/space_starter.py --serve --database /absolute/owner-directory
 
 On Windows use an absolute path in an owner-protected directory, for example `C:\example-owner\space.db`. The directory must already exist. Existing regular database files may be reopened; SQLite is unencrypted and this is not secure erasure or an OS sandbox.
 
-The launcher prints a loopback URL and a new random local-session token. Open the URL on **that same computer** and paste the token into the page. The token is not put in a URL, cookie or browser persistent storage. Reloading the page requires the token again. A new launcher session creates a new token. Close the foreground launcher with Ctrl+C. Do not expose the listener to a LAN or internet, tunnel it, or treat it as native Muse authentication.
+The launcher prints a loopback URL and a new random local-session token. Open the URL on **that same computer** and paste the token into the page. The token is not put in a URL, cookie or browser persistent storage. Reloading the page requires the token again. A new launcher session creates a new token. Close the foreground launcher with Ctrl+C. Keep this local listener on the same computer; use an appropriately authenticated host when building a shared deployment.
 
 The browser can read local records, create/edit notes, explicitly enable/disable local requests, queue intentions, cancel requests and refresh receipts. Request handling is OFF by default. Enabling it does not connect a model or execute queued prompts. The page is usable at phone-sized viewports; a phone-to-host network workflow is not implemented or claimed.
 

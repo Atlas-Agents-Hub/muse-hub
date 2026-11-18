@@ -1,6 +1,6 @@
 # Choose a specialist
 
-Fifteen substantive packages combine the original eleven-role protocol with four additional executable toolkits. The combined registry is [specialists.json](../../collections/muse-starters-v1/specialists.json); the current 15-profile protocol remains [catalog.json](../../presets/catalog.json). The historical eleven-role protocol is retained in the collection baseline. `data-engineer` maps to public `data-engineering-architect`, and `reliability-engineer` maps to `infrastructure-reliability-engineer`; these are compatibility aliases, not two extra specialists. Native assistants are not installed by either catalog.
+[Download one of the 15 assistant packages](../DOWNLOAD_A_SPECIALIST.md) and open `START_HERE.md`. Each specialist brings its Main instructions, three subchats, selected skills, workflows, and examples.
 
 | Specialist | Contract and use | Example or exporter |
 | --- | --- | --- |
@@ -14,20 +14,14 @@ Fifteen substantive packages combine the original eleven-role protocol with four
 | [Garden Companion](../../presets/garden-companion/README.md) (`garden-companion`) | [Role contract](../../presets/garden-companion/preset.json). Supports garden observations, planting plans and owner-approved seasonal schedules. | [examples/garden_calendar_demo.py](../../examples/garden_calendar_demo.py) |
 | [Learning Coach](../../presets/learning-coach/README.md) (`learning-coach`) | [Role contract](../../presets/learning-coach/preset.json). Runs source-grounded, adaptive study and evidence-based learning reviews. | [examples/learning_session_demo.py](../../examples/learning_session_demo.py) |
 | [Claims Adjudicator](../../presets/claims-adjudicator/README.md) (`claims-adjudicator`) | [Role contract](../../presets/claims-adjudicator/preset.json). Judges claims against exact evidence and preserves limiting conditions. | [examples/export_claims_sourcekit.py](../../examples/export_claims_sourcekit.py) |
-| [Reverse Engineering & Security Researcher](../../presets/reverse-engineering-researcher/README.md) (`reverse-engineering-researcher`) | [Original role contract](../../presets/reverse-engineering-researcher/preset.json). Authorized supplied-observation and protocol review; no new live security adapter is included in this collection. | [Existing source-kit guide](../../presets/reverse-engineering-researcher/INSTALL.md) |
+| [Reverse Engineering & Security Researcher](../../presets/reverse-engineering-researcher/README.md) (`reverse-engineering-researcher`) | [Original role contract](../../presets/reverse-engineering-researcher/preset.json). Authorized software behavior, supplied-observation analysis, and protocol review. | [Existing source-kit guide](../../presets/reverse-engineering-researcher/INSTALL.md) |
 | [Data Engineering & Database Architect](../../presets/data-engineer/COLLECTION_README.md) (`data-engineer`) | [Role contract](../../presets/data-engineer/specialist.json). Design safe data contracts, reconcile incremental records and review query access paths with reproducible offline tools. | `python tools/muse_collection.py demo data-engineer` |
 | [Infrastructure & Reliability Engineer](../../presets/reliability-engineer/COLLECTION_README.md) (`reliability-engineer`) | [Role contract](../../presets/reliability-engineer/specialist.json). Turn service measurements into explicit error budgets, capacity estimates and incident timelines without changing infrastructure. | `python tools/muse_collection.py demo reliability-engineer` |
 | [Automation Engineer](../../presets/automation-engineer/COLLECTION_README.md) (`automation-engineer`) | [Role contract](../../presets/automation-engineer/specialist.json). Prepare bounded application workflows, review target observations and reconcile uncertain effects through the existing host authority. | `python tools/muse_collection.py demo automation-engineer` |
 | [Product & Interface Designer](../../presets/product-interface-designer/COLLECTION_README.md) (`product-interface-designer`) | [Role contract](../../presets/product-interface-designer/specialist.json). Specify coherent interface states and measure real design-token contrast before handing off implementation and rendered-product review. | `python tools/muse_collection.py demo product-interface-designer` |
 
-## Pick the right package
+## Run a tool or use a starter
 
-A specialist kit provides an executable capability plus an operational contract. A starter selects relevant skills and workflows for a narrower task. A workflow describes a sequence of outputs and handoffs; it does not create a scheduler or new authority.
+The [tool quickstart](SPECIALIST_QUICKSTART.md) shows how to run and export the included Python tools. The [skill index](../../collections/muse-starters-v1/SKILL_INDEX.md) and [task catalog](../../collections/muse-starters-v1/CATALOG.md) help you choose a method for your existing project.
 
-The four new kits export with `python tools/muse_collection.py kit SPECIALIST --to ./new-kit.zip` and run independently with `python run.py --demo`. The original eleven specialists retain their established exporters and examples rather than being silently moved into an incompatible packaging protocol.
-
-For the new toolkits, direct calculations are available through `muse_presets.specialist_extensions.evaluate(skill_id, inputs)`. Integrations remain subject to the existing host, source scope and approval controls.
-
-Start with the [working quickstart](SPECIALIST_QUICKSTART.md), browse [all skills](../../collections/muse-starters-v1/SKILL_INDEX.md), or choose a [task starter](../../collections/muse-starters-v1/CATALOG.md).
-
-The Adversarial Verifier and Personal Companion entries above use the current public profile routes. Their separate development-only engines are not silently included in this promotion. A role purpose is not a claim that every possible operation is executable.
+The tool IDs `data-engineer` and `reliability-engineer` map to the Data Engineering & Database Architect and Infrastructure & Reliability Engineer roles. Their package filenames use these short names.

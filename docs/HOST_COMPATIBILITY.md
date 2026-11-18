@@ -1,57 +1,43 @@
-# Host compatibility
+# Connect your assistant and tools
 
-The Python tools can run without a Muse account. Connecting a profile or tool to a model host is a separate integration: the host must identify the user, grant permissions and confirm that it actually loaded and invoked the tool.
+Use the setup route supported by the assistant or tool you are working with. Muse Hub provides role instructions, skills, and local programs; your chosen host manages its account, available tools, and service permissions.
 
-Personal Muse/Hatch and Muse Code use different integration surfaces. Do not assume that a Muse Code plugin manifest or SDK method works in a personal Muse account. Check the receiving host's current documentation and supported interfaces. The toolkit does not include a certified native installation for either host.
+## Assistant instructions
 
-## Inspect the local environment
+Open a specialist's `START_HERE.md` and follow its guide for Main and three subchats. Attach or load the supplied instructions through your host's supported flow. Try the included first task and check that the result uses the context you supplied.
 
-From the repository root:
+## Personal Muse in the terminal
 
-```bash
+Use [muse-cli setup](TERMINAL.md#chat-with-your-personal-muse) for personal Muse chat, side chats, and history. The executable is `muse-cli`. Muse Code uses a different command and setup guide, so choose the one that matches your task.
+
+## Connect a service
+
+Find the service in the [connector directory](connectors/README.md), follow its setup guide, and select the intended account and permissions. Start with a small read or harmless example before using it for a larger workflow. Check the result in the original service when the action changes something.
+
+## Diagnose a local host
+
+From the toolkit root with Python 3.12+:
+
+```sh
 PYTHONPATH=src python3 -B -m muse_presets.cli host-doctor --host personal-hatch
 ```
 
-Use `--host muse-code` to inspect that target instead. On Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python`.
+Use `--host muse-code` for that environment. In PowerShell, set `$env:PYTHONPATH = "src"` and use `python`.
 
-The command reads a bounded inventory of candidate executables, process names, skill directories and optional SDK package metadata. It does not launch the discovered executable, log in, install software, call a model or change host state. Runtime versions can remain unknown when there is no trusted metadata source.
+This diagnostic lists candidate executables, process names, skill directories, and available package metadata. It reads local configuration. `HOST_UNVERIFIED` or exit code 2 means the inspection could not establish the requested host connection; continue with the actual application's setup and status command. An executable being present is useful inventory, while the host's own status confirms your account connection.
 
-An exit code of 2 and `HOST_UNVERIFIED` are deliberate: a local process observation is not an authenticated host connection. Even `HOST_RUNTIME_PRESENT_UNATTESTED` means only that a candidate runtime was observed. It does not grant permission to use it.
+## Inspect a skill configuration
 
-## Inspect a skill catalog
+For an existing installation, provide paths from your own setup:
 
-Use paths approved for your own installation:
-
-```bash
-PYTHONPATH=src python3 -B -m muse_presets.cli skill-binding-doctor \
-  --host personal-hatch \
-  --custom-root /owner-approved/custom-skills \
-  --registry /owner-approved/config/skills.yaml \
-  --skill local_claim_gate \
-  --skill local_provenance_vault \
-  --skill local_iron_ledger
+```sh
+PYTHONPATH=src python3 -B -m muse_presets.cli skill-binding-doctor   --host personal-hatch   --custom-root /owner-approved/custom-skills   --registry /owner-approved/config/skills.yaml   --skill local_claim_gate
 ```
 
-The inspector checks the named descriptors, Markdown, entrypoints and supported catalog fields. A `LOCAL_CATALOG_GAP` result means a local descriptor is missing from the inspected catalog. Any proposed YAML is a preview; the command does not register a skill or modify the catalog.
+The inspector checks the selected descriptor, instructions, entrypoints, and catalog fields. `LOCAL_CATALOG_GAP` identifies a missing local entry. Apply any proposed change through the host's supported configuration flow, then try the skill on a small task.
 
-A file being present, a catalog saying `connected`, and a model being able to invoke a tool are different observations. Verify each separately.
+## Choose the right skill format
 
-## Portable instructions are a separate format
+The [portable exporter](SKILLS.md#portable-instruction-library) creates 50 standard `SKILL.md` folders. Role packages also include registry descriptors for their supported configuration. Keep your live registry and memory separate from downloaded packages, and follow the format accepted by your host.
 
-The source exporter can create 50 hyphen-named `SKILL.md` folders. The native-style role drafts retain their existing underscore-based identifiers and disabled `skills.yaml`. Format compatibility alone proves neither native registration nor model-selected invocation. Use only the format and supported import route accepted by your receiving host; do not copy a portable directory over a live registry.
-
-## Verify a real integration
-
-1. Confirm the receiving account, host version and supported API.
-2. Stage the package in a new, approved location without replacing personal files.
-3. Read back the host's registered tool or loaded instructions.
-4. Invoke a bounded test through the actual host and retain its call identifier.
-5. Check the result at the receiving system, including permission denial and restart behavior.
-
-Do not substitute a shell execution, a manifest flag or a caller-supplied user ID for host authentication. Unsupported interfaces remain unverified; do not install another runtime to bypass the missing integration.
-
-## Filesystem limits
-
-Inspection rejects traversal and owner-controlled symlink or junction ancestors. Exact root-owned macOS `/var`, `/tmp` and `/etc` aliases into `/private` are allowed by the shared path checker. These checks reduce accidental path misuse but are not an atomic filesystem sandbox or a native identity guarantee.
-
-[Architecture](ARCHITECTURE.md) · [Installation and saved data](INSTALL_AND_PERSISTENCE.md)
+[Get started](GETTING_STARTED.md) · [Setup and saved data](INSTALL_AND_PERSISTENCE.md) · [Terminal](TERMINAL.md)

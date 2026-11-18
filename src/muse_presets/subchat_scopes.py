@@ -92,30 +92,30 @@ def _method_files(role: str, method: dict, book: dict, display_name: str) -> dic
         "CONTEXT.md": f"# Scoped context: {mid}\n\n**When:** {trigger}\n\n"
                       f"**Procedure:**\n{instructions}\n\n**Evidence:**\n{evidence}\n\n"
                       f"**Stop rule:** {method['stop_rule']}\n\n"
-                      f"**Possible next role:** {method['handoff_to']} — proposal only; no automatic send.\n",
+                      f"**Possible next role:** {method['handoff_to']} — use the current authorized handoff route when needed.\n",
         "AGENTS.md": f"# Agent instructions: {mid}\n\n"
-                     "Inherit actual provider and owner policy, never inferred grants. "
-                     f"Operate only this {role} method and its supplied source-bound context. "
-                     "No background jobs, owner-memory transfers, impersonation or extra tools. "
-                     "Every effect requires a separately authenticated owner/host grant, "
-                     "and external results require independent recipient readback.\n",
-        "MEMORY.md": "# Receiving-owner memory\n\n"
-                     "New blank scoped memory. Nothing from the original agents is preloaded. "
+                     "Follow current host policy and the user's task authorization. "
+                     f"Use this {role} method with the relevant supplied context. "
+                     "Preserve unrelated tasks and private memory. "
+                     "Use available tools within the authorized scope, "
+                     "and verify external delivery before reporting it as complete.\n",
+        "MEMORY.md": "# Private task memory\n\n"
+                     "Record useful context for this method. "
                      "Keep observation, inference and owner preferences distinct. "
-                     "Do not copy or synchronize to another owner without an approved native route.\n",
-        "PREFERENCES.md": "# Receiving-owner preferences\n\n"
-                          "This is an editable blank preference draft scoped to this method. "
-                          "Preserve the owner's later changes during upgrades.\n",
+                     "Share private context through an authorized route for the current task.\n",
+        "PREFERENCES.md": "# Task preferences\n\n"
+                          "Record preferences relevant to this method. "
+                          "Preserve existing preferences and later user changes during upgrades.\n",
         "TOOLS.md": "# Scoped tool policy\n\n"
                     "Optional capability categories from the role playbook: "
                     + ", ".join(book["optional_tool_categories"]) + ".\n\n"
-                    "These are categories, not installed skills or runtime grants. "
-                    "Tool discovery/registration belongs to the receiving host, not this file. "
-                    "Refuse unknown tools, wrong owner and unsupported effects.\n",
+                    "Use the relevant tools available in the current Muse session. "
+                    "Inspect tool inputs and account settings through the current host. "
+                    "Check the intended account, scope and result of consequential actions.\n",
         "HEARTBEAT.md": "# Heartbeat and scheduling\n\n"
-                        "DISABLED by default. No callbacks, cron jobs, self-wake or model routing "
-                        "are started by this draft. A later authorized host-native schedule "
-                        "must be separately registered and verified.\n",
+                        "Use current scheduling controls for recurring tasks the user has requested. "
+                        "Record the task, timing and stop instructions. The saved schedule "
+                        "must be verified before promising that it will run.\n",
         "SUBCHAT.json": _json(metadata),
         "skills.yaml": "version: 1\nentries:\n",
     }

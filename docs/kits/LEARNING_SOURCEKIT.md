@@ -1,18 +1,13 @@
-# Learning Coach executable source kit
+# Study-session tool
 
-This is a portable offline kit around the existing standard-library SQLite
-LearningSession engine. It is a source product, not an installed native agent.
-The engine, database path checker, original study demo and 25 engine tests are
-copied byte-for-byte under explicit source pins; no study or account state is
-included. The packaging and runner retain the accepted reviewed path, manifest and
-canonical-archive boundaries.
+Create questions from supplied definitions, review them, record practice scores, and reopen study history in SQLite. The portable kit includes the LearningSession engine, a worked study example, tests, and a runner. Use Python 3.12+ on Windows, macOS, or Linux.
 
 ## Build and inspect
 
 From this repository:
 
     PYTHONPATH=src python3 -B examples/export_learning_sourcekit.py --to "$HOME/learning-coach.zip"
-    PYTHONPATH=src python3 -B examples/export_learning_sourcekit.py --verify ../learning-coach.zip --sha256 <external-sha256>
+    PYTHONPATH=src python3 -B examples/export_learning_sourcekit.py --verify "$HOME/learning-coach.zip" --sha256 EXPECTED_SHA256
 
 On Windows set $env:PYTHONPATH='src' and use python instead of python3.
 Export is create-only and requires an existing safe parent directory.
@@ -51,7 +46,6 @@ Read [the local study contract](../LEARNING_LOCAL_STUDY.md) before integration.
 LearningScope is not a credential: use a protected host-side authority callback,
 never model/browser identity fields. SQLite is unencrypted local storage and is
 not appropriate for clinical data, examination secrets or regulated scoring.
-No native Muse, scheduler, Space, model or external connector is activated.
 Python -I is not an OS sandbox. Demo databases are disposable; user databases
 belong outside the immutable kit. Upgrade by creating a newly verified kit;
 there is no automatic migration or state-deleting uninstall.
@@ -62,4 +56,4 @@ there is no automatic migration or state-deleting uninstall.
     PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_learning_session.py -v
     PYTHONPATH=src python3 -B -m unittest discover -s tests -v
 
-Native provider acceptance and public release are separate from these source tests.
+[Learning Coach setup](../../presets/learning-coach/INSTALL.md) · [Study sessions](../LEARNING_LOCAL_STUDY.md)

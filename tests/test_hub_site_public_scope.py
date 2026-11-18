@@ -6,9 +6,12 @@ from muse_presets.public_export import select_public_files, PublicExportError
 
 SITE_FILES = (
     "README.md", "index.html", "site.css", "site.js", "roles.json",
+    "downloads.html", "downloads.js", "downloads.json",
     "public/index.html", "public/styles.css", "public/app.js",
     "public/catalog.json", "INTEGRITY.json"
 )
+SITE_URL = "https://atlas-origins.github.io/muse-ai-agent-presets/"
+RELEASE_URL = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.0"
 
 class HubSitePublicAdmission(unittest.TestCase):
     def setUp(self):
@@ -24,7 +27,7 @@ class HubSitePublicAdmission(unittest.TestCase):
             file.parent.mkdir(parents=True,exist_ok=True)
             file.write_text("{}\n" if file.suffix==".json" else "reviewed Muse Hub source\n",encoding="utf-8")
 
-    def test_only_exact_ten_website_files_are_exportable(self):
+    def test_only_exact_reviewed_website_files_are_exportable(self):
         self.create_site()
         values=select_public_files(self.root,verify_manifest=False)
         expected={"hub/README.md"}|{"hub/site/"+filename for filename in SITE_FILES}
@@ -55,34 +58,31 @@ class HubSitePublicAdmission(unittest.TestCase):
             select_public_files(self.root,verify_manifest=False)
 
 
-    def test_source_site_is_findable_from_root_and_documentation(self):
+    def test_public_site_is_findable_from_root_and_documentation(self):
         project = Path(__file__).resolve().parents[1]
         readme = (project/"README.md").read_text(encoding="utf-8")
         docs = (project/"docs/README.md").read_text(encoding="utf-8")
-        self.assertIn("](hub/site/index.html)", readme)
-        self.assertIn("](hub/site/public/index.html)", readme)
-        self.assertIn("](../hub/site/index.html)", docs)
-        self.assertIn("](../hub/site/public/index.html)", docs)
+        for text in (readme, docs):
+            self.assertIn("](" + SITE_URL + ")", text)
+            self.assertIn("DOWNLOAD_A_SPECIALIST.md", text)
         self.assertLess(len(readme.encode("utf-8")), 8000)
 
-    def test_hub_status_explicitly_separates_local_source_from_deployment(self):
+    def test_hub_links_to_the_current_release_and_reviewable_website(self):
         project = Path(__file__).resolve().parents[1]
-        readme = (project/"README.md").read_text(encoding="utf-8").lower()
-        hub = (project/"hub/README.md").read_text(encoding="utf-8").lower()
-        self.assertIn("not deployed", readme)
-        self.assertIn("not deployed", hub)
-        self.assertIn("source-only", readme)
+        readme = (project/"README.md").read_text(encoding="utf-8")
+        hub = (project/"hub/README.md").read_text(encoding="utf-8")
+        for text in (readme, hub):
+            self.assertIn(SITE_URL, text)
+            self.assertIn(RELEASE_URL, text)
         self.assertIn("](site/index.html)", hub)
+        self.assertIn("](site/downloads.html)", hub)
         self.assertIn("](site/public/index.html)", hub)
-        self.assertIn("v1.1.0", hub)
-        self.assertIn("draft", hub)
 
-    def test_ai_discovery_routes_to_site_source_not_an_unrelated_website(self):
+    def test_ai_discovery_routes_to_the_canonical_public_website(self):
         project = Path(__file__).resolve().parents[1]
         index = (project/"llms.txt").read_text(encoding="utf-8")
-        host = "https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/"
-        self.assertIn(host+"hub/site/index.html", index)
-        self.assertIn(host+"hub/site/public/index.html", index)
+        self.assertIn(SITE_URL, index)
+        self.assertIn(RELEASE_URL, index)
         self.assertNotIn("atlas-origins.github.io/kits/", index)
 
 if __name__=="__main__":unittest.main()

@@ -2,30 +2,23 @@
 
 Organize a project across people and independent assistant workflows.
 
-**Current published source:** [v1.0.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0) · **Individual assistant ZIP:** `muse-coordinator-v1.1.0.zip` (v1.1.0 draft; not yet a public download).
+**[Download Coordinator](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-coordinator-v1.1.0.zip)** · [v1.1.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS)
 
 ## Set up this assistant
 
-1. Choose a **separate Muse assistant** for Coordinator. Don't combine multiple specialists in one account.
-2. When v1.1.0 is published, download the individual ZIP and open its `START_HERE.md`.
-3. Start in **Main** with the supplied identity and instruction documents.
-4. Set up its **three subchats** inside this same assistant. Each subchat has its own instructions, user context, tools, and memory files.
-5. Keep credentials and personal memory outside public GitHub. Any service connection must be authorized separately.
+1. Extract the ZIP into its own folder and open `START_HERE.md`. You can also give Muse the ZIP with your current task.
+2. Choose a **separate Muse assistant** for Coordinator and add the supplied Main instructions.
+3. Set up its **three subchats** using their included instructions, context, tools, and memory documents.
+4. Personalize the role's preferences and working context, then try the task below.
 
 **First task to try:** "Turn these requirements into a task plan with owners, dependencies, and acceptance criteria."
 
-No Python is needed to set up the assistant. For the **current published v1.0.0 source release**, follow [the source setup guide](../../docs/GITHUB_QUICKSTART.md) instead of assuming the draft ZIP is already available.
+No Python is needed for the assistant instructions. The package's `START_HERE.md` explains any optional local tools and their requirements. Choose the account and permissions when adding a connector, and keep credentials and personal memory in your private workspace.
 
-## Optional source tools
+## Make it your own
 
-For a development copy, use the reviewed [source generator](../../examples/github_quickstart.py) (`examples/github_quickstart.py`) and the [developer setup guide](../../docs/GITHUB_QUICKSTART.md). These require a trusted source checkout, not a preconfigured Muse account.
+Use the supplied skills and workflows that fit your task. [Explore this specialist's methods and tools](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md), or use the [terminal guide](../../docs/TERMINAL.md) for command-line work.
 
-See [this specialist's capability scope](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [the local tool guide](../../docs/CAPABILITIES.md). Local scripts run under the computer's permissions; they are not native Muse registrations.
+Role ID: `coordinator`. Package: `muse-coordinator-v1.1.0.zip`.
 
-Source role ID: `coordinator`.
-
-## More help
-
-[Choose another specialist](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Saved data and updates](../../docs/INSTALL_AND_PERSISTENCE.md) · [Muse Hub product scope](../../hub/README.md)
-
-Downloading a ZIP or copying a profile does **not automatically** create a Muse account or subchat, grant tool access, or connect external services.
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)

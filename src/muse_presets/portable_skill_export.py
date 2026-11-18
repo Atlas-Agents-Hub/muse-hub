@@ -65,15 +65,19 @@ def _build():
         f'This library contains {len(mapping)} unique instruction skills: '
         f'{len(methods)} specialist methods and {len(shared)} shared procedures.\n\n'
         'Each folder has a hyphenated name matching its SKILL.md frontmatter. '
-        'Native-style Muse descriptor IDs are preserved in the source repository; '
-        'this export neither changes them nor writes a host skills.yaml.\n\n'
-        'Inspect a skill, then use the receiving assistant\'s documented upload or '
-        'file-reading flow. Start with one non-sensitive task and verify the actual '
-        'result. A valid file format does not prove native registration, model '
-        'selection, persistent memory or permission to call tools. No host is '
-        'contacted or configured by this export. No donor memory is included.\n\n'
-        'All local files are source instructions under the included MIT license; '
-        'no original product runtimes or external scripts are bundled.\n').encode('utf-8')
+        'Choose the procedure that matches your task and give its SKILL.md to '
+        'your current Muse assistant through your usual file or terminal workflow. '
+        'Keep your existing preferences and memory.\n\n'
+        'No Python is needed to use these Markdown instructions. This is the '
+        '50-procedure role library; the developed 75-skill collection is a separate download.\n\n'
+        'The included MIT license covers these instructions.\n').encode('utf-8')
+    files['START_HERE.md']=(
+        '# Use a role procedure with Muse\n\n'
+        'Open README.md, choose one procedure folder, and give Muse its SKILL.md '
+        'along with your task. Say: "Use this procedure for my current task, '
+        'keeping my existing preferences and memory."\n\n'
+        'This download contains 45 specialist methods and five shared procedures. '
+        'You can read and use them without Python.\n').encode('utf-8')
     source_sha=_sha(_json(sources))
     receipt={'schema':'muse-presets/portable-skills-v1','source_pins':sources,
              'source_sha256':source_sha,'native_to_portable':{v:k for k,v in sorted(mapping.items())},

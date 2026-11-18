@@ -22,7 +22,7 @@ Each kit is intentionally editable. Start with a new role package and preserve t
 
 ## Skills, subchats and connectors
 
-Source kits include editable role profiles, three method-scoped subchat contracts and disabled skill descriptors. They do not have native chat IDs or provider access. The [skills reference](SKILLS.md) explains local validation. The [connector guide](CONNECTORS.md) explains why a proposed call cannot be treated as a successful external action.
+Role kits include editable profiles, three focused subchat guides, and skill descriptors. Use the [skills reference](SKILLS.md) for formats and validation, and the [connector guide](CONNECTORS.md) when the extension needs an account or service.
 
 For an actual host integration, configure and authenticate it separately. Only enable an external action after verifying the receiving owner, tool permissions and result. There is no default cron scheduler or auto-deployment.
 

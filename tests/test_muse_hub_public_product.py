@@ -4,8 +4,15 @@ import hashlib
 import json
 import re
 import unittest
+from urllib.parse import urlsplit
 ROOT=Path(__file__).resolve().parents[1]
 TICK=chr(96)
+REPO="https://github.com/atlas-origins/muse-ai-agent-presets"
+SITE="https://atlas-origins.github.io/muse-ai-agent-presets/"
+RELEASE=REPO+"/releases/tag/v1.1.0"
+DOWNLOAD=REPO+"/releases/download/v1.1.0/"
+ALIASES={"data-engineering-architect":"data-engineer",
+         "infrastructure-reliability-engineer":"reliability-engineer"}
 def read(s):return (ROOT/s).read_text(encoding="utf-8")
 class MuseHubPublicProduct(unittest.TestCase):
     def test_root_and_core_guides_use_muse_hub_brand_not_old_marketing(self):
@@ -19,15 +26,15 @@ class MuseHubPublicProduct(unittest.TestCase):
         self.assertTrue(read("README.md").startswith("# Muse Hub\n"))
         self.assertLess(len(read("README.md").encode("utf-8")),8000)
 
-    def test_reality_status_distinguishes_public_and_draft_releases(self):
+    def test_current_release_is_findable_and_history_is_preserved(self):
         for name in ("README.md","docs/DOWNLOAD_A_SPECIALIST.md","docs/RELEASES.md","hub/README.md"):
             with self.subTest(file=name):
-                s=read(name).lower()
-                self.assertIn("v1.0.0",s)
-                self.assertIn("v1.1.0",s)
-                self.assertIn("draft",s)
-                self.assertIn("not",s)
+                s=read(name)
+                self.assertIn(RELEASE,s)
+                for stale in ("v1.1.0 draft", "not deployed", "source-only"):
+                    self.assertNotIn(stale,s.lower())
         self.assertIn("releases/latest", read("README.md"))
+        self.assertIn(REPO+"/releases/tag/v1.0.0", read("docs/RELEASES.md"))
 
     def test_all_15_assistants_stay_separate_and_have_entrypoints(self):
         roles=json.loads(read("presets/catalog.json"))["presets"]
@@ -42,8 +49,9 @@ class MuseHubPublicProduct(unittest.TestCase):
                 self.assertIn("Muse Hub",t)
                 self.assertIn("Main",t)
                 self.assertIn("three subchats",t)
-                self.assertIn("current published",t.lower())
-                self.assertIn("v1.1.0",t)
+                self.assertIn(RELEASE,t)
+                self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-v1.1.0.zip",t)
+                self.assertIn("START_HERE.md",t)
                 self.assertNotIn(" ? ",t)
                 self.assertNotIn("This public starter",t)
                 role_readme=read("presets/"+role+"/README.md")
@@ -59,8 +67,11 @@ class MuseHubPublicProduct(unittest.TestCase):
                 if target:
                     self.assertTrue((ROOT/Path(source).parent/target).exists(),(source,raw))
         downloads=read("docs/DOWNLOAD_A_SPECIALIST.md")
-        self.assertIn("draft", downloads.lower())
+        self.assertIn(RELEASE, downloads)
         self.assertIn("releases/latest", downloads)
+        roles=json.loads(read("presets/catalog.json"))["presets"]
+        for role in roles:
+            self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-v1.1.0.zip",downloads)
         self.assertNotIn(" ? ",downloads)
 
     def test_active_docs_have_no_escaped_line_breaks(self):
@@ -75,20 +86,29 @@ class MuseHubPublicProduct(unittest.TestCase):
 
     def test_llms_txt_parseable_links_and_source_identity(self):
         t=read("llms.txt")
-        self.assertIn("## Current public release",t)
+        self.assertIn("## Start here",t)
         self.assertIn("## Individual specialist homes",t)
-        self.assertIn("## Hub scope",t)
+        self.assertIn("## Skills, workflows, and tools",t)
         self.assertNotIn("\\n",t)
         links=re.findall(r"(?m)^- \[[^\]]+\]\((https://[^)]+)\)",t)
         self.assertGreaterEqual(len(links),18)
         self.assertEqual(len(links),len(set(links)))
-        self.assertTrue(all(("github.com" in link or "raw.githubusercontent.com" in link) for link in links))
+        self.assertIn(SITE,links)
+        self.assertIn(RELEASE,links)
+        for link in links:
+            parsed=urlsplit(link)
+            with self.subTest(link=link):
+                self.assertIn(parsed.hostname, {"github.com", "raw.githubusercontent.com", "atlas-origins.github.io"})
+                self.assertIsNone(parsed.username)
+                self.assertIsNone(parsed.password)
+                if parsed.hostname=="atlas-origins.github.io":
+                    self.assertTrue(parsed.path.startswith("/muse-ai-agent-presets/"))
 
     def test_metadata_proposal_does_not_claim_live_issuance(self):
         j=json.loads(read(".github/muse-hub-metadata-proposal.json"))
         self.assertEqual(j["product_name"],"Muse Hub")
         self.assertEqual(j["repository"],"atlas-origins/muse-ai-agent-presets")
-        self.assertTrue(j["homepage"].startswith("https://github.com/atlas-origins/muse-ai-agent-presets"))
+        self.assertEqual(j["homepage"],SITE)
         self.assertNotIn("atlas-origins.github.io/kits",j["homepage"])
         self.assertLessEqual(len(j["description"]),160)
         self.assertEqual(j["applied_to_github"],False)
@@ -104,12 +124,11 @@ class MuseHubPublicProduct(unittest.TestCase):
             self.assertEqual(hashlib.sha256(archived.read_bytes()).hexdigest(),
                              ledger[row["original_path"]])
 
-    def test_no_private_source_ids_or_live_hub_claims(self):
+    def test_public_guides_exclude_private_source_ids(self):
         for name in ("README.md","hub/README.md","docs/README.md"):
             text=read(name)
             self.assertNotIn("GreenBean-Muse-Assistant",text)
             self.assertNotIn("muse-ai-agent-presets-r32" + "-private",text)
-            self.assertIn("not",text.lower())
-        self.assertIn("151 connector records",read("README.md"))
+        self.assertIn("151 connectors",read("README.md"))
         self.assertIn("75 skills",read("README.md"))
         self.assertIn("25 workflows",read("README.md"))

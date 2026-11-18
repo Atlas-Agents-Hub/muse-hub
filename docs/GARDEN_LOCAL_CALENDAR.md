@@ -1,6 +1,6 @@
 # Garden Companion: offline, owner-scoped calendar engine
 
-**Grade: `LOCAL_SQLITE_TESTED` only.** The source uses only the Python standard library. It does not register a Muse skill, verify a native identity, deploy a Space, send Family Link messages or synchronize an external calendar.
+Keep garden observations and seasonal plans in a local SQLite calendar. The included Python tools record changes, review schedules, and reopen saved work using the standard library.
 
 This new, neutral implementation retains the most useful behavior from an existing design brief: bounded seasonal edits, explicit owner review, revision fencing, all-or-nothing SQLite transactions, durable operation IDs and readback after interruption. It is not a copy of the original application, its private assets, user data, migrations, or proprietary runtime code.
 

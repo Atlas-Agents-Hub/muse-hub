@@ -1,13 +1,13 @@
-# Garden Companion executable source kit
+# Garden records tool
 
-This independent offline kit bundles the unchanged, source-pinned Garden SQLite engine, database-path helper, original demo, original regression suite, neutral role/playbook and license. It needs Python 3.12+ but no repository checkout, Git, pip dependencies, network or paid service after extraction.
+Keep garden observations and schedule changes in SQLite. This portable kit includes the Garden engine, a worked example, regression checks, a role guide, and license information. Use Python 3.12+ after extraction.
 
 ## Build and verify
 
 From this repository, with a new output filename outside the source directory:
 
     PYTHONPATH=src python3 -B examples/export_garden_sourcekit.py --to "$HOME/garden-sourcekit.zip"
-    PYTHONPATH=src python3 -B examples/export_garden_sourcekit.py --verify ../garden-sourcekit.zip --sha256 <trusted-sha256>
+    PYTHONPATH=src python3 -B examples/export_garden_sourcekit.py --verify "$HOME/garden-sourcekit.zip" --sha256 EXPECTED_SHA256
 
 On Windows PowerShell, set `$env:PYTHONPATH='src'` and use `python` instead of `python3`. Output is create-only. Verification requires both an external archive digest and exact equality with a regenerated canonical artifact. It does not parse or decompress the supplied archive. Recompressed equivalents, appended bytes, modified manifests and any noncanonical ZIP are refused rather than interpreted.
 
@@ -24,7 +24,7 @@ The bundled `muse_presets.garden_calendar` API is reusable for an independently 
 
 ## Boundaries and updates
 
-This is a source-only library and runnable demonstration, not an installed native assistant or a connected calendar. Native Muse/Space identity, live weather, biological diagnosis, voice, messaging, jobs and Family Link are not connected. The owner role in tests is a fixture, not a provider-authenticated user. No external calendar writes occur.
+The kit records and reviews local garden plans. To connect an external calendar or weather service, follow its [connector setup](../connectors/README.md) and choose the account and permissions needed for that task.
 
 Package checksums detect drift; they are not publisher signatures or grants. Updates use a fresh reviewed kit and preserve existing user databases. No auto-update, database migration or destructive uninstall is bundled.
 

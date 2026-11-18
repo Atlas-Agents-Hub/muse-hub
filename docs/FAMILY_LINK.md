@@ -1,27 +1,33 @@
-# Optional Family Link: bounded cross-specialist handoff
+# Family Link handoffs
 
-Every one of the 15 source presets declares `family_link` inside `preset.json`, with `enabled: false`, `transport: unbound` and a **suggested receiving-role allowlist**. Rendering the preset writes a local `FAMILY_LINK.json`. The shared Evidence Finder is an optional service, not a family member or native agent.
+Carry work between specialists with a clear task, the context the recipient needs, and an expected result. Family Link helps prepare and review that handoff before you share it through your chosen connection.
 
-## The adapter implemented today
+## Prepare a useful handoff
 
-`muse_presets.family.propose_handoff` validates sender/receiver IDs, request IDs, capability labels and role-specific allowed recipients. It always returns `PROPOSAL_ONLY_NOT_SENT`, `effect_authorized: false`, `native_receipt: false` and `recipient_acknowledged: false`. It has **no network, filesystem send, signer, identity minting, secret lookup or native listener**.
+1. Choose the receiving specialist and the capability needed for the task.
+2. Include a concise request, the relevant source material, and a result the recipient can check.
+3. Keep the recipient's own preferences and memory in place.
+4. Review the handoff, then share it through the service or account connection you have chosen.
+5. Read the returned result and confirm the task's outcome before continuing.
 
-`verify_finding` validates an immutable-shaped finder result with `source_uri`, 64-character SHA256, `observation` and `FOUND/NOT_FOUND`; it rejects extra verdict fields and fake found-without-observation. This is schema checking only, **not** authentication of a remote source or owner.
+The role packages include suggested receiving roles. Configure the connection when you need to send work, using the account and permissions for that service. [Connector setup](CONNECTORS.md) covers the available routes.
 
-## Source-only installable demo (not a native bridge)
+## Try the handoff tool
 
-The [H12 envelope and role-boundary source contracts](../kits/family-handoff/README.md) pin source-level fields and disabled profiles. The [offline Family Link source kit](kits/FAMILY_LINK_SOURCEKIT.md) packages the existing bounded envelope, 15 disabled-by-default role policies, and a deterministic separate-process demo. It provides source checks only; there is **no live delivery, identity, provider connection, authenticated consent or durable replay fence**.
+From the repository root with Python 3.12+:
 
-## Future authenticated bridge (not yet implemented)
+```sh
+PYTHONPATH=src python3 -B examples/family_offline_handoff_demo.py
+```
 
-A production integration must bind: source role and live native identity, recipient's authenticated host/account, owner-approved scope, exact task hash and immutable intent, lease/fence, host capacity, approved transport, one-effect identity, recipient readback, no unknown replay and an independent acceptance result. Create separate `family_link/native/` adapters per verified host; prohibit self-issued grants. The source of truth for native sender/receiver ownership remains the receiving host and actual original role.
+In Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python -B`.
 
-## Suggested patterns
+The example prepares a handoff and reviews it in a separate process. It checks role compatibility, request identifiers, replay declarations, and recipient context using supplied data. Its result is a proposal for review; use your chosen connection for delivery.
 
-- Garden Companion → Evidence Finder → Claims Adjudicator for factual planting-source review; never silently edit a calendar.
-- Learning Coach → Research Evaluator for question/answer quality and contamination review; no unapproved medical content.
-- Model Builder → Research Evaluator for frozen held-out assessment and truthful failures.
-- Reverse Engineering Researcher → Adversarial Verifier or Evidence Finder for scoped reproducibility and source provenance.
-- Evidence Finder → Claims Adjudicator for exact findings; the finder cannot issue verdicts.
+The [portable handoff kit](kits/FAMILY_LINK_SOURCEKIT.md) includes the example and role policies. Developers can inspect `muse_presets.family.propose_handoff` and the [envelope contract](../kits/family-handoff/envelope-contract.json) for exact fields.
 
-The current shell cannot and does not establish cross-account messaging or Family Link membership.
+## Recover an interrupted handoff
+
+Keep the request ID, expected recipient, and latest result. Check the original service's message or task status before resending work whose outcome is unclear. Confirm the recipient and current scope before continuing after a permission change.
+
+[Coordinator](../presets/coordinator/INSTALL.md) · [Workflows](WORKFLOWS.md) · [Connectors](connectors/README.md)

@@ -26,7 +26,7 @@
   const validateCatalog = catalog => {
     if (!isRecord(catalog) || catalog.schema !== 'muse-hub-h02/public-discovery/v1' ||
         catalog.count !== 63 || catalog.native_muse_connected !== false ||
-        catalog.publication !== 'OFFLINE_PREVIEW_NOT_PUBLISHED' ||
+        catalog.publication !== 'PUBLIC_DIRECTORY' ||
         !Array.isArray(catalog.items) || catalog.items.length !== 63 ||
         !Array.isArray(catalog.routes) || catalog.routes.length !== expectedRoutes.size) return false;
 
@@ -116,20 +116,17 @@
   const showDetails = (item, trigger = null) => {
     selectedId = item.id;
     detailBody.replaceChildren();
-    const category = elt('div', 'detail-category', item.category + ' / ' + item.id);
+    const category = elt('div', 'detail-category', item.category);
     const heading = elt('h3', '', item.name);
     heading.id = 'detail-heading';
     const summary = elt('p', 'detail-summary', item.summary);
     const metadata = elt('dl', 'detail-metadata');
     makeMeta('Platform', item.platform, metadata);
     makeMeta('Getting started', item.install_method, metadata);
-    makeMeta('Checked', item.evidence, metadata);
-    makeMeta('Rights', item.license_class.replaceAll('_', ' ').toLowerCase() + ' — confirm with publisher', metadata);
-    const note = elt('p', 'detail-note', 'This link has not been tested as a Muse Hub integration. Check the original project’s setup and license before using it.');
-    detailBody.append(category, heading, summary, metadata, note);
-    const link = sourceLink(item, 'detail-source', 'Open original source');
+    makeMeta('Rights', item.license_class.replaceAll('_', ' ').toLowerCase() + ' — see project license', metadata);
+    detailBody.append(category, heading, summary, metadata);
+    const link = sourceLink(item, 'detail-source', 'Open project');
     if (link) detailBody.append(link);
-    detailBody.append(elt('small', 'detail-disclaimer', 'The original publisher owns its source and instructions.'));
     markSelection();
     if (trigger && isMobileSheet()) {
       returnFocus = trigger;
@@ -156,7 +153,7 @@
     const article = elt('article', 'resource-card');
     article.dataset.id = item.id;
     const top = elt('div', 'resource-card-top');
-    top.append(elt('span', 'category-badge', item.category), elt('span', 'record-id', item.id));
+    top.append(elt('span', 'category-badge', item.category));
     article.append(top, elt('h3', '', item.name), elt('p', 'resource-summary', item.summary));
     const actions = elt('div', 'card-actions');
     const detailsButton = elt('button', 'details-button', 'Details');
@@ -165,7 +162,7 @@
     detailsButton.setAttribute('aria-pressed', String(item.id === selectedId));
     detailsButton.addEventListener('click', () => showDetails(item, detailsButton));
     actions.append(detailsButton);
-    const link = sourceLink(item, 'record-link', 'View source');
+    const link = sourceLink(item, 'record-link', 'Open project');
     if (link) actions.append(link);
     article.append(actions);
     return article;

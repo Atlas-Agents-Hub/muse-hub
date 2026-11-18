@@ -99,6 +99,23 @@ def plan_standalone_pack(role:str,*,display_name:str|None=None)->dict:
             "can_apply":False,"can_delete":False}
 
 
+def standalone_files(role:str,*,display_name:str|None=None)->dict[str,bytes]:
+    """Compose the canonical package in memory for release exporters."""
+    expected=_expected_receipt(role,display_name)
+    files={}
+    for part,(module,manifest,_) in COMPONENTS.items():
+        content,receipt,_=module._build(role,display_name)
+        raw=module._json(receipt)
+        if _sha(raw)!=expected["components"][part]["receipt_sha256"]:
+            raise ValueError("STANDALONE_SOURCE_CHANGED_DURING_EXPORT")
+        files.update({part+"/"+name:data for name,data in content.items()})
+        files[part+"/"+manifest]=raw
+    if _expected_receipt(role,display_name)!=expected:
+        raise ValueError("STANDALONE_SOURCE_CHANGED_DURING_EXPORT")
+    files[MANIFEST]=_json(expected)
+    return files
+
+
 def _require_new(path:Path)->None:
     if _unsafe_source_path(path):
         raise ValueError("UNSAFE_STANDALONE_DESTINATION")

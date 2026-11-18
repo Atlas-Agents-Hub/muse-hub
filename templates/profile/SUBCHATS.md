@@ -1,3 +1,5 @@
-# Specialist subchat plan
+# Focused task contexts
 
-No subchat is created by this draft. Native chat IDs are runtime-owned; create through the receiving host, verify identity and record the actual returned ID in private state. Subagents do not inherit a parent transcript automatically.
+Use a focused subchat when a specialist procedure benefits from separate context. Supply the task, relevant files, scope and expected output through the current host's supported controls. Record the returned chat reference for follow-up.
+
+Share the context needed for that task. Keep private memory and unrelated work in their original scope. Return the result and supporting evidence to the originating conversation.

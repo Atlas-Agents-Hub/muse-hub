@@ -22,7 +22,8 @@ class MuseHubDeepLinkTests(unittest.TestCase):
                 self.assertEqual(query.path, "")
                 self.assertEqual(query.fragment, "setup")
                 self.assertEqual(parse_qs(query.query), {"role": [role]})
-        self.assertNotIn('/releases/download/v1.1.0/', html)
+        self.assertEqual(html.count('class="role-card-download"'), 15)
+        self.assertIn('id="setup-role-download"', html)
 
     def test_local_javascript_reads_only_approved_role_ids_and_rewrites_url(self):
         script = (SITE / "site.js").read_text(encoding="utf-8")
@@ -34,6 +35,9 @@ class MuseHubDeepLinkTests(unittest.TestCase):
             "history.replaceState",
             "event.preventDefault()",
             "selectSetupRole()",
+            "roleAssets.get(slug)",
+            "setupDownload.href =",
+            "releases/download/v1.1.0/muse-${asset}-v1.1.0.zip",
         ):
             self.assertIn(token, script)
         self.assertIn("if (!knownRoles.has(slug)) return", script)
@@ -41,13 +45,16 @@ class MuseHubDeepLinkTests(unittest.TestCase):
                           "localStorage", "document.write", "new Function("):
             self.assertNotIn(forbidden, script)
 
-    def test_reviewed_website_keeps_source_claims_truthful(self):
+    def test_website_exposes_downloads_and_setup_without_internal_gate_labels(self):
         html = (SITE / "index.html").read_text(encoding="utf-8")
-        self.assertIn("H11 / SOURCE-TESTED", html)
-        self.assertIn("H12 / SOURCE-TESTED", html)
+        self.assertIn('href="downloads.html"', html)
+        self.assertIn("docs/TERMINAL.md", html)
+        self.assertIn("docs/COMPANION_HOME.md", html)
         self.assertNotIn("community-built", html.lower())
         self.assertIn("connect-src 'none'", html)
-        self.assertNotIn("releases/download/v1.1.0/", html)
+        self.assertNotRegex(html, r"\b[HS]\d{2}\b")
+        for stale in ("SOURCE-TESTED", "OPEN GATES", "source-only", "not deployed"):
+            self.assertNotIn(stale, html)
 
 if __name__ == "__main__":
     unittest.main()

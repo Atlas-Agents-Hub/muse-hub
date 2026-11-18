@@ -2,12 +2,12 @@
 
 Pick the specialist closest to your task. Each entry explains its scope, the tools included with the toolkit and a concrete starting point.
 
-[Start here](../v1/START_HERE.md) · [All engines and evidence](../collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [Machine-readable engine index](../discovery/specialist-engine-index.json) · [100 task configurations](../../collections/muse-starters-v1/CATALOG.md)
+[Download an assistant](../DOWNLOAD_A_SPECIALIST.md) · [Get started](../GETTING_STARTED.md) · [Methods and tools](../collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [100 task starters](../../collections/muse-starters-v1/CATALOG.md)
 
 ### Build and automate
 
 - **[Software Engineer](../../presets/software-engineer/README.md)** (`software-engineer`) — Build, debug, refactor and release software. Work from reproduction and architecture decisions through implementation, regression tests, source integrity and reviewed delivery. [Role contract](../../presets/software-engineer/playbook.json).
-  **Included tools:** [Engineering sourcekit](../../src/muse_presets/engineer_sourcekit.py) and [Claim Gate](../../presets/software-engineer/runtime/claim-gate/ENGINE.json). The engineering sourcekit runs bounded repair and test workflows. Claim Gate checks admission and recovery; Iron Ledger and Provenance Vault remain evidence-only candidates under separate qualification.
+  **Included tools:** [Engineering sourcekit](../../src/muse_presets/engineer_sourcekit.py) and [Claim Gate](../../presets/software-engineer/runtime/claim-gate/ENGINE.json). Engineering tools run focused repair and test workflows. Claim Gate supports admission and recovery; the linked technical records describe the evidence tools.
   [Example or exporter](../../examples/software_engineer_workflow_demo.py) · [Full engine scope](../collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
 - **[Data Engineering & Database Architect](../../presets/data-engineering-architect/README.md)** (`data-engineering-architect`) — Design and maintain reliable data systems, from schemas and ingestion quality to record identity, event reconciliation, query performance and safe migrations. [Role contract](../../presets/data-engineering-architect/playbook.json).
@@ -33,17 +33,17 @@ Pick the specialist closest to your task. Each entry explains its scope, the too
   [Example or exporter](../../examples/export_claims_sourcekit.py) · [Full engine scope](../collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
 - **[Adversarial Verifier](../../presets/adversarial-verifier/README.md)** (`adversarial-verifier`) — Challenge authorized software, agent systems and releases with threat models, failure injection, negative controls and independent remediation reviews. [Role contract](../../presets/adversarial-verifier/playbook.json).
-  **Included methods:** The public V1 includes a defensive testing playbook and editable review methods. No standalone security-testing engine is bundled with this role.
+  **Included methods:** Use the defensive testing playbook and editable review methods with the tools available for your authorized target.
   [Set up the workroom](../../presets/adversarial-verifier/INSTALL.md) · [Full scope](../collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
 - **[Reverse Engineering & Security Researcher](../../presets/reverse-engineering-researcher/README.md)** (`reverse-engineering-researcher`) — Understand software and protocol behavior with authorized observations, defensive trace analysis, scoped experiments and clean-room reconstructions. [Role contract](../../presets/reverse-engineering-researcher/playbook.json).
-  **Included tools:** [Reverse-analysis engine](../../src/muse_presets/reverse.py) and [Reverse sourcekit](../../src/muse_presets/reverse_sourcekit.py). The reverse-analysis engine and sourcekit compare supplied observations. No live probing or new security-assistance executable is bundled in public V1.
+  **Included tools:** [Reverse-analysis engine](../../src/muse_presets/reverse.py) and [Reverse sourcekit](../../src/muse_presets/reverse_sourcekit.py). The reverse-analysis tools compare supplied observations and help test explanations of application behavior.
   [Example or exporter](../../examples/export_reverse_sourcekit.py) · [Full engine scope](../collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
 ### Create and learn
 
 - **[Creative Studio](../../presets/creative-studio/README.md)** (`creative-studio`) — Develop original visual media, animation, video and interactive scenes—from creative direction, characters, environments and asset development to motion, render inspection, continuity and delivery. [Role contract](../../presets/creative-studio/playbook.json).
-  **Included tools:** [Creative-production engine](../../src/muse_presets/creative_production.py) and [Creative sourcekit](../../src/muse_presets/creative_sourcekit.py). The bundled creative-production engine is a production planner, not an image or video renderer. It compiles briefs, dependencies, shots, timelines, continuity checks and textual storyboards; actual media uses authorized render tools.
+  **Included tools:** [Creative-production engine](../../src/muse_presets/creative_production.py) and [Creative sourcekit](../../src/muse_presets/creative_sourcekit.py). The production planner compiles briefs, dependencies, shots, timelines, continuity checks, and textual storyboards. Use your chosen render tools to create and inspect the media.
   [Example or exporter](../../examples/creative_studio_demo.py) · [Full engine scope](../collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
 - **[Product & Interface Designer](../../presets/product-interface-designer/README.md)** (`product-interface-designer`) — Design and evaluate complete product experiences: user research, information architecture, responsive layouts, interaction flows, accessibility and build-ready handoffs. [Role contract](../../presets/product-interface-designer/playbook.json).
@@ -69,15 +69,15 @@ Pick the specialist closest to your task. Each entry explains its scope, the too
   [Example or exporter](../../examples/garden_calendar_demo.py) · [Full engine scope](../collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
 - **[Coordinator](../../presets/coordinator/README.md)** (`coordinator`) — Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs. [Role contract](../../presets/coordinator/playbook.json).
-  **Included tools:** [Coordinator sourcekit](../../src/muse_presets/coordinator_sourcekit.py) and [Review engine](../../src/muse_presets/coordinator_review.py). The coordinator sourcekit, review tools and drop-in implementation provide local plan and evidence checks; there is no built-in live worker dispatch.
+  **Included tools:** [Coordinator sourcekit](../../src/muse_presets/coordinator_sourcekit.py) and [Review engine](../../src/muse_presets/coordinator_review.py). The coordinator tools review plans, dependencies, evidence, and handoffs so the next step is clear.
   [Example or exporter](../../examples/export_coordinator_sourcekit.py) · [Full engine scope](../collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
-## Source, engine and connection boundaries
+## Start your task
 
-An editable role profile and a built-in executable engine are different things. The source programs above run specific operations on provided inputs; additional tools, browsers, media renderers and service connectors work only when available and authorized in the receiving Muse environment.
+Download the selected specialist, open its START_HERE.md, and bring your task and source material. Choose additional tools or service connections when the work needs them.
 
-The old 11-role compatibility catalog is preserved in [the original source list](../collection/SPECIALIST_CATALOG.md). The current registry has 15 unique roles; aliases such as `data-engineer` and `reliability-engineer` are not extra agents.
+The [specialist catalog](../collection/SPECIALIST_CATALOG.md) links all 15 roles to their methods and examples. The toolkit aliases `data-engineer` and `reliability-engineer` are the short command names for their corresponding specialists.
 
-The public Adversarial Verifier currently supplies methods and configuration, not a standalone security-testing engine. Reverse Engineering includes supplied-observation analysis. Neither profile is an automatically installed native security agent.
+For terminal commands and tool requirements, use the [terminal guide](../TERMINAL.md).
 
-For exact package contents, see the [V1 release](../RELEASES.md) and [capability matrix](../CAPABILITIES.md).
+For package contents, see [downloads](../RELEASES.md) and the [tools guide](../CAPABILITIES.md).

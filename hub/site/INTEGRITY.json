@@ -1,42 +1,54 @@
 {
   "files": {
     "README.md": {
-      "bytes": 2162,
-      "sha256": "dbc3564aa7bb1a4828ebcf5deba71e8633b8a125e88dd091692680ce46cfe64c"
+      "bytes": 985,
+      "sha256": "aef824691fb339ac50ef1c4f5287dbe58a799220194a4bd4534ed1656eb1d8c5"
+    },
+    "downloads.html": {
+      "bytes": 80428,
+      "sha256": "e5163f6aa4176d63744d0f8cd0b379d6069bb8c7068decba926ad72c2ee60193"
+    },
+    "downloads.js": {
+      "bytes": 1799,
+      "sha256": "a9c23fe7c0e299a8f14bf1699cd6e1a85bdf88c14a424da73a94e19816f82c4d"
+    },
+    "downloads.json": {
+      "bytes": 50110,
+      "sha256": "d1ac58b398361b6df280aeed54952df18afdc52288f739340ccc3bfb353c1850"
     },
     "index.html": {
-      "bytes": 35011,
-      "sha256": "974dc9b1e69a434b31bd13a5b2eec8b0cbb6a97e05cde338cd12e7d2f6528fbf"
+      "bytes": 38485,
+      "sha256": "b3a3ca95e8bcbed1f20ff8dcee5f85d78791d84ee39dee4293af0e4c7c1272a8"
     },
     "public/app.js": {
-      "bytes": 12284,
-      "sha256": "dec91015078ff088f16f475692d9733d6bc910f56c087d46b6014ef328c80aeb"
+      "bytes": 11866,
+      "sha256": "adc24c9ab404944b375b345176c463f20f5080b9122f3395cd8cbc05facdc8ce"
     },
     "public/catalog.json": {
-      "bytes": 43690,
-      "sha256": "4586c2a05f26f3a320727bbc7bf050cd01c8fa34db35df56c6ef77d5cebd5b11"
+      "bytes": 39856,
+      "sha256": "6ee0af354c29464cf98cd65889ff080a302e481da024dd914c694b493cdadc52"
     },
     "public/index.html": {
-      "bytes": 45755,
-      "sha256": "e7b40dc82997dc6f8f172055817f5a607ded39a8713348bc4c5e70ff5af9d10c"
+      "bytes": 41843,
+      "sha256": "69e3d63c65ea9143ccf9e81b13c89e3946a57428352d794955f74e5a647f5b5a"
     },
     "public/styles.css": {
       "bytes": 19144,
       "sha256": "402d0dfee6d4283b28fd5c4c5f2ab15cc01c7ecb7b03c4600d59a42cd469f691"
     },
     "roles.json": {
-      "bytes": 3285,
-      "sha256": "4ab25f82d7d718aadf02f249677407daa5ef9f5e614170d32334b44a938e3ef7"
+      "bytes": 6589,
+      "sha256": "1452405901fa954054f9d544c094a74756786b8807cc88535f05d0f05cfb711e"
     },
     "site.css": {
-      "bytes": 18892,
-      "sha256": "ee3fa7997532566c2aeab28d3ad03c88a557bb9fbeb68de696460af16120cd9f"
+      "bytes": 21754,
+      "sha256": "18168304b10803034df4b654e80f51df71bc87d7258204be823fcc79798f9246"
     },
     "site.js": {
-      "bytes": 5680,
-      "sha256": "f1c990a698cdb5bc095d1a2b2e36d8123aa2d6bf13c76563a7a54c010817e49b"
+      "bytes": 5989,
+      "sha256": "0ad6267d2dbed9f2e3c60a389ef90553b1f1dfb42beb1fc3183f3bef2e9943fb"
     }
   },
   "schema": "muse-hub/public-website-overlay/v1",
-  "source_kind": "SOURCE_ONLY_NOT_DEPLOYED"
+  "source_kind": "STATIC_WEBSITE"
 }

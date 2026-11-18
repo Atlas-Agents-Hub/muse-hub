@@ -44,7 +44,7 @@ jobs:
         run: python -m muse_presets.cli audit-neutrality
       - name: Doctor
         run: python -B -m muse_presets.cli doctor
-      - name: Verify all eleven source kits
+      - name: Verify all 15 specialist kits
         run: python -B examples/github_quickstart.py --all
   checks:
     name: checks

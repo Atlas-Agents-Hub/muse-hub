@@ -1,4 +1,4 @@
-# Muse Specialist Toolkit — 30-day V1 observation
+# Muse Hub — product feedback and adoption
 
 The purpose of V1 is to demonstrate existing working value and learn what people use. This is an owner-controlled measurement guide, not a service or an automated activity.
 

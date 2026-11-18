@@ -1,12 +1,10 @@
-# Muse Hub — offline Muse CLI route compatibility (H03)
+# Muse CLI route reference
 
-**Scope:** source-code research and deterministic local comparison. This is **not** a Muse API client, a connected account, a verified backend inventory, or a transport authorization.
-
-It is not a Muse API client.
+Compare two saved revisions of the Muse CLI route table. For personal Muse chat, side chats, and current setup, use the [terminal guide](../TERMINAL.md).
 
 ## What was verified
 
-The two public, MIT-licensed `nikships/muse-cli` source revisions were read at their immutable commits, and their **Git blob SHA-1s** checked against the original research pins. The included fixtures are byte-identical to the earlier Muse Hub H03 projections. They preserve every method name but carry full HTTP/path details **only for the eight names with observed differences**.
+The two public, MIT-licensed `nikships/muse-cli` source revisions were read at their immutable commits, and their **Git blob SHA-1s** checked against the original research pins. The included fixtures are byte-identical to the earlier route projections. They preserve every method name but carry full HTTP/path details **only for the eight names with observed differences**.
 
 | Pinned source | Earlier | Newer |
 | --- | --- | --- |
@@ -45,8 +43,8 @@ The comparator uses Python's standard library, reads local JSON, produces determ
 
 With `--old` and `--new` custom files, the report is explicitly marked `UNVERIFIED_CUSTOM_INPUT_NOT_LIVE_PROVIDER`. Inputs are size-bounded, must be UTF-8 JSON, and reject duplicate methods, unrecognized fields, unsafe aliases, malformed relative paths and encoded traversal. The two default fixtures are pinned to exact SHA-256 digests. Source pins prove file identity, **not** live account availability.
 
-## What this does not establish
+## Related setup and source references
 
-No host-specific Muse session, authorized Personal Muse terminal (original H04), account pairing, Gadget/Noise transport, node enrollment, Family Link, five-door execution or cross-account call has been exercised. These require separate owner-scoped admission and independently observed results.
+This comparison describes two saved source revisions. For current terminal setup, chat, side chats, and history commands, use the [terminal guide](../TERMINAL.md). Connection status comes from the client and account you are using.
 
 The projected identifiers and eight changed definitions are attributed to `nikships/muse-cli` under its included MIT notice; third-party source code and credentials are not bundled. Keep the original source snapshots and the evidence of their exact revisions when researching later versions.

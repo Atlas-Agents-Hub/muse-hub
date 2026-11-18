@@ -1,28 +1,18 @@
-# Muse Hub — product and source boundaries
+# Muse Hub
 
-Muse Hub is **the expanded scope of this repository**, not a separate GitHub project and not a sixteenth Muse specialist. It combines independent assistant kits, reviewed skills/workflows, local utilities, connector research, and a developing discovery/workspace layer.
+[Open the website](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Download version 1.1.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.0) · [Get started](../docs/GETTING_STARTED.md)
 
-## What is already available
+Choose from 15 Muse specialists, add skills and workflows, and build a workspace around the work you do.
 
-- **15 independent Muse assistant profiles**, with each assistant intended to have its own Main and three task-focused subchats.
-- **75 skills, 25 workflows, 100 task starters**, and local executable examples in the source.
-- **151 connector records** linking to source and setup information; no provider account is connected by the catalog.
-- **v1.0.0 is public.** Individual assistant ZIPs for **v1.1.0** are verified draft assets, not yet publicly released.
+## Find your starting point
 
-## Standalone website source (not deployed)
+- [Specialists](../docs/DOWNLOAD_A_SPECIALIST.md): complete ZIPs with a profile, setup guide, focused subchats and a first task.
+- [75 skills](../docs/SKILLS.md) and [25 workflows](../docs/WORKFLOWS.md): practical methods, examples and checks.
+- [100 task starters](../docs/collection/MUSE_CURATED_COLLECTION.md): project starting points with clear goals.
+- [Muse in your terminal](../docs/TERMINAL.md): installation, account setup and everyday commands.
+- [Connector guides](../docs/connectors/README.md): setup information for 151 services and integrations.
+- [Companion Home](../docs/COMPANION_HOME.md): tasks, notes and daily routines.
 
-The [Muse Hub source website](site/index.html) and [63-reference explorer](site/public/index.html) are integrated into this **local source candidate**, not released or deployed. Both are static pages for browsing profiles and links, not a connected Muse terminal, account broker or native workspace. H04–H21 provider/device integrations remain separate acceptance gates. This existing repository is the intended GitHub source home; no additional Hub repository has been authorized.
+## Website files
 
-## What stays separate
-
-Each specialist is a different Muse assistant/account with its own Main, subchats, document scopes, memory, and permissions. The Hub is an organizing experience, not a shared assistant, a credential broker, or a replacement for those accounts. The original Family Link, five-door engineering implementation, and Companion/Arcade source are private and **not bundled** in public Muse Hub.
-
-Downloading a ZIP, copying a profile, running a local sample, or listing a connector is not native Muse installation, live credential exchange, provider invocation, or proof that a third-party tool works.
-
-## Find the right starting point
-
-[Choose an assistant](../docs/DOWNLOAD_A_SPECIALIST.md) · [Skills and workflows](../docs/SKILLS.md) · [Current capabilities](../docs/CAPABILITIES.md) · [Connector directory](../docs/connectors/README.md) · [Version status](../docs/RELEASES.md)
-
-## Repository identity
-
-The hosting organization and current technical URL remain `atlas-origins/muse-ai-agent-presets` until a separately reviewed repository rename. **Muse Hub** is the only public-facing product name. The previous organization landing page is not the product homepage. An eventual Muse Hub website should be source-verified before being set as the repository homepage.
+[Homepage](site/index.html) · [Downloads](site/downloads.html) · [Tools and projects](site/public/index.html) · [Website maintenance](site/README.md)

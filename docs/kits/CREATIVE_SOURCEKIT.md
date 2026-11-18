@@ -15,7 +15,7 @@ Turn an authored creative brief into a deterministic production package: shot sp
 | Image/video/animation production | Not implemented by this kit |
 | Original animation donor | Source-link-only; not bundled or invoked |
 | Independent rights verification, human approval, visual QA | Not run by this tool |
-| Native Muse, model, browser, scheduler or external connectors | Disabled/unbound; not installed |
+| Rendering and connected services | Configure the tools you choose for production |
 
 The role's existing preset and playbook are included unchanged as neutral instructions. Their aspirational creative workflows do not establish an installed renderer. The executable scope is the planner described here.
 
@@ -80,7 +80,7 @@ The new project directory contains exactly five files:
 4. `STORYBOARD.html`: responsive, escaped textual board, usable offline without JavaScript, fonts or external resources. It is explicitly labeled as text, not drawn or rendered media.
 5. `MANIFEST.json`: per-file SHA-256 values and scope claims; written last.
 
-Open the HTML directly to review the shot specifications. Generated tasks remain `NOT_STARTED`; rights, story, production, visual, accessibility and consumer acceptance gates remain `NOT_RUN` until an appropriate independent workflow actually establishes them. Successful export must not be relabeled as visual or native acceptance.
+Open the HTML directly to review the shot specifications. Generated tasks remain `NOT_STARTED`; rights, story, production, visual, accessibility and consumer acceptance gates remain `NOT_RUN` until an appropriate independent workflow actually establishes them. Inspect the rendered result in your production tool when completing those stages.
 
 Verification requires the brief SHA-256 from a separately retained export receipt. It reconstructs expected artifacts from that brief and compares exact bytes, rejecting altered artifacts even when their local manifest hashes have been recomputed. Hashes establish byte identity, not authorship, security approval, or a trusted signature.
 

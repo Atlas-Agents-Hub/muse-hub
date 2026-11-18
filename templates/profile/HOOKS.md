@@ -1,3 +1,3 @@
 # Event hooks
 
-None enabled by default. Hook installation requires supported host APIs, explicit approval, bounded inputs, receipt destination, failure/stop behavior and a live canary. A script on disk is not a registered hook.
+Configure event-driven tasks through the host's supported controls. Define the event, bounded inputs, authorized actions, result destination and stop behavior. Test the configured event and confirm the result before relying on it.

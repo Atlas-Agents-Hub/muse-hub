@@ -1,6 +1,6 @@
 # Optional first-party role adapters
 
-The specialist toolkit can reuse five existing first-party local engines through one **source-checked**, explicit-opt-in interface. This is a portable source integration, **not** a native personal Muse agent, an original provider connection, a remotely authenticated worker, a sandbox, or another orchestration service.
+Reuse five included local engines through a common adapter interface. Choose the capability, inspect its inputs, and enable the example explicitly when you want to run it.
 
 | Capability | Reused local module | What actually runs |
 | --- | --- | --- |
@@ -35,10 +35,10 @@ On Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python`.
 
 Fixtures are deterministic, default-disabled, and use synthetic or temporary local data. Imported Python fixtures use isolated interpreter options to avoid environment-driven import path injection, but isolation options are **not** protection against malicious Python source. A locally rehashed source blob is not an original-owner attestation.
 
-Animation cannot be run using this adapter. Do not advertise native animation, authenticated external APIs, delivered cross-account messages, native model execution or verified clinical release on the basis of these tests.
+For animation work, use the [Creative Studio guide](collection/CREATIVE_STUDIO_SCOPE.md) and your chosen renderer.
 
 ## Extending or promoting a donor
 
 When adding a reviewed first-party source engine, include its actual module, all necessary transitive local dependencies, a pinned source manifest, a deterministic offline fixture, explicit approval of any local code execution, and negative tests for byte tampering, root mismatch, invalid types and unsupported platforms. Keep private agent identity, original owner state, runtime credentials, scratch evidence and internal task logs out of any public distribution.
 
-This is source-only and optional. A real provider adapter requires separate authentication, permission boundaries, recipient readback and integration tests before anyone claims live operation.
+For a provider-backed adapter, configure the target account and permissions, then test its result through the original service.

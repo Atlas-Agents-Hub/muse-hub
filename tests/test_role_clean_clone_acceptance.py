@@ -113,13 +113,14 @@ class RoleCleanCloneAcceptanceTests(unittest.TestCase):
         self.assertFalse(parsed["native_installed"])
         self.assertFalse(parsed["public_git_pushed"])
 
-    def test_docs_show_real_demo_vs_template(self):
+    def test_docs_show_included_tools_and_their_setup(self):
         docs=(self.root/"docs/CAPABILITIES.md").read_text(encoding="utf-8")
         for role in load_registry()["presets"]:
-            self.assertIn(role,docs)
-        for key in ("Template only","Windows","source-only"):
+            title=(self.root/"presets"/role/"README.md").read_text(encoding="utf-8").splitlines()[0].removeprefix("# ")
+            self.assertIn(title,docs)
+        for key in ("Windows","Python 3.12+","tools/muse_collection.py demo data-engineer","DOWNLOAD_A_SPECIALIST.md"):
             self.assertIn(key,docs)
-        self.assertIn("source-only",docs.lower())
+
 
 
 if __name__=="__main__":unittest.main()

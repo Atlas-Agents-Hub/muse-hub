@@ -1,7 +1,7 @@
-# Connector intake and handoff - $display_name
+# Connected services — $display_name
 
-Role: `$role_id`. Consult ROLE_PLAYBOOK.md for allowed task methods and proposed recipients.
-No connector account, secret, transport or permission is included in this profile.
+Role: `$role_id`. Use ROLE_PLAYBOOK.md to choose the task method and any useful specialist handoff.
 
-For an incoming task, record its source, requested output, owner-approved scope and available supported tools. Discover the receiving host's actual tool schemas rather than guessing names. Require explicit approval before consequential sends, edits or publication.
-For an outgoing result, return the artifact and source/test evidence to the originating channel. Record the actual recipient and delivery readback. A local proposal is not a delivered Family Link message. On an ambiguous result, preserve its operation ID and reconcile rather than sending again.
+Identify the incoming task's source, requested output, current authorization and available tools. Use the host's actual schemas and account configuration. Ask before a consequential send, edit or publication when the user has not already authorized it.
+
+Return the artifact and evidence through the task's delivery route. Verify the recipient and delivery result. Preserve an uncertain operation's reference and reconcile it before sending again.

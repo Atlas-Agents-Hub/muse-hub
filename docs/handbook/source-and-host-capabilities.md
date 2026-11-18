@@ -1,43 +1,34 @@
-# Know what a capability can actually do
+# Choose tools for your task
 
-Choose an operation by its real mechanism and expected output. A workflow description, a runnable local function, a native tool, an authenticated connector and a verified external effect are different products of evidence. Keeping those distinctions visible lets you do useful work now without pretending unavailable integrations are installed.
+Start with the result you need, then choose the method, local program, or service that produces it.
 
-## First useful result
+| Your task | Useful starting point |
+| --- | --- |
+| Follow a repeatable method | Choose a skill and give your assistant its instructions and inputs. |
+| Calculate or inspect supplied data | Run a specialist tool and open its report. |
+| Work with a service | Configure its connector, choose the account, and run a small check. |
+| Work in a browser or on a desktop | Use the available browser or desktop tool for the intended application. |
+| Carry work between specialists | Prepare a Family Link handoff and share it through your chosen connection. |
 
-Run a harmless local example from the source repository:
+## Try the local tools
+
+From the toolkit root with Python 3.12+:
 
 ```sh
 python -B tools/muse_collection.py demo automation-engineer
 python -B tools/muse_collection.py workflow-demo pipeline-validation
 ```
 
-These commands need Python 3.12+ in the source tree, not a connected account. Inspect the returned JSON. The specialist example runs actual bounded calculations on authored input records. The workflow example identifies local stages that ran and the host or human handoffs that did not. `external_actions_performed` remains false and `full_workflow_executed` remains false for the multi-stage workflow.
+Read the report to see the stages that ran, their outputs, and the remaining handoffs. Supply your own reviewed inputs using the [specialist tool guide](../collection/SPECIALIST_QUICKSTART.md).
 
-## Read the capability label
+## Check the intended result
 
-| Label | What it establishes |
-| --- | --- |
-| Source instruction | A method is available to read and adapt. |
-| Local implementation | Code exists for a stated input/output contract. |
-| Local test result | Particular cases ran against exact source. |
-| Host discovery | A receiving host actually exposed the descriptor or tool. |
-| Authenticated invocation | An available provider accepted a call under real permissions. |
-| Observed effect | The intended recipient or service returned evidence of the outcome. |
+Open the generated file or read the result from the original service. For a change, confirm the intended account, target, and outcome. Keep the request or operation ID if you may need to resume later.
 
-No row automatically establishes the next. A task acceptance ID is not an answer; a completed background task may not have saved the expected artifact; a screenshot of a button is not evidence its action worked.
+If a response is lost, inspect the original status before repeating the action. If access changes, use the service's setup process to reconnect the correct account and scope.
 
-## Verify
+## Add a connection when needed
 
-For each real operation record the source/version, actual tool, allowed scope, request identity, expected outcome and readback. Check an original activity or result record where the provider exposes it. If an action may have run but its answer was lost, reconcile its original status before retrying. A caller-provided owner ID, role name or receipt flag cannot substitute for authenticated authority.
+The [connector directory](../connectors/README.md) links to each service's setup guide. Use secure account setup and choose the permissions your task needs. [Host setup](../HOST_COMPATIBILITY.md) covers tool configuration; [Terminal](../TERMINAL.md) covers personal Muse chat and toolkit commands.
 
-Use `python -B tools/collection_compatibility.py` to check this collection's relationship to the original profile methods. It explicitly leaves the combined unique-capability total unset: the 75 task procedures and the preserved 50 role/shared procedures overlap. Tests, role counts and shared descriptors are not measures of native assistant quality.
-
-## Failure and recovery
-
-When a connector is unavailable, finish useful reasoning from supplied material and explain the missing observation. Do not recreate a provider API from a guessed endpoint, ask for raw tokens, or switch to a different account to bypass a denial. When a local program refuses malformed input, that is a local validation result—not proof that a native host refused a permission.
-
-For a Space, verify the runtime that is actually serving the page. A source SDK method or successful type check is not a deployed host capability. Preserve durable operation IDs, result writes and reopen checks before displaying success. For a device or Watch workflow, distinguish capture acknowledgment from task completion and test the actual device route separately.
-
-## Scope and evidence
-
-These boundaries are built into the existing collection exports and their offline result contracts. They do not claim native Muse installation, a universal agent API, live account access or comparative superiority. See [Host compatibility](../HOST_COMPATIBILITY.md), [the specialist quickstart](../collection/SPECIALIST_QUICKSTART.md) and [connector guidance](../CONNECTORS.md). Select only the capabilities needed for the current task; reading a useful method should not become an unnecessary setup project.
+[Skills](../SKILLS.md) · [Tools](../CAPABILITIES.md) · [Family Link](../FAMILY_LINK.md)

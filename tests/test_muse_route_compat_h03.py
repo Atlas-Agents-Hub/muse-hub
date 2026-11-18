@@ -161,7 +161,8 @@ class H03Compatibility(unittest.TestCase):
         guide = (ROOT / "docs/discovery/ROUTE_COMPATIBILITY.md").read_text(encoding="utf-8")
         self.assertIn("nikships/muse-cli", guide)
         self.assertIn("NOT_TESTED", guide)
-        self.assertIn("not a Muse API client", guide)
+        self.assertIn("[terminal guide](../TERMINAL.md)", guide)
+        self.assertIn("tools/compare_muse_routes.py --expect 258,402,146,2,8", guide)
         self.assertNotIn(chr(92) + "`", guide)
 
 

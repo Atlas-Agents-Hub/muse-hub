@@ -20,7 +20,7 @@ AREAS=[
 COPY={
 "software-engineer":("Software Engineer",
  "Build, debug, refactor and release software. Work from reproduction and architecture decisions through implementation, regression tests, source integrity and reviewed delivery.",
- "The engineering sourcekit runs bounded repair and test workflows. Claim Gate checks admission and recovery; Iron Ledger and Provenance Vault remain evidence-only candidates under separate qualification.",
+ "Engineering tools run focused repair and test workflows. Claim Gate supports admission and recovery; the linked technical records describe the evidence tools.",
  "Engineering sourcekit","Claim Gate"),
 "data-engineering-architect":("Data Engineering & Database Architect",
  "Design and maintain reliable data systems, from schemas and ingestion quality to record identity, event reconciliation, query performance and safe migrations.",
@@ -44,15 +44,15 @@ COPY={
  "Claims engine","Claims sourcekit"),
 "adversarial-verifier":("Adversarial Verifier",
  "Challenge authorized software, agent systems and releases with threat models, failure injection, negative controls and independent remediation reviews.",
- "The public V1 includes a defensive testing playbook and editable review methods. No standalone security-testing engine is bundled with this role.",
+ "Use the defensive testing playbook and editable review methods with the tools available for your authorized target.",
  None,None),
 "reverse-engineering-researcher":("Reverse Engineering & Security Researcher",
  "Understand software and protocol behavior with authorized observations, defensive trace analysis, scoped experiments and clean-room reconstructions.",
- "The reverse-analysis engine and sourcekit compare supplied observations. No live probing or new security-assistance executable is bundled in public V1.",
+ "The reverse-analysis tools compare supplied observations and help test explanations of application behavior.",
  "Reverse-analysis engine","Reverse sourcekit"),
 "creative-studio":("Creative Studio",
  "Develop original visual media, animation, video and interactive scenes—from creative direction, characters, environments and asset development to motion, render inspection, continuity and delivery.",
- "The bundled creative-production engine is a production planner, not an image or video renderer. It compiles briefs, dependencies, shots, timelines, continuity checks and textual storyboards; actual media uses authorized render tools.",
+ "The production planner compiles briefs, dependencies, shots, timelines, continuity checks, and textual storyboards. Use your chosen render tools to create and inspect the media.",
  "Creative-production engine","Creative sourcekit"),
 "product-interface-designer":("Product & Interface Designer",
  "Design and evaluate complete product experiences: user research, information architecture, responsive layouts, interaction flows, accessibility and build-ready handoffs.",
@@ -76,7 +76,7 @@ COPY={
  "Garden records engine","Garden calendar"),
 "coordinator":("Coordinator",
  "Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs.",
- "The coordinator sourcekit, review tools and drop-in implementation provide local plan and evidence checks; there is no built-in live worker dispatch.",
+ "The coordinator tools review plans, dependencies, evidence, and handoffs so the next step is clear.",
  "Coordinator sourcekit","Review engine")
 }
 
@@ -109,7 +109,7 @@ def render()->str:
  "",
  "Pick the specialist closest to your task. Each entry explains its scope, the tools included with the toolkit and a concrete starting point.",
  "",
- "[Start here](../v1/START_HERE.md) · [All engines and evidence](../collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [Machine-readable engine index](../discovery/specialist-engine-index.json) · [100 task configurations](../../collections/muse-starters-v1/CATALOG.md)",
+ "[Download an assistant](../DOWNLOAD_A_SPECIALIST.md) · [Get started](../GETTING_STARTED.md) · [Methods and tools](../collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [100 task starters](../../collections/muse-starters-v1/CATALOG.md)",
  ""
  ]
  for area,ids in AREAS:
@@ -144,15 +144,15 @@ def render()->str:
     lines.append(f"  [Set up the workroom](../../presets/{rid}/INSTALL.md) · [Full scope](../collection/SPECIALIST_SCOPE_AND_ENGINES.md)")
    lines.append("")
  lines.extend([
- "## Source, engine and connection boundaries",
+ "## Start your task",
  "",
- "An editable role profile and a built-in executable engine are different things. The source programs above run specific operations on provided inputs; additional tools, browsers, media renderers and service connectors work only when available and authorized in the receiving Muse environment.",
+ "Download the selected specialist, open its START_HERE.md, and bring your task and source material. Choose additional tools or service connections when the work needs them.",
  "",
- "The old 11-role compatibility catalog is preserved in [the original source list](../collection/SPECIALIST_CATALOG.md). The current registry has 15 unique roles; aliases such as `data-engineer` and `reliability-engineer` are not extra agents.",
+ "The [specialist catalog](../collection/SPECIALIST_CATALOG.md) links all 15 roles to their methods and examples. The toolkit aliases `data-engineer` and `reliability-engineer` are the short command names for their corresponding specialists.",
  "",
- "The public Adversarial Verifier currently supplies methods and configuration, not a standalone security-testing engine. Reverse Engineering includes supplied-observation analysis. Neither profile is an automatically installed native security agent.",
+ "For terminal commands and tool requirements, use the [terminal guide](../TERMINAL.md).",
  "",
- "For exact package contents, see the [V1 release](../RELEASES.md) and [capability matrix](../CAPABILITIES.md).",
+ "For package contents, see [downloads](../RELEASES.md) and the [tools guide](../CAPABILITIES.md).",
  ""
  ])
  return "\n".join(lines)

@@ -1,6 +1,6 @@
 # Evidence Finder: local durable evidence custody
 
-Maturity: Source-tested reference implementation. NOT a native Muse skill, authenticated owner service, installed connector, source authenticity certificate, or multi-agent transport.
+Save exact text findings and linked receipts in a local SQLite evidence ledger.
 
 The public EvidenceLedger extends the existing bounded find_exact_text primitive with local SQLite storage and replay-safe, SHA-256-linked receipts. It uses only the Python standard library and does not import private agent code.
 
@@ -27,7 +27,7 @@ A different specialist role uses the same source API:
         restored = evidence.read('unique-op-id')
         proof = evidence.verify()
 
-The host must provide a genuinely authenticated authority callback and source permissions on every call. EvidenceScope is a data shape, not an identity token. Source-only examples do not prove a Muse principal.
+When integrating the ledger, provide an authenticated authority callback and source permissions on every call. `EvidenceScope` carries the resolved scope; the host establishes the identity.
 
 ## Exact behavior
 

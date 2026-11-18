@@ -131,12 +131,14 @@ class HubJourneysTest(unittest.TestCase):
         install = (ROOT / "docs/INSTALL_AND_PERSISTENCE.md").read_text(encoding="utf-8")
         self.assertIn("tools/hub_journeys.py", doc)
         self.assertIn("hub-setup-journeys.md", install)
-        for phase in J.PHASES:
-            self.assertIn(phase, doc.lower())
-        self.assertIn("v1.1.0", doc)
-        self.assertIn("not deployed", doc.lower())
-        self.assertIn("H20", doc)
-        self.assertIn("H21", doc)
+        for entrypoint in ("START_HERE.md", "GETTING_STARTED.md", "TERMINAL.md",
+                           "COMPANION_HOME.md#open-companion-home",
+                           "scripts/run_source_test.py"):
+            self.assertIn(entrypoint, doc)
+        for recovery in ("same database path", "newly printed token",
+                         "reconcile the original result", "Back up local databases"):
+            self.assertIn(recovery, doc)
+        self.assertIn("read-only", doc)
 
 
 if __name__ == "__main__":

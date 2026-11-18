@@ -1,84 +1,58 @@
-# Installation and saved data
+# Setup and saved data
 
-For a read-only H00–H21 first-use, health, failure and recovery plan covering all 15 specialists, see the [H19 installation and recovery journeys](handbook/hub-setup-journeys.md). The journey checker never installs a native Muse assistant or invokes a connected provider.
+## Set up a specialist
 
-## Start with one Muse assistant
+[Download a specialist](DOWNLOAD_A_SPECIALIST.md), extract it into a new folder, and open `START_HERE.md`. Give Muse the guide or ZIP with your current task. Follow its instructions for one separate Muse assistant, Main, and three focused subchats.
 
-[Choose a Muse specialist](DOWNLOAD_A_SPECIALIST.md) and read its role guide. Each specialist is intended for a separate Muse assistant with its own Main and three subchats. **v1.1.0 individual ZIPs are currently a draft and not public downloads.** The [current published v1.0.0 source toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) remains available.
+No Python is needed for these instructions. When you add a connector, choose its account and permissions through the service's setup flow. Keep credentials and personal memory in your private workspace.
 
-For a published individual ZIP: download it, verify the checksum, unzip it, and follow `START_HERE.md`. Basic Muse profile setup needs no Python. Optional local programs and third-party service integrations require their own permissions and runtime. Downloading never creates an assistant or signs into a provider.
+## Customize your working copy
 
-## For developers: older source and tool setup
+Start with the supplied identity, role instructions, and first-task prompt. Add your preferences, project context, relevant files, and desired outputs. Use Main for shared goals and decisions, and the subchats for focused work. [Workrooms](handbook/subchat-workrooms.md) explains the handoff between them.
 
+Keep the downloaded package as a reference and make a separate working copy. Store generated reports and personal data outside the application files so an update is easy to compare.
 
-Choose the package that matches your task. The published [v1.0.0 release](RELEASES.md) offers the complete source toolkit, the portable specialist collection and the searchable 151-connector directory. The specialist collection includes bundled runnable tools and task profiles; the complete source includes Personal Companion's Daily Desk.
+## Prepare a kit from the terminal
 
-The earlier [v0.4.1-alpha](RELEASES.md#v041-alpha--eight-runnable-tools-and-eleven-starter-zips) shipped eight standalone executable ZIPs and eleven starter profiles. These packages remain available with their original instructions. Extracting a ZIP or customizing a profile does not install a native Muse agent.
+From a source checkout with Python 3.12+ on Windows, macOS, or Linux:
 
-## Use the V1 specialist collection
-
-Download `muse-specialist-collection-v1.0.0.zip` from the [published v1.0.0 release](RELEASES.md), compare its SHA-256 with the release checksum index, and extract it into a new directory. Follow the included `START_HERE.md` and select the specialist kit or starter you need. The GitHub source checkout also supports `python -B tools/muse_collection.py check` with Python 3.12+.
-
-## Run a downloaded tool
-
-Download an executable ZIP, check it against the release's `SHA256SUMS.txt`, and extract it into a new directory. Follow its `START_HERE.md` or `INSTALL.md`. Requirements vary: use Python 3.12+, and install Git for workflows that operate on repositories.
-
-The [quickstart](GITHUB_QUICKSTART.md) gives a complete Creative Studio example. Keep generated output and personal data outside the extracted package so you can replace code without losing your work.
-
-## Create a complete source kit
-
-```bash
+```sh
 python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
 ```
 
-Use `python3` where appropriate. The wrapper loads local source itself and refuses an existing destination. It creates three separately inspected components:
+Use `python3` where appropriate and choose a new absolute destination. The command preserves existing folders by refusing to replace them.
 
-| Folder | What to customize or inspect |
+| Folder | What it contains |
 | --- | --- |
-| `system-profile/profile/` | `AGENTS.md`, `IDENTITY.md`, `SOUL.md`, `USER.md`, `MEMORY.md`, `OPINION.md`, `VOICE.md`, `SYSTEM_PROMPT.md`, tool and engine guidance. |
-| `subchat-scopes/subchats/` | Three role-method drafts with their own context, `MEMORY.md`, tools and disabled `skills.yaml`. |
-| `role-skills/` | Three role-specific and five shared descriptors; the proposed registry starts disabled. |
+| `system-profile/profile/` | Identity, instructions, preferences, tools, and memory documents for Main. |
+| `subchat-scopes/subchats/` | Three focused subchat guides, each with context, tools, and memory. |
+| `role-skills/` | Three role-specific methods and five shared methods. |
 
-These are source drafts. A memory file is not verified native persistence, a prompt file is not a loaded system message, and a subchat directory is not a registered conversation. Use the [host guide](HOST_COMPATIBILITY.md) for the separate acceptance boundary.
+Use the generated `INSTALL.md` to apply the documents through your assistant's supported setup route. Enable only the tools you intend to use; the generated skill registry starts disabled until configured.
 
-## Create a lightweight profile
+## Run optional local tools
 
-The lower-level renderer creates just a profile, not the complete three-component kit above. From the repository root, choose a destination that does not already exist:
+Follow each package's included command guide. Repository tools use Python 3.12+; engineering workflows also use Git. The [terminal guide](TERMINAL.md) covers personal Muse chat and the local toolkit, while [Workflows](WORKFLOWS.md) lists example inputs and outputs.
 
-```bash
-PYTHONPATH=src python3 -B -m muse_presets.cli render --preset learning-coach --to ./my-learning-coach --name "My Learning Coach"
-PYTHONPATH=src python3 -B -m muse_presets.cli inspect --path ./my-learning-coach
-```
+Local programs use your operating-system permissions. Run reviewed code in a workspace you control and provide only the files needed for the task.
 
-On Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python`. The renderer creates local files only. `inspect` is read-only and reports:
+## Save tasks and notes
 
-| Result | Meaning |
-| --- | --- |
-| `LOCAL_MATCH` | Files match the recorded local hashes. |
-| `OWNER_CUSTOMIZED` | Personal or instruction files have changed. Your edits are preserved. |
-| `REVIEW_REQUIRED` | Files are missing or policy/source content differs from its recorded baseline. |
-| `LEGACY_UNVERIFIABLE` | An older receipt cannot establish the baseline. Do not guess or overwrite it. |
+[Daily Desk](spaces/DAILY_DESK.md) and [Companion Home](COMPANION_HOME.md) store notes in the SQLite database you choose. Put the database outside the application folder, keep its directory private, and reuse the same path after restarting. Their guides explain session tokens, conflicting edits, backup, and restoration.
 
-The receipt includes preset, playbook, template and generated-file hashes. It can detect changes, but someone able to replace both the files and receipt can forge that match. A hash match does not prove publisher identity, host loading or successful execution.
+SQLite files and exported archives contain readable personal data. Use your normal private storage and backup protections. Locking the browser view clears the current page; deleting application code leaves the database in place.
 
-## Stage an engineering package
+## Update without losing customization
 
-```bash
-PYTHONPATH=src python3 -B -m muse_presets.engineering_pack --to ./my-engineering-pack
-```
+1. Keep the original download, your working copy, and the new package separately.
+2. Compare instructions and settings before bringing in changes.
+3. Preserve your identity, preferences, memory, credentials, and task outputs.
+4. Reopen the assistant or tool and check a small task after the update.
 
-This creates a profile, runtime files, skill descriptions and an integrity receipt in a new directory. The local locking implementation supports Windows and POSIX; filesystem durability and retention limits still vary by platform. Read the [Software Engineer guide](../presets/software-engineer/INSTALL.md) before running code or pruning state.
+For generated profiles, `muse_presets.cli inspect --path PATH` reports `LOCAL_MATCH`, `OWNER_CUSTOMIZED`, `REVIEW_REQUIRED`, or `LEGACY_UNVERIFIABLE`. These results help identify changed or missing files; keep your edits when reconciling them.
 
-## Preserve personal changes
+## Recover or remove a setup
 
-Keep a copy of the original package and a separate working copy. Perform a three-way comparison of the original files, the new package and your edits before updating. Resolve conflicts deliberately rather than copying a new tree over personal memory, credentials or active configuration.
+Save the current result and inspect the original target before repeating an interrupted external action. For local servers, stop the terminal process you started with Ctrl+C. Back up the database before moving or removing it. Remove only the package files you chose to install, and manage connected accounts or scheduled jobs through their original service.
 
-`AGENTS.md`, `USER.md`, `MEMORY.md`, instructions and preferences serve different purposes. A saved `HEARTBEAT.md` is not an active schedule, a script is not an enabled hook, and a generated chat ID is not a registered conversation. The receiving host decides what it loads and executes.
-
-## Recovery and removal
-
-Keep incomplete-operation evidence until you know whether an action occurred. An unknown external outcome must not be retried automatically. Stop only processes you started and remove only package-owned files whose paths and ownership you have verified.
-
-Updating or removing local code does not cancel remote jobs or remove host registrations. Handle those through the original provider with explicit permission.
-
-[Architecture](ARCHITECTURE.md) · [Host compatibility](HOST_COMPATIBILITY.md)
+[Get started](GETTING_STARTED.md) · [Host setup](HOST_COMPATIBILITY.md) · [Downloads](RELEASES.md)

@@ -1,17 +1,13 @@
-# Reverse Engineering & Security Researcher — executable offline source kit
+# Observation comparison tool
 
-This independent Python 3.12+ source package reuses the existing first-party
-`muse_presets.reverse.compare_observed_flows` implementation **byte-for-byte**.
-It compares two supplied, benign UI observation sequences. It performs no
-live reverse engineering, packet capture, binary execution, malware detonation,
-network probing, desktop control, sandbox administration or authorization grants.
+Compare two recorded UI observation sequences with the included Python tool. The report identifies changed outcomes and added or removed controls, helping you examine application behavior. Use Python 3.12+ and observations collected for an authorized task.
 
 ## Create and verify
 
 From this repository:
 
     PYTHONPATH=src python3 -B examples/export_reverse_sourcekit.py --to "$HOME/reverse-offline-kit.zip"
-    PYTHONPATH=src python3 -B examples/export_reverse_sourcekit.py --verify ../reverse-offline-kit.zip --sha256 <trusted-sha256>
+    PYTHONPATH=src python3 -B examples/export_reverse_sourcekit.py --verify "$HOME/reverse-offline-kit.zip" --sha256 EXPECTED_SHA256
 
 On Windows PowerShell, set `$env:PYTHONPATH='src'` and use `python`. The exporter
 requires an absent ZIP path, a safe existing destination parent and unmodified,
@@ -69,9 +65,7 @@ fixture files must be regular, non-hardlinked and outside the kit.
 
 Hashes check bytes, not publisher identity. Python `-I` is not an OS sandbox;
 supplied observations may still be incorrect. No source code or assets of
-third-party target programs are bundled. No native Muse account, model,
-provider-issued tool call, calendar, network connector or Family Link is
-installed. Privacy-sensitive observations should not be placed in public Git.
+third-party target programs are bundled. Privacy-sensitive observations should not be placed in public Git.
 
 Updates require a newly frozen, verified kit. There is no auto-update,
 cleanup of owner data, scheduled job or destructive migration. The kit does not manage production task ownership or retention.
@@ -82,5 +76,4 @@ Repository regressions:
     PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_reverse_sourcekit.py -v
     PYTHONPATH=src python3 -B -m unittest discover -s tests -v
 
-Private-source integration, independent A/B/C verification, public export
-and native deployment are distinct stages; never equate one with another.
+[Specialist setup](../../presets/reverse-engineering-researcher/INSTALL.md) · [Terminal](../TERMINAL.md)

@@ -1,63 +1,46 @@
 # Muse Hub
 
-> Community-built source for **15 independent Muse assistants**, each with Main and three subchats; 75 skills, 25 workflows, 100 task starters, local examples and 151 connector records. Not affiliated with the Muse platform. A source record is not a live connection.
+> Independently developed for 15 independent Muse assistants, each with Main and three subchats; 75 skills, 25 workflows, 100 task starters, and 151 connectors.
 
-## Product information
-- [Muse Hub repository](https://github.com/atlas-origins/muse-ai-agent-presets)
-- [Muse Hub documentation](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/README.md)
-- [Choose a specialist](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/DOWNLOAD_A_SPECIALIST.md)
-- [Capabilities and source engines](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/CAPABILITIES.md)
-- [15 specialist source scopes](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md)
-- [Machine-readable specialist engines](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/discovery/specialist-engine-index.json)
-- [Current public release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest)
+## Start here
+- [All downloads](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html)
+- [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)
+- [Repository](https://github.com/atlas-origins/muse-ai-agent-presets)
+- [Get started](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/GETTING_STARTED.md)
+- [Choose a specialist](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/DOWNLOAD_A_SPECIALIST.md)
+- [Terminal guide](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/TERMINAL.md)
+- [Documentation](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/README.md)
+- [Current release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest)
+- [v1.1.0 packages](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.0)
+- [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS)
 
 ## Individual specialist homes
-- [Setup and saved data](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/INSTALL_AND_PERSISTENCE.md)
-- [First use](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/v1/START_HERE.md)
-- v1.1.0 individual ZIP release: draft; no public download links yet. See release status below.
+- [Software Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/software-engineer/INSTALL.md)
+- [Data Engineering & Database Architect](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/data-engineering-architect/INSTALL.md)
+- [Automation Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/automation-engineer/INSTALL.md)
+- [Infrastructure & Reliability Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/infrastructure-reliability-engineer/INSTALL.md)
+- [Research Evaluator](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/research-evaluator/INSTALL.md)
+- [Claims Adjudicator](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/claims-adjudicator/INSTALL.md)
+- [Adversarial Verifier](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/adversarial-verifier/INSTALL.md)
+- [Reverse Engineering & Security Researcher](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/reverse-engineering-researcher/INSTALL.md)
+- [Creative Studio](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/creative-studio/INSTALL.md)
+- [Product & Interface Designer](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/product-interface-designer/INSTALL.md)
+- [Model Builder](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/model-builder/INSTALL.md)
+- [Learning Coach](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/learning-coach/INSTALL.md)
+- [Personal Companion](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/personal-companion/INSTALL.md)
+- [Garden Companion](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/garden-companion/INSTALL.md)
+- [Coordinator](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/coordinator/INSTALL.md)
 
-## Skills, workflows and connector records
-- [75 skills and 25 workflows](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/SKILLS.md)
-- [100 task starters](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/collections/muse-starters-v1/CATALOG.md)
-- [151 connector records by category](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/connectors/CATALOG.md)
-- [Connector setup and permissions](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/connectors/README.md)
-- [Machine-readable source capability inventory](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/discovery/agent-capabilities.json)
-
-## Runnable specialist tools
-- [Specialist collection demo](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/tools/muse_collection.py)
-- [Personal Companion Daily Desk source demo](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/examples/daily_desk.py)
-- [Local engine capability guide](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/collection/SPECIALIST_QUICKSTART.md)
-- [Developer installation guide](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/GITHUB_QUICKSTART.md)
-- [Source-based AI discovery guide](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/discovery/AI_AGENT_GUIDE.md)
-- [Security and permissions](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/SECURITY.md)
-
-## Current public release
-- [Published v1.0.0 source packages](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.0.0)
-- [Full source toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-toolkit-v1.0.0.zip)
-- [Task starter collection](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-specialist-collection-v1.0.0.zip)
-- [Connector directory](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/muse-custom-connectors-v1.0.0.zip)
-- [Published checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.0.0/SHA256SUMS.txt)
-- [Release version status](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/docs/RELEASES.md)
-
-## Optional historical executable kits
-- [Published v0.4.1-alpha source archive](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.4.1-alpha)
-- [Coordinator v0.4.1-alpha standalone](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/coordinator-executable-v0.4.1-alpha.zip)
-- [Software Engineer v0.4.1-alpha standalone](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/software-engineer-executable-v0.4.1-alpha.zip)
-- [Model Builder v0.4.1-alpha standalone](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/model-builder-executable-v0.4.1-alpha.zip)
-- [Claims Adjudicator v0.4.1-alpha standalone](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/claims-adjudicator-executable-v0.4.1-alpha.zip)
-- [Garden Companion v0.4.1-alpha standalone](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/garden-companion-executable-v0.4.1-alpha.zip)
-- [Learning Coach v0.4.1-alpha standalone](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/learning-coach-executable-v0.4.1-alpha.zip)
-- [Reverse Engineering Researcher v0.4.1-alpha standalone](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/reverse-engineering-researcher-executable-v0.4.1-alpha.zip)
-- [Creative Studio v0.4.1-alpha standalone](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v0.4.1-alpha/creative-studio-executable-v0.4.1-alpha.zip)
-
-## Hub scope
-- [Muse Hub status and product boundaries](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/hub/README.md)
-- [Source-only Muse Hub site](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/hub/site/index.html)
-- [63-reference source explorer](https://raw.githubusercontent.com/atlas-origins/muse-ai-agent-presets/main/hub/site/public/index.html)
-
-## Boundaries
-- Each role is intended for its own Muse assistant/account. Do not combine the 15 Main conversations or their private subchat memories.
-- The source kits are not a native Muse installation, authenticated accounts, or guarantees of model-backed autonomous execution.
-- The Muse Hub discovery site exists only in the local source candidate; it is not a released, hosted, authenticated or connected product.
-- Connector records document available source and setup routes; account connection and tool permissions must be established by the user.
-- Use original provider documentation, current version requirements, and appropriate authorizations before executing local code.
+## Skills, workflows, and tools
+- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/SKILLS.md)
+- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/WORKFLOWS.md)
+- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/collections/muse-starters-v1/CATALOG.md)
+- [Specialist tools](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/collection/SPECIALIST_QUICKSTART.md)
+- [Connector directory](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/connectors/README.md)
+- [Companion Home](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/COMPANION_HOME.md)
+- [Daily Desk](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/spaces/DAILY_DESK.md)
+- [Family Link](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/FAMILY_LINK.md)
+- [Setup and saved data](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/INSTALL_AND_PERSISTENCE.md)
+- [Guide for assistants](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/discovery/AI_AGENT_GUIDE.md)
+- [Capabilities](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/CAPABILITIES.md)
+- [Security](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/SECURITY.md)

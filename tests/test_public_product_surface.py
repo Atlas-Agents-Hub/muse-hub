@@ -1,7 +1,7 @@
 """Public distribution must read like a product, not an engineering work log.
 
 Runs on the public source tree only. Current-tree checks do not alter Git
-history or old release assets. Source-only capability claims stay truthful.
+history or old release assets. Runtime and permission checks remain separate from presentation.
 """
 from __future__ import annotations
 import hashlib
@@ -46,8 +46,8 @@ class PublicProductSurfaceTests(unittest.TestCase):
  def test_readme_is_short_product_entrypoint(self):
   readme=(ROOT/"README.md").read_text(encoding="utf-8")
   self.assertLess(len(readme.encode("utf-8")),8000)
-  for text in ("# Muse Hub","v0.4.1-alpha","docs/CAPABILITIES.md",
-               "docs/GITHUB_QUICKSTART.md","MIT","source-only"):
+  for text in ("# Muse Hub","v1.1.0","docs/CAPABILITIES.md",
+               "docs/GITHUB_QUICKSTART.md","MIT","docs/TERMINAL.md"):
    self.assertIn(text,readme)
   for role in ROLE_SLUGS:
    self.assertIn("presets/"+role+"/INSTALL.md",readme)
@@ -64,6 +64,7 @@ class PublicProductSurfaceTests(unittest.TestCase):
   # all other top-level docs is unchanged and still rejects arbitrary sprawl.
   self.assertLessEqual(len(current - {
       "README.md", "HUB_FEATURE_READINESS.md", "COMPANION_HOME.md",
+      "GETTING_STARTED.md", "TERMINAL.md",
   }),19)
   self.assertIn("DOWNLOAD_A_SPECIALIST.md",current)  # preserve topical-doc limit; allow one index
 
@@ -75,7 +76,8 @@ class PublicProductSurfaceTests(unittest.TestCase):
     text=path.read_text(encoding="utf-8")
     self.assertTrue(text.startswith("# "),name)
     self.assertIsNone(WORK_MARKERS.search(re.sub(r"\]\([^)]+\)", "]()", text)),name)
-  self.assertIn("not connected",(DOCS/"CONNECTORS.md").read_text().lower())
+  self.assertIn("account",(DOCS/"CONNECTORS.md").read_text().lower())
+  self.assertIn("permissions",(DOCS/"CONNECTORS.md").read_text().lower())
 
  def test_catalog_and_eleven_role_capabilities_are_visible(self):
   data=json.loads((ROOT/"presets/catalog.json").read_text(encoding="utf-8"))
@@ -84,19 +86,19 @@ class PublicProductSurfaceTests(unittest.TestCase):
   skills=(DOCS/"SKILLS.md").read_text(encoding="utf-8")
   connectors=(DOCS/"CONNECTORS.md").read_text(encoding="utf-8")
   for role in ROLE_SLUGS:
-   self.assertIn(role,caps)
-   self.assertIn(role,skills)
-   self.assertIn(role,connectors)
-  self.assertIn("Template only",caps)
+   title=(ROOT/"presets"/role/"README.md").read_text().splitlines()[0].removeprefix("# ")
+   self.assertIn(title,caps)
   self.assertIn("Windows",caps)
-  self.assertIn("native",skills.lower())
-  self.assertIn("source-only",caps.lower())
+  self.assertIn("SKILL_INDEX.md",skills)
+  self.assertIn("connectors/README.md",connectors)
+  self.assertIn("account",connectors)
+  self.assertIn("permissions",connectors)
 
  def test_published_download_links_present_without_private_credential_urls(self):
   text="\n".join((ROOT/x).read_text(encoding="utf-8")
                  for x in ("README.md","CHANGELOG.md","docs/RELEASES.md"))
-  self.assertIn("releases/tag/v0.2.0-alpha",text)
-  self.assertIn("releases/tag/software-engineer-sourcekit-r56-alpha",text)
+  self.assertIn("releases/tag/v1.1.0",text)
+  self.assertIn("releases/download/v1.1.0/SHA256SUMS",text)
   self.assertNotIn("token=",text.lower())
   self.assertNotIn("sethburkhardt21-dev/muse-ai-agent-presets-r32" + "-private",text)
 

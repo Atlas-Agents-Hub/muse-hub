@@ -32,10 +32,10 @@ To start with existing source guidance, read [Scope a Useful Next Result](../../
 
 ## Failure and recovery
 
-If the answer misses the brief, first check the exact attachment, path and version. Then narrow the request and explicitly supply the missing section. If the assistant cannot access a file, it should say which source is unavailable and continue any useful work supported by the supplied text. Do not treat a newly created folder or a filename such as SYSTEM_PROMPT.md as evidence that the native host injected it.
+If the answer misses the brief, first check the exact attachment, path and version. Then narrow the request and explicitly supply the missing section. If the assistant cannot access a file, it should say which source is unavailable and continue any useful work supported by the supplied text. Use the host's supported attachment or instruction-loading route to make the material available.
 
 Before changing a long-running workflow, preserve the previous packet and output. Reopen the selected source after an edit and compare the relevant lines. A context-refresh test in one conversation or runtime class does not establish the behavior of all subchats, scheduled tasks or spawned workers.
 
 ## Scope and evidence
 
-This is a practical source-use procedure, not a claim about undocumented host injection order or context-window sizes. Its source contracts are the existing collection's scope, custody and recovery methods plus the public profile generator. Native context assembly varies by receiving host; qualify it separately. For durable state, continue with [Documents that remain recoverable](durable-documents.md).
+Keep the current task and its essential sources easy to reopen. For durable state, continue with [Documents that remain recoverable](durable-documents.md).

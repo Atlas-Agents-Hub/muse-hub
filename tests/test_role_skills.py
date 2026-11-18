@@ -320,7 +320,7 @@ class RoleSkillPackTests(unittest.TestCase):
             self.assertIn(role,doc)
         for name in ("legacy-role-alpha","legacy-role-gamma","legacy-role-beta","legacy-role-delta","legacy-role-epsilon","legacy-role-zeta","legacy-role-eta"):
             self.assertNotIn(name,doc.casefold())
-        self.assertIn("source-only",doc)
-        self.assertIn("native",doc.casefold())
+        self.assertIn("skill",doc.casefold())
+        self.assertIn("Muse",doc)
 
 if __name__=="__main__":unittest.main()
