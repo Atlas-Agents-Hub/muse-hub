@@ -8,15 +8,55 @@
   let data;
   try { data = JSON.parse(raw.textContent); }
   catch { status.textContent = 'This directory could not load. Try opening a fresh copy.'; return; }
-  if (data.schema !== 'muse-hub-h02/public-discovery/v1' || data.count !== 63 ||
-      data.native_muse_connected !== false || data.publication !== 'OFFLINE_PREVIEW_NOT_PUBLISHED' ||
-      !Array.isArray(data.items) || data.items.length !== 63 || !Array.isArray(data.routes)) {
+  const expectedRoutes = new Set(['cli', 'desktop', 'watch', 'family', 'doors', 'companion']);
+  const textField = value => typeof value === 'string' &&
+    value.length > 0 && value.length <= 4096;
+  const safeUrl = value => {
+    if (typeof value !== 'string' || !value.startsWith('https://')) return false;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && Boolean(url.hostname) &&
+        !url.username && !url.password && !url.port;
+    } catch { return false; }
+  };
+  const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+
+  // Validate every nested member before reading its fields in the renderer.
+  // This is a locally embedded source catalogue, not a provider response.
+  const validateCatalog = catalog => {
+    if (!isRecord(catalog) || catalog.schema !== 'muse-hub-h02/public-discovery/v1' ||
+        catalog.count !== 63 || catalog.native_muse_connected !== false ||
+        catalog.publication !== 'OFFLINE_PREVIEW_NOT_PUBLISHED' ||
+        !Array.isArray(catalog.items) || catalog.items.length !== 63 ||
+        !Array.isArray(catalog.routes) || catalog.routes.length !== expectedRoutes.size) return false;
+
+    const seenItems = new Set();
+    for (const item of catalog.items) {
+      if (!isRecord(item) || !textField(item.id) || !/^MH-\d{3}$/.test(item.id) ||
+          seenItems.has(item.id) || !safeUrl(item.url) ||
+          !['name', 'summary', 'category', 'platform', 'install_method', 'evidence',
+            'license_class', 'limitation'].every(key => textField(item[key])) ||
+          !Array.isArray(item.route_tags) ||
+          item.route_tags.some(tag => typeof tag !== 'string' || !expectedRoutes.has(tag)) ||
+          new Set(item.route_tags).size !== item.route_tags.length) return false;
+      seenItems.add(item.id);
+    }
+
+    const seenRoutes = new Set();
+    for (const route of catalog.routes) {
+      if (!isRecord(route) || !textField(route.id) || !expectedRoutes.has(route.id) ||
+          seenRoutes.has(route.id) ||
+          !['title', 'description', 'notice'].every(key => textField(route[key])) ||
+          !Array.isArray(route.source_ids) || !route.source_ids.length ||
+          new Set(route.source_ids).size !== route.source_ids.length ||
+          route.source_ids.some(id => typeof id !== 'string' || !seenItems.has(id)))
+        return false;
+      seenRoutes.add(route.id);
+    }
+    return seenRoutes.size === expectedRoutes.size;
+  };
+  if (!validateCatalog(data)) {
     status.textContent = 'Catalog verification failed. No sources are shown.';
-    return;
-  }
-  const allowed = new Set(data.items.map(item => item.id));
-  if (allowed.size !== 63 || data.routes.some(route => route.source_ids.some(id => !allowed.has(id)))) {
-    status.textContent = 'Catalog source restriction failed. No sources are shown.';
     return;
   }
 
@@ -40,13 +80,6 @@
     if (klass) node.className = klass;
     if (value !== undefined) node.textContent = value;
     return node;
-  };
-  const safeUrl = value => {
-    try {
-      const url = new URL(value);
-      return url.protocol === 'https:' && Boolean(url.hostname) &&
-        !url.username && !url.password && !url.port;
-    } catch { return false; }
   };
   const sourceLink = (item, classname, label) => {
     if (!safeUrl(item.url)) return null;
@@ -105,7 +138,18 @@
       detail.setAttribute('aria-modal', 'true');
       backdrop.hidden = false;
       document.body.classList.add('detail-visible');
-      detail.focus();
+      // Chromium can ignore focus while the sheet is becoming visible.
+      // Try after paint, with a short fallback for throttled animation frames.
+      // Both paths refuse to steal focus after a close or another selection.
+      const focusOpenDetail = () => {
+        if (returnFocus !== trigger || !detail.classList.contains('is-open') ||
+            !isMobileSheet()) return;
+        if (document.activeElement !== detail && !detail.contains(document.activeElement)) {
+          detail.focus({ preventScroll: true });
+        }
+      };
+      requestAnimationFrame(() => { focusOpenDetail(); });
+      window.setTimeout(focusOpenDetail, 120);
     }
   };
   const card = item => {
