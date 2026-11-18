@@ -41,7 +41,7 @@
         "Versioned question/rubric and learner attempt receipt",
         "Wrong-learner and duplicate-attempt negative tests"
       ],
-      "stop_rule": "No native learner identity or vetted source means demo-only scoring; no clinical credential claims.",
+      "stop_rule": "Use example scores until the host verifies the learner and reviewed source material. Keep practice results separate from clinical credentialing.",
       "handoff_to": "claims-adjudicator"
     },
     {

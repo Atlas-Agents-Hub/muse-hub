@@ -2,7 +2,7 @@
 
 Build bounded workflows with approval and recovery gates.
 
-**[Download Automation Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/muse-automation-engineer-v1.1.0.zip)** · [v1.1.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.0/SHA256SUMS)
+**[Download Automation Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-automation-engineer-v1.1.1.zip)** · [v1.1.1 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/SHA256SUMS)
 
 ## Set up this assistant
 
@@ -19,6 +19,6 @@ No Python is needed for the assistant instructions. The package's `START_HERE.md
 
 Use the supplied skills and workflows that fit your task. [Explore this specialist's methods and tools](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md), or use the [terminal guide](../../docs/TERMINAL.md) for command-line work.
 
-Role ID: `automation-engineer`. Package: `muse-automation-engineer-v1.1.0.zip`.
+Role ID: `automation-engineer`. Package: `muse-automation-engineer-v1.1.1.zip`.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)

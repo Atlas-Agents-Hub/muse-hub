@@ -69,7 +69,7 @@ Record the gap and use adjacent evidence only with accurate framing.
 
 **Recheck:** Only actually held credentials appear in the resume.
 
-### A project bullet claims deployed capability from a source-only test.
+### A project bullet claims deployment from local tests.
 **Likely cause:** Maturity labels were collapsed.
 
 **Repair:** Restore implemented/tested wording and preserve the test evidence.

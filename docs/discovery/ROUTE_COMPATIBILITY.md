@@ -14,7 +14,7 @@ The two public, MIT-licensed `nikships/muse-cli` source revisions were read at t
 | Name-only projections | 250 | 394 |
 | Detailed projections | 8 | 8 |
 
-[Earlier original route table](https://github.com/nikships/muse-cli/blob/dbc7624368fd3aec20258c545f50654dbc92cc5f/src/muse_cli/routes.json) · [Newer original route table](https://github.com/nikships/muse-cli/blob/b62adbabb77abf688d26a74f93d405b6667dbc9f/src/muse_cli/routes.json) · [Donor MIT license](route-compat/NIKSHIPS-MIT.txt)
+[Earlier original route table](https://github.com/nikships/muse-cli/blob/dbc7624368fd3aec20258c545f50654dbc92cc5f/src/muse_cli/routes.json) · [Newer original route table](https://github.com/nikships/muse-cli/blob/b62adbabb77abf688d26a74f93d405b6667dbc9f/src/muse_cli/routes.json) · [Upstream MIT license](route-compat/NIKSHIPS-MIT.txt)
 
 The source-diff yields **146 added method names, two names absent from the newer file, and eight changed definitions**. The absent names are `feed.ingest` and `feed.unit.share`. This is a *historical source delta*, not proof that the live service added or removed any endpoint.
 

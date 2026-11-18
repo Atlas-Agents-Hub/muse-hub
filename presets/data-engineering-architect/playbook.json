@@ -9,7 +9,7 @@
     "source-control"
   ],
   "hard_boundaries": [
-    "No production database write, live schema migration, credentials or customer data is authorized by this source-only role.",
+    "Confirm the target database, data handling requirements and current authorization before production writes or live migrations. Keep credentials in the supported secure setup.",
     "Do not claim lineage, privacy clearance or query performance without source evidence.",
     "Unknown schema, ownership or rollback means a provisional report."
   ],

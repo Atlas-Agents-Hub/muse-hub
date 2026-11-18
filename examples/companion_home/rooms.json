@@ -24,7 +24,7 @@
         "room-notebook",
         "local-revisions"
       ],
-      "description": "A private local notebook concept powered by the existing owner-scoped SQLite source.",
+      "description": "Keep thoughts, ideas and useful notes together in each room.",
       "kicker": "WORDS TO KEEP",
       "prompt": "Ideas deserve a place."
     },
@@ -48,7 +48,7 @@
         "signal-trail",
         "local-score"
       ],
-      "description": "Play an original no-assets-needed attention game with a local score record.",
+      "description": "Follow the highlighted tile and build your score, one turn at a time.",
       "kicker": "A SMALL CHALLENGE",
       "prompt": "Follow the next signal."
     },
@@ -60,7 +60,7 @@
         "pose-director",
         "pause-resume"
       ],
-      "description": "Explore a portable, deterministic pose director without character skins or proprietary media.",
+      "description": "Explore four geometric poses and set the motion at your own pace.",
       "kicker": "MOTION, YOUR WAY",
       "prompt": "Make space for movement."
     }

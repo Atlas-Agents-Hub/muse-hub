@@ -48,9 +48,9 @@ ROOMS = {
     },
 }
 EXTRA = {
-    "CONNECTORS.md":"# Optional connectors\n\nNo hosted model registry, inference endpoint, machine or paid account is configured. Discover native grants at receiving host before use.\n",
-    "BROWSER.md":"# Browser\n\nNo browser integration is installed. Remote model downloads and dataset retrieval require separately authorized tools and rights.\n",
-    "VOICE.md":"# Voice\n\nNo voice identity, recordings or speech models included. Voice is off.\n",
+    "CONNECTORS.md":"# Connectors\n\nUse the model, data and registry connections available in Muse. Check source rights, cost and the user's authorization before external training or publication. Preserve returned artifact and receipt identifiers.\n",
+    "BROWSER.md":"# Browser\n\nUse the available browser tools to inspect model and dataset sources. Record provenance and license terms, and follow the user's authorization when downloading or changing remote resources.\n",
+    "VOICE.md":"# Voice\n\nUse Muse's configured voice and the user's accessibility preferences. Obtain consent for recording and protect private audio and transcripts.\n",
 }
 BINDING = {
     "schema":"r33/model-builder-host-binding-v1",
@@ -67,35 +67,45 @@ BINDING = {
 }
 HOOKS = {"schema":"r33/model-builder-hooks-v1","enabled":False,
          "installed":False,"scheduler_enabled":False,"event_handlers":[]}
-README = """# Model Builder — neutral source-only development verifier
+README = """# Model Builder tools
 
-The two disabled local skills expose development scoring and checkpoint checks,
-plus opt-in integer-perceptron and decimal-linear toy training with actual
-JSON-weight inference. Use --operation linear-demo --allow-local-training for
-64 bounded gradient updates, recomputed persisted evidence and byte-exact
-baseline restoration. The runtime/model_toy_bundle.py CLI also supports
-run/verify/restore-baseline with explicit dataset and receipt hashes.
-These local routines do not grant a provider, GPU or production promotion.
-Integer toy training is bounded to 8 features, 96 rows and 32 epochs. No LLM/LoRA,
-GPU, model download, paid API, rights clearance, protected-final examination
-or native Muse invocation is performed.
+Score a development experiment, check a checkpoint, or train and replay a small
+local model. The included integer perceptron and decimal linear model save
+numeric weights as JSON and compare their results with a baseline.
 
-The checked-in runtime accepts strictly bounded caller-provided rows and
-synthetic bytes. It verifies disjoint source families, holds protected-final
-labels, measures development accuracy, and refuses forged training and
-promotion claims. The legacy checkpoint is intentionally synthetic, NOT a trained adapter.
-The separate toy operations execute local perceptron updates and replay saved
-numeric weights; they do not establish independent provenance or promotion. The original host's registration, model-selected calls,
-reviewer authority, recipient readback and wrong-owner denial are NOT_RUN.
+## Run an experiment
 
-Two skill descriptors exist with local scripts; config/skills.yaml is disabled.
-The three subchat folders contain only unbound draft role/context/memory
-contracts. No existing host, owner identity, model cache or state is changed.
-Run scripts/doctor.py for local self-hash, not publisher authentication.
+With Python 3.12 or newer, run from this folder:
+
+    python -I -B custom-skills/model_development_metrics/run.py --operation toy-demo --allow-local-training
+    python -I -B custom-skills/model_development_metrics/run.py --operation linear-demo --allow-local-training
+    python -I -B scripts/doctor.py
+
+The linear example performs 64 gradient updates, recomputes the saved results,
+and restores the baseline bytes. The toy example trains an integer perceptron
+and checks its reloaded predictions. Training requires --allow-local-training.
+The doctor checks the package files.
+
+For supplied data, review the runner's --help. runtime/model_toy_bundle.py
+provides run, verify and restore-baseline commands with explicit dataset and
+receipt hashes. Save the returned hashes with the output they identify.
+
+Keep training and development families separate, leave protected-final labels
+unexamined, and check data rights before using your records. The integer model
+accepts at most eight features, 96 rows and 32 epochs. These small experiments
+measure their supplied development data; evaluate the intended real workload
+separately before promoting a model.
+
+## Use with Muse
+
+Use system-files/, subchats/ and the relevant custom-skills/ instructions with
+your existing assistant. Preserve its preferences and memory. Configure any
+additional model service through your host's supported controls and the user's
+authorization. Keep the extracted package separate from live assistant files.
 """
 
 RUNNER = r'''#!/usr/bin/env python3
-"""Bounded local scoring, JSON toy inference and explicitly opted-in toy training. No GPU/provider."""
+"""Score development data, replay JSON weights and run opted-in local experiments."""
 from __future__ import annotations
 import argparse
 import base64
@@ -352,10 +362,11 @@ def _sidecars(profile: Path) -> dict[str,bytes]:
         content[prefix+"SKILL.md"]=(
             f"---\nname: {name}\ndescription: {settings['description']}\n---\n\n"
             f"# Model Builder {settings['method'].title()}\n\n"
-            "Execute run.py only for bounded synthetic or explicitly approved "
-            "offline source inputs. Toy training requires explicit local opt-in; no external training, paid model call, publisher "
-            "release, native host or independent examination is authorized. "
-            "The package-local registry stays disabled.\n"
+            "Use run.py with reviewed, bounded JSON input. Local toy training requires "
+            "--allow-local-training. Preserve dataset and checkpoint hashes, keep "
+            "training and development families separate, and leave protected-final "
+            "labels unexamined. Follow the user's authorization for external training "
+            "or publication through connected tools.\n"
         ).encode("utf-8")
         content[prefix+"run.py"]=RUNNER.encode("utf-8")
     content["config/skills.yaml"]=(
@@ -369,21 +380,21 @@ def _sidecars(profile: Path) -> dict[str,bytes]:
         prefix=f"subchats/{name}/"
         content[prefix+"ROLE.md"]=(
             f"# {name.replace('-',' ').title()}\n\n{details['purpose']}\n\n"
-            "This is an unbound role folder; no native Muse subchat was created.\n"
+            "Use this context for the matching task in your existing Muse conversation.\n"
         ).encode("utf-8")
         content[prefix+"CONTEXT.md"]=(
             f"# Scoped context\n\n{details['actions']}\n\n"
-            "No personal donor state, protected final labels or unrelated task "
-            "history is imported.\n"
+            "Load relevant data provenance and development results. Keep protected-final "
+            "labels and unrelated private history outside this working context.\n"
         ).encode("utf-8")
         content[prefix+"MEMORY.md"]=(
-            "# Memory custody\n\nNo prior memory. Preserve only explicitly "
-            "approved source-scoped observations in a receiving owner-controlled store.\n"
+            "# Memory\n\nPreserve approved observations, source hashes and experiment "
+            "receipts in the user's chosen storage. Keep private records within their task scope.\n"
         ).encode("utf-8")
         content[prefix+"TOOLS.md"]=(
             f"# Tools and refusals\n\n{details['stop']}\n\n"
-            "Host grants, training engine, tokenizers, model weights and GPU "
-            "drivers are NOT configured by this package.\n"
+            "Inspect the available compute, model artifacts and permissions before "
+            "starting any additional workload.\n"
         ).encode("utf-8")
         row={"schema":"r33/model-builder-subchat-v1","role":name,
              "handoff_to":details["next"],"native_chat_id":None,

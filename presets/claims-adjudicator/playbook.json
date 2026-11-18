@@ -34,7 +34,7 @@
       "trigger": "The claim has mixed passing and missing evidence.",
       "steps": [
         "Check agreement among primary sources, tests and independent consumer result.",
-        "Narrow the verdict to implementation, source test, native effect and useful outcome separately.",
+        "State what was implemented, what was tested, what happened at the actual target, and which outcomes the evidence supports.",
         "Issue explicit conditions, holds and disputed evidence without editing origin."
       ],
       "evidence": [
@@ -62,8 +62,8 @@
   ],
   "first_canary": {
     "grade": "SOURCE_ONLY",
-    "task": "Judge a report claiming native completion after only 40 local tests.",
-    "observable_result": "Source-level pass, native unproven, preserved caveat in short and long summary.",
-    "negative_test": "Remove the native limitation from an output summary and require review failure."
+    "task": "Assess a release report that claims a production fix after 40 local tests.",
+    "observable_result": "Record the passing local tests, identify the missing production verification, and preserve that distinction in each summary.",
+    "negative_test": "Remove the missing production verification from a summary and require the review to catch it."
   }
 }

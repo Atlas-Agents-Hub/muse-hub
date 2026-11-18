@@ -1,4 +1,4 @@
-# Optional first-party role adapters
+# Run a specialist example through the adapter interface
 
 Reuse five included local engines through a common adapter interface. Choose the capability, inspect its inputs, and enable the example explicitly when you want to run it.
 
@@ -20,7 +20,7 @@ PYTHONPATH=src python3 -B -m muse_presets.cli donor-list
 PYTHONPATH=src python3 -B -m muse_presets.cli donor-inspect --capability garden
 ```
 
-The catalog and inspection commands only read existing source files and compare local SHA-256 digests to the repository's reviewed source manifest. These checks detect changed bytes but **do not cryptographically authenticate a publisher, independent reviewer, owner, machine or consent**. Rehashing a modified manifest cannot satisfy the embedded source pin.
+The catalog and inspection commands read existing files and compare their hashes with the reviewed source manifest. A changed module is refused. Review the source and use the account authorized for your task before running an example.
 
 ## Run an explicitly reviewed local fixture
 
@@ -33,11 +33,11 @@ PYTHONPATH=src python3 -B examples/role_donor_demo.py --run-fixtures
 
 On Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python`.
 
-Fixtures are deterministic, default-disabled, and use synthetic or temporary local data. Imported Python fixtures use isolated interpreter options to avoid environment-driven import path injection, but isolation options are **not** protection against malicious Python source. A locally rehashed source blob is not an original-owner attestation.
+Examples run only after explicit selection and use synthetic or temporary data. Python import isolation reduces environment-driven imports; run reviewed code in a workspace you control.
 
 For animation work, use the [Creative Studio guide](collection/CREATIVE_STUDIO_SCOPE.md) and your chosen renderer.
 
-## Extending or promoting a donor
+## Add an adapter
 
 When adding a reviewed first-party source engine, include its actual module, all necessary transitive local dependencies, a pinned source manifest, a deterministic offline fixture, explicit approval of any local code execution, and negative tests for byte tampering, root mismatch, invalid types and unsupported platforms. Keep private agent identity, original owner state, runtime credentials, scratch evidence and internal task logs out of any public distribution.
 

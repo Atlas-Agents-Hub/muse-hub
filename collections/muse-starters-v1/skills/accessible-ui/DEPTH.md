@@ -4,7 +4,7 @@ Read only the branch needed for the current task. These are working methods, not
 
 ## Domain method
 
-Accessibility review is evidence about a complete user task across interaction states, not a screenshot score. Separate semantic structure, keyboard operation, focus management, visual perception and assistive-technology observations. Record the actual browser, viewport and assistive technology used. A missing observation is not a pass; an observed barrier is not a claim that every page fails. Use the applicable W3C standard and its exceptions rather than a memorized checklist alone.
+Accessibility review is evidence about a complete user task across interaction states, not a screenshot score. Separate semantic structure, keyboard operation, focus management, visual perception and assistive-technology observations. Record the actual browser, viewport and assistive technology used. Record untested states explicitly and tie each observed barrier to the pages and interactions actually checked. Use the applicable W3C standard and its exceptions rather than a memorized checklist alone.
 
 ## Output contract
 

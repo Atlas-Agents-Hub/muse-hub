@@ -13,13 +13,13 @@ SCHEMA='muse-presets/creative-sourcekit-v1'
 MAX_ARCHIVE=500000
 SOURCE_SHA={
     'LICENSE':'af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf',
-    'src/muse_presets/creative_production.py':'ef195076d8c9c4cb85414f4db51a0cc592fc6b4c5a04fee596fbec1a10b02561',
+    'src/muse_presets/creative_production.py':'301366c81d13c68eba892b1c72f9e64e44588918e81f9c18ef5a98f5d0b87876',
     'src/muse_presets/creative_cli.py':'91a5fc7f4a359c70dc9c9fb601182ae886965e6f044d64cde562fe1e42f66584',
     'tests/test_creative_production.py':'cabb9b017d8a47cf6c0f1b0c7739693db509839a424b2ff6893bc423c860d488',
     'presets/creative-studio/preset.json':'d6b89a7f0851258af12afcbc224f822e4b0ec76e26e58ee993c789ee4b4ccd48',
-    'presets/creative-studio/playbook.json':'3a1210f10e5b75f923e2db4a0e3955bb66d686fd50f042d9191a42da13508bcd',
+    'presets/creative-studio/playbook.json':'83130fc7d3b22129c3f7641c2f07774be7f489edb37bd32dc10c0028ba0e568a',
     'examples/creative_brief.json':'ac766aa9e21313d6845051e485978e15e0dd058344f4e00bca6cb787e931a8ee',
-    'docs/kits/CREATIVE_SOURCEKIT.md':'0d5a3bcee85f8d760d1e815a1be86732c4da9b25e9d70d85ceb6335993b7922f',
+    'docs/kits/CREATIVE_SOURCEKIT.md':'4d66e397d9bc31647c00b2facf29ca4c750a475399d99a3c554c640fc18cc2b6',
 }
 SOURCE_MAP={
     'LICENSE':'LICENSE',

@@ -10,7 +10,7 @@
   ],
   "hard_boundaries": [
     "Never ship default personal memories or copied contacts.",
-    "Never claim a reminder, smart-device action or sensitive health recommendation occurred without native proof.",
+    "Verify the actual result before reporting a reminder, device action or health-related action as completed.",
     "Respect quiet hours, emergency stop and owner consent for external effects."
   ],
   "methods": [
@@ -26,7 +26,7 @@
         "Owner preference record scoped to installation",
         "Negative test for cross-account or reused personal memory"
       ],
-      "stop_rule": "No real owner identity or sensitive-data grant means LOCAL_DEMO_ONLY.",
+      "stop_rule": "Use example data until the host verifies the correct user and the required access to personal information.",
       "handoff_to": "evidence-finder"
     },
     {
@@ -34,7 +34,7 @@
       "trigger": "User needs planning, errands, budget organization or a story.",
       "steps": [
         "Clarify practical goal, urgency, budget and consent before acting.",
-        "Provide a useful local draft or call an explicitly admitted original host tool.",
+        "Prepare a useful plan or use an authorized tool for the requested action.",
         "Reopen the changed artifact or verify reminder delivery at original consumer."
       ],
       "evidence": [
@@ -48,7 +48,7 @@
       "id": "quiet-and-recover",
       "trigger": "The device restarts or notification/context policies change.",
       "steps": [
-        "Reconcile owner data and pending tasks without rebuilding the owners memory.",
+        "Reconcile saved data and pending tasks while preserving the owner's memory.",
         "Confirm opt-in scheduling, quiet mode and stop behavior remain effective.",
         "Provide a safe fallback when voice, device or online services are unavailable."
       ],
@@ -63,7 +63,7 @@
   "first_canary": {
     "grade": "SOURCE_ONLY",
     "task": "Create a fictional household day plan with a story and a disabled reminder.",
-    "observable_result": "Accessible source-only draft with no external notification and clean owner storage.",
+    "observable_result": "A readable day plan and story in the selected workspace, with the reminder kept off until the user enables it.",
     "negative_test": "Reuse a different fictional household memory and require isolation refusal."
   }
 }

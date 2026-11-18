@@ -44,29 +44,37 @@ SUBCHATS = {
     },
 }
 
-README = """# Portable Software Engineer: native-format source bundle
+README = """# Software Engineer tools
 
-This is a source-pinned generic engineering role with REAL local Claim Gate,
-Provenance Vault and read-only Iron Ledger source. It is NOT a natively
-installed Muse agent, publisher-signed release or authorized external executor.
+Use the Claim Gate to inspect a repair, preserve its evidence in Provenance
+Vault, and review the resulting records with Iron Ledger. engine/ contains the
+runtime and its source receipt.
 
-- engine/ is the unchanged source-pinned Software Engineer runtime package.
-- system-files/ is a clean neutral receiving-owner profile draft; never
-  overwrite another user's system files or native memory.
-- subchats/ contains three independent nonempty role/context/memory contracts.
-  No provider chat IDs have been created or authenticated.
-- custom-skills/ contains three native-style skill descriptor pairs. Their
-  config/skills.yaml entries are DISABLED until authorized host admission.
-- custom-skills/engineering_claim_gate/run.py --canary runs an ACTUAL local
-  Claim Gate test on Windows or POSIX using temporary fictional state. Never a live effect.
-- hooks/HOOKS.json and config/host-binding.json are explicitly disabled.
-- receipts/R33_DROPIN_RECEIPT.json is a local source checksum record, not a
-  publisher signature or owner-issued grant.
+## Try the included check
 
-See engine/receipts/PACK_RECEIPT.json for source provenance and rights HOLDS.
-The installed host API, subchat bindings, native discovery, model-selected
-skill invocation and independent recipient readback remain unverified.
-Do not install the donor's original persona, memory, secrets or system state.
+With Python 3.12 or newer, run from this folder:
+
+    python -I -B custom-skills/engineering_claim_gate/run.py --canary
+    python -I -B scripts/doctor.py
+
+The first command exercises the Claim Gate in a temporary example workspace.
+The doctor checks the package files. scripts/README.md covers the repair
+workflow and its required inputs.
+
+## Use with Muse
+
+- system-files/ contains the specialist profile documents.
+- subchats/ contains three task contexts with their own roles and handoffs.
+- custom-skills/ contains the procedures and the local Claim Gate runner.
+
+Load the relevant documents with your current task. Preserve the assistant's
+existing identity, preferences and memory. Use supported host import controls
+for persistent configuration, and keep this package separate from live files.
+
+Read engine/receipts/PACK_RECEIPT.json for source provenance and rights details.
+Check a downloaded ZIP against the release checksum before extraction. Local
+receipts identify bytes and results; consequential actions still follow the
+user's authorization and the connected host's controls.
 """
 
 BINDING = {
@@ -111,7 +119,7 @@ EXTRA_SYSTEM = {
 }
 
 RUNNER = r'''#!/usr/bin/env python3
-"""Disposable REAL local Claim Gate canary. Windows/POSIX; NO native host effects."""
+"""Run the included Claim Gate check in a temporary workspace."""
 from __future__ import annotations
 
 import argparse
@@ -291,27 +299,31 @@ if __name__ == "__main__":
     raise SystemExit(main())
 '''
 
-SCRIPTS_README = """# Offline scripts
+SCRIPTS_README = """# Software Engineer commands
 
-Use python -I -B scripts/doctor.py to verify local self-checksum continuity.
-This is not a publisher signature; a malicious actor who can change the
-manifest and all files may forge a self-consistent packet.
+Use Python 3.12 or newer. Run these commands from the extracted package folder;
+use python3 if that is the Python command on your machine.
 
-On Windows or POSIX Python 3.12+ you can execute an ACTUAL Claim Gate using fictional
-temporary state:
+Check the package files:
 
-    python3 -I -B custom-skills/engineering_claim_gate/run.py --canary
+    python -I -B scripts/doctor.py
 
-Neither command invokes Muse, registers a skill, uses a real recipient or
-issues permissions. All original user state remains untouched.
+Exercise the Claim Gate in a temporary example workspace:
 
-The pinned engine also ships a reviewed-Python engineering workflow:
+    python -I -B custom-skills/engineering_claim_gate/run.py --canary
+
+Open the engineering workflow's command reference:
 
     python -I -B engine/runtime/claim-gate/engineering_workflow.py --help
 
-Use execute/review/complete with absolute paths, separately pinned inputs and
-operator-observed review receipts. It creates disposable repositories; it is
-NOT an OS sandbox for hostile code and does not generate patches with a model.
+The execute, review and complete commands use absolute paths, pinned inputs,
+new workspaces and separately observed review receipts. Preserve a failed or
+interrupted workspace and inspect its receipt before deciding how to resume.
+
+Python tests run with the operating account's permissions. Review supplied
+code first and use separate operating-system isolation for untrusted code.
+The local doctor checks byte consistency; verify a downloaded archive against
+the release checksum before relying on its contents.
 """
 
 def _sha(raw: bytes) -> str:
@@ -328,15 +340,15 @@ def _skill_body(source: bytes, name: str, description: str) -> bytes:
     if not text.lstrip().startswith("#"):
         raise ValueError("SKILL_SOURCE_BODY_MISSING")
     header = f"---\nname: {name}\ndescription: {description}\n---\n\n"
-    notice = ("## Receiving-host binding\n\nThis is source-only. The local "
-              "skills.yaml entry is disabled. No owner/native grant exists. "
-              "Use only in a disposable test workspace with explicit approval. "
-              "Do not interpret local receipt files as host identity.\n\n")
+    notice = ("## Use with Muse\n\nApply this procedure to the user's current task "
+              "using the tools and permissions available in Muse. Review supplied code "
+              "before running it, preserve evidence in a separate workspace, and "
+              "reconcile an uncertain external result before retrying.\n\n")
     if name == "engineering_claim_gate":
         notice += ("The runnable local test is python -B "
                    "custom-skills/engineering_claim_gate/run.py --canary. "
-                   "It exercises the real pinned Claim Gate in temporary "
-                   "fictional state on Windows or POSIX, never an external tool.\n\n")
+                   "It checks the included Claim Gate with temporary example "
+                   "records on Windows or POSIX.\n\n")
     return (header + notice + text.rstrip() + "\n").encode("utf-8")
 
 
@@ -375,19 +387,18 @@ def _sidecars(engine: Path) -> dict[str, bytes]:
         prefix = f"subchats/{role}/"
         result[prefix + "ROLE.md"] = (
             "# " + role.title() + "\n\n" + attrs["purpose"] + "\n\n"
-            "Native identity is unbound. Work only on owner-approved "
-            "synthetic or source-pinned tasks.\n"
+            "Use this context for the matching task in your existing Muse conversation.\n"
         ).encode("utf-8")
         result[prefix + "CONTEXT.md"] = (
             "# Context contract\n\n" + attrs["actions"] + "\n\n"
-            "No parent transcript, donor identity, secrets or private context "
-            "is imported. Source pin and permissions must be verified again "
-            "at the actual host entrypoint.\n"
+            "Load relevant source files and task facts. Verify the source revision "
+            "and permissions at the actual tool entry point, and keep unrelated "
+            "private context out of the handoff.\n"
         ).encode("utf-8")
         result[prefix + "MEMORY.md"] = (
-            "# Memory contract\n\nFresh neutral package. No personal memory "
-            "records. Persist only explicitly approved, source-scoped "
-            "outcomes in receiving-owner-controlled storage.\n"
+            "# Memory\n\nPreserve approved results and their source references in "
+            "the user's chosen storage. Retain failed attempts and exact resume "
+            "instructions when they affect the next step.\n"
         ).encode("utf-8")
         result[prefix + "TOOLS.md"] = (
             "# Tools and refusal\n\n" + attrs["stop"] + "\n\n"

@@ -1,6 +1,758 @@
 {
   "entries": [
     {
+      "archive_path": "docs/history/source-revisions/presets/adversarial-verifier/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "2bfa39a91c08a5c8207b60d88b3ad87d23bd22e7885fdd4c8465c63bbe82f62a",
+      "historical_sha256": "c4de575bb0e347333a2e4469006c9b9cf62f522462e5f507c229d5cd33667659",
+      "ledger": "public",
+      "original_path": "presets/adversarial-verifier/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/adversarial-verifier/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "d68c933545ad2641204df25f1a882dd4e9024feba7a70b875b5c0321cda92249",
+      "historical_sha256": "f5652033bcfc923eb4005a4ef3d0db72b5a6313a7e341ad2f40396312fa4dd7e",
+      "ledger": "public",
+      "original_path": "presets/adversarial-verifier/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/automation-engineer/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "d157c65019d79dad5b96742bff653070eb5c6d254b51da5127ecb4b0044df7ad",
+      "historical_sha256": "33bb9dcb651253df0c1ea1e28a00893e936fb6232a3da6ee2e8b0c06a95f04d0",
+      "ledger": "public",
+      "original_path": "presets/automation-engineer/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/automation-engineer/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "8ea7f8c4cbc82cb9f1de5887d28acc91a10b4db22e178dfcc268a792393ad9de",
+      "historical_sha256": "aeede8ed81dc9f8e2a09e71a4c928528e4605249b0bafc23fb63e526033447ed",
+      "ledger": "public",
+      "original_path": "presets/automation-engineer/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/catalog.json.txt",
+      "change_kind": "CURRENT_RELEASE_METADATA",
+      "current_sha256": "8792c985645f0cec06626e0f4ab13063528c40e95c5e5b1aecd4d95985f01b72",
+      "historical_sha256": "f3c186454e722099255bdfc4ef08fceb5756b418a45599f8ba5e3b5e341e8cc1",
+      "ledger": "public",
+      "original_path": "presets/catalog.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/claims-adjudicator/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "fd9e87f57f5952c9dae70e42815582c1268fd0f9bbea7ffd6b1ad7cf28309d86",
+      "historical_sha256": "019a56f5d8b45e32a705b1e1469c4b1e8abb395a18e63f1e4ed97790db237fb1",
+      "ledger": "public",
+      "original_path": "presets/claims-adjudicator/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/claims-adjudicator/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "ca7da47cf5c4f183a22ed9380d67b5e3f8d9a48b84e75d5acd3e587f1fd6b938",
+      "historical_sha256": "130f0895874462e87be4178e7d109190a134a2fb8c635d5d85f2803697109b45",
+      "ledger": "public",
+      "original_path": "presets/claims-adjudicator/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/claims-adjudicator/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "a6f73c7e2558bce6119c4fc35e32e649b8c9276cacf5f589122614ccf7be5ce6",
+      "historical_sha256": "14934a1fda009f4ce6e822d17a02a2cf345d08ac53945837c08d5c93c57656cf",
+      "ledger": "public",
+      "original_path": "presets/claims-adjudicator/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/coordinator/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "af7a8a2e0bc6a8ad370aee4b1d22fa9100f525ed36ba5f1d1deb24b2e4714c8c",
+      "historical_sha256": "097d44bb65420b9b59f429a09cb66a4e3491d35143181e0cf2bc5416063df5a9",
+      "ledger": "public",
+      "original_path": "presets/coordinator/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/coordinator/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "3f92941c76345257b67c912635e2e56ad9d62aea57b071d5737c9c4a5c607e73",
+      "historical_sha256": "238ad52c0b1c67306468e5cba8f814ba2f35e0c6042f6d545d0a62cf2bc920a7",
+      "ledger": "public",
+      "original_path": "presets/coordinator/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/coordinator/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "10f893ec270ebecdf5c63d92c70882feb96d5aaa58e48314871997472e087aae",
+      "historical_sha256": "30b74bf335b7e696f1e646019d9e734a74d82bd0ca9ab22d5a20883cd4727e6e",
+      "ledger": "public",
+      "original_path": "presets/coordinator/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/creative-studio/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "89520102e4e6755fffa2af68077732ab74f03b770ae3e43b1cf5d3e8b3cafeb0",
+      "historical_sha256": "2a78857a0a0ceaac52fe57c8268a1df73ffb9cb0512f8b04cfd0aef16de25a5f",
+      "ledger": "public",
+      "original_path": "presets/creative-studio/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/creative-studio/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "5737d663a202d3c479bb87e61c01346270329428f283f18d88a38a861c171188",
+      "historical_sha256": "27de0639a4a2867c0aa8e2b5d5ca4feadd7fda157e513317195cd12caafab48c",
+      "ledger": "public",
+      "original_path": "presets/creative-studio/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/creative-studio/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "83130fc7d3b22129c3f7641c2f07774be7f489edb37bd32dc10c0028ba0e568a",
+      "historical_sha256": "3a1210f10e5b75f923e2db4a0e3955bb66d686fd50f042d9191a42da13508bcd",
+      "ledger": "public",
+      "original_path": "presets/creative-studio/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/data-engineering-architect/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "3d6bf72a54b269b36e9ac21cd2cccbef6abb438788b6746bc44426c6299772d2",
+      "historical_sha256": "9e49b80ec7957da4ec8a9583243b31c5a466c860f837b9babc6f40b6dac27258",
+      "ledger": "public",
+      "original_path": "presets/data-engineering-architect/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/data-engineering-architect/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "e49245b4dfcd21cbdc030cd46539e85b10d3e9d0fd773c0948d63aed3592f568",
+      "historical_sha256": "1be96542c20497aa44ff495338184a55be5ee09c36f9db9aba21a747dfb81387",
+      "ledger": "public",
+      "original_path": "presets/data-engineering-architect/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/data-engineering-architect/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "dc0ae37e97bc2dfcc8e52292a938115dd2c6b7c8faa32db7699a6831b1d638a6",
+      "historical_sha256": "95570d988e484f204858ca7e2d3cac09830cb092b807dd8620e81fd80fb8082c",
+      "ledger": "public",
+      "original_path": "presets/data-engineering-architect/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/garden-companion/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "963b45bc73a243e9f140d81a94ae7576098be0e977fcd7d18d49fc618d51e63e",
+      "historical_sha256": "9bbc08246f7fcd603eb72d3483ab7f55c593d3f44304622ffa34e5d1f8dbe726",
+      "ledger": "public",
+      "original_path": "presets/garden-companion/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/garden-companion/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "fc611df8af380f437466a51234b10fd58a6d9bf8d2b59408da257dca7c726a1e",
+      "historical_sha256": "9ee3ec881b83b34141094e1921ff8c1f4fa2323a2053d8f712613be9a8b69603",
+      "ledger": "public",
+      "original_path": "presets/garden-companion/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/garden-companion/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "4966f2ea9649b3594752a6754b0d4d92334bddc5a3d7c8131f6c00d4f2207fb6",
+      "historical_sha256": "375a34f906b89680a9b384b9431445d526291963f918797c772cb04e498bd0bf",
+      "ledger": "public",
+      "original_path": "presets/garden-companion/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/infrastructure-reliability-engineer/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "1014407a57878e051653ba068a86aca71ff17926667416a0a0e1ccd583d14f73",
+      "historical_sha256": "0a8b6c3388c0f200a3cf0b8b74266714dc9c7e74d4aa5e9af666a6b8d3b6b7f9",
+      "ledger": "public",
+      "original_path": "presets/infrastructure-reliability-engineer/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/infrastructure-reliability-engineer/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "2325a6822cbb6c7dd965f06741c9e44f3385fb41e58fc51394cb81932815cea1",
+      "historical_sha256": "78ecbc6908b08d2b1033959fa41994c96f4553e6d9e168be3e318e86d87f601e",
+      "ledger": "public",
+      "original_path": "presets/infrastructure-reliability-engineer/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/infrastructure-reliability-engineer/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "74ee2ca1d327972cf3695f9f6dc576717cd5ec40f7788ffe4eba3ebe90e17723",
+      "historical_sha256": "73627f6bf60b9808f8a03e7a042157fd3109e91616b34718f8d7ea5180c8b760",
+      "ledger": "public",
+      "original_path": "presets/infrastructure-reliability-engineer/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/learning-coach/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "3d087ac79cfe3dc27d886c4ec0f7bd7c6d7b358aa72a073d6020d472c87286dc",
+      "historical_sha256": "94f934184a2ea756d361f350327d88b8fd0afb244cf7270e5b04bc577861d78a",
+      "ledger": "public",
+      "original_path": "presets/learning-coach/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/learning-coach/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "811e88d24c078afdc201c1c42316c84e1b37cdf8386e7fa7bc6be612b70e1555",
+      "historical_sha256": "436cdf13d2d10d09f9ab1c2dac1bee52a411047bf6cc0097b86757b2837559fa",
+      "ledger": "public",
+      "original_path": "presets/learning-coach/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/learning-coach/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "fcac671b6edd2d28bf834fada3faa992577670079f5a6900702c88338f9480e7",
+      "historical_sha256": "78135472989a3a097914afb529e32a7a46b178c35f3341245828b33390f19a59",
+      "ledger": "public",
+      "original_path": "presets/learning-coach/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/model-builder/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "dac7f9f3f4c41b3f737ca41264c0d2e7eaf9c991cd27069da018fa79d1378874",
+      "historical_sha256": "6c88ec0f591f07e9469bc3b32ff3ae09bd6d0487b04c707c7c57aa990a10f9a1",
+      "ledger": "public",
+      "original_path": "presets/model-builder/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/model-builder/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "2d82bec911033bd1b51889da99f27a95cb5b7553469288799e783a3b87518f9d",
+      "historical_sha256": "405f8c467d1ce5b17493698caf04313e4c3483bcd43dad5a9da23308d7c780e1",
+      "ledger": "public",
+      "original_path": "presets/model-builder/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/model-builder/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "7a661ce15c4a725a563b2fea49d0558dc4ee1a83d7031ec2b4535031f58e0bd2",
+      "historical_sha256": "ac1defb09a888c5660156b5d708d1e21431ae347dd0512c548e4a05a9bf81fa3",
+      "ledger": "public",
+      "original_path": "presets/model-builder/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/personal-companion/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "e9046a11b0cbe0fe3e11f698e1b6eb9a8c6d1d546ed4acfbb4c347d6825478ec",
+      "historical_sha256": "22acc5477345edb9ac53b6542379d2dd743c3b4220fc1861dc948a0b9cec8b0a",
+      "ledger": "public",
+      "original_path": "presets/personal-companion/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/personal-companion/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "1528c09ef1d902529102d50c95dec0b3c45005a8310bba745b36356210472a1c",
+      "historical_sha256": "fa69ebc751e03eb593459e939ebe449a4aeb8973679d7275873509a552a00a5d",
+      "ledger": "public",
+      "original_path": "presets/personal-companion/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/personal-companion/playbook.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "b845cd942e392e52e3ac0fa6074a6f2d5ac0604b0e44ae76123dcd09760a496c",
+      "historical_sha256": "6085c4384c24e37ac66fe4544e2bb29979fde6d366a4d18f6931b565b547a68a",
+      "ledger": "public",
+      "original_path": "presets/personal-companion/playbook.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/product-interface-designer/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "60c6d7305df8419f750260ce8118c31be862381dfa4980458975576f0b9af2a9",
+      "historical_sha256": "7a492c5b326f87fc7cb0f03a5ccade34397ff06bd0e68136e0d3456e8759d2f1",
+      "ledger": "public",
+      "original_path": "presets/product-interface-designer/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/product-interface-designer/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "005e60f3e0fb895fe049ec4e5d55a3924243581eeeaa6f4a45cbadb7c5553574",
+      "historical_sha256": "353731cb6cd242c5ff6c07714d629a208e19b670603c84a47dcc8485ae076416",
+      "ledger": "public",
+      "original_path": "presets/product-interface-designer/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/research-evaluator/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "f86073f8cbe00cf08d2b5a121222714f3705b0e471d4b6edc0c9a8693be0f2e7",
+      "historical_sha256": "ef67cf2db31d5265b351d8ce74ae7100564b312a12e99a6ac58245791558b3a1",
+      "ledger": "public",
+      "original_path": "presets/research-evaluator/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/research-evaluator/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "7c42b7a0f458c68765547259f98f7aac9bdf7a2a3b2ddf02b3bf0953e7696247",
+      "historical_sha256": "977716c88bc6f260691acb2cb3fb833861cb42576e0fb6430d6d80e898c0dc1e",
+      "ledger": "public",
+      "original_path": "presets/research-evaluator/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/reverse-engineering-researcher/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "8242842e256f286c27e27b3cea54ba1e8b01187d147cbc1508c26bcff5081d6b",
+      "historical_sha256": "e14720e1d4f8e7cf254935237a2061ba21bdef2bdf955f753592f7f7138344f3",
+      "ledger": "public",
+      "original_path": "presets/reverse-engineering-researcher/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/reverse-engineering-researcher/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "0e4b9874b343d3cffdae463cde411fea4a1c6626b984523a4199cba9d32814f5",
+      "historical_sha256": "86a10042c214e69feac3fecc10d0c320d6f7ac4413d0cf67b90c026015061a7b",
+      "ledger": "public",
+      "original_path": "presets/reverse-engineering-researcher/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/software-engineer/INSTALL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "58d059b2828802a3c2619becac2b80731e0a987145afcacf8f1d53d8d6748f65",
+      "historical_sha256": "be27c9a44340c3ffbe40bf07853068aa964ba72b3322b72ae0e12327595a6099",
+      "ledger": "public",
+      "original_path": "presets/software-engineer/INSTALL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/software-engineer/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "90a9087eea43d87efb60974f08cad298d36064151fb001707d6683f813d28ae2",
+      "historical_sha256": "9ab87ab15e2bbe09d374c3a4e6b81fd2416913d4d28b848fa21d23ce2da85047",
+      "ledger": "public",
+      "original_path": "presets/software-engineer/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/software-engineer/runtime/claim-gate/ENGINE.json.txt",
+      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
+      "current_sha256": "ff25ad4b612034d17031087fc66908d809a5899d72903a2c6b5c50ac912de057",
+      "historical_sha256": "13eacfcff2d1d376b293342760638c94e9808220ac4bbc7dac0c61c3f17b2dfb",
+      "ledger": "public",
+      "original_path": "presets/software-engineer/runtime/claim-gate/ENGINE.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/software-engineer/runtime/iron-ledger/ENGINE.json.txt",
+      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
+      "current_sha256": "65de552ebfc72e4207266d33d63aab9c206ef0923b4b885f741cce0c65a3aa31",
+      "historical_sha256": "592d8e17f2a34f5daa363b94d7cb6cf07d1c021403fae44919db6bc2a6ea7698",
+      "ledger": "public",
+      "original_path": "presets/software-engineer/runtime/iron-ledger/ENGINE.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/software-engineer/runtime/provenance-vault/ENGINE.json.txt",
+      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
+      "current_sha256": "694df4d1d093ac3619f4d075b1f860b3faea50a2c19b6a03c6fb40b8ccc19cf5",
+      "historical_sha256": "e9b6c08028c489a1144464203df8961fa6ddb52c1fa1260d42faf208d3508f2c",
+      "ledger": "public",
+      "original_path": "presets/software-engineer/runtime/provenance-vault/ENGINE.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/software-engineer/skills/claim-gate/SKILL.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "5f7242bfda55d7cb199736b7af3087dd847fb183f1fe6a7fb5b75478b95936e1",
+      "historical_sha256": "d0b39de25f47c93c7892959cae235708e86501cb1d00ce9cd41820e7399a341a",
+      "ledger": "public",
+      "original_path": "presets/software-engineer/skills/claim-gate/SKILL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/software-engineer/skills/iron-ledger/SKILL.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "1523ce2a8d56254b1082be222d0d17c3f4a988b02fa825fbb285d9d72b1374cf",
+      "historical_sha256": "5fccd6686af8657c9dd7e25d0b27726009ba2ae6ea87fdebda978f77fbbb5e8d",
+      "ledger": "public",
+      "original_path": "presets/software-engineer/skills/iron-ledger/SKILL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/presets/software-engineer/skills/provenance-vault/SKILL.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "e0d4e73ca11aa6b33f874dc7292c0fda968469e8a6c941f063f9c9269bfce2e1",
+      "historical_sha256": "f634d329b97f6b4e6d70008937298f59b2a0dc6940a50e49179907fa991d7ad5",
+      "ledger": "public",
+      "original_path": "presets/software-engineer/skills/provenance-vault/SKILL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/skills/shared/consent-and-effects/SKILL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "24256e2bee139132cf2700c12febc6e7be63bf246b257923a25ac2435818b089",
+      "historical_sha256": "a6eedaabc3a9e9bbc51eeda8c3ff24081288525cd3e8abda621a0e7fb89abfdc",
+      "ledger": "public",
+      "original_path": "skills/shared/consent-and-effects/SKILL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/skills/shared/evidence-audit/SKILL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "063c0eb6884fc0c8b64a3965b082243d0ef2a3385dcc3dfd5d0892be271908ec",
+      "historical_sha256": "eb40cf5a61908609ebdfa633821d9b4364bb0aca6e540059f7fea7f8f7b267a1",
+      "ledger": "public",
+      "original_path": "skills/shared/evidence-audit/SKILL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/skills/shared/quality-handoff/SKILL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "45b3fb984f53e22bb57b90ac47eeb6e549d1be463187ae8a05d04092562d7974",
+      "historical_sha256": "41a2f79f822ae8f6d6a7ad7096c28be460da4d64a3708f76039ffaa7cf79bf28",
+      "ledger": "public",
+      "original_path": "skills/shared/quality-handoff/SKILL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/skills/shared/research-verification/SKILL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "46f0c8bd5e20373670ca6873041bc580c7df40e5aecf0bd2d0a7ee9fd0aabf32",
+      "historical_sha256": "eea4551029223afa2b1e993bfad24a29c95fa8c28c0cdef290015d7e5f339aac",
+      "ledger": "public",
+      "original_path": "skills/shared/research-verification/SKILL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/skills/shared/safe-resume/SKILL.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "f0d69813c1ba455b28f560b36e56732d9f1d8c3f93136026eb3aadf6523e62eb",
+      "historical_sha256": "6b5b0e4f53ee6774653764ea5afbe9120dc87dee96fbcb481b4b22d52efc1158",
+      "ledger": "public",
+      "original_path": "skills/shared/safe-resume/SKILL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/__init__.py.txt",
+      "change_kind": "CURRENT_RELEASE_METADATA",
+      "current_sha256": "fcef2b5b21c56b548cb4e2bba3491fb456cbc3af281915f7b462e96cae7baa3b",
+      "historical_sha256": "40efad1b553ff0ef0c8f27b3d91ae97e6a933693040cdc9bbc648f100719c3bb",
+      "ledger": "public",
+      "original_path": "src/muse_presets/__init__.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/claims_sourcekit.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "7ab48f8f9b6b04a179db3e94a0a098ee3efd46d6e2ef2a61e3f6fa429dc50896",
+      "historical_sha256": "182ceb4b6c755fd6a0c55bcc2c4bfeae1b1685bc123a0038dee7c77e5c7f931c",
+      "ledger": "public",
+      "original_path": "src/muse_presets/claims_sourcekit.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/cli.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "6038882e04453370c6b9339cbc223424c80612243a47789aff27f63829f52262",
+      "historical_sha256": "371d1deaff7e9e6167611f07587d351a14b69c88ae3b714eee6dda4cfaf41c7e",
+      "ledger": "public",
+      "original_path": "src/muse_presets/cli.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/coordinator_dropin.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "e4298b392cd5a9c693f997f6e9656529fcaea0187897fc521b6aae464f7b6e1c",
+      "historical_sha256": "248dbeb429269e78da06b4d5209f4fdde25ab3513dab634a27ddcb5a484a5090",
+      "ledger": "public",
+      "original_path": "src/muse_presets/coordinator_dropin.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/coordinator_sourcekit.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "46987d25e61a7ba3004fb68a5fc04093445a4a73d8976a579bd38032b7fbcd19",
+      "historical_sha256": "f73299ce3b0b216979f9d950b575afddacf0efe695a0126e490aeb7a751b6753",
+      "ledger": "public",
+      "original_path": "src/muse_presets/coordinator_sourcekit.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/creative_production.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "301366c81d13c68eba892b1c72f9e64e44588918e81f9c18ef5a98f5d0b87876",
+      "historical_sha256": "ef195076d8c9c4cb85414f4db51a0cc592fc6b4c5a04fee596fbec1a10b02561",
+      "ledger": "public",
+      "original_path": "src/muse_presets/creative_production.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/creative_sourcekit.py.txt",
+      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
+      "current_sha256": "4f32908ddff6b0f5fd1532673bbf6d85bdd5d1f9e9fc68df40547b60408b498b",
+      "historical_sha256": "3f6c9bc28cfe1385c66bd4d499fdf89713e970bf5a77f49da5aaa1968e7433ff",
+      "ledger": "public",
+      "original_path": "src/muse_presets/creative_sourcekit.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/distribution.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "5cfde466057377680d29aaf6542fcb0009a86e63a9fa7ecfc1b07ed73f7df59e",
+      "historical_sha256": "3c4a662fa8ee873cdfecb0e6c410ace1d711008a128fbd02676c30b1261f6880",
+      "ledger": "public",
+      "original_path": "src/muse_presets/distribution.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/donor_source.py.txt",
+      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
+      "current_sha256": "a70360cd6147bd2535e2169db0c431ddd1c5a7dae0e9f2cf72c2b66e7c85de3e",
+      "historical_sha256": "1379993b596e3d1a930751e000423a066080026bfa9198eddcb618ff5669d6bc",
+      "ledger": "public",
+      "original_path": "src/muse_presets/donor_source.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/donor_sources.json.txt",
+      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
+      "current_sha256": "494fed6d52c82e8bac12f0b5a28d10d3f9e4bad9fc9526c4ada454ca5db6fe3b",
+      "historical_sha256": "f808e1e5b00345dbcb95e217a90199534aa0e71f0a53a204e981a9653cc84324",
+      "ledger": "public",
+      "original_path": "src/muse_presets/donor_sources.json"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/engineer_dropin.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "69cdc8894a6f87571198ef00aa6c1ba1b64ae582c97ada78fa186fbd2153c984",
+      "historical_sha256": "d6e77887baea743d74bde04be13eff5cf6aa1e5222a27700b9969836599822af",
+      "ledger": "public",
+      "original_path": "src/muse_presets/engineer_dropin.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/engineer_sourcekit.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "4538ae222851ce59107b48db3cf3c629875b4d81cf6ad3ed27a0f4611d4f4d86",
+      "historical_sha256": "02bad6df12a216928ecc5de8ef35de29a4324132ad324d93f066f10dc8607c12",
+      "ledger": "public",
+      "original_path": "src/muse_presets/engineer_sourcekit.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/model_builder_dropin.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "4d0eb9d3fbef795653bc86db589602a7ed06d81a0f2ea83b17ed1988ffa1bc96",
+      "historical_sha256": "f0cdf08ee25745198ea379a23990af02d237c28de80d4149b5293bc0ce44e135",
+      "ledger": "public",
+      "original_path": "src/muse_presets/model_builder_dropin.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/model_builder_sourcekit.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "d0947b61e16493b3e1347955c5486296ba317d100b4f7f5e83ece53137dd4bae",
+      "historical_sha256": "f0fa21c82f52c2acc127fc665ade548026320c548e7818160ee9f2747283e360",
+      "ledger": "public",
+      "original_path": "src/muse_presets/model_builder_sourcekit.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/model_toy_sourcekit.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "9835687f6fd833b9ea81fa6cb2652238ff4720298221401b5b92deed2759d9df",
+      "historical_sha256": "06a82606ca11e480d61adc6a210ccd2166bcc2a825f688b0a35461ef204567da",
+      "ledger": "public",
+      "original_path": "src/muse_presets/model_toy_sourcekit.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/playbooks.py.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "d3c5f9c90450d349fc0b49425ea72dc4d352635012ace24e45cee97e09b45a94",
+      "historical_sha256": "cc368d9a6f9edd9a7893dd1f4a9493d5e2285f5977a6023be5a4daaadc81ce09",
+      "ledger": "public",
+      "original_path": "src/muse_presets/playbooks.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/portable_skill_export.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "14f36d2f539a505776031bdf9921b8cdcdb684ee267ffdc7420922f2da275ee7",
+      "historical_sha256": "96025c7b411f549a68077d128901f5eafdda02f1d15899eabea032bf466582da",
+      "ledger": "public",
+      "original_path": "src/muse_presets/portable_skill_export.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/reverse_sourcekit.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "13e5f998fe4ca0209e05c928883042803f2db42a2ebdb7ad2a374c6673c72fb2",
+      "historical_sha256": "2dd3c5d091d73461956c7e39f032b87b3191c2edf9f0099eee9601bba54cbdac",
+      "ledger": "public",
+      "original_path": "src/muse_presets/reverse_sourcekit.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/role_skills.py.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "f6a999e00cca73b025e08ba3965bc6ea56ff87754b1a257afc5bdc753f7b27e5",
+      "historical_sha256": "0a3020d9a7f0cb201de4b5839b27477f658878149a5ab1cd0b674650ddfff626",
+      "ledger": "public",
+      "original_path": "src/muse_presets/role_skills.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/standalone_pack.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "52ad45a79bb4235e09ff5ef7c89539b0ebe610f2a2a2e091d73135f7e4f55469",
+      "historical_sha256": "da06c73679c71036b1bf29b92e6f696df9d47332939440e0f9870777784da04b",
+      "ledger": "public",
+      "original_path": "src/muse_presets/standalone_pack.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/subchat_scopes.py.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "975476d4a0e728d42294ba82fc3578fb4c40e147900916efd695ebc7cf70c171",
+      "historical_sha256": "c608ebe597acf9b8c865b6a3e736897ea0b7da22f66fedaf99d364b810860dd4",
+      "ledger": "public",
+      "original_path": "src/muse_presets/subchat_scopes.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/AGENTS.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "bc2fa53a81e01863ed3ac5095e2bb347ac7fed8f88dae6ffb2067f1f62dd81d4",
+      "historical_sha256": "c1f044a542ccabd468920e7a6dc3ddf15d4b47c09c9c62c3c1d30539cd681436",
+      "ledger": "public",
+      "original_path": "templates/profile/AGENTS.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/DOORS.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "eb2aa8728ab35cb5f488e4473b6677e8830b27eb0b061e6357914a42ad035310",
+      "historical_sha256": "d7fb18588719cafa8ec7ce1c9e1953b71b720269b9451efe7df532cf33bb2b0f",
+      "ledger": "public",
+      "original_path": "templates/profile/DOORS.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/ENGINE_MATRIX.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "dd5a2b9c5f248532d10d7b9b782efaa7212cccbe32de9c457f42e2355ac0da06",
+      "historical_sha256": "ec55e419165d117f513996c95efe08e3449b63a635edeb8da3d7bd0d4c20dfeb",
+      "ledger": "public",
+      "original_path": "templates/profile/ENGINE_MATRIX.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/HEARTBEAT.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "a8cba4e2d0de3ebf7ef8fdec139d7f91864f9db4c6fd23786d27cf526608c1f4",
+      "historical_sha256": "d302c059bba23e768c79f57a82d064e806c5bb65bc0d27e22032448bd8e8647e",
+      "ledger": "public",
+      "original_path": "templates/profile/HEARTBEAT.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/HOOKS.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "a08c97bce96b006197cb8cb6f575c7562848cdc7b611cc94c8cf9b37eb269d46",
+      "historical_sha256": "be9b951f358bdc960ef9dd0c76a3cf7a9db08982596ab4fe9480679b4211bd9d",
+      "ledger": "public",
+      "original_path": "templates/profile/HOOKS.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/IDENTITY.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "c02e2ddcd15a81ae233306faafbd6f811c44c4369adfe3c28a91fd39b95bb4d3",
+      "historical_sha256": "44984de2e4401e800d1ead3159109baee475dc90ae387137d42eb652f2efa907",
+      "ledger": "public",
+      "original_path": "templates/profile/IDENTITY.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/MEMORY.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "5a7b0ecf0a4c9e6318ff7f882de33f32a74f53d5ad0a6070fb89bde79068749c",
+      "historical_sha256": "0f7f431894c516db0485d032210c0b0d0e2baa7753267f00c9f20f9a57e16298",
+      "ledger": "public",
+      "original_path": "templates/profile/MEMORY.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/OPINION.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "7146f7384e45ae1f510982fdeada1ef96a58fe1f700c751c4c5b5e992178a2d4",
+      "historical_sha256": "ef8a935024bbb67676ec5bfa9481009274f034fb6beaf8a1199fe3b4734d2177",
+      "ledger": "public",
+      "original_path": "templates/profile/OPINION.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/PROACTIVE_PREFERENCES.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "467a3bc23b926444a137c51525d0173f863badd10d41d238f4758686881441fb",
+      "historical_sha256": "c9e8c48280afca0979c2a6bab6d4b237a8860ae66e81a05665fc52af6a475097",
+      "ledger": "public",
+      "original_path": "templates/profile/PROACTIVE_PREFERENCES.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/SOUL.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "c72bccad4fbd8eded440fb0c9ccc31a4fa085f78fec98aa0c965040de4952ce8",
+      "historical_sha256": "c9885066864ee98bb9f5dd28d904ec04ca436834a0364b70c5a95e2f65080302",
+      "ledger": "public",
+      "original_path": "templates/profile/SOUL.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/SUBCHATS.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "764829c700493901806ca1d8b88480ae65a513a267e4e3e7372d4af801ca49cc",
+      "historical_sha256": "a4272661e82d509abf11bd78c7701dc35558d6b8079165dde22c21ce4bd72fca",
+      "ledger": "public",
+      "original_path": "templates/profile/SUBCHATS.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/SYSTEM_INSTRUCTIONS.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "dbecd0d6daaf46e9ad5810bc0af12c424f34640b6b9716bedb7e4a59b3e201d5",
+      "historical_sha256": "1ae32996c0d5edd39772e6f393eac8fae7e76b00ead1e817f04362f021475d35",
+      "ledger": "public",
+      "original_path": "templates/profile/SYSTEM_INSTRUCTIONS.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/SYSTEM_PROMPT.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "39c504297da432e3652f79299c8ab6e56f8a41e2a86b5ba811dc85b379bf6876",
+      "historical_sha256": "94dfa6fe3c63dc1e77ef77bda909540f06d385d3ff3b9714d946b7e6faa692ea",
+      "ledger": "public",
+      "original_path": "templates/profile/SYSTEM_PROMPT.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/TOOLS.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "08341d1292a693c0f042305829f98d7a20307f4ae8d834cd1b64e4133243bb05",
+      "historical_sha256": "ff02d1bded61dec139a9dda283b2d3538584d6a8034638ec1c35ca6610f37db2",
+      "ledger": "public",
+      "original_path": "templates/profile/TOOLS.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/USER.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "078249d27a0f449cc1d0cb92132d7f314828d40b854041bd80222466b082c52e",
+      "historical_sha256": "6ef0d5bd8bed7526c1c7721e60d715d756dd50030b21bf7f13b3f3d1ac0cd3b5",
+      "ledger": "public",
+      "original_path": "templates/profile/USER.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/profile/VOICE.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "d884ca12cce3dddbd1150d0a8d083044c954f5325eecbeab1b45a04b6decf594",
+      "historical_sha256": "b07ead0200cc104b7d6b0fbe9286b9934d825be1167cd77dd13bc4427868740b",
+      "ledger": "public",
+      "original_path": "templates/profile/VOICE.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/system-profile/BROWSER.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "82f8fcd0bf6f5bee22cbc50b89f2370e0d54eb79de37696c8ad8b0d69bf45e82",
+      "historical_sha256": "3ece4a4b6234b344d3b36fc4e03c94d56cf84621ac2c99dd4e271a63811f2a27",
+      "ledger": "public",
+      "original_path": "templates/system-profile/BROWSER.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/system-profile/CONNECTORS.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "67aea1f2eadb39e6547375e58434125e119fec2383641a8e19aea78c9f80b59d",
+      "historical_sha256": "13db724429cf9d96cf77d0cf054e56fd6896659d12bd3498b556cb9b1f4e3ffd",
+      "ledger": "public",
+      "original_path": "templates/system-profile/CONNECTORS.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/templates/system-profile/VOICE.md.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "a490c9a0b9c591fd1f83d6901c361f4c0b2bc8a851ec2aeac5ebf4f0fdc5a9e2",
+      "historical_sha256": "b07ead0200cc104b7d6b0fbe9286b9934d825be1167cd77dd13bc4427868740b",
+      "ledger": "public",
+      "original_path": "templates/system-profile/VOICE.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/collections/muse-starters-v1/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "b6cc6eb7324a5e2c10fde211c46113b9b01775f819692523f46c7e5ef479db82",
+      "historical_sha256": "8a2167b03d207f5b49b914666eb3d0ae000244fa985bc30ef939db8177d9fbaf",
+      "ledger": "promotion",
+      "original_path": "collections/muse-starters-v1/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/collections/muse-starters-v1/depth/README.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "854a3305ed5f5b2d4597010bb0f51b9c74613bc1eaed78cfdcc6e2a42d03d264",
+      "historical_sha256": "99fb4713bec252c142b7436ffb0d670471bd284cb60334c49d4055a663d47778",
+      "ledger": "promotion",
+      "original_path": "collections/muse-starters-v1/depth/README.md"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/collections/muse-starters-v1/skills.json.txt",
+      "change_kind": "INSTRUCTION_PRESENTATION",
+      "current_sha256": "b7f8a16a0b9094578228b62a1eb0a69d3fe8597ca7990211bb1abf861f506072",
+      "historical_sha256": "a0aca62dcc4b444ea5a13fc5c68956b76ed43c106b1e3c33c5b86493a66b766f",
+      "ledger": "promotion",
+      "original_path": "collections/muse-starters-v1/skills.json"
+    },
+    {
       "archive_path": "docs/history/source-revisions/collections/muse-starters-v1/skills/accessibility-routine/DEPTH.md.txt",
       "change_kind": "GENERATED_COLLECTION_OUTPUT",
       "current_sha256": "8e49ddfc090c228fbacfd6576d3b5b3852afbfbab1a2ad4b07174937b871619a",
@@ -19,7 +771,7 @@
     {
       "archive_path": "docs/history/source-revisions/collections/muse-starters-v1/skills/accessible-ui/DEPTH.md.txt",
       "change_kind": "GENERATED_COLLECTION_OUTPUT",
-      "current_sha256": "20cea30a7b81296b084f14cda9239339a2e555525b5c411f99622f0f3fe87f9a",
+      "current_sha256": "3074b8e5b327c48f49fd2e7a449868d95a34d03cbc464753428c1635287db909",
       "historical_sha256": "1579d5b69bea01ab35184d029b7137aff960a43d5fb8b72fe11e2be9fde6b69e",
       "ledger": "promotion",
       "original_path": "collections/muse-starters-v1/skills/accessible-ui/DEPTH.md"
@@ -115,7 +867,7 @@
     {
       "archive_path": "docs/history/source-revisions/collections/muse-starters-v1/skills/bug-reproduction/DEPTH.md.txt",
       "change_kind": "GENERATED_COLLECTION_OUTPUT",
-      "current_sha256": "17542617298183ec9154a6a09306873b275452f890d45fbcf8ec03d7da3dde67",
+      "current_sha256": "1003961218d74fe260f6807426fa3caa0eaa3595af55efcf1a733da13debb865",
       "historical_sha256": "d4f6fbae5db41c3ea5de00b9333bf3085d33a948a6d0f14ce90855476b5855fd",
       "ledger": "promotion",
       "original_path": "collections/muse-starters-v1/skills/bug-reproduction/DEPTH.md"
@@ -667,7 +1419,7 @@
     {
       "archive_path": "docs/history/source-revisions/collections/muse-starters-v1/skills/lecture-map/SKILL.md.txt",
       "change_kind": "GENERATED_COLLECTION_OUTPUT",
-      "current_sha256": "3df9ce19fbbabbe4c11ca2a03eabe9109330326f2a978e34012f6ff0c3a8a1a7",
+      "current_sha256": "9ac58fe312a90c23d0ab287324f2e377e3f38592bdaeaa8432285258bebed77f",
       "historical_sha256": "5db7350b96e924d5d35a15daf589e085b1268a0b51b97866189811eb94947934",
       "ledger": "promotion",
       "original_path": "collections/muse-starters-v1/skills/lecture-map/SKILL.md"
@@ -947,7 +1699,7 @@
     {
       "archive_path": "docs/history/source-revisions/collections/muse-starters-v1/skills/resume-tailor/DEPTH.md.txt",
       "change_kind": "GENERATED_COLLECTION_OUTPUT",
-      "current_sha256": "9532983842ebfa51df0d9b820baabd01ae1ea39a85ec948a99728f29c1021262",
+      "current_sha256": "5ba9cde811eeb2fe12ad26999b8453eb7b866e938daab70a6b83088e899cf044",
       "historical_sha256": "9791ab43fac58db5e90c5f9431a05e47fd321264f684869c6582913bd1caf946",
       "ledger": "promotion",
       "original_path": "collections/muse-starters-v1/skills/resume-tailor/DEPTH.md"
@@ -2217,6 +2969,14 @@
       "original_path": "docs/collection/SPECIALIST_CATALOG.md"
     },
     {
+      "archive_path": "docs/history/source-revisions/docs/collection/SPECIALIST_QUICKSTART.md.txt",
+      "change_kind": "PUBLIC_GUIDE_COPY",
+      "current_sha256": "97a125900d1274cc45370a5e914d9e9e0a2f6d2b3c53046473e548c98ef8124f",
+      "historical_sha256": "02e98272d91698e748ece790853c88526d1c4a21aa76b8dea522b4090ec0a981",
+      "ledger": "promotion",
+      "original_path": "docs/collection/SPECIALIST_QUICKSTART.md"
+    },
+    {
       "archive_path": "docs/history/source-revisions/tests/test_muse_r3_depth.py.txt",
       "change_kind": "REVIEWED_TEST_EXPECTATIONS",
       "current_sha256": "67680dcf6baec637458b9b12646ea6408567f9a81fe5196360268c28ae5d1514",
@@ -2249,234 +3009,28 @@
       "original_path": "tests/test_muse_r5_hardening.py"
     },
     {
+      "archive_path": "docs/history/source-revisions/tests/test_muse_r5_product.py.txt",
+      "change_kind": "REVIEWED_TEST_EXPECTATIONS",
+      "current_sha256": "ddeda3c96ef3bac5a86dc9eae4c53b4455c98a7cac79c00324bc709045366335",
+      "historical_sha256": "31a544e1d309afd56f11bc3bbda6c1387359de7ce999b91c79a40a33e826a0c2",
+      "ledger": "promotion",
+      "original_path": "tests/test_muse_r5_product.py"
+    },
+    {
       "archive_path": "docs/history/source-revisions/tools/muse_collection.py.txt",
       "change_kind": "RELEASE_PACKAGE_COMPOSITION",
-      "current_sha256": "b93fbad735f8ac9f6e0e810d836be5724b76b9b97652140c505dd11d64107017",
+      "current_sha256": "ac50005fa9341f474a44b2da1166c202da8c6f886b14005a8ec01e9c4f983711",
       "historical_sha256": "cea2b2fe19567da6e7e2b1ee7bec0088a57d4ee313a936265d754dd2ce3cb131",
       "ledger": "promotion",
       "original_path": "tools/muse_collection.py"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/presets/catalog.json.txt",
-      "change_kind": "CURRENT_RELEASE_METADATA",
-      "current_sha256": "32f1bace8a26346a36d7e01ea154ca02431784b4525aa6ea78fbcd1ec327b32b",
-      "historical_sha256": "f3c186454e722099255bdfc4ef08fceb5756b418a45599f8ba5e3b5e341e8cc1",
-      "ledger": "public",
-      "original_path": "presets/catalog.json"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/src/muse_presets/creative_sourcekit.py.txt",
-      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
-      "current_sha256": "4edfb422e329e5fe7fdc2333d9efe93f3fe219b9b9d4660b739fd242e6f9f8ed",
-      "historical_sha256": "3f6c9bc28cfe1385c66bd4d499fdf89713e970bf5a77f49da5aaa1968e7433ff",
-      "ledger": "public",
-      "original_path": "src/muse_presets/creative_sourcekit.py"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/src/muse_presets/donor_source.py.txt",
-      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
-      "current_sha256": "a70360cd6147bd2535e2169db0c431ddd1c5a7dae0e9f2cf72c2b66e7c85de3e",
-      "historical_sha256": "1379993b596e3d1a930751e000423a066080026bfa9198eddcb618ff5669d6bc",
-      "ledger": "public",
-      "original_path": "src/muse_presets/donor_source.py"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/src/muse_presets/donor_sources.json.txt",
-      "change_kind": "REVIEWED_SOURCE_PIN_UPDATE",
-      "current_sha256": "494fed6d52c82e8bac12f0b5a28d10d3f9e4bad9fc9526c4ada454ca5db6fe3b",
-      "historical_sha256": "f808e1e5b00345dbcb95e217a90199534aa0e71f0a53a204e981a9653cc84324",
-      "ledger": "public",
-      "original_path": "src/muse_presets/donor_sources.json"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/src/muse_presets/playbooks.py.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "d3c5f9c90450d349fc0b49425ea72dc4d352635012ace24e45cee97e09b45a94",
-      "historical_sha256": "cc368d9a6f9edd9a7893dd1f4a9493d5e2285f5977a6023be5a4daaadc81ce09",
-      "ledger": "public",
-      "original_path": "src/muse_presets/playbooks.py"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/src/muse_presets/portable_skill_export.py.txt",
-      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
-      "current_sha256": "14f36d2f539a505776031bdf9921b8cdcdb684ee267ffdc7420922f2da275ee7",
-      "historical_sha256": "96025c7b411f549a68077d128901f5eafdda02f1d15899eabea032bf466582da",
-      "ledger": "public",
-      "original_path": "src/muse_presets/portable_skill_export.py"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/src/muse_presets/role_skills.py.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "f6a999e00cca73b025e08ba3965bc6ea56ff87754b1a257afc5bdc753f7b27e5",
-      "historical_sha256": "0a3020d9a7f0cb201de4b5839b27477f658878149a5ab1cd0b674650ddfff626",
-      "ledger": "public",
-      "original_path": "src/muse_presets/role_skills.py"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/src/muse_presets/standalone_pack.py.txt",
-      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
-      "current_sha256": "52ad45a79bb4235e09ff5ef7c89539b0ebe610f2a2a2e091d73135f7e4f55469",
-      "historical_sha256": "da06c73679c71036b1bf29b92e6f696df9d47332939440e0f9870777784da04b",
-      "ledger": "public",
-      "original_path": "src/muse_presets/standalone_pack.py"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/src/muse_presets/subchat_scopes.py.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "975476d4a0e728d42294ba82fc3578fb4c40e147900916efd695ebc7cf70c171",
-      "historical_sha256": "c608ebe597acf9b8c865b6a3e736897ea0b7da22f66fedaf99d364b810860dd4",
-      "ledger": "public",
-      "original_path": "src/muse_presets/subchat_scopes.py"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/AGENTS.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "bc2fa53a81e01863ed3ac5095e2bb347ac7fed8f88dae6ffb2067f1f62dd81d4",
-      "historical_sha256": "c1f044a542ccabd468920e7a6dc3ddf15d4b47c09c9c62c3c1d30539cd681436",
-      "ledger": "public",
-      "original_path": "templates/profile/AGENTS.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/DOORS.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "eb2aa8728ab35cb5f488e4473b6677e8830b27eb0b061e6357914a42ad035310",
-      "historical_sha256": "d7fb18588719cafa8ec7ce1c9e1953b71b720269b9451efe7df532cf33bb2b0f",
-      "ledger": "public",
-      "original_path": "templates/profile/DOORS.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/ENGINE_MATRIX.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "dd5a2b9c5f248532d10d7b9b782efaa7212cccbe32de9c457f42e2355ac0da06",
-      "historical_sha256": "ec55e419165d117f513996c95efe08e3449b63a635edeb8da3d7bd0d4c20dfeb",
-      "ledger": "public",
-      "original_path": "templates/profile/ENGINE_MATRIX.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/HEARTBEAT.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "a8cba4e2d0de3ebf7ef8fdec139d7f91864f9db4c6fd23786d27cf526608c1f4",
-      "historical_sha256": "d302c059bba23e768c79f57a82d064e806c5bb65bc0d27e22032448bd8e8647e",
-      "ledger": "public",
-      "original_path": "templates/profile/HEARTBEAT.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/HOOKS.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "a08c97bce96b006197cb8cb6f575c7562848cdc7b611cc94c8cf9b37eb269d46",
-      "historical_sha256": "be9b951f358bdc960ef9dd0c76a3cf7a9db08982596ab4fe9480679b4211bd9d",
-      "ledger": "public",
-      "original_path": "templates/profile/HOOKS.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/IDENTITY.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "c02e2ddcd15a81ae233306faafbd6f811c44c4369adfe3c28a91fd39b95bb4d3",
-      "historical_sha256": "44984de2e4401e800d1ead3159109baee475dc90ae387137d42eb652f2efa907",
-      "ledger": "public",
-      "original_path": "templates/profile/IDENTITY.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/MEMORY.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "5a7b0ecf0a4c9e6318ff7f882de33f32a74f53d5ad0a6070fb89bde79068749c",
-      "historical_sha256": "0f7f431894c516db0485d032210c0b0d0e2baa7753267f00c9f20f9a57e16298",
-      "ledger": "public",
-      "original_path": "templates/profile/MEMORY.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/OPINION.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "7146f7384e45ae1f510982fdeada1ef96a58fe1f700c751c4c5b5e992178a2d4",
-      "historical_sha256": "ef8a935024bbb67676ec5bfa9481009274f034fb6beaf8a1199fe3b4734d2177",
-      "ledger": "public",
-      "original_path": "templates/profile/OPINION.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/PROACTIVE_PREFERENCES.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "467a3bc23b926444a137c51525d0173f863badd10d41d238f4758686881441fb",
-      "historical_sha256": "c9e8c48280afca0979c2a6bab6d4b237a8860ae66e81a05665fc52af6a475097",
-      "ledger": "public",
-      "original_path": "templates/profile/PROACTIVE_PREFERENCES.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/SOUL.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "c72bccad4fbd8eded440fb0c9ccc31a4fa085f78fec98aa0c965040de4952ce8",
-      "historical_sha256": "c9885066864ee98bb9f5dd28d904ec04ca436834a0364b70c5a95e2f65080302",
-      "ledger": "public",
-      "original_path": "templates/profile/SOUL.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/SUBCHATS.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "764829c700493901806ca1d8b88480ae65a513a267e4e3e7372d4af801ca49cc",
-      "historical_sha256": "a4272661e82d509abf11bd78c7701dc35558d6b8079165dde22c21ce4bd72fca",
-      "ledger": "public",
-      "original_path": "templates/profile/SUBCHATS.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/SYSTEM_INSTRUCTIONS.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "dbecd0d6daaf46e9ad5810bc0af12c424f34640b6b9716bedb7e4a59b3e201d5",
-      "historical_sha256": "1ae32996c0d5edd39772e6f393eac8fae7e76b00ead1e817f04362f021475d35",
-      "ledger": "public",
-      "original_path": "templates/profile/SYSTEM_INSTRUCTIONS.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/SYSTEM_PROMPT.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "39c504297da432e3652f79299c8ab6e56f8a41e2a86b5ba811dc85b379bf6876",
-      "historical_sha256": "94dfa6fe3c63dc1e77ef77bda909540f06d385d3ff3b9714d946b7e6faa692ea",
-      "ledger": "public",
-      "original_path": "templates/profile/SYSTEM_PROMPT.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/TOOLS.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "08341d1292a693c0f042305829f98d7a20307f4ae8d834cd1b64e4133243bb05",
-      "historical_sha256": "ff02d1bded61dec139a9dda283b2d3538584d6a8034638ec1c35ca6610f37db2",
-      "ledger": "public",
-      "original_path": "templates/profile/TOOLS.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/USER.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "078249d27a0f449cc1d0cb92132d7f314828d40b854041bd80222466b082c52e",
-      "historical_sha256": "6ef0d5bd8bed7526c1c7721e60d715d756dd50030b21bf7f13b3f3d1ac0cd3b5",
-      "ledger": "public",
-      "original_path": "templates/profile/USER.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/profile/VOICE.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "d884ca12cce3dddbd1150d0a8d083044c954f5325eecbeab1b45a04b6decf594",
-      "historical_sha256": "b07ead0200cc104b7d6b0fbe9286b9934d825be1167cd77dd13bc4427868740b",
-      "ledger": "public",
-      "original_path": "templates/profile/VOICE.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/system-profile/BROWSER.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "82f8fcd0bf6f5bee22cbc50b89f2370e0d54eb79de37696c8ad8b0d69bf45e82",
-      "historical_sha256": "3ece4a4b6234b344d3b36fc4e03c94d56cf84621ac2c99dd4e271a63811f2a27",
-      "ledger": "public",
-      "original_path": "templates/system-profile/BROWSER.md"
-    },
-    {
-      "archive_path": "docs/history/source-revisions/templates/system-profile/CONNECTORS.md.txt",
-      "change_kind": "INSTRUCTION_PRESENTATION",
-      "current_sha256": "67aea1f2eadb39e6547375e58434125e119fec2383641a8e19aea78c9f80b59d",
-      "historical_sha256": "13db724429cf9d96cf77d0cf054e56fd6896659d12bd3498b556cb9b1f4e3ffd",
-      "ledger": "public",
-      "original_path": "templates/system-profile/CONNECTORS.md"
     }
   ],
   "historical_source_commit": "491d6ceeb9a76fd1350f06d645dc0ed6131dda30",
+  "previous_revision_path": "docs/history/public-revisions-v1.1.0.json.txt",
+  "previous_revision_sha256": "e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324",
   "promotion_provenance_sha256": "f8bde97a22c6002d38efc5d8c5edf96afdf3fa93585333fd1702e8b44e2324b5",
   "public_baseline_sha256": "755ffbbf3bdb8abeb97bd69a6b59f616d4acd535a292b3228afff8e8e7cfe589",
-  "review_base_commit": "befa77356804843ce3a056aed21cb14a9a836b3c",
-  "reviewed_file_count": 309,
-  "schema": "muse-collection-reviewed-source-revisions/v1"
+  "review_base_commit": "49fb71a162173ac2dfb2c0f805e36109c34ac042",
+  "reviewed_file_count": 378,
+  "schema": "muse-collection-reviewed-source-revisions/v2"
 }

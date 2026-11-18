@@ -32,40 +32,36 @@ MAX_UNPACKED=4*1024*1024
 MAX_ARCHIVE=8*1024*1024
 HEX=re.compile(r"^[0-9a-f]{64}$")
 
-START_HERE="""# Coordinator — independently runnable offline source kit
+START_HERE="""# Coordinator review toolkit
 
-The runnable Coordinator reviews an already-supplied, bounded workgraph,
-finds dependency cycles and held external-effect tasks, and compares reported
-actor/reviewer assertions. This is source-only advisory validation; it
-DOES NOT compile, delegate or dispatch Atlas Omnium missions, authorize
-tools, reserve worker hosts, create schedulers, run connected apps, or
-deliver results. Genuine Omnium mission placement is a separate owner.
+Review a supplied workgraph for dependency cycles and held tasks, then compare
+reported results with their supporting actor and reviewer assertions.
 
-Requirements: Python 3.12+; no pip packages, provider account or paid API.
+## Run the example
 
-1. Obtain the ZIP SHA-256 from the trustworthy release page OUTSIDE the
-   archive. Verify before safely extracting into a NEW directory.
-2. Review EXAMPLE_WORKGRAPH.json, EXAMPLE_ASSERTIONS.json and the
-   Coordinator disabled config/skills.yaml. All native chat IDs are null.
-3. In the extracted directory (Windows: python; macOS: python3):
+Use Python 3.12 or newer. Compare the ZIP's SHA-256 with the release checksum,
+extract into a new folder, and inspect EXAMPLE_WORKGRAPH.json and
+EXAMPLE_ASSERTIONS.json. Run from the extracted folder:
 
-   python -I -B coordinator/custom-skills/coordinator_workgraph/run.py --operation demo
+    python -I -B coordinator/custom-skills/coordinator_workgraph/run.py --operation demo
+    python -I -B coordinator/scripts/doctor.py
 
-   This must print LOCAL_COORDINATOR_DEMO_PASSED.
-4. Feed the workgraph into the same runner via stdin using --operation review.
-   It must return LOCAL_PLAN_REVIEW_ONLY, order diagnose-1 then review-2,
-   and hold review-2 because it requests an external effect.
-5. Feed EXAMPLE_ASSERTIONS.json through
-   coordinator/custom-skills/coordinator_evidence/run.py --operation evidence.
-   It must say UNATTESTED_ASSERTIONS_ONLY with held_task_ids [review-2].
-6. Review coordinator/scripts/doctor.py's LOCAL_SELF_HASH_MATCH but never
-   treat this self-hash as a publisher signature or authenticated host grant.
+The demo returns LOCAL_COORDINATOR_DEMO_PASSED. The doctor checks file hashes.
+For your own graph, send its JSON through stdin to the workgraph runner with
+--operation review. For evidence assertions, use
+coordinator/custom-skills/coordinator_evidence/run.py with --operation evidence.
+Each runner provides --help.
 
-The ZIP carries no live personal memory or provider identity. Printed
-actor/reviewer claims are untrusted fictional samples. Returned order is
-advisory and MUST NOT drive autonomous execution. Any unknown effect remains
-held. All registered skills are DISABLED, no model routes or external
-connectors are installed. Actual source and issuer authority are NOT PROVEN.
+The supplied graph orders diagnose-1 before review-2 and holds review-2 because
+it requests an external effect. The assertion example returns
+UNATTESTED_ASSERTIONS_ONLY with held_task_ids containing review-2.
+
+Use the result to review your plan with Muse. An ordering is advisory: resolve
+held tasks, verify uncertain outcomes, and use the connected host's controls
+and the user's authorization before dispatching work or taking external action.
+Keep the profile and task contexts alongside your existing preferences and
+memory. Check download provenance through the release checksum; the local
+doctor verifies consistency within this extracted package.
 """
 
 

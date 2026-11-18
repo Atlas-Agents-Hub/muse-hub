@@ -18,6 +18,7 @@ def _module(name, path):
 collection = _module("release_collection", ROOT / "tools/muse_collection.py")
 legacy = _module("release_source_checks", ROOT / "scripts/build_v1_release.py")
 REPOSITORY = "https://github.com/atlas-origins/muse-ai-agent-presets"
+DEFAULT_VERSION = "v1.1.1"
 ALIASES = {"data-engineering-architect":"data-engineer",
            "infrastructure-reliability-engineer":"reliability-engineer"}
 ROLE_WORKFLOWS = {
@@ -112,7 +113,7 @@ def _use_text(title,entry,*,optional_tools=False):
                "    python -B tools/run.py --demo\n\nSee tools/README.md for your own JSON input.\n")
     return text
 
-def specialist_files(data,role,version="v1.1.0"):
+def specialist_files(data,role,version=DEFAULT_VERSION):
     if role not in load_registry()["presets"]: raise ValueError("UNKNOWN_SPECIALIST")
     alias=ALIASES.get(role,role)
     entry=next((s for s in data["specialists"] if s["id"]==alias),None)
@@ -155,18 +156,19 @@ def specialist_files(data,role,version="v1.1.0"):
         "native_installed":False,"external_effect_authorized":False})
     return _seal(files,"specialist",role,version,skills=selected,workflows=workflows)
 
-def skill_files(data,identity,version="v1.1.0"):
+def skill_files(data,identity,version=DEFAULT_VERSION):
     entry=next((s for s in data["skills"] if s["id"]==identity),None)
     if entry is None: raise ValueError("UNKNOWN_SKILL")
     files=collection.instruction_files(data,[identity],[])
     files["START_HERE.md"]=_use_text(entry["title"],"skills/"+identity+"/SKILL.md",
         optional_tools="tools/run.py" in files).encode()
-    files["AGENTS.md"]=("# "+entry["title"]+"\n\nRead skills/"+identity+
-        "/SKILL.md for this task and DEPTH.md when you need examples or recovery steps. "
+    files["AGENTS.md"]=("# "+entry["title"]+"\n\nRead [SKILL.md](skills/"+identity+
+        "/SKILL.md) for this task and [DEPTH.md](skills/"+identity+
+        "/DEPTH.md) when you need examples or recovery steps. "
         "Keep the existing assistant preferences, memory and tool permissions.\n").encode()
     return _seal(files,"developed-skill",identity,version,skills=[identity])
 
-def workflow_files(data,identity,version="v1.1.0"):
+def workflow_files(data,identity,version=DEFAULT_VERSION):
     entry=next((w for w in data["workflows"] if w["id"]==identity),None)
     if entry is None: raise ValueError("UNKNOWN_WORKFLOW")
     files=collection.instruction_files(data,[],[identity])
@@ -199,7 +201,7 @@ def _bundle(title,identity,members,version):
                                              for n,b in sorted(members.items())]})
     return _zip(_seal(files,"bundle",identity,version))
 
-def compose_downloads(data,version="v1.1.0"):
+def compose_downloads(data,version=DEFAULT_VERSION):
     _version(version)
     if tuple(len(data[k]) for k in ("specialists","skills","workflows","starters"))!=(15,75,25,100):
         raise ValueError("REVIEW_CHANGED_COLLECTION_INVENTORY")
@@ -251,7 +253,7 @@ def _source_archive(version,manifest):
             if _sha(archive.read(prefix+name))!=digest: raise ValueError("SOURCE_ARCHIVE_DIGEST_MISMATCH")
     return proc.stdout
 
-def build_release(destination,expected_head,version="v1.1.0"):
+def build_release(destination,expected_head,version=DEFAULT_VERSION):
     _version(version);target=collection._safe_path(Path(destination))
     if not target.is_absolute() or target.exists() or not target.parent.is_dir():
         raise ValueError("NEW_ABSOLUTE_OUTPUT_DIRECTORY_REQUIRED")
@@ -298,7 +300,7 @@ def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--to",required=True,type=Path)
     parser.add_argument("--expected-head",required=True)
-    parser.add_argument("--version",default="v1.1.0")
+    parser.add_argument("--version",default=DEFAULT_VERSION)
     args=parser.parse_args(argv)
     try:
         print(json.dumps(build_release(args.to,args.expected_head,args.version),sort_keys=True));return 0

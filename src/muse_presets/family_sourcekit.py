@@ -13,8 +13,8 @@ import re
 import stat
 import zipfile
 
-SCHEMA = "muse-hub/family-link-offline-kit/v1"
-SOURCE_BASE_COMMIT = "befa77356804843ce3a056aed21cb14a9a836b3c"
+SCHEMA = "muse-hub/family-link-offline-kit/v2"
+SOURCE_BASE_COMMIT = "49fb71a162173ac2dfb2c0f805e36109c34ac042"
 SCOPE = "SOURCE_ONLY_OFFLINE_TWO_PROCESS_NOT_DELIVERED"
 MANIFEST = "SOURCEKIT_MANIFEST.json"
 MAX_MEMBERS = 40
@@ -24,13 +24,13 @@ MAX_ARCHIVE = 2_000_000
 HEX = re.compile(r"[a-f0-9]{64}\Z")
 ROLE = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*\Z")
 
-# Modules and current release catalog reviewed at SOURCE_BASE_COMMIT.
-# An authorized future update must review and revise the pins deliberately.
+# The base commit identifies the reviewed lineage, not the current file bytes.
+# Exact release inputs are pinned below and revised only after review.
 SOURCE_PINS = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "examples/family_offline_handoff_demo.py": "cd830ada0c87a72586ce5265b52e748bee89c14916bb3f224a4b6e8805f30a43",
-    "presets/catalog.json": "32f1bace8a26346a36d7e01ea154ca02431784b4525aa6ea78fbcd1ec327b32b",
-    "src/muse_presets/__init__.py": "40efad1b553ff0ef0c8f27b3d91ae97e6a933693040cdc9bbc648f100719c3bb",
+    "presets/catalog.json": "8792c985645f0cec06626e0f4ab13063528c40e95c5e5b1aecd4d95985f01b72",
+    "src/muse_presets/__init__.py": "fcef2b5b21c56b548cb4e2bba3491fb456cbc3af281915f7b462e96cae7baa3b",
     "src/muse_presets/catalog.py": "8d2f49924dbdf538c61c5b3fc25d588812309ec4901d3f289ae0f387ca76c445",
     "src/muse_presets/family.py": "af043cc6edc7e0670d2ec098bdd94f7064f4998d58e784f5669cc740bb23780b",
     "src/muse_presets/family_envelope.py": "ac0aaa563db8e26ebf0fe023970130fba491872984ec3a6bdd2e168f3f901efb",
@@ -68,35 +68,36 @@ FALSE_FLAGS = (
     "native_installed", "sender_authenticated", "recipient_authenticated",
     "effect_authorized", "transport_bound", "public_release_published",
 )
-START_HERE = """# Family Link — tested offline source handoff (H12)
+START_HERE = """# Family Link handoff review
 
-This archive contains the ORIGINAL source-only Family Link role policy and
-bounded metadata envelope, plus the existing two-process fictional demo.
-It cannot connect Muse assistants, discover accounts, grant permissions,
-send messages, install a native agent, or provide a durable replay ledger.
+Inspect a bounded handoff envelope and its role policy, then run the included
+two-process example to see validation and replay protection in action.
 
-Requires Python 3.12+ with no dependencies or paid APIs. Verify the archive
-SHA-256 from a trusted external source before extracting, then inspect the
-included source. The embedded manifest is a tamper check, not a signature.
+Use Python 3.12 or newer. Compare the archive's SHA-256 with the release
+checksum and extract into a new folder. The example uses temporary sample
+records and removes them when it finishes.
 
-On macOS/Linux, from the extracted root:
+On macOS or Linux, run from the extracted folder:
 
-  PYTHONPATH=src python -B examples/family_offline_handoff_demo.py
+    PYTHONPATH=src python -B examples/family_offline_handoff_demo.py
 
-On Windows PowerShell, from the extracted root:
+On Windows PowerShell, run from the extracted folder:
 
-  $env:PYTHONPATH="src"
-  python -B examples/family_offline_handoff_demo.py
+    $env:PYTHONPATH="src"
+    python -B examples/family_offline_handoff_demo.py
 
-Expected: LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED, separate_process_verified
-and replayed_id_refused true, effect_authorized and recipient_authenticated
-false. The demo writes only temporary fictional records and cleans them up.
+Expected status: LOCAL_HANDOFF_REVIEW_ONLY_NOT_DELIVERED. The report sets
+separate_process_verified and replayed_id_refused to true. The example reviews
+the envelope locally; it does not send a message to another account.
 
-The 15 included profiles have Family Link disabled, transport unbound,
-no trusted signer and no native recipient. The source modules are preserved
-byte-for-byte from reviewed Muse Hub commit befa7735. Nothing here represents
-cross-account acceptance or authorizes a live action. The private donor
-TaskGuard/retention P1 remains an independent production hold.
+Read the included role profiles and policy with your Muse task. For a real
+handoff, use a connected transport, identify the intended recipient, follow the
+user's authorization, and verify delivery through that transport. A local
+envelope or checksum alone cannot establish that a recipient received it.
+Keep any failed or ambiguous delivery record for reconciliation before retrying.
+
+The manifest records the reviewed source bytes. Keep it with the example
+results and preserve the assistant's existing preferences and private memory.
 """
 
 
@@ -211,7 +212,7 @@ def _source_members(root: Path) -> tuple[dict[str, bytes], tuple[str, ...]]:
 def _source_manifest(members: dict[str, bytes], roles: tuple[str, ...]) -> dict:
     return {
         "schema": SCHEMA,
-        "source_commit": SOURCE_BASE_COMMIT,
+        "source_base_commit": SOURCE_BASE_COMMIT,
         "scope": SCOPE,
         "role_ids": list(roles),
         "files_sha256": {name: _sha(raw) for name, raw in sorted(members.items())},
@@ -291,7 +292,8 @@ def verify_family_sourcekit(archive: Path, expected_sha256: str) -> dict:
             )
             if (
                 type(manifest) is not dict or manifest.get("schema") != SCHEMA
-                or manifest.get("source_commit") != SOURCE_BASE_COMMIT
+                or manifest.get("source_base_commit") != SOURCE_BASE_COMMIT
+                or "source_commit" in manifest
                 or manifest.get("scope") != SCOPE
                 or manifest.get("role_ids") != list(EXPECTED_ROLES)
                 or manifest.get("source_pins") != SOURCE_PINS
@@ -375,7 +377,7 @@ def export_family_sourcekit(root: Path, destination: Path) -> dict:
         "bytes": destination.stat().st_size,
         "source_roles": len(roles),
         "members": len(members),
-        "source_commit": SOURCE_BASE_COMMIT,
+        "source_base_commit": SOURCE_BASE_COMMIT,
         "native_installed": False,
         "effect_authorized": False,
         "public_release_published": False,

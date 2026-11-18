@@ -1,44 +1,36 @@
-# Operational depth and practice
+# Practice and worked examples
 
-## Current scope
+The collection includes 75 skills and 225 practice cases. Each skill has a procedure, decision branches, recovery steps, worked examples, and a result checklist. Start with the [skill index](../SKILL_INDEX.md), then read the selected skill's `SKILL.md` and `DEPTH.md` for the task at hand.
 
-The current R4-qualified collection contains 64 depth-expanded skills, zero remaining foundation-only skills, and 192 public practice cases. The 28 R3 expansions cover everyday planning, learning, research, engineering, creative production, project/data work and practical care. Each adds five conditional branches, three repair paths and two examples. See [the R3 wave](../R3_WAVE.json) for exact identifiers and [item reviews](../R3_ITEM_REVIEWS.md) for upstream scope.
+## Choose an exercise
 
-## Preserved R2 baseline
+| Method | What to practice |
+| --- | --- |
+| Daily briefing | Build a feasible day, resolve an overloaded plan, and retain travel buffers. |
+| Source flashcards | Preserve the source version, units, conditions, and conflicting facts. |
+| Code review | Identify a precise defect, explain its effect, and check the proposed repair. |
+| Continuity review | Distinguish an unintended state change from an intentional change. |
+| Model comparison | Keep the comparison conditions and eligible cases consistent. |
+| Resume without replay | Reconcile an interrupted action using its original operation ID. |
 
-The original eight R2 skills and their 24 cases remain byte-identical. Their earlier depth is summarized below:
+Use the parts that help with your current task. A short request should not require a lengthy intake interview. Cases include ordinary use, an edge case, and recovery from a problem; the worked answers explain the expected reasoning.
 
-| Skill | Task-specific depth | Three concrete cases |
-|---|---|---|
-| Daily briefing | Preserve a short brief; branch into interval-aware planning only when requested | Feasible day, overloaded day, travel buffer |
-| Source flashcards | Preserve source version, locators, units and conditions; hold conflicts | Literal facts, condition-sensitive fact, conflicting source |
-| Claim audit | Separate artifact scope from claimed completion, and local tests from deployment | Unsupported deployment, mixed scope, historical correction |
-| Bug reproduction | Classify setup failure separately from a product defect and a nonreproduction | Reproduced defect, import failure, fixed-current-source |
-| Code review | Exact location, concrete counterexample, impact, minimal repair; clean control | Lost final item, correct control, empty-input crash |
-| Continuity review | Track invariant vs intentional change and observation coverage | Prop-hand change, intended lighting change, missing evidence |
-| Model comparison | Preserve case denominator and compare only eligible conditions | Gain over threshold, environment confound, missing prediction |
-| Resume without replay | Resolve individual effect states and preserve original operation IDs | Unknown send, denied action, independently confirmed completion |
+## Check a practice response
 
-Each R2 skill has five decision branches, three failure diagnoses, one worked example and a handoff contract. R3 skills include an additional edge/recovery example and explicit domain-method and output-contract sections. Read only what helps the current task. A 30-second request should not trigger a lengthy intake interview.
-
-## Use the practice checker
-
-A selected starter contains relevant `practice/CASE.json` fixtures and separate `practice/answers/CASE.json` examples. From that starter's directory:
+A task-starter package includes its relevant `practice/CASE.json` files, worked answers under `practice/answers/`, and a checker. For example, download the Daily Planner starter, extract it into a new folder, and open a terminal there with Python 3.12+:
 
 ```sh
 python -B practice/check_outputs.py check --case practice/daily-briefing-standard.json --output your-response.json
 ```
 
-Exit 0 means the supplied output met the fixture's narrow mechanical checks. Exit 2 means a failed check or malformed input. The checker performs no model or network call. Exact-answer and fixed-source review fixtures intentionally use closed oracles; this is not a general fact-checker, a security certification or visual judgment.
+Create `your-response.json` in the output format described by that case. Read the case before using the worked answer. Exit 0 means the supplied response passed the case's mechanical checks; exit 2 reports a failed check or malformed input. The checker runs locally using the included data.
 
-The required user-facing artifact still matters. A JSON record can pass while its prose is unhelpful. Human review must check usefulness, completeness, unnecessary questions, source fidelity, clarity and actual visual quality where applicable.
+Then review the actual result: does it solve the task, preserve the supplied facts, explain uncertainty, and give a useful next action? Inspect visual work in its intended application. A structured response passing a fixture is one part of that review.
 
-## Example provenance
+## Learn from a failed check
 
-Positive and negative examples are authored synthetic teaching data. The toy total-function repair was exercised locally by a test: the original loses the final element in three of five cases, and the repair passes all five. Those are local code observations, not proof that Muse performed a repair.
+Compare the failing field with the case's inputs and requirements. Correct the response, retain the earlier version if useful, and run the same check again. Use the recovery example to understand how to handle missing information, stale evidence, or an interrupted operation in real work.
 
-The continuity cases use supplied textual frame observations. No screenshot, generated image, video or native Muse session is claimed by these checks.
+The exercises use authored example data. Textual continuity observations help practice reasoning about state; apply the method to actual images or video when assessing a production. Maintainer inventories and source history remain in the collection's technical records.
 
-## Scope ledger
-
-`../DEPTH_STATUS.json` identifies 64 depth-expanded skills and zero foundation-only skills. No broad, independently reproduced Muse superiority result has been established. R3 has 25 bounded upstream entrypoint reviews across 28 mappings; their linked dependencies remain unqualified. The original six R2 item reviews are retained separately. Cross-platform tests are not independent semantic judgment.
+[Task starters](../CATALOG.md) · [Skills](../SKILL_INDEX.md) · [Get started](../../../docs/GETTING_STARTED.md)

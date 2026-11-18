@@ -56,7 +56,7 @@ class FamilySourcekitTests(unittest.TestCase):
             self.assertIn("examples/family_offline_handoff_demo.py", names)
             self.assertIn("presets/catalog.json", names)
             manifest = json.loads(z.read("SOURCEKIT_MANIFEST.json"))
-            self.assertEqual(manifest["schema"], "muse-hub/family-link-offline-kit/v1")
+            self.assertEqual(manifest["schema"], "muse-hub/family-link-offline-kit/v2")
             for field in ("native_installed", "sender_authenticated",
                           "recipient_authenticated", "effect_authorized",
                           "transport_bound", "public_release_published"):
@@ -167,8 +167,37 @@ class FamilySourcekitTests(unittest.TestCase):
             self.assertNotIn("services/family-native/server.py", members)
             self.assertNotIn("credentials.json", members)
             self.assertNotIn(".env", members)
-            self.assertEqual(manifest["source_commit"], "befa77356804843ce3a056aed21cb14a9a836b3c")
+            self.assertEqual(manifest["source_base_commit"], "49fb71a162173ac2dfb2c0f805e36109c34ac042")
+            self.assertEqual(result["source_base_commit"], manifest["source_base_commit"])
+            self.assertNotIn("source_commit", manifest)
+            self.assertNotIn("source_commit", result)
             self.assertEqual(manifest["scope"], "SOURCE_ONLY_OFFLINE_TWO_PROCESS_NOT_DELIVERED")
+
+    def test_base_provenance_is_explicit_and_cannot_be_forged_by_rehashing(self):
+        self.export()
+        original = self.base / "family-link-offline.zip"
+        with zipfile.ZipFile(original) as archive:
+            entries = archive.infolist()
+            members = {name: archive.read(name) for name in archive.namelist()}
+        for case in ("wrong-base", "old-key", "ambiguous-key"):
+            manifest = json.loads(members["SOURCEKIT_MANIFEST.json"])
+            if case == "wrong-base":
+                manifest["source_base_commit"] = "0" * 40
+            elif case == "old-key":
+                manifest["source_commit"] = manifest.pop("source_base_commit")
+            else:
+                manifest["source_commit"] = manifest["source_base_commit"]
+            target = self.base / (case + ".zip")
+            with zipfile.ZipFile(target, "w") as archive:
+                for info in entries:
+                    raw = members[info.filename]
+                    if info.filename == "SOURCEKIT_MANIFEST.json":
+                        raw = (json.dumps(manifest, sort_keys=True) + "\n").encode("utf-8")
+                    archive.writestr(info, raw)
+            with self.subTest(case=case):
+                pin = hashlib.sha256(target.read_bytes()).hexdigest()
+                with self.assertRaisesRegex(FamilySourcekitError, "KIT_MANIFEST_INVALID"):
+                    verify_family_sourcekit(target, pin)
 
 
     def test_cli_export_verify_and_no_overwrite(self):

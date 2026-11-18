@@ -56,7 +56,7 @@
         "Source-backed daily/weekly brief",
         "No-calendar-send proof and honest missing-data flags"
       ],
-      "stop_rule": "No schedule synchronization or push notification without native permission and delivery receipt.",
+      "stop_rule": "Synchronize schedules and send notifications only with current user authorization; verify the saved schedule and delivery result.",
       "handoff_to": "evidence-finder"
     }
   ],

@@ -1,39 +1,33 @@
-# Daily Desk — reusable full-stack design contract
+# Daily Desk design
 
-Daily Desk combines task and note editing, saved revisions, reopening, and backup restoration in a local browser workspace. [Open Daily Desk](../spaces/DAILY_DESK.md) for the current launch and usage guide. This page describes its design.
+Daily Desk combines task and note editing, saved revisions, reopening, and backup restoration in a local browser workspace. [Open Daily Desk](../spaces/DAILY_DESK.md) for the launch and usage guide. This page describes the implementation decisions to preserve when extending it.
 
-## Existing baseline to recover, not recreate
+## Storage and service
 
-The owner-maintained full-stack Space starter already implements `SpaceCompanion`, using the existing `PersonalCompanion` storage helpers. Its source contract is `space-starter/1`: local SQLite notebook persistence, guarded request state, stable operation identity, cancellation, UNKNOWN recovery and an opt-in injected callback boundary. A loopback HTTP adapter and browser assets already exist. Daily Desk now reuses these first-party components and their original regression suites, with its own task/note extension and new tests. Historical tests are not substituted for fresh qualification.
+Daily Desk reuses `PersonalCompanion` storage helpers and the existing `SpaceCompanion` HTTP adapter. Tasks and notes live in the selected SQLite database. Browser sessions use the adapter's loopback, Host/Origin, token, JSON, body-size, and content-security-policy checks.
 
-The implementation recovers the original starter source, tests, runtime policy and ownership before extending its schema. Preserve its Host/Origin/body/CSP checks, default-disabled effects and prohibition on browser-supplied callback authority. Do not introduce another scheduler, account identity or generic agent service.
+The application supplies the owner and Space scope through its trusted service boundary. Browser-provided owner fields must never establish authority. Keep the existing Space request and callback controls separate from task and note editing.
 
-## First useful result
+## Revision-checked writes
 
-A new owner-controlled local desk should create **3 tasks** and **2 notes**, edit one task and one note, close/reopen the client, export an archive and restore it into a new empty store. The restored IDs, fields, revision numbers and content hashes must equal the exported snapshot. This is an application-storage test, not a native model call or a sync guarantee.
+Each record has a stable ID and revision. Each mutation carries an operation ID bound to its exact request. An identical retry returns the original result; conflicting reuse is refused. A stale expected revision must leave the newer saved record intact and keep the user's draft available for comparison.
 
-The screen is a toolbench: task list and filters, note editor, source/version panel, review and export controls. Conversation may offer an optional command surface but must not be the persistence store. All seed content is fictional. Calendar, email, reminders and provider jobs remain off until separately authorized.
+The UI shows empty, loading, saved, error, and recovery states. Keyboard controls, readable labels, narrow layouts, and explicit conflict actions are part of the normal workflow. Conversation can help organize a task, while the database remains the source of saved state.
 
-## Proposed operations and ownership
+## Backup and restore
 
-Reuse existing authenticated/injected owner and Space scopes in the storage/service boundary. Add task creation, read, revision-checked update, completion/reopen, soft archive and list filters. Each mutation needs a stable operation ID bound to the exact payload. Identical retries return the original result; conflicting reuse refuses; a stale expected revision must not overwrite a newer edit.
+Export a consistent snapshot and restore it into a new empty store. Task and note IDs, revisions, content, and receipt history must match the exported snapshot. A restored store receives a new database-instance identity so a pending browser write cannot accidentally target a replacement store.
 
-A task record needs a stable ID, title, explicit status, optional due time with timezone, revision, creation/update timestamps and source note references. A note needs stable ID, body, revision and attachment references, not raw embedded credentials. Existing IDs and migration records must survive upgrade. Do not trust owner identity sent in browser JSON as proof of authority.
+Never restore over an existing database. Verify the archive and migration compatibility, show the result, and let the user choose the restored store. Keep the original database and archive until that review is complete.
 
-## Verify
+## Recovery
 
-Required checks: fresh database creation and migration; canonical input validation; wrong owner/Space; duplicate request; conflicting operation ID; stale revision; lost acknowledgment; cancellation; interruption with UNKNOWN rather than auto-replay; consistent export snapshot; archive corruption; restore to occupied destination; traversal and symlink rejection; and reopen in a separate process. Test source export without private data.
+If an update's result is uncertain, read its original operation before issuing a new ID. Preserve conflicting versions and let the user reconcile them. Inspect the original restore destination after an interrupted publication; keep partial output available for diagnosis.
 
-Browser acceptance covers empty/loading/success/error/recovery states, keyboard navigation, meaningful labels, narrow-screen overflow, persistent edits and wrong-target refusal. A receipt from synthetic callbacks must be labeled synthetic. A static publish or working local page is not proof of a native Muse bridge.
+## Verification
 
-## Failure and recovery
+A useful end-to-end check creates three tasks and two notes, edits one of each, reopens the workspace, exports it, and restores into a new database. Compare IDs, fields, revisions, and hashes.
 
-Never restore over an existing owner's database. Make a new destination, verify the manifest and migration compatibility, then present the result for a deliberate owner selection. If an update's outcome is uncertain, query its original operation before issuing a new ID. Keep conflicting versions and let the owner reconcile; do not silently pick the newest timestamp.
+Regression coverage includes malformed input, wrong owner or Space, duplicate requests, conflicting operation IDs, stale revisions, lost responses, interruption, consistent export, corrupt archives, occupied destinations, traversal, symlinks, and reopening in a separate process. Browser checks cover keyboard use, labels, narrow screens, preserved drafts, and refusal of a write to the wrong store.
 
-## Scope and evidence
-
-This is a source-bound extension plan for the existing `SpaceCompanion` / `PersonalCompanion` implementation. The first shipping milestone is the narrow persistence journey above with a working UI, not five unfinished dashboards. The broader five-foundation/fifteen-toolbench plan remains separate. Native deployment, client account binding, real connector effects and Watch acceptance are not prerequisites for the local source milestone and are not claimed by it.
-
-## Implemented boundary
-
-The runnable UI and archive API are in the [Daily Desk guide](../spaces/DAILY_DESK.md). A restored store preserves task/note IDs, revisions and receipt history, but intentionally gets a new database-instance identity so pending browser writes cannot target a replacement store. Existing Space request/callback policy stays separate and disabled by default. Future iterations must retain that distinction.
+[Daily Desk](../spaces/DAILY_DESK.md) · [Architecture](../ARCHITECTURE.md) · [Development](../DEVELOPMENT.md)

@@ -31,8 +31,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api repos/${{ github.repository }}/releases/tags/v1.1.0 > "$RUNNER_TEMP/release.json"
-          python -B scripts/check_release_links.py "$RUNNER_TEMP/release.json"
+          release_tag="$(python -c 'import json; print(json.load(open("presets/catalog.json"))["release"])')"
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$release_tag" > "$RUNNER_TEMP/release.json"
+          tag_head="$(gh api "repos/$GITHUB_REPOSITORY/commits/$release_tag" --jq .sha)"
+          gh release download "$release_tag" --repo "$GITHUB_REPOSITORY" \
+            --pattern SHA256SUMS --pattern RELEASE_MANIFEST.json --dir "$RUNNER_TEMP/muse-release"
+          python -B scripts/check_release_links.py "$RUNNER_TEMP/release.json" \
+            --manifest "$RUNNER_TEMP/muse-release/RELEASE_MANIFEST.json" \
+            --checksums "$RUNNER_TEMP/muse-release/SHA256SUMS" \
+            --expected-head "$GITHUB_SHA" --tag-head "$tag_head"
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

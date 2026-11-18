@@ -28,6 +28,6 @@ Return the exact source identity, measured result, uncertainty and next action. 
 
 Unknown prior external effect requires readback and HOLD before retry.
 
-## Installation boundary
+## Use with your assistant
 
-This skill is original source guidance. It is exported in disabled state with each starter, not installed into native Muse, nor permission to run tools, schedule tasks, or access private memory.
+Apply this procedure to the current task using the tools and account access authorized for that work. Preserve the user's preferences and memory. Configure any additional tool through the host's supported setup, and obtain approval when an action needs it.

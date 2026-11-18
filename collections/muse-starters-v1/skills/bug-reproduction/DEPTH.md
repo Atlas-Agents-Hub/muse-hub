@@ -35,7 +35,7 @@ Write the failing regression, then the smallest fix and controls. Keep the red o
 
 **Method:** Compare [5, 7] with the empty-list control, then run an assertion on the original function. The missing final slice element is a specific causal hypothesis. Repair to sum(items), then check empty, singleton, mixed sign and multi-item cases.
 
-**Result:** The original regression fails with 5 != 12. The minimal patch changes one expression; the five-case fixture suite passes after the patch. This is an owned demonstration, not a claim that a Muse model produced the repair.
+**Result:** The original regression fails with 5 != 12. The minimal patch changes one expression; the five-case fixture suite passes after the patch. Keep the failing and passing test results with the patch.
 
 ## Failure diagnosis
 

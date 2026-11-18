@@ -18,11 +18,11 @@ from .native_skill_binding import _unsafe_source_path
 SCHEMA = "r33/coordinator-dropin-v1"
 SKILLS = {
     "coordinator_workgraph": {
-        "description": "Offline bounded dependency graph verification without dispatch",
+        "description": "Review a bounded dependency graph for cycles and held tasks",
         "method": "review",
     },
     "coordinator_evidence": {
-        "description": "Offline actor and reviewer assertion correlation; never native proof",
+        "description": "Correlate task results with supplied actor and reviewer evidence",
         "method": "evidence",
     },
 }
@@ -47,9 +47,9 @@ ROOMS = {
     },
 }
 EXTRA_FILES = {
-    "CONNECTORS.md": "# Optional connectors\n\nNo provider account is connected by this package. Discover schemas and verify owner grants in the actual receiving host before any effect.\n",
-    "BROWSER.md": "# Browser constraints\n\nNever navigate or act from the offline reviewer. Browser and CUA drivers require separate explicit task and host grants.\n",
-    "VOICE.md": "# Voice constraints\n\nNo voice identity or personal audio assets are bundled. Voice is optional and disabled.\n",
+    "CONNECTORS.md": "# Connectors\n\nUse the connectors available in your current Muse session. Check their actual schemas and permissions, follow the user's authorization, and verify consequential results through provider readback.\n",
+    "BROWSER.md": "# Browser\n\nUse the browser tools available in Muse for the user's task. Check the current page and target before acting, and reconcile uncertain results before retrying. The local graph reviewer helps plan those steps.\n",
+    "VOICE.md": "# Voice\n\nUse the voice settings configured in Muse and the user's accessibility preferences. Obtain consent before recording and stop playback when requested.\n",
 }
 BINDING = {
     "schema": "r33/coordinator-host-binding-v1",
@@ -69,30 +69,42 @@ HOOKS = {
     "managed_schedule": False,
     "event_handlers": [],
 }
-README = """# Coordinator — independent neutral native-format source pack
+README = """# Coordinator tools
 
-This package has a REAL local source-only graph/assertion reviewer.
-It is not a scheduler, mission compiler, Omnium executor, signed grant,
-host session or agent communication service.
+Review a workgraph, find dependency cycles, and compare task results with the
+evidence supplied for them. Use the profile in system-files/ and the three
+contexts in subchats/ with your existing Muse assistant.
 
-Two custom skills exist as **disabled metadata** and have a runnable offline
-script. Submit bounded synthetic JSON through stdin with --operation review
-or --operation evidence; --operation demo exercises a complete toy graph.
-No model/host, browser, remote computer, user file or recipient is invoked.
+## Try the graph review
 
-Each of the three subchat folders has distinct role, context, tools and memory
-instructions, but every native chat ID is null and not installed.
-The owner profile remains an inert draft and no existing Muse files are changed.
-Use scripts/doctor.py for self-check continuity, and source-repository
-coordinator-dropin-inspect for source-pinned inspection.
+With Python 3.12 or newer, run from this folder:
 
-Provider-level discovery, native call, recipient readback and wrong-owner
-refusal must be proven on a separate receiving owner account. Nothing here
-counts as WIRED, USED, USEFUL or public release.
+    python -I -B custom-skills/coordinator_workgraph/run.py --operation demo
+    python -I -B scripts/doctor.py
+
+The demo reviews a supplied example graph. The doctor checks the package files.
+For your own bounded JSON, send it through stdin with --operation review on the
+workgraph runner or --operation evidence on
+custom-skills/coordinator_evidence/run.py. Use each runner's --help for options.
+
+Treat the returned ordering as a plan. Resolve held tasks and confirm the
+user's authorization before carrying out consequential actions through Muse.
+Keep uncertain outcomes held until they can be reconciled with actual results.
+
+## Use with Muse
+
+Load the relevant profile, context and skill documents for the current task.
+Keep existing preferences and memory. Use your host's supported import controls
+when adding these components to its configuration. Preserve the supplied
+package separately from the live assistant's files.
+
+For a downloaded archive, compare its SHA-256 with the release checksum before
+extraction. The local doctor checks file consistency; publisher identity comes
+from the source through which you obtained the release.
 """
 
 RUNNER = r'''#!/usr/bin/env python3
-"""Offline Coordinator reviewer: never creates missions, schedules or grants."""
+"""Review workgraphs and supporting task evidence."""
 from __future__ import annotations
 import argparse
 import json
@@ -315,11 +327,10 @@ def _sidecars(profile: Path) -> dict[str, bytes]:
         content[prefix+"SKILL.md"]=(
             f"---\nname: {name}\ndescription: {config['description']}\n---\n\n"
             f"# Coordinator {config['method'].title()}\n\n"
-            f"Call run.py --operation {config['method']} only on bounded synthetic "
-            "or explicitly approved data. The offline runner cannot grant owner "
-            "authority, dispatch work, create schedules or deliver a result. "
-            "The receiving host must independently register this skill. "
-            "Keep the package-local skills.yaml entry disabled.\n"
+            f"Use run.py --operation {config['method']} with reviewed, bounded JSON "
+            "through stdin. Read the returned holds and evidence gaps before carrying "
+            "out the plan. Use Muse's connected tools and the user's authorization "
+            "for consequential actions; preserve uncertain outcomes for reconciliation.\n"
         ).encode("utf-8")
         content[prefix+"run.py"]=RUNNER.encode("utf-8")
     content["config/skills.yaml"]=("version: 1\nentries:\n"+"".join(
@@ -332,19 +343,19 @@ def _sidecars(profile: Path) -> dict[str, bytes]:
         prefix=f"subchats/{name}/"
         content[prefix+"ROLE.md"]=(
             f"# {name.replace('-',' ').title()}\n\n{config['purpose']}\n\n"
-            "This is an unbound role folder, NOT a real Muse subchat ID.\n"
+            "Use this context for the matching task in your existing Muse conversation.\n"
         ).encode("utf-8")
         content[prefix+"CONTEXT.md"]=(
             f"# Bounded context\n\n{config['actions']}\n\n"
-            "No parent transcript or original personal identity is inherited.\n"
+            "Load the relevant task facts and preserve the user's existing preferences.\n"
         ).encode("utf-8")
         content[prefix+"MEMORY.md"]=(
-            "# Memory custody\n\nNo personal history. Preserve only approved "
-            "task-local, source-pinned facts in receiving owner-controlled state.\n"
+            "# Memory\n\nPreserve approved task facts and their evidence in the user's "
+            "chosen storage. Keep unrelated private context out of the handoff.\n"
         ).encode("utf-8")
         content[prefix+"TOOLS.md"]=(
             f"# Tools and refusals\n\n{config['stop']}\n\n"
-            "Native tool discovery, permission, actor and recipient IDs are unverified.\n"
+            "Confirm the available tool, intended target and current permission before acting.\n"
         ).encode("utf-8")
         row={"schema":"r33/coordinator-subchat-v1","role":name,
              "handoff_to":config["next"],"native_chat_id":None,

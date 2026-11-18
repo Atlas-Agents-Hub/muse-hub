@@ -322,7 +322,7 @@ def _storyboard(plan):
         '</p><div class="meta"><span>' + str(len(plan["shots"])) + ' shots</span><span>' + str(plan["total_frames"]) + ' frames</span><span>' + str(project["fps"]) +
         ' fps</span><span>' + escape(project["aspect_ratio"]) + '</span></div></header><p class="notice"><strong>Textual storyboard.</strong> No images or animation have been rendered. Rights are caller declarations; human review is outstanding.</p>'
         '<section aria-label="Shot specifications" class="shots">' + ''.join(cards) + '</section><section><h2>Asset inventory</h2><div class="table-wrap" tabindex="0" aria-label="Scrollable asset inventory"><table><caption>Declared sources; not independently authenticated rights</caption><thead><tr><th>Asset</th><th>Kind</th><th>License declaration</th><th>Credit</th></tr></thead><tbody>' +
-        inventory + '</tbody></table></div></section><footer><p class="hash">Canonical brief SHA-256: ' + plan["brief_sha256"] + '</p><p>No network, native assistant, model, or external renderer is invoked.</p></footer></main></body></html>\n').encode("utf-8")
+        inventory + '</tbody></table></div></section><footer><p class="hash">Canonical brief SHA-256: ' + plan["brief_sha256"] + '</p><p>Save or print this storyboard and use its shot specifications to guide asset creation and production review.</p></footer></main></body></html>\n').encode("utf-8")
 
 
 def project_documents(value: object) -> tuple[dict[str, bytes], dict]:

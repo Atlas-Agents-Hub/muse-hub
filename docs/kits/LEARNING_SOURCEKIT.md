@@ -1,59 +1,48 @@
 # Study-session tool
 
-Create questions from supplied definitions, review them, record practice scores, and reopen study history in SQLite. The portable kit includes the LearningSession engine, a worked study example, tests, and a runner. Use Python 3.12+ on Windows, macOS, or Linux.
+Create questions from supplied definitions, review them, record practice scores, and reopen study history in SQLite. This portable Python kit includes the LearningSession engine, a disposable worked example, tests, and a runner. For assistant-guided study, start with [Learning Coach](../../presets/learning-coach/INSTALL.md).
 
-## Build and inspect
+## Build and verify
 
-From this repository:
+From the toolkit root with Python 3.12+:
 
-    PYTHONPATH=src python3 -B examples/export_learning_sourcekit.py --to "$HOME/learning-coach.zip"
-    PYTHONPATH=src python3 -B examples/export_learning_sourcekit.py --verify "$HOME/learning-coach.zip" --sha256 EXPECTED_SHA256
+```sh
+PYTHONPATH=src python3 -B examples/export_learning_sourcekit.py --to "$HOME/learning-coach.zip"
+PYTHONPATH=src python3 -B examples/export_learning_sourcekit.py --verify "$HOME/learning-coach.zip" --sha256 EXPECTED_SHA256
+```
 
-On Windows set $env:PYTHONPATH='src' and use python instead of python3.
-Export is create-only and requires an existing safe parent directory.
-Verification compares bounded exact canonical bytes without parsing or
-extracting a supplied ZIP. Recompressed or changed packages are refused even
-when their caller-supplied hash matches. A separately trusted digest is still
-needed to establish the expected artifact; hashes are not publisher signatures.
+Replace `EXPECTED_SHA256` with the digest from a trusted release record or your retained export result. On Windows PowerShell, set `$env:PYTHONPATH = "src"` and use `python` instead of `python3`. Choose a new output file in an existing private directory; the exporter preserves existing files.
 
-After verifying the digest and extracting into a new directory:
+Verification compares the supplied digest and the exact canonical archive bytes. A recompressed or changed ZIP is refused before extraction. Keep the expected digest with your download so you can verify the same package later.
 
-    python -I -B run.py --operation demo
-    python -I -B run.py --operation self-test
+## Try a study session
 
-The runner checks file names, sizes, hashes, directories, manifest and linked
-paths before importing the engine. Unknown files, import shadows, duplicate
-or deeply nested manifest JSON and optimized-interpreter operation refuse.
-It supports Windows, macOS and Linux Python 3.12+; platform-specific skips
-remain explicit. The extracted source does not need the original repository.
+Extract the verified kit into a new directory and open a terminal there:
 
-## Useful behavior and boundaries
+```sh
+python -I -B run.py --operation demo
+python -I -B run.py --operation self-test
+```
 
-The demo admits explicitly supplied definitions with source hashes and line
-locators, creates held drafts, approves one as a synthetic owner, gives the
-learner a question without its answer, records a score, reopens SQLite,
-recovers the same receipt and calculates next-day review eligibility.
-The original 25-test engine suite exercises wrong-role and cross-session
-refusal, source tampering, injected lessons, stale versions, duplicate scoring,
-transaction rollback and concurrent connections.
+The example registers supplied definitions, creates questions with source locations, reviews one as a fictional owner, records an answer, and reopens its receipt. It also checks that a correctly answered item becomes due again after 24 hours. The sample SQLite database is removed when the example finishes.
 
-The generator accepts only simple Term :: Definition. lines. Scoring is literal
-case/whitespace normalization, not semantic assessment. Review due times use
-HEURISTIC_V1_NOT_FSRS, not validated adaptive mastery. Material is caller-supplied
-and is not independently verified educational or clinical content.
+The runner checks its files, manifest, and paths before importing the engine. Changed source, unexpected import files, linked paths, and malformed manifests are refused. The extracted kit uses Python's standard library and runs independently of the original repository on Windows, macOS, and Linux.
 
-Read [the local study contract](../LEARNING_LOCAL_STUDY.md) before integration.
-LearningScope is not a credential: use a protected host-side authority callback,
-never model/browser identity fields. SQLite is unencrypted local storage and is
-not appropriate for clinical data, examination secrets or regulated scoring.
-Python -I is not an OS sandbox. Demo databases are disposable; user databases
-belong outside the immutable kit. Upgrade by creating a newly verified kit;
-there is no automatic migration or state-deleting uninstall.
+## Use your own study records
 
-## Repository regression commands
+Follow the [study-session integration guide](../LEARNING_LOCAL_STUDY.md) to add the library to an application. The question generator reads `Term :: Definition.` lines. Scoring compares case- and whitespace-normalized text, and the review queue uses a fixed next-day schedule for correct answers. Review questions and choose an assessment method appropriate to the learner and subject.
 
-    PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_learning_sourcekit.py -v
-    PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_learning_session.py -v
-    PYTHONPATH=src python3 -B -m unittest discover -s tests -v
+Resolve users and sessions through the application's trusted host callback. Keep owner review and learner access separate; browser fields and model text cannot authenticate a person. Store personal databases outside the kit in a protected directory, with suitable backup and retention controls. SQLite stores readable source text and answers, so use a system with the required protections for confidential examinations or sensitive information.
 
-[Learning Coach setup](../../presets/learning-coach/INSTALL.md) · [Study sessions](../LEARNING_LOCAL_STUDY.md)
+Run reviewed Python code in a workspace you control; isolated import mode is not an operating-system sandbox. Updates use a newly verified kit while your records remain in their own location. Review storage compatibility before moving existing data.
+
+## Developer checks
+
+```sh
+PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_learning_sourcekit.py -v
+PYTHONPATH=src python3 -B -m unittest discover -s tests -p test_learning_session.py -v
+```
+
+These checks exercise packaging, user and session separation, source changes, duplicate scoring, transaction rollback, and reopening.
+
+[Learning Coach setup](../../presets/learning-coach/INSTALL.md) · [Study sessions](../LEARNING_LOCAL_STUDY.md) · [Terminal](../TERMINAL.md)

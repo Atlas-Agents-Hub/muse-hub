@@ -18,4 +18,4 @@ Find the setup guide for the part of Muse Hub you want to use.
 
 ## Developer records
 
-The [technical feature register](discovery/hub-feature-status.json) records source dependencies and acceptance evidence for maintainers. Use the product guides above for current setup and everyday use. [Development](DEVELOPMENT.md) describes source checks and contribution work.
+The [release directory](discovery/hub-feature-status.json) links the current website, downloads and package manifest. [Development](DEVELOPMENT.md) explains how to run checks and contribute.

@@ -7,6 +7,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import subprocess
 import sys
 import unittest
@@ -109,16 +110,29 @@ class ProductTests(unittest.TestCase):
                 files=self.tool.specialist_kit_files(self.data,role)
                 first=self.tool.build_file_map_bytes(files)
                 self.assertEqual(first,self.tool.build_file_map_bytes(files))
-                with zipfile.ZipFile(io.BytesIO(first)) as z:z.extractall(temp)
+                base=Path(temp);archive=base/'kit.zip';extracted=base/'extracted'
                 env={k:v for k,v in os.environ.items() if k not in ('PYTHONPATH','PYTHONHOME')}
-                p=subprocess.run([sys.executable,'-B','run.py','--demo'],cwd=temp,env=env,
+                exported=subprocess.run([sys.executable,'-B',str(ROOT/'tools/muse_collection.py'),
+                    'kit',role,'--to',str(archive)],cwd=ROOT,env=env,
+                    capture_output=True,text=True,encoding='utf-8',timeout=30)
+                self.assertEqual(exported.returncode,0,exported.stdout+exported.stderr)
+                self.assertEqual(archive.read_bytes(),first)
+                with zipfile.ZipFile(archive) as z:z.extractall(extracted)
+                self.assertTrue((extracted/'START_HERE.md').is_file())
+                p=subprocess.run([sys.executable,'-B','run.py','--demo'],cwd=extracted,env=env,
                     capture_output=True,text=True,timeout=20)
                 self.assertEqual(p.returncode,0,p.stderr)
                 report=json.loads(p.stdout)
                 self.assertEqual(report['specialist'],role)
                 self.assertGreaterEqual(len(report['results']),2)
                 self.assertFalse(report['external_actions_performed'])
-                self.assertTrue((Path(temp)/'SPECIALIST.json').is_file())
+                self.assertTrue((extracted/'SPECIALIST.json').is_file())
+                guide=(extracted/'practice/README.md').read_text(encoding='utf-8')
+                command=re.search(r'python -B (practice/check_outputs.py check --case [^\n]+)',guide)
+                self.assertIsNotNone(command,guide)
+                checked=subprocess.run([sys.executable,'-B',*command.group(1).split()],cwd=extracted,env=env,
+                    capture_output=True,text=True,encoding='utf-8',timeout=20)
+                self.assertEqual(checked.returncode,0,checked.stdout+checked.stderr)
                 manifest=json.loads(files['MANIFEST.json'])
                 for name,expected in manifest['files'].items():
                     self.assertEqual(hashlib.sha256(files[name]).hexdigest(),expected)

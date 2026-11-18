@@ -23,7 +23,9 @@ ALIASES={'data-engineer':'data-engineering-architect','reliability-engineer':'in
 SHARED={'evidence_audit','safe_resume','research_verification','consent_and_effects','quality_handoff'}
 REVISION_MANIFEST='collections/muse-starters-v1/PUBLIC_REVISIONS.json'
 # An edited local manifest cannot authorize a new current source hash.
-REVISION_MANIFEST_SHA256='e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324'
+REVISION_MANIFEST_SHA256='1528144d34d26ec9aa448c5368173836169bff77da6448a9ecce6f070a98ff86'
+PREVIOUS_REVISION_PATH='docs/history/public-revisions-v1.1.0.json.txt'
+PREVIOUS_REVISION_SHA256='e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324'
 PUBLIC_BASELINE_SHA256='755ffbbf3bdb8abeb97bd69a6b59f616d4acd535a292b3228afff8e8e7cfe589'
 PROMOTION_PROVENANCE_SHA256='f8bde97a22c6002d38efc5d8c5edf96afdf3fa93585333fd1702e8b44e2324b5'
 
@@ -84,13 +86,16 @@ def validate_revisions(value:dict,baseline:dict,provenance:dict)->dict[str,dict]
     """Validate the closed historical/current mapping; bytes are checked below."""
     fields={'schema','historical_source_commit','review_base_commit',
             'public_baseline_sha256','promotion_provenance_sha256',
-            'reviewed_file_count','entries'}
+            'reviewed_file_count','entries','previous_revision_path','previous_revision_sha256'}
     require(type(value) is dict and set(value)==fields,'REVIEWED_REVISIONS_SCHEMA')
-    require(value['schema']=='muse-collection-reviewed-source-revisions/v1',
+    require(value['schema']=='muse-collection-reviewed-source-revisions/v2',
             'REVIEWED_REVISIONS_SCHEMA')
     require(value['historical_source_commit']=='491d6ceeb9a76fd1350f06d645dc0ed6131dda30'
-            and value['review_base_commit']=='befa77356804843ce3a056aed21cb14a9a836b3c',
+            and value['review_base_commit']=='49fb71a162173ac2dfb2c0f805e36109c34ac042',
             'REVIEWED_REVISIONS_LINEAGE')
+    require(value['previous_revision_path']==PREVIOUS_REVISION_PATH and
+            value['previous_revision_sha256']==PREVIOUS_REVISION_SHA256,
+            'REVIEWED_REVISIONS_PREVIOUS')
     require(value['public_baseline_sha256']==PUBLIC_BASELINE_SHA256 and
             value['promotion_provenance_sha256']==PROMOTION_PROVENANCE_SHA256,
             'REVIEWED_REVISIONS_LEDGER')
@@ -130,13 +135,22 @@ def validate_revisions(value:dict,baseline:dict,provenance:dict)->dict[str,dict]
 def _reviewed_revisions(root:Path,baseline:dict,provenance:dict)->dict[str,dict]:
     raw=_bytes(root,REVISION_MANIFEST)
     require(_digest(raw)==REVISION_MANIFEST_SHA256,'REVIEWED_REVISIONS_MANIFEST_DRIFT')
+    require(_digest(_bytes(root,PREVIOUS_REVISION_PATH))==PREVIOUS_REVISION_SHA256,
+            'REVIEWED_REVISIONS_PREVIOUS_DRIFT')
     # Parse the same byte sequence that passed the code-pinned digest check.
     value=json.loads(raw.decode('utf-8'))
     require(_digest(_bytes(root,'collections/muse-starters-v1/PUBLIC_BASELINE.json'))
             ==PUBLIC_BASELINE_SHA256,'PUBLIC_BASELINE_LEDGER_DRIFT')
     require(_digest(_bytes(root,'collections/muse-starters-v1/PROMOTION_PROVENANCE.json'))
             ==PROMOTION_PROVENANCE_SHA256,'PROMOTION_PROVENANCE_LEDGER_DRIFT')
-    return validate_revisions(value,baseline,provenance)
+    revisions=validate_revisions(value,baseline,provenance)
+    # Every declared historical archive is verified, including role-guide
+    # copies also retained by the earlier migration manifests below.
+    for ledger,rows in revisions.items():
+        for name,row in rows.items():
+            require(_digest(_bytes(root,row['archive_path']))==row['historical_sha256'],
+                    ('PUBLIC_SOURCE_DRIFT:' if ledger=='public' else 'IMPORTED_SOURCE_DRIFT:')+name)
+    return revisions
 
 
 def check_repository(root:Path=ROOT)->dict:

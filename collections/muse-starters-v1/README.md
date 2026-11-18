@@ -1,57 +1,58 @@
 # Muse Specialist Collection
 
-**15 specialists · 75 reusable skills · 25 workflows · 100 starters**
+**15 specialists · 75 reusable skills · 25 workflows · 100 task starters**
 
-Choose a practical specialization for the assistant you already use, or run the included local tools directly. The collection combines readable methods, detailed recovery playbooks, executable examples and create-only exports. It does not replace an assistant's identity, memory, account or permissions.
+Choose a specialist for your work, apply a focused method with your current assistant, or run an included Python tool. Each package brings together instructions, examples, and a start guide.
 
-## Start with the task
+## Start with a useful task
 
-Browse the [15-specialist catalog](../../docs/collection/SPECIALIST_CATALOG.md), [100 starters](CATALOG.md) and [75 skills](SKILL_INDEX.md). Follow the [working quickstart](../../docs/collection/SPECIALIST_QUICKSTART.md) to run an example, export a standalone kit or apply your own input records.
+1. [Choose an assistant](../../docs/DOWNLOAD_A_SPECIALIST.md), a [task starter](CATALOG.md), or a [skill](SKILL_INDEX.md).
+2. Download its ZIP from [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html).
+3. Extract it into its own folder, open `START_HERE.md`, and give Muse your task and source material.
+4. Follow the result checklist and keep the output in your working folder.
 
-```sh
-python tools/muse_collection.py demo data-engineer
-python tools/muse_collection.py show frontend-partner
-python tools/muse_collection.py build frontend-partner --to ./frontend-partner.zip
-python tools/muse_collection.py kit product-interface-designer --to ./interface-kit.zip
-```
+Assistant instructions need no Python. The [getting-started guide](../../docs/GETTING_STARTED.md) explains specialist setup, Main, and the three focused subchats.
 
-## What you get
+## What is included
 
-| Component | Purpose |
+| Component | Use it for |
 | --- | --- |
-| 15 specialist packages | Eleven existing role packages and four new executable extensions for data, reliability, automation and interface design. |
-| 75 reusable skills | Domain procedures with decisions, failure diagnosis, examples, output contracts and recovery. Eleven new skills also expose bounded local Python tools. |
-| 25 workflows | Optional task sequences with explicit deliverables. The five additions register actual local tool stages and name remaining host/human handoffs. |
-| 100 starters | Focused task configurations, not 100 new agents or processes. All original IDs remain available. |
-| 225 public practice cases | Authored positive and negative development examples, not hidden benchmark results or proof of model superiority. |
-| Deterministic exporters | Source-consistent ZIPs with per-file hashes and no overwriting of existing outputs. |
+| 15 specialists | Engineering, research, data, creative work, design, planning, and everyday tasks. |
+| 75 skills | A focused procedure with inputs, decisions, examples, and an output checklist. |
+| 25 workflows | A sequence of methods with clear inputs, handoffs, and expected results. |
+| 100 task starters | A useful selection of methods and context for a specific task. |
+| 225 practice cases | Worked exercises for trying the methods and checking recovery from common problems. |
+| Python tools | Reproducible calculations, data checks, local records, and package exports. |
 
-The original eleven-role protocol is preserved. Four existing starters additionally select the new specialist kits: data-cleaner, operations-analyst, customer-support-designer and frontend-partner. Their legacy base-role bindings remain unchanged.
+## Run a tool or create a package
 
-## Workflows you can inspect
+From the toolkit root with Python 3.12+:
 
 ```sh
-python tools/muse_collection.py workflow-demo pipeline-validation
-python tools/muse_collection.py workflow-demo incident-recovery
-python tools/muse_collection.py workflow-demo interface-quality
+python -B tools/muse_collection.py demo data-engineer
+python -B tools/muse_collection.py show frontend-partner
+python -B tools/muse_collection.py build frontend-partner --to "$HOME/frontend-partner.zip"
+python -B tools/muse_collection.py kit product-interface-designer --to "$HOME/interface-kit.zip"
 ```
 
-The demonstration returns real local-stage results and explicitly lists unexecuted handoffs. A declared approval field or supplied receipt is not authenticated authority. No workflow demonstration dispatches a provider, retries an uncertain effect or changes a live target.
+Use `python3` if that is your Python command. Choose a new export destination and keep the original download separate from your customized copy. [The tool quickstart](../../docs/collection/SPECIALIST_QUICKSTART.md) covers package contents and your own input records.
 
-## Quality and provenance
+## Try a workflow
 
-The original 64 skills and 20 workflow definitions remain preserved. Eleven new skills are original first-party work, with no copied donor prompt or invented upstream attribution. Each has five domain decisions, three failure diagnoses, two worked examples and three concrete public practice cases. Exact historical snapshots and projection tests preserve earlier collection contracts during the expansion.
+```sh
+python -B tools/muse_collection.py workflow-demo pipeline-validation
+python -B tools/muse_collection.py workflow-demo incident-recovery
+python -B tools/muse_collection.py workflow-demo interface-quality
+```
 
-Read [Sources](SOURCES.md), [Curation policy](CURATION_POLICY.md), [Evaluation](EVALUATION.md) and [Roadmap](ROADMAP.md). Local correctness and package checks are different from independent semantic judgment and repeated native Muse task comparisons. Broad comparative superiority is not established.
+Read the report to see which calculations ran and which handoffs need your next tool or decision. Connect services through their supported account setup when your task needs live data or an external action.
 
-The source exporter assumes a trusted local workspace without concurrent hostile filesystem changes. Hashes establish self-consistency, not publisher identity. The packages do not ship a replacement `IDENTITY.md`, `SOUL.md`, `MEMORY.md` or heartbeat. Native services are not activated automatically.
+## Keep your work
 
-## Historical qualification
+Preserve your assistant's preferences, memory, and project files. Keep personal data outside the toolkit directory. Updates are easier to compare when you retain the original package and your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) covers backup and recovery.
 
-The following record describes the earlier source baseline, not the current inventory or a new model-performance claim.
+## Development and attribution
 
-## R4 source qualification
+The [source catalog](SOURCES.md) records references and licenses. [Development](../../docs/DEVELOPMENT.md) explains repository checks and contribution work. The collection's technical data retains stable IDs, source history, and evaluation records for maintainers.
 
-The final 28 foundation-only skills received R4 depth and 84 new public exercises. All 64 existing skill instructions are now depth-expanded; the collection still has 100 selectable starters and 20 optional workflows. The original R4 source was qualified on A/B/C (397 focused tests and 2,041 full-suite tests per host, with platform skips reported), then privately integrated at commit 82abced781e2603a022e1c378a486b5a2e49cf7e. GitHub Actions run 43262169201 passed on that exact commit. These are historical source checks, not installed-assistant or native-model performance certification.
-
-R2 and R3 procedures, all starter IDs and the existing 11 specialist-family bindings remain preserved. The 192 public case examples are development fixtures, not unseen held-out tests. Actual independently validated Muse superiority and public release are not established; the starter packages do not install a new agent identity, memory or execution runtime.
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Skills](SKILL_INDEX.md) · [Task starters](CATALOG.md) · [Terminal](../../docs/TERMINAL.md)

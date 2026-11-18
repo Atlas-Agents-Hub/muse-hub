@@ -93,7 +93,8 @@ class ReviewedSourceRevisionGuards(unittest.TestCase):
    'collections/muse-starters-v1/PUBLIC_BASELINE.json':'755ffbbf3bdb8abeb97bd69a6b59f616d4acd535a292b3228afff8e8e7cfe589',
    'collections/muse-starters-v1/PROMOTION_PROVENANCE.json':'f8bde97a22c6002d38efc5d8c5edf96afdf3fa93585333fd1702e8b44e2324b5',
    'collections/muse-starters-v1/R3_BASELINE_ASSETS.json':'3d53f30e013a0d9ff3134b4fb852df059ab26f98a3660ec4b635dd29c134203f',
-   'collections/muse-starters-v1/PUBLIC_REVISIONS.json':'e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324',
+   'collections/muse-starters-v1/PUBLIC_REVISIONS.json':'1528144d34d26ec9aa448c5368173836169bff77da6448a9ecce6f070a98ff86',
+   'docs/history/public-revisions-v1.1.0.json.txt':'e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324',
   }
   for name,digest in expected.items():
    with self.subTest(path=name):self.assertEqual(hashlib.sha256((R/name).read_bytes()).hexdigest(),digest)
@@ -120,6 +121,7 @@ class ReviewedSourceRevisionGuards(unittest.TestCase):
   mutations=(
    ('SCHEMA',lambda x:x.update(approved=True)),
    ('LINEAGE',lambda x:x.update(historical_source_commit='0'*40)),
+   ('PREVIOUS',lambda x:x.update(previous_revision_sha256='0'*64)),
    ('COUNT',lambda x:x['entries'].pop()),
    ('PATH',lambda x:x['entries'].__setitem__(1,copy.deepcopy(x['entries'][0]))),
    ('HISTORY',lambda x:x['entries'][0].update(original_path='../private.txt')),
@@ -136,6 +138,8 @@ class ReviewedSourceRevisionGuards(unittest.TestCase):
   from unittest.mock import patch
   rows={row['original_path']:row for row in self.revisions['entries']}
   names=['presets/catalog.json','tools/muse_collection.py',
+         'presets/adversarial-verifier/INSTALL.md','presets/adversarial-verifier/README.md',
+         'docs/collection/SPECIALIST_QUICKSTART.md',
          next(name for name in rows if name.endswith('/SKILL.md'))]
   original=M._bytes
   for name in names:
@@ -145,6 +149,12 @@ class ReviewedSourceRevisionGuards(unittest.TestCase):
     def reader(root,path,checked=target):return b'tampered' if path==checked else original(root,path)
     with self.subTest(path=target),patch.object(M,'_bytes',side_effect=reader):
      with self.assertRaisesRegex(M.CompatibilityError,reason):M.check_repository(R)
+ def test_previous_review_snapshot_tampering_is_refused(self):
+  from unittest.mock import patch
+  original=M._bytes
+  def reader(root,path):return b'changed previous review' if path==M.PREVIOUS_REVISION_PATH else original(root,path)
+  with patch.object(M,'_bytes',side_effect=reader):
+   with self.assertRaisesRegex(M.CompatibilityError,'REVIEWED_REVISIONS_PREVIOUS_DRIFT'):M.check_repository(R)
  def test_original_ledger_rewrites_are_refused(self):
   from unittest.mock import patch
   original=M._bytes

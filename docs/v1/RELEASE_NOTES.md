@@ -1,6 +1,13 @@
-# Muse Hub v1.1.0
+# Muse Hub v1.1.1
 
 Choose a specialist, open its package, and start with your own task.
+
+## Improved in this update
+
+- Clear setup instructions throughout the downloads and local apps.
+- Correct skill-guide paths and complete practice files in exported kits.
+- Easier keyboard navigation, readable focus indicators and working resource links with JavaScript disabled.
+- Release checks that match every package, checksum and download link to the website version.
 
 ## What is included
 
@@ -20,6 +27,6 @@ Assistant instructions require no Python. Optional local programs list their req
 
 ## Downloads and updates
 
-Use the [v1.1.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.0) and compare each download with its `SHA256SUMS` entry. Keep your original download and customized working copy separately. Preserve preferences, memory, credentials, and saved databases when updating.
+Use the [v1.1.1 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1) and compare each download with its `SHA256SUMS` entry. Keep your original download and customized working copy separately. Preserve preferences, memory, credentials, and saved databases when updating.
 
 [Get started](../GETTING_STARTED.md) · [Terminal](../TERMINAL.md) · [Setup and saved data](../INSTALL_AND_PERSISTENCE.md) · [Release history](../RELEASES.md)

@@ -16,7 +16,7 @@ Notes: prototype exists; testing is incomplete; next review is unscheduled.
 
 Ask: **Read the supplied brief, identify the source marker, and produce a three-part outline. Separate the working prototype from the untested claims. Do not change my identity, memory settings or permissions.**
 
-The result should use the actual provided notes, retain the incomplete testing and avoid inventing a scheduled review. This works as a reasoning task without pretending that an agent has installed a new skill or connected another account.
+The result should use the supplied notes, retain the incomplete testing, and identify the unscheduled review as a next step.
 
 ## Choose a manageable context packet
 
