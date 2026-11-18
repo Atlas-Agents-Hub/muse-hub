@@ -1,0 +1,189 @@
+{
+  "allowed_hosts": [
+    "v2.convertapi.com",
+    "www.convertapi.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Media management",
+  "id": "convertapi",
+  "name": "ConvertAPI",
+  "operations": [
+    {
+      "description": "Convert a file to another format with any of ConvertAPI's converters, such as Word to PDF or PDF to JPG. Extra file inputs (like a template or overlay file) are not supported here; use Custom API Call for those.",
+      "id": "convert_file",
+      "inputs": [
+        {
+          "description": "The format of the file you are converting.",
+          "label": "From Format",
+          "name": "from",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "What to convert the file into.",
+          "label": "To Format",
+          "name": "to",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The file to convert.",
+          "label": "File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "Files to add after the main one, for converters that combine files.",
+          "label": "Additional Files",
+          "name": "additionalFiles",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Options of the chosen converter. Leave empty for the defaults.",
+          "label": "Conversion Options",
+          "name": "options",
+          "required": false,
+          "type": "DynamicProperties"
+        }
+      ],
+      "kind": "action",
+      "name": "Convert File",
+      "source_path": "convertapi/src/lib/actions/convert-file.ts",
+      "source_sha256": "44cb0777e0f71f2e2cda9791291101f45a7ff4d9b654ff4e556565e178a56559",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/convertapi/src/lib/actions/convert-file.ts"
+    },
+    {
+      "description": "Combine several PDF files into one PDF, in the order you list them.",
+      "id": "merge_pdf",
+      "inputs": [
+        {
+          "description": "Add the PDFs in the order they should appear. At least two are needed.",
+          "label": "PDF Files",
+          "name": "files",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Merged file name, without the extension. Leave empty for a default.",
+          "label": "Output File Name",
+          "name": "fileName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only needed if the PDFs are password-protected. Used for every file.",
+          "label": "Password",
+          "name": "password",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Add a top-level bookmark for each merged file.",
+          "label": "Bookmark Each File",
+          "name": "bookmarksTableOfContents",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Scale every page to this size, or keep the original size.",
+          "label": "Page Size",
+          "name": "pageSize",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Rotate every page to this orientation, or keep the original.",
+          "label": "Page Orientation",
+          "name": "pageOrientation",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Merge PDF Files",
+      "source_path": "convertapi/src/lib/actions/merge-pdf.ts",
+      "source_sha256": "ff6552b41f1e4ad3803e415e6c75e972f16a54f7ab04f8cd32df324247aa6998",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/convertapi/src/lib/actions/merge-pdf.ts"
+    },
+    {
+      "description": "Split a PDF into several PDFs by page count, page ranges, single pages, matching text or bookmarks.",
+      "id": "split_pdf",
+      "inputs": [
+        {
+          "description": "The PDF to split.",
+          "label": "PDF File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "How the PDF is cut into parts.",
+          "label": "Split By",
+          "name": "mode",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Value Help",
+          "name": "valueHelp",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "What to split on. The format depends on the Split By mode.",
+          "label": "Split Value",
+          "name": "value",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Join the parts back into one PDF, e.g. to extract selected pages.",
+          "label": "Merge Parts Into One PDF",
+          "name": "mergeOutput",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Only needed if the PDF is password-protected.",
+          "label": "Password",
+          "name": "password",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Base name for the parts, without extension. Each part gets a number.",
+          "label": "Output File Name",
+          "name": "fileName",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Split PDF File",
+      "source_path": "convertapi/src/lib/actions/split-pdf.ts",
+      "source_sha256": "f0176057e3acb0537c62cb6513a42a8a03908e218a472c777f15b24df2db6f79",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/convertapi/src/lib/actions/split-pdf.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "ef1426fc455ceee8b748bd5a0232fd8c19785c74",
+    "index_path": "convertapi/src/index.ts",
+    "index_sha256": "87335812c9b1dc06319b8d8406fdcfca43d721c7352be9b20dae5943ba46b014",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "automation-engineer"
+  ]
+}

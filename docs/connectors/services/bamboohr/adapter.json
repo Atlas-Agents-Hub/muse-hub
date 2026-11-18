@@ -1,0 +1,71 @@
+{
+  "allowed_hosts": [
+    "api.bamboohr.com",
+    "documentation.bamboohr.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The subdomain used to access BambooHR. If you access BambooHR at https://mycompany.bamboohr.com, then the companyDomain is \"mycompany\"",
+        "label": "Company domain",
+        "name": "companyDomain",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API key', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Jobs",
+  "id": "bamboohr",
+  "name": "BambooHR",
+  "operations": [
+    {
+      "description": "Triggers when a specific field in a BambooHR report changes for any employee.",
+      "id": "reportFieldChanged",
+      "inputs": [
+        {
+          "description": "The ID of the BambooHR report to monitor (e.g., \"1\", \"2\", etc.)",
+          "label": "Report ID",
+          "name": "reportId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The name of the field to watch for changes (e.g., \"department\", \"jobTitle\", \"status\")",
+          "label": "Field to Monitor",
+          "name": "fieldToMonitor",
+          "required": true,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Report Field Changed",
+      "source_path": "bamboohr/src/lib/triggers/report-field-changed.ts",
+      "source_sha256": "fdaec20970c18d187408d5d9f593a04ed154aa02e53db37298d7d601140944c5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bamboohr/src/lib/triggers/report-field-changed.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7141eba16139ae91ed3a8757907687eb08529df6",
+    "index_path": "bamboohr/src/index.ts",
+    "index_sha256": "7fe636396ade547b0366f6cf395a9f636465bd1160d96652d6458fee0e12d96f",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator"
+  ]
+}

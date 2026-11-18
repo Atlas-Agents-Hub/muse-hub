@@ -1,0 +1,318 @@
+{
+  "allowed_hosts": [
+    "docs.getgrist.com",
+    "support.getgrist.com",
+    "team.getgist.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Domain URL",
+        "name": "domain",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "grist",
+  "name": "Grist",
+  "operations": [
+    {
+      "description": "Creates a new record in specific table.",
+      "id": "grist-create-record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "commonProps.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "commonProps.document_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "commonProps.table_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table_Columns",
+          "name": "table_columns",
+          "required": null,
+          "source_expression": "commonProps.table_columns",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Record",
+      "source_path": "grist/src/lib/actions/create-record.action.ts",
+      "source_sha256": "7a2330b46660c03b00e8028f9cb38ce005d3abafc5d61eef9d09aa183aabb001",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/grist/src/lib/actions/create-record.action.ts"
+    },
+    {
+      "description": "Search record by matching criteria.",
+      "id": "grist-search-record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "commonProps.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "commonProps.document_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "commonProps.table_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Column",
+          "name": "column",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Enter the search text. The search operation is case sensitive, exact text match, and supports column-type Text only.",
+          "label": "Value",
+          "name": "value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Record",
+      "source_path": "grist/src/lib/actions/search-record.action.ts",
+      "source_sha256": "5092e5da4fee8697e658f3a3f7f73a6095262e02138197f4cbd33bca7916a783",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/grist/src/lib/actions/search-record.action.ts"
+    },
+    {
+      "description": "Updates an existing record in specific table.",
+      "id": "grist-update-record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "commonProps.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "commonProps.document_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "commonProps.table_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record ID",
+          "name": "record_id",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Table_Columns",
+          "name": "table_columns",
+          "required": null,
+          "source_expression": "commonProps.table_columns",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Record",
+      "source_path": "grist/src/lib/actions/update-record.action.ts",
+      "source_sha256": "8e9d7405893d6d67fbe9c0936fe286bf18a0b534532fb246b3cb777ee444903f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/grist/src/lib/actions/update-record.action.ts"
+    },
+    {
+      "description": "Uploads attachments to specific document.",
+      "id": "grist-upload-attachments-to-document",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "commonProps.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "commonProps.document_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Attachment",
+          "name": "attachment",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "In case you want to change the name of the attachment.",
+          "label": "Attachment Name",
+          "name": "attachment_name",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Upload Attachment to Document",
+      "source_path": "grist/src/lib/actions/upload-attachments-to-document.action.ts",
+      "source_sha256": "7088489f8df324e97c4cfb8d3c30d7592be77a3bc79bcdab88f4c3803463be42",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/grist/src/lib/actions/upload-attachments-to-document.action.ts"
+    },
+    {
+      "description": "Triggers when a new record is added to the table.",
+      "id": "grist-new-record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "commonProps.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "commonProps.document_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "commonProps.table_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Readiness_Column",
+          "name": "readiness_column",
+          "required": null,
+          "source_expression": "commonProps.readiness_column",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Record",
+      "source_path": "grist/src/lib/triggers/new-record.trigger.ts",
+      "source_sha256": "d3c049a8a80d1a7a90043e0899b7948e51c8fc6e3f2f5d724b2d95952293c9a6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/grist/src/lib/triggers/new-record.trigger.ts"
+    },
+    {
+      "description": "Triggers when a record is updated in the table.",
+      "id": "grist-updated-record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "commonProps.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "commonProps.document_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "commonProps.table_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Readiness_Column",
+          "name": "readiness_column",
+          "required": null,
+          "source_expression": "commonProps.readiness_column",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Updated Record",
+      "source_path": "grist/src/lib/triggers/updated-record.trigger.ts",
+      "source_sha256": "bc06dd123cc0bac16b9a1c46de22ffdcdc56bbab0c6f8627d834f29b221ef792",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/grist/src/lib/triggers/updated-record.trigger.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "092380a578d7a0385b3a10026578052f43e3cf48",
+    "index_path": "grist/src/index.ts",
+    "index_sha256": "f0c6b096314470311a240be3e06dd392cd85bf500a36e9576ef2cb6693dd122a",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder",
+    "garden-companion"
+  ]
+}

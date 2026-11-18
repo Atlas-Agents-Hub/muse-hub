@@ -1,0 +1,341 @@
+{
+  "allowed_hosts": [
+    "api.linkedin.com",
+    "learn.microsoft.com",
+    "www.linkedin.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://www.linkedin.com/oauth/v2/authorization"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "email",
+      "openid",
+      "profile",
+      "rw_organization_admin",
+      "w_member_social",
+      "w_organization_social"
+    ],
+    "token_urls": [
+      "https://www.linkedin.com/oauth/v2/accessToken"
+    ]
+  },
+  "category": "Social",
+  "id": "linkedin",
+  "name": "LinkedIn",
+  "operations": [
+    {
+      "description": "Post on a LinkedIn Company Page you manage",
+      "id": "create_company_update",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Company",
+          "name": "company",
+          "required": null,
+          "source_expression": "linkedinCommon.company",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Company_Visibility_Info",
+          "name": "company_visibility_info",
+          "required": null,
+          "source_expression": "linkedinCommon.companyVisibilityInfo",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Text",
+          "name": "text",
+          "required": null,
+          "source_expression": "linkedinCommon.text",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Image Url",
+          "name": "imageUrl",
+          "required": null,
+          "source_expression": "linkedinCommon.postImage",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Link_Preview_Info",
+          "name": "link_preview_info",
+          "required": null,
+          "source_expression": "linkedinCommon.linkPreviewInfo",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Link",
+          "name": "link",
+          "required": null,
+          "source_expression": "linkedinCommon.link",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Link Title",
+          "name": "linkTitle",
+          "required": null,
+          "source_expression": "linkedinCommon.linkTitle",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Link Description",
+          "name": "linkDescription",
+          "required": null,
+          "source_expression": "linkedinCommon.linkDescription",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Company Update",
+      "source_path": "linkedin/src/lib/actions/create-company-update.ts",
+      "source_sha256": "443808bd3369a1762c556e459bfe731132a47e0965a83dd931aa0b47e596262d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/create-company-update.ts"
+    },
+    {
+      "description": "Reserve a LinkedIn image URN and a URL to upload the bytes to",
+      "id": "create_image_upload_url",
+      "inputs": [
+        {
+          "description": "Who will own the image. Defaults to the connected member.",
+          "label": "Owner URN",
+          "name": "owner_urn",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Image Upload URL",
+      "source_path": "linkedin/src/lib/actions/create-image-upload-url.ts",
+      "source_sha256": "73eedf1f4fa96ed54df8d58768fdc68898914cc0817aa4bbd62cff3617812a62",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/create-image-upload-url.ts"
+    },
+    {
+      "description": "Publish a post on the connected LinkedIn member's personal profile",
+      "id": "create_member_post",
+      "inputs": [
+        {
+          "description": "Body of the post.",
+          "label": "Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Who can see the post.",
+          "label": "Visibility",
+          "name": "visibility",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Optional URL to attach as an article preview.",
+          "label": "Link URL",
+          "name": "link",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Link Title",
+          "name": "link_title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Link Description",
+          "name": "link_description",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Image",
+          "name": "image",
+          "required": null,
+          "source_expression": "linkedinCommon.imageUrl",
+          "type": "ProviderField"
+        },
+        {
+          "description": "URN of an image already uploaded to LinkedIn, for example urn:li:image:D4E10AQ.... Obtain it from Create Image Upload URL and PUT the bytes to that upload URL before posting.",
+          "label": "Image URN",
+          "name": "image_urn",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Member Post",
+      "source_path": "linkedin/src/lib/actions/create-member-post.ts",
+      "source_sha256": "2f7381c6a81efadaf835f153ce5874b9844b636e7d4f7dfa497cf84d0d003b5a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/create-member-post.ts"
+    },
+    {
+      "description": "Post on your personal LinkedIn profile",
+      "id": "create_share_update",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Text",
+          "name": "text",
+          "required": null,
+          "source_expression": "linkedinCommon.text",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Visibility",
+          "name": "visibility",
+          "required": null,
+          "source_expression": "linkedinCommon.visibility",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Image Url",
+          "name": "imageUrl",
+          "required": null,
+          "source_expression": "linkedinCommon.postImage",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Link_Preview_Info",
+          "name": "link_preview_info",
+          "required": null,
+          "source_expression": "linkedinCommon.linkPreviewInfo",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Link",
+          "name": "link",
+          "required": null,
+          "source_expression": "linkedinCommon.link",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Link Title",
+          "name": "linkTitle",
+          "required": null,
+          "source_expression": "linkedinCommon.linkTitle",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Link Description",
+          "name": "linkDescription",
+          "required": null,
+          "source_expression": "linkedinCommon.linkDescription",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Share Update",
+      "source_path": "linkedin/src/lib/actions/create-share-update.ts",
+      "source_sha256": "d91055e599c1837bab15482b97097c4216276c811b6692e46c685b6bed277a10",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/create-share-update.ts"
+    },
+    {
+      "description": "Permanently delete a LinkedIn post by its URN",
+      "id": "delete_post",
+      "inputs": [
+        {
+          "description": "URN of the post to delete, for example urn:li:share:7212345678901234567.",
+          "label": "Post URN",
+          "name": "post_urn",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Post",
+      "source_path": "linkedin/src/lib/actions/delete-post.ts",
+      "source_sha256": "ed1773cf1c030da9d2da85782a3dd3a20488adbd6f624125255bbbe43c35112a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/delete-post.ts"
+    },
+    {
+      "description": "Get the profile of the LinkedIn member who owns the connection",
+      "id": "get_current_member_profile",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Current Member Profile",
+      "source_path": "linkedin/src/lib/actions/get-current-member-profile.ts",
+      "source_sha256": "0d5dbef25a19d928249dd0ecea6262a01781fd19149d965e2da8e406531e65b5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/get-current-member-profile.ts"
+    },
+    {
+      "description": "List the LinkedIn organization pages the connected member administers",
+      "id": "list_managed_organizations",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Managed Organizations",
+      "source_path": "linkedin/src/lib/actions/list-managed-organizations.ts",
+      "source_sha256": "020b99bf3a90ec880e13c932c9019b88b80ffd9c92b827c89736fd8fe813ecd7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/list-managed-organizations.ts"
+    },
+    {
+      "description": "Edit the commentary, call-to-action label or landing page of an existing LinkedIn post",
+      "id": "update_post_commentary",
+      "inputs": [
+        {
+          "description": "URN of the post to edit, for example urn:li:share:7212345678901234567.",
+          "label": "Post URN",
+          "name": "post_urn",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "New body text. Leave empty to keep the current text.",
+          "label": "Commentary",
+          "name": "commentary",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "New call-to-action button label. Leave empty to keep the current one.",
+          "label": "Call To Action Label",
+          "name": "content_call_to_action_label",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "New destination for the call-to-action button. Leave empty to keep the current one.",
+          "label": "Landing Page URL",
+          "name": "content_landing_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Post Commentary",
+      "source_path": "linkedin/src/lib/actions/update-post-commentary.ts",
+      "source_sha256": "f8e6beb5afa6b1038d092d70bc9608574dd849efaff865032b011f2f96c3b4bd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/update-post-commentary.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "1841f951abe34e5003e51a1e4eee2c59ba0b639a",
+    "index_path": "linkedin/src/index.ts",
+    "index_sha256": "45bbbbe79e98268a01b089b31745fc21db94e614b8f9e999c6786e763daad9ab",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "personal-companion",
+    "coordinator"
+  ]
+}

@@ -1,0 +1,424 @@
+{
+  "allowed_hosts": [
+    "api.clockify.me",
+    "reports.api.clockify.me"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Productivity",
+  "id": "clockify",
+  "name": "Clockify",
+  "operations": [
+    {
+      "description": "Creates a new in a specific project.",
+      "id": "create-task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "clockifyProps.projectId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Task Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Assignee Ids",
+          "name": "assigneeIds",
+          "required": null,
+          "source_expression": "clockifyProps.assigneeIds({ required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "clockify/src/lib/actions/create-task.ts",
+      "source_sha256": "b1aca0837802c4bc4a7c5ae0f814b133aed246aed118e00453b8d65a7a5eed6b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Creates a new time entry.",
+      "id": "create-time-entry",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Start Datetime",
+          "name": "start",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "End Datetime",
+          "name": "end",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Entry Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "clockifyProps.projectId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Task Id",
+          "name": "taskId",
+          "required": null,
+          "source_expression": "clockifyProps.taskId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Billable",
+          "name": "billable",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Tag Ids",
+          "name": "tagIds",
+          "required": null,
+          "source_expression": "clockifyProps.tagIds({ required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Time Entry",
+      "source_path": "clockify/src/lib/actions/create-time-entry.ts",
+      "source_sha256": "e3e7152ce7826ac4960743f989f9065c7796ee34e21b89b9d02317764e619239",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/actions/create-time-entry.ts"
+    },
+    {
+      "description": "Finds currently running timer on specified workspace.",
+      "id": "find-running-timer",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Running Timer",
+      "source_path": "clockify/src/lib/actions/find-running-timer.ts",
+      "source_sha256": "c914a4af09f0187e2f3febeb4a689ef9539e4347768a79a32fd63bbd06ecd81b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/actions/find-running-timer.ts"
+    },
+    {
+      "description": "Finds an existing task in a specific project.",
+      "id": "find-task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "clockifyProps.projectId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Task Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Exact Match ?",
+          "name": "exactMatch",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Task",
+      "source_path": "clockify/src/lib/actions/find-task.ts",
+      "source_sha256": "eb7aa1323fdf4606ccda54b5161f4416e87eb588f696a9e3440d83cd03f2d6cc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/actions/find-task.ts"
+    },
+    {
+      "description": "Finds a time entry by description, start datetime or end datetime.",
+      "id": "find-time-entry",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Start Datetime",
+          "name": "start",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "End Datetime",
+          "name": "end",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Entry Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "clockifyProps.projectId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Task Id",
+          "name": "taskId",
+          "required": null,
+          "source_expression": "clockifyProps.taskId({ required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Time Entry",
+      "source_path": "clockify/src/lib/actions/find-time-entry.ts",
+      "source_sha256": "14b38a9f09fcb21d0efcb0036565fa8b26c356567e70bdd4a1da5a96f195f6ea",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/actions/find-time-entry.ts"
+    },
+    {
+      "description": "Starts a new time entry.",
+      "id": "start-timer",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Entry Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "clockifyProps.projectId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Task Id",
+          "name": "taskId",
+          "required": null,
+          "source_expression": "clockifyProps.taskId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Billable",
+          "name": "billable",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Tag Ids",
+          "name": "tagIds",
+          "required": null,
+          "source_expression": "clockifyProps.tagIds({ required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Start Timer",
+      "source_path": "clockify/src/lib/actions/start-timer.ts",
+      "source_sha256": "4ce3cf287c7613affb35876162e93667cf8fb6da822d7e543f0ee258761fab21",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/actions/start-timer.ts"
+    },
+    {
+      "description": "Stops currently running timer on specified workspace.",
+      "id": "stop-timer",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Stop Timer",
+      "source_path": "clockify/src/lib/actions/stop-timer.ts",
+      "source_sha256": "b746ddd6beb9d5a5642264f0fa8e6f3c168fedb7ac4bade3594e9be70e7b9b4f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/actions/stop-timer.ts"
+    },
+    {
+      "description": "Triggers when a new task is created in specified project.",
+      "id": "new-task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "clockifyProps.projectId({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Task",
+      "source_path": "clockify/src/lib/triggers/new-task.ts",
+      "source_sha256": "31ab0de5e8e8d94c7bdda1928d23e08c5795c9bbca965b1daaf647b1b9a6b57c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/triggers/new-task.ts"
+    },
+    {
+      "description": "Triggers when a new time entry is created.",
+      "id": "new-time-entry",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "clockifyProps.projectId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Task Id",
+          "name": "taskId",
+          "required": null,
+          "source_expression": "clockifyProps.taskId({ required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Time Entry",
+      "source_path": "clockify/src/lib/triggers/new-time-entry.ts",
+      "source_sha256": "7562050d0d151b8f7a601c1b3b654e4ba7323735a1bdfb4980e8e16c55d0b437",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/triggers/new-time-entry.ts"
+    },
+    {
+      "description": "Triggers when a new entry is started and running.",
+      "id": "new-timer-started",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "clockifyProps.workspaceId({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Timer Started",
+      "source_path": "clockify/src/lib/triggers/new-timer-started.ts",
+      "source_sha256": "5640230d54eb167eefd7e4bb71e15f28425724afbecffb21113f278fdd29d762",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/clockify/src/lib/triggers/new-timer-started.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "4e6fdd9f5bbc37770939e38218c4e43b21004862",
+    "index_path": "clockify/src/index.ts",
+    "index_sha256": "78436112a50c043388f4eab912038cb5eb21cd4a1954e3a579c379d6f3dda6be",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

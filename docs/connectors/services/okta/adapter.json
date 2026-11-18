@@ -1,0 +1,312 @@
+{
+  "allowed_hosts": [
+    "dev-12345.okta.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Okta organization domain (e.g., https://dev-12345.okta.com or dev-12345.okta.com)",
+        "label": "Okta Domain",
+        "name": "domain",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Your Okta API token (from Admin → Security → API → Tokens)",
+        "label": "API Token",
+        "name": "apiToken",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Developer & Infra",
+  "id": "okta",
+  "name": "Okta",
+  "operations": [
+    {
+      "description": "Activate a previously deactivated or pending user",
+      "id": "activate_user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "User Id",
+          "name": "userId",
+          "required": null,
+          "source_expression": "userIdDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Send activation email to user",
+          "label": "Send Email",
+          "name": "sendEmail",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Activate User",
+      "source_path": "okta/src/lib/actions/activate-user.ts",
+      "source_sha256": "fd8a7a8775f70675a07ede255f6226acee826e93f09572adf1c90f2f2ce0a5b7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/actions/activate-user.ts"
+    },
+    {
+      "description": "Add a user to a specific Okta group",
+      "id": "add_user_to_group",
+      "inputs": [
+        {
+          "description": "",
+          "label": "User Id",
+          "name": "userId",
+          "required": null,
+          "source_expression": "userIdDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Group Id",
+          "name": "groupId",
+          "required": null,
+          "source_expression": "groupIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Add User to Group",
+      "source_path": "okta/src/lib/actions/add-user-to-group.ts",
+      "source_sha256": "b14b431aec84846500f9b7df6cbd94b698e5f392be68eb410c61d2b2d48cdaf6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/actions/add-user-to-group.ts"
+    },
+    {
+      "description": "Creates a user without credentials and sends account creation prompt via email",
+      "id": "create_user",
+      "inputs": [
+        {
+          "description": "User first name",
+          "label": "First Name",
+          "name": "firstName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "User last name",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "User email address",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "User login (typically same as email)",
+          "label": "Login",
+          "name": "login",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "User mobile phone number",
+          "label": "Mobile Phone",
+          "name": "mobilePhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Send account creation email to user",
+          "label": "Send Email",
+          "name": "sendEmail",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create User",
+      "source_path": "okta/src/lib/actions/create-user.ts",
+      "source_sha256": "d7f48a5a4422d9e3632f61a3cbbc70f681cfd64a44292b8bca6105719caee899",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/actions/create-user.ts"
+    },
+    {
+      "description": "Deactivate (disable) a user in Okta",
+      "id": "deactivate_user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "User Id",
+          "name": "userId",
+          "required": null,
+          "source_expression": "userIdDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Send deactivation email to user",
+          "label": "Send Email",
+          "name": "sendEmail",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Deactivate User",
+      "source_path": "okta/src/lib/actions/deactivate-user.ts",
+      "source_sha256": "fc18123edeacbd7ef0daed2aa356da895fb60470ab7e55d2562d2a35cae066ad",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/actions/deactivate-user.ts"
+    },
+    {
+      "description": "Search for an Okta group by name",
+      "id": "find_group_by_name",
+      "inputs": [
+        {
+          "description": "The group name to search for",
+          "label": "Group Name",
+          "name": "groupName",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Group by Name",
+      "source_path": "okta/src/lib/actions/find-group-by-name.ts",
+      "source_sha256": "c4fc119e4a78c29d2618d050fffdc1ae6fba0a6020e7e6fc2af1dac2587713d6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/actions/find-group-by-name.ts"
+    },
+    {
+      "description": "Look up an Okta user by their email address",
+      "id": "find_user_by_email",
+      "inputs": [
+        {
+          "description": "The user email address",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User by Email",
+      "source_path": "okta/src/lib/actions/find-user-by-email.ts",
+      "source_sha256": "e36f0d1b5d34c47633a202e874f40fb18b1be45d26a5c9bc5f90216c3c0c7a7d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/actions/find-user-by-email.ts"
+    },
+    {
+      "description": "Temporarily suspend a user in Okta",
+      "id": "suspend_user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "User Id",
+          "name": "userId",
+          "required": null,
+          "source_expression": "userIdDropdown()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Suspend User",
+      "source_path": "okta/src/lib/actions/suspend-user.ts",
+      "source_sha256": "7349deb007109f64a17363441f30efc009704e7ef4bfd9e8613ec17f95403dc4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/actions/suspend-user.ts"
+    },
+    {
+      "description": "Update user profile information",
+      "id": "update_user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "User Id",
+          "name": "userId",
+          "required": null,
+          "source_expression": "userIdDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Updated first name",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Updated last name",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Updated email address",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Updated mobile phone number",
+          "label": "Mobile Phone",
+          "name": "mobilePhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "JSON object with custom profile attributes",
+          "label": "Custom Attributes",
+          "name": "customAttributes",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Update User",
+      "source_path": "okta/src/lib/actions/update-user.ts",
+      "source_sha256": "468ec111d3e5cadf2b1292e3530934c84f3a82330e2504f3d955dca2ccd8ce35",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/actions/update-user.ts"
+    },
+    {
+      "description": "Fires when a new Okta event is generated",
+      "id": "new_event",
+      "inputs": [
+        {
+          "description": "Select which event types to trigger on",
+          "label": "Event Types to Monitor",
+          "name": "eventTypes",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Name for the Okta Event Hook (optional)",
+          "label": "Hook Name",
+          "name": "hookName",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Event",
+      "source_path": "okta/src/lib/triggers/new-event.ts",
+      "source_sha256": "65e4796b85f47d486c2299baa13ae38070230f88d22c12cc50d3fbf8ece51d69",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/okta/src/lib/triggers/new-event.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "24e690440a379caa821408a9c52da8a4c4ffd90d",
+    "index_path": "okta/src/index.ts",
+    "index_sha256": "e7f1d692f8abe371b29b02703b74b69cf5a8278bef997180d2a06d85681c94f0",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "software-engineer",
+    "infrastructure-reliability-engineer",
+    "automation-engineer",
+    "reverse-engineering-researcher"
+  ]
+}

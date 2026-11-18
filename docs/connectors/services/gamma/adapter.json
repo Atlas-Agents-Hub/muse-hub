@@ -1,0 +1,159 @@
+{
+  "allowed_hosts": [
+    "gamma.app",
+    "public-api.gamma.app"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: \"API Key\", description: \"Paste your API key here.\", required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Design",
+  "id": "gamma",
+  "name": "Gamma",
+  "operations": [
+    {
+      "description": "Create a new Gamma generation job.",
+      "id": "generateGamma",
+      "inputs": [
+        {
+          "description": "The folder to save the generated gamma into.",
+          "label": "Folder",
+          "name": "folderId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Text used to generate your gamma (1-400,000 characters).",
+          "label": "Input Text",
+          "name": "inputText",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "How you want your inputText to be modified.",
+          "label": "Text Mode",
+          "name": "textMode",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The type of artifact you want to create.",
+          "label": "Format",
+          "name": "format",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The theme from Gamma to be used. Defaults to workspace default.",
+          "label": "Theme Name",
+          "name": "themeName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "How many cards to create (default 10). Pro: 1-50, Ultra: 1-75.",
+          "label": "Number of Cards",
+          "name": "numCards",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "How your content will be divided into cards. Use '---' in text for breaks.",
+          "label": "Card Split",
+          "name": "cardSplit",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Extra specifications about the desired content and layouts (1-500 characters).",
+          "label": "Additional Instructions",
+          "name": "additionalInstructions",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Additional file types for saving your gamma.",
+          "label": "Export As",
+          "name": "exportAs",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "JSON object for text attributes (e.g., amount, tone, audience, language).",
+          "label": "Text Options",
+          "name": "textOptions",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "JSON object for image attributes (e.g., source, model, style).",
+          "label": "Image Options",
+          "name": "imageOptions",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "JSON object for card attributes (e.g., dimensions).",
+          "label": "Card Options",
+          "name": "cardOptions",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "JSON object for sharing attributes (e.g., workspaceAccess, externalAccess).",
+          "label": "Sharing Options",
+          "name": "sharingOptions",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Generate Gamma",
+      "source_path": "gamma/src/lib/actions/generate-gamma.ts",
+      "source_sha256": "5a4d0670250599ae5573ff664fc620a40ef41dd1d4a6bc25c196090b0b63aa85",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gamma/src/lib/actions/generate-gamma.ts"
+    },
+    {
+      "description": "Given a Generation ID, fetch the status, outputs, metadata, etc.",
+      "id": "getGeneration",
+      "inputs": [
+        {
+          "description": "The ID of the generation job (from the \"Generate Gamma\" action).",
+          "label": "Generation ID",
+          "name": "generationId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Generation",
+      "source_path": "gamma/src/lib/actions/get-generation.ts",
+      "source_sha256": "1d6fc6fd02343c8cbd7cc2e6382948b76eaf2b47ff0080cbc3c8903404da463f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gamma/src/lib/actions/get-generation.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "138c178de3eeb49050c4b35d9f55469b738a07aa",
+    "index_path": "gamma/src/index.ts",
+    "index_sha256": "85f7d3cd9effa298b251b7a615d0f267ebcfd32f63695b0739e59bc8a919d303",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer"
+  ]
+}

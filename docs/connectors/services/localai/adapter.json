@@ -1,0 +1,237 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The address of your LocalAI server, for example http://localhost:8080/v1. It must be reachable from Muse.",
+        "label": "Server URL",
+        "name": "base_url",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "One of the API keys your server was started with (--api-keys or API_KEY). Leave empty if the server has no keys.",
+        "label": "Access Token",
+        "name": "access_token",
+        "required": false,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "AI & ML",
+  "id": "localai",
+  "name": "LocalAI",
+  "operations": [
+    {
+      "description": "Ask LocalAI anything you want!",
+      "id": "ask_localai",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "localaiCommon.modelDropdown({ displayName: 'Model', description: 'The chat model on your LocalAI server that will write the answer.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Question",
+          "name": "prompt",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Higher is more random, lower is more focused. Defaults to 0.9.",
+          "label": "Temperature",
+          "name": "temperature",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Longest answer to generate, in tokens. Defaults to 2048.",
+          "label": "Maximum Tokens",
+          "name": "maxTokens",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Nucleus sampling, from 0 to 1. Defaults to 1.",
+          "label": "Top P",
+          "name": "topP",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "From -2 to 2. Higher repeats lines less. Defaults to 0.",
+          "label": "Frequency penalty",
+          "name": "frequencyPenalty",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "From -2 to 2. Higher moves to new topics. Defaults to 0.6.",
+          "label": "Presence penalty",
+          "name": "presencePenalty",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Messages sent before the question, each with a role and content.",
+          "label": "Roles",
+          "name": "roles",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Ask LocalAI",
+      "source_path": "localai/src/lib/actions/send-prompt.ts",
+      "source_sha256": "712e4c9e3b0d231cdd607ce1d3a448370af58e87d7c498fe38e6f8b8f28c6432",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/localai/src/lib/actions/send-prompt.ts"
+    },
+    {
+      "description": "Turn text into a vector for semantic search or clustering.",
+      "id": "create_embedding",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "localaiCommon.modelDropdown({ displayName: 'Model', description: 'An embedding model installed on your LocalAI server.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The text to turn into a vector.",
+          "label": "Text",
+          "name": "input",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Embedding",
+      "source_path": "localai/src/lib/actions/create-embedding.ts",
+      "source_sha256": "08c5a70aaa3745fb58ce6c51f08888ea8e0c88fd3f6f3b53c93ab496dfd937a2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/localai/src/lib/actions/create-embedding.ts"
+    },
+    {
+      "description": "List the models installed on your LocalAI server.",
+      "id": "list_models",
+      "inputs": [
+        {
+          "description": "Only return models whose id includes this text.",
+          "label": "Name Contains",
+          "name": "contains",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Models",
+      "source_path": "localai/src/lib/actions/list-models.ts",
+      "source_sha256": "ec621dd3294aa078b4d2a0389ffd0c48752fc40a9a2e93544a96fb15469f576f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/localai/src/lib/actions/list-models.ts"
+    },
+    {
+      "description": "Turn text into a spoken audio file.",
+      "id": "text_to_speech",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "localaiCommon.modelDropdown({ displayName: 'Model', description: 'A text-to-speech model installed on your LocalAI server.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The text to read aloud.",
+          "label": "Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "For models with several voices. Empty uses the default.",
+          "label": "Voice",
+          "name": "voice",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Not every LocalAI backend supports every format.",
+          "label": "Audio Format",
+          "name": "format",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Name for the audio file, without the extension.",
+          "label": "File Name",
+          "name": "fileName",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Text to Speech",
+      "source_path": "localai/src/lib/actions/text-to-speech.ts",
+      "source_sha256": "e0ec461c88c6372ef4f0e0d467e7d5e62131ea07b8dc07fa03e9bffb2b6221b4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/localai/src/lib/actions/text-to-speech.ts"
+    },
+    {
+      "description": "Turn speech in an audio file into text.",
+      "id": "transcribe_audio",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "localaiCommon.modelDropdown({ displayName: 'Model', description: 'A speech-recognition model (for example whisper) installed on your LocalAI server.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The recording to transcribe.",
+          "label": "Audio",
+          "name": "audio",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "Language code of the speech. Empty auto-detects.",
+          "label": "Language",
+          "name": "language",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Transcribe Audio",
+      "source_path": "localai/src/lib/actions/transcribe-audio.ts",
+      "source_sha256": "ba72c34f084c7bda49b15d0678861b6b17a3c1f5fb23e070ba0d1c33e2dfc51f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/localai/src/lib/actions/transcribe-audio.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "994d51c805e91dbd23bc36767959fabf1adb9a84",
+    "index_path": "localai/src/index.ts",
+    "index_sha256": "98ad79876e9ef89a7f80a36fe2b23e52ee10dc92dee7113bfae0ff0eeb3325be",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "model-builder",
+    "research-evaluator",
+    "software-engineer"
+  ]
+}

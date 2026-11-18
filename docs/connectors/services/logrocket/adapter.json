@@ -1,0 +1,170 @@
+{
+  "allowed_hosts": [
+    "api.logrocket.com",
+    "app.logrocket.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Monitoring",
+  "id": "logrocket",
+  "name": "LogRocket",
+  "operations": [
+    {
+      "description": "Create or update user information and traits in LogRocket to contextualize user behavior.",
+      "id": "identifyUser",
+      "inputs": [
+        {
+          "description": "Your LogRocket organization ID (found in Settings > General Settings, or in your App ID before the slash)",
+          "label": "Organization ID",
+          "name": "orgId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Your LogRocket app/project ID (found in Settings > General Settings, or in your App ID after the slash)",
+          "label": "App ID",
+          "name": "appId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique identifier for the user",
+          "label": "User ID",
+          "name": "userId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The user's name (max 1024 characters)",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The user's email address (max 1024 characters)",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Unix timestamp in milliseconds indicating when this data was collected (optional)",
+          "label": "Timestamp",
+          "name": "timestamp",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "User traits as key-value pairs (e.g., {\"plan\": \"free\", \"age\": 43}). Values will be converted to strings.",
+          "label": "Traits",
+          "name": "traits",
+          "required": false,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Identify User",
+      "source_path": "logrocket/src/lib/actions/identify-user.ts",
+      "source_sha256": "f908018593e816a8c9e5d9313ad653e54d6c4e339f325a5cb3f15e237c665aff",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/logrocket/src/lib/actions/identify-user.ts"
+    },
+    {
+      "description": "Request session highlights for a user. Results will be sent to the webhook URL when ready.",
+      "id": "requestHighlights",
+      "inputs": [
+        {
+          "description": "Your LogRocket organization ID (found in Settings > General Settings, or in your App ID before the slash)",
+          "label": "Organization ID",
+          "name": "orgId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Your LogRocket project ID (found in Settings > General Settings, or in your App ID after the slash)",
+          "label": "Project ID",
+          "name": "projectId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The email of the user to get highlights for",
+          "label": "User Email",
+          "name": "userEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The ID of the user from LogRocket.identify() calls",
+          "label": "User ID",
+          "name": "userId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Start of the time range for sessions (optional)",
+          "label": "Start Time",
+          "name": "timeRangeStart",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "End of the time range for sessions (optional)",
+          "label": "End Time",
+          "name": "timeRangeEnd",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "URL where highlights results will be posted when ready. You can get this from the \"Highlights Ready\" trigger.",
+          "label": "Webhook URL",
+          "name": "webhookUrl",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Request Highlights",
+      "source_path": "logrocket/src/lib/actions/request-highlights.ts",
+      "source_sha256": "7555672e7c6bdca674789cd5a5e9866786820803a5dbfba97d1c631ab9999897",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/logrocket/src/lib/actions/request-highlights.ts"
+    },
+    {
+      "description": "Trigger when session highlights are ready. Use this webhook URL when requesting highlights.",
+      "id": "highlightsReady",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": false,
+          "type": "MarkDown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Highlights Ready",
+      "source_path": "logrocket/src/lib/triggers/highlights-ready.ts",
+      "source_sha256": "a00c8e23dbf7b31d00961fe318f0dece0c172a2c6d0b4f03b32c70a5edc73a7d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/logrocket/src/lib/triggers/highlights-ready.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "9f7c850ea12522129ce14cdf1a00ff70886793a6",
+    "index_path": "logrocket/src/index.ts",
+    "index_sha256": "f5588459e5e805840ba28c72620c3d588ac73ebf9e062b7fa10e3153d7f69f8a",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "infrastructure-reliability-engineer",
+    "software-engineer",
+    "adversarial-verifier",
+    "reverse-engineering-researcher"
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Broker host name or IP, without scheme or port (for example rabbitmq.example.com).",
+        "label": "Host",
+        "name": "host",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Username",
+        "label": "Username",
+        "name": "username",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', description: 'Password', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "AMQP port. Usually 5672, or 5671 with TLS.",
+        "label": "Port",
+        "name": "port",
+        "required": true,
+        "type": "Number"
+      },
+      {
+        "description": "Virtual host name. Leave empty for the default \"/\".",
+        "label": "Virtual Host",
+        "name": "vhost",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "Connect with TLS. Most hosted brokers require this.",
+        "label": "Use TLS (amqps)",
+        "name": "useTls",
+        "required": false,
+        "type": "Checkbox"
+      },
+      {
+        "description": "Optional. Base URL of the RabbitMQ Management plugin (for example http://localhost:15672). Uses the same username and password.",
+        "label": "Management API URL",
+        "name": "managementUrl",
+        "required": false,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Developer & Infra",
+  "id": "rabbitmq",
+  "name": "RabbitMQ",
+  "operations": [
+    {
+      "description": "Send a message on a RabbitMQ exchange",
+      "id": "sendMessageToExchange",
+      "inputs": [
+        {
+          "description": "The name of the exchange to send the message to",
+          "label": "Exchange",
+          "name": "exchange",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The routing key to use when sending the message",
+          "label": "Routing Key (Optional)",
+          "name": "routingKey",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The data to send",
+          "label": "Data",
+          "name": "data",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Message to Exchange",
+      "source_path": "rabbitmq/src/lib/actions/send-message-to-exchange.ts",
+      "source_sha256": "b1a0dc4a7b07fe77489b07a21bb9b419ba27a2eb254f9af164be266b2d95fa4b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/rabbitmq/src/lib/actions/send-message-to-exchange.ts"
+    },
+    {
+      "description": "Send a message on a RabbitMQ queue",
+      "id": "sendMessageToQueue",
+      "inputs": [
+        {
+          "description": "The name of the queue to send the message to. It must already exist.",
+          "label": "Queue",
+          "name": "queue",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The data to send",
+          "label": "Data",
+          "name": "data",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Message to Queue",
+      "source_path": "rabbitmq/src/lib/actions/send-message-to-queue.ts",
+      "source_sha256": "1496824c5828ae7914b893dee53fd9491e2e9e1db2fe6e3f9cebfdee93f9aa8a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/rabbitmq/src/lib/actions/send-message-to-queue.ts"
+    },
+    {
+      "description": "Triggers when a message is received on a RabbitMQ queue",
+      "id": "messageReceived",
+      "inputs": [
+        {
+          "description": "The name of the queue to listen to",
+          "label": "Queue",
+          "name": "queue",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The maximum number of messages to fetch per poll",
+          "label": "Max Messages Per Poll",
+          "name": "maxMessagesPerPoll",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Message Received",
+      "source_path": "rabbitmq/src/lib/triggers/message-received.ts",
+      "source_sha256": "602da34ec434ec92ec23d3d97be5d1893768eca02adb58661fecd67291929f1a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/rabbitmq/src/lib/triggers/message-received.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "0f0c555d22d5dcc5c4d1321a2e59867c1092d441",
+    "index_path": "rabbitmq/src/index.ts",
+    "index_sha256": "ae7a7eb21750823001cf94fa75ccd6293b2cf98c1fc2698e8e0f60b864a54150",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "software-engineer",
+    "infrastructure-reliability-engineer",
+    "automation-engineer"
+  ]
+}

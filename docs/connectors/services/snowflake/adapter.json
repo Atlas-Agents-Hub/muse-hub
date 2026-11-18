@@ -1,0 +1,443 @@
+{
+  "allowed_hosts": [
+    "cloud.activepieces.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://{account}.snowflakecomputing.com/oauth/authorize"
+    ],
+    "fields": [
+      {
+        "description": "Account icon (bottom-left) → **View account details** → copy the **Account Identifier**. Examples: `xy12345.us-east-1`, `orgname-accountname`.",
+        "label": "Account Identifier",
+        "name": "account",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Optional. Default database for queries. Find names under **Data → Databases**.",
+        "label": "Default Database",
+        "name": "database",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "Optional. Default virtual warehouse. Find names under **Admin → Warehouses**.",
+        "label": "Default Warehouse",
+        "name": "warehouse",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "Optional. Default security role. Find names under **Admin → Users & Roles → Roles**.",
+        "label": "Default Role",
+        "name": "role",
+        "required": false,
+        "type": "ShortText"
+      }
+    ],
+    "method": "OAuth 2.0 account connection; Provider connection fields; API key or access token",
+    "scopes": [
+      "refresh_token"
+    ],
+    "token_urls": [
+      "https://{account}.snowflakecomputing.com/oauth/token-request"
+    ]
+  },
+  "category": "Search & Data",
+  "id": "snowflake",
+  "name": "Snowflake",
+  "operations": [
+    {
+      "description": "Delete one or more rows from a Snowflake table that match a WHERE condition.",
+      "id": "delete_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.database",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema",
+          "name": "schema",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.schema",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "WHERE Condition",
+          "name": "where_clause",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Row",
+      "source_path": "snowflake/src/lib/actions/delete-row.ts",
+      "source_sha256": "7a9d1b6a76a6540eec8e82c14dd726f03cd3d2bc84139219d00ccd9e12198311",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/actions/delete-row.ts"
+    },
+    {
+      "description": "Retrieve a single row from a Snowflake table by matching a column value.",
+      "id": "get_row_by_id",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.database",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema",
+          "name": "schema",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.schema",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The column to search in (e.g. the primary key or unique identifier column).",
+          "label": "ID Column",
+          "name": "id_column",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The value to look up in the ID column.",
+          "label": "ID Value",
+          "name": "id_value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Row by ID",
+      "source_path": "snowflake/src/lib/actions/get-row-by-id.ts",
+      "source_sha256": "332d967d6a89a092170a6318f627b24f9a3a19168f2d3ddcf7a029f402022d8b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/actions/get-row-by-id.ts"
+    },
+    {
+      "description": "Retrieve the column definitions (name, data type, nullability, default) for a Snowflake table.",
+      "id": "get_table_schema",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.database",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema",
+          "name": "schema",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.schema",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.table",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Table Schema",
+      "source_path": "snowflake/src/lib/actions/get-table-schema.ts",
+      "source_sha256": "19ff3f44c7d30fb0adcf79765bbcefd7fe90bc068cfb121528cfdd33a890ee1e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/actions/get-table-schema.ts"
+    },
+    {
+      "description": "Insert a row into a table.",
+      "id": "insert-row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.database",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema",
+          "name": "schema",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.schema",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table_Column_Values",
+          "name": "table_column_values",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.table_column_values",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Insert Row",
+      "source_path": "snowflake/src/lib/actions/insert-row.ts",
+      "source_sha256": "14a4968eddad5efae07a82ad54f0da84e200aeb48fe193a8037cacc1eb4d54ae",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/actions/insert-row.ts"
+    },
+    {
+      "description": "List all tables in a Snowflake schema.",
+      "id": "list_tables",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.database",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema",
+          "name": "schema",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.schema",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Tables",
+      "source_path": "snowflake/src/lib/actions/list-tables.ts",
+      "source_sha256": "11f8e0ece30cc155786e24810c0252e3c1f5e5c9f3815171136ed5f8d2a93b5d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/actions/list-tables.ts"
+    },
+    {
+      "description": "Execute a SQL query against your Snowflake database and return the results as rows.",
+      "id": "runQuery",
+      "inputs": [
+        {
+          "description": "The SQL statement to execute. Use `:1`, `:2`… or `?` as placeholders for the **Parameters** values below to safely pass dynamic values without SQL injection risk.",
+          "label": "SQL Query",
+          "name": "sqlText",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Values to bind to the placeholders (`:1`, `:2`…, or `?`) in the SQL query. Provide them in the same order they appear in the query. Using parameters is the safe way to pass dynamic values — never concatenate user input directly into the SQL.",
+          "label": "Parameters",
+          "name": "binds",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Maximum time in milliseconds the query may run before Snowflake cancels it (applied as STATEMENT_TIMEOUT_IN_SECONDS, capped at 540 seconds). Defaults to 30 000 ms (30 seconds).",
+          "label": "Query Timeout (ms)",
+          "name": "timeout",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "An optional label sent to Snowflake to identify this client. Visible in query history under **Monitoring → Query History → Client Application**. Useful for auditing which automation triggered a query.",
+          "label": "Application Name",
+          "name": "application",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Run Query",
+      "source_path": "snowflake/src/lib/actions/run-query.ts",
+      "source_sha256": "3989df428fde2618db3ea5fc95186aa2746e5ccb72a10207ff6877bc90b40020",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/actions/run-query.ts"
+    },
+    {
+      "description": "Search for rows in a Snowflake table using an optional WHERE condition, ordering, and row limit.",
+      "id": "search_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.database",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema",
+          "name": "schema",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.schema",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Filter Condition",
+          "name": "where_clause",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Sort By",
+          "name": "order_by",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of rows to return (1–10 000). Defaults to 100.",
+          "label": "Row Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Rows",
+      "source_path": "snowflake/src/lib/actions/search-rows.ts",
+      "source_sha256": "8e701ff359acb451bccc2d791e3f6816908c276866638471b76fed55f0c6e5be",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/actions/search-rows.ts"
+    },
+    {
+      "description": "Update one or more rows in a Snowflake table that match a WHERE condition.",
+      "id": "update_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.database",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema",
+          "name": "schema",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.schema",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table_Update_Values",
+          "name": "table_update_values",
+          "required": null,
+          "source_expression": "snowflakeCommonProps.table_update_values",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "WHERE Condition",
+          "name": "where_clause",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Confirm that an empty WHERE condition should update every row in the table.",
+          "label": "Update All Rows",
+          "name": "update_all_rows",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Row",
+      "source_path": "snowflake/src/lib/actions/update-row.ts",
+      "source_sha256": "d864cf6326506f1192687350ca17e58c003dd474bdace2a4c214bc041720707a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/actions/update-row.ts"
+    },
+    {
+      "description": "Triggers when a new column is added to the selected table. Checked by polling every few minutes.",
+      "id": "new_column",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Column",
+      "source_path": "snowflake/src/lib/triggers/new-column.ts",
+      "source_sha256": "4bbaaae02da5d9ab5c3514f72de08662286ad773ebc0baa4543261f634423fcc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/triggers/new-column.ts"
+    },
+    {
+      "description": "Triggers when a row is inserted or updated in the selected table. Uses an \"updated at\" timestamp column you choose — any row whose timestamp is newer than the last check will fire the trigger.",
+      "id": "new_or_updated_row",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New or Updated Row",
+      "source_path": "snowflake/src/lib/triggers/new-or-updated-row.ts",
+      "source_sha256": "211faa4f7b094c3e7d02ca2b1a11748f72b57bcc23b5fb6032a1293baf68c548",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/triggers/new-or-updated-row.ts"
+    },
+    {
+      "description": "Triggers when a new row is inserted into the selected table. Uses a timestamp column you choose to detect rows added since the last check.",
+      "id": "new_row",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Row",
+      "source_path": "snowflake/src/lib/triggers/new-row.ts",
+      "source_sha256": "ea2af6e89c4424c9c22a19489e44951a8e5dc38925acc82a236c6e00df46e3a9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/snowflake/src/lib/triggers/new-row.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "099667e9f884bd9b9a8d65763a6115a41c82ed4b",
+    "index_path": "snowflake/src/index.ts",
+    "index_sha256": "8b4cb8371e07a2a3524ee731eaf7a5fed5f2bd466d374e1614bc5ce9941d6eba",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

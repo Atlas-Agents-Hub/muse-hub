@@ -1,0 +1,589 @@
+{
+  "allowed_hosts": [
+    "a.klaviyo.com",
+    "developers.klaviyo.com",
+    "www.klaviyo.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://www.klaviyo.com/oauth/authorize"
+    ],
+    "fields": [],
+    "method": "API key or access token; OAuth 2.0 account connection",
+    "scopes": [
+      "accounts:read",
+      "events:read",
+      "events:write",
+      "lists:read",
+      "lists:write",
+      "profiles:read",
+      "profiles:write",
+      "segments:read",
+      "subscriptions:read",
+      "subscriptions:write",
+      "tags:read"
+    ],
+    "token_urls": [
+      "https://a.klaviyo.com/oauth/token"
+    ]
+  },
+  "category": "Marketing",
+  "id": "klaviyo",
+  "name": "Klaviyo",
+  "operations": [
+    {
+      "description": "Add profiles to a specific list without changing subscription status.",
+      "id": "addProfileToList",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "listIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Profile_Id",
+          "name": "profile_id",
+          "required": null,
+          "source_expression": "allProfileIdsMultiSelectDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Profile to List",
+      "source_path": "klaviyo/src/lib/actions/add-profile-to-list.ts",
+      "source_sha256": "aded5afd3f2b4a7cee1bacd89a0cb074f7ee6d6919907bf79de08e752a156e97",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/actions/add-profile-to-list.ts"
+    },
+    {
+      "description": "Create a new subscriber list.",
+      "id": "createList",
+      "inputs": [
+        {
+          "description": "Name for the new list",
+          "label": "List Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create List",
+      "source_path": "klaviyo/src/lib/actions/create-list.ts",
+      "source_sha256": "5e4726c9f1c53a9171a53631b1724d6e69a5db355ed61943cb16aba4741639ed",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/actions/create-list.ts"
+    },
+    {
+      "description": "Add new user profile with email/SMS subscription options",
+      "id": "createProfile",
+      "inputs": [
+        {
+          "description": "Email address (recommended identifier)",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone number in E.164 format (e.g., +15005550006)",
+          "label": "Phone Number",
+          "name": "phone_number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Unique identifier from external system",
+          "label": "External ID",
+          "name": "external_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "first_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "last_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Company name",
+          "label": "Organization",
+          "name": "organization",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Language tag (e.g., en-US)",
+          "label": "Locale",
+          "name": "locale",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Job Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Profile image URL",
+          "label": "Image URL",
+          "name": "image",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Street address line 1",
+          "label": "Address 1",
+          "name": "address1",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Street address line 2",
+          "label": "Address 2",
+          "name": "address2",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "City",
+          "name": "city",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Country",
+          "name": "country",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Region/State",
+          "name": "region",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Zip Code",
+          "name": "zip",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "IANA timezone (e.g., America/New_York)",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "IP Address",
+          "name": "ip",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Latitude coordinate (4 decimal places recommended)",
+          "label": "Latitude",
+          "name": "latitude",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Longitude coordinate (4 decimal places recommended)",
+          "label": "Longitude",
+          "name": "longitude",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Key-value pairs for segmentation and personalization",
+          "label": "Custom Properties",
+          "name": "custom_properties",
+          "required": false,
+          "type": "Object"
+        },
+        {
+          "description": "Return subscription data in response",
+          "label": "Include Subscriptions",
+          "name": "include_subscriptions",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Return predictive analytics in response",
+          "label": "Include Predictive Analytics",
+          "name": "include_predictive_analytics",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Profile",
+      "source_path": "klaviyo/src/lib/actions/create-profile.ts",
+      "source_sha256": "cb3ea752ee1e48a1459d36985462246f8d4cf37aaf43ab5cfd7d6ec9a9e42236",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/actions/create-profile.ts"
+    },
+    {
+      "description": "Find lists by name with optional additional data",
+      "id": "findListByName",
+      "inputs": [
+        {
+          "description": "Enter list name",
+          "label": "List Name(s)",
+          "name": "search_query",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Include related flow and tag information",
+          "label": "Include Additional Data",
+          "name": "include_additional_data",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find List by Name",
+      "source_path": "klaviyo/src/lib/actions/find-list-by-name.ts",
+      "source_sha256": "bfa1e84c8c32af044ee3cc695b4108c54813541a31b0686b9f317a14b585648b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/actions/find-list-by-name.ts"
+    },
+    {
+      "description": "Find a profile using email or phone number.",
+      "id": "findProfileByEmailPhone",
+      "inputs": [
+        {
+          "description": "Enter an email address or phone number (E.164 format recommended)",
+          "label": "Email or Phone Number",
+          "name": "search_query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Include subscriptions and predictive analytics data",
+          "label": "Include Additional Data",
+          "name": "include_additional_data",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Profile by Email/Phone",
+      "source_path": "klaviyo/src/lib/actions/find-profile-by-email-phone.ts",
+      "source_sha256": "5f09bd902f43e1c1d3679b9acbfbabaa897d2494b4d037256ff5a5f47880255f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/actions/find-profile-by-email-phone.ts"
+    },
+    {
+      "description": "Find tags whose name contains the search query.",
+      "id": "findTagByName",
+      "inputs": [
+        {
+          "description": "Search for tags whose name contains this value.",
+          "label": "Tag Name",
+          "name": "search_query",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Tag by Name",
+      "source_path": "klaviyo/src/lib/actions/find-tag-by-name.ts",
+      "source_sha256": "dd1b162d61d75894df5473ab4a1b7a713f0782c0ef47d721597d20f999b20de7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/actions/find-tag-by-name.ts"
+    },
+    {
+      "description": "Subscribe profiles to email or SMS marketing on a list.",
+      "id": "subscribeProfile",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "listIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Profile_Ids",
+          "name": "profile_ids",
+          "required": null,
+          "source_expression": "profileIdsMultiSelectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Subscribe selected profiles to email marketing.",
+          "label": "Subscribe to Email",
+          "name": "subscribe_email",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Subscribe selected profiles to SMS marketing.",
+          "label": "Subscribe to SMS",
+          "name": "subscribe_sms",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Bypass double opt-in and mark as a historical import.",
+          "label": "Historical Import",
+          "name": "historical_import",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "ISO 8601 datetime when consent was given (required for historical import, e.g. 2024-01-15T10:00:00Z).",
+          "label": "Consent Date",
+          "name": "consented_at",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Label for the subscription source (e.g. \"Website Form\").",
+          "label": "Custom Source",
+          "name": "custom_source",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Subscribe Profile",
+      "source_path": "klaviyo/src/lib/actions/subscribe-profile.ts",
+      "source_sha256": "8eaa3b799df53a3e6013cc151ee5cdbab2d09adce3228a0f296e3a9312b90d67",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/actions/subscribe-profile.ts"
+    },
+    {
+      "description": "Update existing profile data and preferences.",
+      "id": "updateProfile",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Profile_Id",
+          "name": "profile_id",
+          "required": null,
+          "source_expression": "profileIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Individual's email address",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone number in E.164 format (e.g., +15005550006)",
+          "label": "Phone Number",
+          "name": "phone_number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Unique identifier from external system (e.g., POS system)",
+          "label": "External ID",
+          "name": "external_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Anonymous identifier for the profile",
+          "label": "Anonymous ID",
+          "name": "anonymous_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Individual's first name",
+          "label": "First Name",
+          "name": "first_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Individual's last name",
+          "label": "Last Name",
+          "name": "last_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Company or organization name",
+          "label": "Organization",
+          "name": "organization",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Locale in IETF BCP 47 format (e.g., en-US)",
+          "label": "Locale",
+          "name": "locale",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Individual's job title",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "URL pointing to profile image location",
+          "label": "Image URL",
+          "name": "image",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "First line of street address",
+          "label": "Address 1",
+          "name": "address1",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Second line of street address",
+          "label": "Address 2",
+          "name": "address2",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "City name",
+          "label": "City",
+          "name": "city",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Country",
+          "name": "country",
+          "required": null,
+          "source_expression": "countryCode",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Region within country (state/province)",
+          "label": "Region",
+          "name": "region",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Postal/zip code",
+          "label": "Zip Code",
+          "name": "zip",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "IANA timezone (e.g., America/New_York)",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "IP address of the profile",
+          "label": "IP Address",
+          "name": "ip",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Latitude coordinate (4 decimal places recommended)",
+          "label": "Latitude",
+          "name": "latitude",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Longitude coordinate (4 decimal places recommended)",
+          "label": "Longitude",
+          "name": "longitude",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Key/value pairs for custom profile properties",
+          "label": "Custom Properties",
+          "name": "custom_properties",
+          "required": false,
+          "type": "Object"
+        },
+        {
+          "description": "Include subscription data in response",
+          "label": "Include Subscriptions",
+          "name": "include_subscriptions",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Include predictive analytics data in response",
+          "label": "Include Predictive Analytics",
+          "name": "include_predictive_analytics",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Profile",
+      "source_path": "klaviyo/src/lib/actions/update-profile.ts",
+      "source_sha256": "20e21eb4426ce587d7b98430e402dcf4d1745478811495bfc74efb448e6dc6a6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/actions/update-profile.ts"
+    },
+    {
+      "description": "Triggers when a new profile is created in Klaviyo.",
+      "id": "newProfile",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Profile",
+      "source_path": "klaviyo/src/lib/triggers/new-profile.ts",
+      "source_sha256": "f402e59be5a4d4e3ceba2835c4b7c5226284c75b2cd5dad2e5b7987a3af3d7d1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/triggers/new-profile.ts"
+    },
+    {
+      "description": "Triggers when a profile is added to a specific list or segment.",
+      "id": "profile_added_to_list_or_segment",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Profile Added to List/Segment",
+      "source_path": "klaviyo/src/lib/triggers/profile-added-to-list-segment.ts",
+      "source_sha256": "b63023d35875438a02cab094c565ff55eef9dc8d09fa88aaa9673434759ebec3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/triggers/profile-added-to-list-segment.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "99c5570a7207f977dbc2b06a84c20ec122b24d40",
+    "index_path": "klaviyo/src/index.ts",
+    "index_sha256": "691681914ae69c8756c18af72bf7bb0ee2aa4b8f67fb8e4482f7056d519a0f5a",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

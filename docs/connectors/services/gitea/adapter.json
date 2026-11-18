@@ -1,0 +1,223 @@
+{
+  "allowed_hosts": [
+    "gitea.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Enter your Gitea instance URL (e.g., https://gitea.com)",
+        "label": "Base URL",
+        "name": "baseUrl",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "read:issue",
+      "read:repository",
+      "read:user",
+      "write:issue",
+      "write:repository"
+    ],
+    "token_urls": []
+  },
+  "category": "Developer & Infra",
+  "id": "gitea",
+  "name": "Gitea",
+  "operations": [
+    {
+      "description": "Adds a comment to an issue or pull request.",
+      "id": "create_comment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Repository",
+          "name": "repository",
+          "required": null,
+          "source_expression": "giteaCommon.repositoryDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The index of the issue or pull request.",
+          "label": "Issue/PR Index",
+          "name": "index",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Comment Body",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Comment to Issue/PR",
+      "source_path": "gitea/src/lib/actions/create-comment.ts",
+      "source_sha256": "5d84ec017d11745fecdb8c18c037f9a80dde34b20458c79b88d82102b984a985",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gitea/src/lib/actions/create-comment.ts"
+    },
+    {
+      "description": "Creates a new issue in a repository.",
+      "id": "create_issue",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Repository",
+          "name": "repository",
+          "required": null,
+          "source_expression": "giteaCommon.repositoryDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Body",
+          "name": "body",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Issue",
+      "source_path": "gitea/src/lib/actions/create-issue.ts",
+      "source_sha256": "7b8e4e320181c57e1f563743aed8252276b7d9f4d17937a3390e840cad602b94",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gitea/src/lib/actions/create-issue.ts"
+    },
+    {
+      "description": "Update repository settings.",
+      "id": "update_repo",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Repository",
+          "name": "repository",
+          "required": null,
+          "source_expression": "giteaCommon.repositoryDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The name of the repository.",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Private",
+          "name": "private",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Website",
+          "name": "website",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Repository",
+      "source_path": "gitea/src/lib/actions/update-repo.ts",
+      "source_sha256": "f3f32a358aba2d5812fd3de9808c561c92b4742208a344713c8800982b6b8b2e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gitea/src/lib/actions/update-repo.ts"
+    },
+    {
+      "description": "Triggers when a new commit is pushed to a repository.",
+      "id": "new_commit",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Repository",
+          "name": "repository",
+          "required": null,
+          "source_expression": "giteaCommon.repositoryDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Branch",
+          "name": "branch",
+          "required": null,
+          "source_expression": "giteaCommon.branchDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Commit",
+      "source_path": "gitea/src/lib/triggers/new-commit.ts",
+      "source_sha256": "0dec26b2707450628981b81f8284349d2dde420e4cfa6c6e04bbffc6f845e436",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gitea/src/lib/triggers/new-commit.ts"
+    },
+    {
+      "description": "Triggers when a new issue is created.",
+      "id": "new_issue",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Repository",
+          "name": "repository",
+          "required": null,
+          "source_expression": "giteaCommon.repositoryDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Issue",
+      "source_path": "gitea/src/lib/triggers/new-issue.ts",
+      "source_sha256": "5cf0d093057b0898b85fae500d9db86188d4255f52b49b8eeb4e838dc893836d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gitea/src/lib/triggers/new-issue.ts"
+    },
+    {
+      "description": "Triggers when a new pull request is created.",
+      "id": "new_pull_request",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Repository",
+          "name": "repository",
+          "required": null,
+          "source_expression": "giteaCommon.repositoryDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Pull Request",
+      "source_path": "gitea/src/lib/triggers/new-pull-request.ts",
+      "source_sha256": "2d5e13f42a74291b7fcb9c57295e387be02e2f32b159ff2383f361cff9b41322",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gitea/src/lib/triggers/new-pull-request.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7ed0f5a756a5e52acb05f584c69532dab78a6d0f",
+    "index_path": "gitea/src/index.ts",
+    "index_sha256": "ed2cc099baea61c68b6e5130d1f77a0a4283904e6ddc8f10aeb5f4d674b504d7",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "software-engineer",
+    "infrastructure-reliability-engineer",
+    "automation-engineer",
+    "reverse-engineering-researcher"
+  ]
+}

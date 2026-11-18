@@ -1,0 +1,225 @@
+{
+  "allowed_hosts": [
+    "plausible.io"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Marketing",
+  "id": "plausible",
+  "name": "Plausible Analytics",
+  "operations": [
+    {
+      "description": "Get aggregated analytics metrics for a time period",
+      "id": "get_aggregate_stats",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site_Id",
+          "name": "site_id",
+          "required": null,
+          "source_expression": "siteIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Period",
+          "name": "period",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Metrics",
+          "name": "metrics",
+          "required": true,
+          "type": "StaticMultiSelectDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Aggregate Stats",
+      "source_path": "plausible/src/lib/actions/get-aggregate-stats.action.ts",
+      "source_sha256": "2159782bbbeadd871446d354b6eeeb4dd4d5d1fdbb786e914f60ec4cf866d63e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/actions/get-aggregate-stats.action.ts"
+    },
+    {
+      "description": "Get details of a site including tracker script configuration",
+      "id": "get_site",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site_Id",
+          "name": "site_id",
+          "required": null,
+          "source_expression": "siteIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Site",
+      "source_path": "plausible/src/lib/actions/get-site.ts",
+      "source_sha256": "d3f0a6a916a265bdbf8a983328f151c42fb04079e5c909d586eabfc3fcd8a8d3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/actions/get-site.ts"
+    },
+    {
+      "description": "Break down traffic by page, source, country, or other dimensions",
+      "id": "get_breakdown",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site_Id",
+          "name": "site_id",
+          "required": null,
+          "source_expression": "siteIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Period",
+          "name": "period",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Breakdown By",
+          "name": "property",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Traffic Breakdown",
+      "source_path": "plausible/src/lib/actions/get-breakdown.action.ts",
+      "source_sha256": "f34332b161149276b00991a2fc83d18fde92ceb2ff59b584e2772934ca6ab379",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/actions/get-breakdown.action.ts"
+    },
+    {
+      "description": "Get a list of custom properties for a site",
+      "id": "list_custom_properties",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site_Id",
+          "name": "site_id",
+          "required": null,
+          "source_expression": "siteIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Custom Properties",
+      "source_path": "plausible/src/lib/actions/list-custom-properties.ts",
+      "source_sha256": "95442bb6c2d6acee0ad20de805ae7ed4a46f22e516413ac897c00c4d5415d08b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/actions/list-custom-properties.ts"
+    },
+    {
+      "description": "Get a list of goals for a site",
+      "id": "list_goals",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site_Id",
+          "name": "site_id",
+          "required": null,
+          "source_expression": "siteIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Goals",
+      "source_path": "plausible/src/lib/actions/list-goals.ts",
+      "source_sha256": "a9ea1de69f18e33205ad46f2e6f469fe403a76c2102f68be9025969724909307",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/actions/list-goals.ts"
+    },
+    {
+      "description": "Get a list of guests for a site",
+      "id": "list_guests",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site_Id",
+          "name": "site_id",
+          "required": null,
+          "source_expression": "siteIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Guests",
+      "source_path": "plausible/src/lib/actions/list-guests.ts",
+      "source_sha256": "927aab14f53aff1d0595364b07a760911b8c5361cdddff128e5afebe45d8cb6f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/actions/list-guests.ts"
+    },
+    {
+      "description": "Get a list of sites your Plausible account can access",
+      "id": "list_sites",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Sites",
+      "source_path": "plausible/src/lib/actions/list-sites.ts",
+      "source_sha256": "3a2294712d9aa98db50f7d1c0e8df7fd295103469cde9e5cc0c65dbcf3c83984",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/actions/list-sites.ts"
+    },
+    {
+      "description": "Get a list of teams your Plausible account can access",
+      "id": "list_teams",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Teams",
+      "source_path": "plausible/src/lib/actions/list-teams.ts",
+      "source_sha256": "8272d0ecd922bb850ef98bbb4c864dc04351390c7a00adca361096c810469531",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/actions/list-teams.ts"
+    },
+    {
+      "description": "Triggers once when current visitors exceed a threshold, then resets when they drop below it",
+      "id": "traffic_spike",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site_Id",
+          "name": "site_id",
+          "required": null,
+          "source_expression": "siteIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Trigger when visitors exceed this number",
+          "label": "Visitor Threshold",
+          "name": "threshold",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Traffic Spike",
+      "source_path": "plausible/src/lib/triggers/traffic-spike.trigger.ts",
+      "source_sha256": "c690780775aac68a5178bf0be9d4928fc20121a8cf2c644ada3a3a7caaa5e99d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/plausible/src/lib/triggers/traffic-spike.trigger.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "e3502f84523d61f6f9d5c6ef40d179064078ff15",
+    "index_path": "plausible/src/index.ts",
+    "index_sha256": "67785be4fd98f9b5a933f3aa22c3957fd178dea6797c0fdb806c9368e345c839",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

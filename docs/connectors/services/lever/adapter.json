@@ -1,0 +1,191 @@
+{
+  "allowed_hosts": [
+    "api.lever.co"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API key', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Jobs",
+  "id": "lever",
+  "name": "Lever",
+  "operations": [
+    {
+      "description": "Provide feedback to a candidate after an interview",
+      "id": "addFeedbackToOpportunity",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Feedback author",
+          "name": "performAs",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "",
+          "label": "Opportunity ID",
+          "name": "opportunityId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "If you select one, you must select an interview too",
+          "label": "Interview panel",
+          "name": "panelId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Mandatory is you select an interview panel",
+          "label": "Interview",
+          "name": "interviewId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Ignored if you select an interview panel and an interview",
+          "label": "Feedback template",
+          "name": "feedbackTemplateId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "",
+          "label": "Fields",
+          "name": "feedbackFields",
+          "required": true,
+          "type": "DynamicProperties"
+        }
+      ],
+      "kind": "action",
+      "name": "Add feedback to opportunity",
+      "source_path": "lever/src/lib/actions/add-feedback-to-opportunity.ts",
+      "source_sha256": "2cd4c843fa0ce18a729ac2236c4506b41dca86686531a99e7940e19dd1183c98",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lever/src/lib/actions/add-feedback-to-opportunity.ts"
+    },
+    {
+      "description": "Retrieve a single opportunity, i.e. an individual's unique candidacy or journey for a given job position",
+      "id": "getOpportunity",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Opportunity ID",
+          "name": "opportunityId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Expand",
+          "name": "expand",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Get opportunity",
+      "source_path": "lever/src/lib/actions/get-opportunity.ts",
+      "source_sha256": "dc8b9223b258f3e4f303e18d2994be25f3e0cb1eb8e2272b88fb47e4b4981903",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lever/src/lib/actions/get-opportunity.ts"
+    },
+    {
+      "description": "Get all feedback for a given opportunity, optionally for a given template",
+      "id": "listOpportunityFeedback",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Opportunity ID",
+          "name": "opportunityId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Feedback template",
+          "name": "template",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List opportunity feedback",
+      "source_path": "lever/src/lib/actions/list-opportunity-feedback.ts",
+      "source_sha256": "9b8e9107e5c58711efcc2e80f92e32adcc45124d1895bda6f58b88c3f4b13b72",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lever/src/lib/actions/list-opportunity-feedback.ts"
+    },
+    {
+      "description": "Get all forms for a given opportunity, optionally for a given form template",
+      "id": "listOpportunityForms",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Opportunity ID",
+          "name": "opportunityId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Form template",
+          "name": "template",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List opportunity forms",
+      "source_path": "lever/src/lib/actions/list-opportunity-forms.ts",
+      "source_sha256": "c762943e746419cf245111046aabf0eae3e59761b00eaacd71b472bf1cfcfc18",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lever/src/lib/actions/list-opportunity-forms.ts"
+    },
+    {
+      "description": "Change an Opportunity's current stage",
+      "id": "updateOpportunityStage",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Opportunity ID",
+          "name": "opportunityId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Stage",
+          "name": "stage",
+          "required": true,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Update opportunity stage",
+      "source_path": "lever/src/lib/actions/update-opportunity-stage.ts",
+      "source_sha256": "9873509afb346164cbce5283e836912ab22efd60e55e0fede951c67ae24d4453",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lever/src/lib/actions/update-opportunity-stage.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "afe8adb6d9aba139d20ef1ff1c939d3da3dea7d3",
+    "index_path": "lever/src/index.ts",
+    "index_sha256": "1524ef67c374a75bccba259003d46cdce9bbb78c5b13b7916e6562314b424e82",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator"
+  ]
+}

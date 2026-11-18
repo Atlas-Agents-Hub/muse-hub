@@ -1,0 +1,491 @@
+{
+  "allowed_hosts": [
+    "adb-1234567890123456.7.azuredatabricks.net",
+    "dbc-a1b2c3d4-e5f6.cloud.databricks.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Databricks workspace URL, e.g. https://dbc-a1b2c3d4-e5f6.cloud.databricks.com or https://adb-1234567890123456.7.azuredatabricks.net",
+        "label": "Workspace URL",
+        "name": "workspaceUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The service principal's client ID (also called application ID), e.g. 6b1d5c2e-0a4f-4c3b-9f1e-2d7a8b9c0d1e.",
+        "label": "Client ID",
+        "name": "clientId",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Client Secret",
+        "name": "clientSecret",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Client Secret', description: \"The OAuth secret generated on the service principal's Secrets tab.\", required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "databricks",
+  "name": "Databricks",
+  "operations": [
+    {
+      "description": "Asks a Genie space a question in plain language and returns the answer and query results.",
+      "id": "ask_genie",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Genie Space Id",
+          "name": "genieSpaceId",
+          "required": null,
+          "source_expression": "databricksProps.genieSpaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The question to ask, e.g. \"What were the top 5 products by revenue last month?\"",
+          "label": "Question",
+          "name": "question",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Optional. The Conversation ID from an earlier Ask Genie step, to ask a follow-up question in the same conversation.",
+          "label": "Conversation ID",
+          "name": "conversationId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Ask Genie",
+      "source_path": "databricks/src/lib/actions/ask-genie.ts",
+      "source_sha256": "d407c96cd609760798737c6452b049ba6ccd83a84e919e197c4d43c6380eda70",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/databricks/src/lib/actions/ask-genie.ts"
+    },
+    {
+      "description": "Finds rows in a Unity Catalog table where a column matches a value.",
+      "id": "find_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Warehouse Id",
+          "name": "warehouseId",
+          "required": null,
+          "source_expression": "databricksProps.warehouseId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Catalog Name",
+          "name": "catalogName",
+          "required": null,
+          "source_expression": "databricksProps.catalogName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema Name",
+          "name": "schemaName",
+          "required": null,
+          "source_expression": "databricksProps.schemaName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Name",
+          "name": "tableName",
+          "required": null,
+          "source_expression": "databricksProps.tableName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Column Name",
+          "name": "columnName",
+          "required": null,
+          "source_expression": "databricksProps.columnName({ required: false, displayName: 'Filter Column', description: 'Only return rows whose value in this column equals Filter Value. Leave empty to return the first rows of the table.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The value to match in the filter column, e.g. 1042 or jane@example.com.",
+          "label": "Filter Value",
+          "name": "filterValue",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of rows to return (1-10000). Defaults to 100.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Rows",
+      "source_path": "databricks/src/lib/actions/find-rows.ts",
+      "source_sha256": "dfbc0a1d45947b5959734e75dd12114e75892067dd8e6a4263aca514f425ec89",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/databricks/src/lib/actions/find-rows.ts"
+    },
+    {
+      "description": "Adds many rows to a Unity Catalog table in one statement.",
+      "id": "insert_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Warehouse Id",
+          "name": "warehouseId",
+          "required": null,
+          "source_expression": "databricksProps.warehouseId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Catalog Name",
+          "name": "catalogName",
+          "required": null,
+          "source_expression": "databricksProps.catalogName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema Name",
+          "name": "schemaName",
+          "required": null,
+          "source_expression": "databricksProps.schemaName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Name",
+          "name": "tableName",
+          "required": null,
+          "source_expression": "databricksProps.tableName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Batch",
+          "name": "batch",
+          "required": null,
+          "source_expression": "databricksProps.rowList({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Insert Multiple Rows",
+      "source_path": "databricks/src/lib/actions/insert-rows.ts",
+      "source_sha256": "1ff875f7853db5da5e1160c588ae2be69acd3abbbf88e83adddd9dba430d55f7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/databricks/src/lib/actions/insert-rows.ts"
+    },
+    {
+      "description": "Adds one row to a Unity Catalog table.",
+      "id": "insert_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Warehouse Id",
+          "name": "warehouseId",
+          "required": null,
+          "source_expression": "databricksProps.warehouseId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Catalog Name",
+          "name": "catalogName",
+          "required": null,
+          "source_expression": "databricksProps.catalogName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema Name",
+          "name": "schemaName",
+          "required": null,
+          "source_expression": "databricksProps.schemaName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Name",
+          "name": "tableName",
+          "required": null,
+          "source_expression": "databricksProps.tableName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Row Fields",
+          "name": "rowFields",
+          "required": null,
+          "source_expression": "databricksProps.rowFields({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Insert Row",
+      "source_path": "databricks/src/lib/actions/insert-row.ts",
+      "source_sha256": "2bf9e52f609b53306c97c2340ae75d0701493440326138f0828d044527f34f52",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/databricks/src/lib/actions/insert-row.ts"
+    },
+    {
+      "description": "Runs any SQL statement on a SQL warehouse and returns the result rows.",
+      "id": "run_query",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Warehouse Id",
+          "name": "warehouseId",
+          "required": null,
+          "source_expression": "databricksProps.warehouseId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The SQL statement to run. Use fully qualified table names and :name markers for values, e.g. SELECT * FROM main.sales.orders WHERE status = :status LIMIT 100",
+          "label": "SQL Query",
+          "name": "query",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Values for the :name markers in the query, e.g. status → shipped. Values are passed as strings; cast in SQL when needed, e.g. CAST(:amount AS DECIMAL(10,2)).",
+          "label": "Parameters",
+          "name": "parameters",
+          "required": false,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Run SQL Query",
+      "source_path": "databricks/src/lib/actions/run-query.ts",
+      "source_sha256": "2545e3d97f9c7df0e5b9f6d141d10cd0b56d64dc772fd7626da1ce179d458f1c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/databricks/src/lib/actions/run-query.ts"
+    },
+    {
+      "description": "Updates the rows of a Unity Catalog table where a column matches a value.",
+      "id": "update_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Warehouse Id",
+          "name": "warehouseId",
+          "required": null,
+          "source_expression": "databricksProps.warehouseId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Catalog Name",
+          "name": "catalogName",
+          "required": null,
+          "source_expression": "databricksProps.catalogName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema Name",
+          "name": "schemaName",
+          "required": null,
+          "source_expression": "databricksProps.schemaName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Name",
+          "name": "tableName",
+          "required": null,
+          "source_expression": "databricksProps.tableName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Column Name",
+          "name": "columnName",
+          "required": null,
+          "source_expression": "databricksProps.columnName({ required: true, displayName: 'Match Column', description: 'Rows whose value in this column equals Match Value are updated.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The value to look for in the match column, e.g. 1042 or jane@example.com.",
+          "label": "Match Value",
+          "name": "matchValue",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Row Fields",
+          "name": "rowFields",
+          "required": null,
+          "source_expression": "databricksProps.rowFields({ required: true, displayName: 'New Values', description: 'Fill in only the columns to change. Empty fields are left as they are.', })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Rows",
+      "source_path": "databricks/src/lib/actions/update-rows.ts",
+      "source_sha256": "03a8a024bed39796ad6a2a4bbb6264070372b926b76dced9aec7ed509791e6c6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/databricks/src/lib/actions/update-rows.ts"
+    },
+    {
+      "description": "Uploads a file to a Unity Catalog volume and, optionally, loads it into a table with COPY INTO.",
+      "id": "upload_file_to_volume",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Catalog Name",
+          "name": "catalogName",
+          "required": null,
+          "source_expression": "databricksProps.catalogName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema Name",
+          "name": "schemaName",
+          "required": null,
+          "source_expression": "databricksProps.schemaName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Volume Name",
+          "name": "volumeName",
+          "required": null,
+          "source_expression": "databricksProps.volumeName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The file to upload, e.g. a CSV or JSON file from an FTP, email or HTTP step.",
+          "label": "File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "Optional folder inside the volume, e.g. imports/orders. It is created if it does not exist.",
+          "label": "Folder",
+          "name": "folder",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Table Name",
+          "name": "tableName",
+          "required": null,
+          "source_expression": "databricksProps.tableName({ required: false, displayName: 'Load into Table', description: 'Optional. A table in the same catalog and schema to load the file into with COPY INTO. Leave empty to only upload the file.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Warehouse Id",
+          "name": "warehouseId",
+          "required": null,
+          "source_expression": "databricksProps.warehouseId({ required: false, description: 'The SQL warehouse that runs COPY INTO. Required when Load into Table is set.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "How the file is read when it is loaded into the table.",
+          "label": "File Format",
+          "name": "fileFormat",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "When the file has columns the table does not, add them to the table instead of failing.",
+          "label": "Add New Columns",
+          "name": "shouldMergeSchema",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Upload File to Volume",
+      "source_path": "databricks/src/lib/actions/upload-file-to-volume.ts",
+      "source_sha256": "3e5c235bd0e4837f6b026013287359ae420374984be52b1a3ce15876504860fc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/databricks/src/lib/actions/upload-file-to-volume.ts"
+    },
+    {
+      "description": "Updates the row with a matching key, or inserts it if no row matches (MERGE).",
+      "id": "upsert_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Warehouse Id",
+          "name": "warehouseId",
+          "required": null,
+          "source_expression": "databricksProps.warehouseId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Catalog Name",
+          "name": "catalogName",
+          "required": null,
+          "source_expression": "databricksProps.catalogName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Schema Name",
+          "name": "schemaName",
+          "required": null,
+          "source_expression": "databricksProps.schemaName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Name",
+          "name": "tableName",
+          "required": null,
+          "source_expression": "databricksProps.tableName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Column Name",
+          "name": "columnName",
+          "required": null,
+          "source_expression": "databricksProps.columnName({ required: true, displayName: 'Key Column', description: 'The column that identifies a row, e.g. id or email. A row with the same value is updated; otherwise a new row is inserted.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Row Fields",
+          "name": "rowFields",
+          "required": null,
+          "source_expression": "databricksProps.rowFields({ required: true, description: 'One field per table column. The key column must be filled in. Empty fields are not changed on update and inserted as NULL.', })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Upsert Row",
+      "source_path": "databricks/src/lib/actions/upsert-row.ts",
+      "source_sha256": "0553036b535bdb046d2b2eae60373a7f3a11b38f11dca4cde270aeadc24e7700",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/databricks/src/lib/actions/upsert-row.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "c45013e8e585e79c38151af1b69e2382f4637ae1",
+    "index_path": "databricks/src/index.ts",
+    "index_sha256": "6bc88ccfff17bdaa619455bdc5c6fd2013b8b4f5eb1b8419aac0f7002f34d467",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

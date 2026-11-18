@@ -1,0 +1,429 @@
+{
+  "allowed_hosts": [
+    "api.pandadoc.com",
+    "app.pandadoc.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Finance & Commerce",
+  "id": "pandadoc",
+  "name": "PandaDoc",
+  "operations": [
+    {
+      "description": "Finds contacts by exact email, or lists all contacts.",
+      "id": "find_contacts",
+      "inputs": [
+        {
+          "description": "Exact email to match. Leave empty to list all contacts.",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Contacts",
+      "source_path": "pandadoc/src/lib/actions/find-contacts.ts",
+      "source_sha256": "02a8d6128ca5a7c7347df5dc6063db32fb340351d74079af3eee2186eb32bd54",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/actions/find-contacts.ts"
+    },
+    {
+      "description": "Finds documents using filters such as name, status, template, folder, contact and dates.",
+      "id": "findDocument",
+      "inputs": [
+        {
+          "description": "Search documents by name or reference number",
+          "label": "Search Query",
+          "name": "q",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search for document by its specific ID",
+          "label": "Document ID",
+          "name": "id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter documents by status",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Exclude documents with this status",
+          "label": "Exclude Status",
+          "name": "status__ne",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Template_Id",
+          "name": "template_id",
+          "required": null,
+          "source_expression": "templateFilterSingleDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Form_Id",
+          "name": "form_id",
+          "required": null,
+          "source_expression": "formDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Folder_Uuid",
+          "name": "folder_uuid",
+          "required": null,
+          "source_expression": "folderDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Contact_Id",
+          "name": "contact_id",
+          "required": null,
+          "source_expression": "contactDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Membership_Id",
+          "name": "membership_id",
+          "required": null,
+          "source_expression": "memberDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Tag",
+          "name": "tag",
+          "required": null,
+          "source_expression": "tagDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Custom_Tag",
+          "name": "custom_tag",
+          "required": null,
+          "source_expression": "customTagInput",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Include only documents created on or after this date",
+          "label": "Created From",
+          "name": "created_from",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Include only documents created before this date",
+          "label": "Created To",
+          "name": "created_to",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Include only documents completed on or after this date",
+          "label": "Completed From",
+          "name": "completed_from",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Include only documents completed before this date",
+          "label": "Completed To",
+          "name": "completed_to",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Include only documents modified on or after this date",
+          "label": "Modified From",
+          "name": "modified_from",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Include only documents modified before this date",
+          "label": "Modified To",
+          "name": "modified_to",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "When on, returns only deleted documents instead of active ones.",
+          "label": "Only Deleted Documents",
+          "name": "deleted",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Number of documents to return (default: 50, max: 100)",
+          "label": "Results Count",
+          "name": "count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Page number for pagination (starts with 1)",
+          "label": "Page Number",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Sort results by field",
+          "label": "Order By",
+          "name": "order_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Filter by metadata key-value pairs. Use format: {\"key\": \"value\"}",
+          "label": "Metadata Filters",
+          "name": "metadata",
+          "required": false,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Document(s)",
+      "source_path": "pandadoc/src/lib/actions/find-document.ts",
+      "source_sha256": "2b65284f1db5b802e1cdc205543621fa54f68286beacb65c403337ad487a9ce8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/actions/find-document.ts"
+    },
+    {
+      "description": "Retrieves comprehensive document data.",
+      "id": "getDocumentDetails",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "documentDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Document",
+      "source_path": "pandadoc/src/lib/actions/get-document-details.ts",
+      "source_sha256": "7e469f13c41965c9616140a4cbdf06a81467ca8ff93be6476de0ac17eaa50a10",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/actions/get-document-details.ts"
+    },
+    {
+      "description": "Retrieves details of a specific attachment from a document.",
+      "id": "getDocumentAttachments",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "documentDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Attachment_Id",
+          "name": "attachment_id",
+          "required": null,
+          "source_expression": "documentAttachmentDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Document Attachment",
+      "source_path": "pandadoc/src/lib/actions/get-document-attachments.ts",
+      "source_sha256": "0d26d5ef7e5de5dc9b3cd29d5cf9d283816d23ea586e55a50abfb3c4511a2bf6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/actions/get-document-attachments.ts"
+    },
+    {
+      "description": "Gets a template with its roles, fields and variables.",
+      "id": "get_template_details",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Template ID",
+          "name": "template_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Template Details",
+      "source_path": "pandadoc/src/lib/actions/get-template-details.ts",
+      "source_sha256": "26a1f0d47b64c89aa8543ce0be2617f42370a66f2dde112cb0bc4653bc881769",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/actions/get-template-details.ts"
+    },
+    {
+      "description": "Lists the fields of a document with their current values.",
+      "id": "list_document_fields",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Document_Id",
+          "name": "document_id",
+          "required": null,
+          "source_expression": "pandadocAiProps.documentId()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Document Fields",
+      "source_path": "pandadoc/src/lib/actions/list-document-fields.ts",
+      "source_sha256": "945316b772fb3a6e96a0d12145e7f83273924ac5ea3564133f18d1a4ff512a91",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/actions/list-document-fields.ts"
+    },
+    {
+      "description": "Lists document folders, optionally inside a parent folder.",
+      "id": "list_document_folders",
+      "inputs": [
+        {
+          "description": "Leave empty for top-level folders.",
+          "label": "Parent Folder ID",
+          "name": "parent_folder_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "1 to 100, default 50.",
+          "label": "Results per Page",
+          "name": "count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Starts at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Document Folders",
+      "source_path": "pandadoc/src/lib/actions/list-document-folders.ts",
+      "source_sha256": "a7671aefb234bd0f67f9965ac1df0ec51430092b4bbb682d8f8eb6446ba6a7ce",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/actions/list-document-folders.ts"
+    },
+    {
+      "description": "Lists or searches templates.",
+      "id": "list_templates",
+      "inputs": [
+        {
+          "description": "Matches template name.",
+          "label": "Search Text",
+          "name": "query",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Tag",
+          "name": "tag",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Folder ID",
+          "name": "folder_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "1 to 100, default 50.",
+          "label": "Results per Page",
+          "name": "count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Starts at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Templates",
+      "source_path": "pandadoc/src/lib/actions/list-templates.ts",
+      "source_sha256": "cd4fd5aaa8ae5bf39c24bc47e431b19f4569ab4c3c1f9e0f6303f6eff07eed82",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/actions/list-templates.ts"
+    },
+    {
+      "description": "Triggers when a document is completed (all recipients have signed or approved).",
+      "id": "documentCompleted",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Template_Filter",
+          "name": "template_filter",
+          "required": null,
+          "source_expression": "templateFilterDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Folder_Filter",
+          "name": "folder_filter",
+          "required": null,
+          "source_expression": "folderFilterDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Document Completed",
+      "source_path": "pandadoc/src/lib/triggers/document-completed.ts",
+      "source_sha256": "08b0b48a0c7d1639042aa117fa3686fb827d875ceae88ee9862f7e95ec72325d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/triggers/document-completed.ts"
+    },
+    {
+      "description": "Triggers when PandaDoc fails to create a document requested through the API (for example a bad file or missing field values).",
+      "id": "document_creation_failed",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Document Creation Failed",
+      "source_path": "pandadoc/src/lib/triggers/document-creation-failed.ts",
+      "source_sha256": "1e395cebe9b10062ddcbf928deaf3050292a9c7b06f720f86cf993ea060083c9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/triggers/document-creation-failed.ts"
+    },
+    {
+      "description": "Triggers when a document is deleted.",
+      "id": "document_deleted",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Document Deleted",
+      "source_path": "pandadoc/src/lib/triggers/document-deleted.ts",
+      "source_sha256": "7d8d7d3d24b1c9d31efadcc432bd0b264bac5f725fdabf606ad6c52e6d87c34a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pandadoc/src/lib/triggers/document-deleted.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "0513ec8db7461e39eb4e4c4086e1410823074c60",
+    "index_path": "pandadoc/src/index.ts",
+    "index_sha256": "61423fc1cda37afabd29f1078fcdbe1748e8472a63967e17dbb3dbbdf311f827",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "claims-adjudicator"
+  ]
+}

@@ -1,0 +1,598 @@
+{
+  "allowed_hosts": [
+    "cloud.activepieces.com",
+    "login.wrike.com",
+    "www.wrike.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://login.wrike.com/oauth2/authorize/v4"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [],
+    "token_urls": [
+      "https://login.wrike.com/oauth2/token"
+    ]
+  },
+  "category": "Project management",
+  "id": "wrike",
+  "name": "Wrike",
+  "operations": [
+    {
+      "description": "Add a comment or internal note to a task or folder",
+      "id": "add_comment",
+      "inputs": [
+        {
+          "description": "Select whether you want to add the comment to a task or folder",
+          "label": "Entity Type",
+          "name": "entityType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The ID of the task or folder to add the comment to",
+          "label": "Entity ID",
+          "name": "entityId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The text content of the comment",
+          "label": "Comment Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Whether the comment should be treated as plain text (no HTML formatting). Default is HTML formatting.",
+          "label": "Plain Text",
+          "name": "plainText",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Comment",
+      "source_path": "wrike/src/lib/actions/add-comment.ts",
+      "source_sha256": "067d1fe51d2a884780014ca822cade980d1a9c9a9f243ee25876cc923cd930ac",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/actions/add-comment.ts"
+    },
+    {
+      "description": "Create a new folder in Wrike",
+      "id": "create_folder",
+      "inputs": [
+        {
+          "description": "The ID of the parent folder where the new folder will be created. Leave empty to create at root level.",
+          "label": "Parent Folder ID",
+          "name": "parentFolderId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The title of the folder",
+          "label": "Folder Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The description of the folder",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "User IDs to share the folder with",
+          "label": "Shared Users",
+          "name": "shareds",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Whether this folder should be created as a project with additional project settings",
+          "label": "Create as Project",
+          "name": "project",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The ID of the user who will own the project (required when creating as project)",
+          "label": "Project Owner ID",
+          "name": "projectOwnerId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The start date of the project (format: YYYY-MM-DD)",
+          "label": "Project Start Date",
+          "name": "projectStartDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "The end date of the project (format: YYYY-MM-DD)",
+          "label": "Project End Date",
+          "name": "projectEndDate",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Folder",
+      "source_path": "wrike/src/lib/actions/create-folder.ts",
+      "source_sha256": "33ee593d6522fcc79cbf983d112c0e3c5f7f79cc1794b491cfa129143ae5273f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/actions/create-folder.ts"
+    },
+    {
+      "description": "Create a new project in Wrike",
+      "id": "create_project",
+      "inputs": [
+        {
+          "description": "The ID of the parent folder where the project will be created. Leave empty to create at root level.",
+          "label": "Parent Folder ID",
+          "name": "parentFolderId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The title of the project",
+          "label": "Project Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The description of the project",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "User IDs who will own the project",
+          "label": "Owner IDs",
+          "name": "ownerIds",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "User IDs to share the project with",
+          "label": "Shared Users",
+          "name": "shareds",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Project start date (format: YYYY-MM-DD)",
+          "label": "Start Date",
+          "name": "start_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Project end date (format: YYYY-MM-DD)",
+          "label": "End Date",
+          "name": "end_date",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Project",
+      "source_path": "wrike/src/lib/actions/create-project.ts",
+      "source_sha256": "487a3fc9541fdac6ac67f040724cd1a54c53d6b78e67842334a2d9ded92ba720",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/actions/create-project.ts"
+    },
+    {
+      "description": "Create a new task in Wrike",
+      "id": "create_task",
+      "inputs": [
+        {
+          "description": "The ID of the folder where the task will be created",
+          "label": "Folder ID",
+          "name": "folderId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The title of the task",
+          "label": "Task Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The description of the task",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The status of the task",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The importance/priority of the task",
+          "label": "Importance",
+          "name": "importance",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "User IDs to assign to the task",
+          "label": "Assignees",
+          "name": "assignees",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Task start date (format: YYYY-MM-DD)",
+          "label": "Start Date",
+          "name": "start_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Task due date (format: YYYY-MM-DD)",
+          "label": "Due Date",
+          "name": "due_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Task duration in minutes",
+          "label": "Duration",
+          "name": "duration",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Custom field values for the task",
+          "label": "Custom Fields",
+          "name": "customFields",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "wrike/src/lib/actions/create-task.ts",
+      "source_sha256": "3773102558f6b96cad5510567ec267a98ebd28f26bdab2847c8054fa84ee82eb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Retrieve folder / project metadata by ID or name",
+      "id": "find_folder",
+      "inputs": [
+        {
+          "description": "The ID of the folder/project to retrieve. If provided, other search criteria will be ignored.",
+          "label": "Folder ID",
+          "name": "folderId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search for folders/projects by title (partial match)",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search for folders/projects within specific parent folders",
+          "label": "Parent IDs",
+          "name": "parentIds",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Filter to only return projects (folders marked as projects)",
+          "label": "Is Project",
+          "name": "project",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Maximum number of folders/projects to return (max 1000)",
+          "label": "Page Size",
+          "name": "pageSize",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Filter by authors (users who created the folders)",
+          "label": "Author IDs",
+          "name": "authors",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Filter by owners (users who own the projects)",
+          "label": "Owner IDs",
+          "name": "owners",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Folder / Project",
+      "source_path": "wrike/src/lib/actions/find-folder.ts",
+      "source_sha256": "f54039c22d133819cc2651756b45e5c5b3d2ff4db4ace04dca154221b05714ad",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/actions/find-folder.ts"
+    },
+    {
+      "description": "Retrieve a task by its ID or lookup fields",
+      "id": "find_task",
+      "inputs": [
+        {
+          "description": "The ID of the task to retrieve. If provided, other search criteria will be ignored.",
+          "label": "Task ID",
+          "name": "taskId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search for tasks by title (partial match)",
+          "label": "Task Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search for tasks within a specific folder",
+          "label": "Folder ID",
+          "name": "folderId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter tasks by status",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Filter tasks by importance/priority",
+          "label": "Importance",
+          "name": "importance",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Filter tasks by assignee user IDs",
+          "label": "Assignee IDs",
+          "name": "assignees",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Filter tasks by author user IDs",
+          "label": "Author IDs",
+          "name": "authors",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Maximum number of tasks to return (max 1000)",
+          "label": "Page Size",
+          "name": "pageSize",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Field to sort tasks by",
+          "label": "Sort Field",
+          "name": "sortField",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Sort order for results",
+          "label": "Sort Order",
+          "name": "sortOrder",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Task",
+      "source_path": "wrike/src/lib/actions/find-task.ts",
+      "source_sha256": "25ad1c9755eb7c26d9169bd6b4ce72bb7095f8e920526bf66a6fcc3f80d0c16a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/actions/find-task.ts"
+    },
+    {
+      "description": "Update fields of an existing task in Wrike",
+      "id": "update_task",
+      "inputs": [
+        {
+          "description": "The ID of the task to update",
+          "label": "Task ID",
+          "name": "taskId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The new title of the task",
+          "label": "Task Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The new description of the task",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The new status of the task",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The new importance/priority of the task",
+          "label": "Importance",
+          "name": "importance",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "User IDs to assign to the task (replaces existing assignees)",
+          "label": "Assignees",
+          "name": "assignees",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Task start date (format: YYYY-MM-DD)",
+          "label": "Start Date",
+          "name": "start_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Task due date (format: YYYY-MM-DD)",
+          "label": "Due Date",
+          "name": "due_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Task duration in minutes",
+          "label": "Duration",
+          "name": "duration",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Custom field values to update for the task",
+          "label": "Custom Fields",
+          "name": "customFields",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Task",
+      "source_path": "wrike/src/lib/actions/update-task.ts",
+      "source_sha256": "850511870f4179abdd7cec7c01f4cc78db22619a2bf6657fe3274bb76a7dd5b9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/actions/update-task.ts"
+    },
+    {
+      "description": "Upload a file and attach it to a task or folder",
+      "id": "upload_attachment",
+      "inputs": [
+        {
+          "description": "Select whether to attach the file to a task or folder",
+          "label": "Entity Type",
+          "name": "entityType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The ID of the task or folder to attach the file to",
+          "label": "Entity ID",
+          "name": "entityId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The file to upload and attach",
+          "label": "File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "Optional custom name for the uploaded file",
+          "label": "File Name",
+          "name": "fileName",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Upload Attachment",
+      "source_path": "wrike/src/lib/actions/upload-attachment.ts",
+      "source_sha256": "f0d43a145e70c2af457026bbb5dc7b8a50f867ce25558e8b64b2219cec5679f4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/actions/upload-attachment.ts"
+    },
+    {
+      "description": "Fires when a new folder (or project) is created in Wrike.",
+      "id": "new_folder",
+      "inputs": [
+        {
+          "description": "Optional: Only trigger for folders created in this specific parent folder",
+          "label": "Parent Folder ID",
+          "name": "parentFolderId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Folder",
+      "source_path": "wrike/src/lib/triggers/new-folder.ts",
+      "source_sha256": "c22536335f38ce5c801ed31f6f67d4d16068b7c40f75fa1406e426e17feaaf7b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/triggers/new-folder.ts"
+    },
+    {
+      "description": "Triggers when a subtask is created.",
+      "id": "new_subtask_created",
+      "inputs": [
+        {
+          "description": "Optional: Only trigger for subtasks created under this specific parent task",
+          "label": "Parent Task ID",
+          "name": "parentTaskId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Subtask Created",
+      "source_path": "wrike/src/lib/triggers/new-subtask.ts",
+      "source_sha256": "4ea14e89f3c8aa4fd70c2f600e13e2ebc860d4c1a98720e7af53dc2e107a4e74",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/triggers/new-subtask.ts"
+    },
+    {
+      "description": "Fires when a new task is created in Wrike (optionally within a folder).",
+      "id": "new_task",
+      "inputs": [
+        {
+          "description": "Optional: Only trigger for tasks created in this specific folder",
+          "label": "Folder ID",
+          "name": "folderId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Task",
+      "source_path": "wrike/src/lib/triggers/new-task.ts",
+      "source_sha256": "78d5b3df43a843bfc01ca67edf4cec488193d6a0ef5b59d458e18b869e4808dc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wrike/src/lib/triggers/new-task.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "bcc429cd4c135610a0bb2371338e29855d2790ad",
+    "index_path": "wrike/src/index.ts",
+    "index_sha256": "48d521f1af4a22a1bc02969e2765ea44b383f80404ff25df882cff6c98505fd4",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

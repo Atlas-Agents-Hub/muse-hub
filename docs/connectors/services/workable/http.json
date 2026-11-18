@@ -1,0 +1,24 @@
+{
+  "id": "workable",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "workable/src/lib/common/client.ts",
+      "credential_source_sha256": "56677dd9607ad82b29236bce11fc69af77016183bc6f1cbc01178a0122e1d52b",
+      "headers": {},
+      "host": "workable.com",
+      "id": "read-spi-v3-accounts",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "workable/src/lib/common/client.ts",
+      "source_sha256": "56677dd9607ad82b29236bce11fc69af77016183bc6f1cbc01178a0122e1d52b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/common/client.ts",
+      "url_template": "https://workable.com/spi/v3/accounts"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

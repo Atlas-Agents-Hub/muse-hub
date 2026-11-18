@@ -1,0 +1,481 @@
+{
+  "allowed_hosts": [
+    "www.zohoapis.ca",
+    "www.zohoapis.com",
+    "www.zohoapis.com.au",
+    "www.zohoapis.eu",
+    "www.zohoapis.in",
+    "www.zohoapis.jp"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.{location}/oauth/v2/auth"
+    ],
+    "fields": [
+      {
+        "description": "The location of your Zoho CRM account",
+        "label": "Location",
+        "name": "location",
+        "required": true,
+        "type": "StaticDropdown"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "ZohoCRM.bulk.ALL",
+      "ZohoCRM.bulk.backup.ALL",
+      "ZohoCRM.modules.ALL",
+      "ZohoCRM.org.ALL",
+      "ZohoCRM.settings.ALL",
+      "ZohoCRM.users.ALL",
+      "ZohoFiles.files.ALL"
+    ],
+    "token_urls": [
+      "https://accounts.{location}/oauth/v2/token"
+    ]
+  },
+  "category": "Sales & CRM",
+  "id": "zoho-crm",
+  "name": "Zoho CRM",
+  "operations": [
+    {
+      "description": "Adds a note to a record.",
+      "id": "add_note",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Module",
+          "name": "module",
+          "required": null,
+          "source_expression": "moduleDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "recordDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Content",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Note",
+      "source_path": "zoho-crm/src/lib/actions/add-note.ts",
+      "source_sha256": "2e7141c426f3014eaff3e69ab44de2a3026ec35ce1ba5b74488eff04b3b8830f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/actions/add-note.ts"
+    },
+    {
+      "description": "Converts a lead into a contact and account, and optionally a deal.",
+      "id": "convert_lead",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Lead_Id",
+          "name": "lead_id",
+          "required": null,
+          "source_expression": "recordDropdown({ displayName: 'Lead', fixedModule: 'Leads' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Account_Id",
+          "name": "account_id",
+          "required": null,
+          "source_expression": "recordDropdown({ displayName: 'Existing Account', description: 'Link to this account; the lead\\'s Company must match its name.', fixedModule: 'Accounts', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Contact_Id",
+          "name": "contact_id",
+          "required": null,
+          "source_expression": "recordDropdown({ displayName: 'Existing Contact', description: 'Merge into this contact; the lead\\'s name and email must match.', fixedModule: 'Contacts', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Move the existing contact to the given account.",
+          "label": "Overwrite Contact's Account",
+          "name": "overwrite",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Assign_To",
+          "name": "assign_to",
+          "required": null,
+          "source_expression": "userDropdown({ displayName: 'Owner', description: 'Active user who owns the new records; empty keeps the lead owner.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Notify Lead Owner",
+          "name": "notify_lead_owner",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Notify New Owner",
+          "name": "notify_new_entity_owner",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Create a Deal",
+          "name": "create_deal",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Deal Name",
+          "name": "deal_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "A Stage picklist value of your org, e.g. \"Qualification\".",
+          "label": "Deal Stage",
+          "name": "deal_stage",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Date as yyyy-MM-dd, e.g. 2026-12-31.",
+          "label": "Deal Closing Date",
+          "name": "deal_closing_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Deal Amount",
+          "name": "deal_amount",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Required when your org uses pipelines, e.g. \"Standard (Standard)\".",
+          "label": "Deal Pipeline",
+          "name": "deal_pipeline",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Other Deal Fields (JSON)",
+          "name": "deal_extra",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Convert Lead",
+      "source_path": "zoho-crm/src/lib/actions/convert-lead.ts",
+      "source_sha256": "6eee0607f5a906e9b4f92500463a2976e29cbe41fb1a66003897712c9a5ade98",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/actions/convert-lead.ts"
+    },
+    {
+      "description": "Updates the record that matches on the duplicate-check fields, or creates it if none matches.",
+      "id": "upsert_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Module",
+          "name": "module",
+          "required": null,
+          "source_expression": "moduleDropdown({ filter: 'creatable' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Duplicate_Check_Fields",
+          "name": "duplicate_check_fields",
+          "required": null,
+          "source_expression": "uniqueFieldsDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Fields",
+          "name": "fields",
+          "required": null,
+          "source_expression": "recordFieldsProp({ mode: 'upsert' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Additional_Fields",
+          "name": "additional_fields",
+          "required": null,
+          "source_expression": "additionalFieldsProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Skip All Automation",
+          "name": "skip_automation",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create or Update Record",
+      "source_path": "zoho-crm/src/lib/actions/upsert-record.ts",
+      "source_sha256": "88030f8c73ac17a38bf31bab3fee76484e21185e74e9084e27820383ed87e7dc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/actions/upsert-record.ts"
+    },
+    {
+      "description": "Creates a record in any module, including custom fields.",
+      "id": "create_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Module",
+          "name": "module",
+          "required": null,
+          "source_expression": "moduleDropdown({ filter: 'creatable' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Fields",
+          "name": "fields",
+          "required": null,
+          "source_expression": "recordFieldsProp({ mode: 'create' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Additional_Fields",
+          "name": "additional_fields",
+          "required": null,
+          "source_expression": "additionalFieldsProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Empty runs Zoho's default workflows; pick some to run only those.",
+          "label": "Automation to Run",
+          "name": "triggers",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Run no workflow, approval or blueprint for this record.",
+          "label": "Skip All Automation",
+          "name": "skip_automation",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Record",
+      "source_path": "zoho-crm/src/lib/actions/create-record.ts",
+      "source_sha256": "41805be42fea47eb46c1159709ab6820ffdd6b2bcc74aefb31a74cc5638a1f3c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/actions/create-record.ts"
+    },
+    {
+      "description": "Deletes a record (it moves to the Zoho CRM Recycle Bin).",
+      "id": "delete_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Module",
+          "name": "module",
+          "required": null,
+          "source_expression": "moduleDropdown({ filter: 'deletable' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "recordDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Run delete workflows configured in Zoho (Zoho default: on).",
+          "label": "Run Workflows",
+          "name": "run_workflows",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Record",
+      "source_path": "zoho-crm/src/lib/actions/delete-record.ts",
+      "source_sha256": "d8f1c1fe126423f3cb43736936b638a2c9a0f63f9b5ba5f5c76b6399a29eb0a5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/actions/delete-record.ts"
+    },
+    {
+      "description": "Gets a record by id from any module, with all its fields.",
+      "id": "get_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Module",
+          "name": "module",
+          "required": null,
+          "source_expression": "moduleDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "recordDropdown()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Record",
+      "source_path": "zoho-crm/src/lib/actions/get-record.ts",
+      "source_sha256": "081958f0f4712b5acb67cec3f002b41d68dbd1ac5ab84d6a119c993ac5dddb63",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/actions/get-record.ts"
+    },
+    {
+      "description": "Download a file content from Zoho CRM. e.g.: a Backup File",
+      "id": "read-file",
+      "inputs": [
+        {
+          "description": "Full https URL on your Zoho API host (/crm/...) or download host.",
+          "label": "URL",
+          "name": "url",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Read file",
+      "source_path": "zoho-crm/src/lib/actions/read-file.ts",
+      "source_sha256": "624b7556debea202c4668aded27f66263fe578f89044c3679d84cc5b8b7e8199",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/actions/read-file.ts"
+    },
+    {
+      "description": "Updates fields of a record in any module. Fields left empty are not changed.",
+      "id": "update_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Module",
+          "name": "module",
+          "required": null,
+          "source_expression": "moduleDropdown({ filter: 'editable' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "recordDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Fields",
+          "name": "fields",
+          "required": null,
+          "source_expression": "recordFieldsProp({ mode: 'update' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Field API names to set to empty (e.g. \"Phone\", \"Custom_Field__c\").",
+          "label": "Clear Fields",
+          "name": "clear_fields",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Additional_Fields",
+          "name": "additional_fields",
+          "required": null,
+          "source_expression": "additionalFieldsProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Run no workflow, approval or blueprint for this update.",
+          "label": "Skip All Automation",
+          "name": "skip_automation",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Record",
+      "source_path": "zoho-crm/src/lib/actions/update-record.ts",
+      "source_sha256": "3216558f13f2f047be0a3736a9b117f8e8eb6011daf9b4e6042160023567e3dc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/actions/update-record.ts"
+    },
+    {
+      "description": "Triggers when a new contact is created",
+      "id": "new_contact",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Contact",
+      "source_path": "zoho-crm/src/lib/triggers/new-contact.ts",
+      "source_sha256": "a0a2c4f40a7082f5b602c51c6bc00e82d5efa524e5a3f53de09461373e4680e7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/triggers/new-contact.ts"
+    },
+    {
+      "description": "Triggers when a record is created in any module (custom fields included).",
+      "id": "new_record",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Record",
+      "source_path": "zoho-crm/src/lib/triggers/new-record.ts",
+      "source_sha256": "6b1d7ad1d5a6b42f9d5e9e5b3d5760759495bbc81badcaf5c6df9e0a6f059992",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/triggers/new-record.ts"
+    },
+    {
+      "description": "Triggers when a record is modified in any module.",
+      "id": "updated_record",
+      "inputs": [
+        {
+          "description": "Also fire for records created but not edited since the last check.",
+          "label": "Include Newly Created Records",
+          "name": "include_new",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Updated Record",
+      "source_path": "zoho-crm/src/lib/triggers/updated-record.ts",
+      "source_sha256": "c7e84b442dff84ee1917b8c5307b0aa1997668675381e55d24addddc1541f380",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoho-crm/src/lib/triggers/updated-record.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "3500cd919da9c7d3fb8d58dd7627a72bcc16cf62",
+    "index_path": "zoho-crm/src/index.ts",
+    "index_sha256": "3e8047a2ecd5f45e5aa12d2a4dce60b23adcf1a5bea1ccffac5744beb862e8a8",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer"
+  ]
+}

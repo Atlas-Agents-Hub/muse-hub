@@ -1,0 +1,151 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "console.cloud.google.com",
+    "docs.google.com",
+    "drive.google.com",
+    "oauth2.googleapis.com",
+    "support.google.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection; Provider connection fields",
+    "scopes": [],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "google-drive",
+  "name": "Google Drive",
+  "operations": [
+    {
+      "description": "Triggers when a file is created in Drive or the chosen folder. Uploads and copies count. A file moved in from another folder fires only if it is newer than the last file this trigger sent.",
+      "id": "new_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Parent Folder",
+          "name": "parentFolder",
+          "required": null,
+          "source_expression": "common.parentFolderDropdown({ displayName: 'Folder', description: common.watchFolderHint, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Include_Team_Drives",
+          "name": "include_team_drives",
+          "required": null,
+          "source_expression": "common.properties.include_team_drives",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Also download each file. A failed download adds an error instead.",
+          "label": "Include File Content",
+          "name": "include_file_content",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New File",
+      "source_path": "google-drive/src/lib/triggers/new-file.ts",
+      "source_sha256": "7d416f5dbbb4612e33b1b38fb6a980b4d8025a35c2aca2a1a31eb58f247ce5f4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-drive/src/lib/triggers/new-file.ts"
+    },
+    {
+      "description": "Triggers when a new folder is created in Drive or the chosen folder.",
+      "id": "new_folder",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Parent Folder",
+          "name": "parentFolder",
+          "required": null,
+          "source_expression": "common.parentFolderDropdown({ displayName: 'Folder', description: common.watchFolderHint, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Include_Team_Drives",
+          "name": "include_team_drives",
+          "required": null,
+          "source_expression": "common.properties.include_team_drives",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Folder",
+      "source_path": "google-drive/src/lib/triggers/new-folder.ts",
+      "source_sha256": "0242cf282af3fed7c527c1e74d2ffdb7ed5720c0be34fc377ae6bb007cf819e9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-drive/src/lib/triggers/new-folder.ts"
+    },
+    {
+      "description": "Triggers when a file is created or edited. A rename counts; trashing or moving does not.",
+      "id": "new_or_updated_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Behaviour Note",
+          "name": "behaviourNote",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Parent Folder",
+          "name": "parentFolder",
+          "required": null,
+          "source_expression": "common.parentFolderDropdown({ displayName: 'Folder', description: common.watchFolderHint, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Include_Team_Drives",
+          "name": "include_team_drives",
+          "required": null,
+          "source_expression": "common.properties.include_team_drives",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Empty watches every type. Use Dynamic value to add other MIME types.",
+          "label": "File Types",
+          "name": "file_types",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Also download each file. A failed download adds an error instead.",
+          "label": "Include File Content",
+          "name": "include_file_content",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New or Updated File",
+      "source_path": "google-drive/src/lib/triggers/new-or-updated-file.ts",
+      "source_sha256": "eab345ca9143ac0d3a338a148042a95180693964fa23904ecb41a04a1c64372f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-drive/src/lib/triggers/new-or-updated-file.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "c4822116476c8e7ec590854093433412266f1fbe",
+    "index_path": "google-drive/src/index.ts",
+    "index_sha256": "4e713347b0a5ae9f4a5c0083e6fa0a814a0a4b495c904564ae3ddc9fb98337c5",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach",
+    "garden-companion"
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "allowed_hosts": [
+    "api.cloudconvert.com",
+    "cloudconvert.com",
+    "eu-central.api.cloudconvert.com",
+    "storage.cloudconvert.com",
+    "us-east.api.cloudconvert.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://cloudconvert.com/oauth/authorize"
+    ],
+    "fields": [
+      {
+        "description": "CloudConvert processing region",
+        "label": "Region",
+        "name": "region",
+        "required": true,
+        "type": "StaticDropdown"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "task.read",
+      "task.write",
+      "user.read"
+    ],
+    "token_urls": [
+      "https://cloudconvert.com/oauth/token"
+    ]
+  },
+  "category": "Media management",
+  "id": "cloudconvert",
+  "name": "CloudConvert",
+  "operations": [
+    {
+      "description": "Creates a ZIP, RAR, 7Z, TAR, TAR.GZ or TAR.BZ2 archive",
+      "id": "archive_file",
+      "inputs": [],
+      "kind": "action",
+      "name": "Archive File",
+      "source_path": "cloudconvert/src/lib/actions/archive-file.ts",
+      "source_sha256": "b3be34835d09ab28e5b69377d37a981a89356a2231b5344a2ead549b2b94917d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/actions/archive-file.ts"
+    },
+    {
+      "description": "Capture webpage as PDF, screenshot PNG, or JPG from a URL",
+      "id": "capture_website",
+      "inputs": [],
+      "kind": "action",
+      "name": "Capture Website",
+      "source_path": "cloudconvert/src/lib/actions/capture-website.ts",
+      "source_sha256": "d6a2d560289d16e5f58d30b6f04c1cbe1043f16bb0c5d60da9b2b7a6a718bb51",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/actions/capture-website.ts"
+    },
+    {
+      "description": "Create a basic file conversion task for a single file with desired output format",
+      "id": "convert_file",
+      "inputs": [],
+      "kind": "action",
+      "name": "Convert File",
+      "source_path": "cloudconvert/src/lib/actions/convert-file.ts",
+      "source_sha256": "8562607cc1cb12ebd11e5c6eec6e16cacf6e7c9e3b944f6dee90e3375b7dba60",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/actions/convert-file.ts"
+    },
+    {
+      "description": "Downloads output from a completed task",
+      "id": "download_file",
+      "inputs": [],
+      "kind": "action",
+      "name": "Download a File",
+      "source_path": "cloudconvert/src/lib/actions/download-file.ts",
+      "source_sha256": "66a1b5c9c4f2a3c91d41a16c866fa5b688b354e897062f9fd4790f7f0616e88c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/actions/download-file.ts"
+    },
+    {
+      "description": "Combine multiple documents/images into a single PDF",
+      "id": "merge_pdf",
+      "inputs": [],
+      "kind": "action",
+      "name": "Merge Files to PDF",
+      "source_path": "cloudconvert/src/lib/actions/merge-pdf.ts",
+      "source_sha256": "2b6443388b5d8ab32353501ef7968f5d6c8dc78f9f64ca05cb230041c7994378",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/actions/merge-pdf.ts"
+    },
+    {
+      "description": "Creates a task to optimize and compress a file",
+      "id": "optimize_file",
+      "inputs": [],
+      "kind": "action",
+      "name": "Optimize File",
+      "source_path": "cloudconvert/src/lib/actions/optimize-file.ts",
+      "source_sha256": "91351ea38d12d7d11a873ad7edef212b15933283ed37fe57fbfd4ead6ec34ad7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/actions/optimize-file.ts"
+    },
+    {
+      "description": "Triggers when a CloudConvert job has failed",
+      "id": "job_failed",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Job Failed",
+      "source_path": "cloudconvert/src/lib/triggers/job-failed.ts",
+      "source_sha256": "0d4f00d20ea47b8d089778ccac8874a3129157cf09baf9a673239f4bdaa25495",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/triggers/job-failed.ts"
+    },
+    {
+      "description": "Triggers when a CloudConvert job has been completed",
+      "id": "job_finished",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Job Finished",
+      "source_path": "cloudconvert/src/lib/triggers/job-finished.ts",
+      "source_sha256": "165dd100ac97a7d765236833c6d791230a1099716d19bb53ec1636772cdf79b4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/triggers/job-finished.ts"
+    },
+    {
+      "description": "Triggers when a new job has been created",
+      "id": "new_job",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Job Event",
+      "source_path": "cloudconvert/src/lib/triggers/new-job.ts",
+      "source_sha256": "31c72b13c1de77158a771018d6082ddb087199d4cb1a620b360dfc46f4b6a03f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/triggers/new-job.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "70d6b94f672466844496a1b2b4d7be7f542d60ae",
+    "index_path": "cloudconvert/src/index.ts",
+    "index_sha256": "a02e435b6d3a4895fcd4f746761295212c7bfe689b3c18d0e9c27fa006127acd",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "automation-engineer"
+  ]
+}

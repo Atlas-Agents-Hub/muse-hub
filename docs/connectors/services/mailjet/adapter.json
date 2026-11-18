@@ -1,0 +1,113 @@
+{
+  "allowed_hosts": [
+    "api.mailjet.com",
+    "app.mailjet.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The API Key from Mailjet API Key Management.",
+        "label": "API Key",
+        "name": "username",
+        "required": true,
+        "type": "AccountField"
+      },
+      {
+        "description": "The Secret Key that belongs to the API Key.",
+        "label": "Secret Key",
+        "name": "password",
+        "required": true,
+        "type": "AccountField"
+      }
+    ],
+    "method": "Service username and password or token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Email",
+  "id": "mailjet",
+  "name": "Mailjet",
+  "operations": [
+    {
+      "description": "Send a text, HTML or template email through Mailjet",
+      "id": "send_email",
+      "inputs": [
+        {
+          "description": "Sender email, must be verified in Mailjet",
+          "label": "From (Email)",
+          "name": "fromEmail",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "From (Name)",
+          "name": "fromName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Emails of recipients",
+          "name": "toEmails",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Text part",
+          "name": "textPart",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "HTML part",
+          "name": "htmlPart",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Template Id (number) defined in Mailjet",
+          "label": "Template Id",
+          "name": "templateId",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Template variables",
+          "name": "templateVariables",
+          "required": false,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Email",
+      "source_path": "mailjet/src/lib/actions/send-email.ts",
+      "source_sha256": "803155e87360c12c38cd0096a867d719e040fd6871bdc548de80746ee4cce4e8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailjet/src/lib/actions/send-email.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "3ce9b1776549dd01f2c544b8dba458a59726ae43",
+    "index_path": "mailjet/src/index.ts",
+    "index_sha256": "d91fdee6a04370c394194a62cf4653f6725820267083af805d8376e003e338f9",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

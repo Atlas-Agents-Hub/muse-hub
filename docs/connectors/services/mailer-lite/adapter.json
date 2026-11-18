@@ -1,0 +1,223 @@
+{
+  "allowed_hosts": [
+    "connect.mailerlite.com",
+    "dashboard.mailerlite.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Marketing",
+  "id": "mailer-lite",
+  "name": "MailerLite",
+  "operations": [
+    {
+      "description": "Get a campaign by ID.",
+      "id": "get_campaign",
+      "inputs": [
+        {
+          "description": "The campaign ID, from list_campaigns.",
+          "label": "Campaign ID",
+          "name": "campaign_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Campaign",
+      "source_path": "mailer-lite/src/lib/actions/get-campaign.ts",
+      "source_sha256": "77f65b7bf8e5384074186aad5e1f8d228c6194a6c77d70f8c33c0f47ad94d837",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailer-lite/src/lib/actions/get-campaign.ts"
+    },
+    {
+      "description": "Get a form by ID.",
+      "id": "get_form",
+      "inputs": [
+        {
+          "description": "The form ID, from list_forms.",
+          "label": "Form ID",
+          "name": "form_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Form",
+      "source_path": "mailer-lite/src/lib/actions/get-form.ts",
+      "source_sha256": "2f50cbc319c7198967bfe09ecb239874a0273879d14182eeb8093c2d8c29ff0b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailer-lite/src/lib/actions/get-form.ts"
+    },
+    {
+      "description": "Get a webhook by ID.",
+      "id": "get_webhook",
+      "inputs": [
+        {
+          "description": "The webhook ID, from list_webhooks.",
+          "label": "Webhook ID",
+          "name": "webhook_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Webhook",
+      "source_path": "mailer-lite/src/lib/actions/get-webhook.ts",
+      "source_sha256": "6542b02b1dcb13c2c930451cde3ad8f4158f19b795c6a3fb30712f843d67d873",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailer-lite/src/lib/actions/get-webhook.ts"
+    },
+    {
+      "description": "List the subscriber fields in the account.",
+      "id": "list_fields",
+      "inputs": [
+        {
+          "description": "Only return fields whose name contains this text.",
+          "label": "Keyword",
+          "name": "keyword",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return fields of this type.",
+          "label": "Type",
+          "name": "type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Items to return (1-100, default 100).",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Page number to return, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Fields",
+      "source_path": "mailer-lite/src/lib/actions/list-fields.ts",
+      "source_sha256": "d542e2cf1c54577201a8b0499e19c07006aea4c53dd0cefc14eaca080222ac8a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailer-lite/src/lib/actions/list-fields.ts"
+    },
+    {
+      "description": "List signup forms of one type.",
+      "id": "list_forms",
+      "inputs": [
+        {
+          "description": "The type of forms to list.",
+          "label": "Form Type",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Only return forms whose name contains this text.",
+          "label": "Name Contains",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Items to return (1-100, default 25).",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Page number to return, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Forms",
+      "source_path": "mailer-lite/src/lib/actions/list-forms.ts",
+      "source_sha256": "7f7795f23fa97476a60d150cebddbf1f934f960555af665231f02d1a4d7d7a93",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailer-lite/src/lib/actions/list-forms.ts"
+    },
+    {
+      "description": "List groups in the account, one page at a time.",
+      "id": "list_groups",
+      "inputs": [
+        {
+          "description": "How many groups to return per page, up to 1000.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Page number, starting at 1; meta.last_page in the response is last.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Groups",
+      "source_path": "mailer-lite/src/lib/actions/list-groups.ts",
+      "source_sha256": "be235d80cc98c7d0995fb730a1580d42bdb65b31b37b9c18c8f65b44c10ff403",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailer-lite/src/lib/actions/list-groups.ts"
+    },
+    {
+      "description": "List the segments in the account.",
+      "id": "list_segments",
+      "inputs": [
+        {
+          "description": "Items to return (1-250, default 50).",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Page number to return, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Segments",
+      "source_path": "mailer-lite/src/lib/actions/list-segments.ts",
+      "source_sha256": "191bfafeb6738bb70c8bc70efa581219eeb238faf7b6393963431fdc29b209e7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailer-lite/src/lib/actions/list-segments.ts"
+    },
+    {
+      "description": "List the webhooks in the account.",
+      "id": "list_webhooks",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Webhooks",
+      "source_path": "mailer-lite/src/lib/actions/list-webhooks.ts",
+      "source_sha256": "7775ef62cbce4d5cef65783359502a1e4a589554f147c99ef4a4879fdd262ec2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailer-lite/src/lib/actions/list-webhooks.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "8d26d425b8d3dc74665992c68efdbce0ec56a97d",
+    "index_path": "mailer-lite/src/index.ts",
+    "index_sha256": "3f97765739d526d446d75ac50bc695ba3d269281b81891547a7dc153aabce6df",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

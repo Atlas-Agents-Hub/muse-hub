@@ -1,0 +1,438 @@
+{
+  "allowed_hosts": [
+    "invoices.example.com",
+    "invoices.example.com.",
+    "invoicing.co"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "https://invoicing.co for the hosted service, or your self-hosted address such as https://invoices.example.com",
+        "label": "Base URL",
+        "name": "base_url",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Access_Token",
+        "name": "access_token",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Token', description: 'Settings > Account Management > API Tokens in Invoice Ninja.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Finance & Commerce",
+  "id": "invoiceninja",
+  "name": "Invoice Ninja",
+  "operations": [
+    {
+      "description": "Returns 1 if a task with this number exists, 0 if not.",
+      "id": "exists_task",
+      "inputs": [
+        {
+          "description": "The task or ticket number to check.",
+          "label": "Task or Ticket Number",
+          "name": "number",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Check Task Existence",
+      "source_path": "invoiceninja/src/lib/actions/task-exists.ts",
+      "source_sha256": "4a27dfe39c2c7f8fa572d5583714e959a827344f3c2ee1fe9169cf3572d9d9e9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/invoiceninja/src/lib/actions/task-exists.ts"
+    },
+    {
+      "description": "Creates a new client with a primary contact in Invoice Ninja.",
+      "id": "create_client",
+      "inputs": [
+        {
+          "description": "First name of the client contact (optional).",
+          "label": "Contact First Name",
+          "name": "client_first_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Last name of the client contact (optional).",
+          "label": "Contact Last Name",
+          "name": "client_last_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone number of the client contact (optional).",
+          "label": "Contact Phone",
+          "name": "client_phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "E-mail of the client contact.",
+          "label": "Contact Email",
+          "name": "client_email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Should Invoice Ninja e-mail invoices to this contact?",
+          "label": "Send invoices to the client",
+          "name": "client_send_email",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Name of the business or person.",
+          "label": "Business Name",
+          "name": "client_business_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Leave blank if not a business (optional).",
+          "label": "VAT / Tax Number",
+          "name": "client_tax_no",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Notes not visible to the client (optional).",
+          "label": "Private Notes",
+          "name": "client_private_notes",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Usually street name and number.",
+          "label": "Address Line 1",
+          "name": "client_address1",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Additional address details (optional).",
+          "label": "Address Line 2",
+          "name": "client_address2",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "City / Town",
+          "name": "client_city",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional.",
+          "label": "State / County",
+          "name": "client_state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional.",
+          "label": "Postcode",
+          "name": "client_postcode",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Client",
+      "source_path": "invoiceninja/src/lib/actions/create-client.ts",
+      "source_sha256": "faf9496cfee787d8ff858cedc0a3fea79c5ae7797aaca7c693db05fc72d9ed51",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/invoiceninja/src/lib/actions/create-client.ts"
+    },
+    {
+      "description": "Creates an invoice from existing products (price and tax are taken from each product).",
+      "id": "create_invoice",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client_Id",
+          "name": "client_id",
+          "required": null,
+          "source_expression": "LEGACY_PROPS.client_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Purchase_Order_No",
+          "name": "purchase_order_no",
+          "required": null,
+          "source_expression": "LEGACY_PROPS.purchase_order_no",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Discount",
+          "name": "discount",
+          "required": null,
+          "source_expression": "LEGACY_PROPS.discount",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Discount_Type",
+          "name": "discount_type",
+          "required": null,
+          "source_expression": "LEGACY_PROPS.discount_type",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Public_Notes",
+          "name": "public_notes",
+          "required": null,
+          "source_expression": "LEGACY_PROPS.public_notes",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Private_Notes",
+          "name": "private_notes",
+          "required": null,
+          "source_expression": "LEGACY_PROPS.private_notes",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Order_Items_Json",
+          "name": "order_items_json",
+          "required": null,
+          "source_expression": "LEGACY_PROPS.order_items_json",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Send the invoice by Invoice Ninja e-mail when it is created.",
+          "label": "E-mail the invoice to the client",
+          "name": "send_email",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Makes the invoice active; otherwise it stays a draft.",
+          "label": "Mark the invoice as sent",
+          "name": "mark_sent",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The date part is used, e.g. 2024-01-20.",
+          "label": "Invoice due date",
+          "name": "due_date",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Invoice",
+      "source_path": "invoiceninja/src/lib/actions/create-invoice.ts",
+      "source_sha256": "e149c198bb89ffb0859bd81fe830e3bbc547f9ead308a0abf27b6ae4b2af919a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/invoiceninja/src/lib/actions/create-invoice.ts"
+    },
+    {
+      "description": "Creates a billable task in Invoice Ninja.",
+      "id": "create_task",
+      "inputs": [
+        {
+          "description": "A task or ticket number not used before in Invoice Ninja.",
+          "label": "Task or Ticket Number",
+          "name": "number",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Client_Id",
+          "name": "client_id",
+          "required": null,
+          "source_expression": "invoiceNinjaProps.clientDropdown({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Project_Id",
+          "name": "project_id",
+          "required": null,
+          "source_expression": "invoiceNinjaProps.projectDropdown({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "What the task is about.",
+          "label": "Description",
+          "name": "description",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Leave empty to use the default rate.",
+          "label": "Custom Hourly Rate",
+          "name": "rate",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "invoiceninja/src/lib/actions/create-task.ts",
+      "source_sha256": "c2b3fa11ff509b6b23f3a391ac95c19c114a62cd9f67fb3eb19bfada86e14939",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/invoiceninja/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Gets the client whose contact has this e-mail. Returns false when there is none.",
+      "id": "getclient_task",
+      "inputs": [
+        {
+          "description": "The e-mail address of one of the client's contacts.",
+          "label": "Client e-mail address",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Client Details from e-mail",
+      "source_path": "invoiceninja/src/lib/actions/get-client.ts",
+      "source_sha256": "a2d36ccb1208f5e6b6d4b3a67f6acd1facdf4d04ef180be3181ce9415f30b576",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/invoiceninja/src/lib/actions/get-client.ts"
+    },
+    {
+      "description": "Gets invoices by payment status, optionally for one client. Returns false when none match.",
+      "id": "getinvoices_task",
+      "inputs": [
+        {
+          "description": "Select the invoice status for filtering.",
+          "label": "Invoice Status",
+          "name": "invoiceStatus",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientID",
+          "required": null,
+          "source_expression": "invoiceNinjaProps.clientDropdown({ required: false, displayName: 'Client' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Maximum number of invoices to return (1-${MAX_RESULTS}). Default ${MAX_RESULTS}.",
+          "label": "Max Results",
+          "name": "numberOfResults",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Invoices",
+      "source_path": "invoiceninja/src/lib/actions/get-invoices.ts",
+      "source_sha256": "8645227a0dfef2efbdaa91f23dcf12905c944c5c33d7bddecabd521bcf0c577e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/invoiceninja/src/lib/actions/get-invoices.ts"
+    },
+    {
+      "description": "Runs an Invoice Ninja report and returns its columns and rows.",
+      "id": "getreport_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Report Type",
+          "name": "reportType",
+          "required": null,
+          "source_expression": "invoiceNinjaReports.reportProps().report_type",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Date Range",
+          "name": "dateRange",
+          "required": null,
+          "source_expression": "invoiceNinjaReports.reportProps().date_range",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Start Date",
+          "name": "startDate",
+          "required": null,
+          "source_expression": "invoiceNinjaReports.reportProps().start_date",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "End Date",
+          "name": "endDate",
+          "required": null,
+          "source_expression": "invoiceNinjaReports.reportProps().end_date",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientID",
+          "required": null,
+          "source_expression": "invoiceNinjaProps.clientDropdown({ required: false, displayName: 'Client' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Return at most this many rows. Empty = all.",
+          "label": "Max Rows",
+          "name": "numberOfResults",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Report",
+      "source_path": "invoiceninja/src/lib/actions/get-report.ts",
+      "source_sha256": "47c66f94efb0915561b0d146be797328e64e44e9d5374897f932d8bae0d103d6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/invoiceninja/src/lib/actions/get-report.ts"
+    },
+    {
+      "description": "Start, stop, send now, restore, archive or delete a recurring invoice.",
+      "id": "action_recurring_invoice",
+      "inputs": [
+        {
+          "description": "The ID of the recurring invoice in Invoice Ninja.",
+          "label": "Recurring Invoice ID",
+          "name": "recurring_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Choose one.",
+          "label": "Action to perform",
+          "name": "actionRecurring",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Perform Action on Recurring Invoice",
+      "source_path": "invoiceninja/src/lib/actions/action-recurring.ts",
+      "source_sha256": "20e651138ccc259c320c75a23fc52a9744d5be00b1cb058aee0afa4322bf20c0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/invoiceninja/src/lib/actions/action-recurring.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "cd4fe5137d3ddd2c1c8d18b6899b4a8e969d9bba",
+    "index_path": "invoiceninja/src/index.ts",
+    "index_sha256": "d7fb060c2ecd58706744c59a7cc27663010be0d04d3fcaf7665cf4e94df81a63",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "claims-adjudicator"
+  ]
+}

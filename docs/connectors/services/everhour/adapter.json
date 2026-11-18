@@ -1,0 +1,83 @@
+{
+  "allowed_hosts": [
+    "api.everhour.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Productivity",
+  "id": "everhour",
+  "name": "Everhour",
+  "operations": [
+    {
+      "description": "Creates a new task in a project.",
+      "id": "create-task",
+      "inputs": [
+        {
+          "description": "The ID of the project to create the task in.",
+          "label": "Project ID",
+          "name": "projectId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The name of the task.",
+          "label": "Task Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "everhour/src/lib/actions/create-task.ts",
+      "source_sha256": "8f9103eece8f4293346c8c08571f00a0af7ae44527334448affe5cddef96de8c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/everhour/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Starts a timer for a specific task.",
+      "id": "start-timer",
+      "inputs": [
+        {
+          "description": "The ID of the task to start the timer for.",
+          "label": "Task ID",
+          "name": "taskId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Start Timer",
+      "source_path": "everhour/src/lib/actions/start-timer.ts",
+      "source_sha256": "6e5f160c05417bf275e00f03f0f7e587fd33c05b416f4a1212270fd0b3f6e4a9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/everhour/src/lib/actions/start-timer.ts"
+    },
+    {
+      "description": "Stops the currently running timer. Fails if no timer is currently active.",
+      "id": "stop-timer",
+      "inputs": [],
+      "kind": "action",
+      "name": "Stop Timer",
+      "source_path": "everhour/src/lib/actions/stop-timer.ts",
+      "source_sha256": "dfc70b5f8f1af6420ada0e898bb2e5be3c7392da73eca32a5caf924c025e301d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/everhour/src/lib/actions/stop-timer.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "ae2a82177e6204ebdd2253efde0d607211ce8b3b",
+    "index_path": "everhour/src/index.ts",
+    "index_sha256": "f010910b3c2c43f5d1debfb8798d1bdc1aadce45215a4a8989abab93281a7aef",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

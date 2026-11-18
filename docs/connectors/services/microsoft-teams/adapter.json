@@ -1,0 +1,396 @@
+{
+  "allowed_hosts": [
+    "graph.microsoft.com",
+    "graph.microsoft.us",
+    "learn.microsoft.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://{cloud}/{tenantId}/oauth2/v2.0/authorize"
+    ],
+    "fields": [
+      {
+        "description": "",
+        "label": "Cloud",
+        "name": "cloud",
+        "required": null,
+        "source_expression": "cloudProperty",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Tenant ID",
+        "name": "tenantId",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "Channel.Create",
+      "Channel.ReadBasic.All",
+      "ChannelMessage.Read.All",
+      "ChannelMessage.Send",
+      "Chat.ReadWrite",
+      "OnlineMeetingRecording.Read.All",
+      "OnlineMeetingTranscript.Read.All",
+      "Presence.Read.All",
+      "Team.ReadBasic.All",
+      "TeamMember.Read.All",
+      "User.Read",
+      "User.ReadBasic.All",
+      "email",
+      "offline_access",
+      "openid",
+      "profile"
+    ],
+    "token_urls": [
+      "https://{cloud}/{tenantId}/oauth2/v2.0/token"
+    ]
+  },
+  "category": "Communication",
+  "id": "microsoft-teams",
+  "name": "Microsoft Teams",
+  "operations": [
+    {
+      "description": "Create a new channel in Microsoft Teams.",
+      "id": "microsoft_teams_create_channel",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Team Id",
+          "name": "teamId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.teamId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Channel Name",
+          "name": "channelDisplayName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Channel Description",
+          "name": "channelDescription",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Channel",
+      "source_path": "microsoft-teams/src/lib/actions/create-channel.ts",
+      "source_sha256": "97d30deb544ea8607a7eb33673222cc749f9e13d79ec36f8e2398dbf315aaf6a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/actions/create-channel.ts"
+    },
+    {
+      "description": "Finds channels by name.",
+      "id": "microsoft_teams_find_channel",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Team Id",
+          "name": "teamId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.teamId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Channel Name",
+          "name": "channelName",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Channel",
+      "source_path": "microsoft-teams/src/lib/actions/find-channel.ts",
+      "source_sha256": "7befc3a6a9c7d2095c85c9b72f201cbb714293f4b30e72f5a1ab27e8d7550dfb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/actions/find-channel.ts"
+    },
+    {
+      "description": "Finds a team member by email or display name.",
+      "id": "microsoft_teams_find_team_member",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Team Id",
+          "name": "teamId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.teamId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Search By",
+          "name": "searchBy",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Email address or name to search for.",
+          "label": "searchValue",
+          "name": "searchValue",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Team Member",
+      "source_path": "microsoft-teams/src/lib/actions/find-team-member.ts",
+      "source_sha256": "b415914f0497f45bb4a1950800c2d6aeea1f5f67d60423f3366bc392b3fb9b7f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/actions/find-team-member.ts"
+    },
+    {
+      "description": "Fetch a specific channel message by team, channel, and message ID (optionally a reply).",
+      "id": "microsoft_teams_get_channel_message",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Team Id",
+          "name": "teamId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.teamId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Channel Id",
+          "name": "channelId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.channelId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The ID of the channel message to retrieve.",
+          "label": "Message ID",
+          "name": "messageId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Provide to fetch a specific reply under the message.",
+          "label": "Reply ID (optional)",
+          "name": "replyId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Channel Message",
+      "source_path": "microsoft-teams/src/lib/actions/get-channel-message.ts",
+      "source_sha256": "1dc37c0a72c25206380accd8e977eeda5b0f65f19c05e36b2629c1b7a9fa8bb3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/actions/get-channel-message.ts"
+    },
+    {
+      "description": "Fetch a specific chat message by chat and message ID.",
+      "id": "microsoft_teams_get_chat_message",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Chat Id",
+          "name": "chatId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.chatId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The ID of the message to retrieve.",
+          "label": "Message ID",
+          "name": "messageId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Chat Message",
+      "source_path": "microsoft-teams/src/lib/actions/get-chat-message.ts",
+      "source_sha256": "27eef780762fcdc3e60aca57b68d65bc4d7128ed77dadd07f52452e41396fb49",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/actions/get-chat-message.ts"
+    },
+    {
+      "description": "Retrieves recordings for a Teams meeting. Provide a Recording to fetch its metadata; omit it to list all available recordings.",
+      "id": "microsoft_teams_get_meeting_recording",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Meeting Identifier Type",
+          "name": "meetingIdentifierType",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.meetingIdentifierType({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Meeting Identifier Value",
+          "name": "meetingIdentifierValue",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.meetingIdentifierValue({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Recording Id",
+          "name": "recordingId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.recordingId({ required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Meeting Recording",
+      "source_path": "microsoft-teams/src/lib/actions/get-meeting-recording.ts",
+      "source_sha256": "1b6cdf3b68bfd23713f3001f7f66ac847878a00904e7d06d7eac847b394f7e6e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/actions/get-meeting-recording.ts"
+    },
+    {
+      "description": "Retrieves transcripts for a Teams meeting. Provide a Transcript to fetch its text content; omit it to list all available transcripts.",
+      "id": "microsoft_teams_get_meeting_transcript",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Meeting Identifier Type",
+          "name": "meetingIdentifierType",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.meetingIdentifierType({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Meeting Identifier Value",
+          "name": "meetingIdentifierValue",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.meetingIdentifierValue({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Transcript Id",
+          "name": "transcriptId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.transcriptId({ required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Meeting Transcript",
+      "source_path": "microsoft-teams/src/lib/actions/get-meeting-transcript.ts",
+      "source_sha256": "24077b99b9ac4534ed5ba9ed2c6053bb3e0fd8bccb35da7905a1c4d7411458e9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/actions/get-meeting-transcript.ts"
+    },
+    {
+      "description": "Sends a message in an existing chat.",
+      "id": "microsoft_teams_send_chat_message",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Chat Id",
+          "name": "chatId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.chatId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Content Type",
+          "name": "contentType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Message",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Chat Message",
+      "source_path": "microsoft-teams/src/lib/actions/send-chat-message.ts",
+      "source_sha256": "d3f6ce5c101cf72eec7dd8f4536edb5edfdbc0b41abd2311dbdd22dbc9a94b43",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/actions/send-chat-message.ts"
+    },
+    {
+      "description": "Triggers when a new channel is created in a team.",
+      "id": "new-channel",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Team Id",
+          "name": "teamId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.teamId({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Channel",
+      "source_path": "microsoft-teams/src/lib/triggers/new-channel.ts",
+      "source_sha256": "323f908bf8f6e22937495ef07faf9b048b676fcdd73745eb0dca9d0c2f4e6856",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/triggers/new-channel.ts"
+    },
+    {
+      "description": "Triggers when a new message is posted in a channel.",
+      "id": "new-channel-message",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Team Id",
+          "name": "teamId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.teamId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Channel Id",
+          "name": "channelId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.channelId({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Channel Message",
+      "source_path": "microsoft-teams/src/lib/triggers/new-channel-message.ts",
+      "source_sha256": "df378e9e88b863240df3d21e3d957cb0bc4fc50bce985c679e2c65e5a7e3ed1e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/triggers/new-channel-message.ts"
+    },
+    {
+      "description": "Triggers when a new message is received in a chat.",
+      "id": "new-chat-message",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Chat Id",
+          "name": "chatId",
+          "required": null,
+          "source_expression": "microsoftTeamsProps.chatId({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Chat Message",
+      "source_path": "microsoft-teams/src/lib/triggers/new-chat-message.ts",
+      "source_sha256": "be3c06106f289ce629902338b3d8d343377943db7cb1d6f796b10365bce1c940",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-teams/src/lib/triggers/new-chat-message.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "4914779807e13b668ffb36898a90249f2e1c791d",
+    "index_path": "microsoft-teams/src/index.ts",
+    "index_sha256": "fe6713258066ef6fe3540f39d93bcbc13b1b8938cbc1f2e023c514816e5beaf0",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "automation-engineer"
+  ]
+}

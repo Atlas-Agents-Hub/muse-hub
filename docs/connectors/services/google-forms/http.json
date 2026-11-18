@@ -1,0 +1,67 @@
+{
+  "id": "google-forms",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "google-forms/src/lib/actions/forms-get-form.ts",
+      "credential_source_sha256": "3b2ed68b0c39f9012e0ab78a503779e6d11879a111ede5245309339593852815",
+      "headers": {},
+      "host": "forms.googleapis.com",
+      "id": "read-v1-forms-form-id",
+      "method": "GET",
+      "parameters": [
+        "form_id"
+      ],
+      "source_path": "google-forms/src/lib/actions/forms-get-form.ts",
+      "source_sha256": "3b2ed68b0c39f9012e0ab78a503779e6d11879a111ede5245309339593852815",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-forms/src/lib/actions/forms-get-form.ts",
+      "url_template": "https://forms.googleapis.com/v1/forms/{form_id}"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "google-forms/src/lib/actions/forms-get-response.ts",
+      "credential_source_sha256": "94c4dccc9728e4ed46f49577d66babecd9d58d0d47d12cfc3a8090b85a942f67",
+      "headers": {},
+      "host": "forms.googleapis.com",
+      "id": "read-v1-forms-form-id-responses-response-id",
+      "method": "GET",
+      "parameters": [
+        "form_id",
+        "response_id"
+      ],
+      "source_path": "google-forms/src/lib/actions/forms-get-response.ts",
+      "source_sha256": "94c4dccc9728e4ed46f49577d66babecd9d58d0d47d12cfc3a8090b85a942f67",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-forms/src/lib/actions/forms-get-response.ts",
+      "url_template": "https://forms.googleapis.com/v1/forms/{form_id}/responses/{response_id}"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "google-forms/src/lib/actions/forms-list-responses.ts",
+      "credential_source_sha256": "1a27967d61eabbec05aa02d1fa6fb07bd8a9350a8af8aff041d11be0377a12ee",
+      "headers": {},
+      "host": "forms.googleapis.com",
+      "id": "read-v1-forms-form-id-responses",
+      "method": "GET",
+      "parameters": [
+        "form_id"
+      ],
+      "source_path": "google-forms/src/lib/actions/forms-list-responses.ts",
+      "source_sha256": "1a27967d61eabbec05aa02d1fa6fb07bd8a9350a8af8aff041d11be0377a12ee",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-forms/src/lib/actions/forms-list-responses.ts",
+      "url_template": "https://forms.googleapis.com/v1/forms/{form_id}/responses"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

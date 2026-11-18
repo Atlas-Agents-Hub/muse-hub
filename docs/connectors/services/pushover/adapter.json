@@ -1,0 +1,208 @@
+{
+  "allowed_hosts": [
+    "api.pushover.net"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Api_Token",
+        "name": "api_token",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Token', description: 'The API Token/Key of your Pushover application.', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "User_Key",
+        "name": "user_key",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'User Key', description: 'Your user key, or a group key to notify a group.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Communication",
+  "id": "pushover",
+  "name": "Pushover",
+  "operations": [
+    {
+      "description": "Spend a prepaid credit to license a Pushover user",
+      "id": "assign_license",
+      "inputs": [
+        {
+          "description": "The 30-character user key to license. Supply either this or Email, not both.",
+          "label": "User Key",
+          "name": "user",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Pushover account email of the person to license, used when their user key is unknown. Supply either this or User Key, not both.",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Restrict the license to one platform. Any platform may be used when omitted.",
+          "label": "Operating System",
+          "name": "os",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Assign License",
+      "source_path": "pushover/src/lib/actions/assign-license.ts",
+      "source_sha256": "442ae30d681ad1a0752fc479ef248f4e863bcbb561593a688f0826bfd03a079b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushover/src/lib/actions/assign-license.ts"
+    },
+    {
+      "description": "Read the name and members of one Pushover delivery group",
+      "id": "get_delivery_group",
+      "inputs": [
+        {
+          "description": "The 30-character delivery group key. Resolve it with List Delivery Groups; this is not the user key stored on the connection.",
+          "label": "Group Key",
+          "name": "group_key",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Delivery Group",
+      "source_path": "pushover/src/lib/actions/get-delivery-group.ts",
+      "source_sha256": "f3f2c32d0ee53b967bd20ac1398e4eb5e88b73094ec7525b0cb87b444b415377",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushover/src/lib/actions/get-delivery-group.ts"
+    },
+    {
+      "description": "Read the acknowledgement status of an emergency notification receipt",
+      "id": "get_receipt_status",
+      "inputs": [
+        {
+          "description": "Receipt id returned by Send Push Message at emergency priority, for example rXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.",
+          "label": "Receipt",
+          "name": "receipt",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Emergency Receipt Status",
+      "source_path": "pushover/src/lib/actions/get-receipt-status.ts",
+      "source_sha256": "72e07597e2eab9bb4713aa5503b7d12878ad7da84a02f18a4d040262d3319d86",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushover/src/lib/actions/get-receipt-status.ts"
+    },
+    {
+      "description": "Read how many prepaid Pushover license credits remain",
+      "id": "get_license_credits",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get License Credits",
+      "source_path": "pushover/src/lib/actions/get-license-credits.ts",
+      "source_sha256": "a4209ebc578bc5c129e1e2a668aa672d3ec7089026eaae6f8fa75e80cfb6b974",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushover/src/lib/actions/get-license-credits.ts"
+    },
+    {
+      "description": "Read the monthly message allowance and remaining quota of the application",
+      "id": "get_app_limits",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Monthly Message Limits",
+      "source_path": "pushover/src/lib/actions/get-app-limits.ts",
+      "source_sha256": "67480234e6a482b72af878a0651711b7776d6e29d03247df916f21696b240ee0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushover/src/lib/actions/get-app-limits.ts"
+    },
+    {
+      "description": "List the delivery groups owned by the Pushover account",
+      "id": "list_delivery_groups",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Delivery Groups",
+      "source_path": "pushover/src/lib/actions/list-delivery-groups.ts",
+      "source_sha256": "109a70df30b8b6fbc6b42cb0e5c619494a1deaac08840d2228f9b4c063b64ca2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushover/src/lib/actions/list-delivery-groups.ts"
+    },
+    {
+      "description": "List the notification sound identifiers Pushover accepts",
+      "id": "list_notification_sounds",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Notification Sounds",
+      "source_path": "pushover/src/lib/actions/list-notification-sounds.ts",
+      "source_sha256": "ea78555c5af78d6a218ed135fdec5733a79edb1adbd6bd9a8a78478b502c202d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushover/src/lib/actions/list-notification-sounds.ts"
+    },
+    {
+      "description": "Update the Pushover glance widget fields on the user devices",
+      "id": "update_glance",
+      "inputs": [
+        {
+          "description": "Short description of the data, maximum 100 characters. Omit to leave unchanged. Values cannot be cleared once set.",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Main line of text, maximum 100 characters. Omit to leave unchanged. Values cannot be cleared once set.",
+          "label": "Text",
+          "name": "text",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Second line of text, maximum 100 characters. Omit to leave unchanged. Values cannot be cleared once set.",
+          "label": "Subtext",
+          "name": "subtext",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Integer shown on the widget, may be negative. Omit to leave unchanged.",
+          "label": "Count",
+          "name": "count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Integer from 0 to 100 rendered as a progress bar. Omit to leave unchanged.",
+          "label": "Percent",
+          "name": "percent",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Update only this device name. All devices are updated when omitted.",
+          "label": "Device",
+          "name": "device",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Glance Widget",
+      "source_path": "pushover/src/lib/actions/update-glance.ts",
+      "source_sha256": "ec7289f1f8111f93645021c059ae2d104dc97183a093f2a82ef7939b53a67194",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushover/src/lib/actions/update-glance.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "eff6bd2451a8c6faa73830d83958ec59a05b0ef1",
+    "index_path": "pushover/src/index.ts",
+    "index_sha256": "047487cc3c424c37621b6877148feddb7ef155aaa52f6a28e69603d4d1e692ec",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "automation-engineer"
+  ]
+}

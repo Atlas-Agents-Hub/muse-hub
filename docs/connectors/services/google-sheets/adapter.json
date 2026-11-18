@@ -1,0 +1,426 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "console.cloud.google.com",
+    "developers.google.com",
+    "oauth2.googleapis.com",
+    "sheets.googleapis.com",
+    "support.google.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection; Provider connection fields",
+    "scopes": [],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "google-sheets",
+  "name": "Google Sheets",
+  "operations": [
+    {
+      "description": "Look up a row by column value; if no match is found, create a new row with the provided values.",
+      "id": "find-or-create-row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Column Name",
+          "name": "columnName",
+          "required": null,
+          "source_expression": "columnNameProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The value to look for in the selected column.",
+          "label": "Search Value",
+          "name": "searchValue",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only treat exact matches as found.",
+          "label": "Exact Match",
+          "name": "matchCase",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The row that contains the column names.",
+          "label": "Header Row",
+          "name": "headerRow",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Key each row by column name instead of A, B, C.",
+          "label": "Use Column Names",
+          "name": "useHeaderNames",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "First_Row_Headers",
+          "name": "first_row_headers",
+          "required": null,
+          "source_expression": "isFirstRowHeaderProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Store dates and formulas as plain text instead of evaluating them.",
+          "label": "As String",
+          "name": "as_string",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Values",
+          "name": "values",
+          "required": null,
+          "source_expression": "rowValuesProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Find or Create Row",
+      "source_path": "google-sheets/src/lib/actions/find-or-create-row.ts",
+      "source_sha256": "1739bc1a0846b0247b5585cec5f68d5497fb59bd01520e2b3c555f014b1dbfbe",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/actions/find-or-create-row.ts"
+    },
+    {
+      "description": "Look up rows in a worksheet based on a column value.",
+      "id": "find_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Column Name",
+          "name": "columnName",
+          "required": null,
+          "source_expression": "columnNameProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The value to look for. Leave empty to return all rows.",
+          "label": "Search Value",
+          "name": "searchValue",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return rows whose cell matches the value exactly.",
+          "label": "Exact Match",
+          "name": "matchCase",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Start searching from this row number.",
+          "label": "Starting Row",
+          "name": "startingRow",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "How many matching rows to return.",
+          "label": "Number of Rows",
+          "name": "numberOfRows",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The row that contains the column names.",
+          "label": "Header Row",
+          "name": "headerRow",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Key each row by column name instead of A, B, C.",
+          "label": "Use Column Names",
+          "name": "useHeaderNames",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Rows",
+      "source_path": "google-sheets/src/lib/actions/find-rows.ts",
+      "source_sha256": "5da67b3c7cd884850ad7329f7719e761e01dda28601a879da3b4b5a747308edc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/actions/find-rows.ts"
+    },
+    {
+      "description": "Find spreadsheet(s) by name.",
+      "id": "find_spreadsheets",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Include Team Drives",
+          "name": "includeTeamDrives",
+          "required": null,
+          "source_expression": "includeTeamDrivesProp({ advanced: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Enter the name of the spreadsheet to search for",
+          "label": "Spreadsheet Name",
+          "name": "spreadsheet_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return spreadsheets whose name matches exactly.",
+          "label": "Exact Match",
+          "name": "exact_match",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Spreadsheet(s)",
+      "source_path": "google-sheets/src/lib/actions/find-spreadsheets.ts",
+      "source_sha256": "1d825fa7e7448fc1f7605dc1a0a1c98ffea96242fde68cca6bb64ef6bdfba547",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/actions/find-spreadsheets.ts"
+    },
+    {
+      "description": "Find worksheets in a spreadsheet by title.",
+      "id": "find-worksheet",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Include Team Drives",
+          "name": "includeTeamDrives",
+          "required": null,
+          "source_expression": "includeTeamDrivesProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Spreadsheet Id",
+          "name": "spreadsheetId",
+          "required": null,
+          "source_expression": "spreadsheetIdProp('Spreadsheet', 'The spreadsheet to search in.')",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The worksheet title to search for.",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return worksheets whose title matches exactly.",
+          "label": "Exact Match",
+          "name": "exact_match",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Worksheet(s)",
+      "source_path": "google-sheets/src/lib/actions/find-worksheet.ts",
+      "source_sha256": "436a9408d46697606ef7621ba1ea829567f1a3163ea23596a8540c66c431c9f7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/actions/find-worksheet.ts"
+    },
+    {
+      "description": "Read every row from a worksheet.",
+      "id": "get-many-rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "First_Row_Headers",
+          "name": "first_row_headers",
+          "required": null,
+          "source_expression": "isFirstRowHeaderProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get All Rows",
+      "source_path": "google-sheets/src/lib/actions/get-many-rows.ts",
+      "source_sha256": "40e34f21657afc532af6f767635b41251c53d67b847e8b4f9ad99d3b749987dd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/actions/get-many-rows.ts"
+    },
+    {
+      "description": "Read the next batch of rows from a worksheet, continuing where the last run left off. A batch of only blank rows returns an empty list mid-sheet, so do not stop at the first empty result.",
+      "id": "get_next_rows",
+      "inputs": [
+        {
+          "description": "The row to start reading from on the first run.",
+          "label": "Start Row",
+          "name": "startRow",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "The row that contains the column names.",
+          "label": "Header Row",
+          "name": "headerRow",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Key each row by column name instead of A, B, C.",
+          "label": "Use Column Names",
+          "name": "useHeaderNames",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "The key used to store the current row number in memory",
+          "label": "Memory Key",
+          "name": "memKey",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of rows to get",
+          "label": "Group Size",
+          "name": "groupSize",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Next Rows",
+      "source_path": "google-sheets/src/lib/actions/get-rows.ts",
+      "source_sha256": "ba6b2c3a8ca995a48fdaaaa4a6abff95bf32f54260a3bbab9c0f9739e51bdc5b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/actions/get-rows.ts"
+    },
+    {
+      "description": "Retrieve one row by its row number.",
+      "id": "find_row_by_num",
+      "inputs": [
+        {
+          "description": "The row to retrieve, counting from 1.",
+          "label": "Row Number",
+          "name": "rowNumber",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "The row that contains the column names.",
+          "label": "Header Row",
+          "name": "headerRow",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Key each row by column name instead of A, B, C.",
+          "label": "Use Column Names",
+          "name": "useHeaderNames",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Row by Number",
+      "source_path": "google-sheets/src/lib/actions/find-row-by-num.ts",
+      "source_sha256": "b666f082dddc452fc5769cbddd4ea5381452a6384875089753298b35b58de29b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/actions/find-row-by-num.ts"
+    },
+    {
+      "description": "Read cells from a range using A1 notation (e.g. A1:D10). Returns rows and the resolved range.",
+      "id": "read-data-range",
+      "inputs": [
+        {
+          "description": "The cells to read. Leave empty to read the whole worksheet.",
+          "label": "Range (A1 Notation)",
+          "name": "range",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Group the results one array per row, or one array per column.",
+          "label": "Return Data As",
+          "name": "majorDimension",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Return values as displayed, as raw values, or as formulas.",
+          "label": "Cell Values",
+          "name": "valueRenderOption",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Read Data Range",
+      "source_path": "google-sheets/src/lib/actions/read-data-range.ts",
+      "source_sha256": "a8958da08f6eb7826fad01471e99733e937288cee4099bc7f8ed4db8ad7fa1eb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/actions/read-data-range.ts"
+    },
+    {
+      "description": "Triggers when a new row is added or modified in a spreadsheet.",
+      "id": "google-sheets-new-or-updated-row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Info",
+          "name": "info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "Fire only when this column changes. Any Column fires on any cell.",
+          "label": "Trigger Column",
+          "name": "trigger_column",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New or Updated Row",
+      "source_path": "google-sheets/src/lib/triggers/new-or-updated-row.trigger.ts",
+      "source_sha256": "7769d2ca1dab227272cbeace5a4b66f685e1d9246c430b07804aef3e18252f7f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/triggers/new-or-updated-row.trigger.ts"
+    },
+    {
+      "description": "Triggers when a new row is added to the bottom of a worksheet.",
+      "id": "googlesheets_new_row_added",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Info",
+          "name": "info",
+          "required": false,
+          "type": "MarkDown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Row Added",
+      "source_path": "google-sheets/src/lib/triggers/new-row-added-webhook.ts",
+      "source_sha256": "683401828241856b30dceee34908433f58441ac3ede7b1891b6bb561adaa1a98",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-sheets/src/lib/triggers/new-row-added-webhook.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "757c32074f50f0916fc2db213ae6a1b44254218c",
+    "index_path": "google-sheets/src/index.ts",
+    "index_sha256": "41a7d8450c689cd3460adb85abaf923c060712c098d406cc2d19e6523715ee70",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach",
+    "garden-companion"
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "allowed_hosts": [
+    "duckdb.org"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "No account token for the listed public requests",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "duckdb",
+  "name": "DuckDB",
+  "operations": [
+    {
+      "description": "Create DB from data and run query",
+      "id": "createAndQueryDB",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "List of tables to create in the database",
+          "label": "Tables",
+          "name": "tables",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Please use $1, $2, etc. for parameterized queries to avoid SQL injection.",
+          "label": "Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Arguments to be used in the query",
+          "label": "Arguments",
+          "name": "args",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Create and Query DB",
+      "source_path": "duckdb/src/lib/actions/create-and-query-db.ts",
+      "source_sha256": "bb6094f3beaadde57abb5a628603ce7c81241ca410c712ec2d737d7b4a7da94e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/duckdb/src/lib/actions/create-and-query-db.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "81007d0fc3e99d2f8a8ed23b6762b34b3b59949e",
+    "index_path": "duckdb/src/index.ts",
+    "index_sha256": "ccb20bc3be99498438f736f98f8aa33ed8c6a6282edbd3ab16e17c5b623adfd4",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "allowed_hosts": [
+    "10az.online.tableau.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Tableau Server or Tableau Cloud URL (e.g., https://10az.online.tableau.com)",
+        "label": "Server URL",
+        "name": "serverUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Tableau REST API version (e.g., 3.19, 3.20, 3.26). Check your Tableau server documentation for supported versions. Use 3.26 for most Tableau Cloud instances.",
+        "label": "API Version",
+        "name": "apiVersion",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Your Tableau site name (leave empty for default site)",
+        "label": "Site Content URL",
+        "name": "siteContentUrl",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "Your Tableau username (email for Tableau Cloud, or domain\\\\username for Server)",
+        "label": "Username",
+        "name": "username",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', description: 'Your Tableau password', required: false, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Name of your Personal Access Token",
+        "label": "Personal Access Token Name",
+        "name": "personalAccessTokenName",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Personal Access Token Secret",
+        "name": "personalAccessTokenSecret",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Personal Access Token Secret', description: 'Secret value of your Personal Access Token', required: false, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "tableau",
+  "name": "Tableau",
+  "operations": [
+    {
+      "description": "Download a view from a workbook in the specified format",
+      "id": "download_view",
+      "inputs": [
+        {
+          "description": "Select the view to download",
+          "label": "View",
+          "name": "viewId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The format to download the view in",
+          "label": "Format",
+          "name": "format",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Maximum age of cached data in minutes (default: 60)",
+          "label": "Max Age (minutes)",
+          "name": "maxAge",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Resolution for image format (high for maximum pixel density)",
+          "label": "Image Resolution",
+          "name": "resolution",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Width of the rendered image/PDF in pixels",
+          "label": "Visualization Width",
+          "name": "vizWidth",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Height of the rendered image/PDF in pixels",
+          "label": "Visualization Height",
+          "name": "vizHeight",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Page size for PDF format",
+          "label": "Page Type",
+          "name": "pageType",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Page orientation for PDF format",
+          "label": "Orientation",
+          "name": "orientation",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Download View",
+      "source_path": "tableau/src/lib/actions/download-view.ts",
+      "source_sha256": "6f8c73497971ea63bde9857d05ef7e771cb436509d4f9d8658b3ed0f747e18d8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/tableau/src/lib/actions/download-view.ts"
+    },
+    {
+      "description": "Finds a view based on name (URL name)",
+      "id": "find_view",
+      "inputs": [
+        {
+          "description": "The URL name of the view to find (e.g., Sheet1 from /views/workbook/Sheet1)",
+          "label": "View Name",
+          "name": "viewName",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find View",
+      "source_path": "tableau/src/lib/actions/find-view.ts",
+      "source_sha256": "86b42f8014ee4ca77a87505dee8a597b4a6260966ee0baec8a4ec52a250f88d6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/tableau/src/lib/actions/find-view.ts"
+    },
+    {
+      "description": "Finds a workbook based on ID or content URL",
+      "id": "find_workbook",
+      "inputs": [
+        {
+          "description": "Choose whether to search by workbook ID or content URL",
+          "label": "Search By",
+          "name": "searchType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The ID of the workbook to find",
+          "label": "Workbook ID",
+          "name": "workbookId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The content URL of the workbook to find (e.g., \"MyWorkbook\" from /workbooks/MyWorkbook)",
+          "label": "Content URL",
+          "name": "contentUrl",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Workbook",
+      "source_path": "tableau/src/lib/actions/find-workbook.ts",
+      "source_sha256": "681e832d10ae999fa168d03c603f5f1cb36fdc0210e1eeb827c7d9a9e9855524",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/tableau/src/lib/actions/find-workbook.ts"
+    },
+    {
+      "description": "Refreshes the specified workbook immediately",
+      "id": "refresh_workbook",
+      "inputs": [
+        {
+          "description": "Select the workbook to refresh",
+          "label": "Workbook",
+          "name": "workbookId",
+          "required": true,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Refresh Workbook",
+      "source_path": "tableau/src/lib/actions/refresh-workbook.ts",
+      "source_sha256": "9a877b435848a63b1b35e6b427f4b3b3c816d38035b502eaf3e5262c13626cf6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/tableau/src/lib/actions/refresh-workbook.ts"
+    },
+    {
+      "description": "Runs the specified extract refresh task and returns job information",
+      "id": "run_extract_refresh_task",
+      "inputs": [
+        {
+          "description": "Select the extract refresh task to run",
+          "label": "Extract Refresh Task",
+          "name": "taskId",
+          "required": true,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Run Extract Refresh Task",
+      "source_path": "tableau/src/lib/actions/run-extract-refresh-task.ts",
+      "source_sha256": "b708e0e808713906a83d865be4124eb84a19552b085a840bed966219796dc258",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/tableau/src/lib/actions/run-extract-refresh-task.ts"
+    },
+    {
+      "description": "Triggers when a datasource event occurs (created, updated, or deleted)",
+      "id": "datasource_event",
+      "inputs": [
+        {
+          "description": "Select the datasource event to trigger on",
+          "label": "Event Type",
+          "name": "eventType",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Datasource Event",
+      "source_path": "tableau/src/lib/triggers/datasource-events.ts",
+      "source_sha256": "01db113f675c69369b587999b0f2c38e8909ce8429731fcff35462c11b38e145",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/tableau/src/lib/triggers/datasource-events.ts"
+    },
+    {
+      "description": "Triggers when a datasource refresh event occurs (started, succeeded, or failed)",
+      "id": "datasource_refresh_event",
+      "inputs": [
+        {
+          "description": "Select the datasource refresh event to trigger on",
+          "label": "Event Type",
+          "name": "eventType",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Datasource Refresh Event",
+      "source_path": "tableau/src/lib/triggers/datasource-refresh-events.ts",
+      "source_sha256": "0e8cb5c8edd9705874544789375ca252273c7a273c5442f5c5a36fa14de6882e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/tableau/src/lib/triggers/datasource-refresh-events.ts"
+    },
+    {
+      "description": "Triggers when a label event occurs (created, updated, or deleted)",
+      "id": "label_event",
+      "inputs": [
+        {
+          "description": "Select the label event to trigger on",
+          "label": "Event Type",
+          "name": "eventType",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Label Event",
+      "source_path": "tableau/src/lib/triggers/label-events.ts",
+      "source_sha256": "1f1b6fd53cd034380c2280fe21e323cbaad9ab8b759fc63e088bc6162642e75c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/tableau/src/lib/triggers/label-events.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "c661c66031da0c66d67b6dce5cfe8943c871b5b6",
+    "index_path": "tableau/src/index.ts",
+    "index_sha256": "9ad9ff4d44edd48a9a642b9aa5899a49bd2662813927358838b2b6080bd1e5bc",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

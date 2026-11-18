@@ -1,0 +1,352 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The server's hostname or IP address.",
+        "label": "Host",
+        "name": "host",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The port the server listens on, usually 3306.",
+        "label": "Port",
+        "name": "port",
+        "required": true,
+        "type": "Number"
+      },
+      {
+        "description": "The database user to sign in as.",
+        "label": "Username",
+        "name": "user",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', description: 'The password for that user.', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "The database to use. Only Run Query works without one.",
+        "label": "Database",
+        "name": "database",
+        "required": false,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "mysql",
+  "name": "MySQL",
+  "operations": [
+    {
+      "description": "Deletes one or more rows from a table",
+      "id": "delete_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": null,
+          "source_expression": "mysqlCommon.timezone",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "mysqlCommon.table()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The column to match rows on.",
+          "label": "Search Column",
+          "name": "search_column",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The value that column must equal.",
+          "label": "Search Value",
+          "name": "search_value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Row",
+      "source_path": "mysql/src/lib/actions/delete-row.ts",
+      "source_sha256": "de53093f2055ed981ad5b608ba7f1faf037dd2159ec73576c36b9b09c6748658",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mysql/src/lib/actions/delete-row.ts"
+    },
+    {
+      "description": "Reads rows from a table",
+      "id": "find_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": null,
+          "source_expression": "warningMarkdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": null,
+          "source_expression": "mysqlCommon.timezone",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "mysqlCommon.table()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The SQL after WHERE. Write ? where each value goes.",
+          "label": "Condition",
+          "name": "condition",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Values for each ? in the condition, in order.",
+          "label": "Arguments",
+          "name": "args",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Leave empty to return every column.",
+          "label": "Columns",
+          "name": "columns",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Rows",
+      "source_path": "mysql/src/lib/actions/find-rows.ts",
+      "source_sha256": "2eb12c77e001489f5d67db28bdfcf706e18af2db14fd831d7366cf4a061d105c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mysql/src/lib/actions/find-rows.ts"
+    },
+    {
+      "description": "Returns a list of tables in the database",
+      "id": "get_tables",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Tables",
+      "source_path": "mysql/src/lib/actions/get-tables.ts",
+      "source_sha256": "71e3c05613f71ab1ca88565fe34bd2b8dbc9e7a1f99d6d93976c96adc2bf1659",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mysql/src/lib/actions/get-tables.ts"
+    },
+    {
+      "description": "Inserts many rows into a table in a single transaction",
+      "id": "insert_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": null,
+          "source_expression": "mysqlCommon.timezone",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "mysqlCommon.table()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Rows",
+          "name": "batch",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "Insert empty fields as empty strings instead of the column default.",
+          "label": "Keep Empty Strings",
+          "name": "keep_empty_strings",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Insert Multiple Rows",
+      "source_path": "mysql/src/lib/actions/insert-rows.ts",
+      "source_sha256": "f933757f5b48eca94e65d2ec8ddb130f421dc7c9242988fc97176232b9bb7b92",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mysql/src/lib/actions/insert-rows.ts"
+    },
+    {
+      "description": "Inserts a new row into a table",
+      "id": "insert_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": null,
+          "source_expression": "mysqlCommon.timezone",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "mysqlCommon.table()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Column names and the values to store in them.",
+          "label": "Values",
+          "name": "values",
+          "required": true,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Insert Row",
+      "source_path": "mysql/src/lib/actions/insert-row.ts",
+      "source_sha256": "d72520e4115b9c004f86772e14fa801e8994e732ac4918e627daa38f38baef91",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mysql/src/lib/actions/insert-row.ts"
+    },
+    {
+      "description": "Runs a SQL statement on the database and returns its results",
+      "id": "execute_query",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": null,
+          "source_expression": "warningMarkdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": null,
+          "source_expression": "mysqlCommon.timezone",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The SQL to run. Write ? where each value goes.",
+          "label": "Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Values for each ? in the query, in order.",
+          "label": "Arguments",
+          "name": "args",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Run Query",
+      "source_path": "mysql/src/lib/actions/execute-query.ts",
+      "source_sha256": "f0956770073a4a7c962167a446939f60f06294f6a4649f0e094f9994e57b4686",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mysql/src/lib/actions/execute-query.ts"
+    },
+    {
+      "description": "Updates one or more rows in a table",
+      "id": "update_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": null,
+          "source_expression": "mysqlCommon.timezone",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "mysqlCommon.table()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The column to match rows on.",
+          "label": "Search Column",
+          "name": "search_column",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The value that column must equal.",
+          "label": "Search Value",
+          "name": "search_value",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Changes_Info",
+          "name": "changes_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "Columns to change and their new values.",
+          "label": "Values",
+          "name": "values",
+          "required": true,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Row",
+      "source_path": "mysql/src/lib/actions/update-row.ts",
+      "source_sha256": "2c1c3921ff42bd28d5a291c467199c77daaa28a91a2f75c7bc64cea475049127",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mysql/src/lib/actions/update-row.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "34726f51201bdb3fac7dc671f13e7bc6d0fbbca3",
+    "index_path": "mysql/src/index.ts",
+    "index_sha256": "fd41d4d88e6731b63aa75b57cb1152001e1a3cf07ef50183d130ca2ec2d71ea4",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

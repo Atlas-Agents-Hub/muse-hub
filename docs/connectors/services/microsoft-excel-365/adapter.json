@@ -1,0 +1,522 @@
+{
+  "allowed_hosts": [
+    "graph.microsoft.com",
+    "graph.microsoft.us",
+    "learn.microsoft.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://{cloud}/common/oauth2/v2.0/authorize"
+    ],
+    "fields": [
+      {
+        "description": "",
+        "label": "Cloud",
+        "name": "cloud",
+        "required": null,
+        "source_expression": "microsoftCloudProperty",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "Files.ReadWrite",
+      "Sites.ReadWrite.All",
+      "email",
+      "offline_access",
+      "openid",
+      "profile"
+    ],
+    "token_urls": [
+      "https://{cloud}/common/oauth2/v2.0/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "microsoft-excel-365",
+  "name": "Microsoft Excel 365",
+  "operations": [
+    {
+      "description": "Locate a row by specifying a lookup column and value (e.g. find a row where “ID” = 123).",
+      "id": "find_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Storage Source",
+          "name": "storageSource",
+          "required": null,
+          "source_expression": "commonProps.storageSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "commonProps.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "commonProps.documentId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Workbook Id",
+          "name": "workbookId",
+          "required": null,
+          "source_expression": "commonProps.workbookId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Worksheet Id",
+          "name": "worksheetId",
+          "required": null,
+          "source_expression": "commonProps.worksheetId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Id",
+          "name": "tableId",
+          "required": null,
+          "source_expression": "commonProps.tableId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The column to search in.",
+          "label": "Lookup Column",
+          "name": "lookup_column",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The value to find in the lookup column.",
+          "label": "Lookup Value",
+          "name": "lookup_value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Row",
+      "source_path": "microsoft-excel-365/src/lib/actions/find-row.ts",
+      "source_sha256": "93e665a4ce637109fc9e46fbcda9b5ff23339b839ccafca5c3a8777a515a816e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-excel-365/src/lib/actions/find-row.ts"
+    },
+    {
+      "description": "Finds an existing workbook by name.",
+      "id": "find-workbook",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Storage Source",
+          "name": "storageSource",
+          "required": null,
+          "source_expression": "commonProps.storageSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "commonProps.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "commonProps.documentId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Excel File name to search for without extension.",
+          "label": "File Name",
+          "name": "fileName",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Workbook",
+      "source_path": "microsoft-excel-365/src/lib/actions/find-workbooks.ts",
+      "source_sha256": "1f22f18817a59cf4cafda93134f12df54b2f251bda5f63e749f12581dd919935",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-excel-365/src/lib/actions/find-workbooks.ts"
+    },
+    {
+      "description": "Finds an existing worksheet by name.",
+      "id": "find-worksheet",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Storage Source",
+          "name": "storageSource",
+          "required": null,
+          "source_expression": "commonProps.storageSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "commonProps.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "commonProps.documentId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Workbook Id",
+          "name": "workbookId",
+          "required": null,
+          "source_expression": "commonProps.workbookId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Worksheet Name",
+          "name": "sheetName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "If true, only return worksheets that exactly match the name. If false, return worksheets that contain the name.",
+          "label": "Exact Match",
+          "name": "exactMatch",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Worksheet",
+      "source_path": "microsoft-excel-365/src/lib/actions/find-worksheets.ts",
+      "source_sha256": "d998e1eaca9c4e623b4707f75c14d6b96b45320424e1bbe5dc221d45e2d49d4b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-excel-365/src/lib/actions/find-worksheets.ts"
+    },
+    {
+      "description": "Retrieve the entire content of a row by its row ID.",
+      "id": "getRowById",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Storage Source",
+          "name": "storageSource",
+          "required": null,
+          "source_expression": "commonProps.storageSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "commonProps.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "commonProps.documentId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Workbook Id",
+          "name": "workbookId",
+          "required": null,
+          "source_expression": "commonProps.workbookId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Worksheet Id",
+          "name": "worksheetId",
+          "required": null,
+          "source_expression": "commonProps.worksheetId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Id",
+          "name": "tableId",
+          "required": null,
+          "source_expression": "commonProps.tableId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The zero-based index of the row to retrieve (e.g., 0 for the first row, 1 for the second).",
+          "label": "Row ID (Index)",
+          "name": "row_id",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Row by ID",
+      "source_path": "microsoft-excel-365/src/lib/actions/get-row-by-id.ts",
+      "source_sha256": "3222df06f60527b2b6fb9ed2fd0a34cc1ac2b7b776083a94f5646e029ca58dbd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-excel-365/src/lib/actions/get-row-by-id.ts"
+    },
+    {
+      "description": "List columns of a table in a worksheet",
+      "id": "get_table_columns",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Storage Source",
+          "name": "storageSource",
+          "required": null,
+          "source_expression": "commonProps.storageSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "commonProps.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "commonProps.documentId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Workbook Id",
+          "name": "workbookId",
+          "required": null,
+          "source_expression": "commonProps.workbookId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Worksheet Id",
+          "name": "worksheetId",
+          "required": null,
+          "source_expression": "commonProps.worksheetId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Id",
+          "name": "tableId",
+          "required": null,
+          "source_expression": "commonProps.tableId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Limit the number of columns retrieved",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Table Columns",
+      "source_path": "microsoft-excel-365/src/lib/actions/get-table-columns.ts",
+      "source_sha256": "c99970992f127896790be3bf9bdbce5291911a8671bc122d5ab4129e0b76dc64",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-excel-365/src/lib/actions/get-table-columns.ts"
+    },
+    {
+      "description": "List rows of a table in a worksheet",
+      "id": "get_table_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Storage Source",
+          "name": "storageSource",
+          "required": null,
+          "source_expression": "commonProps.storageSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "commonProps.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "commonProps.documentId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Workbook Id",
+          "name": "workbookId",
+          "required": null,
+          "source_expression": "commonProps.workbookId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Worksheet Id",
+          "name": "worksheetId",
+          "required": null,
+          "source_expression": "commonProps.worksheetId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Id",
+          "name": "tableId",
+          "required": null,
+          "source_expression": "commonProps.tableId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Limit the number of rows retrieved",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Table Rows",
+      "source_path": "microsoft-excel-365/src/lib/actions/get-table-rows.ts",
+      "source_sha256": "c704451d61695ff014a5a31d96288e3ce9f9d528d003a0ceffbb50f3e6450029",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-excel-365/src/lib/actions/get-table-rows.ts"
+    },
+    {
+      "description": "Retrieve a list of workbooks",
+      "id": "get_workbooks",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Storage Source",
+          "name": "storageSource",
+          "required": null,
+          "source_expression": "commonProps.storageSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "commonProps.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "commonProps.documentId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Limits the number of workbooks returned, returns all workbooks if empty",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Workbooks",
+      "source_path": "microsoft-excel-365/src/lib/actions/get-workbooks.ts",
+      "source_sha256": "ee88270a8bf02003d807158f703b947b76791685aad5db18578df26336ef6dc7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-excel-365/src/lib/actions/get-workbooks.ts"
+    },
+    {
+      "description": "Retrieve worksheets from a workbook",
+      "id": "get_worksheets",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Storage Source",
+          "name": "storageSource",
+          "required": null,
+          "source_expression": "commonProps.storageSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "commonProps.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "commonProps.documentId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Workbook Id",
+          "name": "workbookId",
+          "required": null,
+          "source_expression": "commonProps.workbookId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "If checked, all worksheets will be returned",
+          "label": "Return All",
+          "name": "returnAll",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Limit the number of worksheets returned",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Worksheets",
+      "source_path": "microsoft-excel-365/src/lib/actions/get-worksheets.ts",
+      "source_sha256": "f52c1016ddb33d3d6f96ebbf947fb625676aee398f2830db3fa3f7764f0565c8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-excel-365/src/lib/actions/get-worksheets.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "6675b86edcd7c7f70092d2487f499f9701ad6d99",
+    "index_path": "microsoft-excel-365/src/index.ts",
+    "index_sha256": "8dc20434abae09e1f6ab7dce75ab08cf74aee26a1554b499fd8b492816a50eeb",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach"
+  ]
+}

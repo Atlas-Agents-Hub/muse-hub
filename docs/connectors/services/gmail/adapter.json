@@ -1,0 +1,339 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "console.cloud.google.com",
+    "gmail.googleapis.com",
+    "oauth2.googleapis.com",
+    "support.google.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection; Provider connection fields",
+    "scopes": [],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Email",
+  "id": "gmail",
+  "name": "Gmail",
+  "operations": [
+    {
+      "description": "Get a single draft email by its ID.",
+      "id": "gmail_get_draft",
+      "inputs": [
+        {
+          "description": "The ID of the draft to read (obtain from List Drafts).",
+          "label": "Draft ID",
+          "name": "draft_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Draft",
+      "source_path": "gmail/src/lib/actions/get-draft-action.ts",
+      "source_sha256": "e9a7a8f2c6944e66917914abe26d534511525fbfdb127c9fffeac3222b79ca2c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/actions/get-draft-action.ts"
+    },
+    {
+      "description": "Read one email by its message ID, including attachments.",
+      "id": "gmail_get_mail",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Message_Id",
+          "name": "message_id",
+          "required": null,
+          "source_expression": "GmailProps.message",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Email",
+      "source_path": "gmail/src/lib/actions/get-mail-action.ts",
+      "source_sha256": "42947d920d74a416f282d888386634f30ad2106dc3b5fdcc3445352fc591fade",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/actions/get-mail-action.ts"
+    },
+    {
+      "description": "Get a single label by its ID, including message and thread counts.",
+      "id": "gmail_get_label",
+      "inputs": [
+        {
+          "description": "The ID of the label to read (obtain from List Labels).",
+          "label": "Label ID",
+          "name": "label_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Label",
+      "source_path": "gmail/src/lib/actions/get-label-action.ts",
+      "source_sha256": "150ba010a67d99660ef073414d987fc32bd219fadb04371172b256aa3e5758bd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/actions/get-label-action.ts"
+    },
+    {
+      "description": "Get the connected mailbox profile.",
+      "id": "gmail_get_profile",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Profile",
+      "source_path": "gmail/src/lib/actions/get-profile-action.ts",
+      "source_sha256": "6d996fe9ba960d6591945485fc313bc285582661378511b8e6e644c2f7002848",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/actions/get-profile-action.ts"
+    },
+    {
+      "description": "Get a thread from your Gmail account via Id",
+      "id": "gmail_get_thread",
+      "inputs": [
+        {
+          "description": "The thread Id of the mail to read",
+          "label": "Thread ID",
+          "name": "thread_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Format",
+          "name": "format",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<GmailMessageFormat>({ displayName: 'Format', description: 'Format of the mail', required: false, defaultValue: 'full', options: { disabled: false, options: [ { value: GmailMessageFormat.MINIMAL, label: 'Minimal' }, { value: GmailMessageFormat.FULL, label: 'Full' }, { value: GmailMessageFormat.RAW, label: 'Raw' }, { value: GmailMessageFormat.METADATA, label: 'Metadata' }, ], }, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Thread",
+      "source_path": "gmail/src/lib/actions/get-thread-action.ts",
+      "source_sha256": "4e491c231c3252f41ce87f5b02f6881d97722391337c343f9444e713e8e1f843",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/actions/get-thread-action.ts"
+    },
+    {
+      "description": "List draft emails in the mailbox.",
+      "id": "gmail_list_drafts",
+      "inputs": [
+        {
+          "description": "Optional Gmail search query to filter drafts (e.g. \"subject:invoice\").",
+          "label": "Search Query",
+          "name": "query",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of drafts to return (1-500).",
+          "label": "Max Results",
+          "name": "max_results",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Drafts",
+      "source_path": "gmail/src/lib/actions/list-drafts-action.ts",
+      "source_sha256": "20d8d270133ebdef90f1ab19f770cb55c43e877a198d4cbea880793bb983ccab",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/actions/list-drafts-action.ts"
+    },
+    {
+      "description": "List mailbox changes since a given history ID.",
+      "id": "gmail_list_history",
+      "inputs": [
+        {
+          "description": "Return changes after this history ID (obtain from Get Profile or a previous history result).",
+          "label": "Start History ID",
+          "name": "start_history_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Limit results to these change types (leave empty for all).",
+          "label": "History Types",
+          "name": "history_types",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Maximum number of history records to return (1-500).",
+          "label": "Max Results",
+          "name": "max_results",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List History",
+      "source_path": "gmail/src/lib/actions/list-history-action.ts",
+      "source_sha256": "a3be3a86e2eff8fb87c49c83a22804282a821e68995c838c17bd563976e3e36f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/actions/list-history-action.ts"
+    },
+    {
+      "description": "List all labels in the mailbox.",
+      "id": "gmail_list_labels",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Labels",
+      "source_path": "gmail/src/lib/actions/list-labels-action.ts",
+      "source_sha256": "fa3f270fa3e1cca5b89dbe3a434517f5b46e71d23c6743426f5b051b82b6b22e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/actions/list-labels-action.ts"
+    },
+    {
+      "description": "Triggers for each attachment on a new email.",
+      "id": "new_attachment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "From",
+          "name": "from",
+          "required": null,
+          "source_expression": "GmailProps.from",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "To",
+          "name": "to",
+          "required": null,
+          "source_expression": "{ ...GmailProps.to, advanced: true }",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": null,
+          "source_expression": "GmailProps.subject",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Label",
+          "name": "label",
+          "required": null,
+          "source_expression": "GmailProps.label({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Category",
+          "name": "category",
+          "required": null,
+          "source_expression": "{ ...GmailProps.category, advanced: true }",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only attachments with this extension.",
+          "label": "File Extension",
+          "name": "filenameExtension",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Attachment",
+      "source_path": "gmail/src/lib/triggers/new-attachment.ts",
+      "source_sha256": "df520405f274e59de054104d0c4b9e92330cd803768889578d3b89a2ef0fac19",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/triggers/new-attachment.ts"
+    },
+    {
+      "description": "Triggers when a new email conversation (thread) begins",
+      "id": "new_conversation",
+      "inputs": [
+        {
+          "description": "",
+          "label": "From",
+          "name": "from",
+          "required": null,
+          "source_expression": "{ ...GmailProps.from, description: 'Filter by sender email (optional)', displayName: 'From', required: false, }",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only trigger for conversations containing this text in the subject (optional)",
+          "label": "Subject Contains",
+          "name": "subject",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only trigger for conversations started within this many hours",
+          "label": "Maximum Age (Hours)",
+          "name": "maxAgeHours",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Conversation",
+      "source_path": "gmail/src/lib/triggers/new-conversation.ts",
+      "source_sha256": "fdf8f829535dd77e1c91e2ff0c8a27a5120407b7b18a1dcc8b0008a5f2e9b4af",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/triggers/new-conversation.ts"
+    },
+    {
+      "description": "Triggers when a new email matching the filters arrives.",
+      "id": "gmail_new_email_received",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": null,
+          "source_expression": "GmailProps.subject",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "From",
+          "name": "from",
+          "required": null,
+          "source_expression": "GmailProps.from",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "To",
+          "name": "to",
+          "required": null,
+          "source_expression": "{ ...GmailProps.to, advanced: true }",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Label",
+          "name": "label",
+          "required": null,
+          "source_expression": "GmailProps.label({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Category",
+          "name": "category",
+          "required": null,
+          "source_expression": "{ ...GmailProps.category, advanced: true }",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Email",
+      "source_path": "gmail/src/lib/triggers/new-email.ts",
+      "source_sha256": "3e8f65cbcea2b0ba8eb37f7572b0b452ae0826bd03bab38f40e0d0e8da14c9b6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/triggers/new-email.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "a3c60bbd75a1f804a05f6865949e21f8606f362e",
+    "index_path": "gmail/src/index.ts",
+    "index_sha256": "6f5f439ddf3fc054ca1100de9a8bcf87b109048d0cd064ade2a4a378eea0ab13",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

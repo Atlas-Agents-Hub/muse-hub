@@ -1,0 +1,451 @@
+{
+  "allowed_hosts": [
+    "api.capsulecrm.com",
+    "capsulecrm.com",
+    "cloud.activepieces.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://api.capsulecrm.com/oauth/authorise"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "read",
+      "write"
+    ],
+    "token_urls": [
+      "https://api.capsulecrm.com/oauth/token"
+    ]
+  },
+  "category": "Sales & CRM",
+  "id": "capsule-crm",
+  "name": "Capsule CRM",
+  "operations": [
+    {
+      "description": "Add a comment/note to an entity (e.g., contact, opportunity, project).",
+      "id": "add_note_to_entity",
+      "inputs": [
+        {
+          "description": "The body of the note.",
+          "label": "Note Content",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "The type of entity to add the note to.",
+          "label": "Entity Type",
+          "name": "entityType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Entity",
+          "name": "entityId",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "The activity type for this entry. Defaults to \"Note\".",
+          "label": "Activity Type",
+          "name": "activityTypeId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Note to Entity",
+      "source_path": "capsule-crm/src/lib/actions/add-note-to-entity.ts",
+      "source_sha256": "86ffb41c06d731ad4b71d8bc3b1c1cc9c61f50d1c2b0ae35b7eb6242588e7f1c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/capsule-crm/src/lib/actions/add-note-to-entity.ts"
+    },
+    {
+      "description": "Create a new Person or Organisation in Capsule CRM.",
+      "id": "create_contact",
+      "inputs": [
+        {
+          "description": "The type of contact to create.",
+          "label": "Contact Type",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Details",
+          "name": "contactFields",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "",
+          "label": "About",
+          "name": "about",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Owner",
+          "name": "ownerId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "",
+          "label": "Team",
+          "name": "teamId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "MultiSelectDropdown"
+        },
+        {
+          "description": "",
+          "label": "Custom Fields",
+          "name": "customFields",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "",
+          "label": "Email Addresses",
+          "name": "emailAddresses",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Phone Numbers",
+          "name": "phoneNumbers",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Addresses",
+          "name": "addresses",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Websites",
+          "name": "websites",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Contact",
+      "source_path": "capsule-crm/src/lib/actions/create-contact.ts",
+      "source_sha256": "d70d43914eaea5466f5437c4b63d7742fa296cf16c0b3ce61435ff416fc89993",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/capsule-crm/src/lib/actions/create-contact.ts"
+    },
+    {
+      "description": "Create a new Project in Capsule CRM.",
+      "id": "create_project",
+      "inputs": [
+        {
+          "description": "The main contact for this project.",
+          "label": "Party",
+          "name": "partyId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The name of this project.",
+          "label": "Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The description of this project.",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "An optional link to the opportunity that this project was created to support.",
+          "label": "Opportunity",
+          "name": "opportunityId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The stage that this project is on.",
+          "label": "Stage",
+          "name": "stageId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The status of the project.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The expected close date of this project.",
+          "label": "Expected Close Date",
+          "name": "expectedCloseOn",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "The user this project is assigned to.",
+          "label": "Owner",
+          "name": "ownerId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The team this project is assigned to.",
+          "label": "Team",
+          "name": "teamId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "An array of tags that are added to this project.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "MultiSelectDropdown"
+        },
+        {
+          "description": "An array of custom fields that are defined for this project.",
+          "label": "Custom Fields",
+          "name": "customFields",
+          "required": false,
+          "type": "DynamicProperties"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Project",
+      "source_path": "capsule-crm/src/lib/actions/create-project.ts",
+      "source_sha256": "92ca7e09c6a002e765615629df5772bb0884eda5d527e626282b3dde86241472",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/capsule-crm/src/lib/actions/create-project.ts"
+    },
+    {
+      "description": "Create a new Task in Capsule CRM.",
+      "id": "create_task",
+      "inputs": [
+        {
+          "description": "A short description of the task.",
+          "label": "Description",
+          "name": "description",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The date when this task is due.",
+          "label": "Due Date",
+          "name": "dueOn",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "More details about the task.",
+          "label": "Details",
+          "name": "detail",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The time when this task is due (e.g., 18:00:00). Note: The time is in the user's timezone.",
+          "label": "Due Time",
+          "name": "dueTime",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The entity this task is linked to. Only one can be selected.",
+          "label": "Link To",
+          "name": "linkTo",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Linked Entity",
+          "name": "linkedEntityId",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "The category of this task.",
+          "label": "Category",
+          "name": "categoryId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The user this task is assigned to.",
+          "label": "Owner",
+          "name": "ownerId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "capsule-crm/src/lib/actions/create-task.ts",
+      "source_sha256": "0e5b02d056d9f7ed698dfcac0845657f5ce3c696d8ca64e7524be6f4132cb12d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/capsule-crm/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Find a Person by search criteria.",
+      "id": "find_contact",
+      "inputs": [
+        {
+          "description": "The value to search for (e.g., a name or email).",
+          "label": "Search Term",
+          "name": "term",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Contact",
+      "source_path": "capsule-crm/src/lib/actions/find-contact.ts",
+      "source_sha256": "ed49b743cd5a13ad283ee365ee9e87c4a95ac35ad1a4c0225d18325cf2e3016d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/capsule-crm/src/lib/actions/find-contact.ts"
+    },
+    {
+      "description": "Find an Opportunity by search criteria.",
+      "id": "find_opportunity",
+      "inputs": [
+        {
+          "description": "The structured filter query. See the [documentation](https://capsulecrm.com/developer/api-v2/filters/) for examples.",
+          "label": "Filter",
+          "name": "filter",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Opportunity",
+      "source_path": "capsule-crm/src/lib/actions/find-opportunity.ts",
+      "source_sha256": "dd0aea21d61b17556ce8a69c83755ae2ad0adace4d1fd18a33dc2bb418910751",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/capsule-crm/src/lib/actions/find-opportunity.ts"
+    },
+    {
+      "description": "Find a Project by search criteria.",
+      "id": "find_project",
+      "inputs": [
+        {
+          "description": "The structured filter query. See the [documentation](https://capsulecrm.com/developer/api-v2/filters/) for examples.",
+          "label": "Filter",
+          "name": "filter",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Project",
+      "source_path": "capsule-crm/src/lib/actions/find-project.ts",
+      "source_sha256": "81ccc2cbad3aad2e994e31b3335ec0a91a605e9c8048cb4a128e4d78b73bab71",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/capsule-crm/src/lib/actions/find-project.ts"
+    },
+    {
+      "description": "Update fields on an existing Person or Organisation.",
+      "id": "update_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Contact_Id",
+          "name": "contact_id",
+          "required": null,
+          "source_expression": "capsuleCrmProps.contact_id()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Details",
+          "name": "contactFields",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "",
+          "label": "Owner Id",
+          "name": "ownerId",
+          "required": null,
+          "source_expression": "capsuleCrmProps.owner_id(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Team Id",
+          "name": "teamId",
+          "required": null,
+          "source_expression": "capsuleCrmProps.team_id(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Update the biography or description for the contact.",
+          "label": "About",
+          "name": "about",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Addresses",
+          "name": "addresses",
+          "required": false,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "",
+          "label": "Websites",
+          "name": "websites",
+          "required": false,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "",
+          "label": "Email Addresses",
+          "name": "emailAddresses",
+          "required": false,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "",
+          "label": "Phone Numbers",
+          "name": "phoneNumbers",
+          "required": false,
+          "type": "DynamicProperties"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Contact",
+      "source_path": "capsule-crm/src/lib/actions/update-contact.ts",
+      "source_sha256": "f7d5f857947896a12ac2382489781ed8920f600872e78fc60f4e8e3e66e4b3a0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/capsule-crm/src/lib/actions/update-contact.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "8cf519548681acd3d3c8dc8d71ab18d05d8dc13c",
+    "index_path": "capsule-crm/src/index.ts",
+    "index_sha256": "b5bac23712d7db07e2f09884f685507725a6cf84afae709eb2e449a51a8cad9f",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer"
+  ]
+}

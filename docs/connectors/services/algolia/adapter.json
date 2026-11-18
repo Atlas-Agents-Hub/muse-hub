@@ -1,0 +1,123 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Algolia application ID.",
+        "label": "Application ID",
+        "name": "applicationId",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', description: 'An Algolia API key with index browsing and record write permissions.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "algolia",
+  "name": "Algolia",
+  "operations": [
+    {
+      "description": "Retrieves records from an Algolia index.",
+      "id": "browse-records",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": null,
+          "source_expression": "algoliaProps.index()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Maximum number of records to retrieve. Defaults to 10,000.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Browse Records",
+      "source_path": "algolia/src/lib/actions/browse-records.ts",
+      "source_sha256": "68bfd2a68fd6910a8cfd2ff5c38a85cad74ad796e9089f6527ef8469c85bc95b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/algolia/src/lib/actions/browse-records.ts"
+    },
+    {
+      "description": "Deletes records from an Algolia index by objectID.",
+      "id": "delete-records",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": null,
+          "source_expression": "algoliaProps.index()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Provide the Algolia objectIDs to delete from the selected index.",
+          "label": "Record IDs",
+          "name": "recordIds",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Records",
+      "source_path": "algolia/src/lib/actions/delete-records.ts",
+      "source_sha256": "f225e21c70bbb559cc14bb9505da2797016d821d121af42264a46ad7df652d8c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/algolia/src/lib/actions/delete-records.ts"
+    },
+    {
+      "description": "Adds or updates records in an Algolia index.",
+      "id": "save-records",
+      "inputs": [
+        {
+          "description": "Enter an existing index name or a new one — Algolia creates it automatically.",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Provide an array of JSON objects to save. Include `objectID` to update an existing record, or omit it to let Algolia create one.",
+          "label": "Records",
+          "name": "records",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Save Records",
+      "source_path": "algolia/src/lib/actions/save-records.ts",
+      "source_sha256": "51dd0e60eaf435d27d690a8d26d3bc33e62309adc69f292c7780f153b7bb2f4e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/algolia/src/lib/actions/save-records.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "1ea1541214fb3d9338dd8ba2c45d25c1b90dc230",
+    "index_path": "algolia/src/index.ts",
+    "index_sha256": "c7b3fa423f14efa6eccc274e8e191214757d439d243ea586035b4e856959ad43",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

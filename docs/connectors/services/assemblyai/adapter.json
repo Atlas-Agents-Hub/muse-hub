@@ -1,0 +1,199 @@
+{
+  "allowed_hosts": [
+    "www.assemblyai.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "AI & ML",
+  "id": "assemblyai",
+  "name": "AssemblyAI",
+  "operations": [
+    {
+      "description": "Retrieves a transcript by its ID.",
+      "id": "getTranscript",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Id",
+          "name": "id",
+          "required": null,
+          "source_expression": "transcriptIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Transcript",
+      "source_path": "assemblyai/src/lib/actions/transcripts/get-transcript.ts",
+      "source_sha256": "8186cca51ef094d5392c90d4608a7d6fbd741c8a0679df73ad52fa9d7e75be43",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/assemblyai/src/lib/actions/transcripts/get-transcript.ts"
+    },
+    {
+      "description": "Retrieve the paragraphs of the transcript by its ID.",
+      "id": "getTranscriptParagraphs",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Id",
+          "name": "id",
+          "required": null,
+          "source_expression": "transcriptIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Transcript Paragraphs",
+      "source_path": "assemblyai/src/lib/actions/transcripts/get-paragraphs.ts",
+      "source_sha256": "11ac663a09fce8d1a32e36fea043e1b72b8d10196e2e52d5d2cf91335cbf447a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/assemblyai/src/lib/actions/transcripts/get-paragraphs.ts"
+    },
+    {
+      "description": "Get the result of the redacted audio model.",
+      "id": "getRedactedAudio",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Id",
+          "name": "id",
+          "required": null,
+          "source_expression": "transcriptIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Download file?",
+          "name": "download_file",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The desired file name for storing in ActivePieces. Make sure the file extension is correct.",
+          "label": "Download File Name",
+          "name": "download_file_name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Transcript Redacted Audio",
+      "source_path": "assemblyai/src/lib/actions/transcripts/get-redacted-audio.ts",
+      "source_sha256": "d34bda48cf8e909ccf8e193aa7c49f18841b41e4e696e44c5b7c195e6c87265c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/assemblyai/src/lib/actions/transcripts/get-redacted-audio.ts"
+    },
+    {
+      "description": "Retrieve the sentences of the transcript by its ID.",
+      "id": "getTranscriptSentences",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Id",
+          "name": "id",
+          "required": null,
+          "source_expression": "transcriptIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Transcript Sentences",
+      "source_path": "assemblyai/src/lib/actions/transcripts/get-sentences.ts",
+      "source_sha256": "a2a545f25dafdbd5586b758b316dcdb0ee7e2a1a4ea831272f3a40d742113f50",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/assemblyai/src/lib/actions/transcripts/get-sentences.ts"
+    },
+    {
+      "description": "Export the transcript as SRT or VTT subtitles.",
+      "id": "getSubtitles",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Transcript ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Subtitles Format",
+          "name": "format",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The maximum number of characters per caption",
+          "label": "Number of Characters per Caption",
+          "name": "chars_per_caption",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Transcript Subtitles",
+      "source_path": "assemblyai/src/lib/actions/transcripts/get-subtitles.ts",
+      "source_sha256": "23690eb05537e58e3ac15b012bed5335008ee04d5138887601c478cce4f4e90c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/assemblyai/src/lib/actions/transcripts/get-subtitles.ts"
+    },
+    {
+      "description": "Retrieve a list of transcripts you created.\nTranscripts are sorted from newest to oldest. The previous URL always points to a page with older transcripts.",
+      "id": "listTranscripts",
+      "inputs": [],
+      "kind": "action",
+      "name": "List transcripts",
+      "source_path": "assemblyai/src/lib/actions/transcripts/list-transcripts.ts",
+      "source_sha256": "04d3ee6d0dacecfdbb90b6582e1a8c6ee557cc4d93d611aba865da7f9eafd4a4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/assemblyai/src/lib/actions/transcripts/list-transcripts.ts"
+    },
+    {
+      "description": "Retrieve a LeMUR response that was previously generated.",
+      "id": "getLemurResponse",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Request_Id",
+          "name": "request_id",
+          "required": null,
+          "source_expression": "lemurRequestIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Retrieve LeMUR response",
+      "source_path": "assemblyai/src/lib/actions/lemur/get-lemur-response.ts",
+      "source_sha256": "a2a67a30d5cf144e3e8905752140128dc06bd3bf2248564662486556d8a2eb27",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/assemblyai/src/lib/actions/lemur/get-lemur-response.ts"
+    },
+    {
+      "description": "Upload a media file to AssemblyAI's servers.",
+      "id": "uploadFile",
+      "inputs": [
+        {
+          "description": "The File or URL of the audio or video file.",
+          "label": "Audio File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        }
+      ],
+      "kind": "action",
+      "name": "Upload File",
+      "source_path": "assemblyai/src/lib/actions/files/upload.ts",
+      "source_sha256": "a6649b02a4f89401e940c3cde130fa48e114c20960a35ef93ffcb244edfc3904",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/assemblyai/src/lib/actions/files/upload.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "e491e5d921b1b857ad89722faa68bd58fee65f6f",
+    "index_path": "assemblyai/src/index.ts",
+    "index_sha256": "339a18f048d7ae011db3c277d9feac4d6f15390566925b3f5a35b37ea09d02b1",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "model-builder",
+    "research-evaluator",
+    "software-engineer"
+  ]
+}

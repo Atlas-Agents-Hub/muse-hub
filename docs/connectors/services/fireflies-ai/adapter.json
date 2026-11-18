@@ -1,0 +1,224 @@
+{
+  "allowed_hosts": [
+    "api.fireflies.ai",
+    "app.fireflies.ai",
+    "app.fireflies.ai.",
+    "meet.google.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "AI & ML",
+  "id": "fireflies-ai",
+  "name": "Fireflies.ai",
+  "operations": [
+    {
+      "description": "Searches meetings based on provided parameters. Returns up to 1,000 meetings; narrow the filters if more match.",
+      "id": "find_meeting_by_query",
+      "inputs": [
+        {
+          "description": "Finds meetings whose title contains this text.",
+          "label": "Meeting Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter meetings by host email.",
+          "label": "Host Email",
+          "name": "hostEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter meetings by participant email",
+          "label": "Participant Email",
+          "name": "participantEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Finds meetings in the 24 hours starting at this date and time. Pick the date in the date picker to get that day in your time zone.",
+          "label": "Date",
+          "name": "date",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Meeting by Call Details",
+      "source_path": "fireflies-ai/src/lib/actions/find-meeting-by-query.ts",
+      "source_sha256": "d1dd67d547cae57bb235c7ad60c1580968c52f825e59c7b65a1b5fd93ab90666",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/fireflies-ai/src/lib/actions/find-meeting-by-query.ts"
+    },
+    {
+      "description": "Finds a specific meeting by ID.",
+      "id": "find-meeting-by-id",
+      "inputs": [
+        {
+          "description": "The ID of the meeting to retrieve.",
+          "label": "Meeting ID",
+          "name": "meetingId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Meeting by ID",
+      "source_path": "fireflies-ai/src/lib/actions/find-meeting-by-id.ts",
+      "source_sha256": "b5ce1b425772774b116d8ab95d796d2f86098f3581774e75e4dfd7efe4db7adf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/fireflies-ai/src/lib/actions/find-meeting-by-id.ts"
+    },
+    {
+      "description": "Retrieves the latest meeting for a user.",
+      "id": "find_recent_meeting",
+      "inputs": [],
+      "kind": "action",
+      "name": "Find Recent Meeting",
+      "source_path": "fireflies-ai/src/lib/actions/find-recent-meeting.ts",
+      "source_sha256": "129bc81f0363782cb5b01d3a0c1a4380976e2a606863180b46e05b06f4098ea1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/fireflies-ai/src/lib/actions/find-recent-meeting.ts"
+    },
+    {
+      "description": "Retrieves profile information by ID.",
+      "id": "get-user-details",
+      "inputs": [
+        {
+          "description": "",
+          "label": "User ID",
+          "name": "userId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get User Details",
+      "source_path": "fireflies-ai/src/lib/actions/get-user-details.ts",
+      "source_sha256": "f44636a407ed34cb54191a412eaec70c46e031b38da7b0206b24b4652ad9efa0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/fireflies-ai/src/lib/actions/get-user-details.ts"
+    },
+    {
+      "description": "Creates a new meeting in Fireflies for transcription (requires a publicly accessible URL).",
+      "id": "upload_audio",
+      "inputs": [
+        {
+          "description": "The publicly accessible HTTPS URL of your audio or video file (mp3, mp4, wav, m4a, ogg). Fireflies only accepts URLs, not direct file uploads. For private files, use a signed URL with a short expiry.",
+          "label": "Audio URL",
+          "name": "audioUrl",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional. Your own ID for this upload. Fireflies echoes it back in its webhooks.",
+          "label": "Client Reference ID",
+          "name": "client_reference_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional. Language of the recording as a code such as \"es\" or \"de\". Leave empty for English.",
+          "label": "Language Code",
+          "name": "custom_language",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional. When the meeting happened, as ISO 8601 (for example 2026-03-15 or 2026-03-15T14:30:00Z). Cannot be in the future.",
+          "label": "Meeting Date",
+          "name": "meeting_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Bypass_Size_Check",
+          "name": "bypass_size_check",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<string>({ displayName: 'Allow Small Files', description: 'Optional. Choose \"Yes\" to upload files under 50 KB, which Fireflies otherwise rejects.', required: false, advanced: true, options: { disabled: false, options: YES_NO_OPTIONS }, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Upload Audio",
+      "source_path": "fireflies-ai/src/lib/actions/upload-audio.ts",
+      "source_sha256": "518d8fd01733c31057fd73b07220e766a3cb86a637eae76579619eb438246d3f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/fireflies-ai/src/lib/actions/upload-audio.ts"
+    },
+    {
+      "description": "Triggered when Fireflies finishes the AI summary of a meeting. A resend from Fireflies after notes change fires again, and in rare cases a delivery may fire twice.",
+      "id": "meeting_summarized",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Webhook Instructions",
+          "name": "webhookInstructions",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Signing_Secret",
+          "name": "signing_secret",
+          "required": null,
+          "source_expression": "firefliesWebhook.signingSecretProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Meeting Summarized",
+      "source_path": "fireflies-ai/src/lib/triggers/meeting-summarized.ts",
+      "source_sha256": "70546c1b4a1a7f39a0bcfd3542b15e0a1d249b732d557be19f2eb9471d71b921",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/fireflies-ai/src/lib/triggers/meeting-summarized.ts"
+    },
+    {
+      "description": "Triggered when a new meeting is transcribed. The summary may still be processing at this point; use Meeting Summarized if you need it. A resend from Fireflies after notes change fires again, and in rare cases a delivery may fire twice.",
+      "id": "new_transcription_completed",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Webhook Instructions",
+          "name": "webhookInstructions",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Signing_Secret",
+          "name": "signing_secret",
+          "required": null,
+          "source_expression": "firefliesWebhook.signingSecretProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Transcription Completed",
+      "source_path": "fireflies-ai/src/lib/triggers/new-transcription-complete.ts",
+      "source_sha256": "aa418e8372620e00c1d77f137395cb7099ace9e77879eb2118ada52673746f34",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/fireflies-ai/src/lib/triggers/new-transcription-complete.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "40ee70d13762f0d14436b346a202c2331c9d69ed",
+    "index_path": "fireflies-ai/src/index.ts",
+    "index_sha256": "1f1cc470b25b61267161ff8545b316dc97446f15166f526c216a570523b9a767",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "model-builder",
+    "research-evaluator",
+    "software-engineer"
+  ]
+}

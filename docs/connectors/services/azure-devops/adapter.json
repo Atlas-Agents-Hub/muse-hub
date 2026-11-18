@@ -1,0 +1,313 @@
+{
+  "allowed_hosts": [
+    "dev.azure.com",
+    "learn.microsoft.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Azure DevOps organization URL (e.g. https://dev.azure.com/mycompany)",
+        "label": "Organization URL",
+        "name": "organizationUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Pat",
+        "name": "pat",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Personal Access Token', description: 'Your Azure DevOps PAT with Work Items (Read & Write) and Project and Team (Read) scopes.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Developer & Infra",
+  "id": "azure-devops",
+  "name": "Azure DevOps",
+  "operations": [
+    {
+      "description": "Adds a comment to an existing work item in Azure DevOps",
+      "id": "add_comment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project",
+          "name": "project",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Numeric ID of the work item (e.g. 123). To pass it dynamically, reference the ID from a previous step (e.g. `{{trigger.id}}`), not the title.",
+          "label": "Work Item ID",
+          "name": "work_item_id",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "The comment text to add (supports HTML)",
+          "label": "Comment",
+          "name": "comment",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Comment",
+      "source_path": "azure-devops/src/lib/actions/add-comment.ts",
+      "source_sha256": "f9c268c55dad88c696bc328efc6d89d82b836e4388cd5cd3c738fe473531947c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/azure-devops/src/lib/actions/add-comment.ts"
+    },
+    {
+      "description": "Creates a new work item (Bug, Task, User Story, etc.) in Azure DevOps",
+      "id": "create_work_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project",
+          "name": "project",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Work_Item_Type",
+          "name": "work_item_type",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.workItemTypeDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The title of the work item",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Detailed description of the work item (supports HTML)",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Assigned_To",
+          "name": "assigned_to",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.assignedToDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "priority",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.priorityDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Work Item",
+      "source_path": "azure-devops/src/lib/actions/create-work-item.ts",
+      "source_sha256": "56c99604be7a597b2074f817f8740410f28b1be4a1e0d20f953775ad0f72261f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/azure-devops/src/lib/actions/create-work-item.ts"
+    },
+    {
+      "description": "Retrieves a work item by ID from Azure DevOps",
+      "id": "get_work_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project",
+          "name": "project",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Numeric ID of the work item (e.g. 123). To pass it dynamically, reference the ID from a previous step (e.g. `{{trigger.id}}`), not the title.",
+          "label": "Work Item ID",
+          "name": "work_item_id",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Work Item",
+      "source_path": "azure-devops/src/lib/actions/get-work-item.ts",
+      "source_sha256": "3097a0a7ff716a58e493ea95e236f29cd1077f9604bbafa43d4b4451f3daf2b8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/azure-devops/src/lib/actions/get-work-item.ts"
+    },
+    {
+      "description": "Lists work items from Azure DevOps using a WIQL query",
+      "id": "list_work_items",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project",
+          "name": "project",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The WIQL query to execute. Default: SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = @project ORDER BY [System.ChangedDate] DESC",
+          "label": "WIQL Query",
+          "name": "wiql_query",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Maximum number of work items to return (default: 50, max: 200)",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Work Items",
+      "source_path": "azure-devops/src/lib/actions/list-work-items.ts",
+      "source_sha256": "4631a90e41a1cd2dd9ffd1e2d6a8f97679266d4307d565775e9f0f7d5bb5c738",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/azure-devops/src/lib/actions/list-work-items.ts"
+    },
+    {
+      "description": "Updates an existing work item in Azure DevOps",
+      "id": "update_work_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project",
+          "name": "project",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Work_Item_Type",
+          "name": "work_item_type",
+          "required": null,
+          "source_expression": "{ ...azureDevOpsCommon.workItemTypeDropdown, description: 'Type of the work item. Used only to load the matching list of states below — it does not change the work item\\'s type. Changing type requires a separate Azure DevOps operation not supported here.', }",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Numeric ID of the work item (e.g. 123). To pass it dynamically from a previous step, use a reference like `{{trigger.id}}` or the output of a Get/List step — not the title.",
+          "label": "Work Item ID",
+          "name": "work_item_id",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "New title for the work item",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "New description for the work item (supports HTML)",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "State",
+          "name": "state",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.stateDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Assigned_To",
+          "name": "assigned_to",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.assignedToDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "priority",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.priorityDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Work Item",
+      "source_path": "azure-devops/src/lib/actions/update-work-item.ts",
+      "source_sha256": "0cac51deac628c1907a1c3f2d11d446e6f72398e2c274c63116b514eee275dcf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/azure-devops/src/lib/actions/update-work-item.ts"
+    },
+    {
+      "description": "Fires instantly when a work item is created, updated, or commented on in Azure DevOps via a Service Hooks subscription. Requires a public webhook URL reachable from Azure DevOps.",
+      "id": "new_updated_work_item_webhook",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project",
+          "name": "project",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Work_Item_Type",
+          "name": "work_item_type",
+          "required": null,
+          "source_expression": "azureDevOpsCommon.workItemTypeDropdownOptional",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Which work item lifecycle events should trigger this flow. Select at least one.",
+          "label": "Events",
+          "name": "events",
+          "required": true,
+          "type": "StaticMultiSelectDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New or Updated Work Item (Instant)",
+      "source_path": "azure-devops/src/lib/triggers/new-updated-work-item-webhook.ts",
+      "source_sha256": "da6a0bd06125e5ce37e301c47a6a7219f6dba9125b790f81b25db9503f827ad8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/azure-devops/src/lib/triggers/new-updated-work-item-webhook.ts"
+    },
+    {
+      "description": "Polls Azure DevOps every few minutes and fires when a work item is created or updated. Use this when your Muse instance is not reachable from the public internet; otherwise prefer the Instant trigger. Pick a work item type to unlock the state filter.",
+      "id": "new_updated_work_item",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New or Updated Work Item (Polling)",
+      "source_path": "azure-devops/src/lib/triggers/new-updated-work-item.ts",
+      "source_sha256": "e35bdd4e6641b0eb4dbf43cfc0b19707db0ebdcc638c9566e1933713f0536737",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/azure-devops/src/lib/triggers/new-updated-work-item.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "46fdd66a11c7dfdfd0fe1bd964629e1e694588e1",
+    "index_path": "azure-devops/src/index.ts",
+    "index_sha256": "1965017d8726851a999042ebc1872256f180b3f1a9655613ac40064af5805baa",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "software-engineer",
+    "infrastructure-reliability-engineer",
+    "automation-engineer",
+    "reverse-engineering-researcher"
+  ]
+}

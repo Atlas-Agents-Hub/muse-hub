@@ -1,0 +1,267 @@
+{
+  "allowed_hosts": [
+    "app.nocodb.com",
+    "docs.nocodb.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "NocoDB Base URL",
+        "name": "baseUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api Token",
+        "name": "apiToken",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Token', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Required only for self-hosted instances. Not needed for the cloud version.",
+        "label": "API Version",
+        "name": "version",
+        "required": false,
+        "type": "StaticDropdown"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "nocodb",
+  "name": "NocoDB",
+  "operations": [
+    {
+      "description": "Gets a record by the Record ID.",
+      "id": "nocodb-get-record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "nocodbCommon.workspaceId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Base Id",
+          "name": "baseId",
+          "required": null,
+          "source_expression": "nocodbCommon.baseId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Id",
+          "name": "tableId",
+          "required": null,
+          "source_expression": "nocodbCommon.tableId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record ID",
+          "name": "recordId",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get a Record",
+      "source_path": "nocodb/src/lib/actions/get-record.ts",
+      "source_sha256": "6a4ad46403e0e575a0e64de071002de669b03b9cfe31ffbac25b3a3e77c2db68",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/nocodb/src/lib/actions/get-record.ts"
+    },
+    {
+      "description": "Returns the profile and roles of the authenticated user.",
+      "id": "nocodb-get-current-user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Base ID",
+          "name": "baseId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Current User",
+      "source_path": "nocodb/src/lib/actions/get-current-user.ts",
+      "source_sha256": "17189b559f6b271a15dbc9cb428441b990bbfaee72ef508690029a4e4ad8abd7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/nocodb/src/lib/actions/get-current-user.ts"
+    },
+    {
+      "description": "Returns the columns and metadata of the given table.",
+      "id": "nocodb-get-table-schema",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Base ID",
+          "name": "baseId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Table ID",
+          "name": "tableId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Table Schema",
+      "source_path": "nocodb/src/lib/actions/get-table-schema.ts",
+      "source_sha256": "7856003b7020ce9c96aec8f1b534dc3b508d19e1951aad6feeb001f713dbd5df",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/nocodb/src/lib/actions/get-table-schema.ts"
+    },
+    {
+      "description": "Returns the bases within the given workspace (or the instance, on self-hosted).",
+      "id": "nocodb-list-bases",
+      "inputs": [
+        {
+          "description": "Leave unset on self-hosted instances.",
+          "label": "Workspace ID",
+          "name": "workspaceId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Bases",
+      "source_path": "nocodb/src/lib/actions/list-bases.ts",
+      "source_sha256": "8a4645e648510ac5c44cda467dabeefae8bedfeb288feec3b7d7ba5542b4cd46",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/nocodb/src/lib/actions/list-bases.ts"
+    },
+    {
+      "description": "Returns the columns configured on the given view, with their view-scoped column IDs.",
+      "id": "nocodb-list-view-columns",
+      "inputs": [
+        {
+          "description": "",
+          "label": "View ID",
+          "name": "viewId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List View Columns",
+      "source_path": "nocodb/src/lib/actions/list-view-columns.ts",
+      "source_sha256": "abee92c3c285c4b7dac9a363039879ae1eb75b60433b741d0acc8349940bf32b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/nocodb/src/lib/actions/list-view-columns.ts"
+    },
+    {
+      "description": "Returns the sort rules configured on the given view.",
+      "id": "nocodb-list-view-sorts",
+      "inputs": [
+        {
+          "description": "",
+          "label": "View ID",
+          "name": "viewId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List View Sorts",
+      "source_path": "nocodb/src/lib/actions/list-view-sorts.ts",
+      "source_sha256": "736c345a91a092f417bfb6758663d459ee2493e0a0465c77c14aba2209c36c17",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/nocodb/src/lib/actions/list-view-sorts.ts"
+    },
+    {
+      "description": "Returns the workspaces visible to the authenticated account.",
+      "id": "nocodb-list-workspaces",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Workspaces",
+      "source_path": "nocodb/src/lib/actions/list-workspaces.ts",
+      "source_sha256": "9ef0d97e5e99d67c43fee6f1cc559ce2e68002c60e7f1ad852d5270f5ae9ad1c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/nocodb/src/lib/actions/list-workspaces.ts"
+    },
+    {
+      "description": "Returns a list of records matching the where condition.",
+      "id": "nocodb-search-records",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "nocodbCommon.workspaceId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Base Id",
+          "name": "baseId",
+          "required": null,
+          "source_expression": "nocodbCommon.baseId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table Id",
+          "name": "tableId",
+          "required": null,
+          "source_expression": "nocodbCommon.tableId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Column Id",
+          "name": "columnId",
+          "required": null,
+          "source_expression": "nocodbCommon.columnId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Enables you to define specific conditions for filtering records.See docs [here](https://docs.nocodb.com/0.109.7/developer-resources/rest-apis/#comparison-operators).",
+          "label": "Where",
+          "name": "whereCondition",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Enables you to set a limit on the number of records you want to retrieve.",
+          "label": "Limit",
+          "name": "limit",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Comma separated field names without space.Example: **field1,-field2** will sort the records first by 'field1' in ascending order and then by 'field2' in descending order.",
+          "label": "Sort",
+          "name": "sort",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Records",
+      "source_path": "nocodb/src/lib/actions/search-records.ts",
+      "source_sha256": "e571d15588e93a1396c9b54e1fbfd22caee1770555b0d25bc835502ee097a24d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/nocodb/src/lib/actions/search-records.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "cf6a124fee3352abdf0348cf7bfcebcb12cf75a7",
+    "index_path": "nocodb/src/index.ts",
+    "index_sha256": "ac8dd2ec4ed525d2843de5404d09985725ad64fe22fc5e2e66eaf38830023c92",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

@@ -1,0 +1,333 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "console.cloud.google.com",
+    "drive.google.com",
+    "oauth2.googleapis.com",
+    "slides.googleapis.com",
+    "support.google.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection; Provider connection fields",
+    "scopes": [],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "google-slides",
+  "name": "Google Slides",
+  "operations": [
+    {
+      "description": "Add a new slide with a layout, and optionally fill its title and body.",
+      "id": "add_slide",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Presentation_Id",
+          "name": "presentation_id",
+          "required": null,
+          "source_expression": "slidesProps.presentationIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Layout of the new slide, from the presentation's theme.",
+          "label": "Layout",
+          "name": "layout",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Where to put the slide, starting at 1 for the first slide. Leave empty to add it at the end.",
+          "label": "Position",
+          "name": "position",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Text for the slide title. Leave empty to keep the placeholder empty.",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Text for the body (or the subtitle, on the Title slide layout). New lines start new paragraphs.",
+          "label": "Body",
+          "name": "body",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Slide",
+      "source_path": "google-slides/src/lib/actions/add-slide.ts",
+      "source_sha256": "f9e8131f7af9dd07ad968c02348f27dcad9790bc14a6d2970919008c6ab1dabb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-slides/src/lib/actions/add-slide.ts"
+    },
+    {
+      "description": "Search Google Drive for presentations by name and/or folder.",
+      "id": "find_presentations",
+      "inputs": [
+        {
+          "description": "Return presentations whose name contains this text (case-insensitive). Leave empty to list all.",
+          "label": "Name Contains",
+          "name": "name_contains",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Folder_Id",
+          "name": "folder_id",
+          "required": null,
+          "source_expression": "slidesProps.folderIdProp( 'Only presentations directly in this Drive folder: its ID or URL (https://drive.google.com/drive/folders/<id>). Leave empty to search all of Drive.' )",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Maximum number of presentations to return (1-${MAX_LIMIT}). Default 50.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The nextPageToken of a previous call, to get the next results. Leave empty for the first page.",
+          "label": "Page Token",
+          "name": "page_token",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Presentations",
+      "source_path": "google-slides/src/lib/actions/find-presentations.ts",
+      "source_sha256": "a970aaa749ae4abb6c722ad118f2c0cd4fe29181b3d00f6dd0ab2f079adbfee4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-slides/src/lib/actions/find-presentations.ts"
+    },
+    {
+      "description": "Get all slides from a presentation",
+      "id": "get_presentation",
+      "inputs": [
+        {
+          "description": "The presentation ID (between /d/ and /edit in its URL), or the full URL.",
+          "label": "Presentation ID",
+          "name": "presentation_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional Google field mask to return only part of the presentation, e.g. presentationId,title,slides(objectId). Leave empty for the full presentation.",
+          "label": "Fields",
+          "name": "fields",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Presentation",
+      "source_path": "google-slides/src/lib/actions/get-presentation.ts",
+      "source_sha256": "010fd7f5e835c7f0c5de7ed696f96eebcff9fc0e03caa7ee855072a30af25da6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-slides/src/lib/actions/get-presentation.ts"
+    },
+    {
+      "description": "Get each slide's number, object ID, title, text and speaker notes.",
+      "id": "get_presentation_outline",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Presentation_Id",
+          "name": "presentation_id",
+          "required": null,
+          "source_expression": "slidesProps.presentationIdProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Presentation Outline",
+      "source_path": "google-slides/src/lib/actions/get-presentation-outline.ts",
+      "source_sha256": "df60915f03d5436a29c6d1e7d44794f3ab54a781834b66308b6d388585f0ca6b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-slides/src/lib/actions/get-presentation-outline.ts"
+    },
+    {
+      "description": "Get one slide with all of its elements.",
+      "id": "get_slide",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Presentation_Id",
+          "name": "presentation_id",
+          "required": null,
+          "source_expression": "slidesProps.presentationIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Slide_Number",
+          "name": "slide_number",
+          "required": null,
+          "source_expression": "slidesProps.slideNumberProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Slide_Object_Id",
+          "name": "slide_object_id",
+          "required": null,
+          "source_expression": "slidesProps.slideObjectIdProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Slide",
+      "source_path": "google-slides/src/lib/actions/get-slide.ts",
+      "source_sha256": "6876ea4a39f0f4f8b8f902d1b7a9e690347a569513239dcd5ca8ea9620e1bcef",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-slides/src/lib/actions/get-slide.ts"
+    },
+    {
+      "description": "Get a PNG image of a slide, as a link and optionally as a file.",
+      "id": "get_slide_thumbnail",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Presentation_Id",
+          "name": "presentation_id",
+          "required": null,
+          "source_expression": "slidesProps.presentationIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Slide_Number",
+          "name": "slide_number",
+          "required": null,
+          "source_expression": "slidesProps.slideNumberProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Slide_Object_Id",
+          "name": "slide_object_id",
+          "required": null,
+          "source_expression": "slidesProps.slideObjectIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Width of the image.",
+          "label": "Size",
+          "name": "size",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Also download the image and return it as a file (the image link expires after about 30 minutes).",
+          "label": "Save as File",
+          "name": "save_as_file",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Slide Thumbnail",
+      "source_path": "google-slides/src/lib/actions/get-slide-thumbnail.ts",
+      "source_sha256": "d3f2db5bff081b2a22d7d4fb2c0d5dbb68269fb73c5bee8114950740c3087e0e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-slides/src/lib/actions/get-slide-thumbnail.ts"
+    },
+    {
+      "description": "List the elements on one slide with their position, size and text, in points.",
+      "id": "list_slide_elements",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Presentation_Id",
+          "name": "presentation_id",
+          "required": null,
+          "source_expression": "slidesProps.presentationIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Slide_Number",
+          "name": "slide_number",
+          "required": null,
+          "source_expression": "slidesProps.slideNumberProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Slide_Object_Id",
+          "name": "slide_object_id",
+          "required": null,
+          "source_expression": "slidesProps.slideObjectIdProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Slide Elements",
+      "source_path": "google-slides/src/lib/actions/list-slide-elements.ts",
+      "source_sha256": "a4c16dd6f6034e0b2778c3664621f05168b42d850355aa41dc0490dcd4229986",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-slides/src/lib/actions/list-slide-elements.ts"
+    },
+    {
+      "description": "Move a slide to a new position in the presentation.",
+      "id": "move_slide",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Presentation_Id",
+          "name": "presentation_id",
+          "required": null,
+          "source_expression": "slidesProps.presentationIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Slide_Number",
+          "name": "slide_number",
+          "required": null,
+          "source_expression": "slidesProps.slideNumberProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Slide_Object_Id",
+          "name": "slide_object_id",
+          "required": null,
+          "source_expression": "slidesProps.slideObjectIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Position the slide should end up at, starting at 1 for the first slide.",
+          "label": "New Position",
+          "name": "position",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Move Slide",
+      "source_path": "google-slides/src/lib/actions/move-slide.ts",
+      "source_sha256": "11bc8dcd27b9fe4bbb03b1e726390cfa3a3235a9b662616b8aa0335314faddda",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-slides/src/lib/actions/move-slide.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "c183061bafad9d831ef379b26e1bc1da82fce6d2",
+    "index_path": "google-slides/src/index.ts",
+    "index_sha256": "92b50b30307231aea44be9f3f8ed810ad7f48a0b7be6512a0a79eb6aa4f55b63",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach"
+  ]
+}

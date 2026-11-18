@@ -1,0 +1,277 @@
+{
+  "allowed_hosts": [
+    "www.gravatar.com",
+    "your-site.ghost.io."
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The API URL of your application (https://test-publication.ghost.io)",
+        "label": "API URL",
+        "name": "baseUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Admin API Key', description: 'The admin API key for your application', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Blogging",
+  "id": "ghostcms",
+  "name": "GhostCMS",
+  "operations": [
+    {
+      "description": "Create a new member",
+      "id": "create_member",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Full Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Note",
+          "name": "note",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Newsletters",
+          "name": "newsletters",
+          "required": null,
+          "source_expression": "common.properties.newsletters(false)",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Member",
+      "source_path": "ghostcms/src/lib/actions/create-member.ts",
+      "source_sha256": "56ea5188e8ceb33a3955ffa9bd224c609349be31f5743ea9d5af256012de7763",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/ghostcms/src/lib/actions/create-member.ts"
+    },
+    {
+      "description": "Create a new post",
+      "id": "create_post",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Slug",
+          "name": "slug",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Published At",
+          "name": "publishedAt",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Content (HTML)",
+          "name": "html",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Custom Excerpt",
+          "name": "customExcerpt",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Author",
+          "name": "author",
+          "required": null,
+          "source_expression": "common.properties.author",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Featured",
+          "name": "featured",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Tags",
+          "name": "tags",
+          "required": null,
+          "source_expression": "common.properties.tags",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Post",
+      "source_path": "ghostcms/src/lib/actions/create-post.ts",
+      "source_sha256": "1dd338430568a4bf7e77dd11f8f0fb6a7f26ae06b0395efad2447645e2ce74bc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/ghostcms/src/lib/actions/create-post.ts"
+    },
+    {
+      "description": "Find a member by email",
+      "id": "find_member",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Member",
+      "source_path": "ghostcms/src/lib/actions/find-member.ts",
+      "source_sha256": "698d3d5069fdd4f583013ef83ec709fc9e0dd2b7d4f7665e28f1d3bf724db204",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/ghostcms/src/lib/actions/find-member.ts"
+    },
+    {
+      "description": "Find a staff user by email",
+      "id": "find_user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User",
+      "source_path": "ghostcms/src/lib/actions/find-user.ts",
+      "source_sha256": "8381c6b9968a5c31a2fe3fb02a6010bf1276d6d7d621471f007aac36f0c5b578",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/ghostcms/src/lib/actions/find-user.ts"
+    },
+    {
+      "description": "Update a member",
+      "id": "update_member",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Member",
+          "name": "member",
+          "required": null,
+          "source_expression": "common.properties.member()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Full Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Note",
+          "name": "note",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Newsletters",
+          "name": "newsletters",
+          "required": null,
+          "source_expression": "common.properties.newsletters(false)",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Member",
+      "source_path": "ghostcms/src/lib/actions/update-member.ts",
+      "source_sha256": "adabe50c11f13c6f3a43dd5c13b4620a79bc58cf6739538831c95ec87bffa8cd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/ghostcms/src/lib/actions/update-member.ts"
+    },
+    {
+      "description": "Triggers when a new member is added",
+      "id": "member_added",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Member Added",
+      "source_path": "ghostcms/src/lib/triggers/member-added.ts",
+      "source_sha256": "a37740b8f466ac31d8f9c51a30ccf4f2650c15f026bf7b3086b51c5afac2c200",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/ghostcms/src/lib/triggers/member-added.ts"
+    },
+    {
+      "description": "Triggers when a member is deleted",
+      "id": "member_deleted",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Member Deleted",
+      "source_path": "ghostcms/src/lib/triggers/member-deleted.ts",
+      "source_sha256": "b5e234e3d3e74c8414022bee23dacaeecbbbc40408de2baa22adf315178244ec",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/ghostcms/src/lib/triggers/member-deleted.ts"
+    },
+    {
+      "description": "Triggers when a member is edited",
+      "id": "member_edited",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Member Edited",
+      "source_path": "ghostcms/src/lib/triggers/member-edited.ts",
+      "source_sha256": "0d1743c282683f4c9eaa3ea0e75545cfaa58ef91f2292707e3705fa51494f366",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/ghostcms/src/lib/triggers/member-edited.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "67973d2da3d9e8d4bb9f141424760612a6d1d977",
+    "index_path": "ghostcms/src/index.ts",
+    "index_sha256": "7f96820d069ded5d7b2a38257ca8b318dc78f487d86b8729ad5f3818ae3af3bd",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

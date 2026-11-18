@@ -1,0 +1,209 @@
+{
+  "allowed_hosts": [
+    "api.uptimerobot.com",
+    "dashboard.uptimerobot.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Monitoring",
+  "id": "uptimerobot",
+  "name": "UptimeRobot",
+  "operations": [
+    {
+      "description": "Create a new HTTP uptime monitor in UptimeRobot",
+      "id": "create_monitor",
+      "inputs": [
+        {
+          "description": "A name for this monitor (e.g. 'Company Website' or 'API Server')",
+          "label": "Monitor Name",
+          "name": "friendly_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The full URL to monitor, including the protocol (e.g. 'https://example.com').",
+          "label": "URL",
+          "name": "url",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "How often UptimeRobot checks this URL, in seconds. Minimum 300s (5 min) on the Free plan, 60s on Solo/Team, 30s on Enterprise.",
+          "label": "Check Interval (seconds)",
+          "name": "interval",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Create HTTP Monitor",
+      "source_path": "uptimerobot/src/lib/actions/create-monitor.ts",
+      "source_sha256": "622eaee99d79cf780144c54270600314024360b66ad4a5e8c74ded8f5a72dc20",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/uptimerobot/src/lib/actions/create-monitor.ts"
+    },
+    {
+      "description": "Permanently delete a monitor from UptimeRobot. This cannot be undone.",
+      "id": "delete_monitor",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Monitor",
+          "name": "monitor",
+          "required": null,
+          "source_expression": "uptimeRobotCommon.monitorDropdownOptional",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Use this to pass a dynamic Monitor ID from a previous step. If set, this overrides the dropdown selection above.",
+          "label": "Or Enter Monitor ID",
+          "name": "monitor_id_override",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Monitor",
+      "source_path": "uptimerobot/src/lib/actions/delete-monitor.ts",
+      "source_sha256": "7d3d9db6c6bb4cb07744164e18b55e25e3a5a1dd9220b9076f8eb98389167bbc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/uptimerobot/src/lib/actions/delete-monitor.ts"
+    },
+    {
+      "description": "Update the settings of an existing UptimeRobot monitor",
+      "id": "edit_monitor",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Monitor",
+          "name": "monitor",
+          "required": null,
+          "source_expression": "uptimeRobotCommon.monitorDropdownOptional",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Use this to pass a dynamic Monitor ID from a previous step (e.g. {{create_monitor.id}}). If set, this overrides the dropdown selection above.",
+          "label": "Or Enter Monitor ID",
+          "name": "monitor_id_override",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Update the monitor's name. Leave empty to keep the current name.",
+          "label": "New Monitor Name",
+          "name": "friendly_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Update the URL or IP being monitored. Leave empty to keep the current value.",
+          "label": "New URL or IP Address",
+          "name": "url",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Minimum 300s (5 min) on the Free plan, 60s on Solo/Team, 30s on Enterprise. Values below the plan minimum are rejected by UptimeRobot. Leave empty to keep the current interval.",
+          "label": "New Check Interval (seconds)",
+          "name": "interval",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Edit Monitor",
+      "source_path": "uptimerobot/src/lib/actions/edit-monitor.ts",
+      "source_sha256": "6b35b4f6fbfc0c356c1cf6d5ac20ebe098c8b61f605361fc8f4deafacc0208c7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/uptimerobot/src/lib/actions/edit-monitor.ts"
+    },
+    {
+      "description": "List and search your UptimeRobot monitors with optional filters. Leave the Monitors / Monitor IDs fields empty to return all monitors.",
+      "id": "get_monitors",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Monitor_Ids",
+          "name": "monitor_ids",
+          "required": null,
+          "source_expression": "uptimeRobotCommon.monitorMultiSelect",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Use this to pass dynamic Monitor IDs from a previous step (e.g. \"123, 456\"). Merged with any selections above.",
+          "label": "Or Enter Monitor IDs (comma-separated)",
+          "name": "monitor_ids_csv",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only HTTP monitors are supported at the moment. Other UptimeRobot types (Keyword, Ping, Port, Heartbeat) will be added in a future release. Leave empty to return monitors of all types.",
+          "label": "Monitor Type",
+          "name": "type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Only return monitors with this status. Leave empty for all statuses.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Monitors",
+      "source_path": "uptimerobot/src/lib/actions/get-monitors.ts",
+      "source_sha256": "eea8a0f6938691df00bd91b7507f9feff54b7bb57cad1301c0724a0c60f2b9cb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/uptimerobot/src/lib/actions/get-monitors.ts"
+    },
+    {
+      "description": "Temporarily pause or resume monitoring for a specific monitor.",
+      "id": "pause_resume_monitor",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Monitor",
+          "name": "monitor",
+          "required": null,
+          "source_expression": "uptimeRobotCommon.monitorDropdownOptional",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Use this to pass a dynamic Monitor ID from a previous step. If set, this overrides the dropdown selection above.",
+          "label": "Or Enter Monitor ID",
+          "name": "monitor_id_override",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Pause stops all checks and alerts. Resume restarts monitoring.",
+          "label": "Action",
+          "name": "action",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Pause or Resume Monitor",
+      "source_path": "uptimerobot/src/lib/actions/pause-resume-monitor.ts",
+      "source_sha256": "8f46764e9e783391e548250c0cb37c26f9bcad798c750dcee85f0ffcc30373dd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/uptimerobot/src/lib/actions/pause-resume-monitor.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "0c4fd400d67b797f680806eca5fea5b6b5a81b16",
+    "index_path": "uptimerobot/src/index.ts",
+    "index_sha256": "bcd9e0e65e5466323a5b3676321e7fcf106d147b32408c4477e468de28934fef",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "infrastructure-reliability-engineer",
+    "software-engineer",
+    "adversarial-verifier"
+  ]
+}

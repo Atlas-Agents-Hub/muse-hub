@@ -1,0 +1,82 @@
+{
+  "id": "gmail",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "gmail/src/lib/auth.ts",
+      "credential_source_sha256": "de604c7c6e3d597458d4d857f3846af67eaaf7c0c9df613d18c01025a1db1e04",
+      "headers": {},
+      "host": "gmail.googleapis.com",
+      "id": "read-gmail-v1-users-me-profile",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "gmail/src/lib/auth.ts",
+      "source_sha256": "de604c7c6e3d597458d4d857f3846af67eaaf7c0c9df613d18c01025a1db1e04",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/auth.ts",
+      "url_template": "https://gmail.googleapis.com/gmail/v1/users/me/profile"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "gmail/src/lib/auth.ts",
+      "credential_source_sha256": "de604c7c6e3d597458d4d857f3846af67eaaf7c0c9df613d18c01025a1db1e04",
+      "headers": {},
+      "host": "gmail.googleapis.com",
+      "id": "read-gmail-v1-users-me-messages-message-id",
+      "method": "GET",
+      "parameters": [
+        "message_id"
+      ],
+      "source_path": "gmail/src/lib/common/data.ts",
+      "source_sha256": "170fa36c3bde33af1ecd5b63a269b7683d72e2c7df7e5185e2c23d94ae0babc3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/common/data.ts",
+      "url_template": "https://gmail.googleapis.com/gmail/v1/users/me/messages/{message_id}"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "gmail/src/lib/auth.ts",
+      "credential_source_sha256": "de604c7c6e3d597458d4d857f3846af67eaaf7c0c9df613d18c01025a1db1e04",
+      "headers": {},
+      "host": "gmail.googleapis.com",
+      "id": "read-gmail-v1-users-me-threads-thread-id",
+      "method": "GET",
+      "parameters": [
+        "thread_id"
+      ],
+      "source_path": "gmail/src/lib/common/data.ts",
+      "source_sha256": "170fa36c3bde33af1ecd5b63a269b7683d72e2c7df7e5185e2c23d94ae0babc3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/common/data.ts",
+      "url_template": "https://gmail.googleapis.com/gmail/v1/users/me/threads/{thread_id}"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "gmail/src/lib/auth.ts",
+      "credential_source_sha256": "de604c7c6e3d597458d4d857f3846af67eaaf7c0c9df613d18c01025a1db1e04",
+      "headers": {},
+      "host": "gmail.googleapis.com",
+      "id": "read-gmail-v1-users-me-labels",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "gmail/src/lib/common/data.ts",
+      "source_sha256": "170fa36c3bde33af1ecd5b63a269b7683d72e2c7df7e5185e2c23d94ae0babc3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gmail/src/lib/common/data.ts",
+      "url_template": "https://gmail.googleapis.com/gmail/v1/users/me/labels"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

@@ -1,0 +1,330 @@
+{
+  "allowed_hosts": [
+    "example-website.com."
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The WordPress user the flow acts as.",
+        "label": "Username",
+        "name": "username",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', required: true, description: 'Application password, or the login password with the Basic Auth plugin.', })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Address of your WordPress site.",
+        "label": "Website URL",
+        "name": "website_url",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Blogging",
+  "id": "wordpress",
+  "name": "WordPress",
+  "operations": [
+    {
+      "description": "Gets one media library file by its ID.",
+      "id": "get_media",
+      "inputs": [
+        {
+          "description": "ID of the media item, from list_media or upload_media.",
+          "label": "Media ID",
+          "name": "media_id",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Media",
+      "source_path": "wordpress/src/lib/actions/get-media.action.ts",
+      "source_sha256": "af7010480dff9d3095710f5b8694d781dbb74babd3ae87f0d547a266f502df24",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wordpress/src/lib/actions/get-media.action.ts"
+    },
+    {
+      "description": "Gets one site page by its ID.",
+      "id": "get_page",
+      "inputs": [
+        {
+          "description": "ID of the page, from list_pages or search_site_content.",
+          "label": "Page ID",
+          "name": "page_id",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Page",
+      "source_path": "wordpress/src/lib/actions/get-page.action.ts",
+      "source_sha256": "e2b233ac851cda2995c499f622a64b3b4b194ff5f5ab7415848f8bce20e7e783",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wordpress/src/lib/actions/get-page.action.ts"
+    },
+    {
+      "description": "Fetch one post by its ID",
+      "id": "get_post",
+      "inputs": [
+        {
+          "description": "Number after post= in the post's edit URL.",
+          "label": "Post ID",
+          "name": "id",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Post Details",
+      "source_path": "wordpress/src/lib/actions/get-post.action.ts",
+      "source_sha256": "3e5cf532bdfc4d96b2d1aaf9f1e28798077d2e9c9463ef8d019529183706fb86",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wordpress/src/lib/actions/get-post.action.ts"
+    },
+    {
+      "description": "Lists files in the media library, optionally filtered by keyword, type or attached post.",
+      "id": "list_media",
+      "inputs": [
+        {
+          "description": "Only files whose title, caption or file name contain this text.",
+          "label": "Search",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only files of this general type.",
+          "label": "Media Type",
+          "name": "media_type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Only files with this exact MIME type, e.g. image/png.",
+          "label": "MIME Type",
+          "name": "mime_type",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only files attached to this post or page ID. Use 0 for unattached files.",
+          "label": "Attached Post ID",
+          "name": "parent",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Media",
+      "source_path": "wordpress/src/lib/actions/list-media.action.ts",
+      "source_sha256": "e75efb67e15c05062fd6ebd29cf1bb665e1470a0f9f2b799f80ec7c8dd4af495",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wordpress/src/lib/actions/list-media.action.ts"
+    },
+    {
+      "description": "Lists site pages, optionally filtered by keyword, status or parent page.",
+      "id": "list_pages",
+      "inputs": [
+        {
+          "description": "Only pages whose title or content contain this text.",
+          "label": "Search",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Page statuses to include. Defaults to published only. \"Any\" includes every status except trash.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Only direct children of this page ID. Use 0 for top-level pages.",
+          "label": "Parent Page ID",
+          "name": "parent",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Sort field. Defaults to date. \"Relevance\" needs Search.",
+          "label": "Order By",
+          "name": "orderby",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Sort direction. Defaults to descending.",
+          "label": "Order",
+          "name": "order",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List Pages",
+      "source_path": "wordpress/src/lib/actions/list-pages.action.ts",
+      "source_sha256": "e0d98e4cab8c482190bd35acf9f55d09b759dcf23e46d0a64de80484911ab4fd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wordpress/src/lib/actions/list-pages.action.ts"
+    },
+    {
+      "description": "Lists blog posts, optionally filtered by keyword, status, category, tag, author or date.",
+      "id": "list_posts",
+      "inputs": [
+        {
+          "description": "Only posts whose title, content or excerpt contain this text.",
+          "label": "Search",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Post statuses to include. Defaults to published only. \"Any\" includes every status except trash.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Only posts in any of these category IDs (from list_categories).",
+          "label": "Category IDs",
+          "name": "categories",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Only posts with any of these tag IDs (from list_tags).",
+          "label": "Tag IDs",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Only posts by this user ID (from list_users).",
+          "label": "Author ID",
+          "name": "author",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Only posts published after this ISO 8601 date, e.g. 2026-01-31T00:00:00.",
+          "label": "Published After",
+          "name": "after",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only posts published before this ISO 8601 date.",
+          "label": "Published Before",
+          "name": "before",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Sort field. Defaults to date. \"Relevance\" needs Search.",
+          "label": "Order By",
+          "name": "orderby",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Sort direction. Defaults to descending.",
+          "label": "Order",
+          "name": "order",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List Posts",
+      "source_path": "wordpress/src/lib/actions/list-posts.action.ts",
+      "source_sha256": "6aa0a96b29f54ae9e3564e7d18e532bbd22f4e315f3df148bdf0fe61b5b67b9f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wordpress/src/lib/actions/list-posts.action.ts"
+    },
+    {
+      "description": "Lists post tags, optionally filtered by name or post.",
+      "id": "list_tags",
+      "inputs": [
+        {
+          "description": "Only tags whose name or slug contain this text.",
+          "label": "Search",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only the tag with this exact slug.",
+          "label": "Slug",
+          "name": "slug",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only tags assigned to this post ID (from list_posts).",
+          "label": "Post ID",
+          "name": "post",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Whether to leave out tags with no published posts. Defaults to No.",
+          "label": "Hide Empty",
+          "name": "hide_empty",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List Tags",
+      "source_path": "wordpress/src/lib/actions/list-tags.action.ts",
+      "source_sha256": "c4650dcc978c5fc7e6e1ce87167cb1e3978deb1b781fc9e587ca785fb27d1562",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wordpress/src/lib/actions/list-tags.action.ts"
+    },
+    {
+      "description": "Lists site users, optionally filtered by name or role.",
+      "id": "list_users",
+      "inputs": [
+        {
+          "description": "Only users whose name, slug, email or URL contain this text.",
+          "label": "Search",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only users with any of these role slugs, e.g. administrator, editor, author, contributor, subscriber.",
+          "label": "Roles",
+          "name": "roles",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "List Users",
+      "source_path": "wordpress/src/lib/actions/list-users.action.ts",
+      "source_sha256": "52f95b9c26b9210a30b52691dd3060c608fc55639d49d9c733810700c300c11c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/wordpress/src/lib/actions/list-users.action.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "356281142151fefb3b6c6a9c445856ca2b77bba6",
+    "index_path": "wordpress/src/index.ts",
+    "index_sha256": "f90ed202c77798181a5a57b523b79bcd80601f9d384b83c0ab92aa66b901dd75",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

@@ -23,7 +23,7 @@ class GitHubMobileNavigation(unittest.TestCase):
   self.assertLess(len(hero.encode("utf8")),1100)
   inventory=json.loads(doc(ROOT/"hub/site/downloads.json"))["counts"]
   for claim in ["# Muse Hub","15 independent assistants","three subchats",
-                str(inventory["skill"])+" skills",str(inventory["workflow"])+" workflows","100 task starters","151 connectors"]:
+                str(inventory["skill"])+" skills",str(inventory["workflow"])+" workflows",str(len(json.loads(doc(ROOT/'collections/muse-starters-v1/starters.json'))))+" task starters",str(len(catalog()))+" connectors"]:
    self.assertIn(claim,hero)
   self.assertNotIn("Muse Specialist Toolkit",body)
   self.assertNotIn("atlas-origins.github.io/kits",body)
@@ -32,7 +32,7 @@ class GitHubMobileNavigation(unittest.TestCase):
 
  def test_homepage_has_four_obvious_actions_before_technical_details(self):
   body=doc(README);first=body.split("## The 15 specialists",1)[0]
-  for phrase in ("Choose an assistant","Download v1.5.0",
+  for phrase in ("Choose an assistant","Download "+json.loads(doc(ROOT/'presets/catalog.json'))['release'],
                  "Visit Muse Hub","Get started"):
    self.assertIn(phrase,first)
   for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/connectors/README.md",
@@ -63,13 +63,13 @@ class GitHubMobileNavigation(unittest.TestCase):
    with self.subTest(group=group):
     self.assertIn("CATALOG.md#"+group,body)
     self.assertIn(title,body)
-  self.assertLess(body.index("Browse by category"),body.index("Source and attribution"))
+  self.assertLess(body.index("Browse by category"),body.index("Use connector actions in a workflow"))
   self.assertNotIn("not installed",body[:body.index("Browse by category")].lower())
- def test_all_151_connectors_are_grouped_with_links_and_short_descriptions(self):
+ def test_all_connectors_are_grouped_with_links_and_short_descriptions(self):
   body=doc(CROOT/"CATALOG.md")
   self.assertNotRegex(body,r"(?m)^\|.*\|")
   self.assertIn("Browse by use case",body)
-  self.assertEqual(len(catalog()),151)
+  self.assertGreater(len(catalog()),250)
   positions=[]
   for group,title in GROUPS.items():
    self.assertIn("## "+title,body)
@@ -77,11 +77,11 @@ class GitHubMobileNavigation(unittest.TestCase):
   self.assertEqual(positions,sorted(positions))
   for entry in catalog():
    with self.subTest(connector=entry["id"]):
-    self.assertEqual(body.count(entry["source_url"]),1)
+    self.assertEqual(body.count(entry.get('guide_path',entry["source_url"])),1)
   # Count only connector links; user-facing GitHub links remain directly browsable.
   links=re.findall(r"\]\((https://github\.com/bluman1/muse-connectors/blob/[a-f0-9]{40}/connectors/[a-z0-9-]+/SKILL\.md)\)",body)
   self.assertEqual(len(links),151);self.assertEqual(len(set(links)),151)
-  self.assertIn("As&#97;na",body)
+  self.assertIn("Asana",body)
  def test_category_renderer_is_deterministic_and_detects_outdated_docs(self):
   p=ROOT/"scripts/render_github_connector_directory.py"
   self.assertTrue(p.is_file())

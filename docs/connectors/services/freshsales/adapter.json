@@ -1,0 +1,217 @@
+{
+  "allowed_hosts": [
+    "acme.com",
+    "acme.myfreshworks.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "Service username and password or token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Sales & CRM",
+  "id": "freshsales",
+  "name": "Freshsales",
+  "operations": [
+    {
+      "description": "Get an account by its ID",
+      "id": "get_account",
+      "inputs": [
+        {
+          "description": "ID of the account to fetch",
+          "label": "Account ID",
+          "name": "sales_account_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Account",
+      "source_path": "freshsales/src/lib/actions/get-account.ts",
+      "source_sha256": "7f6f4c96dcbfbf38203c4528dc415b1f4b2f6bf3aa437d0c90ac2767a3e2a9df",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/actions/get-account.ts"
+    },
+    {
+      "description": "Get a contact by its ID",
+      "id": "get_contact",
+      "inputs": [
+        {
+          "description": "ID of the contact to fetch",
+          "label": "Contact ID",
+          "name": "contact_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Contact",
+      "source_path": "freshsales/src/lib/actions/get-contact.ts",
+      "source_sha256": "fa875c3fa7282cad83276359729d13f920bf0f8a21ef79e9234843992c76bfbc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/actions/get-contact.ts"
+    },
+    {
+      "description": "Get a deal by its ID",
+      "id": "get_deal",
+      "inputs": [
+        {
+          "description": "ID of the deal to fetch",
+          "label": "Deal ID",
+          "name": "deal_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Deal",
+      "source_path": "freshsales/src/lib/actions/get-deal.ts",
+      "source_sha256": "889d860e5f2806d76e033176f455b60db48e5783b68313aa18b08f6fa6a39399",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/actions/get-deal.ts"
+    },
+    {
+      "description": "Get a task by its ID",
+      "id": "get_task",
+      "inputs": [
+        {
+          "description": "ID of the task to fetch",
+          "label": "Task ID",
+          "name": "task_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Task",
+      "source_path": "freshsales/src/lib/actions/get-task.ts",
+      "source_sha256": "f0e7d965589a345f9a23f2bdfcd8b4254840b5b65c29e70d29d96ed302c265c9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/actions/get-task.ts"
+    },
+    {
+      "description": "List deal pipelines with their stages",
+      "id": "list_pipelines",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Pipelines and Stages",
+      "source_path": "freshsales/src/lib/actions/list-pipelines.ts",
+      "source_sha256": "0ec9ad835c1cf2583507b529169acd64649247bac476422cb871c1b52a3059fd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/actions/list-pipelines.ts"
+    },
+    {
+      "description": "List contacts, accounts or deals from a saved view",
+      "id": "list_records",
+      "inputs": [
+        {
+          "description": "Which records to list",
+          "label": "Record Type",
+          "name": "entity",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "View_Id",
+          "name": "view_id",
+          "required": null,
+          "source_expression": "freshsalesProps.view()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Page number, starting at 1",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Records per page (1-100)",
+          "label": "Per Page",
+          "name": "per_page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Records in View",
+      "source_path": "freshsales/src/lib/actions/list-records.ts",
+      "source_sha256": "7b8e3459e9cb8dfbbbc819a83750b4a108e0a6154934247a021bfb2e5cd8ff96",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/actions/list-records.ts"
+    },
+    {
+      "description": "List tasks by status (open, overdue, completed...)",
+      "id": "list_tasks",
+      "inputs": [
+        {
+          "description": "Which tasks to list",
+          "label": "Filter",
+          "name": "filter",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Page number, starting at 1",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Tasks",
+      "source_path": "freshsales/src/lib/actions/list-tasks.ts",
+      "source_sha256": "b53ef180214e81551b2c2f1e383796fa7ffb68060705f37f73ea385a8270043e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/actions/list-tasks.ts"
+    },
+    {
+      "description": "List Freshsales users (owners) with their IDs",
+      "id": "list_users",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Users",
+      "source_path": "freshsales/src/lib/actions/list-users.ts",
+      "source_sha256": "33e19bb7a2fe3bc75a53b5aebaceb3aa498007746d356f10786b22208338946e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/actions/list-users.ts"
+    },
+    {
+      "description": "Triggers when a new account is created",
+      "id": "new_account",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Account",
+      "source_path": "freshsales/src/lib/triggers/new-account.ts",
+      "source_sha256": "341c41fc5be90bca65c533bda8f37c06526dfe6bd2f30fdbaa30d1363abd33db",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/triggers/new-account.ts"
+    },
+    {
+      "description": "Triggers when a new contact is created",
+      "id": "new_contact",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Contact",
+      "source_path": "freshsales/src/lib/triggers/new-contact.ts",
+      "source_sha256": "ce6b122d10e770dac9e912f996197a75a698bafaa92d78ac65cce9d62e1dd0ed",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/triggers/new-contact.ts"
+    },
+    {
+      "description": "Triggers when a new deal is created",
+      "id": "new_deal",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Deal",
+      "source_path": "freshsales/src/lib/triggers/new-deal.ts",
+      "source_sha256": "ff646bce9d2d2c76a5dbb0c9b82d0c553a5948b11f2461583263fc94f1d6f018",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshsales/src/lib/triggers/new-deal.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "361221e595c6166c4c1bfa2b7be48fbf088813d7",
+    "index_path": "freshsales/src/index.ts",
+    "index_sha256": "4a05d3c9bc5ad6506015b5ef323873aa69266a00e3f9b1889ab3f0ba7c2ecd2c",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer"
+  ]
+}

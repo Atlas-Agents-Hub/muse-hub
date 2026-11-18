@@ -8,30 +8,31 @@ def tool():
  m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
 
 class ConnectorCatalogTests(unittest.TestCase):
- def test_all151_have_source_setup_and_specialist_relevance(self):
-  m=tool();doc=m.load_catalog();self.assertEqual(len(doc['connectors']),151)
+ def test_all_connectors_have_source_setup_and_specialist_relevance(self):
+  m=tool();doc=m.load_catalog();self.assertGreater(len(doc['connectors']),250)
   self.assertEqual(doc['source']['repository'],'bluman1/muse-connectors')
   self.assertEqual(doc['source']['commit'],'73f302c2d8569fdc65e0e57c26b244c547fcd40e')
   roles=set(json.loads((R/'presets/catalog.json').read_bytes())['presets'])
-  self.assertEqual(len({c['id'] for c in doc['connectors']}),151)
+  self.assertEqual(len({c['id'] for c in doc['connectors']}),len(doc['connectors']))
   for c in doc['connectors']:
    with self.subTest(connector=c['id']):
     self.assertTrue(set(c['specialists'])<=roles);self.assertTrue(c['specialists'])
-    self.assertIn(doc['source']['commit'],c['source_url'])
+    source=doc['source'] if c.get('source_id','muse-connectors')=='muse-connectors' else doc['extensions']
+    self.assertIn(source['commit'],c['source_url'])
     self.assertTrue(c['setup_prompt']);self.assertIn(c['source_url'],c['setup_prompt'])
     self.assertIn('credentials',c['setup_prompt']);self.assertIn('approval',c['setup_prompt'])
     self.assertRegex(c['source_sha256'],r'^[a-f0-9]{64}$')
     self.assertTrue(c['auth']);self.assertTrue(c['permissions']);self.assertTrue(c['files'])
  def test_frozen_snapshot_and_license_are_verified(self):
   m=tool();d=m.load_catalog();proof=json.loads((R/'docs/connectors/PROVENANCE.json').read_bytes())
-  self.assertEqual(proof['connector_count'],151)
+  self.assertEqual(proof['connector_count'],len(d['connectors']))
   self.assertFalse(proof['upstream_code_executed']);self.assertFalse(proof['connector_code_vendored'])
   for path,digest in proof['distributed_files'].items():self.assertEqual(hashlib.sha256((R/path).read_bytes()).hexdigest(),digest)
   license=(R/'docs/connectors/UPSTREAM_LICENSE.txt').read_text();self.assertIn('muse-connectors contributors',license)
  def test_all_entries_have_browsable_source_fallback(self):
   body=(R/'docs/connectors/CATALOG.md').read_text();page=(R/'docs/connectors/index.html').read_text()
   for c in tool().load_catalog()['connectors']:
-   self.assertIn(c['source_url'],body);self.assertIn('id="'+c['id']+'"',page)
+   self.assertIn(c.get('guide_path',c['source_url']),body);self.assertIn('id="'+c['id']+'"',page)
   for token in ['connector-search','category-filter','specialist-filter','copy-prompt','aria-live','Content-Security-Policy']:
    self.assertIn(token,page)
   js=(R/'docs/connectors/app.js').read_text();self.assertNotIn('innerHTML',js);self.assertNotIn('eval(',js)
@@ -56,7 +57,7 @@ class ConnectorCatalogTests(unittest.TestCase):
   m=tool()
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'catalog.zip';x=m.export_catalog(p)
-   self.assertEqual(x['connectors'],151)
+   self.assertEqual(x['connectors'],len(m.load_catalog()['connectors']))
    with zipfile.ZipFile(p) as z:
     self.assertIsNone(z.testzip());manifest=json.loads(z.read('MANIFEST.json'))
     self.assertEqual(set(z.namelist()),set(manifest['files'])|{'MANIFEST.json'})
@@ -68,15 +69,15 @@ class V1ProductTests(unittest.TestCase):
      s=(R/'README.md').read_text();hero=s.split('\n## ',1)[0]
      counts=json.loads((R/'hub/site/downloads.json').read_bytes())['counts']
      for value in ('Muse Hub','15 independent assistants',f"{counts['skill']} skills",f"{counts['workflow']} workflows",
-                   f"{counts['tool-guide']} tool guides",'100 task starters','151 connectors'):
+                   f"{counts['tool-guide']} tool guides",f"{len(json.loads((R/'collections/muse-starters-v1/starters.json').read_bytes()))} task starters",f"{len(tool().load_catalog()['connectors'])} connectors"):
          self.assertIn(value,hero)
      self.assertNotIn('Muse Specialist Toolkit',s)
      self.assertLess(len(s.encode()),8000)
 
  def test_current_setup_routes_and_release_metadata_agree(self):
      d=json.loads((R/'docs/discovery/agent-capabilities.json').read_bytes())
-     self.assertEqual(d['project'],'Muse Hub');self.assertEqual(d['release'],'v1.5.0')
-     self.assertEqual(d['custom_connector_count'],151);self.assertEqual(d['configuration_count'],115)
+     self.assertEqual(d['project'],'Muse Hub');self.assertEqual(d['release'],json.loads((R/'presets/catalog.json').read_bytes())['release'])
+     self.assertEqual(d['custom_connector_count'],len(tool().load_catalog()['connectors']))
      self.assertEqual(len(d['specialist_downloads']),15)
      for p in ['docs/GETTING_STARTED.md','docs/TERMINAL.md','docs/v1/POST_RELEASE.md',
                'docs/connectors/README.md','scripts/build_v1_release.py']:

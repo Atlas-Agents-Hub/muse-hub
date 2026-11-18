@@ -1,0 +1,638 @@
+{
+  "allowed_hosts": [
+    "developer.zendesk.com",
+    "support.zendesk.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://{subdomain}.zendesk.com/oauth/authorizations/new"
+    ],
+    "fields": [
+      {
+        "description": "The email address you use to login to Zendesk",
+        "label": "Agent Email",
+        "name": "email",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The API token you can generate in Zendesk",
+        "label": "Token",
+        "name": "token",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The subdomain of your Zendesk instance",
+        "label": "Organization (e.g activepieceshelp)",
+        "name": "subdomain",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; OAuth 2.0 account connection",
+    "scopes": [
+      "read",
+      "write"
+    ],
+    "token_urls": [
+      "https://{subdomain}.zendesk.com/oauth/tokens"
+    ]
+  },
+  "category": "Support",
+  "id": "zendesk",
+  "name": "Zendesk",
+  "operations": [
+    {
+      "description": "Add a new user to the Zendesk instance.",
+      "id": "create-user",
+      "inputs": [
+        {
+          "description": "The name of the user",
+          "label": "Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The primary email address of the user",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The role of the user. Defaults to \"end-user\" if not specified.",
+          "label": "Role",
+          "name": "role",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Custom_Role_Id",
+          "name": "custom_role_id",
+          "required": null,
+          "source_expression": "customRoleIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Organization_Id",
+          "name": "organization_id",
+          "required": null,
+          "source_expression": "organizationIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Create and associate user with a new organization by name (alternative to Organization ID)",
+          "label": "Organization Name",
+          "name": "organization_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The phone number of the user",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "An alias displayed to end users",
+          "label": "Alias",
+          "name": "alias",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Additional details about the user",
+          "label": "Details",
+          "name": "details",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Internal notes about the user",
+          "label": "Notes",
+          "name": "notes",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "A unique external ID for the user (useful for integrations)",
+          "label": "External ID",
+          "name": "external_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The time zone of the user (e.g., \"America/New_York\")",
+          "label": "Time Zone",
+          "name": "time_zone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The locale of the user (e.g., \"en-US\")",
+          "label": "Locale",
+          "name": "locale",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether the user is verified",
+          "label": "Verified",
+          "name": "verified",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the user is active. Defaults to true.",
+          "label": "Active",
+          "name": "active",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the user is shared from a different Zendesk Support instance",
+          "label": "Shared",
+          "name": "shared",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the user is a shared agent from a different Zendesk Support instance",
+          "label": "Shared Agent",
+          "name": "shared_agent",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the user has forum moderation capabilities",
+          "label": "Moderator",
+          "name": "moderator",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the user is suspended",
+          "label": "Suspended",
+          "name": "suspended",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the agent has restrictions on what tickets they can access",
+          "label": "Restricted Agent",
+          "name": "restricted_agent",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the user can only create private comments",
+          "label": "Only Private Comments",
+          "name": "only_private_comments",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the user can access CSV reports",
+          "label": "Report CSV",
+          "name": "report_csv",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Skip sending a verification email to the user",
+          "label": "Skip Verify Email",
+          "name": "skip_verify_email",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The ticket restriction for the user",
+          "label": "Ticket Restriction",
+          "name": "ticket_restriction",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The user's signature for email responses",
+          "label": "Signature",
+          "name": "signature",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Default_Group_Id",
+          "name": "default_group_id",
+          "required": null,
+          "source_expression": "groupIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Agent_Brand_Ids",
+          "name": "agent_brand_ids",
+          "required": null,
+          "source_expression": "agentBrandIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Array of tags to apply to the user",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "User_Fields",
+          "name": "user_fields",
+          "required": null,
+          "source_expression": "userFieldsDynamicProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Array of identity objects with type and value. Example: [{\"type\": \"email\", \"value\": \"test@user.com\"}, {\"type\": \"twitter\", \"value\": \"username\"}]",
+          "label": "Identities",
+          "name": "identities",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create User",
+      "source_path": "zendesk/src/lib/actions/create-user.ts",
+      "source_sha256": "1dd3e9a34f598888bc84673b4860ae2b59916cf070d1d9fc02e8d053e50f4cd1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/create-user.ts"
+    },
+    {
+      "description": "Remove a user and associated records from the account.",
+      "id": "delete-user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "User_Id",
+          "name": "user_id",
+          "required": null,
+          "source_expression": "userIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "I understand that deleted users are not recoverable and this action cannot be undone.",
+          "label": "Confirm Deletion",
+          "name": "confirmation",
+          "required": true,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete User",
+      "source_path": "zendesk/src/lib/actions/delete-user.ts",
+      "source_sha256": "6c719864f6033943fb4a018ec323b7ee29a141aa339378b7f2c27858ae48f429",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/delete-user.ts"
+    },
+    {
+      "description": "Find a group by name.",
+      "id": "find-group",
+      "inputs": [
+        {
+          "description": "The name of the group to find",
+          "label": "Group Name",
+          "name": "group_name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find a Group",
+      "source_path": "zendesk/src/lib/actions/find-group.ts",
+      "source_sha256": "bd92d5c67488bf16deedc78f1048f959c31a965fcd45616845ac08fb30ab23d3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/find-group.ts"
+    },
+    {
+      "description": "Find an agent by email or name.",
+      "id": "find-agent",
+      "inputs": [
+        {
+          "description": "Choose how to search for the agent",
+          "label": "Search By",
+          "name": "search_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The email or name to search for",
+          "label": "Search Value",
+          "name": "search_value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find an Agent",
+      "source_path": "zendesk/src/lib/actions/find-agent.ts",
+      "source_sha256": "a1669795fbb781b4f10d5db9614423f7d025500bc07a1e4983cea03fb35d51c9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/find-agent.ts"
+    },
+    {
+      "description": "Find the latest comment on a ticket.",
+      "id": "find-latest-comment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Ticket_Id",
+          "name": "ticket_id",
+          "required": null,
+          "source_expression": "ticketIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Include private internal comments in the search",
+          "label": "Include Private Comments",
+          "name": "include_private",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Latest Comment",
+      "source_path": "zendesk/src/lib/actions/find-latest-comment.ts",
+      "source_sha256": "511c680f519aad01d91c7cac8e535af10f6ca902737fec759f829a3fbed77ce5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/find-latest-comment.ts"
+    },
+    {
+      "description": "Search organizations by name, domain, external ID, or other criteria.",
+      "id": "find-organization",
+      "inputs": [
+        {
+          "description": "Choose how to search for organizations",
+          "label": "Search Type",
+          "name": "search_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The name of the organization to search for",
+          "label": "Organization Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search organizations by domain name",
+          "label": "Domain",
+          "name": "domain",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search organizations by external ID",
+          "label": "External ID",
+          "name": "external_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search organizations containing this tag",
+          "label": "Tag",
+          "name": "tag",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search in organization details/notes",
+          "label": "Details",
+          "name": "details",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Custom search query using Zendesk search syntax (e.g., \"type:organization domain:example.com\")",
+          "label": "Custom Query",
+          "name": "custom_query",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "How to sort the results",
+          "label": "Sort By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Sort order for results",
+          "label": "Sort Order",
+          "name": "sort_order",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Organization(s)",
+      "source_path": "zendesk/src/lib/actions/find-organization.ts",
+      "source_sha256": "be8834194938b0eb1639c8b1e3b6de4be0eb5dac6012f13079439fc9d91ee6bc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/find-organization.ts"
+    },
+    {
+      "description": "Search tickets by ID, field, or content.",
+      "id": "find-tickets",
+      "inputs": [
+        {
+          "description": "Choose how to search for tickets",
+          "label": "Search Type",
+          "name": "search_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Date Time Filter",
+          "name": "timeFilter",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "The ID of the ticket to find",
+          "label": "Ticket ID",
+          "name": "ticket_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search tickets by status",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Search tickets by priority",
+          "label": "Priority",
+          "name": "priority",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Search tickets by type",
+          "label": "Type",
+          "name": "ticket_type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Search tickets containing this tag",
+          "label": "Tag",
+          "name": "tag",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search tickets by requester email address",
+          "label": "Requester Email",
+          "name": "requester_email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search tickets by assignee email address",
+          "label": "Assignee Email",
+          "name": "assignee_email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search in ticket subject and content",
+          "label": "Content",
+          "name": "content",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Custom search query using Zendesk search syntax (e.g., \"type:ticket status:open priority:high\")",
+          "label": "Custom Query",
+          "name": "custom_query",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "How to sort the results",
+          "label": "Sort By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Sort order for results",
+          "label": "Sort Order",
+          "name": "sort_order",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Ticket(s)",
+      "source_path": "zendesk/src/lib/actions/find-tickets.ts",
+      "source_sha256": "1ae5562c8a1d31e988f36590c6c719b02b1a02df3128af4e572eeb096f6566d4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/find-tickets.ts"
+    },
+    {
+      "description": "Search users by email, name, role, or other criteria.",
+      "id": "find-user",
+      "inputs": [
+        {
+          "description": "Choose how to search for users",
+          "label": "Search Type",
+          "name": "search_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The email address of the user to search for",
+          "label": "Email Address",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The name of the user to search for",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search users by role",
+          "label": "Role",
+          "name": "role",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Search users by organization name",
+          "label": "Organization",
+          "name": "organization",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search users containing this tag",
+          "label": "Tag",
+          "name": "tag",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Search users by external ID",
+          "label": "External ID",
+          "name": "external_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Custom search query using Zendesk search syntax (e.g., \"type:user role:agent\")",
+          "label": "Custom Query",
+          "name": "custom_query",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "How to sort the results",
+          "label": "Sort By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Sort order for results",
+          "label": "Sort Order",
+          "name": "sort_order",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User(s)",
+      "source_path": "zendesk/src/lib/actions/find-user.ts",
+      "source_sha256": "e7818baa7ca3aea5954127a1e2cc114c02ebb92a4c0aaad6320c0a898aa74990",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/find-user.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "a6c2376d561d5dd2411d9e0b60c1857b55dd0d0f",
+    "index_path": "zendesk/src/index.ts",
+    "index_sha256": "53ae1c5727c4a1bda06dcad2df326766ce017caaa2d40539fc3b3d8c876b5fd4",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

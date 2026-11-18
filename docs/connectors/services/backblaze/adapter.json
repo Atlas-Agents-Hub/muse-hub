@@ -1,0 +1,142 @@
+{
+  "allowed_hosts": [
+    "www.backblaze.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Access Key ID",
+        "name": "accessKeyId",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Secret Access Key",
+        "name": "secretAccessKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Secret Access Key', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Bucket",
+        "name": "bucket",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Endpoint",
+        "name": "endpoint",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Region",
+        "name": "region",
+        "required": true,
+        "type": "StaticDropdown"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Developer & Infra",
+  "id": "backblaze",
+  "name": "Backblaze",
+  "operations": [
+    {
+      "description": "Read a file from Backblaze bucket to use it in other steps.",
+      "id": "read-backblaze-file",
+      "inputs": [
+        {
+          "description": "The key of the file to read. include extension if file has any extension.",
+          "label": "Key",
+          "name": "key",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Read File",
+      "source_path": "backblaze/src/lib/actions/read-file.ts",
+      "source_sha256": "be4bca780b8d3c6944a44f615c69fb2b55a38fa504823d3915846e1e54245fa8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/backblaze/src/lib/actions/read-file.ts"
+    },
+    {
+      "description": "Upload an File to bucket.",
+      "id": "upload-backblaze-file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "my-file-name (no extension). write full path if you want to store in the directories or sub-directories.",
+          "label": "File Name",
+          "name": "fileName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "ACL",
+          "name": "acl",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Type",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Upload File",
+      "source_path": "backblaze/src/lib/actions/upload-file.ts",
+      "source_sha256": "275235eeb7beeba593a051f03c279febcea1947017f01e3c6c63bda2db086729",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/backblaze/src/lib/actions/upload-file.ts"
+    },
+    {
+      "description": "Trigger when a new file is uploaded.",
+      "id": "new_backblaze_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Folder Path",
+          "name": "folderPath",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New File",
+      "source_path": "backblaze/src/lib/triggers/new-file.ts",
+      "source_sha256": "0c234f9c41e735474696a4cb781dda077f7ce8ab989f41c3dcfe41bd621f12c1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/backblaze/src/lib/triggers/new-file.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "d7c79cf454de72bc67fc76e7ae78ddce31e436bf",
+    "index_path": "backblaze/src/index.ts",
+    "index_sha256": "6cec5c8ee630560e6cb6d5d879aabcee75326a8ec52d7d2a3bdf74517971935a",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "software-engineer",
+    "infrastructure-reliability-engineer",
+    "automation-engineer"
+  ]
+}

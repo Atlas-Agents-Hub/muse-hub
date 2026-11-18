@@ -203,7 +203,7 @@ class ConnectorTests(unittest.TestCase):
         for term in ("account", "permissions", "credentials", "original service status"):
             self.assertIn(term,doc.casefold())
         directory=(root/"docs/connectors/README.md").read_text(encoding="utf-8")
-        self.assertIn("151",directory)
+        self.assertIn(str(len(json.loads((root/'docs/connectors/catalog.json').read_bytes())['connectors'])),directory)
         self.assertIn("CATALOG.md",directory)
         for word in ("example-owner-user","example-private-host","legacy-role-alpha","legacy-role-eta","example-private-network"):
             self.assertNotIn(word,doc.casefold())

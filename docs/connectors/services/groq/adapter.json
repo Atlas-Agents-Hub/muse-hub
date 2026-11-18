@@ -1,0 +1,214 @@
+{
+  "allowed_hosts": [
+    "api.groq.com",
+    "console.groq.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "AI & ML",
+  "id": "groq",
+  "name": "Groq",
+  "operations": [
+    {
+      "description": "Send a question or instruction to a Groq model and get a text reply.",
+      "id": "ask-ai",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "groqProps.chatModel({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "What you want the model to answer or do.",
+          "label": "Question",
+          "name": "prompt",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "From 0 to 2. Lower is more focused, higher is more varied.",
+          "label": "Temperature",
+          "name": "temperature",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Longest reply in tokens, about 4 characters each.",
+          "label": "Maximum Tokens",
+          "name": "maxTokens",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "From 0 to 1. Adjust this or Temperature, not both.",
+          "label": "Top P",
+          "name": "topP",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "From -2 to 2. Groq models do not support this yet.",
+          "label": "Frequency Penalty",
+          "name": "frequencyPenalty",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "From -2 to 2. Groq models do not support this yet.",
+          "label": "Presence Penalty",
+          "name": "presencePenalty",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Runs that share this ID continue one conversation. Empty: no memory.",
+          "label": "Conversation Memory ID",
+          "name": "memoryKey",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Memory Info",
+          "name": "memoryInfo",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "Messages sent before the question, such as a system instruction.",
+          "label": "Roles",
+          "name": "roles",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Ask AI",
+      "source_path": "groq/src/lib/actions/ask-ai.ts",
+      "source_sha256": "c7c86311b8e078d16ea2bd041e471c0475cae665630b9d75caf15cfb78157ce3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/groq/src/lib/actions/ask-ai.ts"
+    },
+    {
+      "description": "Turn speech in an audio file into text, in the language spoken.",
+      "id": "transcribe-audio",
+      "inputs": [
+        {
+          "description": "flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav or webm.",
+          "label": "Audio File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "groqProps.whisperModel({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "ISO-639-1 code of the spoken language, for better accuracy.",
+          "label": "Language",
+          "name": "language",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Spellings or text that came just before, in the audio's language.",
+          "label": "Prompt",
+          "name": "prompt",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "From 0 to 1. Groq recommends 0.",
+          "label": "Temperature",
+          "name": "temperature",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Text returns the words alone; Verbose JSON adds segment timings.",
+          "label": "Response Format",
+          "name": "responseFormat",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Transcribe Audio",
+      "source_path": "groq/src/lib/actions/transcribe-audio.ts",
+      "source_sha256": "6229eae4ed4a50c59ac815341baa9f641486977810053378dd7d796ef2a0d634",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/groq/src/lib/actions/transcribe-audio.ts"
+    },
+    {
+      "description": "Turn speech in any supported language into English text.",
+      "id": "translate-audio",
+      "inputs": [
+        {
+          "description": "flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav or webm.",
+          "label": "Audio File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "groqProps.whisperModel({ required: true, description: 'Use whisper-large-v3; the turbo model cannot translate.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Spellings or earlier text in English to guide the translation.",
+          "label": "Prompt",
+          "name": "prompt",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "From 0 to 1. Groq recommends 0.",
+          "label": "Temperature",
+          "name": "temperature",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Text returns the words alone; Verbose JSON adds segment timings.",
+          "label": "Response Format",
+          "name": "responseFormat",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Translate Audio",
+      "source_path": "groq/src/lib/actions/translate-audio.ts",
+      "source_sha256": "a3a7d77c2729ee1c059ef88a6282108018092fb00bdeded1df2e02e78b4b2162",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/groq/src/lib/actions/translate-audio.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "af79fbd016836ec01fbd73a3b6e938a2e9086049",
+    "index_path": "groq/src/index.ts",
+    "index_sha256": "5ca2d9520021d807f1ca4c47d415dfc4d2a302fad41d03a4b3850f5af4395ecb",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "model-builder",
+    "research-evaluator",
+    "software-engineer"
+  ]
+}

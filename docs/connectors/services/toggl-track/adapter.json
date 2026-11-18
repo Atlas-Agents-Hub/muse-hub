@@ -1,0 +1,461 @@
+{
+  "allowed_hosts": [
+    "api.track.toggl.com",
+    "focus.toggl.com",
+    "track.toggl.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token; Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Productivity",
+  "id": "toggl-track",
+  "name": "Toggl Track",
+  "operations": [
+    {
+      "description": "Find a client by name or status in a workspace.",
+      "id": "find_client",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The name of the client to find (case-insensitive).",
+          "label": "Client Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter clients by their status.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Client",
+      "source_path": "toggl-track/src/lib/actions/find-client.ts",
+      "source_sha256": "8822ba520a480656f0ea0cd0f49074dc01448563f3b33ce5b33acf31e32fcbc1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/actions/find-client.ts"
+    },
+    {
+      "description": "Find a project in a workspace by its name.",
+      "id": "find_project",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The name of the project to find.",
+          "label": "Project Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Return active, inactive, or both types of projects.",
+          "label": "Project Status",
+          "name": "active",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Return only billable projects.",
+          "label": "Billable Only",
+          "name": "billable",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Get only projects assigned to the current user.",
+          "label": "My Projects Only",
+          "name": "only_me",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Return only template projects.",
+          "label": "Templates Only",
+          "name": "only_templates",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Page number for pagination.",
+          "label": "Page Number",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of items per page (max 200; Toggl 2.0: max 100).",
+          "label": "Items Per Page",
+          "name": "per_page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Project",
+      "source_path": "toggl-track/src/lib/actions/find-project.ts",
+      "source_sha256": "82184a49ef96da74a9f7b426c09f9845f568bab00e06dd84af9c52c3cfbff9f0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/actions/find-project.ts"
+    },
+    {
+      "description": "Find a tag by name in a workspace.",
+      "id": "find_tag",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Search by tag name.",
+          "label": "Tag Name",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Page number for pagination.",
+          "label": "Page Number",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of items per page (Toggl 2.0: max 100).",
+          "label": "Items Per Page",
+          "name": "per_page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Tag",
+      "source_path": "toggl-track/src/lib/actions/find-tag.ts",
+      "source_sha256": "0397a1be6dfac2e1b389c957590b8244e282e99f78d02c780d25676d0d65ee2c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/actions/find-tag.ts"
+    },
+    {
+      "description": "Find a task by name and status.",
+      "id": "find_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Search by task name.",
+          "label": "Task Name",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter by project ID.",
+          "label": "Project ID",
+          "name": "project_id",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Filter by active state.",
+          "label": "Status",
+          "name": "active",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Page number for pagination.",
+          "label": "Page Number",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of items per page (default 50).",
+          "label": "Items Per Page",
+          "name": "per_page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Field used for sorting.",
+          "label": "Sort Field",
+          "name": "sort_field",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Sort order.",
+          "label": "Sort Order",
+          "name": "sort_order",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Smallest boundary date (YYYY-MM-DD).",
+          "label": "Start Date",
+          "name": "start_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Biggest boundary date (YYYY-MM-DD).",
+          "label": "End Date",
+          "name": "end_date",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Task",
+      "source_path": "toggl-track/src/lib/actions/find-task.ts",
+      "source_sha256": "dc18213d2697b34373f1f89d3b4a775db7893e0359bad84c25465b0d9f3f56bb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/actions/find-task.ts"
+    },
+    {
+      "description": "Find a user in a workspace by their name or email.",
+      "id": "find_user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Organization_Id",
+          "name": "organization_id",
+          "required": null,
+          "source_expression": "togglCommon.organization_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The name or email of the user to find.",
+          "label": "Name or Email",
+          "name": "search_term",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Return only active users.",
+          "label": "Active Users Only",
+          "name": "active",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Page number for pagination.",
+          "label": "Page Number",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of items per page.",
+          "label": "Items Per Page",
+          "name": "per_page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User",
+      "source_path": "toggl-track/src/lib/actions/find-user.ts",
+      "source_sha256": "4a6dc1c84be3987b56eb881e7cfa0c38961d1475db559940a32118d222448c97",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/actions/find-user.ts"
+    },
+    {
+      "description": "Get a client by its ID.",
+      "id": "get_client",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Client_Id",
+          "name": "client_id",
+          "required": null,
+          "source_expression": "togglCommon.required_client_id",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Client",
+      "source_path": "toggl-track/src/lib/actions/get-client.ts",
+      "source_sha256": "355dafa7689e4d4db8cb78d101fefd5974402c6f44f679cbd9e75614ca93a766",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/actions/get-client.ts"
+    },
+    {
+      "description": "Get a project by its ID.",
+      "id": "get_project",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Project_Id",
+          "name": "project_id",
+          "required": null,
+          "source_expression": "togglCommon.project_id",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Project",
+      "source_path": "toggl-track/src/lib/actions/get-project.ts",
+      "source_sha256": "a1c6892413c2c7a52493a306464f508e3fec724d9e9288f6727c972f866aa803",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/actions/get-project.ts"
+    },
+    {
+      "description": "Get the details of a workspace.",
+      "id": "get_workspace",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Workspace",
+      "source_path": "toggl-track/src/lib/actions/get-workspace.ts",
+      "source_sha256": "4482dba3b1cf91c4122850d43cabd3817ee932e4a5b7c3ec4e2db3fe70db9f13",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/actions/get-workspace.ts"
+    },
+    {
+      "description": "Fires when a new client is created in a workspace.",
+      "id": "new_client",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Setup Instructions",
+          "name": "setupInstructions",
+          "required": false,
+          "type": "MarkDown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Client",
+      "source_path": "toggl-track/src/lib/triggers/new-client.ts",
+      "source_sha256": "36325fa6b14d0d4cf08383649d63de8f6166b772d89efd9109d5aa237d68bf0d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/triggers/new-client.ts"
+    },
+    {
+      "description": "Fires when a new project is added.",
+      "id": "new_project",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Setup Instructions",
+          "name": "setupInstructions",
+          "required": false,
+          "type": "MarkDown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Project",
+      "source_path": "toggl-track/src/lib/triggers/new-project.ts",
+      "source_sha256": "636afb26a8a57d0253ebfffa6dbca98ee5c42112dbbc250e02daa330dcf8231c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/triggers/new-project.ts"
+    },
+    {
+      "description": "Triggers when a new tag is created",
+      "id": "new_tag",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace_Id",
+          "name": "workspace_id",
+          "required": null,
+          "source_expression": "togglCommon.workspace_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Setup Instructions",
+          "name": "setupInstructions",
+          "required": false,
+          "type": "MarkDown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Tag",
+      "source_path": "toggl-track/src/lib/triggers/new-tag.ts",
+      "source_sha256": "d421d497447d7dfa4184f3300e9956af7e89a105bffcde5105bc8f383abcded6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/toggl-track/src/lib/triggers/new-tag.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "b7bb5cfaff5c9ab387872271b009142d26dabab1",
+    "index_path": "toggl-track/src/index.ts",
+    "index_sha256": "160db7281804d9641b2576905496385ef174569a07bf9a95552b1304e4bd7f3e",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

@@ -1,0 +1,250 @@
+{
+  "allowed_hosts": [
+    ".",
+    "api.buffer.com",
+    "publish.buffer.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Social",
+  "id": "buffer",
+  "name": "Buffer",
+  "operations": [
+    {
+      "description": "Save a new idea to your Buffer Idea Bank.",
+      "id": "create_idea",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Organization Id",
+          "name": "organizationId",
+          "required": null,
+          "source_expression": "bufferProps.organizationId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Group Id",
+          "name": "groupId",
+          "required": null,
+          "source_expression": "bufferProps.ideaGroupId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "A short title or headline for the idea.",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The main body of the idea.",
+          "label": "Text",
+          "name": "text",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Public URLs of images to attach to the idea.",
+          "label": "Image URLs",
+          "name": "imageUrls",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Mark this idea as created with AI assistance.",
+          "label": "AI Assisted",
+          "name": "aiAssisted",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Idea",
+      "source_path": "buffer/src/lib/actions/create-idea.ts",
+      "source_sha256": "9ea63fc0be797a77e2613e003e5f518a26843af56c6b4554494698e1f318d95b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/buffer/src/lib/actions/create-idea.ts"
+    },
+    {
+      "description": "Create a post in Buffer and add it to the queue, share it next, share it now, or schedule it for a custom time. Each run also loads your channel list (one extra Buffer API request, counted against your plan limit; Free: 600 a day).",
+      "id": "create_post",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Organization Id",
+          "name": "organizationId",
+          "required": null,
+          "source_expression": "bufferProps.organizationId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Channel Ids",
+          "name": "channelIds",
+          "required": null,
+          "source_expression": "bufferProps.channelIds(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The text content of the post.",
+          "label": "Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "When and how the post should be published.",
+          "label": "Share Mode",
+          "name": "mode",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "When to publish the post. Required when Share Mode is \"Schedule for Custom Time\". ISO 8601 (UTC).",
+          "label": "Scheduled Time",
+          "name": "dueAt",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Use \"Automatic\" for channels Buffer can publish to directly. Use \"Notification\" for channels that require manual publishing via the Buffer mobile app (e.g. Instagram personal accounts).",
+          "label": "Scheduling Type",
+          "name": "schedulingType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Save the post as a draft instead of scheduling it. Drafts are not published until explicitly scheduled.",
+          "label": "Save as Draft",
+          "name": "saveToDraft",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Public URLs of images to attach to the post.",
+          "label": "Image URLs",
+          "name": "imageUrls",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "A link to share. On Facebook, LinkedIn, Threads, Bluesky and Substack it becomes a link preview card when no images are attached; otherwise it is added to the end of the text.",
+          "label": "Link URL",
+          "name": "linkUrl",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The video title. Required when a YouTube channel is selected; ignored for other channels.",
+          "label": "YouTube Title",
+          "name": "youtubeTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The video category. Required when a YouTube channel is selected; ignored for other channels.",
+          "label": "YouTube Category",
+          "name": "youtubeCategoryId",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Post",
+      "source_path": "buffer/src/lib/actions/create-post.ts",
+      "source_sha256": "b2c3cef5832d9da0122f76dfff08ee42565b6b64c88c032c2e53e878ef16a70a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/buffer/src/lib/actions/create-post.ts"
+    },
+    {
+      "description": "Triggers when a new channel is connected to your Buffer organization. Each check uses one Buffer API request, which counts against your plan limit (Free: 600 a day).",
+      "id": "new_channel",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Organization Id",
+          "name": "organizationId",
+          "required": null,
+          "source_expression": "bufferProps.organizationId()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Channel",
+      "source_path": "buffer/src/lib/triggers/new-channel.ts",
+      "source_sha256": "f11b3e5969339c1e52fd17ef20b121005a35de3b624c0f0718fc5a4622bae24b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/buffer/src/lib/triggers/new-channel.ts"
+    },
+    {
+      "description": "Triggers when a new post is queued in Buffer. Each check usually uses one Buffer API request (one more per 100 matching posts, at most 10 per check; any left over are picked up on the next check), which counts against your plan limit (Free: 600 a day).",
+      "id": "new_queue_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Organization Id",
+          "name": "organizationId",
+          "required": null,
+          "source_expression": "bufferProps.organizationId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Channel Ids",
+          "name": "channelIds",
+          "required": null,
+          "source_expression": "bufferProps.channelFilter()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Queue Item",
+      "source_path": "buffer/src/lib/triggers/new-queue-item.ts",
+      "source_sha256": "0de835250158b5d4d661f1262c53f841a78ec657f118d885cbeecd9f483bc325",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/buffer/src/lib/triggers/new-queue-item.ts"
+    },
+    {
+      "description": "Triggers when a Buffer post is successfully published. Each check usually uses one Buffer API request (one more per 100 posts sent in the last 24 hours, at most 10 per check), which counts against your plan limit (Free: 600 a day). If more than 1,000 posts are sent in one day, only the 1,000 with the latest scheduled times are checked.",
+      "id": "new_sent_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Organization Id",
+          "name": "organizationId",
+          "required": null,
+          "source_expression": "bufferProps.organizationId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Channel Ids",
+          "name": "channelIds",
+          "required": null,
+          "source_expression": "bufferProps.channelFilter()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Sent Post",
+      "source_path": "buffer/src/lib/triggers/new-sent-item.ts",
+      "source_sha256": "32aa8d93f450666935d699d311e7a1fbce42282a97d4e4a40d9c9ad33f066fde",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/buffer/src/lib/triggers/new-sent-item.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "22e395f37c5de5669a4d2cba48c0d033f15a4042",
+    "index_path": "buffer/src/index.ts",
+    "index_sha256": "c187c05679cd3f34e5bf270108ef0f33f5ed2ffb5945334c168d61274b287648",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "personal-companion",
+    "coordinator"
+  ]
+}

@@ -1,0 +1,417 @@
+{
+  "allowed_hosts": [
+    ".",
+    "groove-tech.workable.com",
+    "workable.com",
+    "www.linkedin.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Jobs",
+  "id": "workable",
+  "name": "Workable",
+  "operations": [
+    {
+      "description": "Gets a candidate's full profile.",
+      "id": "getCandidate",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Id",
+          "name": "id",
+          "required": null,
+          "source_expression": "candidateIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Candidate",
+      "source_path": "workable/src/lib/actions/get-candidate.ts",
+      "source_sha256": "9eccd891aa9d2645258aaceaf8af46d9cb7ae3705b8a271c76401e4d12fc4eb1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/actions/get-candidate.ts"
+    },
+    {
+      "description": "Gets the details of a job.",
+      "id": "getJob",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Shortcode of the job, for example \"GROOV005\". Find it with List Jobs.",
+          "label": "Job Shortcode",
+          "name": "shortcode",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Also return the description, requirements and benefits.",
+          "label": "Include Description",
+          "name": "include_description",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Job",
+      "source_path": "workable/src/lib/actions/get-job.ts",
+      "source_sha256": "3241d86650f6ea3210a814845e581d278da49082b8d2dbfcb05d0d10d3367475",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/actions/get-job.ts"
+    },
+    {
+      "description": "Lists members of the hiring team, one page at a time.",
+      "id": "getMembers",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Role",
+          "name": "role",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Only members of this job.",
+          "label": "Job Shortcode",
+          "name": "shortcode",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only the member with this email.",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only members with this exact name.",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Members per page, 1 to 100. Default 50.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "nextCursor from a previous run, to get the next page.",
+          "label": "Cursor",
+          "name": "cursor",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Members",
+      "source_path": "workable/src/lib/actions/get-members.ts",
+      "source_sha256": "009823ff1500457214a42fac13d7a0ac8a06a0f9e3556b2e93509597f523e9de",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/actions/get-members.ts"
+    },
+    {
+      "description": "Lists the pipeline stages of a job, or of the account when no job is given.",
+      "id": "getStages",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Shortcode of the job. Empty lists the account-wide stages.",
+          "label": "Job Shortcode",
+          "name": "shortcode",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Stages",
+      "source_path": "workable/src/lib/actions/get-stages.ts",
+      "source_sha256": "fc77e54c9c227eea6e7e74d2e6fa2a1c5f4727fe34ea68cd3e335024d4e26c1c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/actions/get-stages.ts"
+    },
+    {
+      "description": "Lists the Workable accounts this token can use, with their subdomains.",
+      "id": "list_accounts",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Accounts",
+      "source_path": "workable/src/lib/actions/list-accounts.ts",
+      "source_sha256": "24f3b35291a0384ed2267c64edc39e184e463f369f9a45fb87f5268eae8a95e9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/actions/list-accounts.ts"
+    },
+    {
+      "description": "Finds candidates by email, job, stage or date, one page at a time.",
+      "id": "list_candidates",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only candidates with this email.",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only candidates of this job.",
+          "label": "Job Shortcode",
+          "name": "shortcode",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only candidates in this stage. Needs Job Shortcode.",
+          "label": "Stage Slug",
+          "name": "stage",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Created After",
+          "name": "created_after",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Updated After",
+          "name": "updated_after",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Candidates per page, 1 to 100. Default 50.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "nextCursor from a previous run, to get the next page.",
+          "label": "Cursor",
+          "name": "cursor",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Candidates",
+      "source_path": "workable/src/lib/actions/list-candidates.ts",
+      "source_sha256": "e5c19e5fd0af24d057e146876da8d17107ebd099312cf269e86575005be5ceb7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/actions/list-candidates.ts"
+    },
+    {
+      "description": "Lists jobs, optionally by state or date, one page at a time.",
+      "id": "list_jobs",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "State",
+          "name": "state",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Created After",
+          "name": "created_after",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Updated After",
+          "name": "updated_after",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Jobs per page, 1 to 100. Default 50.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "nextCursor from a previous run, to get the next page.",
+          "label": "Cursor",
+          "name": "cursor",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Jobs",
+      "source_path": "workable/src/lib/actions/list-jobs.ts",
+      "source_sha256": "585c2507c065e8037392fafe5cb0c0f7b50ab902e4a25cdc7f535373f90d7c37",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/actions/list-jobs.ts"
+    },
+    {
+      "description": "Lists external recruiters of the account or of one job.",
+      "id": "list_recruiters",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only recruiters of this job.",
+          "label": "Job Shortcode",
+          "name": "shortcode",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Recruiters",
+      "source_path": "workable/src/lib/actions/list-recruiters.ts",
+      "source_sha256": "1631c5082e833f96150dd9e4b0fd677c3c4641d8b078bf3f37931ee733baf02d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/actions/list-recruiters.ts"
+    },
+    {
+      "description": "Triggers when a candidate is moved to another stage. Can be filtered by job and target stage.",
+      "id": "candidate_stage_changed",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Instructions",
+          "name": "instructions",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Shortcode of a job. Leave empty to trigger for all jobs.",
+          "label": "Job Shortcode",
+          "name": "shortcode",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Stage slug, for example 'applied'. Only moves into this stage. Leave empty to trigger for all stages.",
+          "label": "Stage Slug",
+          "name": "stage_slug",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Candidate Stage Changed",
+      "source_path": "workable/src/lib/triggers/candidate-stage-changed.ts",
+      "source_sha256": "3a1cf396ed6101ef00e0d3ce337e62d25826928805225f1840ddb87f768b8ec7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/triggers/candidate-stage-changed.ts"
+    },
+    {
+      "description": "Triggers when a new candidate is added. Can be filtered by job and pipeline stage.",
+      "id": "newCandidate",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Instructions",
+          "name": "instructions",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Account_Subdomain",
+          "name": "account_subdomain",
+          "required": null,
+          "source_expression": "accountSubdomainProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Shortcode of a job. Leave empty to trigger for all jobs.",
+          "label": "Job Shortcode",
+          "name": "shortcode",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Stage slug, for example 'applied'. Leave empty to trigger for all stages.",
+          "label": "Stage Slug",
+          "name": "stage_slug",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Candidate",
+      "source_path": "workable/src/lib/triggers/new-candidate.ts",
+      "source_sha256": "71fca6746e322639e070f5837076d5359facb54a642b0c9fa73af584ea428e30",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/workable/src/lib/triggers/new-candidate.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "ac285d33968909d024c50415b11c58e3ef9e58ce",
+    "index_path": "workable/src/index.ts",
+    "index_sha256": "eeab291cac0a81d1706c24e82d721190f818ea48d92ce365b1cff94ae4be4bf8",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator"
+  ]
+}

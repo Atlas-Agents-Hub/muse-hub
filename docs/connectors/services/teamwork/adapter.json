@@ -1,0 +1,461 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Teamwork email address.",
+        "label": "Username",
+        "name": "username",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Your Teamwork site subdomain (e.g., mycompany for mycompany.teamwork.com)",
+        "label": "Subdomain",
+        "name": "subdomain",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Project management",
+  "id": "teamwork",
+  "name": "Teamwork",
+  "operations": [
+    {
+      "description": "Create a new user/contact (name, email, invite options).",
+      "id": "create_person",
+      "inputs": [
+        {
+          "description": "The user's first name.",
+          "label": "First Name",
+          "name": "first-name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The user's last name.",
+          "label": "Last Name",
+          "name": "last-name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The user's email address.",
+          "label": "Email",
+          "name": "email-address",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The type of user to create.",
+          "label": "User Type",
+          "name": "user-type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The company to associate the user with.",
+          "label": "Company",
+          "name": "company-id",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Send an invitation email to the new user.",
+          "label": "Send Invite",
+          "name": "sendInvite",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The user's job title.",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Person",
+      "source_path": "teamwork/src/lib/actions/create-person.ts",
+      "source_sha256": "73a1f61e0154e82de63ae87257ad8ed9b9ad2efe58ac266102396847df1069d9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/actions/create-person.ts"
+    },
+    {
+      "description": "Add a new stage in a workflow or board.",
+      "id": "create_stage",
+      "inputs": [
+        {
+          "description": "The workflow to add the stage to.",
+          "label": "Workflow",
+          "name": "workflowId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The name of the stage.",
+          "label": "Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Hex color code (e.g., #FF0000)",
+          "label": "Color",
+          "name": "color",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Stage",
+      "source_path": "teamwork/src/lib/actions/create-stage.ts",
+      "source_sha256": "801830e82737b94d7e966fe825eb59e65a8f2af9ff79d20729f729c5b6d50346",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/actions/create-stage.ts"
+    },
+    {
+      "description": "Add a new task under a project with description, due date, assignee, tags, etc.",
+      "id": "create_task",
+      "inputs": [
+        {
+          "description": "The project to create the task in.",
+          "label": "Project",
+          "name": "projectId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The task list to add the task to.",
+          "label": "Task List",
+          "name": "tasklistId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The content of the task.",
+          "label": "Content",
+          "name": "content",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The users responsible for the task.",
+          "label": "Responsible Parties",
+          "name": "responsible-party-id",
+          "required": false,
+          "type": "MultiSelectDropdown"
+        },
+        {
+          "description": "The start date of the task.",
+          "label": "Start Date",
+          "name": "start-date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "The due date of the task.",
+          "label": "Due Date",
+          "name": "due-date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "A description for the task.",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The priority of the task.",
+          "label": "Priority",
+          "name": "priority",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Tags to associate with the task.",
+          "label": "Tags",
+          "name": "tagIds",
+          "required": false,
+          "type": "MultiSelectDropdown"
+        },
+        {
+          "description": "A file to attach to the task.",
+          "label": "Attachment",
+          "name": "attachment",
+          "required": false,
+          "type": "File"
+        },
+        {
+          "description": "Custom fields for this task.",
+          "label": "Custom Fields",
+          "name": "customFields",
+          "required": false,
+          "type": "DynamicProperties"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "teamwork/src/lib/actions/create-task.ts",
+      "source_sha256": "6ea5b671995067a152d66165961b600f8c8d545930d49375d6e6003a153ebb82",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Search for a company by name or domain.",
+      "id": "find_company",
+      "inputs": [
+        {
+          "description": "The name or domain to search for.",
+          "label": "Search Term",
+          "name": "searchTerm",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Limit the search to a specific project.",
+          "label": "Project",
+          "name": "projectId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Company",
+      "source_path": "teamwork/src/lib/actions/find-company.ts",
+      "source_sha256": "76434b25a79558410290ba53b5ffdd8d366ca755604f48db2dea68e6f2499d3c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/actions/find-company.ts"
+    },
+    {
+      "description": "Find a milestone by name or due date in a project.",
+      "id": "find_milestone",
+      "inputs": [
+        {
+          "description": "The name or due date to search for.",
+          "label": "Search Term",
+          "name": "searchTerm",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Limit the search to a specific project.",
+          "label": "Project",
+          "name": "projectId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Milestone",
+      "source_path": "teamwork/src/lib/actions/find-milestone.ts",
+      "source_sha256": "bda79fd119ecee87a1124b21eff1dfdcd861afb30514df0ed77c274c3387066d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/actions/find-milestone.ts"
+    },
+    {
+      "description": "Locate notebooks or note comments by search parameters.",
+      "id": "find_notebook_or_comment",
+      "inputs": [
+        {
+          "description": "The type of item to search for.",
+          "label": "Search For",
+          "name": "searchFor",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The keyword to search for.",
+          "label": "Search Term",
+          "name": "searchTerm",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Limit the search to a specific project.",
+          "label": "Project",
+          "name": "projectId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Notebook / Notebook Comment",
+      "source_path": "teamwork/src/lib/actions/find-notebook-or-comment.ts",
+      "source_sha256": "f8728356af06d2d0be0e69b7a000c52102df51d5e5703a11ee3c00958ac4f597",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/actions/find-notebook-or-comment.ts"
+    },
+    {
+      "description": "Search for tasks.",
+      "id": "find_task",
+      "inputs": [
+        {
+          "description": "The keyword to search for.",
+          "label": "Search Term",
+          "name": "searchTerm",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Limit the search to a specific project.",
+          "label": "Project",
+          "name": "projectId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Task",
+      "source_path": "teamwork/src/lib/actions/find-task.ts",
+      "source_sha256": "6f1c36e1e30adac5cb380a1a8f8cf6500f5ea6b84f412323981c8f1873920932",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/actions/find-task.ts"
+    },
+    {
+      "description": "Modify a task’s fields (due date, assignee, content, priority, etc.).",
+      "id": "update_task",
+      "inputs": [
+        {
+          "description": "The task to update.",
+          "label": "Task",
+          "name": "taskId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The new content of the task.",
+          "label": "Content",
+          "name": "content",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The new description for the task.",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The new users responsible for the task.",
+          "label": "Responsible Parties",
+          "name": "responsible-party-id",
+          "required": false,
+          "type": "MultiSelectDropdown"
+        },
+        {
+          "description": "The new start date of the task.",
+          "label": "Start Date",
+          "name": "start-date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "The new due date of the task.",
+          "label": "Due Date",
+          "name": "due-date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "The new priority of the task.",
+          "label": "Priority",
+          "name": "priority",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "New tags to associate with the task.",
+          "label": "Tags",
+          "name": "tagIds",
+          "required": false,
+          "type": "MultiSelectDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Task",
+      "source_path": "teamwork/src/lib/actions/update-task.ts",
+      "source_sha256": "30e9f7af854d951eedf225e50414d1fbc549849c1590c744c1c0437271447b38",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/actions/update-task.ts"
+    },
+    {
+      "description": "Fires when a new comment is posted.",
+      "id": "new_comment",
+      "inputs": [
+        {
+          "description": "The project to watch for new comments. If not specified, all projects will be watched.",
+          "label": "Project",
+          "name": "projectId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Comment",
+      "source_path": "teamwork/src/lib/triggers/new-comment.ts",
+      "source_sha256": "185b2a7862ea6df71580d18643337612300fbcd924e1352ac0b29e655396924e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/triggers/new-comment.ts"
+    },
+    {
+      "description": "Fires when a new expense entry is added.",
+      "id": "new_expense",
+      "inputs": [
+        {
+          "description": "The project to watch for new expenses. If not specified, all projects will be watched.",
+          "label": "Project",
+          "name": "projectId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Expense",
+      "source_path": "teamwork/src/lib/triggers/new-expense.ts",
+      "source_sha256": "afbdd83373f2441d03c3974692bfc0c618cdec395f4244f8747354438ceeed15",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/triggers/new-expense.ts"
+    },
+    {
+      "description": "Fires when a new file is added.",
+      "id": "new_file",
+      "inputs": [
+        {
+          "description": "The project to watch for new files. If not specified, all projects will be watched.",
+          "label": "Project",
+          "name": "projectId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New File",
+      "source_path": "teamwork/src/lib/triggers/new-file.ts",
+      "source_sha256": "69ff66b6cd26bd1fb1fc7428a0dc62f47a2acf5ba5ac3c7c3cad69ea00182784",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/teamwork/src/lib/triggers/new-file.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "c3244b5532f234f987bc3fd96401fa2eb0110f4f",
+    "index_path": "teamwork/src/index.ts",
+    "index_sha256": "7e3a19852b2a47c32a2970f55822e9666623f93c21978471ef36f9d53504cde0",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

@@ -1,0 +1,368 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "console.cloud.google.com",
+    "developers.google.com",
+    "oauth2.googleapis.com",
+    "support.google.com",
+    "www.google.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection; Provider connection fields",
+    "scopes": [],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Scheduling",
+  "id": "google-calendar",
+  "name": "Google Calendar",
+  "operations": [
+    {
+      "description": "Finds busy periods across calendars in a time range.",
+      "id": "google_calendar_find_busy_free_periods",
+      "inputs": [],
+      "kind": "action",
+      "name": "Find Busy/Free Periods in Calendar",
+      "source_path": "google-calendar/src/lib/actions/find-busy-free-periods.ts",
+      "source_sha256": "2d7b45004bf8da4bab8fa14db2656a6766bc3d61801a040ba52523758aaab76d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/actions/find-busy-free-periods.ts"
+    },
+    {
+      "description": "Computes open time slots shared across one or more calendars within a window, by inverting their busy blocks.",
+      "id": "google_calendar_find_free_slots",
+      "inputs": [
+        {
+          "description": "The calendars whose schedules must all be free. A slot is returned only when it is open on every selected calendar.",
+          "label": "Calendars",
+          "name": "calendar_ids",
+          "required": true,
+          "type": "MultiSelectDropdown"
+        },
+        {
+          "description": "Start of the search window, as an absolute ISO 8601 timestamp (e.g. \"2026-06-01T09:00:00Z\"). Prefer absolute times over relative ones.",
+          "label": "Window Start",
+          "name": "start_date",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "End of the search window, as an absolute ISO 8601 timestamp (e.g. \"2026-06-05T18:00:00Z\").",
+          "label": "Window End",
+          "name": "end_date",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "Discard any open slot shorter than this many minutes. Leave empty to return every open slot regardless of length.",
+          "label": "Minimum Slot Duration (minutes)",
+          "name": "min_duration_minutes",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "If set together with Working Hours End, each day's open slots are clipped to this hour range, interpreted in UTC (not the calendar's local time zone). Example: 9 for 09:00 UTC. Leave both unset to return slots across the full window.",
+          "label": "Working Hours Start (hour 0-23)",
+          "name": "working_hours_start",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Upper bound of the daily working-hours window. Example: 17 for 5 PM. Ignored unless Working Hours Start is also set.",
+          "label": "Working Hours End (hour 0-23)",
+          "name": "working_hours_end",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Free Time Slots",
+      "source_path": "google-calendar/src/lib/actions/find-free-slots.ts",
+      "source_sha256": "54c0db5dea9a6464444ca01bb0328825fb2a954e4493563279396b838176925a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/actions/find-free-slots.ts"
+    },
+    {
+      "description": "Fetch the full details of a single Google Calendar event by its event ID.",
+      "id": "google_calendar_get_event",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Event",
+      "source_path": "google-calendar/src/lib/actions/ai-get-event.ts",
+      "source_sha256": "84972ee89ae4a8fa3c9f4d092f3a691ac353344854cb15fc6b8625e5f651dafb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/actions/ai-get-event.ts"
+    },
+    {
+      "description": "Fetch event details by its unique ID from Google Calendar.",
+      "id": "google_calendar_get_event_by_id",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Event by ID",
+      "source_path": "google-calendar/src/lib/actions/get-event-by-id.ts",
+      "source_sha256": "f590a81d8999a627a96431c013a4ccde39d7123d658c85a9aab44e6d52f484cd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/actions/get-event-by-id.ts"
+    },
+    {
+      "description": "Lists events in a calendar, with optional filters.",
+      "id": "google_calendar_get_events",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Events",
+      "source_path": "google-calendar/src/lib/actions/get-events.ts",
+      "source_sha256": "af8c15e9437ba8e7ea404062918f6649852b6d967042c6ad3421e948dc09f564",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/actions/get-events.ts"
+    },
+    {
+      "description": "Lists the individual occurrences of one recurring event series, each with its own instance event ID.",
+      "id": "google_calendar_list_recurring_event_instances",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Calendar_Id",
+          "name": "calendar_id",
+          "required": null,
+          "source_expression": "googleCalendarCommon.calendarDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The event ID of the recurring SERIES (the parent), e.g. \"abc123def456\". Obtain it from Search Events Across Calendars or Get all Events. Individual instance IDs will not work here.",
+          "label": "Recurring Event ID",
+          "name": "event_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional lower bound (inclusive) for an instance's end time, as an ISO 8601 timestamp with offset (e.g. \"2026-06-01T00:00:00Z\").",
+          "label": "Start Time",
+          "name": "time_min",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Optional upper bound (exclusive) for an instance's start time, as an ISO 8601 timestamp with offset (e.g. \"2026-06-30T23:59:59Z\").",
+          "label": "End Time",
+          "name": "time_max",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Whether to include cancelled (deleted) instances of the series in the result. Defaults to false.",
+          "label": "Include Cancelled Instances",
+          "name": "show_deleted",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Maximum number of instances to return per page (1-2500). Defaults to the API default of 250.",
+          "label": "Max Results",
+          "name": "max_results",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Recurring Event Instances",
+      "source_path": "google-calendar/src/lib/actions/list-recurring-event-instances.ts",
+      "source_sha256": "495b4c7fd0ed825f5346533aca87fae68795a145c0a7a269279b77a858a222a9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/actions/list-recurring-event-instances.ts"
+    },
+    {
+      "description": "Moves an existing event from one calendar to another, preserving its event ID and metadata.",
+      "id": "google_calendar_move_event",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Calendar_Id",
+          "name": "calendar_id",
+          "required": null,
+          "source_expression": "googleCalendarCommon.calendarDropdown('writer')",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The ID of the event to move, e.g. \"abc123def456\". Obtain it from Search Events Across Calendars or Get all Events.",
+          "label": "Event ID",
+          "name": "event_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The calendar to move the event to.",
+          "label": "Destination Calendar",
+          "name": "destination_calendar_id",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Who should receive notifications about the change of the event's organizer.",
+          "label": "Send Notifications",
+          "name": "send_updates",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Move Event to Another Calendar",
+      "source_path": "google-calendar/src/lib/actions/move-event.ts",
+      "source_sha256": "82c904aaef3093e77f830341e2afc148bc53c9d4fbc900d0b59894377eab8191",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/actions/move-event.ts"
+    },
+    {
+      "description": "Searches every calendar the account can access for events matching a keyword within a required time window.",
+      "id": "google_calendar_search_events_all_calendars",
+      "inputs": [
+        {
+          "description": "Free-text query matched against event fields (summary, description, location, attendee names/emails) using Google's native search. Example: \"budget review\".",
+          "label": "Search Term",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Lower bound (inclusive) for an event's end time, as an ISO 8601 timestamp (e.g. \"2026-06-01T00:00:00Z\"). Required to bound the cross-calendar scan.",
+          "label": "Start Time",
+          "name": "start_date",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "Upper bound (exclusive) for an event's start time, as an ISO 8601 timestamp (e.g. \"2026-06-30T23:59:59Z\"). Required to bound the cross-calendar scan.",
+          "label": "End Time",
+          "name": "end_date",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "When enabled, recurring events are expanded into their individual instances instead of returning the underlying recurring event.",
+          "label": "Expand Recurring Events?",
+          "name": "single_events",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Events Across Calendars",
+      "source_path": "google-calendar/src/lib/actions/search-events-all-calendars.ts",
+      "source_sha256": "1681aad7faede09c3c834b70cd9d570fc00f7e03e72531e788fdf6e04acaf330",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/actions/search-events-all-calendars.ts"
+    },
+    {
+      "description": "Fires when an event is canceled or deleted.",
+      "id": "event_cancelled",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Calendar_Id",
+          "name": "calendar_id",
+          "required": null,
+          "source_expression": "googleCalendarCommon.calendarDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Watch one event instead of the whole calendar.",
+          "label": "Target Specific Event",
+          "name": "specific_event",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Event_Id",
+          "name": "event_id",
+          "required": null,
+          "source_expression": "googleCalendarCommon.eventDropdown(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Leave empty to fire on every cancellation. Each cancellation has one reason, checked in this order: Rescheduled (title or description says \"rescheduled\"), Attendee Declined, Event Deleted (you organize it, or only its id is left), Other (someone else cancelled a meeting you were invited to).",
+          "label": "Cancellation Reasons",
+          "name": "cancellation_reason",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Event Cancelled",
+      "source_path": "google-calendar/src/lib/triggers/event-cancelled.ts",
+      "source_sha256": "f058fb04294d09a30e13d5a79c8813137bd5618b4ef3e628a5a8c508a0a85dd6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/triggers/event-cancelled.ts"
+    },
+    {
+      "description": "Fires when an event ends.",
+      "id": "event_ends",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Calendar_Id",
+          "name": "calendar_id",
+          "required": null,
+          "source_expression": "googleCalendarCommon.calendarDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Watch one event instead of the whole calendar.",
+          "label": "Target Specific Event",
+          "name": "specific_event",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Event_Id",
+          "name": "event_id",
+          "required": null,
+          "source_expression": "googleCalendarCommon.eventDropdown(false)",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Event Ends",
+      "source_path": "google-calendar/src/lib/triggers/event-ends.ts",
+      "source_sha256": "edd406b4fa0b51dcd79a214f3ab270df36bdb6c4d541b51bffa8175b6bfa1ef4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/triggers/event-ends.ts"
+    },
+    {
+      "description": "Triggers when an event is added or updated",
+      "id": "new_or_updated_event",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Calendar_Id",
+          "name": "calendar_id",
+          "required": null,
+          "source_expression": "googleCalendarCommon.calendarDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Fires once per occurrence of a recurring event.",
+          "label": "Expand Recurring Events",
+          "name": "expandRecurringEvent",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New or Updated Event",
+      "source_path": "google-calendar/src/lib/triggers/calendar-event.ts",
+      "source_sha256": "86a77009438be75187a3ed5cd20d339c93dcf88e0525d5f86f55745bd53da4a3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-calendar/src/lib/triggers/calendar-event.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "0a9eaa7beb55f9acc3b916d7b322a963a44bd908",
+    "index_path": "google-calendar/src/index.ts",
+    "index_sha256": "169d31618de3f41d0c1e84c9aa4645cc049105ab014ee18f6d2a740a4eeb638a",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer",
+    "garden-companion"
+  ]
+}

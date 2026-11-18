@@ -1,0 +1,86 @@
+{
+  "allowed_hosts": [
+    "developer.matomo.org",
+    "matomo.example.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The domain of your Matomo account: https://matomo.example.com",
+        "label": "Matomo Domain",
+        "name": "domain",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Token Auth",
+        "name": "tokenAuth",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Token Auth', description: 'The Token Auth key from your Matomo account', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "The site ID that will be associated to this connection. Site IDs can be found on the main Websites page.",
+        "label": "Site ID",
+        "name": "siteId",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Marketing",
+  "id": "matomo",
+  "name": "Matomo",
+  "operations": [
+    {
+      "description": "Add an annotation to a Matomo site",
+      "id": "add_annotation",
+      "inputs": [
+        {
+          "description": "The note to add",
+          "label": "Note",
+          "name": "note",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The date to add the note to. Format: YYYY-MM-DD",
+          "label": "Date",
+          "name": "date",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "Whether or not the note should be starred",
+          "label": "Starred",
+          "name": "starred",
+          "required": true,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Annotation",
+      "source_path": "matomo/src/lib/actions/add-annotation.ts",
+      "source_sha256": "8dc8bab306b39ff51a1956e7e5d311a185d86ce9c1faa22fb4061b83dab33f8f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/matomo/src/lib/actions/add-annotation.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "3d418097dc4ab029a9244cdf71a5588ab569e64c",
+    "index_path": "matomo/src/index.ts",
+    "index_sha256": "84d88d7e19a094abe159443cbea0ccb4e09ca764d3bc98aa9c7707e527d4027b",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

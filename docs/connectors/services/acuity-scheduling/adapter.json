@@ -1,0 +1,533 @@
+{
+  "allowed_hosts": [
+    "acuityscheduling.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://acuityscheduling.com/oauth2/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "api-v1"
+    ],
+    "token_urls": [
+      "https://acuityscheduling.com/oauth2/token"
+    ]
+  },
+  "category": "Scheduling",
+  "id": "acuity-scheduling",
+  "name": "Acuity Scheduling",
+  "operations": [
+    {
+      "description": "Block off a specific time range on a calendar.",
+      "id": "add_blocked_time",
+      "inputs": [
+        {
+          "description": "The start date and time for the block (ISO 8601 format).",
+          "label": "Start Time",
+          "name": "start",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "The end date and time for the block (ISO 8601 format).",
+          "label": "End Time",
+          "name": "end",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Calendar Id",
+          "name": "calendarID",
+          "required": null,
+          "source_expression": "calendarIdDropdown({ displayName: 'Calendar ID', description: 'The numeric ID of the calendar to add this block to.', required: true, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Optional notes for the blocked off time.",
+          "label": "Notes",
+          "name": "notes",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Blocked Off Time",
+      "source_path": "acuity-scheduling/src/lib/actions/add-blocked-time.ts",
+      "source_sha256": "3fba2e079b1078e42b78351e3804adc425390b66d27ba90358ca000f21e1f1c5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/actions/add-blocked-time.ts"
+    },
+    {
+      "description": "Creates a new appointment.",
+      "id": "create_appointment",
+      "inputs": [
+        {
+          "description": "Date and time of the appointment.",
+          "label": "DateTime",
+          "name": "datetime",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Appointment Type Id",
+          "name": "appointmentTypeID",
+          "required": null,
+          "source_expression": "appointmentTypeIdDropdown({ displayName: 'Appointment Type', description: 'Select the type of appointment.', required: true, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Client's first name.",
+          "label": "First Name",
+          "name": "firstName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's last name.",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's email address. (Optional if booking as admin).",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's phone number.",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's timezone (e.g., America/New_York). Required for accurate availability checking.",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Set to true to book as an admin. Disables availability/attribute validations, allows setting notes, and makes Calendar ID required.",
+          "label": "Book as Admin",
+          "name": "adminBooking",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Calendar Id",
+          "name": "calendarID",
+          "required": null,
+          "source_expression": "calendarIdDropdown({ displayName: 'Calendar ID', description: 'Numeric ID of the calendar. Required if booking as admin. If not provided, Acuity tries to find an available calendar automatically for non-admin bookings.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "If true, confirmation emails or SMS will not be sent.",
+          "label": "Suppress Confirmation Email/SMS",
+          "name": "noEmail",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Package or coupon certificate code.",
+          "label": "Certificate Code",
+          "name": "certificate",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Appointment notes. Only settable if booking as admin.",
+          "label": "Notes",
+          "name": "notes",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Indicates whether the client has explicitly given permission to receive SMS messages.",
+          "label": "SMS Opt-In",
+          "name": "smsOptIn",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Addon Ids",
+          "name": "addonIDs",
+          "required": null,
+          "source_expression": "addonIdsDropdown({ displayName: 'Addons', description: 'Select addons for the appointment. Addons are filtered by selected Appointment Type if available.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Label Id",
+          "name": "labelId",
+          "required": null,
+          "source_expression": "labelIdDropdown({ displayName: 'Label', description: 'Apply a label to the appointment. The API currently supports one label.', required: false, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Appointment",
+      "source_path": "acuity-scheduling/src/lib/actions/create-appointment.ts",
+      "source_sha256": "de8104d730dfc533f7faa44fb52ffc6a2eb3e2ab0c6033cdfd839099ec486a7d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/actions/create-appointment.ts"
+    },
+    {
+      "description": "Creates a new client.",
+      "id": "create_client",
+      "inputs": [
+        {
+          "description": "Client's first name.",
+          "label": "First Name",
+          "name": "firstName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's last name.",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's phone number.",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's email address.",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Notes about the client.",
+          "label": "Notes",
+          "name": "notes",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Client",
+      "source_path": "acuity-scheduling/src/lib/actions/create-client.ts",
+      "source_sha256": "06589739f4696ffa3faa3d0c711c84bf796c76d3213170b9e68daf438d46608a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/actions/create-client.ts"
+    },
+    {
+      "description": "Find appointments based on various criteria, including client information.",
+      "id": "find_appointment",
+      "inputs": [
+        {
+          "description": "Filter appointments by client first name.",
+          "label": "Client First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter appointments by client last name.",
+          "label": "Client Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter appointments by client e-mail address.",
+          "label": "Client Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter appointments by client phone number. URL encode '+' if using country codes (e.g., %2B1234567890).",
+          "label": "Client Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only get appointments on or after this date.",
+          "label": "Min Date",
+          "name": "minDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Only get appointments on or before this date.",
+          "label": "Max Date",
+          "name": "maxDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Calendar Id",
+          "name": "calendarID",
+          "required": null,
+          "source_expression": "calendarIdDropdown({ displayName: 'Calendar ID', description: 'Show only appointments on the calendar with this ID.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Appointment Type Id",
+          "name": "appointmentTypeID",
+          "required": null,
+          "source_expression": "appointmentTypeIdDropdown({ displayName: 'Appointment Type', description: 'Show only appointments of this type.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Filter by appointment status.",
+          "label": "Appointment Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Maximum number of results to return (default 100).",
+          "label": "Max Results",
+          "name": "maxResults",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Sort direction for the results.",
+          "label": "Sort Direction",
+          "name": "direction",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Appointment(s)",
+      "source_path": "acuity-scheduling/src/lib/actions/find-appointments.ts",
+      "source_sha256": "263429c336baea756d1f244a2a82fdf7d9ab0f63b41c7d963cbe18d174c95862",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/actions/find-appointments.ts"
+    },
+    {
+      "description": "Finds client based on seach term.",
+      "id": "find_client",
+      "inputs": [
+        {
+          "description": "Filter client list by first name, last name, or phone number.",
+          "label": "Search Term",
+          "name": "search",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Client",
+      "source_path": "acuity-scheduling/src/lib/actions/find-client.ts",
+      "source_sha256": "db97ce3279f6768a58391d6d0854489f80194d55b5b841ef771ef4a88212fe94",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/actions/find-client.ts"
+    },
+    {
+      "description": "Reschedules an existing appointment to a new date/time.",
+      "id": "reschedule_appointment",
+      "inputs": [
+        {
+          "description": "The ID of the appointment to reschedule.",
+          "label": "Appointment ID",
+          "name": "id",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Appointment Type Id",
+          "name": "appointmentTypeID",
+          "required": null,
+          "source_expression": "appointmentTypeIdDropdown({ displayName: 'Appointment Type', description: 'Select the type of appointment (used for finding new available slots).', required: true, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "New Date and time of the appointment.",
+          "label": "DateTime",
+          "name": "datetime",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "Client's timezone (e.g., America/New_York).",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Calendar Id",
+          "name": "calendarID",
+          "required": null,
+          "source_expression": "calendarIdDropdown({ displayName: 'New Calendar ID', description: 'Numeric ID of the new calendar to reschedule to. If blank, stays on current calendar. Submit 0 to auto-assign.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Set to true to reschedule as an admin. Disables availability validations.",
+          "label": "Reschedule as Admin",
+          "name": "adminReschedule",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "If true, rescheduling emails or SMS will not be sent.",
+          "label": "Suppress Rescheduling Email/SMS",
+          "name": "noEmail",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Reschedule Appointment",
+      "source_path": "acuity-scheduling/src/lib/actions/reschedule-appointment.ts",
+      "source_sha256": "03a4599abcc450b9683679e2a9dfd592adb755845197b88b51db1d25b68b5eb1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/actions/reschedule-appointment.ts"
+    },
+    {
+      "description": "Updates an existing client.",
+      "id": "update_client",
+      "inputs": [
+        {
+          "description": "The current first name of the client to update.",
+          "label": "Current First Name (Identifier)",
+          "name": "currentFirstName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The current last name of the client to update.",
+          "label": "Current Last Name (Identifier)",
+          "name": "currentLastName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The current phone number of the client to update. Helps identify the client if names are not unique.",
+          "label": "Current Phone (Identifier, Optional)",
+          "name": "currentPhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's new first name. Leave blank to keep current.",
+          "label": "New First Name",
+          "name": "newFirstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's new last name. Leave blank to keep current.",
+          "label": "New Last Name",
+          "name": "newLastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's new email address. Leave blank to keep current.",
+          "label": "New Email",
+          "name": "newEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Client's new phone number. Leave blank to keep current.",
+          "label": "New Phone",
+          "name": "newPhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "New notes about the client. Leave blank to keep current.",
+          "label": "New Notes",
+          "name": "newNotes",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Client",
+      "source_path": "acuity-scheduling/src/lib/actions/update-client.ts",
+      "source_sha256": "f59117feada6c3709d77071780fbd5a4dff1bac4db5a608096dbcd687d3cca90",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/actions/update-client.ts"
+    },
+    {
+      "description": "Triggers when an appointment is canceled.",
+      "id": "appointment_canceled",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Calendar Id",
+          "name": "calendarId",
+          "required": null,
+          "source_expression": "calendarIdDropdown({ displayName: 'Calendar', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Appointment Type Id",
+          "name": "appointmentTypeId",
+          "required": null,
+          "source_expression": "appointmentTypeIdDropdown({ displayName: 'Appointment Type', required: false, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Appointment Canceled",
+      "source_path": "acuity-scheduling/src/lib/triggers/appointment-canceled.ts",
+      "source_sha256": "8582dcdecc41e8e90f9868ebf9e4295f24cd7ba174ce2815ec01c2f7e81af65f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/triggers/appointment-canceled.ts"
+    },
+    {
+      "description": "Triggers when a new appointment is scheduled.",
+      "id": "new_appointment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Calendar Id",
+          "name": "calendarId",
+          "required": null,
+          "source_expression": "calendarIdDropdown({ displayName: 'Calendar', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Appointment Type Id",
+          "name": "appointmentTypeId",
+          "required": null,
+          "source_expression": "appointmentTypeIdDropdown({ displayName: 'Appointment Type', required: false, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Appointment",
+      "source_path": "acuity-scheduling/src/lib/triggers/appointment-scheduled.ts",
+      "source_sha256": "6266959ff494c6e87fe8601a46693da94c14c599738d4ab63deb4be377eab56d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/acuity-scheduling/src/lib/triggers/appointment-scheduled.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "481c6ad8b33b72d88bcb1e1dfa2d4d59b0d3f565",
+    "index_path": "acuity-scheduling/src/index.ts",
+    "index_sha256": "82c6e7a0349080b65790533be4e3cfa874dcb38fa2e3071a2c5906893c647bcd",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

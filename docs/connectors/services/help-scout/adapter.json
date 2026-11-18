@@ -1,0 +1,527 @@
+{
+  "allowed_hosts": [
+    "api.helpscout.net",
+    "secure.helpscout.net"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://secure.helpscout.net/authentication/authorizeClientApplication"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [],
+    "token_urls": [
+      "https://api.helpscout.net/v2/oauth2/token"
+    ]
+  },
+  "category": "Support",
+  "id": "help-scout",
+  "name": "Help Scout",
+  "operations": [
+    {
+      "description": "Adds a note to a conversation.",
+      "id": "add_note",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Conversation Id",
+          "name": "conversationId",
+          "required": null,
+          "source_expression": "conversationIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Note Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "User Id",
+          "name": "userId",
+          "required": null,
+          "source_expression": "userIdDropdown('User')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Note",
+      "source_path": "help-scout/src/lib/actions/add-note.ts",
+      "source_sha256": "d8310d351485ec166718e3d8a76f3c95534eb7597ce4b7e4c3da72c1a8df82bf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/add-note.ts"
+    },
+    {
+      "description": "Start a new conversation.",
+      "id": "create_conversation",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Mailbox Id",
+          "name": "mailboxId",
+          "required": null,
+          "source_expression": "mailboxIdDropdown(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Customer Email",
+          "name": "customerEmail",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Defaults to Chat, which is what earlier versions of this step always created.",
+          "label": "Conversation Type",
+          "name": "conversationType",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "From User",
+          "name": "fromUser",
+          "required": null,
+          "source_expression": "userIdDropdown('From User')",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Thread Type",
+          "name": "threadType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Conversation Status",
+          "name": "status",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Body",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Assign To",
+          "name": "assignTo",
+          "required": null,
+          "source_expression": "userIdDropdown('Assigned User')",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "CC",
+          "name": "cc",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "BCC",
+          "name": "bcc",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Imported",
+          "name": "imported",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Conversation",
+      "source_path": "help-scout/src/lib/actions/create-conversation.ts",
+      "source_sha256": "4ab43447c2b980b6421cb4057d1f9950fb14db7882c3d90e3dd10a0278d5c86a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/create-conversation.ts"
+    },
+    {
+      "description": "Adds a new customer to Help Scout.",
+      "id": "create_customer",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Photo URL",
+          "name": "photoUrl",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Location",
+          "name": "location",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Background",
+          "name": "background",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Customer’s age (string, e.g. \"30-35\")",
+          "label": "Age",
+          "name": "age",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Gender",
+          "name": "gender",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Organization",
+          "name": "organization",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "URLs for social profiles (type will be set to \"other\")",
+          "label": "Social Profile URLs",
+          "name": "socialProfiles",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Customer",
+      "source_path": "help-scout/src/lib/actions/create-customer.ts",
+      "source_sha256": "feb515b0f853ee1a35057a6c48210e50dafd5af7f557a61b1be17469117e9263",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/create-customer.ts"
+    },
+    {
+      "description": "Finds an existing conversation using provided filter.",
+      "id": "find_conversation",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Mailbox Id",
+          "name": "mailboxId",
+          "required": null,
+          "source_expression": "mailboxIdDropdown(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Leave empty to search every status.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Assign To",
+          "name": "assignTo",
+          "required": null,
+          "source_expression": "userIdDropdown('Assigned User')",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Custom Query",
+          "name": "query",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Conversation",
+      "source_path": "help-scout/src/lib/actions/find-conversation.ts",
+      "source_sha256": "533f60389e4a2bf52c4ce4662de05bf9a6486e66fb0a98e5b5d7e6de37fb276a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/find-conversation.ts"
+    },
+    {
+      "description": "Finds a customer by email.",
+      "id": "find_customer",
+      "inputs": [
+        {
+          "description": "The customer email address, for example jane@example.com.",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Customer",
+      "source_path": "help-scout/src/lib/actions/find-customer.ts",
+      "source_sha256": "74141f60986ddca410830b5d871acad18b83c3c5c60f14a47ac7e2d24243f40f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/find-customer.ts"
+    },
+    {
+      "description": "Finds a user by email.",
+      "id": "find_user",
+      "inputs": [
+        {
+          "description": "The teammate email address, for example agent@yourcompany.com.",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User",
+      "source_path": "help-scout/src/lib/actions/find-user.ts",
+      "source_sha256": "1035b104cd8e4820c3191280257c9c3e7660731a70b4e70d63f94720441efaf5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/find-user.ts"
+    },
+    {
+      "description": "Sends a reply in an existing conversation.",
+      "id": "send_reply",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Conversation Id",
+          "name": "conversationId",
+          "required": null,
+          "source_expression": "conversationIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Reply Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Customer Email",
+          "name": "customerEmail",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Draft",
+          "name": "draft",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Conversation Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "User Id",
+          "name": "userId",
+          "required": null,
+          "source_expression": "userIdDropdown('User (who adds the reply)')",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "CC (emails)",
+          "name": "cc",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "BCC (emails)",
+          "name": "bcc",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Reply",
+      "source_path": "help-scout/src/lib/actions/send-reply.ts",
+      "source_sha256": "27acb32df56b6062e6a390705bfa5d65eebb517b20a52dfc4de935a1ca2ae186",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/send-reply.ts"
+    },
+    {
+      "description": "Updates customer's properties.",
+      "id": "update_customer_properties",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Customer Id",
+          "name": "customerId",
+          "required": null,
+          "source_expression": "customerIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Fields",
+          "name": "fields",
+          "required": null,
+          "source_expression": "customerProperties",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Customer Properties",
+      "source_path": "help-scout/src/lib/actions/update-customer-properties.ts",
+      "source_sha256": "a49c3a6579aef06e7bcd7c4b48fe7bfac6644da8e78f6fc16bd2ce2711e011a8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/update-customer-properties.ts"
+    },
+    {
+      "description": "Triggers when a conversation is assigned to a user.",
+      "id": "conversation_assigned",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Mailbox Id",
+          "name": "mailboxId",
+          "required": null,
+          "source_expression": "mailboxIdDropdown(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Assigned To",
+          "name": "assignedTo",
+          "required": null,
+          "source_expression": "userIdDropdown('Assigned User')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Conversation Assigned",
+      "source_path": "help-scout/src/lib/triggers/conversation-assigned.ts",
+      "source_sha256": "f9d7a1e87ad92c699d040eb7bda1a944afb88fd872171e03533b7b588c2b6734",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/triggers/conversation-assigned.ts"
+    },
+    {
+      "description": "Triggers when a new conversation is started in a mailbox.",
+      "id": "conversation_created",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Mailbox Id",
+          "name": "mailboxId",
+          "required": null,
+          "source_expression": "mailboxIdDropdown(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Assigned To",
+          "name": "assignedTo",
+          "required": null,
+          "source_expression": "userIdDropdown('Assigned User')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Conversation Created",
+      "source_path": "help-scout/src/lib/triggers/conversation-created.ts",
+      "source_sha256": "ef99f1974693d7c76d764714f927886ed8c62d1903e98369c64dd935b56d0a03",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/triggers/conversation-created.ts"
+    },
+    {
+      "description": "Triggers when a new customer is added.",
+      "id": "new_customer",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Customer",
+      "source_path": "help-scout/src/lib/triggers/new-customer.ts",
+      "source_sha256": "4520e43423e8684913916cbb17d180a7a3d121f750704373314a6ed17da133cf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/triggers/new-customer.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "48e633d62bb127faae31eadcf9bf22706e7a73c2",
+    "index_path": "help-scout/src/index.ts",
+    "index_sha256": "e783fa3796b885d0750b32aa0bcbe129f9cf0c4735747089cb608febd811762f",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

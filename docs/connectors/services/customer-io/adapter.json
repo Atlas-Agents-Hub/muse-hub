@@ -1,0 +1,104 @@
+{
+  "allowed_hosts": [
+    "api-eu.customer.io",
+    "api.customer.io",
+    "customer.io",
+    "fly.customer.io",
+    "track-eu.customer.io",
+    "track.customer.io"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Region",
+        "name": "region",
+        "required": null,
+        "source_expression": "Property.StaticDropdown<'us' | 'eu'>({ displayName: 'Region', required: true, defaultValue: 'us', options: { options: [ { label: 'US', value: 'us' }, { label: 'EU', value: 'eu' }, ], }, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Site ID",
+        "name": "track_site_id",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "API Key",
+        "name": "track_api_key",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Bearer Token",
+        "name": "api_bearer_token",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Marketing",
+  "id": "customer-io",
+  "name": "customer.io",
+  "operations": [
+    {
+      "description": "Create an event in Customer.io",
+      "id": "create_event",
+      "inputs": [
+        {
+          "description": "The unique value representing a person. You may identify a person by id, email address, or the cio_id (when updating people), depending on your workspace settings",
+          "label": "Customer identifier",
+          "name": "customer_identifier",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The name of the event. This is how you'll reference the event in campaigns or segments",
+          "label": "Event Name",
+          "name": "event_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Event information to be sent to Customer.io",
+          "label": "parameters",
+          "name": "body_type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Body",
+          "name": "body",
+          "required": true,
+          "type": "DynamicProperties"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Event",
+      "source_path": "customer-io/src/lib/actions/create_event.ts",
+      "source_sha256": "c708c579d8a91ff88b8510bba3a5fd542a8467fad03b96730d419341d6a2e8ab",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/customer-io/src/lib/actions/create_event.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7d7c8907c5c317ea74721f753c4276f0a0f82e05",
+    "index_path": "customer-io/src/index.ts",
+    "index_sha256": "f9fb9ad1cd8f803831ba746bc9643609a703f53e6e8485290670a24a98f58e59",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

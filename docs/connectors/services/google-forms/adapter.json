@@ -1,0 +1,165 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "console.cloud.google.com",
+    "forms.googleapis.com",
+    "oauth2.googleapis.com",
+    "support.google.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection; Provider connection fields",
+    "scopes": [],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "google-forms",
+  "name": "Google Forms",
+  "operations": [
+    {
+      "description": "Fetch a form's full structure: title, settings, items with their indices and itemIds, question IDs, and current revisionId.",
+      "id": "forms_get_form",
+      "inputs": [
+        {
+          "description": "The ID of the form to fetch. Obtain it from forms_create_form, forms_list_responses, or the New Response trigger.",
+          "label": "Form ID",
+          "name": "form_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Form",
+      "source_path": "google-forms/src/lib/actions/forms-get-form.ts",
+      "source_sha256": "3b2ed68b0c39f9012e0ab78a503779e6d11879a111ede5245309339593852815",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-forms/src/lib/actions/forms-get-form.ts"
+    },
+    {
+      "description": "Fetch one submission by its responseId, including all answers keyed by questionId and submission timestamps.",
+      "id": "forms_get_response",
+      "inputs": [
+        {
+          "description": "The ID of the form the response belongs to. Obtain it from forms_list_responses or the New Response trigger.",
+          "label": "Form ID",
+          "name": "form_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The ID of the response to fetch. Obtain it from forms_list_responses or the New Response trigger.",
+          "label": "Response ID",
+          "name": "response_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Form Response",
+      "source_path": "google-forms/src/lib/actions/forms-get-response.ts",
+      "source_sha256": "94c4dccc9728e4ed46f49577d66babecd9d58d0d47d12cfc3a8090b85a942f67",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-forms/src/lib/actions/forms-get-response.ts"
+    },
+    {
+      "description": "List submitted responses for a form, with each response's responseId, timestamps, and answers keyed by questionId.",
+      "id": "forms_list_responses",
+      "inputs": [
+        {
+          "description": "The ID of the form whose responses to list. Obtain it from forms_create_form, forms_get_form, or the New Response trigger.",
+          "label": "Form ID",
+          "name": "form_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional filter on submission time, e.g. \"timestamp > 2026-01-01T00:00:00Z\" or \"timestamp < 2026-06-01T00:00:00Z\". Only the timestamp field is supported.",
+          "label": "Filter",
+          "name": "filter",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of responses to return per page (default 5000).",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Token from a previous call's nextPageToken to fetch the next page of responses.",
+          "label": "Page Token",
+          "name": "page_token",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Form Responses",
+      "source_path": "google-forms/src/lib/actions/forms-list-responses.ts",
+      "source_sha256": "1a27967d61eabbec05aa02d1fa6fb07bd8a9350a8af8aff041d11be0377a12ee",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-forms/src/lib/actions/forms-list-responses.ts"
+    },
+    {
+      "description": "Triggers when someone submits a response to the form. Can also trigger when a respondent edits their response.",
+      "id": "new_response",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Info",
+          "name": "info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Form_Id",
+          "name": "form_id",
+          "required": null,
+          "source_expression": "googleFormsCommon.form_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Include_Team_Drives",
+          "name": "include_team_drives",
+          "required": null,
+          "source_expression": "googleFormsCommon.include_team_drives",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Run_On",
+          "name": "run_on",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<string>({ displayName: 'Run On', description: 'Choose whether an edited response starts the flow again.', required: false, defaultValue: RUN_ON_NEW_ONLY, options: { disabled: false, options: [ { label: 'New responses only', value: RUN_ON_NEW_ONLY }, { label: 'New and edited responses', value: RUN_ON_NEW_AND_EDITED }, ], }, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Response",
+      "source_path": "google-forms/src/lib/triggers/new-form-response.ts",
+      "source_sha256": "859b4b113e1b8cb64f9399c87b175e8d2a0024563c74cf3965b19e2f53ad2a71",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-forms/src/lib/triggers/new-form-response.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "9454d68fad702b26dcef0e346315fe581879f67b",
+    "index_path": "google-forms/src/index.ts",
+    "index_sha256": "36564169fd0b884311881208dc0df365c41f727d6f22fb50d9ae21b1d55070d7",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach",
+    "garden-companion"
+  ]
+}

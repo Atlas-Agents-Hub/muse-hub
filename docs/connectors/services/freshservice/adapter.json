@@ -1,0 +1,727 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Freshservice subdomain (e.g., \"mycompany\" from mycompany.freshservice.com).",
+        "label": "Freshservice Domain",
+        "name": "domain",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api_Key",
+        "name": "api_key",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', description: 'Your Freshservice API key from Profile Settings.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Support",
+  "id": "freshservice",
+  "name": "Freshservice",
+  "operations": [
+    {
+      "description": "Adds a private or public note to an existing change request.",
+      "id": "add_note_to_change",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Change_Id",
+          "name": "change_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.change(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The content of the note. HTML is supported.",
+          "label": "Note Content",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "If checked, the note is only visible to agents. If unchecked, the requester can also see it.",
+          "label": "Private Note",
+          "name": "private",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Note to Change",
+      "source_path": "freshservice/src/lib/actions/add-note-to-change.ts",
+      "source_sha256": "f3e65f63b17ed8207460ac93357ade898b9e4502d28696aba344f79fa488e974",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/actions/add-note-to-change.ts"
+    },
+    {
+      "description": "Adds a private or public note to an existing ticket.",
+      "id": "add_note_to_ticket",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Ticket_Id",
+          "name": "ticket_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.ticket(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The content of the note. HTML is supported.",
+          "label": "Note Content",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "If checked, the note is only visible to agents. If unchecked, the requester can also see it.",
+          "label": "Private Note",
+          "name": "private",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Note to Ticket",
+      "source_path": "freshservice/src/lib/actions/add-note-to-ticket.ts",
+      "source_sha256": "fa5c0e40c2269d5c5220424cec79dd0b45e278c7c009419d01de2ad029491a7b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/actions/add-note-to-ticket.ts"
+    },
+    {
+      "description": "Creates a new change request in Freshservice.",
+      "id": "create_change",
+      "inputs": [
+        {
+          "description": "The subject of the change.",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Requester_Id",
+          "name": "requester_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.requester(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "HTML content describing the change.",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Agent_Id",
+          "name": "agent_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.agent(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Group_Id",
+          "name": "group_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.group(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Department_Id",
+          "name": "department_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.department(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "priority",
+          "required": null,
+          "source_expression": "freshserviceCommon.priority",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Impact",
+          "name": "impact",
+          "required": null,
+          "source_expression": "freshserviceCommon.impact",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "freshserviceCommon.changeStatus",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Risk",
+          "name": "risk",
+          "required": null,
+          "source_expression": "freshserviceCommon.changeRisk",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Change_Type",
+          "name": "change_type",
+          "required": null,
+          "source_expression": "freshserviceCommon.changeType",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Planned start date and time (ISO 8601, e.g. 2025-01-15T09:00:00Z).",
+          "label": "Planned Start Date",
+          "name": "planned_start_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Planned end date and time (ISO 8601, e.g. 2025-01-15T17:00:00Z).",
+          "label": "Planned End Date",
+          "name": "planned_end_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Category of the change.",
+          "label": "Category",
+          "name": "category",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Sub-category of the change.",
+          "label": "Sub Category",
+          "name": "sub_category",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Item category of the change.",
+          "label": "Item Category",
+          "name": "item_category",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "A JSON object of custom field names and values.",
+          "label": "Custom Fields",
+          "name": "custom_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Change",
+      "source_path": "freshservice/src/lib/actions/create-change.ts",
+      "source_sha256": "9a0be6debb952f5506763546fef3748971aca27019e82e60caa976f7c7ee8e0a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/actions/create-change.ts"
+    },
+    {
+      "description": "Creates a new task on a change request in Freshservice.",
+      "id": "create_change_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Change_Id",
+          "name": "change_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.change(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The title of the task.",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Description of the task.",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Agent_Id",
+          "name": "agent_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.agent(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Group_Id",
+          "name": "group_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.group(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "freshserviceCommon.taskStatus",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Task due date and time (ISO 8601, e.g. 2025-01-15T17:00:00Z).",
+          "label": "Due Date",
+          "name": "due_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Time in seconds before the due date to send a reminder notification.",
+          "label": "Notify Before (seconds)",
+          "name": "notify_before",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Change Task",
+      "source_path": "freshservice/src/lib/actions/create-change-task.ts",
+      "source_sha256": "74908a0ddf4e0207ac9eb5ce035bcc8a845fb02ca4b1d6345aa90d739250c3c4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/actions/create-change-task.ts"
+    },
+    {
+      "description": "Creates a new requester (end user) in Freshservice.",
+      "id": "create_requester",
+      "inputs": [
+        {
+          "description": "The first name of the requester.",
+          "label": "First Name",
+          "name": "first_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The primary email address of the requester.",
+          "label": "Email",
+          "name": "primary_email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The last name of the requester.",
+          "label": "Last Name",
+          "name": "last_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The job title of the requester.",
+          "label": "Job Title",
+          "name": "job_title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The work phone number of the requester.",
+          "label": "Work Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The mobile phone number of the requester.",
+          "label": "Mobile Phone",
+          "name": "mobile_phone_number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Department_Id",
+          "name": "department_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.department(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "A JSON object of custom field names and values.",
+          "label": "Custom Fields",
+          "name": "custom_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Requester",
+      "source_path": "freshservice/src/lib/actions/create-requester.ts",
+      "source_sha256": "280126311b9bbdeea115f4c772b9c640bd772800edb0e4a5c8539f000a034d22",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/actions/create-requester.ts"
+    },
+    {
+      "description": "Creates a new ticket in Freshservice.",
+      "id": "create_ticket",
+      "inputs": [
+        {
+          "description": "The subject of the ticket.",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "HTML content of the ticket. You can use basic HTML tags for formatting.",
+          "label": "Description",
+          "name": "description",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Requester_Id",
+          "name": "requester_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.requester(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "freshserviceCommon.status",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "priority",
+          "required": null,
+          "source_expression": "freshserviceCommon.priority",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Source",
+          "name": "source",
+          "required": null,
+          "source_expression": "freshserviceCommon.source",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Urgency",
+          "name": "urgency",
+          "required": null,
+          "source_expression": "freshserviceCommon.urgency",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Impact",
+          "name": "impact",
+          "required": null,
+          "source_expression": "freshserviceCommon.impact",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The type of ticket (e.g., Incident, Service Request).",
+          "label": "Type",
+          "name": "type",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Responder_Id",
+          "name": "responder_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.agent(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Department_Id",
+          "name": "department_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.department(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Group_Id",
+          "name": "group_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.group(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The category of the ticket.",
+          "label": "Category",
+          "name": "category",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The sub-category of the ticket.",
+          "label": "Sub Category",
+          "name": "sub_category",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Tags to add to the ticket.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "A JSON object of custom field names and values.",
+          "label": "Custom Fields",
+          "name": "custom_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Ticket",
+      "source_path": "freshservice/src/lib/actions/create-ticket.ts",
+      "source_sha256": "c90805a9d86e338ec0ad6af01319a156cbae20fa8f918bdc698c21d1ef2481b4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/actions/create-ticket.ts"
+    },
+    {
+      "description": "Deletes a change request from Freshservice.",
+      "id": "delete_change",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Change_Id",
+          "name": "change_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.change(true)",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Change",
+      "source_path": "freshservice/src/lib/actions/delete-change.ts",
+      "source_sha256": "15e65669d9853d519ec2ef874bb0fc7fa270f3be5311e83fa8801a4e573885e0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/actions/delete-change.ts"
+    },
+    {
+      "description": "Updates an existing change request in Freshservice.",
+      "id": "update_change",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Change_Id",
+          "name": "change_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.change(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "New subject for the change.",
+          "label": "Subject",
+          "name": "subject",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "HTML content describing the change.",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Requester_Id",
+          "name": "requester_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.requester(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Agent_Id",
+          "name": "agent_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.agent(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Group_Id",
+          "name": "group_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.group(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Department_Id",
+          "name": "department_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.department(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "priority",
+          "required": null,
+          "source_expression": "freshserviceCommon.priority",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Impact",
+          "name": "impact",
+          "required": null,
+          "source_expression": "freshserviceCommon.impact",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "freshserviceCommon.changeStatus",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Risk",
+          "name": "risk",
+          "required": null,
+          "source_expression": "freshserviceCommon.changeRisk",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Change_Type",
+          "name": "change_type",
+          "required": null,
+          "source_expression": "freshserviceCommon.changeType",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Planned start date and time (ISO 8601, e.g. 2025-01-15T09:00:00Z).",
+          "label": "Planned Start Date",
+          "name": "planned_start_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Planned end date and time (ISO 8601, e.g. 2025-01-15T17:00:00Z).",
+          "label": "Planned End Date",
+          "name": "planned_end_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Category of the change.",
+          "label": "Category",
+          "name": "category",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Sub-category of the change.",
+          "label": "Sub Category",
+          "name": "sub_category",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Item category of the change.",
+          "label": "Item Category",
+          "name": "item_category",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "A JSON object of custom field names and values.",
+          "label": "Custom Fields",
+          "name": "custom_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Change",
+      "source_path": "freshservice/src/lib/actions/update-change.ts",
+      "source_sha256": "45b8674514470949da8ef62d0f8088205b2b5d28d4c3dbbe5f6570eea5a67cc5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/actions/update-change.ts"
+    },
+    {
+      "description": "Triggers when a new change request is created in Freshservice.",
+      "id": "new_change",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Change",
+      "source_path": "freshservice/src/lib/triggers/new-change.ts",
+      "source_sha256": "fd501ec21e0441e96fc6daa169b3ea26a59489fc60f6f473e0f8d3faff688f33",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/triggers/new-change.ts"
+    },
+    {
+      "description": "Triggers when a new task is created on a specific change request.",
+      "id": "new_change_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Change_Id",
+          "name": "change_id",
+          "required": null,
+          "source_expression": "freshserviceCommon.change(true)",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Change Task",
+      "source_path": "freshservice/src/lib/triggers/new-change-task.ts",
+      "source_sha256": "c24b0916c1c7a8c17d8d4bf74a9f623b143313edbd1ca683ff2f3bbf79f5dd20",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/triggers/new-change-task.ts"
+    },
+    {
+      "description": "Triggers when a new requester (user) is created in Freshservice.",
+      "id": "new_requester",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Requester",
+      "source_path": "freshservice/src/lib/triggers/new-requester.ts",
+      "source_sha256": "15c70ea920ebc36f6e51ce99bcd0f5e795388ee948e730f4820fe8e10bd9d0d0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshservice/src/lib/triggers/new-requester.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "9d19c093538370986570dee217e0933c575926b6",
+    "index_path": "freshservice/src/index.ts",
+    "index_sha256": "7c977a501f99e09449a71e9321f31c28479293ba14c547cb705b5176b8a4e4ae",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

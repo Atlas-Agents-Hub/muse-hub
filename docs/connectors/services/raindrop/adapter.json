@@ -1,0 +1,226 @@
+{
+  "allowed_hosts": [
+    "api.raindrop.io",
+    "raindrop.io"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://raindrop.io/oauth/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [],
+    "token_urls": [
+      "https://raindrop.io/oauth/access_token"
+    ]
+  },
+  "category": "Reading",
+  "id": "raindrop",
+  "name": "Raindrop",
+  "operations": [
+    {
+      "description": "Saves a new bookmark to your Raindrop.io account",
+      "id": "create_raindrop",
+      "inputs": [
+        {
+          "description": "The URL of the page to bookmark",
+          "label": "URL",
+          "name": "link",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Custom title for the bookmark. If left empty, Raindrop will extract it from the URL automatically.",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Short description or summary of the page",
+          "label": "Excerpt",
+          "name": "excerpt",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Personal note to attach to this bookmark",
+          "label": "Note",
+          "name": "note",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Collection_Id",
+          "name": "collection_id",
+          "required": null,
+          "source_expression": "raindropProps.collectionId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "List of tags to organize the bookmark (press Enter to add each tag)",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Mark this bookmark as important / favourite",
+          "label": "Mark as Favourite",
+          "name": "important",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Bookmark",
+      "source_path": "raindrop/src/lib/actions/create-raindrop.ts",
+      "source_sha256": "8c5c43cecb5c2c4d78aaca5a5a881ddd35a9ce715be38d9ae2ee2264d3fa0ec4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/raindrop/src/lib/actions/create-raindrop.ts"
+    },
+    {
+      "description": "Moves a bookmark to the trash. To permanently delete it, empty the trash in Raindrop.io.",
+      "id": "delete_raindrop",
+      "inputs": [
+        {
+          "description": "The numeric ID of the bookmark to delete. You can find it in the URL when viewing the bookmark in Raindrop.io (e.g. raindrop.io/app/raindrop/123456789).",
+          "label": "Bookmark ID",
+          "name": "raindrop_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Bookmark",
+      "source_path": "raindrop/src/lib/actions/delete-raindrop.ts",
+      "source_sha256": "ac700b56fc1179470f9f21684239315b0a294544d16da39f4c917a15bbd56812",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/raindrop/src/lib/actions/delete-raindrop.ts"
+    },
+    {
+      "description": "Lists bookmarks from a collection, with optional keyword search",
+      "id": "find_raindrops",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Collection_Id",
+          "name": "collection_id",
+          "required": null,
+          "source_expression": "raindropProps.collectionId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Filter bookmarks by keyword. Supports operators like #tag or type:article. Leave empty to list all bookmarks.",
+          "label": "Search Query",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of bookmarks to return (max 50)",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Bookmarks",
+      "source_path": "raindrop/src/lib/actions/find-raindrops.ts",
+      "source_sha256": "3fcff4984c6a14dbdb3e14b2d6713b4d2236e3ce203e6dbc194ea5fd053bcadd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/raindrop/src/lib/actions/find-raindrops.ts"
+    },
+    {
+      "description": "Retrieves the details of a bookmark by its ID",
+      "id": "get_raindrop",
+      "inputs": [
+        {
+          "description": "The numeric ID of the bookmark. You can find it in the URL when viewing the bookmark in Raindrop.io (e.g. raindrop.io/app/raindrop/123456789).",
+          "label": "Bookmark ID",
+          "name": "raindrop_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Bookmark",
+      "source_path": "raindrop/src/lib/actions/get-raindrop.ts",
+      "source_sha256": "1940a7e24218c0078aa66fac8642edd250c319a95c5456f906b961fa4609fabb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/raindrop/src/lib/actions/get-raindrop.ts"
+    },
+    {
+      "description": "Updates the details of an existing bookmark",
+      "id": "update_raindrop",
+      "inputs": [
+        {
+          "description": "The numeric ID of the bookmark to update. You can find it in the URL when viewing the bookmark in Raindrop.io (e.g. raindrop.io/app/raindrop/123456789).",
+          "label": "Bookmark ID",
+          "name": "raindrop_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Updated title for the bookmark",
+          "label": "New Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Updated short description or summary of the page",
+          "label": "New Excerpt",
+          "name": "excerpt",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Updated personal note attached to the bookmark",
+          "label": "New Note",
+          "name": "note",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Collection_Id",
+          "name": "collection_id",
+          "required": null,
+          "source_expression": "raindropProps.collectionId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "New list of tags (replaces existing tags). Leave empty to keep existing tags unchanged.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Mark or unmark this bookmark as important / favourite",
+          "label": "Mark as Favourite",
+          "name": "important",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Bookmark",
+      "source_path": "raindrop/src/lib/actions/update-raindrop.ts",
+      "source_sha256": "ceefe65773fa26608944d1f1c6b9935ad88a8ff6bb64c23579c2923fa1e15144",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/raindrop/src/lib/actions/update-raindrop.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "d46aeac7e65103413cb76f1f7e58b67fe2a36e9d",
+    "index_path": "raindrop/src/index.ts",
+    "index_sha256": "a7b2ae0293c91d198e790ff597592be03fc04674db0946d663e28e2f41b5387a",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "research-evaluator",
+    "learning-coach"
+  ]
+}

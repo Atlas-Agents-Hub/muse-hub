@@ -1,0 +1,24 @@
+{
+  "id": "cohere",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "cohere/src/lib/auth.ts",
+      "credential_source_sha256": "6856e94a40d918951c22f3eb306b91b34623136bcbccce4ca60d1f9613af6fdb",
+      "headers": {},
+      "host": "api.cohere.com",
+      "id": "read-v2-models",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "cohere/src/lib/auth.ts",
+      "source_sha256": "6856e94a40d918951c22f3eb306b91b34623136bcbccce4ca60d1f9613af6fdb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cohere/src/lib/auth.ts",
+      "url_template": "https://api.cohere.com/v2/models"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

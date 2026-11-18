@@ -1,0 +1,70 @@
+{
+  "allowed_hosts": [
+    "api.cohere.com",
+    "dashboard.cohere.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "AI & ML",
+  "id": "cohere",
+  "name": "Cohere",
+  "operations": [
+    {
+      "description": "Generate a text response using Cohere AI Chat API",
+      "id": "generate_text",
+      "inputs": [
+        {
+          "description": "The user message to send to the model",
+          "label": "Prompt",
+          "name": "prompt",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "The Cohere model to use for generation",
+          "label": "Model",
+          "name": "model",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Controls randomness (0.0 = deterministic, 1.0 = maximum randomness). Default: 0.3",
+          "label": "Temperature",
+          "name": "temperature",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Maximum number of tokens to generate. Leave empty for model default.",
+          "label": "Max Tokens",
+          "name": "maxTokens",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Generate Text",
+      "source_path": "cohere/src/lib/actions/generate-text.ts",
+      "source_sha256": "9a25068b03eae905a572d5a9648b3141b59075808bb08d30e1437fc0f170ac0c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cohere/src/lib/actions/generate-text.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7b8e1992357a994b68dde950d4053cf037173641",
+    "index_path": "cohere/src/index.ts",
+    "index_sha256": "b6005512eab439f4979ac8caeefaf98c92e49717e4bd66ed9af1f1077d22163d",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "model-builder",
+    "research-evaluator",
+    "software-engineer"
+  ]
+}

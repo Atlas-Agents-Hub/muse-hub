@@ -1,0 +1,439 @@
+{
+  "allowed_hosts": [
+    "graph.microsoft.com",
+    "graph.microsoft.us",
+    "learn.microsoft.com",
+    "outlook.office.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://{cloud}/{tenant}/oauth2/v2.0/authorize"
+    ],
+    "fields": [
+      {
+        "description": "",
+        "label": "Cloud",
+        "name": "cloud",
+        "required": null,
+        "source_expression": "microsoftCloudProperty",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Access Mode",
+        "name": "accessMode",
+        "required": null,
+        "source_expression": "microsoftScopeProperty",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Use \"common\" for the default delegated multi-tenant flow. For app-only (Client Credentials), set this to your Directory (tenant) ID.",
+        "label": "Tenant ID",
+        "name": "tenant",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Email/UPN or user object ID of the mailbox to act on. Required for app-only (Client Credentials). Leave blank for delegated access (acts as the signed-in user).",
+        "label": "Mailbox (App-only)",
+        "name": "mailbox",
+        "required": false,
+        "type": "ShortText"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "{accessMode}"
+    ],
+    "token_urls": [
+      "https://{cloud}/{tenant}/oauth2/v2.0/token"
+    ]
+  },
+  "category": "Email",
+  "id": "microsoft-outlook",
+  "name": "Microsoft Outlook",
+  "operations": [
+    {
+      "description": "Tag an email with one or more Outlook categories.",
+      "id": "addLabelToEmail",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Message Id",
+          "name": "messageId",
+          "required": null,
+          "source_expression": "messageIdDropdown({ displayName: 'Email', description: 'The email to tag.', required: true, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Category names to add, one per row.",
+          "label": "Categories",
+          "name": "categories",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Label to Email",
+      "source_path": "microsoft-outlook/src/lib/actions/add-label-to-email.ts",
+      "source_sha256": "8f7b59184f2a77be3b5f76f4b185a5105e62c5fb8cdcb6c539e9c0e728064d65",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/actions/add-label-to-email.ts"
+    },
+    {
+      "description": "Save a new email to your Drafts folder without sending it.",
+      "id": "createDraftEmail",
+      "inputs": [
+        {
+          "description": "",
+          "label": "To",
+          "name": "recipients",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Cc",
+          "name": "ccRecipients",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Bcc",
+          "name": "bccRecipients",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "How the text in Body is interpreted.",
+          "label": "Body Format",
+          "name": "bodyFormat",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Body",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Attachments",
+          "name": "attachments",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Draft Email",
+      "source_path": "microsoft-outlook/src/lib/actions/create-draft-email.ts",
+      "source_sha256": "275567c7a9160d5800e76680045c6c288bcb84986045b681bdef9cafa6f751f9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/actions/create-draft-email.ts"
+    },
+    {
+      "description": "Search your mailbox by keywords, sender or subject.",
+      "id": "findEmail",
+      "inputs": [
+        {
+          "description": "Words to find. Narrow with from:, subject: or hasAttachments:true.",
+          "label": "Search Query",
+          "name": "searchQuery",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Folder Id",
+          "name": "folderId",
+          "required": null,
+          "source_expression": "mailFolderIdDropdown({ displayName: 'Folder', description: 'Leave empty to search every folder.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "How many emails to return, up to 1000.",
+          "label": "Max Results",
+          "name": "top",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Email",
+      "source_path": "microsoft-outlook/src/lib/actions/find-email.ts",
+      "source_sha256": "18ff2b786d021bd75733d91142e24bcf94b577c9e505e4216eed663db8f98c91",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/actions/find-email.ts"
+    },
+    {
+      "description": "Forward an email to new recipients with an optional note.",
+      "id": "forwardEmail",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Message Id",
+          "name": "messageId",
+          "required": null,
+          "source_expression": "messageIdDropdown({ displayName: 'Email', description: 'The email to forward.', required: true, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "One address per row.",
+          "label": "To",
+          "name": "recipients",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Added above the forwarded email. HTML tags are rendered.",
+          "label": "Comment",
+          "name": "comment",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Forward Email",
+      "source_path": "microsoft-outlook/src/lib/actions/forward-email.ts",
+      "source_sha256": "90e3cef10fc35e5d073e9a6a1e2c4b2a814052c3941444391ce119c40a808c60",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/actions/forward-email.ts"
+    },
+    {
+      "description": "Reply to an Outlook email, or save the reply as a draft.",
+      "id": "reply-email",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Message Id",
+          "name": "messageId",
+          "required": null,
+          "source_expression": "messageIdDropdown({ displayName: 'Email', description: 'The email to reply to.', required: true, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "How the text in Body is interpreted.",
+          "label": "Body Format",
+          "name": "bodyFormat",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Body",
+          "name": "replyBody",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Cc",
+          "name": "ccRecipients",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Bcc",
+          "name": "bccRecipients",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Attachments",
+          "name": "attachments",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Save the reply to Drafts instead of sending it.",
+          "label": "Save as Draft",
+          "name": "draft",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Reply to Email",
+      "source_path": "microsoft-outlook/src/lib/actions/reply-email.ts",
+      "source_sha256": "ceb2571f10274b974a7941c42437fb1a6cca68a2c821fd6e1dc3df65659674e4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/actions/reply-email.ts"
+    },
+    {
+      "description": "Sends an existing draft message.",
+      "id": "outlook_send_draft",
+      "inputs": [
+        {
+          "description": "ID of the draft to send. Obtain it from Create Draft or one of the Create ... Draft actions.",
+          "label": "Draft Message ID",
+          "name": "messageId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Draft",
+      "source_path": "microsoft-outlook/src/lib/actions/outlook-send-draft.ts",
+      "source_sha256": "32751b9da1ff6d975179d042af4113465fc85e34268ef5970db576d0a4d7edcd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/actions/outlook-send-draft.ts"
+    },
+    {
+      "description": "Send an email that is waiting in your Drafts folder.",
+      "id": "sendDraftEmail",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Message Id",
+          "name": "messageId",
+          "required": null,
+          "source_expression": "draftMessageIdDropdown({ displayName: 'Email', description: 'Pick a draft from your Drafts folder.', required: true, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Draft Email",
+      "source_path": "microsoft-outlook/src/lib/actions/send-draft-email.ts",
+      "source_sha256": "d6210431902ea4e8ef27092c4edaa5bad5c9127b228f4c6a16b9124911296702",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/actions/send-draft-email.ts"
+    },
+    {
+      "description": "Send an email from your Outlook mailbox.",
+      "id": "send-email",
+      "inputs": [
+        {
+          "description": "",
+          "label": "To",
+          "name": "recipients",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Cc",
+          "name": "ccRecipients",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Bcc",
+          "name": "bccRecipients",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "How the text in Body is interpreted.",
+          "label": "Body Format",
+          "name": "bodyFormat",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Body",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Attachments",
+          "name": "attachments",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Email",
+      "source_path": "microsoft-outlook/src/lib/actions/send-email.ts",
+      "source_sha256": "1c8dbd782dca75ffa6c2079344bd638b8e328d2d7302f7a376246bac2838033a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/actions/send-email.ts"
+    },
+    {
+      "description": "Triggers once for each attachment on a new email.",
+      "id": "newAttachment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Folder Id",
+          "name": "folderId",
+          "required": null,
+          "source_expression": "mailFolderIdDropdown({ displayName: 'Folder', description: 'Leave empty to watch the whole mailbox, including sent mail.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only emails whose sender address contains this text.",
+          "label": "From",
+          "name": "sender",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only attachments whose file name contains this text.",
+          "label": "Attachment Name",
+          "name": "attachmentNameFilter",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only attachments with this extension. Separate several with commas, e.g. pdf, docx.",
+          "label": "File Extension",
+          "name": "fileExtension",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Attachment",
+      "source_path": "microsoft-outlook/src/lib/triggers/new-attachment.ts",
+      "source_sha256": "8de7c5f47b8c2f306b688c186cf0a9242016181fdf56f187f65a134945c0493c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/triggers/new-attachment.ts"
+    },
+    {
+      "description": "Triggers when a new email lands in the folder you pick.",
+      "id": "newEmailInFolder",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Folder Id",
+          "name": "folderId",
+          "required": null,
+          "source_expression": "mailFolderIdDropdown({ displayName: 'Folder', description: 'New emails in this folder start the flow.', required: true, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Email in Folder",
+      "source_path": "microsoft-outlook/src/lib/triggers/new-email-in-folder.ts",
+      "source_sha256": "0ce0c222cdf18cfda295a902944ca0eaa762115990c4ab6d74e6842dddfd72f8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-outlook/src/lib/triggers/new-email-in-folder.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "8be0a497fbf1fff2654b6b39c78e44ce602acdfb",
+    "index_path": "microsoft-outlook/src/index.ts",
+    "index_sha256": "80d70511958683f9da1b97477ff002abb1c02ff9a58a07afda935f52a6e3d898",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

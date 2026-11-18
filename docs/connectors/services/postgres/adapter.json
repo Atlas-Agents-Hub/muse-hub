@@ -1,0 +1,425 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The server's hostname or IP address.",
+        "label": "Host",
+        "name": "host",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The port the server listens on, usually 5432.",
+        "label": "Port",
+        "name": "port",
+        "required": true,
+        "type": "Number"
+      },
+      {
+        "description": "The database user to sign in as.",
+        "label": "User",
+        "name": "user",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', description: 'The password for that user.', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "The name of the database to connect to.",
+        "label": "Database",
+        "name": "database",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Encrypt the connection. Most hosted databases require it.",
+        "label": "Enable SSL",
+        "name": "enable_ssl",
+        "required": true,
+        "type": "Checkbox"
+      },
+      {
+        "description": "Check the server's certificate. Self-signed servers need a CA below.",
+        "label": "Verify Server Certificate",
+        "name": "reject_unauthorized",
+        "required": true,
+        "type": "Checkbox"
+      },
+      {
+        "description": "The CA certificate (PEM) to trust when verifying the server.",
+        "label": "Certificate",
+        "name": "certificate",
+        "required": false,
+        "type": "LongText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "postgres",
+  "name": "Postgres",
+  "operations": [
+    {
+      "description": "Deletes one or more rows from a table",
+      "id": "delete-row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Delete_Warning",
+          "name": "delete_warning",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "postgresCommon.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Search_Column",
+          "name": "search_column",
+          "required": null,
+          "source_expression": "postgresCommon.column({ displayName: 'Search Column', description: 'The column to match rows on.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Rows whose search column equals this value are deleted.",
+          "label": "Search Value",
+          "name": "search_value",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Return every deleted row. The row count is always returned.",
+          "label": "Return Deleted Rows",
+          "name": "return_rows",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Row",
+      "source_path": "postgres/src/lib/actions/delete-row.ts",
+      "source_sha256": "58602d58decdac5ef8f26e633000f1fb6eabf4428397c8e2f10e579fa499c60d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/postgres/src/lib/actions/delete-row.ts"
+    },
+    {
+      "description": "Reads rows from a table",
+      "id": "find-rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": null,
+          "source_expression": "warningMarkdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "postgresCommon.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The SQL after WHERE. Leave empty to read every row.",
+          "label": "Condition",
+          "name": "condition",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Values for $1, $2 and so on in the condition, in order.",
+          "label": "Arguments",
+          "name": "args",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Columns",
+          "name": "columns",
+          "required": null,
+          "source_expression": "postgresCommon.columns",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Maximum rows to return. Clear it to return every matching row.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Rows",
+      "source_path": "postgres/src/lib/actions/find-rows.ts",
+      "source_sha256": "78a888acef09812d1e8c763bcf98c33101fa36d8e41ce5866c76576950b094d9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/postgres/src/lib/actions/find-rows.ts"
+    },
+    {
+      "description": "Returns the tables in the database",
+      "id": "get-tables",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Tables",
+      "source_path": "postgres/src/lib/actions/get-tables.ts",
+      "source_sha256": "544dee0a2e8b65a344e23aad8805098ef7e2411a5ec27e722c3881b3a6bdef07",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/postgres/src/lib/actions/get-tables.ts"
+    },
+    {
+      "description": "Inserts many rows into a table in a single transaction",
+      "id": "insert-rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "postgresCommon.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Rows",
+          "name": "batch",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "Insert empty fields as empty strings instead of the column default.",
+          "label": "Keep Empty Strings",
+          "name": "keep_empty_strings",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Return inserted rows with generated ids. Needs SELECT permission too.",
+          "label": "Return Inserted Rows",
+          "name": "return_rows",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Insert Multiple Rows",
+      "source_path": "postgres/src/lib/actions/insert-rows.ts",
+      "source_sha256": "e07f36b0e7cf0d52f2af763e106d7e842140733b2c8f9da10c2d1b0387be1cbe",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/postgres/src/lib/actions/insert-rows.ts"
+    },
+    {
+      "description": "Inserts a new row into a table",
+      "id": "insert-row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "postgresCommon.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Column names mapped to the values to insert.",
+          "label": "Values",
+          "name": "values",
+          "required": true,
+          "type": "Object"
+        },
+        {
+          "description": "Return the stored row with generated ids. Needs SELECT permission too.",
+          "label": "Return Inserted Row",
+          "name": "return_row",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Insert Row",
+      "source_path": "postgres/src/lib/actions/insert-row.ts",
+      "source_sha256": "1432e8a52299f7a14687b28c63ee5f0ee779afdf0fdcde79fdd9fc5b37de44c2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/postgres/src/lib/actions/insert-row.ts"
+    },
+    {
+      "description": "Runs a SQL statement on the database",
+      "id": "run-query",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "The SQL to run. Write $1, $2 where each value goes.",
+          "label": "Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Values for $1, $2 and so on in the query, in order.",
+          "label": "Arguments",
+          "name": "args",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Milliseconds to wait for the query before it fails.",
+          "label": "Query Timeout",
+          "name": "query_timeout",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Milliseconds to wait for the connection before it fails.",
+          "label": "Connection Timeout",
+          "name": "connection_timeout_ms",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "A name that identifies this step in the server's activity list.",
+          "label": "Application Name",
+          "name": "application_name",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Run Query",
+      "source_path": "postgres/src/lib/actions/run-query.ts",
+      "source_sha256": "fdbaee7b8dea3d3e416c3beca2976f397bbd4bbfc9975f3dd9a1a2c0e802a19e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/postgres/src/lib/actions/run-query.ts"
+    },
+    {
+      "description": "Updates one or more rows in a table",
+      "id": "update-row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "postgresCommon.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Changes_Info",
+          "name": "changes_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "Column names mapped to their new values.",
+          "label": "Values",
+          "name": "values",
+          "required": true,
+          "type": "Object"
+        },
+        {
+          "description": "",
+          "label": "Search_Column",
+          "name": "search_column",
+          "required": null,
+          "source_expression": "postgresCommon.column({ displayName: 'Search Column', description: 'The column to match rows on.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Rows whose search column equals this value are updated.",
+          "label": "Search Value",
+          "name": "search_value",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Return every updated row. The row count is always returned.",
+          "label": "Return Updated Rows",
+          "name": "return_rows",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Row",
+      "source_path": "postgres/src/lib/actions/update-row.ts",
+      "source_sha256": "fbe49fde444f0c9fbc51f8d58f9b9e698c138803ed4eb8b62fe60f61634939ad",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/postgres/src/lib/actions/update-row.ts"
+    },
+    {
+      "description": "Triggers when a new row is added to a table",
+      "id": "new-row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "postgresCommon.table",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Order_By",
+          "name": "order_by",
+          "required": null,
+          "source_expression": "postgresCommon.column({ displayName: 'Order By Column', description: 'Use a created timestamp or an auto-increment ID. Ordering by an updated-at column runs the flow again when a row\\'s value moves past the newest one.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Order_Direction",
+          "name": "order_direction",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<OrderDirection>({ displayName: 'Order Direction', description: 'Descending when newer rows have larger values, like dates and IDs.', required: true, display: 'cards', options: { options: [ { label: 'Ascending', value: 'ASC', }, { label: 'Descending', value: 'DESC', }, ] }, defaultValue: 'DESC', })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Row",
+      "source_path": "postgres/src/lib/triggers/new-row.ts",
+      "source_sha256": "965c6bc1405b8cccecef5229f96b7bc2d0c553733be987f525c03bc3d0481f9d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/postgres/src/lib/triggers/new-row.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "d8fd1cdbc22e51a60f99ce638f682039a28bdd86",
+    "index_path": "postgres/src/index.ts",
+    "index_sha256": "76b7c2bf50f6317636601ce205ba91e5240c5605220ae86164d05a163e989394",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}
