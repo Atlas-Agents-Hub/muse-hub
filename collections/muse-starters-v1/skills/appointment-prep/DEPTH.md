@@ -39,7 +39,7 @@ Check recipient and sharing scope, then report actual delivery separately.
 
 **Avoid:** Do not claim an appointment occurred or the care team acknowledged the note.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** One observation is dated Monday, another has no date, and two medication records disagree.
 
@@ -47,7 +47,7 @@ Check recipient and sharing scope, then report actual delivery separately.
 
 **Result:** The appointment note includes both concerns and questions for clarification; it does not choose a treatment instruction.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The person later supplies a date and a clinician-confirmed current record.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `appointment-prep-r4-standard`, `appointment-prep-r4-edge`, `appointment-prep-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

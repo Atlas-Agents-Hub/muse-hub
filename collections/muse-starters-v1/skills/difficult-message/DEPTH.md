@@ -39,7 +39,7 @@ Confirm the exact recipient and final authorized text through the actual availab
 
 **Avoid:** Do not confuse a draft with a sent or received message.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A missed deadline is verified, but the sender’s belief that it was deliberate is unconfirmed.
 
@@ -47,7 +47,7 @@ Confirm the exact recipient and final authorized text through the actual availab
 
 **Result:** Draft: the deadline passed, this affected the work, and a revised delivery date is requested. Deliberate disregard is not stated as proven.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The user explicitly prefers a firmer boundary after repeated verified misses.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `difficult-message-r4-standard`, `difficult-message-r4-edge`, `difficult-message-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

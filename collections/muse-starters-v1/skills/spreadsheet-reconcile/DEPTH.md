@@ -37,7 +37,7 @@ Return a cell-specific correction proposal and keep actual changes not performed
 
 **Avoid:** Do not claim a workbook was repaired from a report alone.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Source transactions A=10.10 USD, B=20.20 USD and C=-5.05 USD should appear once each. Workbook rows contain A,B,B,C.
 
@@ -45,7 +45,7 @@ Return a cell-specific correction proposal and keep actual changes not performed
 
 **Result:** Report duplicate B and a20.20 USD overstatement. Propose removing the duplicate occurrence only after confirming it is not a separate transaction.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A second source contains A=10 USD and B=10 EUR. The workbook reports 20 USD.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `spreadsheet-reconcile-r3-standard`, `spreadsheet-reconcile-r3-edge`, `spreadsheet-reconcile-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

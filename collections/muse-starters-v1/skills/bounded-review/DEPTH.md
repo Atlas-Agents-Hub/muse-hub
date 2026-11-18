@@ -39,7 +39,7 @@ Invalidate affected findings and repeat only the relevant checks on the new revi
 
 **Avoid:** Do not reuse stale approval for materially different bytes.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Requirement A has a passing observation; requirement B has a reproduced failure.
 
@@ -47,7 +47,7 @@ Invalidate affected findings and repeat only the relevant checks on the new revi
 
 **Result:** Verdict: changes needed for B. A remains passed; neither the whole project nor unrelated functions are declared broken.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** B has no test result rather than a failing result.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `bounded-review-r4-standard`, `bounded-review-r4-edge`, `bounded-review-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

@@ -66,10 +66,13 @@ class RolePositioningTests(unittest.TestCase):
                  "production planner","not an image or video renderer","creative_studio_demo.py"):
    with self.subTest(term=phrase):self.assertIn(phrase,body)
 
- def test_role_intro_links_to_concrete_implemented_capabilities(self):
-  body=README.read_text(encoding="utf8")
-  self.assertIn("docs/capabilities.md",body.lower())
-  self.assertIn("## Tools, skills, and connectors",body)
-  self.assertIn("python -B examples/daily_desk.py",body)
+ def test_role_intro_links_to_concrete_tools_and_their_commands(self):
+     body=README.read_text(encoding="utf8")
+     self.assertIn("docs/capabilities.md",body.lower())
+     self.assertIn("## Put your assistant to work",body)
+     self.assertIn("docs/spaces/DAILY_DESK.md",body)
+     self.assertIn("docs/GITHUB_QUICKSTART.md",body)
+     quickstart=(README.parent/"docs/GITHUB_QUICKSTART.md").read_text(encoding="utf8")
+     self.assertIn("python -B examples/daily_desk.py",quickstart)
 
 if __name__=="__main__":unittest.main()

@@ -29,7 +29,7 @@ Separate the reversible recommendation from unresolved factual claims and identi
 
 **Avoid:** Do not manufacture certainty or block unrelated supported work.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Build log says 12 local checks passed. The deployment record says deployment was not run. The draft claims “The application is deployed and all checks passed.”
 
@@ -70,7 +70,3 @@ Public regression exercises. Worked answers are for learning; exclude them from 
 
 Practice case IDs: `claim-audit-standard`, `claim-audit-scope`, `claim-audit-superseded`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-More explicit procedures and checkable examples; comparative Muse performance has not been measured.

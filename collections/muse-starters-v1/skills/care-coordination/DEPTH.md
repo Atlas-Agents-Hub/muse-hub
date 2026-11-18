@@ -37,7 +37,7 @@ Prioritize immediate appropriate professional or emergency help over routine pla
 
 **Avoid:** Do not delay urgent assistance to finish a checklist or offer a diagnosis.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Plan P2 says bring the current medication list to an appointment. Alex agrees to transport; Sam is proposed to prepare the list but has not replied.
 
@@ -45,7 +45,7 @@ Prioritize immediate appropriate professional or emergency help over routine pla
 
 **Result:** The handoff shows Alex accepted, Sam pending, no invented confirmation and no treatment changes. Sharing is limited to the relevant appointment task.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A family note says change an existing medication instruction, while the clinician plan remains unchanged.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `care-coordination-r3-standard`, `care-coordination-r3-edge`, `care-coordination-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

@@ -37,7 +37,7 @@ Label it a hypothesis and define a subsequent measurement.
 
 **Avoid:** Do not infer effect size from interview enthusiasm.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** P1 raises navigation difficulty in two excerpts, P2 raises it once, and P3 reports no difficulty. All three were asked.
 
@@ -45,7 +45,7 @@ Label it a hypothesis and define a subsequent measurement.
 
 **Result:** Navigation difficulty is supported by 2 of3 interviewed participants, with 1 dissenting participant. This is a within-sample finding, not a population rate or a proven conversion effect.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** P3 was not asked about navigation and has no relevant observation.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `interview-synthesis-r3-standard`, `interview-synthesis-r3-edge`, `interview-synthesis-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

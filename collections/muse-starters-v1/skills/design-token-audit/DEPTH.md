@@ -37,7 +37,7 @@ Offer measured alternatives that preserve semantic role and compare them in the 
 
 **Avoid:** Do not solve one ratio by making every interface color identical.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Black text token #000000 on white #ffffff has a supplied threshold of 4.5.
 
@@ -45,7 +45,7 @@ Offer measured alternatives that preserve semantic role and compare them in the 
 
 **Result:** The ratio is 21 and the pair passes; the tool does not claim the rendered interface or full accessibility was inspected.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Muted text #aaaaaa is paired with white at the same threshold.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `design-token-audit-r5-standard`, `design-token-audit-r5-edge`, `design-token-audit-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

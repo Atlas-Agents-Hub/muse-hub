@@ -37,7 +37,7 @@ Require the original retention and replay horizon contract before removal.
 
 **Avoid:** Do not use this local reconciliation as proof that original production retention is solved.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** State contains A version 3 deleted; incoming A version 2 value 10 and a repeat of the tombstone.
 
@@ -45,7 +45,7 @@ Require the original retention and replay horizon contract before removal.
 
 **Result:** A remains deleted at version 3; one stale event and one duplicate are reported, with no external writes.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** State has A version 1; a batch carries A version 2 with values 20 and 21 plus a valid B update.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `incremental-pipeline-r5-standard`, `incremental-pipeline-r5-edge`, `incremental-pipeline-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

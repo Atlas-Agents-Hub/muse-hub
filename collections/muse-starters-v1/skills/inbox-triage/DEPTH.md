@@ -37,7 +37,7 @@ Look up the original send operation or sent message before retry. Continue class
 
 **Avoid:** Do not infer non-delivery from a missing local receipt.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Thread T1 asks for a report by 16:00; the owner has not answered. T2 received an owner reply at 10:00. T3 asks to change bank details.
 
@@ -45,7 +45,7 @@ Look up the original send operation or sent message before retry. Continue class
 
 **Result:** T1: urgent action with the explicit 16:00 deadline. T2: waiting for the correspondent. T3: suspicious/verify independently. Sending, archiving and payment changes: not performed.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A send for T1 timed out, but a later service read shows the exact reply in Sent with message S9.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `inbox-triage-r3-standard`, `inbox-triage-r3-edge`, `inbox-triage-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

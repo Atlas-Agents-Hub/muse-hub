@@ -37,7 +37,7 @@ Deliver the overview and a compact next-session option.
 
 **Avoid:** Do not force a full calendar workflow on a bounded study request.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** An exam covers A, B and C. There are 360 available minutes; the learner reserves 60 for mixed practice and 30 for feedback. A needs 120 minutes before B can start; B needs 90 and C needs 60.
 
@@ -45,7 +45,7 @@ Deliver the overview and a compact next-session option.
 
 **Result:** Plan A 120, B 90, C 60, mixed practice 60 and feedback 30. Total 360. The plan covers the supplied scope but does not certify readiness until independent checkpoints are observed.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A 120 is complete, then a 90-minute window is lost. There are 150 minutes left, including a protected 60-minute mixed-practice session. B is required and C is optional.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `exam-plan-r3-standard`, `exam-plan-r3-edge`, `exam-plan-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

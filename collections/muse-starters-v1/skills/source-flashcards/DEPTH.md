@@ -29,7 +29,7 @@ Show the answer and one source-grounded explanation, identify the missed distinc
 
 **Avoid:** Do not declare mastery from one correct attempt.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Synthetic equipment lesson: “Cool storage is 2–8 degrees C. Recheck the seal every 14 days. A broken seal is replaced immediately.”
 
@@ -70,7 +70,3 @@ Public regression exercises. Worked answers are for learning; exclude them from 
 
 Practice case IDs: `source-flashcards-standard`, `source-flashcards-qualifier`, `source-flashcards-conflict`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-More explicit procedures and checkable examples; comparative Muse performance has not been measured.

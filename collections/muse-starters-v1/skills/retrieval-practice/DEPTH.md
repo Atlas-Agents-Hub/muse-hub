@@ -37,7 +37,7 @@ Step back to a smaller diagnostic question and then test a different application
 
 **Avoid:** Do not repeat the same explanation indefinitely or change all topics at once.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A rubric gives one point each for naming evaporation and condensation. The learner names evaporation only; after a hint, names both.
 
@@ -45,7 +45,7 @@ Step back to a smaller diagnostic question and then test a different application
 
 **Result:** Independent score: 1/2. Assisted score: 2/2. Feedback targets condensation. Next question uses a different water-cycle example; no mastery claim.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The same first attempt arrives again with the same attempt ID after a timeout.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `retrieval-practice-r3-standard`, `retrieval-practice-r3-edge`, `retrieval-practice-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

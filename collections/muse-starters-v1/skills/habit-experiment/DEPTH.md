@@ -39,7 +39,7 @@ Reduce, pause or stop the experiment using the person’s priorities.
 
 **Avoid:** Do not insist on streak preservation at the expense of wellbeing.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Three opportunities are recorded: one complete, one incomplete and one unknown.
 
@@ -47,7 +47,7 @@ Reduce, pause or stop the experiment using the person’s priorities.
 
 **Result:** One success out of two observed opportunities; one record is missing. This is not proof of a causal effect.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The missing observation is later confirmed complete.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `habit-experiment-r4-standard`, `habit-experiment-r4-edge`, `habit-experiment-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

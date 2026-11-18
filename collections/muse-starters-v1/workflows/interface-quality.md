@@ -2,23 +2,27 @@
 
 Measure supplied color pairs, find missing interaction states and review target observations before actual rendered-interface acceptance.
 
-1. **Check Real Color Tokens Before Interface Handoff** — load `skills/design-token-audit/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-2. **Review Interface States and Recovery Paths** — load `skills/interaction-state-coverage/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-3. **Choose a Locator From Actual Target Observations** — load `skills/selector-resilience/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-4. **Inspect a Real Interface for Access Barriers** — load `skills/accessible-ui/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
+1. **Check Real Color Tokens Before Interface Handoff** — load `skills/design-token-audit/SKILL.md`, then carry the previous step's output forward.
+2. **Review Interface States and Recovery Paths** — load `skills/interaction-state-coverage/SKILL.md`, then carry the previous step's output forward.
+3. **Choose a Locator From Actual Target Observations** — load `skills/selector-resilience/SKILL.md`, then carry the previous step's output forward.
+4. **Inspect a Real Interface for Access Barriers** — load `skills/accessible-ui/SKILL.md`, then carry the previous step's output forward.
 
 ## Finish
 Return contrast calculations, graph gaps and eligible locator candidates; report browser, keyboard and visual checks only when they actually ran.
 
-A workflow is a sequence for Muse to follow, not a background service or dispatch permission.
+## Included local tools
 
-## Executable local stages
+Run the included examples from the extracted package folder:
 
-Use `muse_presets.specialist_extensions.evaluate(skill_id, inputs)` with the task-specific input contract for each bound stage. These are real local calculations, not provider dispatch.
+```sh
+python -B tools/run.py --demo
+```
 
-- `design-token-audit` → preserve its actual returned JSON for the next relevant stage.
-- `interaction-state-coverage` → preserve its actual returned JSON for the next relevant stage.
-- `selector-resilience` → preserve its actual returned JSON for the next relevant stage.
+For your own JSON input: `python -B tools/run.py --tool SKILL_ID --input input.json`. Python 3.10 or newer is required for these optional tools.
+
+- `design-token-audit`: carry its returned JSON into the next relevant step.
+- `interaction-state-coverage`: carry its returned JSON into the next relevant step.
+- `selector-resilience`: carry its returned JSON into the next relevant step.
 
 ## Input artifacts
 - Color tokens and actual pairs
@@ -29,5 +33,3 @@ Use `muse_presets.specialist_extensions.evaluate(skill_id, inputs)` with the tas
 - Contrast report
 - State coverage report
 - Locator review
-
-Try the authored local-stage demonstration: `python tools/muse_collection.py workflow-demo interface-quality`. The report names unexecuted host/human handoffs and does not claim the complete external workflow ran.

@@ -14,7 +14,7 @@ import stat
 import zipfile
 
 SCHEMA = "muse-hub/family-link-offline-kit/v1"
-SOURCE_BASE_COMMIT = "7069f0621da0d0ca7f87b1661872e4dbfa805d37"
+SOURCE_BASE_COMMIT = "befa77356804843ce3a056aed21cb14a9a836b3c"
 SCOPE = "SOURCE_ONLY_OFFLINE_TWO_PROCESS_NOT_DELIVERED"
 MANIFEST = "SOURCEKIT_MANIFEST.json"
 MAX_MEMBERS = 40
@@ -24,18 +24,18 @@ MAX_ARCHIVE = 2_000_000
 HEX = re.compile(r"[a-f0-9]{64}\Z")
 ROLE = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*\Z")
 
-# Frozen original modules and catalog from the accepted post-PR23 source.
+# Modules and current release catalog reviewed at SOURCE_BASE_COMMIT.
 # An authorized future update must review and revise the pins deliberately.
 SOURCE_PINS = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "examples/family_offline_handoff_demo.py": "cd830ada0c87a72586ce5265b52e748bee89c14916bb3f224a4b6e8805f30a43",
-    "presets/catalog.json": "f3c186454e722099255bdfc4ef08fceb5756b418a45599f8ba5e3b5e341e8cc1",
+    "presets/catalog.json": "32f1bace8a26346a36d7e01ea154ca02431784b4525aa6ea78fbcd1ec327b32b",
     "src/muse_presets/__init__.py": "40efad1b553ff0ef0c8f27b3d91ae97e6a933693040cdc9bbc648f100719c3bb",
     "src/muse_presets/catalog.py": "8d2f49924dbdf538c61c5b3fc25d588812309ec4901d3f289ae0f387ca76c445",
     "src/muse_presets/family.py": "af043cc6edc7e0670d2ec098bdd94f7064f4998d58e784f5669cc740bb23780b",
     "src/muse_presets/family_envelope.py": "ac0aaa563db8e26ebf0fe023970130fba491872984ec3a6bdd2e168f3f901efb",
     "src/muse_presets/neutrality.py": "c22e459f40662c35998a203750e0991f7505c4c908f6c138d1cd76cfae97a60c",
-    "src/muse_presets/playbooks.py": "cc368d9a6f9edd9a7893dd1f4a9493d5e2285f5977a6023be5a4daaadc81ce09",
+    "src/muse_presets/playbooks.py": "d3c5f9c90450d349fc0b49425ea72dc4d352635012ace24e45cee97e09b45a94",
 }
 # Exact accepted role bytes, in addition to disabled-by-default policy shape.
 # A silent title/description edit must not alter the kit without a new review.
@@ -94,7 +94,7 @@ false. The demo writes only temporary fictional records and cleans them up.
 
 The 15 included profiles have Family Link disabled, transport unbound,
 no trusted signer and no native recipient. The source modules are preserved
-byte-for-byte from pinned Muse Hub commit 7069f062. Nothing here represents
+byte-for-byte from reviewed Muse Hub commit befa7735. Nothing here represents
 cross-account acceptance or authorizes a live action. The private donor
 TaskGuard/retention P1 remains an independent production hold.
 """

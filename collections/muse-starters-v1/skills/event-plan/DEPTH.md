@@ -39,7 +39,7 @@ Reconcile the existing reservation or order before replacing it.
 
 **Avoid:** Do not create duplicate commitments after a timeout.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Two guests are confirmed, one is pending, and one staff member will attend a venue with capacity three.
 
@@ -47,7 +47,7 @@ Reconcile the existing reservation or order before replacing it.
 
 **Result:** The confirmed scenario fits capacity; the pending guest is not silently admitted. Fixed 100, per-guest 20 and reserve 10 give a confirmed-scenario cost of 150.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The third guest confirms without a capacity change.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `event-plan-r4-standard`, `event-plan-r4-edge`, `event-plan-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

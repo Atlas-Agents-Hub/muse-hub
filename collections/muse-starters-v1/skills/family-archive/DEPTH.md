@@ -39,7 +39,7 @@ Preserve the correction and its basis, updating affected derivatives.
 
 **Avoid:** Do not erase the original attribution history or propagate an unsupported old caption.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Files A and B have the same digest, but only A has explicit public permission; C is separately authorized.
 
@@ -47,7 +47,7 @@ Preserve the correction and its basis, updating affected derivatives.
 
 **Result:** A and B form a duplicate-byte group. Public eligibility is evaluated per item; B remains private or unresolved. No original is deleted.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A newly documented person in C has not granted the required public-sharing consent.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `family-archive-r4-standard`, `family-archive-r4-edge`, `family-archive-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

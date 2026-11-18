@@ -29,7 +29,7 @@ Recheck the exact changed region and regression, then close only the correspondi
 
 **Avoid:** Do not declare unrelated risk categories fixed.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Function subtotal(items) adds items[:-1] although its contract includes every item. A PR also changes the variable name but not behavior.
 
@@ -70,7 +70,3 @@ Public regression exercises. Worked answers are for learning; exclude them from 
 
 Practice case IDs: `code-review-standard`, `code-review-clean`, `code-review-boundary`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-More explicit procedures and checkable examples; comparative Muse performance has not been measured.

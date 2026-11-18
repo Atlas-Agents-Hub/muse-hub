@@ -39,7 +39,7 @@ Replace the claim with an honest deliverable or an explicitly tested outcome.
 
 **Avoid:** Do not manufacture case studies or imply an unmeasured guarantee.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Price is 200 dollars, variable cost is 120, fixed setup is 100, and the pilot has three customers.
 
@@ -47,7 +47,7 @@ Replace the claim with an honest deliverable or an explicitly tested outcome.
 
 **Result:** Contribution is 80 dollars per customer; scenario margin is 140 dollars after fixed setup. Pilot suitability still depends on supported scope and actual capacity.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Five customers request the same pilot but capacity is four.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `offer-design-r4-standard`, `offer-design-r4-edge`, `offer-design-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

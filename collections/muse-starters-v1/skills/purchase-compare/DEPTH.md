@@ -39,7 +39,7 @@ Recheck the exact variant, seller, total and terms before any separately authori
 
 **Avoid:** Do not report a purchase from a recommendation or cart.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A meets the offline requirement and costs 100 plus 20 shipping. B meets it but has an unknown mandatory fee; C lacks offline use.
 
@@ -47,7 +47,7 @@ Recheck the exact variant, seller, total and terms before any separately authori
 
 **Result:** A has a complete total of 120. B remains unresolved; C is rejected for fit. B is not declared cheapest by assuming its fee is zero.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** B’s fee is later verified as 10 on a price of 90.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `purchase-compare-r4-standard`, `purchase-compare-r4-edge`, `purchase-compare-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

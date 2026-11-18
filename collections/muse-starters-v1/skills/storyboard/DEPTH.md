@@ -37,7 +37,7 @@ Treat the storyboard as an intermediate artifact and continue through an availab
 
 **Avoid:** Do not claim the storyboard itself is the requested video.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A 12-second sequence at 24 fps has three shots: approach 4 s, discover 5 s, reaction 3 s, with hard cuts. A key remains in the character's left hand.
 
@@ -45,7 +45,7 @@ Treat the storyboard as an intermediate artifact and continue through an availab
 
 **Result:** The storyboard totals 288 frames. Each shot has one clear purpose and the key remains in the left hand unless a documented handoff occurs.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The same three durations now use two one-second overlapping dissolves.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `storyboard-r3-standard`, `storyboard-r3-edge`, `storyboard-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

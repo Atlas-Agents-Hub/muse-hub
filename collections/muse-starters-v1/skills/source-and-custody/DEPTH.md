@@ -39,7 +39,7 @@ Maintain both source identities and scope the conflict; seek the governing versi
 
 **Avoid:** Do not silently select the newest-looking filename.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** One artifact matches its pinned digest; a second differs although both have readable content.
 
@@ -47,7 +47,7 @@ Maintain both source identities and scope the conflict; seek the governing versi
 
 **Result:** Use the first within its allowed scope. Quarantine the second for revision reconciliation; do not claim either author was authenticated by the digest.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The original provider later supplies the exact intended second revision and its permitted use.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `source-and-custody-r4-standard`, `source-and-custody-r4-edge`, `source-and-custody-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

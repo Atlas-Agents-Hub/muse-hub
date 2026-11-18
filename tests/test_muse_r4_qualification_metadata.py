@@ -39,14 +39,20 @@ class R4QualificationMetadataTests(unittest.TestCase):
         self.assertEqual(self.wave["actual_muse_comparisons"],0)
         self.assertEqual(self.counts["independent_upstream_reviews"],0)
 
-    def test_current_r4_docs_describe_source_accepted_not_runtime_superiority(self):
+    def test_product_guides_and_historical_qualification_records_stay_distinct(self):
         for path in (C/"README.md",C/"ROADMAP.md",ROOT/"docs/collection/MUSE_CURATED_COLLECTION.md"):
             with self.subTest(path=path):
                 text=path.read_text(encoding="utf-8")
-                self.assertIn("## R4 source qualification",text)
                 self.assertNotIn("This is a candidate state until",text)
-                self.assertIn("not",text.lower())
-        self.assertFalse((C/"R4_WAVE.json").read_text(encoding="utf-8").find("LOCAL_CANDIDATE_NOT_INTEGRATED")>=0)
+                self.assertNotIn("LOCAL_CANDIDATE_NOT_INTEGRATED",text)
+        product=(ROOT/"docs/collection/MUSE_CURATED_COLLECTION.md").read_text(encoding="utf-8")
+        for term in ("15 specialist packages", "75 skills", "25 workflows", "100 task starters",
+                     "DOWNLOAD_A_SPECIALIST.md", "SPECIALIST_QUICKSTART.md", "PUBLIC_COMPATIBILITY.json"):
+            self.assertIn(term,product)
+        self.assertNotIn("## R4 source qualification",product)
+        self.assertEqual(self.counts["paired_muse_comparisons_executed"],0)
+        self.assertEqual(self.wave["actual_muse_comparisons"],0)
+        self.assertNotIn("LOCAL_CANDIDATE_NOT_INTEGRATED",(C/"R4_WAVE.json").read_text(encoding="utf-8"))
 
 if __name__=="__main__":
     unittest.main()

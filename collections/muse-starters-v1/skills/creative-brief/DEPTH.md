@@ -37,7 +37,7 @@ Preserve positioning and protected assets while adapting layout and technical co
 
 **Avoid:** Do not reopen the entire strategy or replace the approved message.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** The brief requires a1080 × 1920 poster, the exact line "Open Saturday", and no photographs. The proposed direction is geometric shapes with a large date area.
 
@@ -45,7 +45,7 @@ Preserve positioning and protected assets while adapting layout and technical co
 
 **Result:** Deliver a vertical vector-style layout brief with "Open Saturday" unchanged, no photo assets, a clear primary message and a legibility check. Approval of the visual direction remains pending.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A follow-up asks for a square adaptation but still includes a mandatory vertical-only template constraint.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `creative-brief-r3-standard`, `creative-brief-r3-edge`, `creative-brief-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

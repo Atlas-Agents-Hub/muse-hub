@@ -39,7 +39,7 @@ Separate supported explanation from plausible hypotheses and name the evidence n
 
 **Avoid:** Do not present causal inference as a retrieved fact.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A changes from 1 to 3, B disappears, and C appears in complete snapshots v1 and v2.
 
@@ -47,7 +47,7 @@ Separate supported explanation from plausible hypotheses and name the evidence n
 
 **Result:** A modified; B removed; C added. Reasons for the changes remain unestablished unless separately evidenced.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A later snapshot restores A to 1.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `change-brief-r4-standard`, `change-brief-r4-edge`, `change-brief-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

@@ -37,7 +37,7 @@ Report the supplied success observation while preserving unauthenticated-evidenc
 
 **Avoid:** Do not upgrade a locally provided JSON record into an authenticated completion or grant.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** An operation has a request digest but only an unknown observation with no receipt.
 
@@ -45,7 +45,7 @@ Report the supplied success observation while preserving unauthenticated-evidenc
 
 **Result:** The result remains unknown, requires provider readback and never authorizes retry.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Two bound records declare success and failure under the same request digest.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `effect-reconciliation-r5-standard`, `effect-reconciliation-r5-edge`, `effect-reconciliation-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

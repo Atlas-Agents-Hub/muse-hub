@@ -29,7 +29,7 @@ Keep continuity, timing, readability, audio and consumer-open checks separate.
 
 **Avoid:** Do not equate continuity with finished-media acceptance.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** The approved character carries a red satchel in the left hand throughout shots 1–3. Supplied frame observations say frame 001 is left-hand, frame 025 is right-hand, frame 049 is left-hand.
 
@@ -70,7 +70,3 @@ Public regression exercises. Worked answers are for learning; exclude them from 
 
 Practice case IDs: `continuity-review-standard`, `continuity-review-intentional`, `continuity-review-missing-view`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-More explicit procedures and checkable examples; comparative Muse performance has not been measured.

@@ -48,17 +48,19 @@ class SpecialistEnginePositioning(unittest.TestCase):
   self.assertFalse(any("security_assistance" in p for row in rows.values() for p in row["source_engines"]))
   self.assertEqual(doc["host_integrations"],"SEPARATE_AUTHORIZATION")
 
- def test_user_and_machine_entrypoints(self):
-  text=README.read_text(encoding="utf8")
-  guide=GUIDE.read_text(encoding="utf8")
-  self.assertIn("docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md",text)
-  self.assertIn("specialist-engine-index.json",(ROOT/"llms.txt").read_text(encoding="utf8"))
-  self.assertIn("specialist-engine-index.json",(ROOT/"docs/discovery/AI_AGENT_GUIDE.md").read_text(encoding="utf8"))
-  self.assertIn("specialist-engine-index.json",guide)
-  for role in self.load()["roles"]:
-   self.assertIn(role["id"],guide)
-  self.assertIn("host-provided",guide.lower())
-  self.assertIn("source",guide.lower())
+ def test_user_and_machine_entrypoints_reach_exact_engine_inventory(self):
+     text=README.read_text(encoding="utf8")
+     guide=GUIDE.read_text(encoding="utf8")
+     self.assertIn("docs/handbook/specialists-by-task.md",text)
+     directory=(ROOT/"docs/handbook/specialists-by-task.md").read_text(encoding="utf8")
+     self.assertIn("../collection/SPECIALIST_SCOPE_AND_ENGINES.md",directory)
+     self.assertIn("docs/discovery/AI_AGENT_GUIDE.md",(ROOT/"llms.txt").read_text(encoding="utf8"))
+     self.assertIn("../collection/SPECIALIST_SCOPE_AND_ENGINES.md",(ROOT/"docs/discovery/AI_AGENT_GUIDE.md").read_text(encoding="utf8"))
+     self.assertIn("specialist-engine-index.json",guide)
+     for role in self.load()["roles"]:
+         self.assertIn(role["id"],guide)
+     self.assertIn("separately authorized host tools",guide)
+     self.assertIn("tool registrations and approvals",guide)
 
  def test_source_manifests_not_relabelled_as_native_activation(self):
   doc=self.load()

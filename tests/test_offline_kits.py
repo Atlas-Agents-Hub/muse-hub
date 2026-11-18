@@ -134,13 +134,17 @@ class OfflineFamilyH12Tests(unittest.TestCase):
             with self.assertRaisesRegex(PublicExportError, "UNAPPROVED_COLLECTION_PATH"):
                 select_public_files(root, verify_manifest=False)
 
-    def test_readme_keeps_original_authority_and_no_delivery_claim(self):
+    def test_handoff_guide_describes_review_before_service_delivery(self):
         text = (KIT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("family_envelope.py", text)
-        self.assertIn("NOT", text)
-        self.assertIn("review_local_envelope", text)
-        self.assertIn("../kits/family-handoff/README.md", (ROOT / "docs/README.md").read_text(encoding="utf-8"))
-        self.assertIn("NOT_DELIVERED", text)
+        for term in ("family_envelope.py", "family_offline_handoff_demo.py",
+                     "separate processes", "resulting proposal", "confirm delivery",
+                     "envelope-contract.json", "role-boundaries.json"):
+            self.assertIn(term, text)
+        index = (ROOT / "docs/README.md").read_text(encoding="utf-8")
+        self.assertIn("FAMILY_LINK.md", index)
+        guide = (ROOT / "docs/FAMILY_LINK.md").read_text(encoding="utf-8")
+        self.assertIn("kits/FAMILY_LINK_SOURCEKIT.md", guide)
+        self.assertIn("before retrying an uncertain result", text)
         self.assertNotIn("native Family Link installed", text)
 
 

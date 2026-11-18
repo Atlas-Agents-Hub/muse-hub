@@ -39,7 +39,7 @@ Check the complete terms and obtain the user’s actual decision before acceptin
 
 **Avoid:** Do not report an agreement from a draft or a favorable comparison.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Offer A guarantees 1,000 with 150 in costs; B guarantees 1,000 with 50 in costs. The minimum net is 900 and workload limit is 40 hours.
 
@@ -47,7 +47,7 @@ Check the complete terms and obtain the user’s actual decision before acceptin
 
 **Result:** A yields 850 and fails the stated floor. B yields 950 and is within limits only if its hours fit. No agreement has been reached.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** B’s workload rises to 45 hours.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `negotiation-prep-r4-standard`, `negotiation-prep-r4-edge`, `negotiation-prep-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

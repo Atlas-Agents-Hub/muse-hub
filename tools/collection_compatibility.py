@@ -21,6 +21,11 @@ HEX=re.compile(r'^[0-9a-f]{64}$')
 SHA=re.compile(r'^[0-9a-f]{40}$')
 ALIASES={'data-engineer':'data-engineering-architect','reliability-engineer':'infrastructure-reliability-engineer'}
 SHARED={'evidence_audit','safe_resume','research_verification','consent_and_effects','quality_handoff'}
+REVISION_MANIFEST='collections/muse-starters-v1/PUBLIC_REVISIONS.json'
+# An edited local manifest cannot authorize a new current source hash.
+REVISION_MANIFEST_SHA256='e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324'
+PUBLIC_BASELINE_SHA256='755ffbbf3bdb8abeb97bd69a6b59f616d4acd535a292b3228afff8e8e7cfe589'
+PROMOTION_PROVENANCE_SHA256='f8bde97a22c6002d38efc5d8c5edf96afdf3fa93585333fd1702e8b44e2324b5'
 
 class CompatibilityError(ValueError):pass
 
@@ -75,6 +80,65 @@ def _bytes(root:Path,name:str)->bytes:
 
 def _digest(raw:bytes)->str:return hashlib.sha256(raw).hexdigest()
 
+def validate_revisions(value:dict,baseline:dict,provenance:dict)->dict[str,dict]:
+    """Validate the closed historical/current mapping; bytes are checked below."""
+    fields={'schema','historical_source_commit','review_base_commit',
+            'public_baseline_sha256','promotion_provenance_sha256',
+            'reviewed_file_count','entries'}
+    require(type(value) is dict and set(value)==fields,'REVIEWED_REVISIONS_SCHEMA')
+    require(value['schema']=='muse-collection-reviewed-source-revisions/v1',
+            'REVIEWED_REVISIONS_SCHEMA')
+    require(value['historical_source_commit']=='491d6ceeb9a76fd1350f06d645dc0ed6131dda30'
+            and value['review_base_commit']=='befa77356804843ce3a056aed21cb14a9a836b3c',
+            'REVIEWED_REVISIONS_LINEAGE')
+    require(value['public_baseline_sha256']==PUBLIC_BASELINE_SHA256 and
+            value['promotion_provenance_sha256']==PROMOTION_PROVENANCE_SHA256,
+            'REVIEWED_REVISIONS_LEDGER')
+    entries=value['entries']
+    require(type(entries) is list and type(value['reviewed_file_count']) is int
+            and value['reviewed_file_count']==len(entries)
+            and 1<=len(entries)<=len(baseline['files'])+len(provenance['incoming_files']),
+            'REVIEWED_REVISIONS_COUNT')
+    result={'public':{},'promotion':{}}
+    pins={'public':baseline['files'],
+          'promotion':{name:row['sha256'] for name,row in provenance['incoming_files'].items()}}
+    seen=set()
+    keys={'ledger','original_path','archive_path','historical_sha256',
+          'current_sha256','change_kind'}
+    kinds={'CURRENT_RELEASE_METADATA','INSTRUCTION_PRESENTATION',
+           'PUBLIC_GUIDE_COPY','RELEASE_PACKAGE_COMPOSITION','GENERATED_COLLECTION_OUTPUT',
+           'REVIEWED_SOURCE_PIN_UPDATE','REVIEWED_TEST_EXPECTATIONS'}
+    for row in entries:
+        require(type(row) is dict and set(row)==keys,'REVIEWED_REVISIONS_SCHEMA')
+        ledger=row['ledger'];name=row['original_path']
+        require(type(ledger) is str and ledger in result,'REVIEWED_REVISIONS_LEDGER')
+        require(type(name) is str and name not in seen,'REVIEWED_REVISIONS_PATH')
+        require(name in pins[ledger] and row['historical_sha256']==pins[ledger][name],
+                'REVIEWED_REVISIONS_HISTORY')
+        require(row['archive_path']=='docs/history/source-revisions/'+name+'.txt',
+                'REVIEWED_REVISIONS_ARCHIVE')
+        require(all(type(row[key]) is str and HEX.fullmatch(row[key])
+                    for key in ('historical_sha256','current_sha256')) and
+                row['current_sha256']!=row['historical_sha256'],
+                'REVIEWED_REVISIONS_HASH')
+        require(type(row['change_kind']) is str and row['change_kind'] in kinds,
+                'REVIEWED_REVISIONS_KIND')
+        seen.add(name);result[ledger][name]=row
+    return result
+
+
+def _reviewed_revisions(root:Path,baseline:dict,provenance:dict)->dict[str,dict]:
+    raw=_bytes(root,REVISION_MANIFEST)
+    require(_digest(raw)==REVISION_MANIFEST_SHA256,'REVIEWED_REVISIONS_MANIFEST_DRIFT')
+    # Parse the same byte sequence that passed the code-pinned digest check.
+    value=json.loads(raw.decode('utf-8'))
+    require(_digest(_bytes(root,'collections/muse-starters-v1/PUBLIC_BASELINE.json'))
+            ==PUBLIC_BASELINE_SHA256,'PUBLIC_BASELINE_LEDGER_DRIFT')
+    require(_digest(_bytes(root,'collections/muse-starters-v1/PROMOTION_PROVENANCE.json'))
+            ==PROMOTION_PROVENANCE_SHA256,'PROMOTION_PROVENANCE_LEDGER_DRIFT')
+    return validate_revisions(value,baseline,provenance)
+
+
 def check_repository(root:Path=ROOT)->dict:
     root=Path(root)
     # Never execute modules from a caller-selected tree. The checked source must
@@ -100,9 +164,11 @@ def check_repository(root:Path=ROOT)->dict:
     for row in mapping['procedure_links']:
         require((row['role'],row['method'])==expected[row['legacy_id']],'LEGACY_SOURCE_JOIN')
     baseline=read_json(root/(prefix+'PUBLIC_BASELINE.json'))
+    provenance=read_json(root/(prefix+'PROMOTION_PROVENANCE.json'))
     require(baseline['schema']=='muse-collection-public-baseline/v1' and
             baseline['source_commit']==mapping['public_base'],'PUBLIC_BASELINE')
     require(type(baseline['files']) is dict and len(baseline['files'])==198,'PUBLIC_BASELINE')
+    revisions=_reviewed_revisions(root,baseline,provenance)
     # The original role guides are retained byte-for-byte in versioned
     # archives; current user-facing READMEs/INSTALLs may evolve.
     historical={}
@@ -128,9 +194,12 @@ def check_repository(root:Path=ROOT)->dict:
     require(len(historical)==30,'HISTORICAL_MIGRATION_COUNT')
     for name,h in baseline['files'].items():
         require(type(h) is str and bool(HEX.fullmatch(h)),'PUBLIC_BASELINE')
-        checked=historical.get(name,name)
+        revision=revisions['public'].get(name)
+        checked=historical.get(name,revision['archive_path'] if revision else name)
         require(_digest(_bytes(root,checked))==h,'PUBLIC_SOURCE_DRIFT:'+name)
-    provenance=read_json(root/(prefix+'PROMOTION_PROVENANCE.json'))
+        if revision:
+            require(_digest(_bytes(root,name))==revision['current_sha256'],
+                    'REVIEWED_SOURCE_DRIFT:'+name)
     require(set(provenance)=={'schema','source_kind','private_history_included','upstream_code_imported','scope','incoming_files'},'PROVENANCE_SCHEMA')
     require(provenance['schema']=='muse-collection-promotion/v1' and
             provenance['source_kind']=='OWNER_AUTHORIZED_FIRST_PARTY','PROVENANCE_KIND')
@@ -144,18 +213,24 @@ def check_repository(root:Path=ROOT)->dict:
         require(row['disposition'] in {'BYTE_PRESERVED','REVIEWED_PUBLIC_ADAPTATION'},'PROVENANCE_DISPOSITION')
         # Pin the accepted promotion bytes separately from its revised,
         # current reader-facing example guide.
+        revision=revisions['promotion'].get(name)
         archived=('docs/history/promotion-source/SPECIALIST_QUICKSTART.txt'
-                  if name=='docs/collection/SPECIALIST_QUICKSTART.md' else name)
+                  if name=='docs/collection/SPECIALIST_QUICKSTART.md'
+                  else revision['archive_path'] if revision else name)
         require(_digest(_bytes(root,archived))==row['sha256'],
                 'IMPORTED_SOURCE_DRIFT:'+name)
         if archived!=name:
             require((root/name).is_file(),'CURRENT_PROMOTION_GUIDE_MISSING')
+        if revision:
+            require(_digest(_bytes(root,name))==revision['current_sha256'],
+                    'REVIEWED_SOURCE_DRIFT:'+name)
         if row['disposition']=='BYTE_PRESERVED':require(row['sha256']==row['source_sha256'],'PROVENANCE_HASH')
     return {'status':'COLLECTION_COMPATIBILITY_VERIFIED','role_count':15,
             'collection_skills':len(data['skills']),'legacy_procedures':len(expected),
             'combined_unique_capabilities':None,'starters':len(data['starters']),
             'workflows':len(data['workflows']),'preserved_public_files':len(baseline['files']),
             'incoming_files_verified':len(rows),'native_installed':False,
+            'reviewed_source_revisions':sum(len(items) for items in revisions.values()),
             'model_called':False,'external_effects':False,
             'proof_limit':'SOURCE_SELF_CONSISTENCY_NOT_PUBLISHER_IDENTITY_OR_BEHAVIORAL_EQUIVALENCE'}
 

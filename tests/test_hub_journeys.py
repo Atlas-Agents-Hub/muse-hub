@@ -35,9 +35,8 @@ class HubJourneysTest(unittest.TestCase):
         self.assertIs(row["native_runtime_verified"], False)
         self.assertIs(row["site_deployed"], False)
         docs = (ROOT / "docs/HUB_FEATURE_READINESS.md").read_text(encoding="utf-8")
-        rowtext = [line for line in docs.splitlines() if line.startswith("| H19 |")]
-        self.assertEqual(len(rowtext), 1)
-        self.assertIn("SOURCE_JOURNEYS_TESTED_HOST_NOT_VERIFIED", rowtext[0])
+        self.assertIn("(discovery/hub-feature-status.json)", docs)
+        self.assertIn("(handbook/hub-setup-journeys.md)", docs)
 
     def test_every_feature_has_seven_explicit_phases_and_holds(self):
         output = J.build_journeys(ROOT)
@@ -128,9 +127,11 @@ class HubJourneysTest(unittest.TestCase):
 
     def test_documented_journey_is_discoverable_and_non_destructive(self):
         doc = (ROOT / "docs/handbook/hub-setup-journeys.md").read_text(encoding="utf-8")
-        install = (ROOT / "docs/INSTALL_AND_PERSISTENCE.md").read_text(encoding="utf-8")
+        index = (ROOT / "docs/README.md").read_text(encoding="utf-8")
+        handbook = (ROOT / "docs/handbook/README.md").read_text(encoding="utf-8")
         self.assertIn("tools/hub_journeys.py", doc)
-        self.assertIn("hub-setup-journeys.md", install)
+        self.assertIn("handbook/README.md", index)
+        self.assertIn("hub-setup-journeys.md", handbook)
         for entrypoint in ("START_HERE.md", "GETTING_STARTED.md", "TERMINAL.md",
                            "COMPANION_HOME.md#open-companion-home",
                            "scripts/run_source_test.py"):

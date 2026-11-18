@@ -29,7 +29,7 @@ Write the failing regression, then the smallest fix and controls. Keep the red o
 
 **Avoid:** Do not mark a proposed patch tested or rebuild completed unrelated features.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A supplied total(items) function returns sum(items[:-1]). The contract says every input item contributes. For [5, 7], expected 12 but observed 5.
 
@@ -70,7 +70,3 @@ Public regression exercises. Worked answers are for learning; exclude them from 
 
 Practice case IDs: `bug-reproduction-standard`, `bug-reproduction-setup`, `bug-reproduction-not-reproduced`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-More explicit procedures and checkable examples; comparative Muse performance has not been measured.

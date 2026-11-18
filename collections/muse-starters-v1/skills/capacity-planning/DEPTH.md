@@ -37,7 +37,7 @@ Model and measure that dependency separately and state that horizontal scaling m
 
 **Avoid:** Do not extrapolate linearly through a known shared bottleneck.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Demand is 900 requests/second, measured capacity 250, utilization target 0.6, four current instances and one reserve.
 
@@ -45,7 +45,7 @@ Model and measure that dependency separately and state that horizontal scaling m
 
 **Result:** Seven total instances are required, three more than current; no infrastructure change is performed.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Demand is zero and the owner still requires one standby instance.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `capacity-planning-r5-standard`, `capacity-planning-r5-edge`, `capacity-planning-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

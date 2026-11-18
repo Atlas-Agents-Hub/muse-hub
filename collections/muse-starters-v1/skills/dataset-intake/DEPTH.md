@@ -37,7 +37,7 @@ Bound conclusions to its observed population and identify missing coverage.
 
 **Avoid:** Do not declare representative performance without evidence.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Rows r1 and r2 have different record IDs but entityE 1 appears in train and test; E2 appears only in train.
 
@@ -45,7 +45,7 @@ Bound conclusions to its observed population and identify missing coverage.
 
 **Result:** Hold the evaluation split because E1 crosses partitions. Unique row IDs do not remove leakage; propose a group-aware split without deleting the original records.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** A later intake has no group overlap, but feature final_status is recorded after the target event.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard task, an edge condition and rec
 
 Practice case IDs: `dataset-intake-r3-standard`, `dataset-intake-r3-edge`, `dataset-intake-r3-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original specialist synthesis with source and fixture checks. No matched Muse comparison has been executed; greater domain detail is not measured superiority over upstream packages.

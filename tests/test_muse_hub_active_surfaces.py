@@ -47,14 +47,17 @@ class MuseHubActiveSurfaces(unittest.TestCase):
         self.assertEqual(j['native_muse_activation'],'NOT_ASSERTED')
         self.assertEqual(j['host_integrations'],'SEPARATE_AUTHORIZATION')
 
-    def test_ai_discovery_uses_exact_source_counts(self):
+    def test_ai_discovery_uses_exact_counts_and_reaches_engine_reference(self):
         s=(ROOT/'docs/discovery/AI_AGENT_GUIDE.md').read_text(encoding='utf8')
-        self.assertIn('# Muse Hub',s)
-        self.assertIn('100 task starters',s)
-        self.assertIn('151 custom connector',s.lower())
+        for term in ('# Muse Hub', '15 independent assistants', '75 skills',
+                     '25 workflows', '100 task starters', '151 connectors'):
+            self.assertIn(term,s)
         self.assertNotIn('100+ configurations',s)
         self.assertNotIn('Muse Specialist Toolkit',s)
-        self.assertIn('specialist-engine-index.json',s)
+        self.assertIn('../collection/SPECIALIST_SCOPE_AND_ENGINES.md',s)
+        methods=(ROOT/'docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md').read_text(encoding='utf8')
+        self.assertIn('../discovery/specialist-engine-index.json',methods)
+        self.assertTrue((ROOT/'docs/discovery/specialist-engine-index.json').is_file())
 
     def test_repository_metadata_is_a_proposal_not_an_applied_claim(self):
         j=json.loads((ROOT/'.github/muse-hub-metadata-proposal.json').read_text(encoding='utf8'))

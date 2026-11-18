@@ -2,23 +2,27 @@
 
 Review schema evolution, reconcile a versioned batch and inspect a supplied query plan without modifying a production database.
 
-1. **Review a Schema Change Before Migration** — load `skills/schema-evolution/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-2. **Reconcile Versioned Events Without Resurrection** — load `skills/incremental-pipeline/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-3. **Read a Query Plan Before Changing Indexes** — load `skills/query-plan-review/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
-4. **Test Data Transformations Against Explicit Invariants** — load `skills/data-quality-review/SKILL.md` for this step, carry forward the previous step's real output, and stop before any unapproved external effect.
+1. **Review a Schema Change Before Migration** — load `skills/schema-evolution/SKILL.md`, then carry the previous step's output forward.
+2. **Reconcile Versioned Events Without Resurrection** — load `skills/incremental-pipeline/SKILL.md`, then carry the previous step's output forward.
+3. **Read a Query Plan Before Changing Indexes** — load `skills/query-plan-review/SKILL.md`, then carry the previous step's output forward.
+4. **Test Data Transformations Against Explicit Invariants** — load `skills/data-quality-review/SKILL.md`, then carry the previous step's output forward.
 
 ## Finish
 Return the schema decision, reconciled candidate state, conflict ledger and query-plan evidence; retain production transaction and retention obligations.
 
-A workflow is a sequence for Muse to follow, not a background service or dispatch permission.
+## Included local tools
 
-## Executable local stages
+Run the included examples from the extracted package folder:
 
-Use `muse_presets.specialist_extensions.evaluate(skill_id, inputs)` with the task-specific input contract for each bound stage. These are real local calculations, not provider dispatch.
+```sh
+python -B tools/run.py --demo
+```
 
-- `schema-evolution` → preserve its actual returned JSON for the next relevant stage.
-- `incremental-pipeline` → preserve its actual returned JSON for the next relevant stage.
-- `query-plan-review` → preserve its actual returned JSON for the next relevant stage.
+For your own JSON input: `python -B tools/run.py --tool SKILL_ID --input input.json`. Python 3.10 or newer is required for these optional tools.
+
+- `schema-evolution`: carry its returned JSON into the next relevant step.
+- `incremental-pipeline`: carry its returned JSON into the next relevant step.
+- `query-plan-review`: carry its returned JSON into the next relevant step.
 
 ## Input artifacts
 - Current/proposed schema
@@ -29,5 +33,3 @@ Use `muse_presets.specialist_extensions.evaluate(skill_id, inputs)` with the tas
 - Schema report
 - Candidate state
 - Query-plan review
-
-Try the authored local-stage demonstration: `python tools/muse_collection.py workflow-demo pipeline-validation`. The report names unexecuted host/human handoffs and does not claim the complete external workflow ran.

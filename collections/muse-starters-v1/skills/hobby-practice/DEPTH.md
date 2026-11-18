@@ -39,7 +39,7 @@ Use a separate transfer attempt when appropriate.
 
 **Avoid:** Do not equate repetition gains with general mastery.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Warm-up takes three minutes, practice twelve, and review five in a twenty-minute slot.
 
@@ -47,7 +47,7 @@ Use a separate transfer attempt when appropriate.
 
 **Result:** The session fits exactly. Focus on the stated cue and record the actual result rather than claiming mastery.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** The same session now has only fifteen minutes, or a stop signal occurs.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `hobby-practice-r4-standard`, `hobby-practice-r4-edge`, `hobby-practice-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

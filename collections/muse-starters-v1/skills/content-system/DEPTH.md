@@ -39,7 +39,7 @@ Prepare the exact content and channel, then use the actual authorized provider a
 
 **Avoid:** Do not claim a draft exists online or promise a background schedule without execution.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A blog draft uses current source S1; a social post uses stale source S2.
 
@@ -47,7 +47,7 @@ Prepare the exact content and channel, then use the actual authorized provider a
 
 **Result:** The blog is ready to draft. Hold the post for source refresh. Neither item is marked published.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** S2 is refreshed and approved for reuse.
 
@@ -88,7 +88,3 @@ Three authored public exercises cover a routine case, a constraint or ambiguity,
 
 Practice case IDs: `content-system-r4-standard`, `content-system-r4-edge`, `content-system-r4-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original task procedures and input-derived public exercise checks. No real Muse comparison, independent semantic superiority, clinical effectiveness or consumer adoption has been established.

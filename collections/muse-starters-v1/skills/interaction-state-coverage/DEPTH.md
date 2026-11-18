@@ -37,7 +37,7 @@ Report a complete declared graph while retaining browser and accessibility check
 
 **Avoid:** Do not translate graph consistency into a claim of an executed end-to-end test.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** A flow declares idle, loading, success and error, but only connects idle to loading and loading to success; empty is required.
 
@@ -45,7 +45,7 @@ Report a complete declared graph while retaining browser and accessibility check
 
 **Result:** The report identifies missing empty and unreachable error; browser_tested remains false.
 
-## Edge or recovery example 1 (authored, synthetic)
+## Edge or recovery example 1 (example)
 
 **Input:** Add failure from loading to error and retry from error to idle, with success as a terminal state.
 
@@ -86,7 +86,3 @@ Three authored public exercises cover a standard input, an edge condition and ch
 
 Practice case IDs: `interaction-state-coverage-r5-standard`, `interaction-state-coverage-r5-edge`, `interaction-state-coverage-r5-recovery`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-Original first-party source and supplied-input calculations. No native Muse performance or superiority claim follows from the source examples.

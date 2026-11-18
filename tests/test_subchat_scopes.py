@@ -235,7 +235,10 @@ class SubchatScopesTests(unittest.TestCase):
             self.assertIn(method["trigger"], context)
             self.assertIn(method["stop_rule"], context)
             self.assertIn(method["handoff_to"], context)
-            self.assertIn("proposal only", context)
+            self.assertIn("current authorized handoff route", context)
+            metadata=json.loads((room / "SUBCHAT.json").read_text(encoding="utf-8"))
+            self.assertEqual(metadata["handoff_mode"], "PROPOSAL_ONLY")
+            self.assertFalse(metadata["external_effect_authorized"])
         self.assertEqual(len(set(contexts)), 3)
 
     def test_receipt_source_pin_forgery_is_rejected(self):
@@ -286,8 +289,8 @@ class SubchatScopesTests(unittest.TestCase):
         for original in ("legacy-role-eta", "legacy-role-alpha", "legacy-role-beta", "legacy-role-delta",
                          "legacy-role-gamma", "legacy-role-zeta", "legacy-role-epsilon"):
             self.assertNotIn(original, text)
-        self.assertIn("native", text)
-        self.assertIn("owner", text)
+        self.assertIn("private working copy", text)
+        self.assertIn("existing files and memory are preserved", text)
 
     def test_staged_scopes_never_promote_native_authority(self):
         dest = self.stage("software-engineer")

@@ -149,15 +149,18 @@ class FiveDoorSourceTests(unittest.TestCase):
             with self.assertRaisesRegex(PublicExportError, "UNAPPROVED_COLLECTION_PATH"):
                 select_public_files(root, verify_manifest=False)
 
-    def test_navigation_and_readme_name_exact_offline_limit(self):
+    def test_run_guide_describes_actual_workflow_and_recovery(self):
         readme = (KIT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("S1", readme)
-        self.assertIn("S5", readme)
-        self.assertIn("UNKNOWN_EFFECT_HOLD", readme)
-        self.assertIn("five_door_offline_demo.py", readme)
-        self.assertIn("NOT", readme)
+        for term in ("five_door_offline_demo.py", "Python 3.12+", "Git",
+                     "Windows PowerShell", "Capture", "Reproduce", "Repair",
+                     "Check", "Review", "manifest.json", "stage-routes.json"):
+            self.assertIn(term, readme)
+        self.assertIn("inspect the original operation before repeating it", readme)
+        self.assertIn("separate process", readme)
         docs = (ROOT / "docs/README.md").read_text(encoding="utf-8")
-        self.assertIn("engineering-doors/README.md", docs)
+        self.assertIn("WORKFLOWS.md", docs)
+        workflows = (ROOT / "docs/WORKFLOWS.md").read_text(encoding="utf-8")
+        self.assertIn("software_engineer_workflow_demo.py", workflows)
 
 
 if __name__ == "__main__":

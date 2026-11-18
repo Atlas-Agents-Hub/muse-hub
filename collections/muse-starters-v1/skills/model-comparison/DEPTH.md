@@ -29,7 +29,7 @@ Label the suite as public regression/development evidence and seek a separate ta
 
 **Avoid:** Do not call self-authored answer keys independent ground truth for subjective quality.
 
-## Worked example (authored, synthetic)
+## Worked example
 
 **Input:** Four closed-label cases have labels A,B,A,B. Plain candidate predicts A,B,B,A (2/4), new candidate predicts A,B,A,A (3/4). The frozen improvement threshold is 0.20 and conditions match.
 
@@ -70,7 +70,3 @@ Public regression exercises. Worked answers are for learning; exclude them from 
 
 Practice case IDs: `model-comparison-standard`, `model-comparison-confounded`, `model-comparison-missing`.
 Packaged exercises live under `practice/`. The optional `practice/check_outputs.py` checks supplied JSON outputs; it does not call Muse or certify semantic/visual quality.
-
-## Evidence boundary
-
-More explicit procedures and checkable examples; comparative Muse performance has not been measured.
