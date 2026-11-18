@@ -504,7 +504,7 @@ def main(argv=None):
             rejected.append({'path':rel,'reason':'duplicate-graph-or-outcome'});continue
         fingerprints.add(signature);titles.add(normalized);imported.append(result)
     if len(imported)<200:raise ValueError('too few complete distinct workflows')
-    license_raw=(source_root/'LICENSE').read_bytes()
+    license_raw=(source_root/'LICENSE').read_text(encoding='utf-8').replace('\r\n','\n').encode('utf-8')
     library=root/'collections/library'
     catalog=json.loads((library/'workflows.json').read_bytes())
     previous={row['id']:row for row in catalog['workflows'] if row.get('source',{}).get('repository')==REPOSITORY}
