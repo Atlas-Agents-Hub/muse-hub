@@ -40,6 +40,24 @@ EXTENSION_SKILLS = frozenset(('schema-evolution','incremental-pipeline','query-p
 ID = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
 SHA = re.compile(r'^[0-9a-f]{40}$')
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]/'collections'/'muse-starters-v1'
+# Explicit attachments follow the same dependency closure as their skill. Keep
+# these independent of the legacy executable-extension role contracts.
+SKILL_ASSETS = {
+    'project-prioritization': ('PRIORITIZE.md','PROVENANCE.md','backlog.json','backlog.csv'),
+    'daily-briefing': ('REMINDERS.md','CALENDAR_REVIEW.md'),
+    'weekly-reset': ('GOAL_REVIEW.md',),
+    'accessible-ui': ('SOURCE_CHECK.md','examples/clean.html','examples/review.html'),
+}
+SKILL_TOOLS = {
+    'project-prioritization': 'tools/prioritize.py',
+    'accessible-ui': 'tools/accessibility_check.py',
+}
+SKILL_RESOURCE_SECTIONS = {
+    'project-prioritization': '## Score your backlog\nUse the included [prioritization calculator](PRIORITIZE.md) to compare RICE scores and choose a batch that fits each resource budget, including prerequisite work. The guide includes JSON and CSV examples.\n\n',
+    'daily-briefing': '## Plan the details\nUse the [reminder worksheet](REMINDERS.md) to set up and follow through on a task. Use the [calendar review](CALENDAR_REVIEW.md) to make room for preparation, travel and focused work. Each includes a blank template and a worked example.\n\n',
+    'weekly-reset': '## Review a goal\nUse the [goal review worksheet](GOAL_REVIEW.md) to connect a measurable outcome with this week\'s actions, available time and evidence of progress. Start with the blank template or follow the worked example.\n\n',
+    'accessible-ui': '## Check an HTML page\nRun the included [HTML source checker](SOURCE_CHECK.md) to find missing document language, empty page titles, duplicate IDs and markup that needs a closer look. The guide includes two example pages and next steps for browser testing.\n\n',
+}
 
 class CollectionError(ValueError):
     """Invalid content or unsafe export destination."""
@@ -290,8 +308,7 @@ def render_skill(s: dict[str,Any], sources: dict[str,dict[str,Any]], *, include_
         refs='Original procedure and Python tool; see the included examples and practice cases.'
     steps='\n'.join(f'{i}. {x}' for i,x in enumerate(s['steps'],1))
     deeper=('## Go deeper\nRead [DEPTH.md](DEPTH.md) when the task needs branching decisions, worked examples or recovery details. Keep this extra context out of unrelated small tasks.\n\n' if s.get('depth') else '')
-    local_tool=('## Score your backlog\nUse the included [prioritization calculator](PRIORITIZE.md) to compare RICE scores and choose a batch that fits each resource budget, including prerequisite work. The guide includes JSON and CSV examples.\n\n'
-                if include_local_tools and s['id']=='project-prioritization' else '')
+    local_tool=SKILL_RESOURCE_SECTIONS.get(s['id'],'') if include_local_tools else ''
     return (f"---\nname: {s['id']}\ndescription: {json.dumps(s['trigger'],ensure_ascii=False)}\n---\n\n# {s['title']}\n\n"
             f"## Use when\n{s['trigger']}\n\n## Not for\n{s['not_for']}\n\n## Inputs\n{_list(s['inputs'])}\n\n"
             f"## Procedure\n{steps}\n\n## Deliver\n{_list(s['outputs'])}\n\n## Check the result\n{_list(s['checks'])}\n\n"
@@ -410,11 +427,34 @@ def instruction_files(data: dict[str,Any], skill_ids: list[str], workflow_ids: l
     files['SOURCES.json']=(json.dumps([sources[k] for k in sorted(selected_sources)],indent=2,ensure_ascii=False)+'\n').encode()
     files['EVALUATION_CASES.json']=(json.dumps([c for c in data['evaluation_cases'] if c['skill_id'] in chosen],indent=2,ensure_ascii=False)+'\n').encode()
     if chosen & EXTENSION_SKILLS:files.update(_local_tool_files(data,chosen & EXTENSION_SKILLS))
-    if 'project-prioritization' in chosen:
-        files['tools/prioritize.py']=_bounded_source(DEFAULT_ROOT.parents[1]/'tools'/'prioritize.py')
-        for name in ('PRIORITIZE.md','PROVENANCE.md','backlog.json','backlog.csv'):
-            files['skills/project-prioritization/'+name]=_bounded_source(DEFAULT_ROOT/'skills'/'project-prioritization'/name)
+    for key in sorted(chosen):
+        if key in SKILL_TOOLS:
+            name=SKILL_TOOLS[key]
+            files[name]=_bounded_source(DEFAULT_ROOT.parents[1]/name)
+        for name in SKILL_ASSETS.get(key,()):
+            files['skills/'+key+'/'+name]=_bounded_source(DEFAULT_ROOT/'skills'/key/name)
     return files
+
+
+def resource_start_guide(files: dict[str,bytes]) -> str:
+    """Expose only resources actually present in this extracted package."""
+    parts=[]
+    worksheets=(('skills/daily-briefing/REMINDERS.md','Set up and manage a reminder'),
+        ('skills/daily-briefing/CALENDAR_REVIEW.md','Review your calendar'),
+        ('skills/weekly-reset/GOAL_REVIEW.md','Review a goal and choose the next action'))
+    available=[(path,title) for path,title in worksheets if path in files]
+    if available:
+        parts.append('\n## Plan your week\n\nCopy a blank worksheet, or use its filled example to get started:\n\n'+
+            '\n'.join('- ['+title+']('+path+')' for path,title in available)+'\n')
+    if 'tools/prioritize.py' in files:
+        parts.append('\n## Choose a batch of work\n\nCompare RICE scores and fit prerequisite work into your resource budgets. With Python 3.10 or newer, run:\n\n'
+            '    python -B tools/prioritize.py --input skills/project-prioritization/backlog.json\n\n'
+            'See [the calculator guide](skills/project-prioritization/PRIORITIZE.md) for your own JSON or CSV backlog.\n')
+    if 'tools/accessibility_check.py' in files:
+        parts.append('\n## Check an HTML page\n\nWith Python 3.10 or newer, try the included example:\n\n'
+            '    python -B tools/accessibility_check.py --input skills/accessible-ui/examples/clean.html\n\n'
+            'Read [the HTML source checker guide](skills/accessible-ui/SOURCE_CHECK.md) for your own pages and browser checks.\n')
+    return ''.join(parts)
 
 
 def package_files(data: dict[str,Any], starter_id: str) -> dict[str,bytes]:
@@ -425,10 +465,7 @@ def package_files(data: dict[str,Any], starter_id: str) -> dict[str,bytes]:
     files=instruction_files(data,p['skills'],p['workflows'])
     files.update({'LICENSE':PROJECT_LICENSE.encode(),'PROFILE.md':render_profile(p).encode(),
         'START_HERE.md':(f"# Use {p['title']} with Muse\n\nGive this ZIP or its extracted folder to your current Muse assistant. Say: ‘Read PROFILE.md and use the relevant skills for my current task, keeping my existing preferences and memory.’\n\nStart with your own request or the example in PROFILE.md. Load a workflow when it fits the task. You can use all Markdown instructions without Python. Optional local commands state their requirements alongside the command.\n").encode()})
-    if 'tools/prioritize.py' in files:
-        files['START_HERE.md']+=('\n## Choose a batch of work\n\nWith Python 3.10 or newer, run from this folder:\n\n'
-            '    python -B tools/prioritize.py --input skills/project-prioritization/backlog.json\n\n'
-            'See [the calculator guide](skills/project-prioritization/PRIORITIZE.md) to use your own backlog.\n').encode()
+    files['START_HERE.md']+=resource_start_guide(files).encode()
     chosen=sorted(name.split('/')[1] for name in files if name.startswith('skills/') and name.endswith('/SKILL.md'))
     manifest={'schema':'muse-starter-pack/v1','starter':starter_id,'base_role':p['base_role'],'skills':chosen,
               'evaluation':EVALUATION,'automatic_external_actions':False,'core_engine_included':False,

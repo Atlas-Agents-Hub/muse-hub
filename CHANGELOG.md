@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.4.0 - plans you can reuse, checks you can run
+
+- Start from reusable reminder, calendar and goal worksheets, with filled examples and recovery steps.
+- Keep recurring reminders, calendar changes, progress evidence and weekly capacity together in the existing planning kits.
+- Check HTML document language, page titles, duplicate IDs, label references and image text alternatives with a Python command.
+- Run the checker from the Accessible UI download and every relevant specialist, workflow or starter package.
+- Find the worksheets and checker through the planning and developer journeys, and explore the original web application testing guide.
+
 ## v1.3.0 - choose work that fits
 
 - Compare a backlog with exact RICE scores and stable rankings.

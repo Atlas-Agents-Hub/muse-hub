@@ -249,8 +249,8 @@ class ConnectorTests(unittest.TestCase):
 
     def test_current_release_and_historical_downloads_are_clear(self):
         doc=(Path(__file__).resolve().parents[1]/"docs/RELEASES.md").read_text(encoding="utf-8")
-        for target in ("releases/tag/v1.3.0", "releases/download/v1.3.0/SHA256SUMS",
-                       "muse-specialist-toolkit-v1.3.0.zip", "DOWNLOAD_A_SPECIALIST.md",
+        for target in ("releases/tag/v1.4.0", "releases/download/v1.4.0/SHA256SUMS",
+                       "muse-specialist-toolkit-v1.4.0.zip", "DOWNLOAD_A_SPECIALIST.md",
                        "v1.0.0", "v0.4.1-alpha"):
             self.assertIn(target,doc)
         self.assertIn("15 assistants",doc)

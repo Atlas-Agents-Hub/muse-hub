@@ -63,8 +63,8 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
                   "Windows", "macOS", "Linux", "Python 3.12+"):
          self.assertIn(term,page)
      downloads=(ROOT/"docs/DOWNLOAD_A_SPECIALIST.md").read_text("utf8")
-     self.assertIn("releases/download/v1.3.0/",downloads)
-     self.assertIn("releases/download/v1.3.0/SHA256SUMS",downloads)
+     self.assertIn("releases/download/v1.4.0/",downloads)
+     self.assertIn("releases/download/v1.4.0/SHA256SUMS",downloads)
  def test_skills_guide_reaches_current_methods_and_tools(self):
      page=(ROOT/"docs/SKILLS.md").read_text("utf8")
      self.assertIn("handbook/specialists-by-task.md",page)

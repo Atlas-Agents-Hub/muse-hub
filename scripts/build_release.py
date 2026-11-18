@@ -18,7 +18,7 @@ def _module(name, path):
 collection = _module("release_collection", ROOT / "tools/muse_collection.py")
 legacy = _module("release_source_checks", ROOT / "scripts/build_v1_release.py")
 REPOSITORY = "https://github.com/atlas-origins/muse-ai-agent-presets"
-DEFAULT_VERSION = "v1.3.0"
+DEFAULT_VERSION = "v1.4.0"
 ALIASES = {"data-engineering-architect":"data-engineer",
            "infrastructure-reliability-engineer":"reliability-engineer"}
 ROLE_WORKFLOWS = {
@@ -99,7 +99,7 @@ def _seal(files,kind,identity,version,**details):
         "files":{name:_sha(raw) for name,raw in sorted(result.items())}})
     return result
 
-def _use_text(title,entry,*,optional_tools=False,prioritization_tool=False):
+def _use_text(title,entry,*,files):
     text=("# "+title+"\n\n"
         "1. Extract this ZIP into its own folder.\n"
         "2. Open "+entry+". Give Muse this folder or ZIP and your current task.\n"
@@ -108,14 +108,10 @@ def _use_text(title,entry,*,optional_tools=False,prioritization_tool=False):
         "No Python is required for that use.\n\n"
         "## Check the downloaded files\n\nWith Python 3.10 or newer, run from the extracted folder:\n\n"
         "    python -B VERIFY.py\n")
-    if optional_tools:
+    if 'tools/run.py' in files:
         text+=("\n## Try the included local tools\n\nThe examples use Python 3.10 or newer and the standard library:\n\n"
                "    python -B tools/run.py --demo\n\nSee tools/README.md for your own JSON input.\n")
-    if prioritization_tool:
-        text+=("\n## Choose a batch of work\n\nCompare RICE scores and fit prerequisite work into your resource budgets. With Python 3.10 or newer, run:\n\n"
-               "    python -B tools/prioritize.py --input skills/project-prioritization/backlog.json\n\n"
-               "See [the calculator guide](skills/project-prioritization/PRIORITIZE.md) for your own JSON or CSV backlog.\n")
-    return text
+    return text+collection.resource_start_guide(files)
 
 def specialist_files(data,role,version=DEFAULT_VERSION):
     if role not in load_registry()["presets"]: raise ValueError("UNKNOWN_SPECIALIST")
@@ -145,8 +141,7 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
     first=book["first_canary"]
     files["FIRST_TASK.md"]=("# Try "+title+"\n\n"+first["task"]+"\n\n## Expected result\n\n"+
         first["observable_result"]+"\n\n## Check an edge case\n\n"+first["negative_test"]+"\n").encode()
-    start=_use_text("Start with "+title,"PROFILE.md",optional_tools="tools/run.py" in files,
-                    prioritization_tool="tools/prioritize.py" in files)
+    start=_use_text("Start with "+title,"PROFILE.md",files=files)
     start+=("\n## Use the host-format components\n\n"
         "- Profile documents: assistant/system-profile/profile/.\n"
         "- Scoped task contexts: assistant/subchat-scopes/subchats/.\n"
@@ -165,8 +160,7 @@ def skill_files(data,identity,version=DEFAULT_VERSION):
     entry=next((s for s in data["skills"] if s["id"]==identity),None)
     if entry is None: raise ValueError("UNKNOWN_SKILL")
     files=collection.instruction_files(data,[identity],[])
-    files["START_HERE.md"]=_use_text(entry["title"],"skills/"+identity+"/SKILL.md",
-        optional_tools="tools/run.py" in files,prioritization_tool="tools/prioritize.py" in files).encode()
+    files["START_HERE.md"]=_use_text(entry["title"],"skills/"+identity+"/SKILL.md",files=files).encode()
     files["AGENTS.md"]=("# "+entry["title"]+"\n\nRead [SKILL.md](skills/"+identity+
         "/SKILL.md) for this task and [DEPTH.md](skills/"+identity+
         "/DEPTH.md) when you need examples or recovery steps. "
@@ -177,8 +171,7 @@ def workflow_files(data,identity,version=DEFAULT_VERSION):
     entry=next((w for w in data["workflows"] if w["id"]==identity),None)
     if entry is None: raise ValueError("UNKNOWN_WORKFLOW")
     files=collection.instruction_files(data,[],[identity])
-    files["START_HERE.md"]=_use_text(entry["title"],"workflows/"+identity+".md",
-        optional_tools="tools/run.py" in files,prioritization_tool="tools/prioritize.py" in files).encode()
+    files["START_HERE.md"]=_use_text(entry["title"],"workflows/"+identity+".md",files=files).encode()
     files["AGENTS.md"]=("# "+entry["title"]+"\n\n"+entry["goal"]+"\n\nFollow workflows/"+
         identity+".md, loading each included skill when needed. Preserve real outputs between "
         "steps and follow the user's current authorization for external actions.\n").encode()

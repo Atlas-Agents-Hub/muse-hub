@@ -4,12 +4,12 @@
 
 Choose from **15 independent assistants**, each with Main and **three subchats**. Add **75 skills**, **25 workflows**, **100 task starters**, and guides to **151 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
 
-**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.3.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.3.0)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
+**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.4.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.4.0)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
 
 ## Start with what you want to do
 
-- **[Organize your day](docs/journeys/ORGANIZE_YOUR_DAY.md):** goals and reminders in Muse, a Personal Companion, calendar connections, and a place for your notes.
-- **[Build and automate](docs/journeys/BUILD_AND_AUTOMATE.md):** an engineering specialist, browser or terminal access, a reproducible workflow, and a review handoff.
+- **[Organize your day](docs/journeys/ORGANIZE_YOUR_DAY.md):** ready-to-copy reminder, calendar and goal worksheets, a Personal Companion, and a place for your notes.
+- **[Build and automate](docs/journeys/BUILD_AND_AUTOMATE.md):** an engineering specialist, terminal tools, HTML accessibility checks, browser testing, and a review handoff.
 - **[Create something](docs/journeys/CREATE_SOMETHING.md):** a creative brief, a production plan, media tools, and time to explore the Studio.
 
 Explore [Muse's features](https://muse.ai/) and choose the Hub tools that fit your task. On the website, **Inside Muse**, **Included with Muse Hub**, and **Community project** labels show where each resource comes from.

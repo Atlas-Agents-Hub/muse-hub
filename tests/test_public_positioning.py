@@ -12,7 +12,7 @@ class ProductPositioningTests(unittest.TestCase):
             self.assertIn(term,hero)
         for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/GETTING_STARTED.md","docs/TERMINAL.md"):
             self.assertIn(path,text)
-        self.assertIn("releases/tag/v1.3.0",text)
+        self.assertIn("releases/tag/v1.4.0",text)
         self.assertIn("https://atlas-origins.github.io/muse-ai-agent-presets/",text)
         prose=re.sub(r"\]\([^)]+\)","]()",text)
         self.assertNotRegex(prose,r"\b(?:H\d{2}|S[1-5])\b")
