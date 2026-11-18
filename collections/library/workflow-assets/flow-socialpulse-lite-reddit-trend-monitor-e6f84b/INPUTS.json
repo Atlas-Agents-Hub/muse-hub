@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-socialpulse-lite-reddit-trend-monitor-e6f84b",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-model": null,
+    "step-6-sheetname": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

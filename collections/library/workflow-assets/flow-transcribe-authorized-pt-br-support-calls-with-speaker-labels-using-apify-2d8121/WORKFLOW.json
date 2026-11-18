@@ -1,0 +1,189 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-transcribe-authorized-pt-br-support-calls-with-speaker-labels-using-apify-2d8121",
+  "title": "Transcribe authorized PT-BR support calls with speaker labels using Apify",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Run manually",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Set authorized support call",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "mediaUrl",
+              "value": {
+                "configuration_input": "step-2-assignments-0-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "language",
+              "value": "pt",
+              "type": "string"
+            },
+            {
+              "name": "diarization",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "name": "maxDurationMinutes",
+              "value": 20,
+              "type": "number"
+            },
+            {
+              "name": "confirmRightsAndConsent",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Validate consent URL and limits",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const cfg = record;\nif (cfg.confirmRightsAndConsent !== true) throw new Error('Confirm processing rights and any required speaker consent before running');\nlet parsed;\ntry { parsed = new URL(String(cfg.mediaUrl || '')); } catch { throw new Error('Use one valid public HTTPS media URL'); }\nconst host = parsed.hostname.toLowerCase();\nif (parsed.protocol !== 'https:' || parsed.username || parsed.password || !host.includes('.') || host === 'localhost' || host.endsWith('.local') || host.endsWith('.internal') || /^10\\.|^127\\.|^169\\.254\\.|^192\\.168\\.|^172\\.(1[6-9]|2[0-9]|3[01])\\./.test(host)) throw new Error('Use one public HTTPS media URL without embedded credentials');\nconst language = String(cfg.language || 'pt').toLowerCase();\nif (!/^[a-z]{2,3}$/.test(language)) throw new Error('Language must be a two-to-three-letter ISO code');\nconst maxDurationMinutes = Number(cfg.maxDurationMinutes);\nif (!Number.isInteger(maxDurationMinutes) || maxDurationMinutes < 1 || maxDurationMinutes > 20) throw new Error('Duration must be between 1 and 20 minutes');\nreturn [{json:{sources:[parsed.toString()],language,diarization:true,output_formats:['json','srt','vtt','txt'],maxDurationMinutes,integrationSource:\"{{input:step-3-jscode-literal}}\"}}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Transcribe support call on Apify",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "maxItems",
+              "value": "1"
+            },
+            {
+              "name": "maxTotalChargeUsd",
+              "value": "0.05"
+            },
+            {
+              "name": "timeout",
+              "value": "300"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": {
+          "expression": "{{ JSON.stringify(record) }}"
+        },
+        "options": {
+          "timeout": 295000
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Validate speaker-labelled result",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const expected = steps[\"step-3\"].records[0];\nconst rows = records.flatMap((item) => Array.isArray(item.json) ? item.json : [item.json]);\nif (rows.length !== 1) throw new Error('Expected exactly one transcription result');\nconst row = rows[0];\nif (row.url !== expected.sources[0] || row.integrationSource !== expected.integrationSource || typeof row.text !== 'string' || !Array.isArray(row.segments) || !row.files || typeof row.files !== 'object' || !Number.isInteger(row.charged_minutes) || row.charged_minutes < 1 || row.charged_minutes > expected.maxDurationMinutes) throw new Error('The Actor response failed semantic validation');\nreturn [{json:row}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://www.brainiall.com/assets/{resource}.mp3"
+    },
+    {
+      "id": "step-3-jscode-literal",
+      "purpose": "Provide the configured resource or key used by this transformation.",
+      "required": true
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.apify.com/v2/acts/vivid_astronaut~audio-video-transcription-diarization/{resource}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Transcribe authorized PT-BR support calls with speaker labels using Apify.json",
+    "git_blob": "63937ef4b3084e32c8d69bb6cb4c166b51e1dfe5",
+    "sha256": "51b17e83e5f2c15aef0b61ce730335b3994e90bf0631856296b0d452b8221c8a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Transcribe%20authorized%20PT-BR%20support%20calls%20with%20speaker%20labels%20using%20Apify.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-email-summary-agent-921390",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-modelid": null,
+    "step-5-sendto": null,
+    "step-5-options-cclist": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-route-spend-requests-to-approvers-by-threshold-with-deputies-reminders-and-esc-b39eb1",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-value": null,
+    "step-2-assignments-1-value": null,
+    "step-12-assignments-0-value": null,
+    "step-20-assignments-0-value": null,
+    "step-29-assignments-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

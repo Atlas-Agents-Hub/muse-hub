@@ -1,0 +1,16 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-generate-seo-seed-keywords-using-ai-93ffc0",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    }
+  }
+}

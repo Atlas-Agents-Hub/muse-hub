@@ -1,0 +1,455 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-product-imagines-355242",
+  "title": "AI product imagines",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "resource": "fileFolder",
+        "filter": {
+          "folderId": {
+            "configuration_input": "step-2-filter-folderid"
+          }
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Google Drive1",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "expression": "{{record[\"id\"]}}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "configuration_input": "step-4-modelid"
+        },
+        "text": "Describe the visual style of this image, what stands out. if you had to have a holistic overview, as a professional facebook ads designer. How would you explain this image /  or images to be able to reproduce the elements that make it work for other ads.\n\nThe core goal of the output here should be to create a template of the style for inspirations. As later we will take ideas from these to generate our own high converting facebook ads.\n\nensure you do not make this product specific, rather focusing on creating outlines for static ad styles. so keep ti vague in terms of what exactly is in the ad, but rather the principles of the ad",
+        "inputType": "base64",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Google Drive2",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "filter": {
+          "folderId": {
+            "configuration_input": "step-5-filter-folderid"
+          }
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Google Drive3",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "expression": "{{record[\"id\"]}}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "OpenAI1",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "configuration_input": "step-7-modelid"
+        },
+        "text": "Analyse our product image. Identify the core emotions behind it and the main product. we will use this later to connect the product image with some ad styles and generate our own ads",
+        "inputType": "base64",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "AI prompt agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "promptType": "define",
+        "text": {
+          "expression": "You’ve been given an outline that includes: \n\n(use all the data from here when creating the prompts {{ record.choices[0].message.content }}  - it is also critical our product image is displayed in here: {{ steps[\"step-7\"].record.content }} )\n\nWhat the product is and who it’s for\n\nWhat’s visible in the product image (e.g. background, angle, lighting)\n\nPatterns and emotional triggers from top-performing ad examples\n\nYour task:\nUsing this outline, generate 10 image ad prompts that follow this format exactly:\n\nprompt: [Detailed visual description of the ad concept]\n\nEach prompt should include:\n\nA bold, testimonial-style headline (in quotation marks at the top)\n\nA clear description of the emotional transformation the image should convey\n\nWhat is shown in the image (body parts, facial expressions, environment, etc.)\n\nWhere and how the product is placed\n\nThe color palette and visual tone (e.g., icy blue for calm, red for pain)\n\nWhere the headline should appear on the image\n\nRendering style (e.g., cinematic, hyperrealistic, dramatic shadows)\n\nFinal format for Facebook or Instagram (1:1 format always)\n\nRepeat this 10 times. Each one must be unique, emotionally powerful, and visually clear."
+        },
+        "hasOutputParser": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchemaExample": {
+          "json": [
+            {
+              "Prompt": "Sun-drenched poolside shot of the product on a marble ledge at golden hour, with soft shadows and warm tones. Aspect ratio 1:1."
+            },
+            {
+              "Prompt": "Cool lavender-tinted sunset beach backdrop behind the product, highlighting reflective metallic accents. Aspect ratio 4:5."
+            },
+            {
+              "Prompt": "..."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "HTTP Request1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-12-url"
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": {
+                "expression": "{{ record.Prompt }}"
+              }
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Loop Over Items1",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Wait",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 15
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Convert to File",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {
+          "fileName": "image.png",
+          "mimeType": "image/png"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "OpenAI2",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-16-modelid"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Analyse this prompt which is a template of a high converting facebook ad we have built {{ record.content }}\n\nNow we will take this template, and add our product in as the hero for our ads{{ record.content}}\n\nensure the template is applied to make our product the hereo, with all copy, colours and vibe being focused on making the product stand out, in a facebook ad, deisgn to convert.\n\nMake a relevant prompt & outline as our next step in the flow is to break down this prompt (combining the facebook ad visual style, with our product image) and spit it into 10 prompts, all to create individual statics.\n\nDo what you think is best to pass this information forward."
+              },
+              "role": "system"
+            },
+            {
+              "content": "Put both pieces of data together and only generate 1 output prompt\n"
+            }
+          ]
+        },
+        "simplify": false,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Google Drive4",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "driveId": {
+          "configuration_input": "step-17-driveid"
+        },
+        "folderId": {
+          "configuration_input": "step-17-folderid"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-13",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-filter-folderid",
+      "purpose": "Select the filter / folderId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-filter-folderid",
+      "purpose": "Select the filter / folderId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/images/generations"
+    },
+    {
+      "id": "step-16-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-driveid",
+      "purpose": "Select the driveId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-folderid",
+      "purpose": "Select the folderId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI product imagines.json",
+    "git_blob": "6005ed87d0101ccc622b89309ae9eaf21bdba693",
+    "sha256": "430a5a30cd612a933d60bb34ac52037a6d0c13d687553ef41d4eaeef6643342f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI%20product%20imagines.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

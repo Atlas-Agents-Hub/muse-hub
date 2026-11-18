@@ -1,0 +1,348 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-utm-link-creator-qr-code-generator-with-scheduled-google-analytics-reports-86ae4b",
+  "title": "UTM Link Creator & QR Code Generator with Scheduled Google Analytics Reports",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ record.timestamp }}"
+        },
+        "sessionIdType": "customKey",
+        "contextWindowLength": 200
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Google Analytics",
+      "operation": "service-read",
+      "adapter": "googleanalytics",
+      "parameters": {
+        "metricsGA4": {
+          "metricValues": [
+            {
+              "listName": "sessions"
+            }
+          ]
+        },
+        "propertyId": {
+          "configuration_input": "step-3-propertyid"
+        },
+        "dimensionsGA4": {
+          "dimensionValues": [
+            {},
+            {
+              "listName": "sourceMedium"
+            }
+          ]
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Create UTM Link & Send To Database",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-5",
+      "label": "Set UTM Parameters For Link",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "website_url",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-5-assignments-0-value"
+              }
+            },
+            {
+              "name": "campaign_id",
+              "type": "string",
+              "value": "12246"
+            },
+            {
+              "name": "campaign_source",
+              "type": "string",
+              "value": "google"
+            },
+            {
+              "name": "campaign_medium",
+              "type": "string",
+              "value": "display"
+            },
+            {
+              "name": "campaign_name",
+              "type": "string",
+              "value": "summerfun"
+            },
+            {
+              "name": "campaign_term",
+              "type": "string",
+              "value": "conretecoating"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Create UTM Link With Parameters",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const items = records;\nconst updatedItems = items.map((item) => {\n const utmUrl = `${item?.json?.website_url}?utm_source=${item?.json?.campaign_source}&utm_medium=${item?.json?.campaign_medium}&utm_campaign=${item?.json?.campaign_name}&utm_term=${item?.json?.campaign_term}&utm_content=${item?.json?.campaign_id}`;\n item.json.utmUrl = utmUrl;\n return item;\n});\nreturn updatedItems;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Submit UTM Link To Database",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-7-base"
+        },
+        "table": {
+          "configuration_input": "step-7-table"
+        },
+        "columns": {
+          "value": {
+            "URL": {
+              "expression": "{{ record.utmUrl }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "upsert"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Create QR Code With Submitted QR Link",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://quickchart.io/qr?text={{ record.utmUrl }}&size=300&margin=10&ecLevel=H&dark=000000&light=FFFFFF"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Schedule Google Analytics Report To Marketing Manager",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Google Analytics Data Analysis Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.timestamp }}"
+        },
+        "options": {
+          "systemMessage": "\"You are an advanced data analytics AI specializing in executive reporting. Your task is to analyze the provided dataset and generate a structured executive summary that highlights key insights, trends, and actionable takeaways. Structure your summary in the following format:\n\nOverview – Briefly describe the dataset and its significance.\nKey Performance Indicators (KPIs) – Highlight the most important metrics and compare them to previous periods if applicable.\nTrends & Insights – Identify patterns, growth areas, declines, and anomalies.\nOpportunities & Recommendations – Provide strategic recommendations based on the insights.\nConclusion – Summarize the key takeaways concisely.\n*Ensure the tone is professional, clear, and tailored for executives who require quick, data-driven insights without unnecessary details.\""
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Send Summary Report To Marketing Manager",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "configuration_input": "step-11-sendto"
+        },
+        "message": {
+          "expression": "{{ record.output }}"
+        },
+        "options": {},
+        "subject": "Google Analytics Metrics Summary Report"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-10",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-7",
+      "channel": "main",
+      "branch": 0
+    },
+    {
+      "from": "step-11",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-4",
+    "step-9"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-propertyid",
+      "purpose": "Select the propertyId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://ecconcretecoating.com/"
+    },
+    {
+      "id": "step-7-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-sendto",
+      "purpose": "Select the sendTo for step-11.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/UTM Link Creator & QR Code Generator with Scheduled Google Analytics Reports.json",
+    "git_blob": "864b0b279d923b02abe0ecc4985da71223e2fea8",
+    "sha256": "67eee88c2e41480349fa8952ec2a01a4e94f5c016c50adee9427233705235829",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/UTM%20Link%20Creator%20%26%20QR%20Code%20Generator%20with%20Scheduled%20Google%20Analytics%20Reports.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

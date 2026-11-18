@@ -1,0 +1,38 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-deduplicate-scraping-ai-grants-for-eligibility-using-ai-412ad2",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-8-base": null,
+    "step-8-table": null,
+    "step-9-operation": null,
+    "step-10-url": null,
+    "step-11-base": null,
+    "step-11-table": null,
+    "step-15-base": null,
+    "step-15-table": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

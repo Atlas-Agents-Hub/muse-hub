@@ -1,0 +1,414 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automate-content-generator-for-wordpress-with-muse-r1-c70bb3",
+  "title": "Automate Content Generator for WordPress with Muse R1",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Get Ideas",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "expression": "Sheet1"
+        },
+        "documentId": {
+          "configuration_input": "step-2-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Set your prompt",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "prompt",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.PROMPT }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Create post on Wordpress",
+      "operation": "service-write",
+      "adapter": "wordpress",
+      "parameters": {
+        "title": {
+          "expression": "{{ record.message.content }}"
+        },
+        "additionalFields": {
+          "status": "draft",
+          "content": {
+            "expression": "{{ steps[\"step-8\"].record.message.content }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Upload image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "contentType": "binaryData",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Disposition",
+              "value": {
+                "expression": "attachment; filename=\"copertina-{{ steps[\"step-4\"].record.id }}.jpg\""
+              }
+            }
+          ]
+        },
+        "inputDataFieldName": "data"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Set Image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://wp.test.7hype.com/wp-json/wp/v2/posts/{{ steps[\"step-4\"].record.id }}"
+        },
+        "method": "POST",
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "featured_media",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Update Sheet",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "DATA": {
+              "expression": "{{ current_time.format('dd/LL/yyyy') }}"
+            },
+            "TITOLO": {
+              "expression": "{{ steps[\"step-9\"].record.message.content }}"
+            },
+            "ID POST": {
+              "expression": "{{ steps[\"step-4\"].record.id }}"
+            },
+            "row_number": {
+              "expression": "{{ steps[\"step-2\"].record.row_number }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DATA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "PROMPT",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "TITOLO",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "ID POST",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "row_number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "row_number"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "update",
+        "sheetName": {
+          "configuration_input": "step-7-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-7-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Generate article with Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "expression": "deepseek-reasoner"
+        },
+        "options": {
+          "maxTokens": 2048
+        },
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "You are an SEO expert, write an article based on this topic:\n{{ record.prompt }}\n\nInstructions:\n- In the introduction, introduce the topic that will be explored in the rest of the text\n- The introduction should be about 120 words\n- The conclusions should be about 120 words\n- Use the conclusions to summarize everything said in the article and offer a conclusion to the reader\n- Write a maximum of 4-5 chapters and argue them.\n- The chapters should follow a logical flow and not repeat the same concepts.\n- The chapters should be related to each other and not isolated blocks of text. The text should flow and follow a linear logic.\n- Do not start chapters with \"Chapter 1\", \"Chapter 2\", \"Chapter 3\" ... write only the chapter title\n- For the text, use HTML for formatting, but limit yourself to bold, italics, paragraphs and lists.\n- Don't put the output in ```html but only text\n- Don't use markdown for formatting.\n- Go deeper into the topic you're talking about, don't just throw superficial information there\n- In output I want only the HTML format"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Generate title with Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "expression": "deepseek-reasoner"
+        },
+        "options": {
+          "maxTokens": 2048
+        },
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "You are an SEO Copywriter and you need to think of a title of maximum 60 characters for the following article:\n{{ record.message.content }}\n\nInstructions:\n- Use keywords contained in the article\n- Do not use any HTML characters\n- Output only the string containing the title.\n- Do not use quotation marks. The only special characters allowed are \":\" and \",\""
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Generate Image with DALL-E",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "Generate a real photographic image used as a cover for a blog post:\n\nImage prompt:\n{{ steps[\"step-9\"].record.message.content }}, photography, realistic, sigma 85mm f/1.4"
+        },
+        "options": {
+          "size": "1792x1024",
+          "style": "natural",
+          "quality": "hd"
+        },
+        "resource": "image"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://yoursite.com/wp-json/wp/v2/media"
+    },
+    {
+      "id": "step-7-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "WordPress/Automate Content Generator for WordPress with DeepSeek R1.json",
+    "git_blob": "5cae8f315394132011c6023bc6e2dfd53a8460f1",
+    "sha256": "6c1e7f2c91df30368cc77ce11d11e2d5c3d73b8018d1f5706d8f01e2deee8aaf",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/WordPress/Automate%20Content%20Generator%20for%20WordPress%20with%20DeepSeek%20R1.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

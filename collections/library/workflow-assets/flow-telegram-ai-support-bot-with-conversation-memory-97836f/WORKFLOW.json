@@ -1,0 +1,132 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-telegram-ai-support-bot-with-conversation-memory-97836f",
+  "title": "Telegram AI Support Bot with Conversation Memory",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Telegram Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "promptType": "define",
+        "text": {
+          "expression": "{{ record.message.text }}"
+        },
+        "options": {
+          "systemMessage": "You are a friendly, concise assistant for a small business. Keep answers under 120 words. Reply in the customer's language. If you are not sure about business-specific facts (prices, policies, hours), say you'll check with the team instead of guessing."
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Chat Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Send Reply",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "text": {
+          "expression": "{{ record.output }}"
+        },
+        "additionalFields": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Telegram AI Support Bot with Conversation Memory.json",
+    "git_blob": "282068c98f8804724d3a1fe2a4ad26347afb842c",
+    "sha256": "f211e85ef91630261a8d5d3634be0e614c86cf276e1704be85d87452b9d4faa1",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Telegram%20AI%20Support%20Bot%20with%20Conversation%20Memory.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

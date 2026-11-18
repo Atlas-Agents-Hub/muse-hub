@@ -1,0 +1,243 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-customer-feedback-sentiment-analysis-d50e93",
+  "title": "AI Customer feedback sentiment analysis",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Add customer feedback to Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "Category": {
+              "expression": "{{ record['What is your feedback about?'] }}"
+            },
+            "Sentiment": {
+              "expression": "{{ record.text }}"
+            },
+            "Timestamp": {
+              "expression": "{{ record.submittedAt }}"
+            },
+            "Entered by": {
+              "expression": "Form"
+            },
+            "Customer Name": {
+              "expression": "{{ record.Name }}"
+            },
+            "Customer contact": {
+              "expression": "{{ record['How do we get in touch with you?'] }}"
+            },
+            "Customer Feedback": {
+              "expression": "{{ record['Your feedback'] }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Timestamp",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Customer Feedback",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Customer Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Customer contact",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Entered by",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Urgent?",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Sentiment",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-1-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-1-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Merge sentiment with form content",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Classify feedback with Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "Classify the sentiment in the following customer feedback: {{ record['Your feedback'] }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Submit form with customer feedback",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "formSubmittedText": "Your response has been recorded"
+        },
+        "formTitle": "Customer Feedback",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "What is your feedback about?",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Product"
+                  },
+                  {
+                    "option": "Service"
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Your feedback",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "How do we get in touch with you?"
+            }
+          ]
+        },
+        "formDescription": "Please give feedback about our company orproducts."
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-1-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI Customer feedback sentiment analysis.json",
+    "git_blob": "850b0b9cc0353fe49a30f2d9f2468be12260e39f",
+    "sha256": "647a1d81e79462e0d2f80ecdb66389a41b73c79c9a3ec364157cb456e3fc9ece",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20Customer%20feedback%20sentiment%20analysis.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

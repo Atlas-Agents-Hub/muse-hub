@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-conversational-interviews-with-ai-agents-and-muse-forms-ce5de8",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-26-sheetname": null,
+    "step-26-documentid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "redis": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    }
+  }
+}

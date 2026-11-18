@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-extract-spending-history-from-gmail-to-google-sheet-ee99b2",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-options-password": null,
+    "step-4-options-password": null,
+    "step-9-sheetname": null,
+    "step-9-documentid": null,
+    "step-15-conditions-0-rightvalue": null,
+    "step-18-sheetname": null,
+    "step-18-documentid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

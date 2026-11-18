@@ -1,0 +1,20 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-publish-one-video-natively-to-tiktok-instagram-and-youtube-with-postwire-35be2a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-1-value": null,
+    "step-3-url": null,
+    "step-4-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

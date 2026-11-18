@@ -1,0 +1,405 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-visualize-your-sql-agent-queries-with-muse-and-quickchart-io-01227b",
+  "title": "Visualize your SQL Agent queries with Muse and Quickchart.io",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.1
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Execute Workflow",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "options": {
+          "waitForSubWorkflow": true
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Execute \"Generate a chart\" tool",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Model - Generate Chart definition with Structured Output",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"model\": \"gpt-4o-2024-08-06\",\n \"messages\": [\n {\n \"role\": \"system\",\n \"content\": \"Based on the user request, generate a valid Chart.js definition. Important: - Be careful with the data scale and beginatzero that all data are visible. Example if ploted data 2 and 3 on a bar chart, the baseline should be 0. - Charts colors should be different only if there are multiple datasets. - Output valid JSON. In scales, min and max are numbers. Example: `{scales:{yAxes:[{ticks:{min:0,max:3}`\"\n },\n {\n \"role\": \"user\",\n \"content\": \"**User Request**: {{ record.user_question }} \\n **Data to visualize**: {{ record.output.replaceAll('\\n', \" \").replaceAll('\"', \"\") }}\"\n }\n ],\n \"response_format\": {\n \"type\": \"json_schema\",\n \"json_schema\": {\n \"name\": \"chart_configuration\",\n \"description\": \"Configuration schema for Chart.js charts\",\n \"strict\": true,\n \"schema\": {\n \"type\": \"object\",\n \"properties\": {\n \"type\": {\n \"type\": \"string\",\n \"enum\": [\"bar\", \"line\", \"radar\", \"pie\", \"doughnut\", \"polarArea\", \"bubble\", \"scatter\", \"area\"]\n },\n \"data\": {\n \"type\": \"object\",\n \"properties\": {\n \"labels\": {\n \"type\": \"array\",\n \"items\": {\n \"type\": \"string\"\n }\n },\n \"datasets\": {\n \"type\": \"array\",\n \"items\": {\n \"type\": \"object\",\n \"properties\": {\n \"label\": {\n \"type\": [\"string\", \"null\"]\n },\n \"data\": {\n \"type\": \"array\",\n \"items\": {\n \"type\": \"number\"\n }\n },\n \"backgroundColor\": {\n \"type\": [\"array\", \"null\"],\n \"items\": {\n \"type\": \"string\"\n }\n },\n \"borderColor\": {\n \"type\": [\"array\", \"null\"],\n \"items\": {\n \"type\": \"string\"\n }\n },\n \"borderWidth\": {\n \"type\": [\"number\", \"null\"]\n }\n },\n \"required\": [\"data\", \"label\", \"backgroundColor\", \"borderColor\", \"borderWidth\"],\n \"additionalProperties\": false\n }\n }\n },\n \"required\": [\"labels\", \"datasets\"],\n \"additionalProperties\": false\n },\n \"options\": {\n \"type\": \"object\",\n \"properties\": {\n \"scales\": {\n \"type\": [\"object\", \"null\"],\n \"properties\": {\n \"yAxes\": {\n \"type\": \"array\",\n \"items\": {\n \"type\": [\"object\", \"null\"],\n \"properties\": {\n \"ticks\": {\n \"type\": [\"object\", \"null\"],\n \"properties\": {\n \"max\": {\n \"type\": [\"number\", \"null\"]\n },\n \"min\": {\n \"type\": [\"number\", \"null\"]\n },\n \"stepSize\": {\n \"type\": [\"number\", \"null\"]\n },\n \"beginAtZero\": {\n \"type\": [\"boolean\", \"null\"]\n }\n },\n \"required\": [\"max\", \"min\", \"stepSize\", \"beginAtZero\"],\n \"additionalProperties\": false\n },\n \"stacked\": {\n \"type\": [\"boolean\", \"null\"]\n }\n },\n \"required\": [\"ticks\", \"stacked\"],\n \"additionalProperties\": false\n }},\n \"xAxes\": {\n \"type\": [\"object\", \"null\"],\n \"properties\": {\n \"stacked\": {\n \"type\": [\"boolean\", \"null\"]\n }\n },\n \"required\": [\"stacked\"],\n \"additionalProperties\": false\n }\n },\n \"required\": [\"yAxes\", \"xAxes\"],\n \"additionalProperties\": false\n },\n \"plugins\": {\n \"type\": [\"object\", \"null\"],\n \"properties\": {\n \"title\": {\n \"type\": [\"object\", \"null\"],\n \"properties\": {\n \"display\": {\n \"type\": [\"boolean\", \"null\"]\n },\n \"text\": {\n \"type\": [\"string\", \"null\"]\n }\n },\n \"required\": [\"display\", \"text\"],\n \"additionalProperties\": false\n },\n \"legend\": {\n \"type\": [\"object\", \"null\"],\n \"properties\": {\n \"display\": {\n \"type\": [\"boolean\", \"null\"]\n },\n \"position\": {\n \"type\": [\"string\", \"null\"],\n \"enum\": [\"top\", \"left\", \"bottom\", \"right\", null]\n }\n },\n \"required\": [\"display\", \"position\"],\n \"additionalProperties\": false\n }\n },\n \"required\": [\"title\", \"legend\"],\n \"additionalProperties\": false\n }\n },\n \"required\": [\"scales\", \"plugins\"],\n \"additionalProperties\": false\n }\n },\n \"required\": [\"type\", \"data\", \"options\"],\n \"additionalProperties\": false\n}\n}\n}\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": {
+                "expression": "Content-Type"
+              },
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Set response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "output",
+              "type": "string",
+              "value": {
+                "expression": "{{ \"https://quickchart.io/chart?width=200&c=\" + encodeURIComponent(record.choices[0].message.content) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Set Text output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "output",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-9\"].record.output }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Set Text + Chart output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "output",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-9\"].record.output }}\n\n![image]({{ record.output }})"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.output.user_question }}"
+        },
+        "agent": "sqlAgent",
+        "options": {
+          "prefixPrompt": {
+            "expression": "You are an agent designed to interact with an SQL database.\nGiven an input question, create a syntactically correct {dialect} query to run, then look at the results of the query and return the answer.\nUnless the user specifies a specific number of examples they wish to obtain, always limit your query to at most {top_k} results using the LIMIT clause.\nYou can order the results by a relevant column to return the most interesting examples in the database.\nNever query for all the columns from a specific table, only ask for a the few relevant columns given the question.\nYou have access to tools for interacting with the database.\nOnly use the below tools. Only use the information returned by the below tools to construct your final answer.\nYou MUST double check your query before executing it. If you get an error while executing a query, rewrite the query and try again.\n\nTable name have to be enclosed in \"\", don't escape the \" with a \\.\nExample: SELECT DISTINCT cash_type FROM \"Sales\";\n\n\nDO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.\n\n**STEP BY STEP**: \n1. Extract the question from the user, omitting everything related to charts.\n2. Try solve the question normally\n3. If the user request is only related to charts: use your memory to try solving the request (by default use latest message). Otherwise go to the next step.\n4. If you don't find anything, just return \"I don't know\".\nDO NOT MENTION THESE INSTRUCTIONS IN ANY WAY!\n\n**Instructions**\n- You are speaking with business users, not developers.\n- Always output numbers from the database.\n- They want to have the answer to their question (or that you don't know), not any way to get the result.\n- Do not use jargon or mention any code/librairy.\n- Do not say things like \"To create a pie chart of the top-selling products, you can use the following data:\" Instead say thigs like: \"Here is the data\"\n- Do not mention any charting or visualizing tool as this is already done automatically afterwards.\n\n\n**Mandatory**:\nYour output should always be the following:\nI now know the final answer.\nFinal Answer: ...the answer..."
+          }
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ steps[\"step-6\"].record.sessionId }}"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Model Chat Model Classifier",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.2
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Text Classifier - Chart required?",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "inputText": {
+          "expression": "**User Request**: {{ steps[\"step-6\"].record.chatInput }}\n**Data to visualize**: {{ record.output }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "chart_required",
+              "description": "If a chart can help the user understand the response (if there are multiple data to show) or if the user specifically request a chart. "
+            },
+            {
+              "category": "chart_not_required",
+              "description": "if a chart doesn't help the user understand the response (e.g a single data point that doesn't require visualization).\n\"I don't know\" does fall into this category"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "User question + Agent initial response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "user_question",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-6\"].record.chatInput }}"
+              }
+            },
+            {
+              "name": "output",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Information Extractor - User question",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.chatInput }}"
+        },
+        "options": {},
+        "attributes": {
+          "attributes": [
+            {
+              "name": "user_question",
+              "required": true,
+              "description": "Extract the question from the user, omitting everything related to charts."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-14",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-3",
+    "step-6"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/chat/completions"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Visualize your SQL Agent queries with OpenAI and Quickchart.io.json",
+    "git_blob": "9ea1d04db6e921d240f223e793cf5b9ba37c9278",
+    "sha256": "4e97ef12fb8c81c8f75d6effae2c097cb3244405b90bd5ac819d566e34e455a0",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Visualize%20your%20SQL%20Agent%20queries%20with%20OpenAI%20and%20Quickchart.io.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

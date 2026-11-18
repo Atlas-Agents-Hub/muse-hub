@@ -1,0 +1,152 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-publish-one-video-natively-to-tiktok-instagram-and-youtube-with-postwire-35be2a",
+  "title": "Publish one video natively to TikTok Instagram and YouTube with PostWire",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When you click Test workflow",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Your idea, video and platforms",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "idea",
+              "value": "Announce that our AI meal planner now builds a full week of recipes from one photo of your fridge. Friendly, build-in-public tone.",
+              "type": "string"
+            },
+            {
+              "name": "video_url",
+              "value": {
+                "configuration_input": "step-2-assignments-1-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "platforms",
+              "value": {
+                "expression": "{{ [\"tiktok\", \"instagram\", \"youtube\"] }}"
+              },
+              "type": "array"
+            },
+            {
+              "name": "brand_voice",
+              "value": "Plain language, first person, no hype, at most one emoji.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Write a native caption per platform",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ prompt: record.idea, platforms: record.platforms, media_url: record.video_url, brand_voice: record.brand_voice }) }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Publish to every connected account",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ platforms: steps[\"step-2\"].record.platforms, video_url: steps[\"step-2\"].record.video_url, per_platform: record.drafts, options: { tiktok: { privacy_level: 'SELF_ONLY' } } }) }}"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-1-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://example.com/{resource}.mp4"
+    },
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://postwire.io/api/generate"
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://postwire.io/api/post"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/Publish one video natively to TikTok Instagram and YouTube with PostWire.json",
+    "git_blob": "4517c3431064093b1a4f8f394cd890c4871dd4fe",
+    "sha256": "9e36e859b2ad31b42a96be984d95760a9819577a0e2b6202fdc14ca7897de4f7",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/Publish%20one%20video%20natively%20to%20TikTok%20Instagram%20and%20YouTube%20with%20PostWire.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

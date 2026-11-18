@@ -1,0 +1,33 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-enrich-property-inventory-survey-with-image-recognition-and-assistant-ded601",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-base": null,
+    "step-3-table": null,
+    "step-7-url": null,
+    "step-10-url": null,
+    "step-16-base": null,
+    "step-16-table": null,
+    "step-16-columns-value-model": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

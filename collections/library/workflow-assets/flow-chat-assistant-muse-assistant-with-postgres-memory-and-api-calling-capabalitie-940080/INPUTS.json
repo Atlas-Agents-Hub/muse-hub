@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-chat-assistant-muse-assistant-with-postgres-memory-and-api-calling-capabalitie-940080",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-assistantid": null,
+    "step-9-url": null,
+    "step-10-url": null,
+    "step-11-assistantid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "mysql": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    }
+  }
+}

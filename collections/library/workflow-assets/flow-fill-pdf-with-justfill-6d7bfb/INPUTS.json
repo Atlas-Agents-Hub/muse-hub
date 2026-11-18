@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-fill-pdf-with-justfill-6d7bfb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-id": null,
+    "step-2-assignments-0-value": null,
+    "step-3-url": null,
+    "step-3-parameters-0-value": null,
+    "step-3-jsonbody-body-id": null,
+    "step-6-url": null,
+    "step-6-parameters-0-value": null,
+    "step-8-url": null,
+    "step-8-parameters-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

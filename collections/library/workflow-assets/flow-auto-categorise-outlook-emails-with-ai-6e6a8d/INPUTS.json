@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-auto-categorise-outlook-emails-with-ai-6e6a8d",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-folderid": null,
+    "step-7-folderid": null,
+    "step-9-folderid": null,
+    "step-11-folderid": null,
+    "step-21-filters-folderstoinclude-0": null,
+    "step-23-folderid": null
+  },
+  "adapters": {
+    "microsoftoutlook": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

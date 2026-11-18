@@ -1,0 +1,35 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-vision-based-assistant-scraper-with-google-sheets-scrapingbee-and-muse-fec58f",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-2-parameters-0-value": null,
+    "step-6-sheetname": null,
+    "step-6-documentid": null,
+    "step-8-url": null,
+    "step-8-parameters-0-value": null,
+    "step-9-workflowid": null,
+    "step-10-sheetname": null,
+    "step-10-documentid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-summarize-the-new-documents-from-google-drive-and-save-summary-in-google-sheet-66e9b1",
+  "title": "Summarize the New Documents from Google Drive and Save Summary in Google Sheet",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Google Docs",
+      "operation": "service-read",
+      "adapter": "googledocs",
+      "parameters": {
+        "operation": "get",
+        "documentURL": {
+          "expression": "{{ record.id }}"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Wikipedia",
+      "operation": "service-read",
+      "adapter": "toolwikipedia",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "Calculator",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "Name": {
+              "expression": "{{ steps[\"step-5\"].record.lastModifyingUser.displayName }}"
+            },
+            "Email ": {
+              "expression": "{{ steps[\"step-5\"].record.lastModifyingUser.emailAddress }}"
+            },
+            "Summarise Conetent data ": {
+              "expression": "{{ record.message.content }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Email ",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Summarise Conetent data ",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-4-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-4-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Google Drive",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "event": "fileCreated",
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "configuration_input": "step-5-foldertowatch"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Generate Summary AI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-6-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Summarise the below content\n {{ record.content }}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-foldertowatch",
+      "purpose": "Select the folderToWatch for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Summarize the New Documents from Google Drive and Save Summary in Google Sheet.json",
+    "git_blob": "fb5be19c5edd2b58212c1485a2f57d63810b04fd",
+    "sha256": "83cba24b02d47a4bf3bdd8970325bfa51bfd4fcde7dc581cc5b82bc5fda98ea1",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Summarize%20the%20New%20Documents%20from%20Google%20Drive%20and%20Save%20Summary%20in%20Google%20Sheet.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

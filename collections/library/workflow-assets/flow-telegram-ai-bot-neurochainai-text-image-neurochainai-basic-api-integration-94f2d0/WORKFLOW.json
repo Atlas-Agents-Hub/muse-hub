@@ -1,0 +1,844 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-telegram-ai-bot-neurochainai-text-image-neurochainai-basic-api-integration-94f2d0",
+  "title": "Telegram AI Bot NeurochainAI Text & Image - NeurochainAI Basic API Integration",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Telegram Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Code",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// O valor vem como um array com uma string, então precisamos pegar o primeiro item do array\nconst rawUrl = record.choices[0].text;\n\n// Remover colchetes e aspas (se existirem) e pegar o primeiro elemento do array\nconst imageUrl = JSON.parse(rawUrl)[0];\n\nreturn {\n json: {\n imageUrl: imageUrl\n }\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "HTTP Request3",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.imageUrl }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Telegram2",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": "⌛",
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "replyMarkup": "inlineKeyboard",
+        "additionalFields": {
+          "appendAttribution": false,
+          "reply_to_message_id": {
+            "expression": "{{ steps[\"step-1\"].record.message.message_id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Telegram1",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "operation": "sendPhoto",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": {
+            "expression": "*Prompt:* `{{ steps[\"step-17\"].record.cleanMessage }}`"
+          },
+          "parse_mode": "Markdown",
+          "reply_to_message_id": {
+            "expression": "{{ steps[\"step-1\"].record.message.message_id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Telegram4",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-4\"].record.result.chat.id }}"
+        },
+        "messageId": {
+          "expression": "{{ steps[\"step-4\"].record.result.message_id }}"
+        },
+        "operation": "deleteMessage"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Telegram3",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.error.message }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🔄 Retry",
+                    "additionalFields": {
+                      "callback_data": {
+                        "expression": "response= Fluxretry: {{ steps[\"step-17\"].record.cleanMessage }}"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false,
+          "reply_to_message_id": {
+            "expression": "{{ steps[\"step-1\"].record.message.message_id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Telegram5",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-4\"].record.result.chat.id }}"
+        },
+        "messageId": {
+          "expression": "{{ steps[\"step-4\"].record.result.message_id }}"
+        },
+        "operation": "deleteMessage"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Telegram6",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "*Prompt too short*"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "replyMarkup": "inlineKeyboard",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "appendAttribution": false,
+          "reply_to_message_id": {
+            "expression": "{{ steps[\"step-1\"].record.message.message_id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Telegram7",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-4\"].record.result.chat.id }}"
+        },
+        "messageId": {
+          "expression": "{{ steps[\"step-4\"].record.result.message_id }}"
+        },
+        "operation": "deleteMessage"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "NeurochainAI - REST API",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-11-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"model\": \"Meta-Llama-3.1-8B-Instruct-Q6_K.gguf\",\n \"prompt\": \"You must respond directly to the user's message, and the message the user sent you is the following message: {{ steps[\"step-1\"].record.message.text }}\",\n \"max_tokens\": 1024,\n \"temperature\": 0.6,\n \"top_p\": 0.95,\n \"frequency_penalty\": 0,\n \"presence_penalty\": 1.1\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-11-parameters-0-value"
+              }
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "TYPING - ACTION",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "operation": "sendChatAction"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "AI Response",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.choices[0].text }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "appendAttribution": false,
+          "reply_to_message_id": {
+            "expression": "{{ steps[\"step-1\"].record.message.message_id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "No response",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "*No response from worker*"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "appendAttribution": false,
+          "reply_to_message_id": {
+            "expression": "{{ steps[\"step-1\"].record.message.message_id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Prompt too short",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "*Prompt too short*"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "replyMarkup": "inlineKeyboard",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "appendAttribution": false,
+          "reply_to_message_id": {
+            "expression": "{{ steps[\"step-1\"].record.message.message_id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Switch2",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.error.message }}"
+                    },
+                    "rightValue": {
+                      "expression": "500 - \"{\\\"error\\\":true,\\\"msg\\\":\\\"No response from worker\\\"}\""
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.error.message }}"
+                    },
+                    "rightValue": "400 - \"{\\\"error\\\":true,\\\"msg\\\":\\\"Prompt string is invalid\\\"}\""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Code1",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Acessa a mensagem original que está em record.message.text\nconst userMessage = record.message.text;\n\n// Remover o prefixo '/flux' e qualquer espaço extra após o comando\nconst cleanMessage = userMessage.replace(/^\\/flux\\s*/, '');\n\n// Retornar a mensagem limpa\nreturn {\n json: {\n cleanMessage: cleanMessage\n }\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Switch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Flux",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.message.text }}"
+                    },
+                    "rightValue": "/flux"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "text",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.message.text }}"
+                    },
+                    "rightValue": "@NCNAI_BOT"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "DM Text",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.message.chat.type }}"
+                    },
+                    "rightValue": "private"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "ignoreCase": true
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "NeurochainAI - Flux",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-19-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"model\": \"flux1-schnell-gguf\",\n \"prompt\": \"Generate an image that matches exactly this: {{ steps[\"step-17\"].record.cleanMessage }}\",\n \"size\": \"1024x1024\",\n \"quality\": \"standard\",\n \"n\": 1,\n \"seed\": {{ Math.floor(Math.random() * 999) + 1 }}\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-19-parameters-0-value"
+              }
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Switch1",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.error.message }}"
+                    },
+                    "rightValue": "400 - \"{\\\"error\\\":true,\\\"msg\\\":\\\"Prompt string is invalid\\\"}\""
+                  }
+                ]
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.error.message }}"
+                    },
+                    "rightValue": "400 - \"{\\\"error\\\":true,\\\"msg\\\":\\\"Prompt string is invalid\\\"}\""
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-11-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://ncmb.neurochain.io/tasks/message"
+    },
+    {
+      "id": "step-11-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-19-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://ncmb.neurochain.io/tasks/tti"
+    },
+    {
+      "id": "step-19-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Telegram AI Bot_ NeurochainAI Text & Image - NeurochainAI Basic API Integration.json",
+    "git_blob": "b7157ca5a9176bede279bd56bce2c8000a38c91f",
+    "sha256": "c029dab3d0692c0034b24974267fd1e2725a80650750ce88587fe38abefa3181",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Telegram%20AI%20Bot_%20NeurochainAI%20Text%20%26%20Image%20-%20NeurochainAI%20Basic%20API%20Integration.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

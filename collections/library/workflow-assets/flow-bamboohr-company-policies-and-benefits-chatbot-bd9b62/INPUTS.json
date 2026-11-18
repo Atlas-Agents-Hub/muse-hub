@@ -1,0 +1,34 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-bamboohr-company-policies-and-benefits-chatbot-bd9b62",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-22-tablename": null,
+    "step-24-tablename": null
+  },
+  "adapters": {
+    "bamboohr": {
+      "connection": null
+    },
+    "embedding": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

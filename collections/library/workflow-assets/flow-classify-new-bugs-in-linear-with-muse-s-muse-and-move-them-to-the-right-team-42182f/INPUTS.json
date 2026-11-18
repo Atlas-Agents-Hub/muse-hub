@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-classify-new-bugs-in-linear-with-muse-s-muse-and-move-them-to-the-right-team-42182f",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-teamid": null,
+    "step-2-conditions-1-rightvalue": null,
+    "step-4-url": null,
+    "step-10-modelid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "linear": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

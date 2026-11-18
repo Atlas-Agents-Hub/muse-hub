@@ -1,0 +1,157 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-force-ai-to-use-a-specific-output-format-baf7bb",
+  "title": "Force AI to use a specific output format",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Execute Workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Prompt",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "input",
+              "value": "Return the 5 largest states by area in the USA with their 3 largest cities and their population."
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "LLM Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "string"
+              },
+              "cities": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": "string",
+                    "population": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Auto-fixing Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Force AI to use a specific output format.json",
+    "git_blob": "9211666f1a6ec97ffea0ac801f7c5cdd32a776e5",
+    "sha256": "89559e6295d72f9c283a2133120be1949d5af0ef3482a20a1194671d8a398891",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Force%20AI%20to%20use%20a%20specific%20output%20format.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

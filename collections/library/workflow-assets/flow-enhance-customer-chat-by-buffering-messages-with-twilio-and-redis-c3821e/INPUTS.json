@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-enhance-customer-chat-by-buffering-messages-with-twilio-and-redis-c3821e",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "redis": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "twilio": {
+      "connection": null
+    }
+  }
+}

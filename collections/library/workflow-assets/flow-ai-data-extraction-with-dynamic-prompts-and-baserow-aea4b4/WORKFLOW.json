@@ -1,0 +1,941 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-data-extraction-with-dynamic-prompts-and-baserow-aea4b4",
+  "title": "AI Data Extraction with Dynamic Prompts and Baserow",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Baserow Event",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-1-path"
+        },
+        "options": {},
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Event Type",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "rows.updated",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.event_type }}"
+                    },
+                    "rightValue": "rows.updated"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "field.created",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.event_type }}"
+                    },
+                    "rightValue": "field.created"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "field.updated",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.event_type }}"
+                    },
+                    "rightValue": "field.updated"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Table Fields API",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.baserow.io/api/database/fields/table/{{ record.body.table_id }}/"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "user_field_names",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get Prompt Fields",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const fields = records\n .filter(item => item.json.description)\n .map(item => ({\n id: item.json.id,\n order: item.json.order,\n name: item.json.name,\n description: item.json.description,\n }));\n\nreturn { json: { fields } };",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Get Event Body",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{ steps[\"step-1\"].records[0].body }}"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "List Table API",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.baserow.io/api/database/rows/table/{{ record.table_id }}/"
+        },
+        "options": {
+          "pagination": {
+            "pagination": {
+              "nextURL": {
+                "expression": "{{ $response.body.next || `https://api.baserow.io/api/database/rows/table/${record.table_id}/?user_field_names=true&size=20&page=9999` }}"
+              },
+              "maxRequests": 3,
+              "paginationMode": "responseContainsNextURL",
+              "requestInterval": 1000,
+              "limitPagesFetched": true,
+              "completeExpression": {
+                "expression": "{{ $response.body.isEmpty() || $response.statusCode >= 400 }}"
+              },
+              "paginationCompleteWhen": "other"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "user_field_names",
+              "value": "true"
+            },
+            {
+              "name": "size",
+              "value": "20"
+            },
+            {
+              "name": "include",
+              "value": "id,order,_id,name,created_at,last_modified_at"
+            },
+            {
+              "name": "filters",
+              "value": {
+                "json": {
+                  "filter_type": "AND",
+                  "filters": [
+                    {
+                      "type": "not_empty",
+                      "field": "File",
+                      "value": ""
+                    }
+                  ],
+                  "groups": []
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get Valid Rows",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return records\n .filter(item => item.json.results?.length)\n .flatMap(item => item.json.results);",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Get File Data",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.File[0].url }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Extract from File",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Update Row",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.baserow.io/api/database/rows/table/{{ steps[\"step-27\"].records[0].table_id }}/{{ steps[\"step-13\"].record.id }}/"
+        },
+        "method": "PATCH",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n ...records\n .reduce((acc, item) => ({\n ...acc,\n [item.json.field]: item.json.value\n }), {})\n}\n}}"
+        },
+        "sendBody": true,
+        "sendQuery": true,
+        "specifyBody": "json",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "user_field_names",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Get Result",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "field",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-27\"].records[0].field.name }}"
+              }
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.text.trim() }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Row Reference",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-14",
+      "label": "Generate Field Value",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "<file>\n{{ record.text }}\n</file>\n\nData to extract: {{ steps[\"step-27\"].records[0].field.description }}\noutput format is: {{ steps[\"step-27\"].records[0].field.type }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "You assist the user in extracting the required data from the given file.\n* Keep you answer short.\n* If you cannot extract the requested data, give you response as \"n/a\"."
+              }
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Get Row",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.baserow.io/api/database/rows/table/{{ steps[\"step-28\"].records[0].table_id }}/{{ record.id }}/"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "user_field_names",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Rows to List",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "items"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Fields to Update",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const row = steps[\"step-19\"].records[0];\nconst fields = steps[\"step-4\"].records[0].fields;\nconst missingFields = fields\n .filter(field => field.description && !row[field.name]);\n\nreturn missingFields;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Loop Over Items1",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Row Ref",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-20",
+      "label": "Get File Data1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-19\"].record.File[0].url }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Extract from File1",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Update Row1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.baserow.io/api/database/rows/table/{{ steps[\"step-28\"].records[0].table_id }}/{{ steps[\"step-19\"].records[0].id }}/"
+        },
+        "method": "PATCH",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n ...records\n .reduce((acc, item) => ({\n ...acc,\n [item.json.field]: item.json.value\n }), {})\n}\n}}"
+        },
+        "sendBody": true,
+        "sendQuery": true,
+        "specifyBody": "json",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "user_field_names",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Get Result1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "field",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-17\"].record.name }}"
+              }
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.text.trim() }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Generate Field Value1",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "<file>\n{{ steps[\"step-21\"].records[0].text }}\n</file>\n\nData to extract: {{ record.description }}\noutput format is: {{ record.type }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "You assist the user in extracting the required data from the given file.\n* Keep you answer short.\n* If you cannot extract the requested data, give you response as \"n/a\" followed by \"(reason)\" where reason is replaced with reason why data could not be extracted."
+              }
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Filter Valid Rows",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.File[0].url }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Filter Valid Fields",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.field.description }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Event Ref",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-28",
+      "label": "Event Ref1",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-29",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-15",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-28",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-24",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-30",
+      "to": "step-14",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-24",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-12",
+      "channel": "main",
+      "branch": 0
+    },
+    {
+      "from": "step-18",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI Data Extraction with Dynamic Prompts and Baserow.json",
+    "git_blob": "d3c10526e79de505eb229c547593fb1614142bf0",
+    "sha256": "c063f5ea35730ddd294ae75b8ff602d30e3bef77bfaa1161f38a05a8c6aaf174",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20Data%20Extraction%20with%20Dynamic%20Prompts%20and%20Baserow.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

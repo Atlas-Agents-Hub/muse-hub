@@ -1,0 +1,42 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automate-siem-alert-enrichment-with-mitre-att-ck-qdrant-zendesk-in-muse-17214b",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-16-mitre-attack-ttps-0-reference": null,
+    "step-16-external-resources-0-url": null,
+    "step-16-external-resources-1-url": null,
+    "step-16-external-resources-2-url": null,
+    "step-17-fileid": null,
+    "step-18-qdrantcollection": null,
+    "step-19-qdrantcollection": null,
+    "step-20-qdrantcollection": null,
+    "step-22-customfieldsvalues-0-id": null,
+    "step-22-customfieldsvalues-1-id": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    },
+    "zendesk": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-post-new-live-tennis-matches-to-discord-on-a-schedule-3e81f2",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-4-operation": null
+  },
+  "adapters": {
+    "discord": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

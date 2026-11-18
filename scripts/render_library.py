@@ -43,6 +43,11 @@ def outputs(root=ROOT):
                 target='../skills/'+sid+'/SKILL.md' if skills[sid].get('format')=='portable-skill' else '../../muse-starters-v1/skills/'+sid+'/SKILL.md'
                 body=body.replace('](../skills/'+sid+'/SKILL.md)',']('+target+')')
             body=body.replace('](../TOOL_GUIDES.md)','](../../../docs/tools/README.md)')
+            if row.get('resources'):
+                body=body.replace(']('+row['id']+'/','](../workflow-assets/'+row['id']+'/')
+                body=body.replace('`'+row['id']+'/', '`../workflow-assets/'+row['id']+'/')
+                body=body.replace('tools/workflow_graph.py workflows/'+row['id']+'/',
+                                  '../../../tools/workflow_library.py ../workflow-assets/'+row['id']+'/')
         add(folder+row['id']+'.md',body)
     index=f"# Muse skills\n\nChoose from **{len(skills)} skills**. Each download includes its method and supporting files. [Search by subject or specialist](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html#skills).\n\n"
     for category,rows in sorted(grouped.items(),key=lambda pair:pair[0].casefold()):

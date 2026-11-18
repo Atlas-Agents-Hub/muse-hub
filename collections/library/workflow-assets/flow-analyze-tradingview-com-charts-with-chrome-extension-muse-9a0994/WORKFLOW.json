@@ -1,0 +1,93 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-analyze-tradingview-com-charts-with-chrome-extension-muse-9a0994",
+  "title": "Analyze tradingview.com charts with Chrome extension, Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-1-path"
+        },
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": "You are an expert financial analyst tasked with providing an advanced technical analyses of a stock or crypto currency chart provided. Your analysis will be based on various technical indicators and will provide simple insights for novice traders. Just explain to traders were you expect the market is moving. Also warn them this is not a binding advice. Make sure to explain everything in infant language.",
+        "modelId": {
+          "configuration_input": "step-2-modelid"
+        },
+        "options": {},
+        "resource": "image",
+        "inputType": "base64",
+        "operation": "analyze"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Respond to Webhook",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "text",
+        "responseBody": {
+          "expression": "{{ record.content }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Analyze tradingview.com charts with Chrome extension, N8N and OpenAI.json",
+    "git_blob": "5d581282d04e6292cfa2a25e8d2ec2f786fcc087",
+    "sha256": "f18d1f162a39c6033b355fb7194ca05e62260efcded1216557eda9637314fcbc",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Analyze%20tradingview.com%20charts%20with%20Chrome%20extension%2C%20N8N%20and%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

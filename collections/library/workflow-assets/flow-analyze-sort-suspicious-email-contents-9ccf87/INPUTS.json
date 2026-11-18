@@ -1,0 +1,29 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-analyze-sort-suspicious-email-contents-9ccf87",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-url": null,
+    "step-9-modelid": null,
+    "step-10-project": null,
+    "step-10-issuetype": null,
+    "step-11-project": null,
+    "step-11-issuetype": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "jira": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

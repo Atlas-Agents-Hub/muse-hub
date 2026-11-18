@@ -1,0 +1,226 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-etl-pipeline-for-text-processing-265c15",
+  "title": "ETL pipeline for text processing",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Twitter",
+      "operation": "service-read",
+      "adapter": "twitter",
+      "parameters": {
+        "limit": 3,
+        "operation": "search",
+        "searchText": {
+          "expression": "#OnThisDay"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Postgres",
+      "operation": "service-read",
+      "adapter": "postgres",
+      "parameters": {
+        "table": "tweets",
+        "columns": "text, score, magnitude",
+        "returnFields": {
+          "expression": "*"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "MongoDB",
+      "operation": "service-read",
+      "adapter": "mongodb",
+      "parameters": {
+        "fields": "text",
+        "options": {},
+        "operation": "insert",
+        "collection": "tweets"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Slack",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": "🐦 NEW TWEET with sentiment score {{record[\"score\"]}} and magnitude {{record[\"magnitude\"]}} ⬇️\n{{record[\"text\"]}}"
+        },
+        "channel": "tweets",
+        "attachments": [],
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": {
+                "expression": "{{record[\"score\"]}}"
+              },
+              "operation": "larger"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "NoOp",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "Google Cloud Natural Language",
+      "operation": "service-read",
+      "adapter": "googlecloudnaturallanguage",
+      "parameters": {
+        "content": {
+          "expression": "{{steps[\"step-3\"].json[\"text\"]}}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Set",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "score",
+              "value": {
+                "expression": "{{record[\"documentSentiment\"][\"score\"]}}"
+              }
+            },
+            {
+              "name": "magnitude",
+              "value": {
+                "expression": "{{record[\"documentSentiment\"][\"magnitude\"]}}"
+              }
+            }
+          ],
+          "string": [
+            {
+              "name": "text",
+              "value": {
+                "expression": "{{steps[\"step-1\"].json[\"text\"]}}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Cron",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 6
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-9"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/ETL pipeline for text processing.json",
+    "git_blob": "3afc6014d27757e712bfb6eced6923afe72306f0",
+    "sha256": "cc234f7171da40b4a6921125e470565b9f10401e1d9f23170c668783f2e6a2a3",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/ETL%20pipeline%20for%20text%20processing.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

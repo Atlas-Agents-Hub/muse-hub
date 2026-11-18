@@ -1,0 +1,18 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-vector-database-as-a-big-data-analysis-tool-for-ai-agents-2-3-anomaly-788070",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-14-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

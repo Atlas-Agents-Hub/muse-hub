@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-assistant-google-calendar-assistant-5487ef",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-calendar": null,
+    "step-5-calendar": null
+  },
+  "adapters": {
+    "googlecalendar": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    }
+  }
+}

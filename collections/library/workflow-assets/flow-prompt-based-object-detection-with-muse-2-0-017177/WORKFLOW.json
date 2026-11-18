@@ -1,0 +1,306 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-prompt-based-object-detection-with-muse-2-0-017177",
+  "title": "Prompt-based Object Detection with Muse 2.0",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Get Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "coords",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.candidates[0].content.parts[0].text.parseJson() }}"
+              }
+            },
+            {
+              "name": "width",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.size.width }}"
+              }
+            },
+            {
+              "name": "height",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.size.height }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get Test Image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Model 2.0 Object Detection",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"contents\": [{\n \"parts\":[\n {\"text\": \"I want to see all bounding boxes of rabbits in this image.\"},\n {\n \"inline_data\": {\n \"mime_type\":\"image/jpeg\",\n \"data\": record.binary.data.data\n }\n }\n ]\n }],\n \"generationConfig\": {\n \"response_mime_type\": \"application/json\",\n \"response_schema\": {\n \"type\": \"ARRAY\",\n \"items\": {\n \"type\": \"OBJECT\",\n \"properties\": {\n \"box_2d\": {\"type\":\"ARRAY\", \"items\": { \"type\": \"NUMBER\" } },\n \"label\": { \"type\": \"STRING\"}\n }\n }\n }\n }\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Scale Normalised Coords",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const { coords, width, height } = records[0].json;\n\nconst scale = 1000;\nconst scaleCoordX = (val) => (val * width) / scale;\nconst scaleCoordY = (val) => (val * height) / scale;\n \nconst normalisedOutput = coords\n .filter(coord => coord.box_2d.length === 4)\n .map(coord => {\n return {\n xmin: coord.box_2d[1] ? scaleCoordX(coord.box_2d[1]) : coord.box_2d[1],\n xmax: coord.box_2d[3] ? scaleCoordX(coord.box_2d[3]) : coord.box_2d[3],\n ymin: coord.box_2d[0] ? scaleCoordY(coord.box_2d[0]) : coord.box_2d[0],\n ymax: coord.box_2d[2] ? scaleCoordY(coord.box_2d[2]) : coord.box_2d[2],\n }\n });\n\nreturn {\n json: {\n coords: normalisedOutput\n },\n binary: steps[\"step-3\"].first().binary\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Draw Bounding Boxes",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "multiStep",
+        "operations": {
+          "operations": [
+            {
+              "color": "#ff00f277",
+              "operation": "draw",
+              "endPositionX": {
+                "expression": "{{ record.coords[0].xmax }}"
+              },
+              "endPositionY": {
+                "expression": "{{ record.coords[0].ymax }}"
+              },
+              "startPositionX": {
+                "expression": "{{ record.coords[0].xmin }}"
+              },
+              "startPositionY": {
+                "expression": "{{ record.coords[0].ymin }}"
+              }
+            },
+            {
+              "color": "#ff00f277",
+              "operation": "draw",
+              "endPositionX": {
+                "expression": "{{ record.coords[1].xmax }}"
+              },
+              "endPositionY": {
+                "expression": "{{ record.coords[1].ymax }}"
+              },
+              "startPositionX": {
+                "expression": "{{ record.coords[1].xmin }}"
+              },
+              "startPositionY": {
+                "expression": "{{ record.coords[1].ymin }}"
+              }
+            },
+            {
+              "color": "#ff00f277",
+              "operation": "draw",
+              "endPositionX": {
+                "expression": "{{ record.coords[2].xmax }}"
+              },
+              "endPositionY": {
+                "expression": "{{ record.coords[2].ymax }}"
+              },
+              "startPositionX": {
+                "expression": "{{ record.coords[2].xmin }}"
+              },
+              "startPositionY": {
+                "expression": "{{ record.coords[2].ymin }}"
+              }
+            },
+            {
+              "color": "#ff00f277",
+              "operation": "draw",
+              "endPositionX": {
+                "expression": "{{ record.coords[3].xmax }}"
+              },
+              "endPositionY": {
+                "expression": "{{ record.coords[3].ymax }}"
+              },
+              "startPositionX": {
+                "expression": "{{ record.coords[3].xmin }}"
+              },
+              "startPositionY": {
+                "expression": "{{ record.coords[3].ymin }}"
+              }
+            },
+            {
+              "color": "#ff00f277",
+              "operation": "draw",
+              "endPositionX": {
+                "expression": "{{ record.coords[4].xmax }}"
+              },
+              "endPositionY": {
+                "expression": "{{ record.coords[4].ymax }}"
+              },
+              "startPositionX": {
+                "expression": "{{ record.coords[4].xmin }}"
+              },
+              "startPositionY": {
+                "expression": "{{ record.coords[4].ymin }}"
+              }
+            },
+            {
+              "color": "#ff00f277",
+              "operation": "draw",
+              "cornerRadius": {
+                "expression": "0"
+              },
+              "endPositionX": {
+                "expression": "{{ record.coords[5].xmax }}"
+              },
+              "endPositionY": {
+                "expression": "{{ record.coords[5].ymax }}"
+              },
+              "startPositionX": {
+                "expression": "{{ record.coords[5].xmin }}"
+              },
+              "startPositionY": {
+                "expression": "{{ record.coords[5].ymin }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get Image Info",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "operation": "information"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-6",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://www.stonhambarns.co.uk/wp-content/uploads/{resource}.jpg"
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Prompt-based Object Detection with Gemini 2.0.json",
+    "git_blob": "3f04dc48d28aeaa6478e951a66f40f150532dbb0",
+    "sha256": "ddb5bf56ec582967feec29ce81d7bff5440b587a8cba9a216ba4c46b765760c8",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Prompt-based%20Object%20Detection%20with%20Gemini%202.0.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-bilig-workpaper-mcp-formula-engine-for-muse-agents-c813cf",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-2-parameters-2-value": null,
+    "step-2-jsonbody-body-id": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

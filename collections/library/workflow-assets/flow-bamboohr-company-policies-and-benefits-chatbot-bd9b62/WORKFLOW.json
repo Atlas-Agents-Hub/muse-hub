@@ -1,0 +1,883 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-bamboohr-company-policies-and-benefits-chatbot-bd9b62",
+  "title": "BambooHR Company Policies and Benefits Chatbot",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "dataType": "binary"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "chunkOverlap": 100
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Vector Store Tool",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "name": "company_files",
+        "topK": 5,
+        "description": "Retrieves information from the company handbook, 401k policies, benefits overview, and expense policies available to all employees."
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Embeddings OpenAI1",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Employee Lookup Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "employee_lookup_tool",
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool with the full name of an employee to retrieve their details from our HRIS, including their job title, department, and supervisor. If an employee name is not provided, you may call this tool with a department name to retrieve the most senior person in that department. This tool requires an exact match on employee names but can infer the senior-most person for a department query.",
+        "jsonSchemaExample": {
+          "json": {
+            "name": "The name of an employee or department"
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Model Chat Model2",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Model Chat Model3",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Model Chat Model4",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Auto-fixing Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-15",
+      "label": "Model Chat Model5",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchemaExample": {
+          "json": {
+            "name": "The name of an employee"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "GET all files",
+      "operation": "service-read",
+      "adapter": "bamboohr",
+      "parameters": {
+        "resource": "file",
+        "operation": "getAll",
+        "returnAll": true,
+        "simplifyOutput": false
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Filter out files from undesired categories",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.name }}"
+              },
+              "rightValue": {
+                "expression": "Company Files"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Split out individual files",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "files"
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Filter out non-pdf files",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.originalFileName.endsWith(\".pdf\") }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Download file from BambooHR",
+      "operation": "service-read",
+      "adapter": "bamboohr",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.id }}"
+        },
+        "resource": "file",
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Supabase Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {
+          "queryName": "match_files"
+        },
+        "tableName": {
+          "configuration_input": "step-22-tablename"
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Employee initiates a conversation",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Supabase Vector Store Retrieval",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {
+          "queryName": "match_files"
+        },
+        "tableName": {
+          "configuration_input": "step-24-tablename"
+        }
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "AI-Powered HR Benefits and Company Policies Chatbot",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-26",
+      "label": "Text Classifier",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "inputText": {
+          "expression": "{{ record.query.name }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "person",
+              "description": "This is the name of a person."
+            },
+            {
+              "category": "department",
+              "description": "This is the name of a department within the company."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "GET all employees",
+      "operation": "service-read",
+      "adapter": "bamboohr",
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Filter out other employees",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.displayName }}"
+              },
+              "rightValue": {
+                "expression": "{{ steps[\"step-25\"].record.query.name }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "Stringify employee record for response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.toJsonString() }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "GET all employees (second path)",
+      "operation": "service-read",
+      "adapter": "bamboohr",
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-31",
+      "label": "Extract departments",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "renameField": true,
+              "outputFieldName": "departments",
+              "fieldToAggregate": "department"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-32",
+      "label": "Ensure uniqueness in department list",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "departments",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.departments.unique() }}"
+              }
+            },
+            {
+              "name": "query",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-26\"].record.query.name }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-33",
+      "label": "Extract department",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.query }}"
+        },
+        "options": {},
+        "attributes": {
+          "attributes": [
+            {
+              "name": "department",
+              "description": {
+                "expression": "The department from the following list that would be most applicable:\n{{ record.departments }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-34",
+      "label": "Retrieve all employees",
+      "operation": "service-read",
+      "adapter": "bamboohr",
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-35",
+      "label": "Filter out other departments",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.department }}"
+              },
+              "rightValue": {
+                "expression": "{{ steps[\"step-33\"].record.output.department }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-36",
+      "label": "Extract relevant employee fields",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "include": "specifiedFields",
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "fieldsToInclude": "id, displayName, jobTitle, workEmail",
+        "destinationFieldName": "department_employees"
+      }
+    },
+    {
+      "id": "step-37",
+      "label": "Identify most senior employee",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Who is the most senior employee from this list:\n{{ record.department_employees.toJsonString() }}"
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-38",
+      "label": "Format name for response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output.name }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-39",
+      "label": "HR AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful HR assistant accessible by employees at our company.\n\nObjective: \nAssist employees with questions regarding company policies, documents, and escalation procedures.\n\nTools: \n1. A vector store database (company_files) containing the company handbook, 401k policy, expense policy, and employee benefits. \n2. An employee lookup tool (employee_lookup_tool) that retrieves details about an employee when provided with their name. It can also retrieve the most senior person in a department if given a department name. \n\nGuidelines: \n- When an employee asks for a contact person, first attempt to find the relevant contact in company_files. \n- If a contact person is found but their details (e.g., email or phone number) are missing, use the `employee_lookup_tool` to retrieve their contact details. \n- If no contact person is found: \n 1. Use the `employee_lookup_tool` with \"HR\" (or another relevant department) to retrieve the most senior person in that department. \n 2. If no senior contact is found, ask the employee for their name. \n 3. Use the `employee_lookup_tool` to retrieve their supervisor’s name. \n 4. Use the `employee_lookup_tool` to retrieve their supervisor’s details. \n 5. Provide the supervisor's contact information and recommend them as the best next point of contact. \n"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-22",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-28",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-39",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-39",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-24",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-33",
+      "to": "step-34",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-26",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-33",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-37",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-14",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-22",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-31",
+      "to": "step-32",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-39",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-39",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-34",
+      "to": "step-35",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-14",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-37",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-35",
+      "to": "step-36",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-37",
+      "to": "step-38",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-30",
+      "to": "step-31",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-7",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-36",
+      "to": "step-37",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-39",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-32",
+      "to": "step-33",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-28",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-32",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-33",
+      "to": "step-35",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-23",
+    "step-25"
+  ],
+  "configuration": [
+    {
+      "id": "step-22-tablename",
+      "purpose": "Select the tableName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-24-tablename",
+      "purpose": "Select the tableName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "HR_and_Recruitment/BambooHR AI-Powered Company Policies and Benefits Chatbot.json",
+    "git_blob": "23dcbc9fa0e22f7b61bb60698812373de0c24fb3",
+    "sha256": "3f009950f6e9425efc00359a55b8a7ba72545f894bfd49b0e52be52f6c523783",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/HR_and_Recruitment/BambooHR%20AI-Powered%20Company%20Policies%20and%20Benefits%20Chatbot.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

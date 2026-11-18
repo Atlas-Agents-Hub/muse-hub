@@ -1,0 +1,147 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-daily-meetings-summarization-with-muse-ai-e51b2c",
+  "title": "Daily meetings summarization with Muse AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Send response back to slack channel",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": "Gemini : {{ record.output.removeMarkdown() }}"
+        },
+        "select": "channel",
+        "channelId": {
+          "configuration_input": "step-1-channelid"
+        },
+        "otherOptions": {
+          "mrkdwn": true,
+          "includeLinkToWorkflow": false
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Google Calendar - Get Events",
+      "operation": "service-read",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "options": {
+          "timeMax": {
+            "expression": "{{ $fromAI('end_date') }}"
+          },
+          "timeMin": {
+            "expression": "{{ $fromAI('start_date') }}"
+          }
+        },
+        "calendar": {
+          "configuration_input": "step-2-calendar"
+        },
+        "operation": "getAll",
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool when you’re asked to retrieve events data."
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Calendar AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "summarize today's meetings.\nstartdate = {{ current_time.format('yyyy-MM-dd 00:00:00') }}\nenddate = {{ current_time.format('yyyy-MM-dd 23:59:59') }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "You are a Google Calendar assistant.\nYour primary goal is to assist the user in managing their calendar effectively using Event Retrieval tool. \nAlways base your responses on the current date: \n{{ DateTime.local().toFormat('cccc d LLLL yyyy') }}.\nGeneral Guidelines:\nAlways mention all meetings attendees\nTool: Event Retrieval\nFormat the date range:\nstart_date: Start date and time in YYYY-MM-DD HH:mm:ss.\nend_date: End date and time in YYYY-MM-DD HH:mm:ss."
+          }
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Daily meetings summarization with Gemini AI.json",
+    "git_blob": "6f557ea540a9f079796fe686dd8db6dbb1eb3f15",
+    "sha256": "826a5cae042825783a6c6fe16e341c35a01aa991736a9d04b8f6eb05ef2c9bfa",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Daily%20meetings%20summarization%20with%20Gemini%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

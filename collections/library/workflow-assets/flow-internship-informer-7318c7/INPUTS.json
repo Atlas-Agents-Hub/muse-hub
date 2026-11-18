@@ -1,0 +1,49 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-internship-informer-7318c7",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-6-url": null,
+    "step-10-url": null,
+    "step-12-datatableid": null,
+    "step-14-datatableid": null,
+    "step-17-calendar": null,
+    "step-18-documentid": null,
+    "step-18-sheetname": null,
+    "step-20-documentid": null,
+    "step-20-sheetname": null,
+    "step-21-url": null,
+    "step-22-datatableid": null,
+    "step-23-documentid": null,
+    "step-23-sheetname": null,
+    "step-30-workflowid": null
+  },
+  "adapters": {
+    "datatable": {
+      "connection": null
+    },
+    "googlecalendar": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

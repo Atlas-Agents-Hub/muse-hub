@@ -1,0 +1,256 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automate-linkedin-outreach-with-notion-and-muse-045f51",
+  "title": "Automate LinkedIn Outreach with Notion and Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Set post status to \"Done\"",
+      "operation": "service-write",
+      "adapter": "notion",
+      "parameters": {
+        "pageId": {
+          "expression": "{{ steps[\"step-9\"].record.url }}"
+        },
+        "options": {},
+        "resource": "databasePage",
+        "operation": "update",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Status|status",
+              "statusValue": "Done"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Post on LinkedIn",
+      "operation": "service-write",
+      "adapter": "linkedin",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.output }}"
+        },
+        "person": "_RmSSZc0jB",
+        "additionalFields": {},
+        "shareMediaCategory": "IMAGE"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Combine text+image",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Fetch image from post",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.url[0] }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Reformat Post Text",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Thank you kindly for your help, please refer to the following LinkedIn post, and output a reformatted version employing thoroughly thought-out paragraph breaks, and lists if present:\n```\n{{ record.content.join(\" \") }}\n```"
+        },
+        "prompt": "define",
+        "options": {},
+        "resource": "assistant",
+        "assistantId": {
+          "configuration_input": "step-6-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "get all content from post page",
+      "operation": "service-read",
+      "adapter": "notion",
+      "parameters": {
+        "blockId": {
+          "expression": "{{ record.url }}"
+        },
+        "resource": "block",
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Pull together all text blocks + image",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "content"
+            },
+            {
+              "fieldToAggregate": "image.file.url"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "query entries from Notion table for today",
+      "operation": "service-read",
+      "adapter": "notion",
+      "parameters": {
+        "filters": {
+          "conditions": [
+            {
+              "key": "Date|date",
+              "date": {
+                "expression": "{{ current_date.format(\"yyyy/mM/dd\") }}"
+              },
+              "condition": "equals"
+            }
+          ]
+        },
+        "options": {},
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "configuration_input": "step-9-databaseid"
+        },
+        "filterType": "manual"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-6-assistantid",
+      "purpose": "Select the assistantId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-databaseid",
+      "purpose": "Select the databaseId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Notion/Automate LinkedIn Outreach with Notion and OpenAI.json",
+    "git_blob": "0ee4e514404bfc64a5871b56ed043ef360594355",
+    "sha256": "43e15b4043256c0fb503f77f3e88b94da9eb45a06046fb6d40a430f53359d91e",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Notion/Automate%20LinkedIn%20Outreach%20with%20Notion%20and%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

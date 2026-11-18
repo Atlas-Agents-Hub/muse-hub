@@ -1,0 +1,425 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-text-automations-using-apple-shortcuts-0472ee",
+  "title": "Text automations using Apple Shortcuts",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Switch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "spanish",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.type }}"
+                    },
+                    "rightValue": "spanish"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "english",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.type }}"
+                    },
+                    "rightValue": "english"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "grammar",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.type }}"
+                    },
+                    "rightValue": "grammar"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "shorter",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.type }}"
+                    },
+                    "rightValue": "shorter"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "longer",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.type }}"
+                    },
+                    "rightValue": "longer"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Respond to Shortcut",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "text",
+        "responseBody": {
+          "expression": "{{ record.message.content.output.replaceAll('\\n', '<br/>') }}"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Webhook from Shortcut",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "shortcut-global-as",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Model - Make Shorter",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-4-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Summarize this content a little bit (5% shorter)\nOutput a JSON with a single field: output"
+            },
+            {
+              "content": {
+                "expression": "{{ record.body.content }}"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Model - Make Longer",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-5-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Make this content a little longer (5% longer)\nOutput a JSON with a single field: output"
+            },
+            {
+              "content": {
+                "expression": "{{ record.body.content }}"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Model - Correct Grammar",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-6-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Correct grammar only, don't change the actual contents.\nOutput a JSON with a single field: output"
+            },
+            {
+              "content": {
+                "expression": "{{ record.body.content }}"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Model - To Spanish",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-7-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Translate this message to Spanish.\nOutput a JSON with a single field: output"
+            },
+            {
+              "content": {
+                "expression": "{{ record.body.content }}"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Model - To English",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-8-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Translate this message to English.\nOutput a JSON with a single field: output"
+            },
+            {
+              "content": {
+                "expression": "{{ record.body.content }}"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 4,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Text automations using Apple Shortcuts.json",
+    "git_blob": "45c3ddaaa372feac6363208d0dc5dfd70f43cd4f",
+    "sha256": "c1d36d0c3a9a64f1da860d8998859295a4bfd933dda091204c2290fdbf3fa8e4",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Text%20automations%20using%20Apple%20Shortcuts.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

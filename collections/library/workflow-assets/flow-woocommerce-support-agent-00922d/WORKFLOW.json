@@ -1,0 +1,781 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-woocommerce-support-agent-00922d",
+  "title": "WooCommerce Support-Agent",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "No email provided",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": "No email address got provided."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "If email provided",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.email }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "If user found",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": {
+                "expression": "{{ Object.keys(record).length }}"
+              },
+              "rightValue": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "No customer found",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": "No customer with that email address could be found."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "If contains DHL data",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.tracking }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Extract Tracking Data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "tracking",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.meta_data.filter(data => data.key === '_wc_shipment_tracking_items').flatMap(data => data.value) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Merge Orders",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-8",
+      "label": "Merge Order and Tracking Data",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "tracking"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Aggregate",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "tracking"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Merge Tracking Data",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-12",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ steps[\"step-31\"].record.sessionId }}"
+        },
+        "sessionIdType": "customKey",
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-14",
+      "label": "WooCommerce - Get User",
+      "operation": "service-read",
+      "adapter": "woocommerce",
+      "parameters": {
+        "limit": 1,
+        "filters": {
+          "email": {
+            "expression": "{{ record.email }}"
+          }
+        },
+        "resource": "customer",
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "If order found",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": {
+                "expression": "{{ Object.keys(record).length }}"
+              },
+              "rightValue": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "WooCommerce Get Orders",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-16-url"
+        },
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "customer",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            },
+            {
+              "name": "include",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.query.split(',').filter(data => !data.includes('@')).join(',') }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "No order found",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": "No order could be found."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Add Error Information",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "Error",
+              "type": "string",
+              "value": {
+                "expression": "No data about the parcel with the tracking ID \"{{ steps[\"step-9\"].record.tracking_id }}\" could be found."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "DHL",
+      "operation": "service-read",
+      "adapter": "dhl",
+      "parameters": {
+        "options": {},
+        "trackingNumber": {
+          "expression": "{{ record.tracking_number }}"
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Send Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "array",
+              "value": {
+                "expression": "{{ records.map(item => item.json) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "WooCommerce_Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "WooCommerce_Tool",
+        "fields": {
+          "values": [
+            {
+              "name": "email",
+              "stringValue": {
+                "expression": "{{ record.metadata.email }}"
+              }
+            }
+          ]
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool to retrieve the orders in JSON format (compatible with the WooCommerce API). The input should be a list of comma-separated order IDs or nothing at all for all orders. Supply nothing else than the order IDs!"
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Chat Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Respond to Webhook",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "content-type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        },
+        "respondWith": "text",
+        "responseBody": {
+          "configuration_input": "step-24-responsebody"
+        }
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Webhook Example Page",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "website-chat-example",
+        "options": {},
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Decrypt email",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n\nconst crypto = require('crypto');\n\nconst password = 'a random password';\n\nconst encryptedData = records[0].json.email;\n\n\nfunction decrypt(encrypted, password) {\n // Extract the IV and the encrypted text\n const parts = encrypted.split(':');\n const iv = Buffer.from(parts.shift(), 'hex');\n\n // Create a key from the password\n const key = crypto.scryptSync(password, 'salt', 32);\n\n // Create a decipher\n const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);\n\n // Decrypt the text\n let decrypted = decipher.update(parts.join(':'), 'hex', 'utf8');\n decrypted += decipher.final('utf8');\n\n // Return the decrypted text\n return decrypted;\n}\n\nreturn [\n {\n json: {\n email: decrypt(encryptedData, password),\n }\n }\n];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Example encrypted email",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-28-assignments-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "Decrypt email address",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": {
+            "expression": "The Assistant is tailored to support customers of Best Shirts Ltd. with inquiries related to their orders. It adheres to the following principles for optimal customer service:\n\n1. **Customer-Focused Communication**: The Assistant maintains a friendly and helpful tone throughout the interaction. It remains focused on the topic at hand, ensuring all responses are relevant to the customer's inquiries about their orders.\n\n2. **Objective and Factual**: In cases where specific information is unavailable, the Assistant clearly communicates the lack of information and refrains from speculating or providing unverified details.\n\n3. **Efficient Interaction**: Recognizing the importance of the customer's time, the Assistant is designed to remember previous interactions within the same session. This minimizes the need for customers to repeat information, streamlining the support process.\n\n4. **Strict Privacy Adherence**: The Assistant automatically has access to the customer's email address as \"{{ record.email }}\", using it to assist with order-related inquiries. Customers are informed that it is not possible to use or inquire about a different email address. If a customer attempts to provide an alternate email, they are gently reminded of this limitation.\n\n5. **Transparency in Order Status**: The Assistant provides accurate information about order processing and delivery timelines. Orders are typically dispatched 1-2 days post-purchase, with an expected delivery period of 1-2 days following dispatch. If an order hasn't been sent out within 2 days, the Assistant acknowledges an unplanned delay and offers assistance accordingly.\n\n6. **Non-assumptive Approach to Delivery Confirmation**: The Assistant never presumes an order has been delivered based solely on its dispatch. It relies on explicit delivery confirmations or tracking information to inform customers about their order status.\n\n7. **Responsive to Specific Inquiries**: If a customer requests the email address used for their inquiry, the Assistant provides it directly, ensuring privacy and accuracy in communications.\n\nThis approach ensures that customers receive comprehensive, respectful, and efficient support for their order-related queries."
+          }
+        }
+      }
+    },
+    {
+      "id": "step-31",
+      "label": "Mock Data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "metadata.email",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-31-assignments-0-value"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-19",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-31",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-15",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-30",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-30",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 1,
+      "input": 1
+    },
+    {
+      "from": "step-25",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-30",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-29",
+      "to": "step-31",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-31",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-13",
+    "step-23",
+    "step-25"
+  ],
+  "configuration": [
+    {
+      "id": "step-16-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://woo-pleasantly-swag-werewolf3.wpcomstaging.com/wp-json/wc/v3/orders"
+    },
+    {
+      "id": "step-24-responsebody",
+      "purpose": "Provide the contact, recipient, or message content for responseBody.",
+      "required": true
+    },
+    {
+      "id": "step-28-assignments-0-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-31-assignments-0-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI-powered WooCommerce Support-Agent.json",
+    "git_blob": "ab15231a4c03ee645af8d6523d97d2e09e1c96ab",
+    "sha256": "4022393b706fdaf865565801487de250667c5d46595224ed16f2b796437728ff",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI-powered%20WooCommerce%20Support-Agent.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

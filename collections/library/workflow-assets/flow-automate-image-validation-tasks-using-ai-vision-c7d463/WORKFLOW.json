@@ -1,0 +1,200 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automate-image-validation-tasks-using-ai-vision-c7d463",
+  "title": "Automate Image Validation Tasks using AI Vision",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "is_valid": {
+                "type": "boolean"
+              },
+              "photo_description": {
+                "type": "string",
+                "description": "describe the appearance of the person(s), object(s) if any and the background in the image. Mention any colours of each if possible."
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Photo URLs",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "type": "array",
+              "value": {
+                "expression": "{{\n[\n{\n \"name\": \"portrait_1\",\n \"url\": \"https://drive.google.com/file/d/1zs963iFkO-3g2rKak8Hcy555h55D8gjF/view?usp=sharing\"\n},\n{\n \"name\": \"portrait_2\",\n \"url\": \"https://drive.google.com/file/d/19FyDcs68dZauQSEf6SEulJMag51SPsFy/view?usp=sharing\"\n},\n{\n \"name\": \"portrait_3\",\n \"url\": \"https://drive.google.com/file/d/1gbXjfNYE7Tvuw_riFmHMKoqPPu696VfW/view?usp=sharing\",\n\n},\n{\n \"name\": \"portrait_4\",\n \"url\": \"https://drive.google.com/file/d/1s19hYdxgfMkrnU25l6YIDq-myQr1tQMa/view?usp=sharing\"\n},\n{\n \"name\": \"portrait_5\",\n \"url\": \"https://drive.google.com/file/d/193FqIXJWAKj6O2SmOj3cLBfypHBkgdI5/view?usp=sharing\"\n}\n]\n}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Photos To List",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Download Photos",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.url }}"
+        },
+        "options": {},
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Resize For AI",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "width": 1024,
+        "height": 1024,
+        "options": {},
+        "operation": "resize",
+        "resizeOption": "onlyIfLarger"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Passport Photo Validator",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": "Assess if the image is a valid according to the passport photo criteria as set by the UK Government.",
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "You help verify passport photo validity.\n\n## Rules for digital photos\nhttps://www.gov.uk/photos-for-passports\n\n### The quality of your digital photo\nYour photo must be:\n* clear and in focus\n* in colour\n* unaltered by computer software\n* at least 600 pixels wide and 750 pixels tall\n* at least 50KB and no more than 10MB\n\n### What your digital photo must show\nThe digital photo must:\n* contain no other objects or people\n* be taken against a plain white or light-coloured background\n* be in clear contrast to the background\n* not have ‘red eye’\n* If you’re using a photo taken on your own device, include your head, shoulders and upper body. Do not crop your photo - it will be done for you.\n\nIn your photo you must:\n* be facing forwards and looking straight at the camera\n* have a plain expression and your mouth closed\n* have your eyes open and visible\n* not have hair in front of your eyes\n* not have a head covering (unless it’s for religious or medical reasons)\n* not have anything covering your face\n* not have any shadows on your face or behind you - shadows on light background are okay\n* Do not wear glasses in your photo unless you have to do so. If you must wear glasses, they cannot be sunglasses or tinted glasses, and you must make sure your eyes are not covered by the frames or any glare, reflection or shadow.\n\n### Photos of babies and children\n* Children must be on their own in the picture. Babies must not be holding toys or using dummies.\n* Children under 6 do not have to be looking directly at the camera or have a plain expression.\n* Children under one do not have to have their eyes open. You can support their head with your hand, but your hand must not be visible in the photo.\n* Children under one should lie on a plain light-coloured sheet. Take the photo from above."
+              }
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary"
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Automate Image Validation Tasks using AI Vision.json",
+    "git_blob": "48659208e298e4d3cc7efcd940f20f6291f52eba",
+    "sha256": "e329aecb9e12d8547d0d78f2edb21222c44dd41f717723ed3e0d5ca2b234905c",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Automate%20Image%20Validation%20Tasks%20using%20AI%20Vision.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

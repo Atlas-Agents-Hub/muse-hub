@@ -1,0 +1,24 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-uptime-ping-alert-578663",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

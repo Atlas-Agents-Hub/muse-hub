@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-summarize-podcast-episode-and-enhance-using-wikipedia-d2ef24",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-sendto": null,
+    "step-11-jsonschema-body-schema": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "toolwikipedia": {
+      "connection": null
+    }
+  }
+}

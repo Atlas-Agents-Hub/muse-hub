@@ -1,0 +1,362 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-interactive-image-editor-with-flux-1-fill-tool-for-inpainting-488bd6",
+  "title": "🎨 Interactive Image Editor with FLUX.1 Fill Tool for Inpainting",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Respond to Webhook",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "text",
+        "responseBody": {
+          "expression": "{{ record.html }}"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Wait 3 sec",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 3
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Is Ready?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.status }}"
+              },
+              "rightValue": "Ready"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "FLUX Fill",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": {
+                "expression": "{{ record.body.prompt }}"
+              }
+            },
+            {
+              "name": "steps",
+              "value": {
+                "expression": "{{ record.body.steps }}"
+              }
+            },
+            {
+              "name": "prompt_upsampling",
+              "value": {
+                "expression": "{{ record.body.prompt_upsampling }}"
+              }
+            },
+            {
+              "name": "guidance",
+              "value": {
+                "expression": "{{ record.body.guidance }}"
+              }
+            },
+            {
+              "name": "output_format",
+              "value": "png"
+            },
+            {
+              "name": "safety_tolerance",
+              "value": "6"
+            },
+            {
+              "name": "image",
+              "value": {
+                "expression": "{{ record.body.image.split(',')[1] }}"
+              }
+            },
+            {
+              "name": "mask",
+              "value": {
+                "expression": "{{ record.body.mask.split(',')[1] }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Check FLUX status",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-6-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get Fill Image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.result.sample }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Show the image to user",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": {
+                  "expression": "{{ $binary.data.mimeType }}"
+                }
+              }
+            ]
+          }
+        },
+        "respondWith": "binary",
+        "responseDataSource": "set"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Mockups",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "Images",
+              "type": "array",
+              "value": {
+                "expression": "{{\n[\n{\"url\":\"https://byuroscope.fra1.digitaloceanspaces.com/nc/uploads/noco/fluxtest/creative-arrangement-minimalist-podium_23-2148959328.jpg\",\n \"title\":\"Stage\" },\n{\"url\":\"https://byuroscope.fra1.digitaloceanspaces.com/nc/uploads/noco/fluxtest/Standing-Big-Paper-Bag-Mockup.jpg\",\n \"title\":\"Paper Bag\" },\n{\"url\":\"https://byuroscope.fra1.digitaloceanspaces.com/nc/uploads/noco/fluxtest/Ceramic-Mug-on-Table-Mockup.jpg\",\n \"title\":\"Big Mug\" },\n{\"url\":\"https://byuroscope.fra1.digitaloceanspaces.com/nc/uploads/noco/fluxtest/Transparent-Bottle-on-Sunny-Beach-Mockup-D.jpg\",\n \"title\":\"Transparent-Bottle\" },\n{\"url\":\"https://byuroscope.fra1.digitaloceanspaces.com/nc/uploads/noco/fluxtest/skin-products-arrangement-wooden-blocks_23-2148761445.jpg\",\n \"title\":\"Cosmetics\" }\n]\n}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "flux-fill",
+        "options": {},
+        "responseMode": "responseNode",
+        "multipleMethods": true
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Editor page",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n <meta charset=\"UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n <title>Konva Image Editor</title>\n <script src=\"https://unpkg.com/konva@9/konva.min.js\"></script>\n <script defer src=\"https://unpkg.com/img-comparison-slider@8/dist/index.js\"></script>\n <link rel=\"stylesheet\" href=\"https://unpkg.com/img-comparison-slider@8/dist/styles.css\" />\n <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/gh/ed-parsadanyan/n8n-flux-fill-demo/flux-fill-style.css\" />\n <script src=\"https://cdn.jsdelivr.net/gh/ed-parsadanyan/n8n-flux-fill-demo/flux-fill-canvas.js\"></script>\n</head>\n<body>\n <div class=\"controls-wrapper\">\n <div class=\"left-panel\">\n <div class=\"image-controls\">\n <select id=\"imageSelector\">\n <option value=\"\">Select an image...</option>\n <option value=\"local\">Load from PC...</option>\n </select>\n <input type=\"file\" id=\"fileInput\" style=\"display: none\" accept=\"image/*\">\n <button id=\"clearButton\">Clear All</button>\n </div>\n \n <div class=\"brush-controls\">\n <label for=\"brushSize\" title=\"Use mouse wheel to adjust brush size\">Brush Size:</label>\n <div class=\"slider-container\">\n <input type=\"range\" id=\"brushSize\" min=\"5\" max=\"40\" value=\"20\">\n <span class=\"slider-value\" id=\"brushSizeValue\">20px</span>\n </div>\n </div>\n </div>\n\n <div class=\"right-panel\">\n <div class=\"prompt-row\">\n <input type=\"text\" id=\"promptInput\" placeholder=\"Enter your prompt (optional)\">\n </div>\n \n <div class=\"main-controls\">\n <label class=\"checkbox-container\">\n <input type=\"checkbox\" id=\"improvePrompt\" checked>\n <span>Improve prompt</span>\n </label>\n \n <div>\n <button id=\"sendButton\">Generate</button>\n <span class=\"loading\" id=\"loadingIndicator\">Processing...</span>\n </div>\n </div>\n \n <div class=\"parameters\">\n <div class=\"slider-container\">\n <label for=\"stepsSlider\">Steps:</label>\n <input type=\"range\" id=\"stepsSlider\" min=\"15\" max=\"50\" value=\"40\">\n <span class=\"slider-value\" id=\"stepsValue\">40</span>\n </div>\n \n <div class=\"slider-container\">\n <label for=\"guidanceSlider\">Guidance:</label>\n <input type=\"range\" id=\"guidanceSlider\" min=\"1.5\" max=\"100\" value=\"60\" step=\"0.1\">\n <span class=\"slider-value\" id=\"guidanceValue\">60.0</span>\n </div>\n </div>\n </div>\n </div>\n\n <div class=\"info\" id=\"imageInfo\"></div>\n <div id=\"container\"></div>\n <div id=\"cursor\"></div>\n\n <div id=\"resultModal\" class=\"modal\">\n <div class=\"modal-content\">\n <div class=\"modal-image-container\">\n <div class=\"comparison-container\">\n <div class=\"image-container\">\n <img class=\"image-before\" id=\"originalImage\" src=\"\" alt=\"Original\">\n <img class=\"image-after\" id=\"resultImage\" src=\"\" alt=\"Generated\">\n </div>\n <input type=\"range\" min=\"0\" max=\"100\" value=\"10\" class=\"slider\">\n <div class=\"slider-line\"></div>\n <div class=\"slider-button\" aria-hidden=\"true\">\n &lt; &gt;\n </div>\n <div class=\"labels\">\n <div class=\"label-before\">Original</div>\n <div class=\"label-after\">Generated</div>\n </div>\n </div>\n </div>\n <div class=\"modal-buttons\">\n <button id=\"reuseButton\">Use Generated</button>\n <button id=\"saveButton\">Save Image</button>\n <button id=\"closeButton\">Close</button>\n </div>\n </div>\n </div>\n\n<script>\n const urlParams = new URLSearchParams(window.location.search);\n const pageId = urlParams.get('id');\n\n // Image data will be populated by n8n\n const imageData = {{ JSON.stringify(record.Images,'',2) }};\n const webhookUrl = '{{ record.webhookUrl }}';\n\n // Initialize the editor when the page loads\n document.addEventListener('DOMContentLoaded', function() {\n initializeEditor({\n images: imageData,\n webhookUrl: webhookUrl,\n pageId: pageId\n });\n });\n</script>\n</body>\n</html>"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "NO OP",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-10",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-10"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.bfl.ml/v1/flux-pro-1.0-fill"
+    },
+    {
+      "id": "step-6-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.bfl.ml/v1/get_result"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/🎨 Interactive Image Editor with FLUX.1 Fill Tool for Inpainting.json",
+    "git_blob": "79abb1cd25107d98559756fe4c1e539e19728eef",
+    "sha256": "77847352dbba9b0068e61c6adbf2b7ad4bcd8c1ef76cd87db8b6bf272362e058",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/%F0%9F%8E%A8%20Interactive%20Image%20Editor%20with%20FLUX.1%20Fill%20Tool%20for%20Inpainting.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

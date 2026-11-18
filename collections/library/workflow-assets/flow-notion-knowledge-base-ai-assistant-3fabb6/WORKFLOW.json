@@ -1,0 +1,298 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-notion-knowledge-base-ai-assistant-3fabb6",
+  "title": "Notion knowledge base AI assistant",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.7
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Search notion database",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.notion.com/v1/databases/{{ record.notionID }}/query"
+        },
+        "method": "POST",
+        "jsonBody": {
+          "json": {
+            "filter": {
+              "or": [
+                {
+                  "property": "question",
+                  "rich_text": {
+                    "contains": "{keyword}"
+                  }
+                },
+                {
+                  "property": "tags",
+                  "multi_select": {
+                    "contains": "{tag}"
+                  }
+                }
+              ]
+            },
+            "sorts": [
+              {
+                "property": "updated_at",
+                "direction": "ascending"
+              }
+            ]
+          }
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "toolDescription": {
+          "expression": "Use this tool to search the \"\" Notion app database.\n\nIt is structured with question and answer format. \nYou can filter query result by:\n- By keyword\n- filter by tag.\n\nKeyword and Tag have an OR relationship not AND."
+        },
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "keyword",
+              "description": "Searches question of the record. Use one keyword at a time."
+            },
+            {
+              "name": "tag",
+              "description": {
+                "expression": "Options: {{ record.tagsOptions }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get database details",
+      "operation": "service-read",
+      "adapter": "notion",
+      "parameters": {
+        "simple": false,
+        "resource": "database",
+        "databaseId": {
+          "configuration_input": "step-3-databaseid"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "contextWindowLength": 4
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Search inside database record",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "fields": "id, type, paragraph.text, heading_1.text, heading_2.text, heading_3.text, bulleted_list_item.text, numbered_list_item.text, to_do.text, children",
+        "dataField": "results",
+        "fieldsToInclude": "selected",
+        "toolDescription": {
+          "expression": "Use this tool to retrieve Notion page content using the page ID. \n\nIt is structured with question and answer format. \nYou can filter query result by:\n- By keyword\n- filter by tag.\n\nKeyword and Tag have an OR relationship not AND."
+        },
+        "optimizeResponse": true,
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "page_id",
+              "description": "Notion page id from 'Search notion database' tool results"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Format schema",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sessionId",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].record.sessionId }}"
+              }
+            },
+            {
+              "name": "action",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].record.action }}"
+              }
+            },
+            {
+              "name": "chatInput",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].record.chatInput }}"
+              }
+            },
+            {
+              "name": "notionID",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-3\"].record.id }}"
+              }
+            },
+            {
+              "name": "databaseName",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.title[0].text.content }}"
+              }
+            },
+            {
+              "name": "tagsOptions",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.properties.tags.multi_select.options.map(item => item.name).join(',') }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.chatInput }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "# Role:\nYou are a helpful agent. Query the \"{{ record.databaseName }}\" Notion database to find relevant records or summarize insights based on multiple records.\n\n# Behavior:\n\nBe clear, very concise, efficient, and accurate in responses. Do not hallucinate.\nIf the request is ambiguous, ask for clarification. Do not embellish, only use facts from the Notion records. Do not offer general advice.\n\n# Error Handling:\n\nIf no matching records are found, try alternative search criteria. Example 1: Laptop, then Computer, then Equipment. Example 2: meetings, then meeting.\nClearly explain any issues with queries (e.g., missing fields or unsupported filters).\n\n# Output:\n\nReturn concise, user-friendly results or summaries.\nFor large sets, show top results by default and offer more if needed. Output URLs in markdown format. \n\nWhen a record has the answer to user question, always output the URL to that page. Do not output links twice."
+          }
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {
+          "title": "Notion Knowledge Base",
+          "subtitle": ""
+        },
+        "initialMessages": {
+          "expression": "Happy {{ current_date.weekdayLong }}!\nKnowledge source assistant at your service. How can I help you?"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-8"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-databaseid",
+      "purpose": "Select the databaseId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.notion.com/v1/blocks/{page_id}/children"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Notion/Notion knowledge base AI assistant.json",
+    "git_blob": "b9d2562892d4ee5b961eb98e3ae6e0a7f9fc0bad",
+    "sha256": "409769bb06f8a447ada3cb66e8f9d3bb9630d0647300db0b74bfd8c151e781b9",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Notion/Notion%20knowledge%20base%20AI%20assistant.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

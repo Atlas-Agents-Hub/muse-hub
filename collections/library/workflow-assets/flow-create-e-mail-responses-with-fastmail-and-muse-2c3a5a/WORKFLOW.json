@@ -1,0 +1,382 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-create-e-mail-responses-with-fastmail-and-muse-2c3a5a",
+  "title": "create e-mail responses with fastmail and Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Session",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-1-url"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get Mailbox IDs",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"using\": [\"urn:ietf:params:jmap:core\", \"urn:ietf:params:jmap:mail\"],\n \"methodCalls\": [\n [\n \"Mailbox/get\",\n {\n \"accountId\": \"{{ steps[\"step-1\"].record.primaryAccounts['urn:ietf:params:jmap:mail'] }}\"\n },\n \"c0\"\n ]\n ]\n }"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "methodResponses[0][1].list"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Email Trigger (IMAP)",
+      "operation": "service-read",
+      "adapter": "emailreadimap",
+      "parameters": {
+        "options": {
+          "customEmailConfig": {
+            "json": [
+              "UNSEEN"
+            ]
+          }
+        },
+        "postProcessAction": "nothing",
+        "downloadAttachments": true
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Get fields from source email",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "textPlain",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.textPlain }}"
+              }
+            },
+            {
+              "name": "from",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.from }}"
+              }
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.subject }}"
+              }
+            },
+            {
+              "name": "metadata['message-id']",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.metadata['message-id'] }}"
+              }
+            },
+            {
+              "name": "metadata['reply-to']",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.metadata['reply-to'] }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-6-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Please analyze the following personal email and draft a casual response based solely on its content. Return only the response text without any additional introductions or formatting. The response should include appropriate greetings (e.g., \"Hi\", \"Hallo\", \"Moin\" in German or \"Hi\", \"Hello\" in English) and sign-offs (e.g., \"Gruß\", \"Lieben Gruß\" in German or \"Regards\" in English). Add a thanks if appropriate. Use \"Du\" only if appropriate; if the email contains \"Sie\", maintain the same formality.\n\nSubject: {{ record.subject }}\nEmail Content: {{ record.textPlain }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Filter for drafts folder",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.role }}"
+              },
+              "rightValue": "drafts"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "upload draft email",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-8-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"using\": [\"urn:ietf:params:jmap:core\", \"urn:ietf:params:jmap:mail\"],\n \"methodCalls\": [\n [\n \"Email/set\",\n {\n \"accountId\": \"{{ steps[\"step-1\"].record.primaryAccounts['urn:ietf:params:jmap:mail'] }}\",\n \"create\": {\n \"newDraft\": {\n \"mailboxIds\": {\n \"{{ record.draftsId }}\": true\n },\n \"keywords\": {\n \"$draft\": true\n },\n \"inReplyTo\": [\"{{ record.metadata['message-id'] }}\"],\n \"references\": [\"{{ record.metadata['message-id'] }}\"],\n \"from\": [{\n \"name\": \"\",\n \"email\": \"{{ steps[\"step-1\"].record.username }}\"\n }],\n \"to\": [{\n \"name\": \"{{ record['to-friendly'] }}\",\n \"email\": \"{{ record.to }}\"\n }],\n \"subject\": \"{{ record.subject }}\",\n \"bodyValues\": {\n \"textBody\": {\n \"value\": \"{{ record.message.content.replace(/\\n/g, '\\\\n') }}\"\n }\n },\n \"bodyStructure\": {\n \"partId\": \"textBody\"\n }\n }\n }\n },\n \"c1\"\n ]\n ]\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "gather data for draft email",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "draftsId",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            },
+            {
+              "name": "to-friendly",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.from.match(/[^<]+/)[0].trim().replaceAll(/\\\"/g, \"\") }}"
+              }
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "Re: {{ steps[\"step-5\"].record.subject }}"
+              }
+            },
+            {
+              "name": "message.content",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-6\"].record.message.content }}"
+              }
+            },
+            {
+              "name": "metadata['message-id']",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.metadata['message-id'] }}"
+              }
+            },
+            {
+              "name": "to",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.metadata['reply-to'].match(/<([^>]+)>/)[1] ?? steps[\"step-5\"].record.from.match(/<([^>]+)>/)[1] }}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.fastmail.com/jmap/session"
+    },
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.fastmail.com/jmap/api/"
+    },
+    {
+      "id": "step-6-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.fastmail.com/jmap/api/"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/create e-mail responses with fastmail and OpenAI.json",
+    "git_blob": "f1caf0b49e193447adfa26520df4dd71b9cd0625",
+    "sha256": "4976170cbc9672bcbddd4082d35da54506058e10b74c430c6c3d9f5af1e1f038",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/create%20e-mail%20responses%20with%20fastmail%20and%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

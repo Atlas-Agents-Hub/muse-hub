@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-write-a-wordpress-post-with-ai-starting-from-a-few-keywords-85084a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-value": null,
+    "step-8-url": null,
+    "step-14-modelid": null,
+    "step-15-modelid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "toolwikipedia": {
+      "connection": null
+    },
+    "wordpress": {
+      "connection": null
+    }
+  }
+}

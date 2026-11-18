@@ -1,0 +1,444 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-send-a-random-recipe-once-a-day-to-telegram-b8be63",
+  "title": "Send a random recipe once a day to Telegram",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Cron",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Airtable2",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "table": "Table 1",
+        "operation": "list",
+        "application": "your_sheet_id",
+        "additionalOptions": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Set",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "chatid",
+              "value": {
+                "expression": "{{steps[\"step-2\"].json[\"fields\"][\"chatid\"]}}"
+              }
+            }
+          ],
+          "string": []
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Recipe Photo",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "file": {
+          "expression": "{{steps[\"step-12\"].json[\"recipes\"][0][\"image\"]}}"
+        },
+        "chatId": {
+          "expression": "{{steps[\"step-3\"].json[\"chatid\"]}}"
+        },
+        "operation": "sendPhoto",
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Recipe URL",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{steps[\"step-12\"].json[\"recipes\"][0][\"title\"]}}\n\n{{steps[\"step-12\"].json[\"recipes\"][0][\"sourceUrl\"]}}"
+        },
+        "chatId": {
+          "expression": "{{steps[\"step-3\"].json[\"chatid\"]}}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "number": [],
+          "string": [
+            {
+              "value1": {
+                "expression": "{{steps[\"step-8\"].parameter[\"fields\"][1]}}"
+              },
+              "value2": {
+                "expression": "{{steps[\"step-8\"].parameter[\"fields\"][0]}}"
+              },
+              "operation": "notEqual"
+            }
+          ],
+          "boolean": []
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Airtable",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "table": "Table 1",
+        "operation": "list",
+        "application": "your_sheet_id",
+        "additionalOptions": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Airtable1",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "table": "Table 1",
+        "fields": [
+          "chatid",
+          {
+            "expression": "{{steps[\"step-14\"].json[\"message\"][\"chat\"][\"id\"]}}"
+          },
+          "Name",
+          {
+            "expression": "{{steps[\"step-14\"].json[\"message\"][\"from\"][\"first_name\"]}}"
+          }
+        ],
+        "options": {},
+        "operation": "append",
+        "application": "your_sheet_id",
+        "addAllFields": false
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Telegram Recipe Image",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "file": {
+          "expression": "{{steps[\"step-13\"].json[\"recipes\"][0][\"image\"]}}"
+        },
+        "chatId": {
+          "expression": "{{steps[\"step-14\"].json[\"message\"][\"chat\"][\"id\"]}}"
+        },
+        "operation": "sendPhoto",
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Telegram Recipe URL",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{steps[\"step-13\"].json[\"recipes\"][0][\"title\"]}}\n\n{{steps[\"step-13\"].json[\"recipes\"][0][\"sourceUrl\"]}}"
+        },
+        "chatId": {
+          "expression": "{{steps[\"step-14\"].json[\"message\"][\"chat\"][\"id\"]}}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Set1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "chatid",
+              "value": {
+                "expression": "{{steps[\"step-14\"].json[\"message\"][\"chat\"][\"id\"]}}"
+              }
+            },
+            {
+              "name": "Name",
+              "value": {
+                "expression": "{{steps[\"step-14\"].json[\"message\"][\"from\"][\"first_name\"]}}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Get recipes from API",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-12-url"
+        },
+        "options": {
+          "fullResponse": false
+        },
+        "queryParametersUi": {
+          "parameter": []
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Get recipes",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-13-url"
+        },
+        "options": {
+          "fullResponse": false
+        },
+        "queryParametersUi": {
+          "parameter": []
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Telegram Trigger - people join bot",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Telegram - Welcome Message",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "Welcome! This bot will send you one vegan recipe a day. Here is your first recipe!"
+        },
+        "chatId": {
+          "expression": "{{steps[\"step-14\"].json[\"message\"][\"chat\"][\"id\"]}}"
+        },
+        "additionalFields": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-14"
+  ],
+  "configuration": [
+    {
+      "id": "step-12-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.spoonacular.com/recipes/random?apiKey={value}&number={value}&tags={value}"
+    },
+    {
+      "id": "step-13-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.spoonacular.com/recipes/random?apiKey={value}&number={value}&tags={value}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Send a random recipe once a day to Telegram.json",
+    "git_blob": "c6ba70ef75fe1082578e76ca0b3e367a8b036182",
+    "sha256": "330b6e7a43c389f807c30a8a29bfd82f53e62178eae497d3a4a428a595b3f6bd",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Send%20a%20random%20recipe%20once%20a%20day%20to%20Telegram.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

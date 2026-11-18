@@ -1,0 +1,43 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-customer-insights-with-qdrant-python-and-information-extractor-0ce8b6",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-values-0-cssselector": null,
+    "step-3-values-2-cssselector": null,
+    "step-3-values-3-cssselector": null,
+    "step-3-values-4-cssselector": null,
+    "step-3-values-5-cssselector": null,
+    "step-3-values-6-cssselector": null,
+    "step-3-values-7-cssselector": null,
+    "step-3-values-8-cssselector": null,
+    "step-5-metadatavalues-8-name": null,
+    "step-5-metadatavalues-9-name": null,
+    "step-17-url": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

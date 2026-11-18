@@ -1,0 +1,259 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-discord-bot-024df2",
+  "title": "Discord bot",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Execute Workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-2-path"
+        },
+        "options": {},
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "No Operation, do nothing",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Analyze user request",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-4-model"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Act as a service desk agent and help to categorize user messages. Return back only JSON without quotations. Do not return anything else."
+            },
+            {
+              "content": {
+                "expression": "Here is a user feedback: \"{{ record.body.feedback }}\". Please analyse it and put into one of the categories:\n1. \"success-story\" for user appraisal or success story. this will be processed by customer success department\n2. \"urgent-issue\" for extreme dissatisfaction or an urgent problem. this will be escalated to the IT team. Please assess if the request is really urgent and whether it has an immediate impact on the client. If the ticket doesn't look like an immediate problem or an extreme dissatisfaction then proceed as a normal ticket.\n3. \"ticket\" for everything else. This will be processed as normal by customer support team.\n\nPlease return back a JSON with the following structure: category (string), feedback (string), instruction (string).\nCategory must match the analysed category. feedback must match the original text. instruction should contain a text for a department according to the category with a one sentense summary of the feedback. Please be polite and friendly to the colleagues."
+              }
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.5
+        },
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Select category",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value2": "success-story"
+            },
+            {
+              "output": 1,
+              "value2": "urgent-issue"
+            },
+            {
+              "output": 2,
+              "value2": "ticket"
+            }
+          ]
+        },
+        "value1": {
+          "expression": "{{ record.gpt_reply.category.toLowerCase() }}"
+        },
+        "dataType": "string",
+        "fallbackOutput": 3
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Parse JSON",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "gpt_reply",
+              "value": {
+                "expression": "{{ JSON.parse( record.message.content.replace(/\\n(?=[^\"]*\"(?:[^\"]*\"[^\"]*\")*[^\"]*$)/g, '\\\\n')) }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "User Success Dept",
+      "operation": "service-write",
+      "adapter": "discord",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.gpt_reply.instruction }}"
+        },
+        "options": {},
+        "webhookUri": {
+          "configuration_input": "step-7-webhookuri"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "IT Dept",
+      "operation": "service-write",
+      "adapter": "discord",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.gpt_reply.instruction }}"
+        },
+        "options": {},
+        "webhookUri": {
+          "configuration_input": "step-8-webhookuri"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Helpdesk",
+      "operation": "service-write",
+      "adapter": "discord",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.gpt_reply.instruction }}"
+        },
+        "options": {},
+        "webhookUri": {
+          "configuration_input": "step-9-webhookuri"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-7-webhookuri",
+      "purpose": "Set the webhookUri endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://discord.com/api/webhooks/<YOUR WEBHOOK HERE>"
+    },
+    {
+      "id": "step-8-webhookuri",
+      "purpose": "Set the webhookUri endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://discord.com/api/webhooks/<YOUR WEBHOOK HERE>"
+    },
+    {
+      "id": "step-9-webhookuri",
+      "purpose": "Set the webhookUri endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://discord.com/api/webhooks/<YOUR WEBHOOK HERE>"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Discord/Discord AI-powered bot.json",
+    "git_blob": "1dc42cf39b701109f5e00562b36a6aec84c33301",
+    "sha256": "ab7755f414b952a118afd88ee1cd308039ebe9d96cf45d53699febec2a171cf9",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Discord/Discord%20AI-powered%20bot.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

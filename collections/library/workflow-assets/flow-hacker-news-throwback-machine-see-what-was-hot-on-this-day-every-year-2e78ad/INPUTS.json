@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-hacker-news-throwback-machine-see-what-was-hot-on-this-day-every-year-2e78ad",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-13-chatid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

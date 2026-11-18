@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-post-new-youtube-videos-to-x-c8322e",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-modelid": null,
+    "step-3-filters-channelid": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "twitter": {
+      "connection": null
+    },
+    "youtube": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,481 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-vision-based-assistant-scraper-with-google-sheets-scrapingbee-and-muse-fec58f",
+  "title": "✨ Vision-Based Assistant Scraper - with Google Sheets, ScrapingBee, and Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "ScrapingBee- Get page HTML",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": {
+                "configuration_input": "step-2-parameters-0-value"
+              }
+            },
+            {
+              "name": "url",
+              "value": {
+                "expression": "{{record.url}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchemaExample": {
+          "json": [
+            {
+              "product_title": "The title of the product",
+              "product_price": "The price of the product",
+              "product_brand": "The brand of the product",
+              "promo": "true or false",
+              "promo_percentage": "NUM %"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "output"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Google Sheets - Get list of URLs",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "configuration_input": "step-6-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-6-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Set fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "url",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.url }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "ScrapingBee - Get page screenshot",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-8-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "sendHeaders": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": {
+                "configuration_input": "step-8-parameters-0-value"
+              }
+            },
+            {
+              "name": "url",
+              "value": {
+                "expression": "{{ record.url }}"
+              }
+            },
+            {
+              "name": "screenshot_full_page",
+              "value": "true"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "HTML-based Scraping Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "HTMLScrapingTool",
+        "workflowId": {
+          "configuration_input": "step-9-workflowid"
+        },
+        "description": {
+          "expression": "Call this tool ONLY when you need to retrieve the HTML content of a webpage."
+        },
+        "responsePropertyName": "data"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Google Sheets - Create Rows",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "promo": {
+              "expression": "{{ record.promo }}"
+            },
+            "category": {
+              "expression": "{{ steps[\"step-7\"].record.url }}"
+            },
+            "product_url": {
+              "expression": "{{ record.product_title }}"
+            },
+            "product_brand": {
+              "expression": "{{ record.product_brand }}"
+            },
+            "product_price": {
+              "expression": "{{ record.product_price }}"
+            },
+            "promo_percent": {
+              "expression": "{{ record.promo_percentage }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "product_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "product_price",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "product_brand",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "promo",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "promo_percent",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-10-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-10-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Vision-based Scraping Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Here is the screenshot you need to use to extract data about the page:\n\n{{ record.url }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "Extract the following details from the input screenshot:\n\n- Product Titles\n- Product Prices\n- Brands\n- Promotional Information (e.g., if the product is on promo)\n\nStep 1: Image-Based Extraction\nAnalyze the provided screenshot to identify and extract all the required details: product titles, prices, brands, and promotional information.\nEnsure the extraction is thorough and validate the completeness of the information.\nCross-check all products for missing or unclear details.\nHighlight any limitations (e.g., text is unclear, partially cropped, or missing) in the extraction process.\n\nStep 2: HTML-Based Extraction (If Needed)\nIf you determine that any required information is:\n\nIncomplete or missing (e.g., not all titles, prices, or brands could be retrieved).\nAmbiguous or uncertain (e.g., unclear text or potential errors in OCR).\nUnavailable due to the limitations of image processing (e.g., product links).\n\nThen:\n\nCall the HTML-based tool with the input URL to access the page content.\nExtract the required details from the HTML to supplement or replace the image-based results.\nCombine data from both sources (if applicable) to ensure the final result is comprehensive and accurate.\n\nAdditional Notes\nAvoid redundant HTML tool usage—confirm deficiencies in image-based extraction before proceeding.\nFor products on promotion, explicitly label this status in the output.\nReport extraction errors or potential ambiguities (e.g., text illegibility).\n\nIn your output, include all these fields as shown in the example below. If there is no promotion, set \"promo\" to false and \"promo_percent\" to 0.\n\njson\nCopy code\n[{\n \"product_title\": \"The title of the product\",\n \"product_price\": \"The price of the product\",\n \"product_brand\": \"The brand of the product\",\n \"promo\": true,\n \"promo_percent\": 25\n}]"
+          },
+          "passthroughBinaryImages": true
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "HTML-Scraping Tool",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-13",
+      "label": "Set fields - from AI agent query",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "url",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.query }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "HTML to Markdown",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.data }}"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-11",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-12"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.scrapingbee.com/api/v1"
+    },
+    {
+      "id": "step-2-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-6-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.scrapingbee.com/api/v1"
+    },
+    {
+      "id": "step-8-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-9-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/✨ Vision-Based AI Agent Scraper - with Google Sheets, ScrapingBee, and Gemini.json",
+    "git_blob": "3c3ca01b9eed142c1dd467436be6ddc6be301c76",
+    "sha256": "92c8a3a79117975c178d7adb339f025fd9399d84ce70e18dbf335bebca2851e3",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/%E2%9C%A8%20Vision-Based%20AI%20Agent%20Scraper%20-%20with%20Google%20Sheets%2C%20ScrapingBee%2C%20and%20Gemini.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

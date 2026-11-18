@@ -1,0 +1,24 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-children-s-arabic-storytelling-on-telegram-b21d86",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-12-chatid": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

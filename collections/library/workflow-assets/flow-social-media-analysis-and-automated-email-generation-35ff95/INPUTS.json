@@ -1,0 +1,35 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-social-media-analysis-and-automated-email-generation-35ff95",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-assignments-2-value": null,
+    "step-2-url": null,
+    "step-3-url": null,
+    "step-4-url": null,
+    "step-10-fromemail": null,
+    "step-11-sheetname": null,
+    "step-11-documentid": null,
+    "step-12-sheetname": null,
+    "step-12-documentid": null
+  },
+  "adapters": {
+    "emailsend": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

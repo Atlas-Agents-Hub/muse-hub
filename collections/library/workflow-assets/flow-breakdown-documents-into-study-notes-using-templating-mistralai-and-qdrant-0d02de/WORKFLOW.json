@@ -1,0 +1,963 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-breakdown-documents-into-study-notes-using-templating-mistralai-and-qdrant-0d02de",
+  "title": "Breakdown Documents into Study Notes using Templating MistralAI and Qdrant",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Local File Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "/home/node/storynotes/context",
+        "events": [
+          "add"
+        ],
+        "options": {
+          "usePolling": true,
+          "followSymlinks": true
+        },
+        "triggerOn": "folder"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "project",
+                "value": {
+                  "expression": "{{ steps[\"step-8\"].record.project }}"
+                }
+              },
+              {
+                "name": "filename",
+                "value": {
+                  "expression": "{{ steps[\"step-8\"].record.filename }}"
+                }
+              }
+            ]
+          }
+        },
+        "jsonData": {
+          "expression": "{{ record.data }}"
+        },
+        "jsonMode": "expressionData"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "chunkSize": 2000
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Embeddings Mistral Cloud",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Mistral Cloud Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Mistral Cloud Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Prep Incoming Doc",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Settings",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "project",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.path.split('/').slice(0, 4)[3] }}"
+              }
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.path }}"
+              }
+            },
+            {
+              "name": "filename",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.path.split('/').last() }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "chooseBranch"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Get Doc Types",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "json": {
+            "docs": [
+              {
+                "filename": "study_guide.md",
+                "title": "Study Guide",
+                "description": "A Study Guide is a consolidated resource designed to aid learning. This guide includes three key elements: * A short answer quiz accompanied by an answer key to test comprehension. * A curated list of long-form essay questions to encourage deeper analysis and synthesis of the material. * A glossary of key terms to reinforce understanding of important concepts."
+              },
+              {
+                "filename": "timeline.md",
+                "title": "Timeline",
+                "description": "A Timeline organizes all significant events described in the sources you have uploaded in chronological order. This ordered list makes it easier to understand the sequence of events and their connection to the broader context of your sources. In addition to the list of events, the Timeline also provides a “cast of characters,” which comprises short biographical sketches of all the important people mentioned in your uploaded sources. These short biographies can help you quickly grasp the roles of various individuals involved in the events described by the Timeline."
+              },
+              {
+                "filename": "briefing_doc.md",
+                "title": "Briefing Doc",
+                "description": "A Briefing Doc identifies and presents the most important facts and insights from the sources in an easy-to-understand outline format. This format is designed to provide a concise overview of the key takeaways from the uploaded materials."
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Split Out Doc Types",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "docs"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "For Each Doc Type...",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Item List Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Vector Store Retriever",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-15",
+      "label": "Embeddings Mistral Cloud1",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Qdrant Vector Store1",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "qdrantCollection": {
+          "configuration_input": "step-16-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Mistral Cloud Chat Model2",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "response"
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Aggregate",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "response.text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Mistral Cloud Chat Model3",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Discover",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.response }}"
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "2secs",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-23",
+      "label": "Get Generated Documents",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.text }}"
+              }
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-25\"].record.path }}"
+              }
+            },
+            {
+              "name": "filename",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-25\"].record.name }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Generate",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "## Document\n{{ record.text.join('\\n') }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "Your job is to create a {{ steps[\"step-12\"].record.title }} for the given document. {{ steps[\"step-12\"].record.description }}\n\nGenerate a {{ steps[\"step-12\"].record.title }} for the given document. If questions are generated, generate the answers alongside them. Format your response in markdown; use \"#\" to format headings, use \"*\" to format lists."
+              }
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Prep For AI",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].records[0].filename.hash() }}"
+              }
+            },
+            {
+              "name": "project",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].records[0].project }}"
+              }
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].records[0].path }}"
+              }
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].records[0].filename }}"
+              }
+            },
+            {
+              "name": "summary",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-33\"].records[0].response.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "To Binary",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "toText",
+        "sourceProperty": {
+          "expression": "{{ record.data }}"
+        }
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Export to Folder",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fileName": {
+          "expression": "{{\n steps[\"step-23\"].record.path.replace(\n steps[\"step-23\"].record.path.split('/').last(),\n steps[\"step-23\"].record.filename.substring(0,21) + '...' + steps[\"step-11\"].record.title + '.md'\n )\n}}"
+        },
+        "operation": "write"
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Get FileType",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "pdf",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.fileType }}"
+                    },
+                    "rightValue": "pdf"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "docx",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.fileType }}"
+                    },
+                    "rightValue": "docx"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "everything else",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "Import File",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fileSelector": {
+          "expression": "{{ record.path }}"
+        }
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "Extract from PDF",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      }
+    },
+    {
+      "id": "step-31",
+      "label": "Extract from DOCX",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "ods"
+      }
+    },
+    {
+      "id": "step-32",
+      "label": "Extract from TEXT",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "text"
+      }
+    },
+    {
+      "id": "step-33",
+      "label": "Summarization Chain",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "chunkSize": 4000
+      }
+    },
+    {
+      "id": "step-34",
+      "label": "Qdrant Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "qdrantCollection": {
+          "configuration_input": "step-34-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-35",
+      "label": "Interview",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "## document summary\n {{ steps[\"step-25\"].record.summary }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "Given the following document summary, what questions would you ask to create a {{ steps[\"step-12\"].record.title }} for the document? Generate 5 questions."
+              }
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-22",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-35",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-28",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-31",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-32",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-30",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-31",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-32",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-34",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-33",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-34",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-34",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-33",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-35",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-14",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-21",
+      "channel": "retriever",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-35",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-34",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-35",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-33",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-21",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-24",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-24",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-33",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-27",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-27",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-35",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-16-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    },
+    {
+      "id": "step-34-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Breakdown Documents into Study Notes using Templating MistralAI and Qdrant.json",
+    "git_blob": "971641460f0427c817d398910cd4a488ef3b62bf",
+    "sha256": "8583c235dfd076df81c19ea0a0e0404e9cf036006162b8975ab673798e24ec82",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Breakdown%20Documents%20into%20Study%20Notes%20using%20Templating%20MistralAI%20and%20Qdrant.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,697 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-zoom-ai-meeting-assistant-creates-mail-summary-clickup-tasks-and-follow-up-cal-969617",
+  "title": "Zoom AI Meeting Assistant creates mail summary, ClickUp tasks and follow-up call",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "No Recording/Transcript available",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "errorMessage": {
+          "expression": "{{ record.error.cause.message }}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Zoom: Get data of last meeting",
+      "operation": "service-read",
+      "adapter": "zoom",
+      "parameters": {
+        "filters": {
+          "type": "scheduled"
+        },
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Filter transcript URL",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "transcript_file",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.recording_files.find(f => f.file_type === 'TRANSCRIPT').download_url }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Filter: Only 1 item",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Zoom: Get transcript file",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.transcript_file }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Extract text from transcript file",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "text"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Format transcript text",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "transcript",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data.split('\\r\\n\\r\\n').slice(1).map(block => {\n const lines = block.split('\\r\\n');\n return lines.slice(2).join(' ');\n}).join('\\n') }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Zoom: Get participants data",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.zoom.us/v2/past_meetings/{{ steps[\"step-18\"].record.id }}/participants"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Create meeting summary",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-11-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Create a formal meeting minutes document from the following transcript and meeting details.\n\nMeeting Date: {{ steps[\"step-4\"].record.start_time }} // This needs to be formatted from the meeting details\nParticipants: {{ record.participants.map(p => p.name + ' (' + p.user_email + ')').join(', ') }}\n\nTranscript:\n{{ steps[\"step-9\"].record.transcript }}\n\nPlease create the minutes in the following format:\n\nMeeting on [Date]\n\nParticipants:\n[List of participants with email addresses]\n\nSummary of the Meeting:\n[Brief and concise summary of the topics discussed]\n\nTasks:\n- [Task] (Responsible: [Name])\n- ...\n\nImportant Dates:\n- [Date] ([Context])\n- ..."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Sort for mail delivery",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "Meeting summary: {{ steps[\"step-4\"].record.topic }} on {{ steps[\"step-4\"].record.start_time }}"
+              }
+            },
+            {
+              "name": {
+                "expression": "to"
+              },
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-10\"].record.participants[0].user_email }}"
+              }
+            },
+            {
+              "name": "body",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.message.content }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Format to html",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const items = [];\n\nfor (const item of records) {\n const body = item.json.body;\n if (!body) continue;\n\n // Simple split approach\n const sections = body.split('\\n\\n');\n const title = sections[0].replace(/\\*\\*/g, '');\n const participants = sections[1].split('\\n').slice(1).join('\\n');\n const summary = sections[2].split('\\n').slice(1).join('\\n');\n const tasks = sections[3].split('\\n').slice(1).join('\\n');\n const dates = sections[4].split('\\n').slice(1).join('\\n');\n\n const html = `<html>\n<body style=\"font-family: Arial, sans-serif; max-width: 800px; margin: 20px;\">\n<h1 style=\"color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;\">${title}</h1>\n<h2 style=\"color: #2c3e50; margin-top: 20px;\">Participants:</h2>\n<ul style=\"list-style-type: none; padding-left: 20px;\">\n${participants.split('\\n').map(p => `<li>${p.replace('- ', '')}</li>`).join('\\n')}\n</ul>\n<h2 style=\"color: #2c3e50; margin-top: 20px;\">Meeting Summary:</h2>\n<p style=\"margin-left: 20px;\">${summary}</p>\n<h2 style=\"color: #2c3e50; margin-top: 20px;\">Tasks:</h2>\n<ul style=\"margin-left: 20px;\">\n${tasks.split('\\n').map(t => `<li>${t.replace('- ', '')}</li>`).join('\\n')}\n</ul>\n<h2 style=\"color: #2c3e50; margin-top: 20px;\">Important Dates:</h2>\n<ul style=\"margin-left: 20px;\">\n${dates.split('\\n').map(d => `<li>${d.replace('- ', '')}</li>`).join('\\n')}\n</ul>\n</body>\n</html>`;\n\n items.push({\n json: {\n html,\n to: item.json.to,\n subject: item.json.subject\n }\n });\n}\n\nreturn items;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Send meeting summary",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.html }}"
+        },
+        "options": {},
+        "subject": {
+          "expression": "{{ record.subject }}"
+        },
+        "toEmail": {
+          "expression": "{{ record.to }}"
+        },
+        "fromEmail": {
+          "configuration_input": "step-14-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Create tasks",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "create_task",
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-15-workflowid"
+        },
+        "description": {
+          "expression": "Use this tool to create a task. \nFor task creation use only action items for me Friedemann, don't use action items for other participants."
+        },
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "description": "An array of tasks",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the task"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "A detailed description of the task"
+                    },
+                    "due_date": {
+                      "type": "string",
+                      "description": "Due Date"
+                    },
+                    "priority": {
+                      "type": "string",
+                      "description": "Priority. . Please capitalize first letter"
+                    },
+                    "project_name": {
+                      "type": "string",
+                      "description": "Name of the project. Word 'Project' shouldn't be included"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "description",
+                    "due_date",
+                    "priority"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Create tasks and follow-up call",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "<system_prompt>\n\nTODAY IS: {{ current_time }}\n\nYOU ARE A MEETING ASSISTANT FOR AUTOMATION IN N8N. YOUR TASK IS TO EFFICIENTLY AND PRECISELY PROCESS INFORMATION FROM ZOOM MEETINGS TO GENERATE TO-DOS AND SCHEDULE FOLLOW-UP MEETINGS. YOU HAVE ACCESS TO THE FOLLOWING DATA:\n\n### INPUTS ###\n- **MEETING TITLE**: {{ steps[\"step-4\"].record.topic }}\n- **PARTICIPANTS**: {{ steps[\"step-10\"].record.participants[0].name }}\n- **TRANSCRIPT**: {{ steps[\"step-9\"].record.transcript }}\n\n### YOUR TASKS ###\n1. **CREATE TO-DOS**:\n - IDENTIFY TASKS AND TO-DOS IN THE TRANSCRIPT.\n - FORMULATE CLEAR, CONCRETE TASKS.\n - PASS THESE TASKS TO THE TOOL \"Create tasks\" TO SAVE THEM IN CLICKUP. \n - DATA STRUCTURE:\n - **TASK DESCRIPTION**: Brief description of the task.\n - **ASSIGNED PERSON**: First name from the participant list.\n - **DUE DATE**: Use any date mentioned in the transcript; otherwise, set to \"Not specified.\"\n\n2. **CREATE MEETING**:\n - ANALYZE THE TRANSCRIPT TO IDENTIFY INFORMATION ABOUT THE NEXT MEETING (DATE, TIME, AND TOPIC).\n - PASS THIS INFORMATION TO THE TOOL \"Create follow-up call.\"\n - DATA STRUCTURE:\n - **MEETING TITLE**: \"Follow-up: [Meeting Title]\"\n - **DATE AND TIME**: Determined from the transcript or set to \"Next Tuesday at 10:00 AM\" if no information is provided.\n - **PARTICIPANTS**: Add all participants from the list.\n\n### CHAIN OF THOUGHTS ###\n1. **UNDERSTAND**: Read and analyze the provided inputs (title, participants, transcript).\n2. **IDENTIFY**: Extract relevant information for the to-dos and the next meeting.\n3. **DIVIDE**: Split the task into two separate processes: creating to-dos and creating the meeting.\n4. **STRUCTURE**: Format the results in the required structure for the respective tools.\n5. **TRANSMIT**: Pass the data to the designated tools in n8n.\n6. **VERIFY**: Ensure the data is correct and complete.\n\n### WHAT YOU SHOULD NOT DO ###\n- **NEVER**: Create unclear or vague to-dos.\n- **NEVER**: Ignore missing data – use default values where uncertain.\n- **NEVER**: Overlook information from the inputs or make incorrect connections.\n- **NEVER**: Transmit tasks or meetings without proper formatting.\n\n### OUTPUT EXAMPLES ###\n1. **TO-DO**:\n - **TASK DESCRIPTION**: \"Prepare presentation for the next meeting.\"\n - **ASSIGNED PERSON**: \"John Doe.\"\n - **DUE DATE**: \"2025-01-25.\"\n\n2. **MEETING**:\n - **MEETING TITLE**: \"Follow-up: Project Discussion.\"\n - **DATE AND TIME**: \"2025-01-28 at 10:00 AM.\"\n - **PARTICIPANTS**: \"John Doe, Jane Example.\"\n\n### NOTES ###\n- EXECUTE YOUR TASKS WITH THE HIGHEST PRECISION AND CONTEXT SENSITIVITY.\n- RELY ON THE PROVIDED DATA AND DEFAULT VALUES WHERE NECESSARY.\n</system_prompt>"
+        },
+        "agent": "openAiFunctionsAgent",
+        "options": {},
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Create follow-up call",
+      "operation": "service-write",
+      "adapter": "microsoftoutlook",
+      "parameters": {
+        "subject": {
+          "expression": "{{ $fromAI(\"meeting_name\",\"Meeting name\",\"string\") }}"
+        },
+        "resource": "event",
+        "operation": "create",
+        "calendarId": {
+          "configuration_input": "step-17-calendarid"
+        },
+        "endDateTime": {
+          "expression": "{{ $fromAI(\"end_date_time\",\"Date and time of meeting end\",\"string\") }}"
+        },
+        "startDateTime": {
+          "expression": "{{ $fromAI(\"start_date_time\",\"Date and time of meeting start\",\"string\") }}"
+        },
+        "descriptionType": "manual",
+        "toolDescription": {
+          "expression": "Use tool to create Outlook Calendar Event. Use this tool only when transcript contains information that call should be scheduled."
+        },
+        "additionalFields": {
+          "timeZone": "Europe/Berlin"
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Filter: Last 24 hours",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "dateTime",
+                "operation": "afterOrEquals"
+              },
+              "leftValue": {
+                "expression": "{{ record.start_time }}"
+              },
+              "rightValue": {
+                "expression": "{{current_time.minus({ hours: 24 }).toISO()}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Execute Workflow Trigger",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "query.items"
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "ClickUp",
+      "operation": "service-read",
+      "adapter": "clickup",
+      "parameters": {
+        "list": {
+          "configuration_input": "step-21-list"
+        },
+        "name": {
+          "expression": "{{ record.name }}"
+        },
+        "team": {
+          "configuration_input": "step-21-team"
+        },
+        "space": {
+          "configuration_input": "step-21-space"
+        },
+        "folder": {
+          "configuration_input": "step-21-folder"
+        },
+        "additionalFields": {
+          "content": {
+            "expression": "{{ record.description }}"
+          },
+          "dueDate": {
+            "expression": "{{ record.due_date }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Zoom: Get transcripts data",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.zoom.us/v2/meetings/{{ record.id }}/recordings"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-16",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-16",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-14",
+      "channel": "main",
+      "branch": 0
+    },
+    {
+      "from": "step-16",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-11-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-fromemail",
+      "purpose": "Select the fromEmail for step-14.",
+      "required": true
+    },
+    {
+      "id": "step-15-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-calendarid",
+      "purpose": "Select the calendarId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-21-list",
+      "purpose": "Provide the contact, recipient, or message content for list.",
+      "required": true
+    },
+    {
+      "id": "step-21-team",
+      "purpose": "Provide the contact, recipient, or message content for team.",
+      "required": true
+    },
+    {
+      "id": "step-21-space",
+      "purpose": "Provide the contact, recipient, or message content for space.",
+      "required": true
+    },
+    {
+      "id": "step-21-folder",
+      "purpose": "Provide the contact, recipient, or message content for folder.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Zoom AI Meeting Assistant creates mail summary, ClickUp tasks and follow-up call.json",
+    "git_blob": "adeb922ff431738ef2579e1a596a125e8dcb71ac",
+    "sha256": "333595a66f3e46803ad07bcbe25c32dbe968980d178a734091ac617df3f389b2",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Zoom%20AI%20Meeting%20Assistant%20creates%20mail%20summary%2C%20ClickUp%20tasks%20and%20follow-up%20call.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

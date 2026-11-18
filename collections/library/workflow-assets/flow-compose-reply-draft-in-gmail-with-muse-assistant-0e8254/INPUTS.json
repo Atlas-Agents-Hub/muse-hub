@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-compose-reply-draft-in-gmail-with-muse-assistant-0e8254",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-9-assistantid": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

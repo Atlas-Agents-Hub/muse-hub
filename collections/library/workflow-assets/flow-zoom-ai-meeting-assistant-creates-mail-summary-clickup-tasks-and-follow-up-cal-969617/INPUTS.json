@@ -1,0 +1,43 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-zoom-ai-meeting-assistant-creates-mail-summary-clickup-tasks-and-follow-up-cal-969617",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-11-modelid": null,
+    "step-14-fromemail": null,
+    "step-15-workflowid": null,
+    "step-17-calendarid": null,
+    "step-21-list": null,
+    "step-21-team": null,
+    "step-21-space": null,
+    "step-21-folder": null
+  },
+  "adapters": {
+    "clickup": {
+      "connection": null
+    },
+    "emailsend": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "microsoftoutlook": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    },
+    "zoom": {
+      "connection": null
+    }
+  }
+}

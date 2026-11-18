@@ -1,0 +1,527 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-personal-shopper-chatbot-for-woocommerce-with-rag-using-google-drive-and-muse-ac4b5a",
+  "title": "Personal Shopper Chatbot for WooCommerce with RAG using Google Drive and Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ steps[\"step-4\"].record.sessionId }}"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Calculator",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Edit Fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sessionId",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.sessionId }}"
+              }
+            },
+            {
+              "name": "chatInput",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.chatInput }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "RAG",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "name": "informazioni_negozio",
+        "description": "Informazioni relative al negozio: orari di apertura, indirizzo, contatti, informazioni generali"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Qdrant Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {},
+        "qdrantCollection": {
+          "configuration_input": "step-7-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "personal_shopper",
+      "operation": "service-read",
+      "adapter": "woocommerce",
+      "parameters": {
+        "options": {
+          "sku": {
+            "expression": "{{ steps[\"step-11\"].record.output.SKU }}"
+          },
+          "search": {
+            "expression": "{{ steps[\"step-11\"].record.output.keyword }}"
+          },
+          "maxPrice": {
+            "expression": "{{ steps[\"step-11\"].record.output.price_max }}"
+          },
+          "minPrice": {
+            "expression": "{{ steps[\"step-11\"].record.output.price_min }}"
+          },
+          "stockStatus": "instock"
+        },
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Information Extractor",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.chatInput }}"
+        },
+        "options": {
+          "systemPromptTemplate": "You are an intelligent assistant for a shoe and accessories store (mainly bags). Your task is to analyze the input text coming from a chat and determine if the user is looking for a product. If the user is looking for a product, you need to extract the following information:\n1. The keyword (keyword) useful for the search.\n2. Any minimum or maximum prices specified.\n3. An SKU (product code) if mentioned.\n4. The name of the category to search in, if specified.\n\nInstructions:\n1. Identify the intent: Determine if the user is looking for a specific product.\n2. Extract the information:\n- If the user is looking for a product, identify:\n- Set the type \"search\" to true. Otherwise, set it to false\n- The keywords.\n- Any minimum or maximum prices (e.g. \"less than 50 euros\", \"between 30 and 60 euros\").\n- An SKU (e.g. \"ABC123 code\").\n- The category name (e.g. \"t-shirts\", \"jeans\", \"women\", \"men\").\n3. Output format: Return a JSON object with the given structure"
+        },
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "search_intent": true,
+            "search_params": [
+              {
+                "type": "search",
+                "value": "ture or false"
+              },
+              {
+                "type": "keyword",
+                "value": "valore_keyword"
+              },
+              {
+                "type": "min_price",
+                "value": "valore_min_price"
+              },
+              {
+                "type": "max_price",
+                "value": "valore_max_price"
+              },
+              {
+                "type": "sku",
+                "value": "valore_sku"
+              },
+              {
+                "type": "category",
+                "value": "valore_categoria"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Model Chat Model2",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Google Drive2",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "filter": {
+          "driveId": {
+            "configuration_input": "step-13-filter-driveid"
+          },
+          "folderId": {
+            "configuration_input": "step-13-filter-folderid"
+          }
+        },
+        "options": {},
+        "resource": "fileFolder"
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Google Drive1",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.id }}"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        },
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Embeddings OpenAI3",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Default Data Loader2",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "dataType": "binary"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Token Splitter1",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "chunkSize": 300,
+        "chunkOverlap": 30
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-19",
+      "label": "HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-19-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "json": {
+            "filter": {}
+          }
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Qdrant Vector Store1",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "qdrantCollection": {
+          "configuration_input": "step-20-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-1\"].record.chatInput }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "You are an intelligent assistant for a clothing store. Your task is to analyze the input text from a chat and determine if the user is looking for a product.\n\nBehavior:\n- If the user is looking for a product the \"search\" field of the following JSON is set to true and you must pass the following JSON as input to the \"personal_shopper\" tool to extract:\n\n```json\n{{ JSON.stringify(record.output) }}\n```\n\n- If the user asks questions related to the store such as address or opening hours, you must use the \"RAG\" tool"
+          }
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-21",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-21",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-16",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-21",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-21",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-20",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-20",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-21",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-21",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-18"
+  ],
+  "configuration": [
+    {
+      "id": "step-7-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-filter-driveid",
+      "purpose": "Select the filter / driveId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-filter-folderid",
+      "purpose": "Select the filter / folderId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-19-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://qdranturl/collections/NAME/points/delete"
+    },
+    {
+      "id": "step-20-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Personal Shopper Chatbot for WooCommerce with RAG using Google Drive and openAI.json",
+    "git_blob": "0757cfcd886908eec91e9790d25fb67bdbb2537b",
+    "sha256": "7051d5fdf9a86dcff12da06db026c113111a8760314afd2da87d4f82fd321ea7",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Personal%20Shopper%20Chatbot%20for%20WooCommerce%20with%20RAG%20using%20Google%20Drive%20and%20openAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

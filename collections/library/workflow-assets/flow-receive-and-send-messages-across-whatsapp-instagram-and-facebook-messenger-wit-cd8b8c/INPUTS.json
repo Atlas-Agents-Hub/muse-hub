@@ -1,0 +1,16 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-receive-and-send-messages-across-whatsapp-instagram-and-facebook-messenger-wit-cd8b8c",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "fiwano": {
+      "connection": null
+    }
+  }
+}

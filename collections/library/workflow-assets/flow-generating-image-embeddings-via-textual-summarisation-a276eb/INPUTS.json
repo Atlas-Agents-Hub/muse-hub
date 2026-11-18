@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-generating-image-embeddings-via-textual-summarisation-a276eb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-fileid": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,310 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-summarize-umami-data-with-ai-via-openrouter-and-save-it-to-baserow-86957b",
+  "title": "Summarize Umami data with AI (via Openrouter) and save it to Baserow",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                4
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get view stats from Umami",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://umami.mydomain.com/api/websites/86d4095c-a2a8-4fc8-9521-103e858e2b41/event-data/stats?startAt={{ DateTime.now().minus({ days: 7 }).toMillis() }}&endAt={{ DateTime.now().toMillis() }}&unit=hour&timezone=Asia%2FHong_Kong"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Parse Umami data",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "function transformToUrlString(items) {\n // In n8n, we need to check if items is an array and get the json property\n const data = items[0].json;\n \n if (!data) {\n console.log('No valid data found');\n return encodeURIComponent(JSON.stringify([]));\n }\n \n try {\n // Create a simplified object with the metrics\n const simplified = {\n pageviews: {\n value: parseInt(data.pageviews.value) || 0,\n prev: parseInt(data.pageviews.prev) || 0\n },\n visitors: {\n value: parseInt(data.visitors.value) || 0,\n prev: parseInt(data.visitors.prev) || 0\n },\n visits: {\n value: parseInt(data.visits.value) || 0,\n prev: parseInt(data.visits.prev) || 0\n },\n bounces: {\n value: parseInt(data.bounces.value) || 0,\n prev: parseInt(data.bounces.prev) || 0\n },\n totaltime: {\n value: parseInt(data.totaltime.value) || 0,\n prev: parseInt(data.totaltime.prev) || 0\n }\n };\n \n return encodeURIComponent(JSON.stringify(simplified));\n } catch (error) {\n console.log('Error processing data:', error);\n throw new Error('Invalid data structure');\n }\n}\n\n// Get the input data\nconst items = records;\n\n// Process the data\nconst result = transformToUrlString(items);\n\n// Return the result\nreturn { json: { urlString: result } };",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Send data to A.I.",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"model\": \"meta-llama/llama-3.1-70b-instruct:free\",\n \"messages\": [\n {\n \"role\": \"user\",\n \"content\": \"You are an SEO expert. Here is data from Umami analytics of Pennibnotes.com. Where X is URL and Y is number of visitors. Give me a table summary of this data in markdown format:{{ steps[\"step-4\"].record.urlString }}.\"\n }\n ]\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Get page data from Umami",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://umami.rumjahn.synology.me/api/websites/f375d28c-1949-4597-8871-f1b942e3aa24/metrics?startAt={{Date.now() - (7 * 24 * 60 * 60 * 1000)}}&endAt={{Date.now()}}&type=url&tz=America/Los_Angeles"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Parse Umami data1",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Get input data\nconst data = records;\n\n// Create URL-encoded string from the data\nconst encodedData = encodeURIComponent(JSON.stringify(data));\n\n// Return the encoded data\nreturn {\n json: {\n thisWeek: encodedData\n }\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Get page view data from Umami",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://umami.rumjahn.synology.me/api/websites/f375d28c-1949-4597-8871-f1b942e3aa24/metrics?startAt={{Date.now() - (14 * 24 * 60 * 60 * 1000)}}&endAt={{Date.now() - (7 * 24 * 60 * 60 * 1000)}}&type=url&tz=America/Los_Angeles"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Parse Umami",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Get input data\nconst data = records;\n\n// Create URL-encoded string from the data\nconst encodedData = encodeURIComponent(JSON.stringify(data));\n\n// Return the encoded data\nreturn {\n json: {\n lastweek: encodedData\n }\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Send data to A.I.1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-10-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"model\": \"meta-llama/llama-3.1-70b-instruct:free\",\n \"messages\": [\n {\n \"role\": \"user\",\n \"content\": \"You are an SEO expert. Here is data from Umami analytics of Pennibnotes.com. Where X is URL and Y is number of visitors. Compare the data from this week to last week. Present the data in a table using markdown and offer 5 improvement suggestions. This week:{{ steps[\"step-7\"].records[0].thisWeek }} Lastweek:{{ record.lastweek }}\"\n }\n ]\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Save data to Baserow",
+      "operation": "service-write",
+      "adapter": "baserow",
+      "parameters": {
+        "tableId": {
+          "configuration_input": "step-11-tableid"
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 5870,
+              "fieldValue": {
+                "expression": "{{ record.choices[0].message.content }}"
+              }
+            },
+            {
+              "fieldId": 5869,
+              "fieldValue": {
+                "expression": "{{ steps[\"step-5\"].records[0].choices[0].message.content }}"
+              }
+            },
+            {
+              "fieldId": 5868,
+              "fieldValue": {
+                "expression": "{{ DateTime.now().toFormat('yyyy-MM-dd') }}"
+              }
+            },
+            {
+              "fieldId": 5871,
+              "fieldValue": "Name of your blog"
+            }
+          ]
+        },
+        "operation": "create",
+        "databaseId": {
+          "configuration_input": "step-11-databaseid"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://openrouter.ai/api/v1/chat/completions"
+    },
+    {
+      "id": "step-10-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://openrouter.ai/api/v1/chat/completions"
+    },
+    {
+      "id": "step-11-tableid",
+      "purpose": "Select the tableId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-databaseid",
+      "purpose": "Select the databaseId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Summarize Umami data with AI (via Openrouter) and save it to Baserow.json",
+    "git_blob": "ffd5fb50f2ffedae24fe7db49a8e58710e95d9f5",
+    "sha256": "e80eaadc8f52efb52fc905a5ed46ac07fbd61405f56f5d6ed89a0b4510809d83",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Summarize%20Umami%20data%20with%20AI%20%28via%20Openrouter%29%20and%20save%20it%20to%20Baserow.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

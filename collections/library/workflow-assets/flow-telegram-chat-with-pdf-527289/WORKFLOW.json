@@ -1,0 +1,401 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-telegram-chat-with-pdf-527289",
+  "title": "Telegram chat with PDF",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Telegram Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "dataType": "binary"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "chunkSize": 3000,
+        "chunkOverlap": 200
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Stop and Error",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "errorMessage": "An error occurred"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Question and Answer Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.message.text }}\nSearch the database with the retriever for information for the answer"
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Vector Store Retriever",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-8",
+      "label": "Pinecone Vector Store1",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-8-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Check If is a document",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.message.document }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Change to application/pdf",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Função para modificar os metadados do arquivo binário\nfunction modifyBinaryMetadata(items) {\n for (const item of items) {\n if (item.binary && item.binary.data) {\n // Modifica o tipo MIME\n item.binary.data.mimeType = 'application/pdf';\n \n // Garante que o nome do arquivo termine com .pdf\n if (!item.binary.data.fileName.toLowerCase().endsWith('.pdf')) {\n item.binary.data.fileName += '.pdf';\n }\n \n // Atualiza o contentType no fileType (se existir)\n if (item.binary.data.fileType) {\n item.binary.data.fileType.contentType = 'application/pdf';\n }\n }\n }\n return items;\n}\n\n// Aplica a modificação e retorna os itens atualizados\nreturn modifyBinaryMetadata(records);",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Telegram get File",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.message.document.file_id }}"
+        },
+        "resource": "file"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Embeddings",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Telegram Response",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.response.text }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Telegram Response about Database",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.metadata.pdf.totalPages }} pages saved on Pinecone"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Stop and Error1",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "errorMessage": "An error occurred."
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Pinecone Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-17-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Limit to 1",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-13",
+      "to": "step-8",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-17",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-17",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "retriever",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-14",
+      "channel": "main",
+      "branch": 0
+    },
+    {
+      "from": "step-15",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-8-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Telegram chat with PDF.json",
+    "git_blob": "ee40df370ec54415bda131bf3533226d767d1453",
+    "sha256": "3268601999d5ad2ea08c9fdc3a933cffc23d57b2b6040dc27a7a5ee0d667886c",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Telegram%20chat%20with%20PDF.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

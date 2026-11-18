@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-leadbot-24h-ai-whatsapp-lead-qualification-606d02",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-sheetid": null,
+    "step-5-url": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,402 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-fill-pdf-with-justfill-6d7bfb",
+  "title": "Fill PDF with JustFill",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On form submission",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "formTitle": "Fill a PDF with JustFill",
+        "formDescription": "Upload a PDF that has a saved JustFill template and provide the values as JSON.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "PDF",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Data JSON",
+              "fieldType": "textarea",
+              "placeholder": {
+                "json": {
+                  "age_score": "1",
+                  "total_score": "5"
+                }
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Config",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": {
+                "configuration_input": "step-2-assignments-0-id"
+              },
+              "name": "apiKey",
+              "value": {
+                "configuration_input": "step-2-assignments-0-value"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Mint upload slot",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-3-parameters-0-value"
+              }
+            },
+            {
+              "name": "Accept",
+              "value": "application/json, text/event-stream"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "json": {
+            "jsonrpc": "2.0",
+            "id": {
+              "configuration_input": "step-3-jsonbody-body-id"
+            },
+            "method": "tools/call",
+            "params": {
+              "name": "request_file_upload",
+              "arguments": {}
+            }
+          }
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Prepare upload",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const rpc = records[0].json;\nif (rpc.error) throw new Error('MCP transport error: ' + JSON.stringify(rpc.error));\nif (rpc.result && rpc.result.isError) throw new Error('MCP tool error: ' + ((rpc.result.content && rpc.result.content[0] && rpc.result.content[0].text) || 'unknown'));\n// The slot JSON arrives as text inside the MCP tool result.\nconst slot = JSON.parse(rpc.result.content[0].text);\nif (slot.error) throw new Error('request_file_upload: ' + slot.error);\nconst trigger = steps[\"step-1\"].first();\nconst binKey = Object.keys(trigger.binary || {})[0];\nif (!binKey) throw new Error('No file arrived from the form.');\n// Ready-made JSON-RPC body for the Open PDF node (building it here avoids\n// n8n's expression parser tripping on `}}` inside inline object literals).\nslot.openBody = {\n  jsonrpc: '2.0', id: 2, method: 'tools/call',\n  params: { name: 'open_pdf', arguments: { upload_token: slot.upload_token } },\n};\nreturn [{ json: slot, binary: { file: trigger.binary[binKey] } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Upload PDF",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ record.post_url }}"
+        },
+        "contentType": "multipart-form-data",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "file"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Open PDF",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-6-url"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-6-parameters-0-value"
+              }
+            },
+            {
+              "name": "Accept",
+              "value": "application/json, text/event-stream"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify(steps[\"step-4\"].record.openBody) }}"
+        },
+        "options": {
+          "timeout": 180000
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Map values to fields",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const rpc = records[0].json;\nif (rpc.error) throw new Error('MCP transport error: ' + JSON.stringify(rpc.error));\nif (rpc.result && rpc.result.isError) throw new Error('MCP tool error: ' + ((rpc.result.content && rpc.result.content[0] && rpc.result.content[0].text) || 'unknown'));\nconst ws = JSON.parse(rpc.result.content[0].text);\nif (ws.error) throw new Error('open_pdf: ' + ws.error);\nif (!Array.isArray(ws.fields) || !ws.summary?.workspace_id) throw new Error('open_pdf returned no usable field list or workspace.');\n\nconst raw = steps[\"step-1\"].records[0]['Data JSON'];\nlet data;\ntry { data = JSON.parse(raw); }\ncatch { throw new Error('Data JSON must be a JSON object keyed by reviewed PDF field names.'); }\nif (!data || Array.isArray(data) || typeof data !== 'object' || !Object.keys(data).length) {\n  throw new Error('Data JSON must be a non-empty object, not a list, null or a scalar.');\n}\n\n// Exact normalized names only. Keep Unicode; never guess using substrings.\nconst norm = s => String(s ?? '').normalize('NFC').toLowerCase().replace(/[^\\p{L}\\p{M}\\p{N}]+/gu, '');\nconst values = Object.create(null), unmatched = [], usedIds = new Set();\nfor (const [k, v] of Object.entries(data)) {\n  const nk = norm(k);\n  if (!nk) throw new Error('Every JSON key must contain a letter or number.');\n  if (v !== null && (typeof v === 'object' || (typeof v === 'number' && !Number.isFinite(v)))) {\n    throw new Error('Field values must be text, finite numbers, booleans or null; nested values are not supported.');\n  }\n  const matches = ws.fields.filter(f => norm(f.name) === nk);\n  if (!matches.length) { unmatched.push(k); continue; }\n  if (matches.length !== 1) throw new Error('Ambiguous PDF field name: ' + k + '. Give each field a unique reviewed name.');\n  const f = matches[0];\n  if (typeof f.id !== 'string' || !f.id) throw new Error('A matched PDF field has no valid ID.');\n  if (usedIds.has(f.id)) throw new Error('Two JSON keys map to the same PDF field. Use one key per field.');\n  usedIds.add(f.id);\n  values[f.id] = v === null ? '' : String(v);\n}\nif (unmatched.length) {\n  throw new Error('Unmatched JSON keys: ' + unmatched.join(', ') + '. Rename the keys or review and save the PDF field names; no PDF was filled.');\n}\nif (!Object.keys(values).length) throw new Error('No data keys matched the template fields.');\n\nreturn [{ json: {\n  workspace_id: ws.summary.workspace_id,\n  source: ws.summary.source,\n  matched: Object.keys(values).length,\n  unmatched,\n  values,\n  fillBody: {\n    jsonrpc: '2.0', id: 3, method: 'tools/call',\n    params: { name: 'fill_pdf', arguments: { workspace_id: ws.summary.workspace_id, values } },\n  },\n} }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Fill PDF",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-8-url"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-8-parameters-0-value"
+              }
+            },
+            {
+              "name": "Accept",
+              "value": "application/json, text/event-stream"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify(record.fillBody) }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Result",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const rpc = records[0].json;\nif (rpc.error) throw new Error('MCP transport error: ' + JSON.stringify(rpc.error));\nif (rpc.result && rpc.result.isError) throw new Error('MCP tool error: ' + ((rpc.result.content && rpc.result.content[0] && rpc.result.content[0].text) || 'unknown'));\nconst out = JSON.parse(rpc.result.content[0].text);\nif (out.error) throw new Error('fill_pdf: ' + out.error);\n// download_url: plain GET, no auth, valid until the workspace expires (~24h).\nreturn [{ json: {\n  download_url: out.download_url,\n  output_mode: out.output_mode,\n  filled_fields: out.filled_fields,\n  link_expires_at: out.link_expires_at,\n  warnings: out.warnings || null,\n} }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Redirect to filled PDF",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "redirect",
+        "redirectUrl": {
+          "expression": "{{ record.download_url }}"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-0-id",
+      "purpose": "Select the id for step-2.",
+      "required": true
+    },
+    {
+      "id": "step-2-assignments-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://justfill.app/api/mcp"
+    },
+    {
+      "id": "step-3-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-3-jsonbody-body-id",
+      "purpose": "Select the id for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://justfill.app/api/mcp"
+    },
+    {
+      "id": "step-6-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-8-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://justfill.app/api/mcp"
+    },
+    {
+      "id": "step-8-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Fill PDF with JustFill.json",
+    "git_blob": "d379ea617a3e778c58c1bdac9933c9041b1e8d73",
+    "sha256": "ad56718041e5622bb9b49bc5224673a2fe50dad2888debf10c84c65e09bf7987",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Fill%20PDF%20with%20JustFill.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

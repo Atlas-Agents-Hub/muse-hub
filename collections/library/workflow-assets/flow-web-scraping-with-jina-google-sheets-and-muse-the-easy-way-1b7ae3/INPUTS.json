@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-web-scraping-with-jina-google-sheets-and-muse-the-easy-way-1b7ae3",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-sheetname": null,
+    "step-3-documentid": null,
+    "step-6-url": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

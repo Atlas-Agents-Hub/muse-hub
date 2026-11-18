@@ -1,0 +1,303 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-scrape-and-summarize-webpages-with-ai-471156",
+  "title": "Scrape and summarize webpages with AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Execute Workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Fetch essay list",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Extract essay names",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "dataPropertyName": {
+          "expression": "data"
+        },
+        "extractionValues": {
+          "values": [
+            {
+              "key": "essay",
+              "attribute": "href",
+              "cssSelector": "table table a",
+              "returnArray": true,
+              "returnValue": "attribute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Fetch essay texts",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "http://www.paulgraham.com/{{ record.essay }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Extract title",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "title",
+              "cssSelector": "title"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Clean up",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "title",
+              "stringValue": {
+                "expression": "{{ record.title }}"
+              }
+            },
+            {
+              "name": "summary",
+              "stringValue": {
+                "expression": "{{ record.response.text }}"
+              }
+            },
+            {
+              "name": "url",
+              "stringValue": {
+                "expression": "http://www.paulgraham.com/{{ steps[\"step-8\"].record.essay }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Split out into items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "essay"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Limit to first 3",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {
+        "maxItems": 3
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Summarization Chain",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "operationMode": "documentLoader"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-12",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-13",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "http://www.paulgraham.com/articles.html"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Scrape and summarize webpages with AI.json",
+    "git_blob": "8989f48f472bd28465d4099d417a35352460aad8",
+    "sha256": "1f42e96dd83f8b810718ddf8a85566aa0386e18c674d4ca30c52a9d1c14d28ea",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Scrape%20and%20summarize%20webpages%20with%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

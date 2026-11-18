@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-translate-audio-using-ai-ec0135",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-7-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

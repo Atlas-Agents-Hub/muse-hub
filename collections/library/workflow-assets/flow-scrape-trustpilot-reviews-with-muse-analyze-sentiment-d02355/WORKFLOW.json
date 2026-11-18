@@ -1,0 +1,761 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-scrape-trustpilot-reviews-with-muse-analyze-sentiment-d02355",
+  "title": "Scrape Trustpilot Reviews with Muse, Analyze Sentiment",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "recensioni"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Information Extractor",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "You need to extract the review from the following HTML: {{ record.recensione }}"
+        },
+        "options": {
+          "systemPromptTemplate": "You are a review expert. You need to extract only the required information and report it without changing anything.\nAll the required information is in the text."
+        },
+        "attributes": {
+          "attributes": [
+            {
+              "name": "autore",
+              "required": true,
+              "description": "Extract the name of the review author"
+            },
+            {
+              "name": "valutazione",
+              "type": "number",
+              "required": true,
+              "description": "Extract the rating given to the review (from 1 to 5)"
+            },
+            {
+              "name": "data",
+              "required": true,
+              "description": "Extract review date in YYYY-MM-DD format"
+            },
+            {
+              "name": "titolo",
+              "required": true,
+              "description": "Extract the review title"
+            },
+            {
+              "name": "testo",
+              "required": true,
+              "description": "Extract the review text"
+            },
+            {
+              "name": "n_recensioni",
+              "type": "number",
+              "required": true,
+              "description": "Extract the total number of reviews made by the user"
+            },
+            {
+              "name": "nazione",
+              "required": true,
+              "description": "Extract the country of the user who wrote the review. Must be two characters"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.Valutazione }}"
+              },
+              "rightValue": {
+                "expression": "{{ steps[\"step-1\"].record.recensioni.replace('/reviews/','') }}"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-5",
+      "label": "Limit1",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {
+        "maxItems": 3
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Set Parameters",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "company_id",
+              "type": "string",
+              "value": "COMPANY"
+            },
+            {
+              "name": "max_page",
+              "type": "number",
+              "value": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get reviews",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://it.trustpilot.com/review/{{ record.company_id }}"
+        },
+        "options": {
+          "pagination": {
+            "pagination": {
+              "parameters": {
+                "parameters": [
+                  {
+                    "name": "page",
+                    "value": {
+                      "expression": "{{ $pageCount + 1 }}"
+                    }
+                  }
+                ]
+              },
+              "maxRequests": {
+                "expression": "{{ record.max_page }}"
+              },
+              "requestInterval": 5000,
+              "limitPagesFetched": true
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "sort",
+              "value": "recency"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Extract",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "recensioni",
+              "attribute": "href",
+              "cssSelector": "article section a",
+              "returnArray": true,
+              "returnValue": "attribute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Get rows",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "filtersUI": {
+          "values": [
+            {
+              "lookupValue": {
+                "expression": "{{ steps[\"step-1\"].record.recensioni.replace('/reviews/','') }}"
+              },
+              "lookupColumn": "Id"
+            }
+          ]
+        },
+        "sheetName": {
+          "configuration_input": "step-9-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-9-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Get Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "Id": {
+              "expression": "{{ steps[\"step-1\"].record.recensioni.replace('/reviews/','') }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Data",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Nome",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Titolo",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Testo",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Località",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "N. Recensioni",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Valutazione",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Sentiment",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "appendOrUpdate",
+        "sheetName": {
+          "configuration_input": "step-10-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-10-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Get Single review",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://it.trustpilot.com{{ steps[\"step-1\"].record.recensioni }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Extract review",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "recensione",
+              "cssSelector": "article",
+              "returnArray": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Update sheet",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "Id": {
+              "expression": "{{ steps[\"step-1\"].record.recensioni.replace('/reviews/','') }}"
+            },
+            "URL": {
+              "expression": "https://it.trustpilot.com{{ steps[\"step-1\"].record.recensioni }}"
+            },
+            "Data": {
+              "expression": "{{ steps[\"step-2\"].record.output.data }}"
+            },
+            "Nome": {
+              "expression": "{{ record.output.autore }}"
+            },
+            "Testo": {
+              "expression": "{{ steps[\"step-2\"].record.output.testo }}"
+            },
+            "Titolo": {
+              "expression": "{{ steps[\"step-2\"].record.output.titolo }}"
+            },
+            "Località": {
+              "expression": "{{ steps[\"step-2\"].record.output.nazione }}"
+            },
+            "Sentiment": {
+              "expression": "{{ record.sentimentAnalysis.category }}"
+            },
+            "Valutazione": {
+              "expression": "{{ steps[\"step-2\"].record.output.valutazione }}"
+            },
+            "N. Recensioni": {
+              "expression": "{{ steps[\"step-2\"].record.output.n_recensioni }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Data",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Nome",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Titolo",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Testo",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Località",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "N. Recensioni",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Valutazione",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Sentiment",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "appendOrUpdate",
+        "sheetName": {
+          "configuration_input": "step-13-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-13-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Sentiment Analysis",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "categories": "Positive, Neutral, Negative",
+          "systemPromptTemplate": "You are highly intelligent and accurate sentiment analyzer. Analyze the sentiment of the provided text. Categorize it into one of the following: {categories}. Use the provided formatting instructions. Only output the JSON."
+        },
+        "inputText": {
+          "expression": "{{ record.output.testo }}"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-14",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-2",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-9-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Scrape Trustpilot Reviews with DeepSeek, Analyze Sentiment with OpenAI.json",
+    "git_blob": "b145f813ef457d604e2a24f279660107dcdb0c55",
+    "sha256": "0bd5428c336a13c7037cdaf192dfae5f45071747aed109d08c0f5aaadde7a662",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Scrape%20Trustpilot%20Reviews%20with%20DeepSeek%2C%20Analyze%20Sentiment%20with%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

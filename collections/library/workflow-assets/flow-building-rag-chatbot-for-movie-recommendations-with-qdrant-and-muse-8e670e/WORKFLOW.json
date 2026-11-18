@@ -1,0 +1,679 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-building-rag-chatbot-for-movie-recommendations-with-qdrant-and-muse-8e670e",
+  "title": "Building RAG Chatbot for Movie Recommendations with Qdrant and Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "GitHub",
+      "operation": "service-read",
+      "adapter": "github",
+      "parameters": {
+        "owner": {
+          "configuration_input": "step-2-owner"
+        },
+        "filePath": "Top_1000_IMDB_movies.csv",
+        "resource": "file",
+        "operation": "get",
+        "repository": {
+          "configuration_input": "step-2-repository"
+        },
+        "additionalParameters": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Extract from File",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "movie_name",
+                "value": {
+                  "expression": "{{ steps[\"step-3\"].record['Movie Name'] }}"
+                }
+              },
+              {
+                "name": "movie_release_date",
+                "value": {
+                  "expression": "{{ steps[\"step-3\"].record['Year of Release'] }}"
+                }
+              },
+              {
+                "name": "movie_description",
+                "value": {
+                  "expression": "{{ steps[\"step-3\"].record.Description }}"
+                }
+              }
+            ]
+          }
+        },
+        "jsonData": {
+          "expression": "{{ steps[\"step-3\"].record.Description }}"
+        },
+        "jsonMode": "expressionData"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Token Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "Qdrant Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "qdrantCollection": {
+          "configuration_input": "step-7-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Call n8n Workflow Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "movie_recommender",
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-10-workflowid"
+        },
+        "description": "Call this tool to get a list of recommended movies from a vector database. ",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "positive_example": {
+                "type": "string",
+                "description": "A string with a movie description matching the user's positive recommendation request"
+              },
+              "negative_example": {
+                "type": "string",
+                "description": "A string with a movie description matching the user's negative anti-recommendation reuqest"
+              }
+            }
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-12",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-13",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineAll"
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "result"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Split Out1",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "result.points"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Merge1",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "fieldsToMatchString": "id"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Aggregate",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "response"
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a Movie Recommender Tool using a Vector Database under the hood. Provide top-3 movie recommendations returned by the database, ordered by their recommendation score, but not showing the score to the user."
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Embedding Recommendation Request with Model",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-19-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "input",
+              "value": {
+                "expression": "{{ record.query.positive_example }}"
+              }
+            },
+            {
+              "name": "model",
+              "value": "text-embedding-3-small"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-19-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Embedding Anti-Recommendation Request with Model",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-20-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "input",
+              "value": {
+                "expression": "{{ record.query.negative_example }}"
+              }
+            },
+            {
+              "name": "model",
+              "value": "text-embedding-3-small"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-20-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Extracting Embedding",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "positive_example",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.data[0].embedding }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Extracting Embedding1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "negative_example",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.data[0].embedding }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Calling Qdrant Recommendation API",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-23-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"query\": {\n \"recommend\": {\n \"positive\": [[{{ record.positive_example }}]],\n \"negative\": [[{{ record.negative_example }}]],\n \"strategy\": \"average_vector\"\n }\n },\n \"limit\":3\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Retrieving Recommended Movies Meta Data",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-24-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"ids\": [\"{{ record.result.points[0].id }}\", \"{{ record.result.points[1].id }}\", \"{{ record.result.points[2].id }}\"],\n \"with_payload\":true\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Selecting Fields Relevant for Agent",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "movie_recommendation_score",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.score }}"
+              }
+            },
+            {
+              "name": "movie_description",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.payload.content }}"
+              }
+            },
+            {
+              "name": "movie_name",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.payload.metadata.movie_name }}"
+              }
+            },
+            {
+              "name": "movie_release_year",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.payload.metadata.release_year }}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-13",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-18",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-18",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-10",
+      "to": "step-18",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-8",
+    "step-12"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-owner",
+      "purpose": "Select the owner for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-repository",
+      "purpose": "Select the repository for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-19-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/embeddings"
+    },
+    {
+      "id": "step-19-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-20-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/embeddings"
+    },
+    {
+      "id": "step-20-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-23-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://edcc6735-2ffb-484f-b735-3467043828fe.europe-west3-0.gcp.cloud.qdrant.io/collections/imdb_1000_open_ai/points/query"
+    },
+    {
+      "id": "step-24-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://edcc6735-2ffb-484f-b735-3467043828fe.europe-west3-0.gcp.cloud.qdrant.io/collections/imdb_1000_open_ai/points"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Building RAG Chatbot for Movie Recommendations with Qdrant and Open AI.json",
+    "git_blob": "c81d10b0dc5f6253add589683ca931b677f1a0e0",
+    "sha256": "5c3d1ac102ce30652005cccd6d47c9f40ae720bf27a6ea2cf08e626f60217aa9",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Building%20RAG%20Chatbot%20for%20Movie%20Recommendations%20with%20Qdrant%20and%20Open%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

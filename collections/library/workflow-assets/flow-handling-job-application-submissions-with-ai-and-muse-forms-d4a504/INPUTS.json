@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-handling-job-application-submissions-with-ai-and-muse-forms-d4a504",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-6-base": null,
+    "step-6-table": null,
+    "step-10-base": null,
+    "step-10-table": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

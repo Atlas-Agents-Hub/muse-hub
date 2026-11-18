@@ -1,0 +1,602 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automate-siem-alert-enrichment-with-mitre-att-ck-qdrant-zendesk-in-muse-17214b",
+  "title": "Automate SIEM Alert Enrichment with MITRE ATT&CK, Qdrant & Zendesk in Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a cybersecurity expert trained on MITRE ATT&CK and enterprise incident response. Your job is to:\n1. Extract TTP information from SIEM data.\n2. Provide actionable remediation steps tailored to the alert.\n3. Cross-reference historical patterns and related alerts.\n4. Recommend external resources for deeper understanding.\n\nEnsure that:\n- TTPs are tagged with the tactic, technique name, and technique ID.\n- Remediation steps are specific and actionable.\n- Historical data includes related alerts and notable trends.\n- External links are relevant to the observed behavior.\n"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Embeddings OpenAI1",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": {
+                  "expression": "{{ record.id }}"
+                }
+              },
+              {
+                "name": "name",
+                "value": {
+                  "expression": "{{ record.name }}"
+                }
+              },
+              {
+                "name": "killchain",
+                "value": {
+                  "expression": "{{ record.kill_chain_phases }}"
+                }
+              },
+              {
+                "name": "external",
+                "value": {
+                  "expression": "{{ record.external_references }}"
+                }
+              }
+            ]
+          }
+        },
+        "jsonData": {
+          "expression": "{{ record.description }}"
+        },
+        "jsonMode": "expressionData"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Token Splitter1",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-8",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-9",
+      "label": "Embeddings OpenAI2",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Extract from File",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "fromJson"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-12",
+      "label": "AI Agent1",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Siem Alert Data:\nAlert: {{ record.raw_subject }}\nDescription: {{ record.description }}"
+        },
+        "options": {
+          "systemMessage": "You are a cybersecurity expert trained on MITRE ATT&CK and enterprise incident response. Your job is to:\n1. Extract TTP information from SIEM data.\n2. Provide actionable remediation steps tailored to the alert.\n3. Cross-reference historical patterns and related alerts.\n4. Recommend external resources for deeper understanding.\n\nEnsure that:\n- TTPs are tagged with the tactic, technique name, and technique ID.\n- Remediation steps are specific and actionable.\n- Historical data includes related alerts and notable trends.\n- External links are relevant to the observed behavior.\n\nPlease output your response in html format, but do not include ```html at the beginning \n"
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchemaExample": {
+          "json": {
+            "ttp_identification": {
+              "alert_summary": "The alert indicates a check-in from the NetSupport RAT, a known Remote Access Trojan, suggesting command and control (C2) communication.",
+              "mitre_attack_ttps": [
+                {
+                  "tactic": "Command and Control",
+                  "technique": "Protocol or Service Impersonation",
+                  "technique_id": "T1001.003",
+                  "description": "The RAT's check-in over port 443 implies potential masquerading of its traffic as legitimate SSL/TLS traffic, a tactic often used to blend C2 communications with normal web traffic.",
+                  "reference": {
+                    "configuration_input": "step-16-mitre-attack-ttps-0-reference"
+                  }
+                }
+              ]
+            },
+            "remediation_steps": {
+              "network_segmentation": {
+                "action": "Isolate the affected host",
+                "target": "10.11.26.183",
+                "reason": "Prevents further C2 communication or lateral movement."
+              },
+              "endpoint_inspection": {
+                "action": "Perform a thorough inspection",
+                "target": "Impacted endpoint",
+                "method": "Use endpoint detection and response (EDR) tools to check for additional persistence mechanisms."
+              },
+              "network_traffic_analysis": {
+                "action": "Investigate and block unusual traffic",
+                "target": "IP 194.180.191.64",
+                "method": "Implement blocks for the IP across the firewall or IDS/IPS systems."
+              },
+              "system_patching": {
+                "action": "Ensure all systems are updated",
+                "method": "Apply the latest security patches to mitigate vulnerabilities exploited by RAT malware."
+              },
+              "ioc_hunting": {
+                "action": "Search for Indicators of Compromise (IoCs)",
+                "method": "Check for NetSupport RAT IoCs across other endpoints within the network."
+              }
+            },
+            "historical_patterns": {
+              "network_anomalies": "Past alerts involving similar attempts to use standard web ports (e.g., 80, 443) for non-standard applications could suggest a broader attempt to blend malicious traffic into legitimate streams.",
+              "persistence_tactics": "Any detection of anomalies in task scheduling or shortcut modifications may indicate persistence methods similar to those used by RATs."
+            },
+            "external_resources": [
+              {
+                "title": "ESET Report on Okrum and Ketrican",
+                "description": "Discusses similar tactics involving protocol impersonation and C2.",
+                "url": {
+                  "configuration_input": "step-16-external-resources-0-url"
+                }
+              },
+              {
+                "title": "Malleable C2 Profiles",
+                "description": "Document on crafting custom C2 traffic profiles similar to the targeting methods used by NetSupport RAT.",
+                "url": {
+                  "configuration_input": "step-16-external-resources-1-url"
+                }
+              },
+              {
+                "title": "MITRE ATT&CK Technique Overview",
+                "description": "Overview of Protocol or Service Impersonation tactics.",
+                "url": {
+                  "configuration_input": "step-16-external-resources-2-url"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Pull Mitre Data From Gdrive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "configuration_input": "step-17-fileid"
+        },
+        "options": {},
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Embed JSON in Qdrant Collection",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "qdrantCollection": {
+          "configuration_input": "step-18-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Query Qdrant Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "options": {},
+        "toolName": "mitre_attack_vector_store",
+        "toolDescription": "The mitre_attack_vector_store is a knowledge base trained on the MITRE ATT&CK framework. It is designed to help identify, correlate, and provide context for cybersecurity incidents based on textual descriptions of alerts, events, or behaviors. This tool leverages precomputed embeddings of attack techniques, tactics, and procedures (TTPs) to map user queries (such as SIEM-generated alerts or JIRA ticket titles) to relevant MITRE ATT&CK techniques.\n\nBy analyzing input text, the vector store can:\n\nRetrieve the most relevant MITRE ATT&CK entries (e.g., techniques, tactics, descriptions, external references).\nProvide structured context about potential adversary behaviors.\nSuggest remediation actions or detection methods based on the input.",
+        "qdrantCollection": {
+          "configuration_input": "step-19-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Qdrant Vector Store query",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "options": {},
+        "toolName": "mitre_attack_vector_store",
+        "toolDescription": "The mitre_attack_vector_store is a knowledge base trained on the MITRE ATT&CK framework. It is designed to help identify, correlate, and provide context for cybersecurity incidents based on textual descriptions of alerts, events, or behaviors. This tool leverages precomputed embeddings of attack techniques, tactics, and procedures (TTPs) to map user queries (such as SIEM-generated alerts or JIRA ticket titles) to relevant MITRE ATT&CK techniques.\n\nBy analyzing input text, the vector store can:\n\nRetrieve the most relevant MITRE ATT&CK entries (e.g., techniques, tactics, descriptions, external references).\nProvide structured context about potential adversary behaviors.\nSuggest remediation actions or detection methods based on the input.",
+        "qdrantCollection": {
+          "configuration_input": "step-20-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Get all Zendesk Tickets",
+      "operation": "service-read",
+      "adapter": "zendesk",
+      "parameters": {
+        "options": {},
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Update Zendesk with Mitre Data",
+      "operation": "service-write",
+      "adapter": "zendesk",
+      "parameters": {
+        "operation": "update",
+        "updateFields": {
+          "internalNote": {
+            "expression": "Summary: {{ record.output.ttp_identification.alert_summary }}"
+          },
+          "customFieldsUi": {
+            "customFieldsValues": [
+              {
+                "id": {
+                  "configuration_input": "step-22-customfieldsvalues-0-id"
+                },
+                "value": {
+                  "expression": "{{ record.output.ttp_identification.mitre_attack_ttps[0].technique_id }}"
+                }
+              },
+              {
+                "id": {
+                  "configuration_input": "step-22-customfieldsvalues-1-id"
+                },
+                "value": {
+                  "expression": "{{ record.output.ttp_identification.mitre_attack_ttps[0].tactic }}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Move on to next ticket",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-12",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-20",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-18",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-19",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-18",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-2",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-12",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-12",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-2",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-2",
+      "channel": "main",
+      "branch": 0
+    },
+    {
+      "from": "step-15",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1",
+    "step-11"
+  ],
+  "configuration": [
+    {
+      "id": "step-16-mitre-attack-ttps-0-reference",
+      "purpose": "Set the reference endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://attack.mitre.org/techniques/T1001/003/"
+    },
+    {
+      "id": "step-16-external-resources-0-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://www.eset.com/int/about/newsroom/research/okrum-ketrican/"
+    },
+    {
+      "id": "step-16-external-resources-1-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://www.cobaltstrike.com/help-malleable-c2"
+    },
+    {
+      "id": "step-16-external-resources-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://attack.mitre.org/techniques/T1001/003/"
+    },
+    {
+      "id": "step-17-fileid",
+      "purpose": "Select the fileId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    },
+    {
+      "id": "step-19-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    },
+    {
+      "id": "step-20-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-customfieldsvalues-0-id",
+      "purpose": "Select the id for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-customfieldsvalues-1-id",
+      "purpose": "Select the id for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Automate SIEM Alert Enrichment with MITRE ATT&CK, Qdrant & Zendesk in n8n.json",
+    "git_blob": "d4efe709f2134308fd43c38b84eb6ffbcdcdef02",
+    "sha256": "a6e666c0fc41f7272a377ffe0ea0f0ba6e9f93ec6c2a75ffbed58a2c33701b75",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Automate%20SIEM%20Alert%20Enrichment%20with%20MITRE%20ATT%26CK%2C%20Qdrant%20%26%20Zendesk%20in%20n8n.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

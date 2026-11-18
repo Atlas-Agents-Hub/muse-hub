@@ -1,0 +1,252 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-blog-writer-pipeline-with-ollama-ad2b2c",
+  "title": "AI Blog Writer Pipeline with Ollama",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Manual Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Set Blog Parameters",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "topic",
+              "value": "How to Self-Host AI Models with Ollama",
+              "type": "string"
+            },
+            {
+              "name": "tone",
+              "value": "professional but conversational",
+              "type": "string"
+            },
+            {
+              "name": "word_count",
+              "value": "1500",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "1. Research Topic (Ollama)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ model: 'llama3:8b', prompt: 'You are a professional blog researcher. Research the topic: \"' + record.topic + '\" and provide 5 key points with supporting evidence. Format as a numbered list with brief explanations. Be factual and cite real concepts.', stream: false, options: { temperature: 0.3, num_predict: 1000 } }) }}"
+        },
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "2. Create Outline (Ollama)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ model: 'llama3:8b', prompt: 'You are a blog outline creator. Based on this research:\\n\\n' + JSON.parse(record.data).response + '\\n\\nCreate a detailed blog outline for the topic: \"' + steps[\"step-2\"].record.topic + '\"\\n\\nInclude: Title, H2 sections, key points under each, and a conclusion. Target ' + steps[\"step-2\"].record.word_count + ' words.', stream: false, options: { temperature: 0.4, num_predict: 1000 } }) }}"
+        },
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "3. Write Draft (Ollama)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ model: 'llama3:8b', prompt: 'You are a professional blog writer. Write a complete blog post following this outline:\\n\\n' + JSON.parse(record.data).response + '\\n\\nRequirements:\\n- Tone: ' + steps[\"step-2\"].record.tone + '\\n- Target length: ' + steps[\"step-2\"].record.word_count + ' words\\n- Use markdown formatting (## for headings)\\n- Include a compelling introduction and conclusion\\n- Add practical tips and examples\\n- Write for SEO (use keywords naturally)', stream: false, options: { temperature: 0.7, num_predict: 4000 } }) }}"
+        },
+        "options": {
+          "timeout": 300000
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "4. Edit & Polish (Ollama)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-6-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ model: 'llama3:8b', prompt: 'You are a professional editor. Edit and improve this blog post for clarity, grammar, flow, and SEO. Fix any issues and make it publication-ready. Return the complete edited post in markdown.\\n\\nOriginal post:\\n\\n' + JSON.parse(record.data).response, stream: false, options: { temperature: 0.3, num_predict: 4000 } }) }}"
+        },
+        "options": {
+          "timeout": 300000
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Final Output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "final_post",
+              "value": {
+                "expression": "{{ JSON.parse(record.data).response }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "topic",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.topic }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "generated_at",
+              "value": {
+                "expression": "{{ new Date().toISOString() }}"
+              },
+              "type": "string"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    },
+    {
+      "id": "step-6-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI Blog Writer Pipeline with Ollama.json",
+    "git_blob": "f9822436e6480440a0d3d6895a4a46d76842d82f",
+    "sha256": "dba159e93eaefe618d0fe7e222a9641b9726c7d2940b1b4458914a83e7ba7489",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20Blog%20Writer%20Pipeline%20with%20Ollama.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

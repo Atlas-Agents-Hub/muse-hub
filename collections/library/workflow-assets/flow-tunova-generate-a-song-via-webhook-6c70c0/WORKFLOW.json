@@ -1,0 +1,132 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-tunova-generate-a-song-via-webhook-6c70c0",
+  "title": "Tunova - Generate a song via webhook",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "POST /generate-song",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-song",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Tunova: start generation",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{\n  \"prompt\": {{ JSON.stringify(record.body.prompt) }},\n  \"instrumental\": {{ record.body.instrumental === true }}\n}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Wait for render",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 150,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Tunova: get result",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.tunova.ai/api/jobs/{{ steps[\"step-2\"].record.job_id }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Return audio URL",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{\n  \"status\": {{ JSON.stringify(record.status) }},\n  \"audio_url\": {{ JSON.stringify(record.clips?.[0]?.audio_url ?? null) }},\n  \"title\": {{ JSON.stringify(record.clips?.[0]?.title ?? null) }}\n}"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.tunova.ai/api/generate"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Tunova - Generate a song via webhook.json",
+    "git_blob": "a2f92f898478a029b53a424d342d4e4db8d470b1",
+    "sha256": "e9a81c19d8b447b7bac2c783ec83944abb48c7609bff3b335cfa496f30e45884",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Tunova%20-%20Generate%20a%20song%20via%20webhook.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

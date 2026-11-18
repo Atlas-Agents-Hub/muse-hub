@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-daily-ai-digest-of-unread-emails-to-telegram-italian-fbd8af",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-modelid": null,
+    "step-6-chatid": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

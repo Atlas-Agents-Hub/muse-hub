@@ -1,0 +1,208 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-send-daily-translated-calvin-and-hobbes-comics-to-discord-e743d5",
+  "title": "Send daily translated Calvin and Hobbes Comics to Discord",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": "Please write the original language and Korean together. \n\nEXAMPLE)\nCalvin: \"YOU'VE NEVER HAD AN OBLIGATION, AN ASSIGNMENT, OR A DEADLINE IN ALL YOUR LIFE! YOU HAVE NO RESPONSIBILITIES AT ALL! IT MUST BE NICE!\" (너는 평생 한 번도 의무, 과제, 혹은 마감일 없었잖아! 전혀 책임이 없다니! 정말 좋겠다!)\nHobbes: \"WIPE THAT INSOLENT SMIRK OFF YOUR FACE!\" (그 뻔뻔한 미소를 그만 지어!)\n",
+        "modelId": {
+          "configuration_input": "step-2-modelid"
+        },
+        "options": {},
+        "resource": "image",
+        "imageUrls": {
+          "expression": "{{ record.output.cartoon_image }}"
+        },
+        "operation": "analyze"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "param",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "year",
+              "type": "string",
+              "value": {
+                "expression": "{{ current_time.format('yyyy') }}"
+              }
+            },
+            {
+              "name": "month",
+              "type": "string",
+              "value": {
+                "expression": "{{ current_time.format('MM') }}"
+              }
+            },
+            {
+              "name": "day",
+              "type": "string",
+              "value": {
+                "expression": "{{ current_time.format('dd') }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Discord",
+      "operation": "service-write",
+      "adapter": "discord",
+      "parameters": {
+        "content": {
+          "expression": "Daily Cartoon ({{ steps[\"step-3\"].record.year }}/{{ steps[\"step-3\"].record.month }}/{{ steps[\"step-3\"].record.day }})\n{{ steps[\"step-6\"].record.output.cartoon_image }}\n\n{{ record.content }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Information Extractor",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Please just extract the src value in the <img class=\"img-fluid Lazyloaded\"> tag from HTML below. I don't need anything other than the value.\n\ne.g.)\nEXAMPLE INPUT)\n<img class=\"img-fluid lazyloaded\" srcset=\"https://assets.amuniversal.com/5ed526b06e94013bda88005056a9545d 900w\" data-srcset=\"https://assets.amuniversal.com/5ed526b06e94013bda88005056a9545d 900w\" sizes=\"\n (min-width: 992px) 900px,\n (min-width: 768px) 600px,\n (min-width: 576px) 300px,\n 900px\" width=\"100%\" alt=\"Calvin and Hobbes Comic Strip for March 03, 2023 \" src=\"https://assets.amuniversal.com/5ed526b06e94013bda88005056a9545d\">\n\n\nEXAMPLE OUTPUT)\nhttps://assets.amuniversal.com/5ed526b06e94013bda88005056a9545d\n\n--\n(INPUT)\n{{ record.data }}"
+        },
+        "options": {},
+        "attributes": {
+          "attributes": [
+            {
+              "name": "cartoon_image",
+              "description": "EXAMPLE OUTPUT) https://assets.amuniversal.com/***"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://www.gocomics.com/calvinandhobbes/{{ record.year }}/{{ record.month }}/{{ record.day }}"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Discord/Send daily translated Calvin and Hobbes Comics to Discord.json",
+    "git_blob": "c76e66c466118e8d161e80d899456e011312c07c",
+    "sha256": "46cbf0916fa3134d34e38311b23278a0bf65841e3f36c55b5a197f9235cbf429",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Discord/Send%20daily%20translated%20Calvin%20and%20Hobbes%20Comics%20to%20Discord.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

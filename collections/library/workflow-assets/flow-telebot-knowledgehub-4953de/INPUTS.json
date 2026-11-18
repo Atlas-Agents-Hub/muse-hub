@@ -1,0 +1,31 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-telebot-knowledgehub-4953de",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-memorykey": null,
+    "step-4-memorykey": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

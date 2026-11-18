@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-chat-with-muse-assistant-by-adding-a-memory-58177e",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-assistantid": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    }
+  }
+}

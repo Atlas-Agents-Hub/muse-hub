@@ -1,0 +1,177 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-generate-seo-seed-keywords-using-ai-93ffc0",
+  "title": "Generate SEO Seed Keywords Using AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "output.answer"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Set Ideal Customer Profile (ICP)",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "product",
+              "type": "string",
+              "value": {
+                "expression": "**Replace this with a string detailing your intended product (if you have one)**"
+              }
+            },
+            {
+              "name": "pain points",
+              "type": "string",
+              "value": {
+                "expression": "**Replace this with a string list of customer pain points**"
+              }
+            },
+            {
+              "name": "goals",
+              "type": "string",
+              "value": {
+                "expression": "**Replace this with a string list of your customers key goals/objectives**"
+              }
+            },
+            {
+              "name": "current solutions",
+              "type": "string",
+              "value": {
+                "expression": "**Replace this with a string detailing how your ideal customer currently solves their pain ppoints**"
+              }
+            },
+            {
+              "name": "expertise level",
+              "type": "string",
+              "value": {
+                "expression": "**Replace this with a string detailing customer level of expertise**"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Aggregate for AI node",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "User:\nHere are some important rules for you to follow:\n<rules>\n1. Analyze the ICP information carefully.\n2. Generate 15-20 seed keywords that are relevant to the ICP's needs, challenges, goals, and search behavior.\n3. Ensure the keywords are broad enough to be considered \"\"head\"\" terms, but specific enough to target the ICP effectively.\n4. Consider various aspects of the ICP's journey, including awareness, consideration, and decision stages.\n5. Include a mix of product-related, problem-related, and solution-related terms.\n6. Think beyond just the product itself - consider industry trends, related technologies, and broader business concepts that would interest the ICP.\n7. Avoid overly generic terms that might attract irrelevant traffic.\n8. Aim for a mix of keyword difficulties, including both competitive and less competitive terms.\n9. Include keywords that cover different search intents: informational, navigational, commercial, and transactional.\n10. Consider related tools or platforms that the ICP might use, and include relevant integration-related keywords.\n11. If applicable, include some location-specific keywords based on the ICP's geographic information.\n12. Incorporate industry-specific terminology or jargon that the ICP would likely use in their searches.\n13. Consider emerging trends or pain points in the ICP's industry that they might be searching for solutions to.\n13. Format the keywords in lowercase, without punctuation. Trim any leading or trailing white space.\n</rules>\n\nYour output should be an array of strings, each representing a seed keyword:\n<example>\n['b2b lead generation', 'startup marketing strategies', 'saas sales funnel', ...]\n</example>\n\nHere is the Ideal Customer Profile (ICP) information:\n<input>\n{{ record.data[0].product }}\n</input>\n\nNow:\nBased on the provided ICP, generate an array of 15-20 seed keywords that will form the foundation of a comprehensive SEO strategy for this B2B SaaS company. These keywords should reflect a deep understanding of the ICP's needs, challenges, and search behavior, while also considering broader industry trends and related concepts.\n\nFirst, write out your ideas in {thoughts: } JSON as part of your analysis, then answer inside the {answer: } key in the JSON."
+        },
+        "agent": "conversationalAgent",
+        "options": {
+          "systemMessage": {
+            "expression": "System: You are an expert SEO strategist tasked with generating 15-20 key head search terms (seed keywords) for a B2B SaaS company. Your goal is to create a comprehensive list of keywords that will attract and engage the ideal customer profile (ICP) described."
+          }
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Connect to your own database",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-7"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Generate SEO Seed Keywords Using AI.json",
+    "git_blob": "e9005c2df47e97272cbf06a0d315b9fe630cbec1",
+    "sha256": "d5e8aeae007614259191b426edc453fc293198f7c1bf0dd4acde87a951c5033d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Generate%20SEO%20Seed%20Keywords%20Using%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

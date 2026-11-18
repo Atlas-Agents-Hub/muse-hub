@@ -1,0 +1,29 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automate-your-rfp-process-with-muse-assistants-616ccb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-7-channelid": null,
+    "step-11-assistantid": null,
+    "step-12-path": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googledocs": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

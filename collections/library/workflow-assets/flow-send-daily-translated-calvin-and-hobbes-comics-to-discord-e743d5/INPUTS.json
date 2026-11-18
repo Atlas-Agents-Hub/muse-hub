@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-send-daily-translated-calvin-and-hobbes-comics-to-discord-e743d5",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-modelid": null
+  },
+  "adapters": {
+    "discord": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

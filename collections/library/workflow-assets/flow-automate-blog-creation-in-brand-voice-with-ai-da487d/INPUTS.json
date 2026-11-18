@@ -1,0 +1,24 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automate-blog-creation-in-brand-voice-with-ai-da487d",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-6-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "wordpress": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-it-ops-ai-slackbot-workflow-chat-with-your-knowledge-base-f5b6e5",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-6-botprofile-imagevalues-icon-url": null,
+    "step-8-botprofile-imagevalues-icon-url": null,
+    "step-9-path": null,
+    "step-10-workflowid": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

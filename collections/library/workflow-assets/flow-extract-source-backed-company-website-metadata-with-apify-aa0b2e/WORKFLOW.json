@@ -1,0 +1,152 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-source-backed-company-website-metadata-with-apify-aa0b2e",
+  "title": "Extract source-backed company website metadata with Apify",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Run manually",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Set company domain",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "domain",
+              "value": "example.com",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Validate domain",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const domain = String(record.domain || '').trim().toLowerCase();\nif (domain.length > 253 || !domain.includes('.') || domain.includes('://') || domain.includes('/') || domain.includes(':') || domain.includes(' ') || domain.startsWith('.') || domain.endsWith('.') || domain.includes('..')) {\n  throw new Error('Use one bare company domain, for example example.com');\n}\nconst labels = domain.split('.');\nconst labelPattern = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/;\nif (labels.some((label) => label.length < 1 || label.length > 63 || !labelPattern.test(label)) || !/^[A-Za-z]{2,63}$/.test(labels.at(-1))) {\n  throw new Error('The company domain is invalid');\n}\nreturn [{ json: { domain, integrationSource: 'n8n-github-c9' } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Extract metadata on Apify",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "maxItems",
+              "value": "1"
+            },
+            {
+              "name": "maxTotalChargeUsd",
+              "value": "0.02"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": {
+          "expression": "{{ JSON.stringify(record) }}"
+        },
+        "options": {
+          "timeout": 150000
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Validate metadata result",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const expectedDomain = steps[\"step-3\"].records[0].domain;\nconst rows = records.flatMap((item) => Array.isArray(item.json) ? item.json : [item.json]);\nif (rows.length !== 1) {\n  throw new Error('Expected exactly one company metadata result');\n}\nconst row = rows[0];\nif (row.success !== true || row.domain !== expectedDomain || row.integrationSource !== 'n8n-github-c9' || row.provenance?.method !== 'website_metadata_scrape') {\n  throw new Error('The Actor response failed semantic validation');\n}\nreturn [{ json: row }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.apify.com/v2/acts/vivid_astronaut~company-enrichment/{resource}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Extract source-backed company website metadata with Apify.json",
+    "git_blob": "414f37a0877a19d7f7ef2b121bbc5845721e6944",
+    "sha256": "fe3d1845f5d7b4015d7f84b6a2614e3e371a1f38cfef6326396095cbe0dac91c",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Extract%20source-backed%20company%20website%20metadata%20with%20Apify.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-summarize-youtube-videos-from-transcript-06be17",
+  "title": "Summarize YouTube Videos from Transcript",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Request YouTube Transcript",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": "Apify API_KEY Here ???",
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"startUrls\": [\n \"{{ record['Full URL'] }}\"\n ]\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "No Operation, do nothing",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "Summarization of a YouTube script",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "YouTube video URL",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "path": "ddd"
+        },
+        "formTitle": "Summarize YouTube video's",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full URL"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Summarization Engine",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Summarize YouTube Videos from Transcript.json",
+    "git_blob": "8966ba5df4c10b9cc84d3b6ed3db600ce4ec4115",
+    "sha256": "fe89b931c2c9908628dd22bd8c431887775f2b268e94e29708076bfbfeb43a9a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Summarize%20YouTube%20Videos%20from%20Transcript.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

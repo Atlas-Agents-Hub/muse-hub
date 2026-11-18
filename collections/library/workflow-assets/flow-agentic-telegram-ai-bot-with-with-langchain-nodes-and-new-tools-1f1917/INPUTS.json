@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-agentic-telegram-ai-bot-with-with-langchain-nodes-and-new-tools-1f1917",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-6-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

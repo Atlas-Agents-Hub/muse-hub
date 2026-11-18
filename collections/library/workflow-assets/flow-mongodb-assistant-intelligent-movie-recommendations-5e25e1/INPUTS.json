@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-mongodb-assistant-intelligent-movie-recommendations-5e25e1",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-workflowid": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "mongodb": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

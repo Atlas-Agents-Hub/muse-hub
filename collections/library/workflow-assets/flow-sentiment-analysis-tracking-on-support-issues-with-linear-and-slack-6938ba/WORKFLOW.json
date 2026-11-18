@@ -1,0 +1,616 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-sentiment-analysis-tracking-on-support-issues-with-linear-and-slack-6938ba",
+  "title": "Sentiment Analysis Tracking on Support Issues with Linear and Slack",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Issues to List",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data.issues.nodes"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Combine Sentiment Analysis",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{\n{\n ...steps[\"step-1\"].record,\n ...record.output\n}\n}}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Sentiment over Issue Comments",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{\nrecord.comments.nodes.map(node => [\n `${node.user.displayName} commented on ${node.createdAt}:`,\n node.body\n].join('\\n')).join('---\\n')\n}}"
+        },
+        "options": {},
+        "attributes": {
+          "attributes": [
+            {
+              "name": "sentiment",
+              "required": true,
+              "description": "One of positive, negative or neutral"
+            },
+            {
+              "name": "sentimentSummary",
+              "description": "Describe the sentiment of the conversation"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Copy of Issue",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{ record }}"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "For Each Issue...",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get Existing Sentiment",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-7-base"
+        },
+        "table": {
+          "configuration_input": "step-7-table"
+        },
+        "options": {
+          "fields": [
+            "Issue ID",
+            "Current Sentiment"
+          ]
+        },
+        "operation": "search",
+        "filterByFormula": {
+          "expression": "{Issue ID} = '{{ record.identifier || 'XYZ' }}'"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Update Row",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-8-base"
+        },
+        "table": {
+          "configuration_input": "step-8-table"
+        },
+        "columns": {
+          "value": {
+            "Summary": {
+              "expression": "{{ steps[\"step-5\"].record.sentimentSummary || '' }}"
+            },
+            "Assigned": {
+              "expression": "{{ steps[\"step-5\"].record.assignee.name }}"
+            },
+            "Issue ID": {
+              "expression": "{{ steps[\"step-5\"].record.identifier }}"
+            },
+            "Issue Title": {
+              "expression": "{{ steps[\"step-5\"].record.title }}"
+            },
+            "Issue Created": {
+              "expression": "{{ steps[\"step-5\"].record.createdAt }}"
+            },
+            "Issue Updated": {
+              "expression": "{{ steps[\"step-5\"].record.updatedAt }}"
+            },
+            "Current Sentiment": {
+              "expression": "{{ steps[\"step-5\"].record.sentiment.toSentenceCase() }}"
+            },
+            "Previous Sentiment": {
+              "expression": "{{ !record.isEmpty() ? record['Current Sentiment'] : 'N/A' }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Issue ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "Positive",
+                  "value": "Positive"
+                },
+                {
+                  "name": "Negative",
+                  "value": "Negative"
+                },
+                {
+                  "name": "Neutral",
+                  "value": "Neutral"
+                },
+                {
+                  "name": "N/A",
+                  "value": "N/A"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Previous Sentiment",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "Positive",
+                  "value": "Positive"
+                },
+                {
+                  "name": "Negative",
+                  "value": "Negative"
+                },
+                {
+                  "name": "Neutral",
+                  "value": "Neutral"
+                },
+                {
+                  "name": "N/A",
+                  "value": "N/A"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Current Sentiment",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Summary",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Issue Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "dateTime",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Issue Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "dateTime",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Issue Updated",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Assigned",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Issue ID"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Airtable Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "baseId": {
+          "configuration_input": "step-9-baseid"
+        },
+        "tableId": {
+          "configuration_input": "step-9-tableid"
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "triggerField": "Current Sentiment",
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Sentiment Transition",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "NON-NEGATIVE to NEGATIVE",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.fields[\"Previous Sentiment\"] !== 'Negative' && record.fields[\"Current Sentiment\"] === 'Negative' }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Fetch Active Linear Issues",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "query": {
+          "expression": "query (\n $filter: IssueFilter\n) {\n issues(\n filter: $filter\n ) {\n nodes {\n id\n identifier\n title\n description\n url\n createdAt\n updatedAt\n assignee {\n name\n }\n comments {\n nodes {\n id\n createdAt\n user {\n displayName\n }\n body\n }\n }\n }\n }\n}"
+        },
+        "endpoint": {
+          "configuration_input": "step-11-endpoint"
+        },
+        "variables": {
+          "expression": "{{\n{\n \"filter\": {\n updatedAt: { gte: current_time.minus(30, 'minutes').toISO() }\n }\n}\n}}"
+        },
+        "requestFormat": "json"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Deduplicate Notifications",
+      "operation": "deduplicate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": {
+          "configuration_input": "step-13-operation"
+        },
+        "dedupeValue": {
+          "expression": "{{ record.fields[\"Issue ID\"] }}:{{ record.fields['Last Modified'] }}"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Report Issue Negative Transition",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-13\"].all().length }} Issues have transitions to Negative Sentiment"
+        },
+        "select": "channel",
+        "blocksUi": {
+          "expression": "{{\n{\n \"blocks\": [\n {\n \"type\": \"section\",\n \"text\": {\n \"type\": \"mrkdwn\",\n \"text\": \":rotating_light: The following Issues transitioned to Negative Sentiment\"\n }\n },\n {\n \"type\": \"divider\"\n },\n ...(steps[\"step-13\"].all().map(item => (\n {\n \"type\": \"section\",\n \"text\": {\n \"type\": \"mrkdwn\",\n \"text\": `*<https://linear.app/myOrg/issue/${record.fields['Issue ID']}|${record.fields['Issue ID']} ${record.fields['Issue Title']}>*\\n${record.fields.Summary}`\n }\n }\n )))\n ]\n}\n}}"
+        },
+        "channelId": {
+          "configuration_input": "step-14-channelid"
+        },
+        "messageType": "block",
+        "otherOptions": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-8",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-6",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-9",
+    "step-12"
+  ],
+  "configuration": [
+    {
+      "id": "step-7-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-baseid",
+      "purpose": "Select the baseId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-tableid",
+      "purpose": "Select the tableId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-endpoint",
+      "purpose": "Set the endpoint endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.linear.app/graphql"
+    },
+    {
+      "id": "step-13-operation",
+      "purpose": "Choose the operation resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Slack/Sentiment Analysis Tracking on Support Issues with Linear and Slack.json",
+    "git_blob": "a819868ea66e2ca047a9a54d443626a31f8a114d",
+    "sha256": "c0303ee34185b1959e4b43181b93c4dffc4b569a83b4914448d11c048bd2f628",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Slack/Sentiment%20Analysis%20Tracking%20on%20Support%20Issues%20with%20Linear%20and%20Slack.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

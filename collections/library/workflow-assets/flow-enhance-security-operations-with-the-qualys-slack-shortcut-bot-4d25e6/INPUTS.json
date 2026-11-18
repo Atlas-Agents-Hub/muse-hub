@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-enhance-security-operations-with-the-qualys-slack-shortcut-bot-4d25e6",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-workflowid": null,
+    "step-3-assignments-1-value": null,
+    "step-4-workflowid": null,
+    "step-5-url": null,
+    "step-6-url": null,
+    "step-8-assignments-0-value": null,
+    "step-11-path": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-simple-expense-tracker-with-muse-chat-assistant-and-google-sheets-366062",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-8-sheetname": null,
+    "step-8-documentid": null,
+    "step-9-workflowid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

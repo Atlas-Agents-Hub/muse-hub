@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automate-content-generator-for-wordpress-with-muse-r1-c70bb3",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-documentid": null,
+    "step-5-url": null,
+    "step-7-sheetname": null,
+    "step-7-documentid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "wordpress": {
+      "connection": null
+    }
+  }
+}

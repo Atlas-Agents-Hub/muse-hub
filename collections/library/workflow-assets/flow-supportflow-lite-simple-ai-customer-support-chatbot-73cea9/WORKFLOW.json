@@ -1,0 +1,208 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-supportflow-lite-simple-ai-customer-support-chatbot-73cea9",
+  "title": "SupportFlow Lite - Simple AI Customer Support Chatbot",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Receive Message",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "supportflow-lite",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Validate Input",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const body = records[0].json.body || records[0].json;\nconst message = body.message || body.text || '';\nconst sessionId = body.session_id || require('crypto').randomUUID();\nconst customerName = body.customer_name || 'Customer';\n\nif (!message || message.trim().length < 2) {\n  throw new Error('Message is required.');\n}\n\nreturn [{ json: { message: message.trim(), sessionId, customerName, receivedAt: new Date().toISOString(), messageId: require('crypto').randomUUID() } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "AI: Generate Response",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-3-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": {
+                "expression": "You are a helpful customer support assistant for {{ $env.SUPPORTFLOW_COMPANY_NAME || 'our company' }}.\n\nCompany info:\n{{ $env.SUPPORTFLOW_COMPANY_INFO || 'We are a technology company focused on providing excellent customer service.' }}\n\nRules:\n1. Be friendly, professional, and concise\n2. Answer based on the company info provided\n3. If you don't know the answer, say: 'I don't have that information. Let me connect you with our team at [support email].'\n4. Keep responses under 150 words\n5. Never make up product features, prices, or policies\n\nRespond in JSON: { \"answer\": \"...\", \"confidence\": 0.0-1.0, \"category\": \"faq|billing|technical|complaint|other\" }"
+              }
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "Customer {{record.customerName}} asks:\n{{record.message}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 500,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Merge Response",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const original = steps[\"step-2\"].records[0];\nconst aiRaw = records[0].json;\nlet ai;\ntry {\n  ai = JSON.parse(aiRaw.message?.content || aiRaw.content || '{}');\n} catch (e) {\n  ai = { answer: 'Sorry, I had trouble processing that. Please try again.', confidence: 0, category: 'other' };\n}\n\nreturn [{ json: { ...original, answer: ai.answer || '', confidence: ai.confidence || 0, category: ai.category || 'other', respondedAt: new Date().toISOString() } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Log to Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "expression": "{{ $env.SUPPORTFLOW_SHEET_ID }}"
+        },
+        "sheetName": {
+          "configuration_input": "step-5-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Message ID": {
+              "expression": "{{ record.messageId }}"
+            },
+            "Session ID": {
+              "expression": "{{ record.sessionId }}"
+            },
+            "Customer": {
+              "expression": "{{ record.customerName }}"
+            },
+            "Question": {
+              "expression": "{{ record.message }}"
+            },
+            "Answer": {
+              "expression": "{{ record.answer }}"
+            },
+            "Confidence": {
+              "expression": "{{ record.confidence }}"
+            },
+            "Category": {
+              "expression": "{{ record.category }}"
+            },
+            "Received": {
+              "expression": "{{ record.receivedAt }}"
+            },
+            "Responded": {
+              "expression": "{{ record.respondedAt }}"
+            }
+          }
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Respond to Customer",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ JSON.stringify({ success: true, messageId: record.messageId, answer: record.answer, confidence: record.confidence, category: record.category }) }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-5-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/SupportFlow Lite - Simple AI Customer Support Chatbot.json",
+    "git_blob": "ed355b8293008ef3f1ad01e60df87dc77d0ed714",
+    "sha256": "8ebdff677f07e50f2c614dcfdeef01c16c2e31637f472eb09e2cb83b0235f438",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/SupportFlow%20Lite%20-%20Simple%20AI%20Customer%20Support%20Chatbot.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

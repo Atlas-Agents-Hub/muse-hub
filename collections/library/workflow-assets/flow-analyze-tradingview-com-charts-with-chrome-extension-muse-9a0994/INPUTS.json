@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-analyze-tradingview-com-charts-with-chrome-extension-muse-9a0994",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-path": null,
+    "step-2-modelid": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    }
+  }
+}

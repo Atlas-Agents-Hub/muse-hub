@@ -1,0 +1,35 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-generated-summary-block-for-wordpress-posts-c117d5",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-sheetname": null,
+    "step-9-documentid": null,
+    "step-11-modelid": null,
+    "step-12-sheetname": null,
+    "step-12-documentid": null,
+    "step-13-channelid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    },
+    "wordpress": {
+      "connection": null
+    }
+  }
+}

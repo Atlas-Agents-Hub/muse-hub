@@ -1,0 +1,131 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-bilig-workpaper-mcp-formula-engine-for-muse-agents-c813cf",
+  "title": "Bilig WorkPaper MCP formula engine for Muse agents",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Manual Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Bilig MCP: write formula and verify",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "accept",
+              "value": "application/json, text/event-stream"
+            },
+            {
+              "name": "mcp-protocol-version",
+              "value": {
+                "configuration_input": "step-2-parameters-2-value"
+              }
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "json": {
+            "jsonrpc": "2.0",
+            "id": {
+              "configuration_input": "step-2-jsonbody-body-id"
+            },
+            "method": "tools/call",
+            "params": {
+              "name": "set_cell_contents",
+              "arguments": {
+                "sheetName": "Inputs",
+                "address": "C2",
+                "value": {
+                  "expression": "B2*B3"
+                }
+              }
+            }
+          }
+        },
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Extract formula proof",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const response = records[0].json;\nconst text = response?.result?.content?.[0]?.text;\nif (!text) {\n  throw new Error('Bilig MCP did not return MCP text content.');\n}\nconst proof = JSON.parse(text);\nconst displayValue = proof?.after?.displayValue;\nconst formula = proof?.after?.formula;\nconst restoredMatchesAfter = proof?.checks?.restoredMatchesAfter === true;\nif (formula !== '=B2*B3') {\n  throw new Error('Unexpected formula readback: ' + String(formula));\n}\nif (displayValue !== '5') {\n  throw new Error('Unexpected calculated value: ' + String(displayValue));\n}\nif (!restoredMatchesAfter) {\n  throw new Error('Bilig MCP did not prove restored readback.');\n}\nreturn [{\n  json: {\n    summary: 'Bilig WorkPaper calculated =B2*B3 as 5 and proved restored readback.',\n    editedCell: proof.editedCell,\n    formula,\n    displayValue,\n    restoredMatchesAfter,\n    github: 'https://github.com/proompteng/bilig',\n    docs: 'https://proompteng.github.io/bilig/mcp-workpaper-tool-server.html',\n    mcpRegistry: 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.proompteng%2Fbilig-workpaper',\n    proof\n  }\n}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://bilig.proompteng.ai/mcp"
+    },
+    {
+      "id": "step-2-parameters-2-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    },
+    {
+      "id": "step-2-jsonbody-body-id",
+      "purpose": "Select the id for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Bilig WorkPaper MCP formula engine for n8n agents.json",
+    "git_blob": "6baea4cb557fb08155f380605e5ea894fbe67701",
+    "sha256": "c12c674fc124ea388efaa74c60de43de1d503ee202fd96a98372e17ec01f0abc",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Bilig%20WorkPaper%20MCP%20formula%20engine%20for%20n8n%20agents.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

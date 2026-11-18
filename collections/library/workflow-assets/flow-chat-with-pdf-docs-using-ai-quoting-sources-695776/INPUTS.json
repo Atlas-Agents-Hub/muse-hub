@@ -1,0 +1,29 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-chat-with-pdf-docs-using-ai-quoting-sources-695776",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-assignments-0-value": null,
+    "step-16-pineconeindex": null,
+    "step-17-pineconeindex": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-rss-keyword-alert-to-telegram-89110f",
+  "title": "RSS Keyword Alert to Telegram",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Ogni 5 minuti",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Leggi il feed JSON",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {
+          "timeout": 10000
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Solo voci nuove e filtrate",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Adatta ARRAY_FIELD, FILTER_FIELD e TIMESTAMP_FIELD alla forma della tua risposta JSON.\n// L'idea: tieni in memoria (static data, sopravvive ai riavvii n8n) l'ultimo timestamp visto,\n// e manda solo le voci nuove che superano il filtro che ti interessa.\nconst ARRAY_FIELD = 'items';       // nome del campo che contiene l'array nella risposta\nconst FILTER_VALUES = [];          // es. ['errore','warning'] — lascia [] per non filtrare\nconst FILTER_FIELD = 'tipo';       // campo su cui applicare FILTER_VALUES\nconst TIMESTAMP_FIELD = 'ts';      // campo timestamp/ordinabile, per non ripetere le stesse voci\n\nconst state = $getWorkflowStaticData('global');\nconst lastTs = state.lastTs || '';\nconst raw = (records[0].json[ARRAY_FIELD] || []);\nconst events = raw\n  .filter(e => !FILTER_VALUES.length || FILTER_VALUES.includes(e[FILTER_FIELD]))\n  .filter(e => String(e[TIMESTAMP_FIELD] || '') > lastTs)\n  .reverse();\nif (events.length) state.lastTs = String(events[events.length - 1][TIMESTAMP_FIELD] || lastTs);\nreturn events.map(e => ({ json: {\n  text: `🔔 ${e[FILTER_FIELD] || 'evento'}\\n${JSON.stringify(e).slice(0, 300)}`\n} }));",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Manda su Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ $env.TELEGRAM_CHAT_ID || 'INSERISCI_CHAT_ID' }}"
+        },
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "additionalFields": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://inserisci-la-tua-api/lista.json"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/RSS Keyword Alert to Telegram.json",
+    "git_blob": "f104d3094102087538eff708a57d50855bdd923d",
+    "sha256": "d66d713fab2293dd896fd6ed7f716894bdc3aa77cfc2a6b6c4568e5136df2e24",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/RSS%20Keyword%20Alert%20to%20Telegram.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

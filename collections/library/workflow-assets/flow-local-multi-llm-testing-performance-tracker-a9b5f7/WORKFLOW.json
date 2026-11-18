@@ -1,0 +1,521 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-local-multi-llm-testing-performance-tracker-a9b5f7",
+  "title": "🚀 Local Multi-LLM Testing & Performance Tracker",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Get Models",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-1-url"
+        },
+        "options": {
+          "timeout": 10000,
+          "allowUnauthorizedCerts": false
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get timeDifference",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "endDate": {
+          "expression": "{{ record.endDateTime }}"
+        },
+        "options": {},
+        "operation": "getTimeBetweenDates",
+        "startDate": {
+          "expression": "{{ steps[\"step-8\"].record.startDateTime }}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Run Model with Dunamic Inputs",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "topP": 1,
+          "temperature": 1,
+          "presencePenalty": 0
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Analyze LLM Response Metrics",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Get the input data from n8n\nconst inputData = items.map(item => item.json);\n\n// Function to count words in a string\nfunction countWords(text) {\n return text.trim().split(/\\s+/).length;\n}\n\n// Function to count sentences in a string\nfunction countSentences(text) {\n const sentences = text.match(/[^.!?]+[.!?]+/g) || [];\n return sentences.length;\n}\n\n// Function to calculate average sentence length\nfunction averageSentenceLength(text) {\n const sentences = text.match(/[^.!?]+[.!?]+/g) || [];\n const sentenceLengths = sentences.map(sentence => sentence.trim().split(/\\s+/).length);\n const totalWords = sentenceLengths.reduce((acc, val) => acc + val, 0);\n return sentenceLengths.length ? (totalWords / sentenceLengths.length) : 0;\n}\n\n// Function to calculate average word length\nfunction averageWordLength(text) {\n const words = text.trim().split(/\\s+/);\n const totalCharacters = words.reduce((acc, word) => acc + word.length, 0);\n return words.length ? (totalCharacters / words.length) : 0;\n}\n\n// Function to calculate Flesch-Kincaid Readability Score\nfunction fleschKincaidReadability(text) {\n // Split text into sentences (approximate)\n const sentences = text.match(/[^.!?]+[.!?]*[\\n]*/g) || [];\n // Split text into words\n const words = text.trim().split(/\\s+/);\n // Estimate syllable count by matching vowel groups\n const syllableCount = (text.toLowerCase().match(/[aeiouy]{1,2}/g) || []).length;\n\n const sentenceCount = sentences.length;\n const wordCount = words.length;\n\n // Avoid division by zero\n if (wordCount === 0 || sentenceCount === 0) return 0;\n\n const averageWordsPerSentence = wordCount / sentenceCount;\n const averageSyllablesPerWord = syllableCount / wordCount;\n\n // Flesch-Kincaid formula\n return 206.835 - (1.015 * averageWordsPerSentence) - (84.6 * averageSyllablesPerWord);\n}\n\n\n// Prepare the result array for n8n output\nconst resultArray = [];\n\n// Loop through the input data and analyze each LLM response\ninputData.forEach(item => {\n const llmResponse = item.llm_response;\n\n // Perform the analyses\n const wordCount = countWords(llmResponse);\n const sentenceCount = countSentences(llmResponse);\n const avgSentenceLength = averageSentenceLength(llmResponse);\n const readabilityScore = fleschKincaidReadability(llmResponse);\n const avgWordLength = averageWordLength(llmResponse);\n\n // Structure the output to include original input and new calculated values\n resultArray.push({\n json: {\n llm_response: item.llm_response,\n prompt: item.prompt,\n model: item.model,\n start_time: item.start_time,\n end_time: item.end_time,\n time_diff: item.time_diff,\n word_count: wordCount,\n sentence_count: sentenceCount,\n average_sent_length: avgSentenceLength,\n readability_score: readabilityScore,\n average_word_length: avgWordLength\n }\n });\n});\n\n// Return the result array to n8n\nreturn resultArray;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Save Results to Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "Model": {
+              "configuration_input": "step-6-columns-value-model"
+            },
+            "Prompt": {
+              "expression": "{{ record.prompt }}"
+            },
+            "Response ": {
+              "expression": "{{ steps[\"step-12\"].record.text }}"
+            },
+            "TIme Sent": {
+              "expression": "{{ record.start_time }}"
+            },
+            "Word_count": {
+              "expression": "{{ record.word_count }}"
+            },
+            "Sentence_count": {
+              "expression": "{{ record.sentence_count }}"
+            },
+            "Time Recieved ": {
+              "expression": "{{ record.end_time }}"
+            },
+            "Total TIme spent ": {
+              "expression": "{{ record.time_diff }}"
+            },
+            "readability_score": {
+              "expression": "{{ record.readability_score }}"
+            },
+            "Average_sent_length": {
+              "expression": "{{ record.average_sent_length }}"
+            },
+            "average_word_length": {
+              "expression": "{{ record.average_word_length }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Prompt",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "TIme Sent",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Time Recieved ",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Total TIme spent ",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Model",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Response ",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "readability_score",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "average_word_length",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Word_count",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Sentence_count",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Average_sent_length",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-6-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-6-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Capture End Time",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "outputFieldName": "endDateTime"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Capture Start Time",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "outputFieldName": "startDateTime"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Prepare Data for Analysis",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "llm_response",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-12\"].record.text }}"
+              }
+            },
+            {
+              "name": "prompt",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.chatInput }}"
+              }
+            },
+            {
+              "name": "model",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-10\"].record.id }}"
+              }
+            },
+            {
+              "name": "start_time",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].record.startDateTime }}"
+              }
+            },
+            {
+              "name": "end_time",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.endDateTime }}"
+              }
+            },
+            {
+              "name": "time_diff",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.timeDifference.days }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Extract Model IDsto Run Separately",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Add System Prompt",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "system_prompt",
+              "type": "string",
+              "value": "Ensure that messages are concise and to the point readable by a 5th grader."
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "LLM Response Analysis",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-2\"].record.chatInput }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "{{ record.system_prompt }}"
+              }
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-12",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    },
+    {
+      "id": "step-6-columns-value-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-6-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/🚀 Local Multi-LLM Testing & Performance Tracker.json",
+    "git_blob": "12b0bef60390b866fd3819ea9b6d788efddc0572",
+    "sha256": "e09cad45ab8fd4f372772c5ca9a0527b0614894e32f3d50d8a31ab489caf9bce",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/%F0%9F%9A%80%20Local%20Multi-LLM%20Testing%20%26%20Performance%20Tracker.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,292 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-voice-chat-using-webhook-memory-manager-muse-elevenlabs-98bc47",
+  "title": "AI Voice Chat using Webhook, Memory Manager, Muse & ElevenLabs",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Get Chat",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Insert Chat",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "mode": "insert",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "user",
+              "message": {
+                "expression": "{{ steps[\"step-11\"].record[\"text\"] }}"
+              }
+            },
+            {
+              "type": "ai",
+              "message": {
+                "expression": "{{ record.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Aggregate",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "context"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "configuration_input": "step-4-sessionkey"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Respond to Webhook",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "binary"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "ElevenLabs - Generate Audio",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.elevenlabs.io/v1/text-to-speech/{{voice id}}"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": {
+                "expression": "{{ steps[\"step-9\"].record.text }}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Limit",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-9",
+      "label": "Basic LLM Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-11\"].record[\"text\"] }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "type": "AIMessagePromptTemplate",
+              "message": {
+                "expression": "To maintain context and fully understand the user's question, always review the previous conversation between you and him before providing an answer.\nThis is the previous conversation:\n{{ steps[\"step-3\"].record[\"context\"].map(m => `\nHuman: ${m.human || 'undefined'}\nAI Assistant: ${m.ai || 'undefined'}\n`).join('') }}"
+              }
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "voice_message",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Model - Speech to Text",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "voice_message"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-10"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-sessionkey",
+      "purpose": "Select the sessionKey for step-4.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI Voice Chat using Webhook, Memory Manager, OpenAI, Google Gemini & ElevenLabs.json",
+    "git_blob": "2dfb8eb6faa080e6ad92095dd2acf85edf559b54",
+    "sha256": "22097f677cb062fd3f6753709e16f8ddc072613b7b979e436ad6d564d445fa9a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20Voice%20Chat%20using%20Webhook%2C%20Memory%20Manager%2C%20OpenAI%2C%20Google%20Gemini%20%26%20ElevenLabs.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

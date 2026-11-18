@@ -1,0 +1,35 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-survey-insights-with-qdrant-python-and-information-extractor-d7bf53",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-sheetname": null,
+    "step-5-documentid": null,
+    "step-29-qdrantcollection": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

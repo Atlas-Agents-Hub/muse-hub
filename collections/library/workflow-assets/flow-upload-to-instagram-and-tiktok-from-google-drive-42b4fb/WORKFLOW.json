@@ -1,0 +1,388 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-upload-to-instagram-and-tiktok-from-google-drive-42b4fb",
+  "title": "Upload to Instagram and Tiktok from Google Drive",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Google Drive Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "event": "fileCreated",
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "configuration_input": "step-1-foldertowatch"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.id || record.data[0].id }}"
+        },
+        "options": {},
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Error Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "🔔 ERROR SUBIENDO VIDEOS"
+        },
+        "chatId": {
+          "configuration_input": "step-4-chatid"
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 1,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              },
+              "leftValue": {
+                "expression": "{{ record.trigger.error.message }}"
+              },
+              "rightValue": "The DNS server returned an error, perhaps the server is offline"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Get Audio from Video",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "resource": "audio",
+        "operation": "transcribe"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Read video from Google Drive",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fileName": {
+          "expression": "{{ record.originalFilename.replaceAll(\" \", \"_\") }}"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Generate Description for Videos in Tiktok and Instagram",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-8-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an expert assistant in creating engaging social media video titles."
+            },
+            {
+              "content": {
+                "expression": "I'm going to upload a video to social media. Here are some examples of descriptions that have worked well on Instagram:\n\nFollow and save for later. Discover InfluencersDe, the AI tool that automates TikTok creation and publishing to drive traffic to your website. Perfect for entrepreneurs and brands.\n#digitalmarketing #ugc #tiktok #ai #influencersde #contentcreation\n\nDiscover the video marketing revolution with InfluencersDe!\n.\n.\n.\n#socialmedia #videomarketing #ai #tiktok #influencersde #growthhacking\n\nDon't miss InfluencersDe, the tool that transforms your marketing strategy with just one click!\n.\n.\n.\n#ugc #ai #tiktok #digitalmarketing #influencersde #branding\n\nCan you create another title for the Instagram post based on this recognized audio from the video?\n\nAudio: {{ steps[\"step-6\"].record.text }}\n\nIMPORTANT: Reply only with the description, don't add anything else."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Read Video from Google Drive",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "filePath": {
+          "expression": "{{ steps[\"step-7\"].record.originalFilename.replaceAll(\" \", \"_\") }}"
+        },
+        "dataPropertyName": "datavideo"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Read Video from Google Drive2",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "filePath": {
+          "expression": "{{ steps[\"step-7\"].record.originalFilename.replaceAll(\" \", \"_\") }}"
+        },
+        "dataPropertyName": "datavideo"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Upload Video and Description to Tiktok",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-11-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].record.message.content.replaceAll(\"\\\"\", \"\") }}"
+              }
+            },
+            {
+              "name": "platform[]",
+              "value": "tiktok"
+            },
+            {
+              "name": "video",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "datavideo"
+            },
+            {
+              "name": "user",
+              "value": "Add user generated in upload-post"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Upload Video and Description to Instagram",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-12-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].record.message.content.replaceAll(\"\\\"\", \"\") }}"
+              }
+            },
+            {
+              "name": "platform[]",
+              "value": "instagram"
+            },
+            {
+              "name": "video",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "datavideo"
+            },
+            {
+              "name": "user",
+              "value": "Add user generated in upload-post"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-foldertowatch",
+      "purpose": "Select the folderToWatch for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-chatid",
+      "purpose": "Select the chatId for step-4.",
+      "required": true
+    },
+    {
+      "id": "step-8-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.upload-post.com/api/upload"
+    },
+    {
+      "id": "step-12-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.upload-post.com/api/upload"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Upload to Instagram and Tiktok from Google Drive.json",
+    "git_blob": "b750765bc185441d4188298bf17e3c51ca87e1ac",
+    "sha256": "563ffa31809a16dda48a5b39b8a4f6f367aff531102b9cdd92e9e9d5c49f864a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Upload%20to%20Instagram%20and%20Tiktok%20from%20Google%20Drive.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

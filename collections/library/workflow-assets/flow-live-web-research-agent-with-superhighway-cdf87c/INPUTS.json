@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-live-web-research-agent-with-superhighway-cdf87c",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-id": null,
+    "step-2-assignments-0-value": null,
+    "step-4-url": null,
+    "step-4-parameters-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

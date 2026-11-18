@@ -1,0 +1,888 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-route-spend-requests-to-approvers-by-threshold-with-deputies-reminders-and-esc-b39eb1",
+  "title": "Route spend requests to approvers by threshold with deputies, reminders and escalation",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Webhook: approval request (form, ERP or Slack)",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "approval-in",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Config",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "base",
+              "value": {
+                "configuration_input": "step-2-assignments-0-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "policy",
+              "value": {
+                "configuration_input": "step-2-assignments-1-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "channel",
+              "value": "slack",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "HR: who is out of office",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "GET",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/hr/out_of_office"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Apply policy: threshold, approver, deputy",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// The rule is written down here, in one place, and the workflow applies it the same way every time.\nconst cfg = steps[\"step-2\"].records[0]; const policy = JSON.parse(cfg.policy);\nconst req = steps[\"step-1\"].records[0].body;\nconst ooo = record.rows || [];\nconst today = new Date().toISOString().slice(0, 10);\nconst tiers = policy[req.type] || policy.purchase;\nconst tier = tiers.find(t => t.max === null || Number(req.amount) <= t.max);\nlet approver = tier.approver, deputy = null, reason = `${req.type} up to AED ${tier.max ?? 'no limit'} goes to ${tier.approver}`;\nif (approver !== 'auto') {\n  const away = ooo.find(o => o.person === approver && o.from <= today && today <= o.to);\n  if (away) { deputy = away.deputy; reason += `; ${approver} is out of office until ${away.to}, routed to deputy ${deputy}`; }\n}\nif (req.requester === approver || req.requester === deputy) { approver = policy.escalate_to; deputy = null; reason += '; requester cannot approve own request, escalated'; }\nconst sd = $getWorkflowStaticData('global'); sd.log = sd.log || [];\nconst decision = approver === 'auto' ? 'APPROVED' : 'PENDING';\nconst rec = { request_id: req.request_id || ('REQ-' + Date.now().toString(36).toUpperCase()), type: req.type, amount: Number(req.amount), requester: req.requester, vendor: req.vendor, description: req.description,\n  approver: deputy || approver, original_approver: approver, deputy, decision, reason, sla_hours: policy.sla_hours, escalate_to: policy.escalate_to, created_at: new Date().toISOString() };\nsd.log.push({ request_id: rec.request_id, decision, approver: rec.approver, at: rec.created_at });\nreturn [{ json: rec }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Auto approved?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.decision }}"
+              },
+              "rightValue": "APPROVED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Approvals: log decision (auto)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/approvals/log"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ approval_id: record.request_id, decision: 'APPROVED', by: 'policy', reason: record.reason, amount: record.amount, requester: record.requester }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Send approval request (Slack, email)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/approvals/request"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ request_id: record.request_id, approver: record.approver, deputy: record.deputy, amount: record.amount, type: record.type, vendor: record.vendor, description: record.description, requester: record.requester, channel: steps[\"step-2\"].records[0].channel, sla_hours: record.sla_hours }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Notify requester",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/messages/send"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ channel: \"email\", to: steps[\"step-4\"].records[0].requester, body: \"Request \" + steps[\"step-4\"].records[0].request_id + \": \" + (record.approval_id ? \"sent to \" + record.sent_to + \" for approval (\" + steps[\"step-4\"].records[0].reason + \")\" : \"approved automatically under policy\") }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Outcome",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const p = steps[\"step-4\"].records[0];\nreturn [{ json: { request_id: p.request_id, type: p.type, amount: p.amount, decision: p.decision, approver: p.approver, deputy: p.deputy, reason: p.reason } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Respond 200 (request routed)",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ JSON.stringify(record) }}"
+        },
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Webhook: decision received (Slack button)",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "approval-decision",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Config (decisions)",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "base",
+              "value": {
+                "configuration_input": "step-12-assignments-0-value"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Validate decision",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const b = steps[\"step-11\"].records[0].body;\nconst sd = $getWorkflowStaticData('global'); sd.log = sd.log || [];\nconst prior = sd.log.find(x => x.request_id === b.request_id);\nif (!prior) return [{ json: { request_id: b.request_id, ok: false, error: 'unknown request' } }];\nif (prior.decision !== 'PENDING') return [{ json: { request_id: b.request_id, ok: false, error: 'already decided: ' + prior.decision } }];\nif (b.decided_by !== prior.approver) return [{ json: { request_id: b.request_id, ok: false, error: `decision from ${b.decided_by} but request is with ${prior.approver}` } }];\nprior.decision = b.decision; prior.decided_by = b.decided_by; prior.decided_at = new Date().toISOString();\nreturn [{ json: { request_id: b.request_id, ok: true, decision: b.decision, decided_by: b.decided_by, comment: b.comment || '' } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Decision valid?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.ok }}"
+              },
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Approvals: log decision",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-12\"].records[0].base }}/approvals/log"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ approval_id: record.request_id, decision: record.decision, by: record.decided_by, comment: record.comment }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Respond 200 (decision recorded)",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ JSON.stringify(steps[\"step-13\"].records[0]) }}"
+        },
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Respond 409 (invalid decision)",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ JSON.stringify(record) }}"
+        },
+        "options": {
+          "responseCode": 409
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Schedule: every hour",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Webhook: run escalation sweep now",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "approval-sweep",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Config (sweep)",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "base",
+              "value": {
+                "configuration_input": "step-20-assignments-0-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "sla_hours",
+              "value": "24",
+              "type": "string"
+            },
+            {
+              "name": "force",
+              "value": {
+                "expression": "{{ record.body && record.body.force ? 'true' : 'false' }}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Approvals: pending past SLA",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "GET",
+        "url": {
+          "expression": "{{ steps[\"step-20\"].records[0].base }}/approvals/pending"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "older_than_sec",
+              "value": {
+                "expression": "{{ record.force === 'true' ? 0 : Number(record.sla_hours) * 3600 }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Pick overdue requests",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const rows = record.rows || [];\nconst out = rows.map(a => ({ json: { approval_id: a.id, approver: a.request.approver, escalate_to: a.request.deputy || '[configured contact]', amount: a.request.amount, requester: a.request.requester, waited_hours: Math.round((Date.now() / 1000 - a.created) / 36) / 100 } }));\nreturn out.length ? out : [{ json: { none: true } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Anything overdue?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.none === true }}"
+              },
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Escalate to deputy or CEO (Slack)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-20\"].records[0].base }}/alerts"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ channel: \"#approvals\", text: \"Escalation: \" + record.approval_id + \" (AED \" + record.amount + \" from \" + record.requester + \") waited \" + record.waited_hours + \" h with \" + record.approver + \", now with \" + record.escalate_to }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Approvals: log escalation",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-20\"].records[0].base }}/approvals/log"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ approval_id: steps[\"step-22\"].record.approval_id, decision: 'pending', escalated_to: steps[\"step-22\"].record.escalate_to, by: 'sla-sweep' }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Sweep summary",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const items = records.map(i => i.json);\nreturn [{ json: { escalated: items.filter(i => i.approval_id).length, ids: items.map(i => i.approval_id).filter(Boolean) } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Respond 200 (sweep done)",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ JSON.stringify(record) }}"
+        },
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Error trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-29",
+      "label": "Config (errors)",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "base",
+              "value": {
+                "configuration_input": "step-29-assignments-0-value"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "Alert ops (Slack)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-29\"].records[0].base }}/alerts"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ channel: \"#ops-alerts\", text: \"Approvals workflow failed: \" + (record.execution?.error?.message || \"unknown\") }) }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-24",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-11",
+    "step-18",
+    "step-19",
+    "step-28"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.your-company.example"
+    },
+    {
+      "id": "step-2-assignments-1-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    },
+    {
+      "id": "step-12-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.your-company.example"
+    },
+    {
+      "id": "step-20-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.your-company.example"
+    },
+    {
+      "id": "step-29-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.your-company.example"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Route spend requests to approvers by threshold with deputies, reminders and escalation.json",
+    "git_blob": "a1407844025530fc9b520eb8b3c27ae511db4ccd",
+    "sha256": "235872531b98373c84115b7562062ed26e54df02e88d6e551659c6b97ebc5bf8",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Route%20spend%20requests%20to%20approvers%20by%20threshold%20with%20deputies%2C%20reminders%20and%20escalation.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-discord-bot-024df2",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-path": null,
+    "step-4-model": null,
+    "step-7-webhookuri": null,
+    "step-8-webhookuri": null,
+    "step-9-webhookuri": null
+  },
+  "adapters": {
+    "discord": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

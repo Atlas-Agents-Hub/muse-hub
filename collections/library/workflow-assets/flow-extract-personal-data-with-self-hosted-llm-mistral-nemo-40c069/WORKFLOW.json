@@ -1,0 +1,194 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-personal-data-with-self-hosted-llm-mistral-nemo-40c069",
+  "title": "Extract personal data with self-hosted LLM Mistral NeMo",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Ollama Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.1
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Auto-fixing Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "prompt": "Instructions:\n--------------\n{instructions}\n--------------\nCompletion:\n--------------\n{completion}\n--------------\n\nAbove, the Completion did not satisfy the constraints given in the Instructions.\nError:\n--------------\n{error}\n--------------\n\nPlease try again. Please only respond with an answer that satisfies the constraints laid out in the Instructions:"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the user"
+              },
+              "surname": {
+                "type": "string",
+                "description": "Surname of the user"
+              },
+              "commtype": {
+                "type": "string",
+                "enum": [
+                  "email",
+                  "phone",
+                  "other"
+                ],
+                "description": "Method of communication"
+              },
+              "contacts": {
+                "type": "string",
+                "description": "Contact details. ONLY IF PROVIDED"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When the communication occurred"
+              },
+              "subject": {
+                "type": "string",
+                "description": "Brief description of the communication topic"
+              }
+            },
+            "required": [
+              "name",
+              "commtype"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Basic LLM Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "Please analyse the incoming user request. Extract information according to the JSON schema. Today is: \"{{ current_time.toISO() }}\""
+              }
+            }
+          ]
+        },
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "On Error",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "Extract JSON Output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{ record.output }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Extract personal data with self-hosted LLM Mistral NeMo.json",
+    "git_blob": "6d49542140210da2127702d655e64c61a59c5d38",
+    "sha256": "ea6144c132e0e5ab4b6b6875b40c5490105c3195f25f9b55e5cfc16f7197536d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Extract%20personal%20data%20with%20self-hosted%20LLM%20Mistral%20NeMo.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

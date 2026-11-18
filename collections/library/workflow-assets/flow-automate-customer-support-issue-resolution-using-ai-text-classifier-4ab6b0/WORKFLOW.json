@@ -1,0 +1,900 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automate-customer-support-issue-resolution-using-ai-text-classifier-4ab6b0",
+  "title": "Automate Customer Support Issue Resolution using AI Text Classifier",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Model Chat Model3",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Model Chat Model4",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Get Issue Comments",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "options": {},
+        "issueKey": {
+          "expression": "{{ record.key }}"
+        },
+        "resource": "issueComment",
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Close Issue",
+      "operation": "service-write",
+      "adapter": "jira",
+      "parameters": {
+        "issueKey": {
+          "expression": "{{ steps[\"step-17\"].record.key }}"
+        },
+        "operation": "update",
+        "updateFields": {
+          "statusId": {
+            "configuration_input": "step-7-updatefields-statusid"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Send Reminder",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "comment": {
+          "expression": "{{ record.text }}\n(this is an automated message)"
+        },
+        "options": {},
+        "issueKey": {
+          "expression": "{{ steps[\"step-17\"].record.key }}"
+        },
+        "resource": "issueComment"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Join Comments",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Add Autoclose Message",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "comment": {
+          "expression": "Autoclosing due to inactivity. Please create a new ticket if you require additional support. Thank you!\n(this is an automated message)"
+        },
+        "options": {},
+        "issueKey": {
+          "expression": "{{ steps[\"step-17\"].record.key }}"
+        },
+        "resource": "issueComment"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Ask For Feedback Message",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "comment": {
+          "expression": "[~accountid:{{ steps[\"step-17\"].record.reporter_accountId }}]\n\nWe think the issue is resolved so we're autoclosing it. If you've been satisified with our service, please leave us a 5 start review here: [link](link/to/review_site)\n\nPlease feel free to create another ticket if you need further assistance.\n(this is an automated message)"
+        },
+        "options": {},
+        "issueKey": {
+          "expression": "{{ steps[\"step-17\"].record.key }}"
+        },
+        "resource": "issueComment"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Simplify Thread For AI",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "thread",
+              "type": "array",
+              "value": {
+                "expression": "{{\nrecord.data.map(comment => {\n const { accountId, displayName } = comment.author;\n\n const message = comment.body.content.map(item =>\n `<${item.type}>${item.content\n .filter(c => c.text || c.content)\n .map(c => c.content\n ? c.content\n .filter(cc => c.text || c.content)\n .map(cc => cc.text)\n .join(' ')\n : c.text\n )}</${item.type}>`\n ).join('');\n return `${displayName} (accountId: ${accountId}) says: ${message}`;\n})\n\n}}"
+              }
+            },
+            {
+              "name": "topic",
+              "type": "string",
+              "value": {
+                "expression": "{{\n[\n `title: ${steps[\"step-17\"].record.title}`,\n `original message: ${steps[\"step-17\"].record.description.replaceAll(/\\n/g, ' ')}`,\n `reported by: ${steps[\"step-17\"].record.reporter}`\n].join('\\n')\n}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Solution Found?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.output.solution_found }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Reply to Issue",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "comment": {
+          "expression": "Hey there!\n{{ steps[\"step-24\"].record.output.response }}\nWe'll close this issue now but feel free to create a new one if needed.\n(this is an automated message)"
+        },
+        "options": {},
+        "issueKey": {
+          "expression": "{{ steps[\"step-17\"].record.key }}"
+        },
+        "resource": "issueComment"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Last Message is Not Bot",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ !steps[\"step-12\"].record.thread.last().includes('this is an automated message') }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "solution_found": {
+                "type": "boolean"
+              },
+              "short_summary_of_issue": {
+                "type": "string"
+              },
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Get Issue Metadata",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "key",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.key }}"
+              }
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.fields.summary }}"
+              }
+            },
+            {
+              "name": "url",
+              "type": "string",
+              "value": {
+                "expression": "{{\n[\n 'https:/',\n record.self.extractDomain(),\n 'browse',\n record.key\n ].join('/')\n}}"
+              }
+            },
+            {
+              "name": "date",
+              "type": "string",
+              "value": {
+                "expression": "{{ DateTime.fromISO(record.fields.created).format('yyyy-MM-dd') }}"
+              }
+            },
+            {
+              "name": "reporter",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.fields.reporter.displayName }}"
+              }
+            },
+            {
+              "name": "reporter_url",
+              "type": "string",
+              "value": {
+                "expression": "{{\n[\n 'https:/',\n record.fields.reporter.self.extractDomain(),\n 'jira',\n 'people',\n record.fields.reporter.accountId\n ].join('/')\n}}"
+              }
+            },
+            {
+              "name": "reporter_accountId",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.fields.reporter.accountId }}"
+              }
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.fields.description }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Notify Slack Channel",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "select": "channel",
+        "blocksUi": {
+          "expression": "{{\n{\n\t\"blocks\": [\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"Hey there 👋\\nI found a zombie ticket that no one has taken a look at yet.\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": `*[${steps[\"step-17\"].record.key}] ${steps[\"step-17\"].record.title}*\\n${steps[\"step-24\"].record.output.short_summary_of_issue}\\n👤 <${steps[\"step-17\"].record.reporter_url}|${steps[\"step-17\"].record.reporter}> 📅 ${steps[\"step-17\"].record.date} 🔗 <${steps[\"step-17\"].record.url}|Link to Issue>\\n`\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"divider\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"I couldn't find an answer in the knowledgebase so I've notified the user and closed the ticket. Thanks!\"\n\t\t\t}\n\t\t}\n\t]\n}\n}}"
+        },
+        "channelId": {
+          "configuration_input": "step-18-channelid"
+        },
+        "messageType": "block",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Close Issue2",
+      "operation": "service-write",
+      "adapter": "jira",
+      "parameters": {
+        "issueKey": {
+          "expression": "{{ steps[\"step-17\"].record.key }}"
+        },
+        "operation": "update",
+        "updateFields": {
+          "statusId": {
+            "configuration_input": "step-19-updatefields-statusid"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Get List of Unresolved Long Lived Issues",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "limit": 10,
+        "options": {
+          "jql": "status IN (\"To Do\", \"In Progress\") AND created <= -7d"
+        },
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Execute Workflow",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "mode": "each",
+        "options": {},
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-23",
+      "label": "Customer Satisfaction Agent",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "inputText": {
+          "expression": "issue:\n{{ steps[\"step-12\"].record.topic }}\n\ncomments:\n{{ steps[\"step-12\"].record.thread.join('\\n') }}"
+        }
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "KnowledgeBase Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "issue:\n{{ steps[\"step-12\"].record.topic }}\n\ncomments:\n{{ steps[\"step-12\"].record.thread.join('\\n') }}"
+        },
+        "options": {
+          "systemMessage": "Help the user answer their question using the company's knowledgebase. Your answer must be based factually on documents retrieved from the knowledge. If no relevant information is found or the information is insufficent to answer the user's query, you must tell the user so and not mislead the user. If you don't know the answer, it is okay to say you don't know."
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Issue Reminder Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "issue:\n{{ steps[\"step-12\"].record.topic }}\n\ncomments:\n{{ steps[\"step-12\"].record.thread }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "The user has a pending issue and some time has passed since the last update. Analyse the last message in this thread and generate a short reminder message to add to the issue comments which summarizes and reiterates what pending action or information is required. Return only the message."
+              }
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Find Simlar Issues",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "limit": 4,
+        "options": {
+          "jql": {
+            "expression": "text ~ \"{{ $fromAI('title', 'the title of the current issue', 'string', '') }}\" AND status IN (\"In Progress\", \"Done\")"
+          }
+        },
+        "operation": "getAll",
+        "descriptionType": "manual",
+        "toolDescription": "Call this tool to search for similar issues in JIRA."
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Query KnowledgeBase",
+      "operation": "service-read",
+      "adapter": "notion",
+      "parameters": {
+        "text": {
+          "expression": "{{ $fromAI('search_terms', 'relevant terms to search for information on the current issue', 'string', '') }}"
+        },
+        "limit": 4,
+        "options": {},
+        "operation": "search",
+        "descriptionType": "manual",
+        "toolDescription": "Search the knowledgebase for information relevant to the issue."
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Report Unhappy Resolution",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": ""
+        },
+        "select": "channel",
+        "blocksUi": {
+          "expression": "{{\n{\n\t\"blocks\": [\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"Hey there 👋\\nI found a unclosed ticket which was resolved but thread overall has a negative sentiment score. Please address or close the ticket.\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": `*[${steps[\"step-17\"].record.key}] ${steps[\"step-17\"].record.title}*\\n${steps[\"step-24\"].record.output.short_summary_of_issue}\\n👤 <${steps[\"step-17\"].record.reporter_url}|${steps[\"step-17\"].record.reporter}> 📅 ${steps[\"step-17\"].record.date} 🔗 <${steps[\"step-17\"].record.url}|Link to Issue>\\n`\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"divider\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"Thanks!\"\n\t\t\t}\n\t\t}\n\t]\n}\n}}"
+        },
+        "channelId": {
+          "configuration_input": "step-28-channelid"
+        },
+        "messageType": "block",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "Classify Current Issue State",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "inputText": {
+          "expression": "issue:\n{{ steps[\"step-12\"].record.topic }}\n\ncomments:\n{{ steps[\"step-12\"].record.thread.join('\\n') || 'There are no comments' }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "resolved",
+              "description": "There are human comments and a resolution was found and/or accepted"
+            },
+            {
+              "category": "pending more information",
+              "description": "There are human comments but no resolution has been reached yet"
+            },
+            {
+              "category": "still waiting",
+              "description": "Reporter is still waiting on a response. Ignoring automated messages, there are no comments."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-29",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-24",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-24",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-25",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-23",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-24",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-24",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-28",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-24",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-28",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-28",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5",
+    "step-22"
+  ],
+  "configuration": [
+    {
+      "id": "step-7-updatefields-statusid",
+      "purpose": "Select the updateFields / statusId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-19-updatefields-statusid",
+      "purpose": "Select the updateFields / statusId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-28-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Automate Customer Support Issue Resolution using AI Text Classifier.json",
+    "git_blob": "a8a2b96e8680df1b62791c17ee735ce12a3aa015",
+    "sha256": "6be34e97350963845d9b8066c0228e5ff06d83597b52db06a77d7c324690c8ab",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Automate%20Customer%20Support%20Issue%20Resolution%20using%20AI%20Text%20Classifier.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

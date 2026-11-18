@@ -1,0 +1,452 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-assistant-for-project-management-and-meetings-with-airtable-and-fireflies-b463d8",
+  "title": "Assistant for project management and meetings with Airtable and Fireflies",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Title: {{ record.data.transcript.title }}\n\nParticipants: {{ record.data.transcript.participants }}\n\nTranscript: {{ JSON.stringify(record.data.transcript.sentences) }}\n\nBullet gist:{{ record.data.transcript.summary.bullet_gist }}"
+        },
+        "agent": "openAiFunctionsAgent",
+        "options": {
+          "systemMessage": {
+            "expression": "You get my calls' transcripts from Firefiles.\nThere can be meetings about projects. You can understand if it's about a project if meeting's title contains \"project\". If so - you need to:\n1. Analyze transcript, use tool \"Create Tasks\" to create tasks for me in my AirTable base.\n2. You need to use tool \"Notify Client About Tasks\" to nofity client about his tasks.\n3. If transcript contains info there's a call needed - you'll use \"Create Event\" tool to create call on Google Meet\nCurrent date: {{ current_time }}"
+          }
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Create Tasks",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "create_task",
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-3-workflowid"
+        },
+        "description": {
+          "expression": "Use this tool to create a task. \nFor task creation use only action items for me [YOUR NAME HERE], don't use action items for other participants."
+        },
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "description": "An array of tasks",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the task"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "A detailed description of the task"
+                    },
+                    "due_date": {
+                      "type": "string",
+                      "description": "Due Date"
+                    },
+                    "priority": {
+                      "type": "string",
+                      "description": "Priority. . Please capitalize first letter"
+                    },
+                    "project_name": {
+                      "type": "string",
+                      "description": "Name of the project. Word 'Project' shouldn't be included"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "description",
+                    "due_date",
+                    "priority"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Notify Client About Tasks",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ $fromAI(\"participant_email\",\"participant email \",\"string\") }}"
+        },
+        "message": {
+          "expression": "Summary:\n{{ record.data.transcript.summary.bullet_gist }}\n\nAction Items:\n{{ $fromAI(\"participant_action_items\",\"participant action items \",\"string\") }}"
+        },
+        "options": {
+          "appendAttribution": false
+        },
+        "subject": "Meeting Summary",
+        "emailType": "text",
+        "descriptionType": "manual",
+        "toolDescription": {
+          "expression": "Use the tool to notify a participant of the meeting with meeting summary and his tasks.\nIMPORTANT: \n1. Please notify participants except for me. My email: [YOUR EMAIL HERE]\n2. When working with tasks - please send only the participant's tasks."
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "query.items"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Create Task",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-7-base"
+        },
+        "table": {
+          "configuration_input": "step-7-table"
+        },
+        "columns": {
+          "value": {
+            "Name": {
+              "expression": "{{ record.name }}"
+            },
+            "Project": {
+              "expression": "{{ [record.project_name] }}"
+            },
+            "Due Date": {
+              "expression": "{{ record.due_date }}"
+            },
+            "Priority": {
+              "expression": "{{ record.priority }}"
+            },
+            "Description": {
+              "expression": "{{ record.description }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "Low",
+                  "value": "Low"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "Urgent",
+                  "value": "Urgent"
+                },
+                {
+                  "name": "low",
+                  "value": "low"
+                },
+                {
+                  "name": "medium",
+                  "value": "medium"
+                },
+                {
+                  "name": "urgent",
+                  "value": "urgent"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Priority",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "dateTime",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Due Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Project",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {
+          "typecast": true
+        },
+        "operation": "create"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Create Event",
+      "operation": "service-read",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "end": {
+          "expression": "{{ $fromAI(\"end_date_time\",\"Date and time of meeting end\",\"string\") }}"
+        },
+        "start": {
+          "expression": "{{ $fromAI(\"start_date_time\",\"Date and time of meeting start\",\"string\") }}"
+        },
+        "calendar": {
+          "configuration_input": "step-8-calendar"
+        },
+        "descriptionType": "manual",
+        "toolDescription": {
+          "expression": "Use tool to create Google Calendar Event. Use this tool only when transcript contains information that call should be scheduled."
+        },
+        "additionalFields": {
+          "summary": {
+            "expression": "{{ $fromAI(\"meeting_name\",\"Meeting name\",\"string\") }}"
+          },
+          "attendees": [
+            {
+              "expression": "{{ $fromAI(\"email\",\"client email\",\"string\") }}"
+            }
+          ],
+          "conferenceDataUi": {
+            "conferenceDataValues": {
+              "conferenceSolution": "hangoutsMeet"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-9-path"
+        },
+        "options": {},
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Get Meeting Content",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-10-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"query\": \"query Transcript($transcriptId: String!) { transcript(id: $transcriptId) { title participants speakers { id name } sentences { speaker_name text } summary { bullet_gist } } }\",\n \"variables\": {\n \"transcriptId\": \"{{ record.meetingId }}\"\n }\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-10-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-1",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-1",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-5",
+    "step-9"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.fireflies.ai/graphql"
+    },
+    {
+      "id": "step-10-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Airtable/AI Agent for project management and meetings with Airtable and Fireflies.json",
+    "git_blob": "b9b2c028f22cc83ddb86f27714584117cf3d6b09",
+    "sha256": "7a7c6ddbb768de0599d16da3c717924efb7e052cd695abd31692b819c2adacd8",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Airtable/AI%20Agent%20for%20project%20management%20and%20meetings%20with%20Airtable%20and%20Fireflies.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

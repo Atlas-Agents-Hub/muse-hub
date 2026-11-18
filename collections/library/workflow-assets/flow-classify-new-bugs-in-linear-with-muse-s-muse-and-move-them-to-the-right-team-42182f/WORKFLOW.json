@@ -1,0 +1,402 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-classify-new-bugs-in-linear-with-muse-s-muse-and-move-them-to-the-right-team-42182f",
+  "title": "Classify new bugs in Linear with Muse s Muse and move them to the right team",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Linear Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "teamId": {
+          "configuration_input": "step-1-teamid"
+        },
+        "resources": [
+          "issue"
+        ]
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Only tickets that need to be classified",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              },
+              "leftValue": {
+                "expression": "{{ steps[\"step-1\"].record.data.description }}"
+              },
+              "rightValue": "Add a description here"
+            },
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ steps[\"step-1\"].record.data.state.id }}"
+              },
+              "rightValue": {
+                "configuration_input": "step-2-conditions-1-rightvalue"
+              }
+            },
+            {
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": {
+                "expression": "{{ steps[\"step-1\"].record.data.labels.filter(label => label.id === 'f2b6e3e9-b42d-4106-821c-6a08dcb489a9').length }}"
+              },
+              "rightValue": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Update team",
+      "operation": "service-write",
+      "adapter": "linear",
+      "parameters": {
+        "issueId": {
+          "expression": "{{ steps[\"step-1\"].record.data.id }}"
+        },
+        "operation": "update",
+        "updateFields": {
+          "teamId": {
+            "expression": "{{ record.teamId }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get all linear teams",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "{ teams { nodes { id name } } }"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Set team ID",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "teamId",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-4\"].records[0].data.teams.nodes.find(team => team.name === record.message.content).id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Set me up",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "teams",
+              "type": "string",
+              "value": "- [Adore][Is responsible for every persona that is not Enterprise. This includes signup journeys, trials, n8n Cloud, the Canvas building experience and more, the nodes detail view (NDV), the nodes panel, the workflows list and the executions view] \n- [Payday][Is responsible for the Enterprise persona. This includes making sure n8n is performant, the enterprise features SSO, LDAP, SAML, Log streaming, environments, queue mode, version control, external storage. Additionally the team looks out for the execution logic in n8n and how branching works] \n- [Nodes][This team is responsible for everything that is related to a specific node in n8n] \n- [Other][This is a placeholder if you don't know to which team something belongs]"
+            },
+            {
+              "name": "slackChannel",
+              "type": "string",
+              "value": "#yourChannelName"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Check if AI was able to find a team",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content }}"
+              },
+              "rightValue": "Other"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Notify in Slack",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": "The AI was not able to identify a fitting team for a bug",
+        "select": "channel",
+        "channelId": {
+          "expression": "{{ steps[\"step-6\"].records[0].slackChannel }}"
+        },
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Merge data",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "chooseBranch"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-10-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "I need you to classify a bug ticket and tell me which team should work on it"
+            },
+            {
+              "role": "system",
+              "content": "All possible teams will be described in the following format: [Teamname][Areas of responsibility] "
+            },
+            {
+              "role": "system",
+              "content": {
+                "expression": "The possible teams are the following:\n {{ steps[\"step-6\"].records[0].teams }}"
+              }
+            },
+            {
+              "role": "system",
+              "content": {
+                "expression": "This is the bug that we're trying to classify:\nTitle: {{ steps[\"step-1\"].records[0].data.title }}\nDescription: {{ steps[\"step-1\"].records[0].data.description }}"
+              }
+            },
+            {
+              "content": "Which team should work on this bug?"
+            },
+            {
+              "role": "system",
+              "content": "Do not respond with anything else than the name of the team from the list you were given"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-7",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-teamid",
+      "purpose": "Select the teamId for step-1.",
+      "required": true
+    },
+    {
+      "id": "step-2-conditions-1-rightvalue",
+      "purpose": "Choose the rightValue resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.linear.app/graphql"
+    },
+    {
+      "id": "step-10-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Classify new bugs in Linear with OpenAI_s GPT-4 and move them to the right team.json",
+    "git_blob": "4af142897aed6985213b588f6d35fc6e4caedf33",
+    "sha256": "0863299c7f5fbebb90662522f0e47f2fd41421a3c432cdafcea729c5fcc054ff",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Classify%20new%20bugs%20in%20Linear%20with%20OpenAI_s%20GPT-4%20and%20move%20them%20to%20the%20right%20team.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

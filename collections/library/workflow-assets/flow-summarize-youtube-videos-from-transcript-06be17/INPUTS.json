@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-summarize-youtube-videos-from-transcript-06be17",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

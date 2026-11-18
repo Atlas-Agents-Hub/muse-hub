@@ -1,0 +1,294 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-children-s-english-storytelling-on-telegram-cf9da9",
+  "title": "Children s English Storytelling on Telegram",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Model Chat Model2",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Create a Prompt for DALL-E",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "prompt": "Summarize the characters in this story based on their appearance and describe them if they are humans or animals and how they look like and what kind of are they, the prompt should be no-text in the picture, make sure the text is free from any prohibited or inappropriate content:\n\n\n\n\"{text}\"\n\n\nCONCISE SUMMARY:",
+              "summarizationMethod": "stuff"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "chunkSize": 500,
+        "chunkOverlap": 300
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Create a story",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "prompt": "Create a captivating short tale for kids, whisking them away to magical lands brimming with wisdom. Explore diverse themes in a fun and simple way, weaving in valuable messages. Dive into cultural adventures with lively language that sparks curiosity. Let your story inspire young minds through enchanting narratives that linger long after the last word. Begin crafting your imaginative tale now! (Approximately 900 characters)\n\n\n\"{text}\"\n\nCONCISE SUMMARY:",
+              "summarizationMethod": "stuff"
+            }
+          }
+        },
+        "chunkingMode": "advanced"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Generate Audio for the story",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "input": {
+          "expression": "{{ record.response.text }}"
+        },
+        "options": {},
+        "resource": "audio"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Generate a Picture for the story",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "Produce an image ensuring that no text is generated within the visual content. {{ record.response.text }}"
+        },
+        "options": {},
+        "resource": "image"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Send Story Text",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.response.text }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-12\"].record.chatId }}"
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Send Audio for the story",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-12\"].record.chatId }}"
+        },
+        "operation": "sendAudio",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "End of the Story for today ....."
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Send Story Picture",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-12\"].record.chatId }}"
+        },
+        "operation": "sendPhoto",
+        "binaryData": true,
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Config",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "chatId",
+              "type": "string",
+              "value": "-4170994782"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-12",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/AI-Powered Children_s English Storytelling on Telegram with OpenAI.json",
+    "git_blob": "cb607e0acd488ef6f5fc3296da617be2cdb1debd",
+    "sha256": "3d2966fa5522aea5a91d077ceea63111147e2848606cea037e2b5c173ad83bf4",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/AI-Powered%20Children_s%20English%20Storytelling%20on%20Telegram%20with%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

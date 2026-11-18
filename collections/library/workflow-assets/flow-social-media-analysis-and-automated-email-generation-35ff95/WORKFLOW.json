@@ -1,0 +1,573 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-social-media-analysis-and-automated-email-generation-35ff95",
+  "title": "Social Media Analysis and Automated Email Generation",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Set your company's variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "your_company_name",
+              "type": "string",
+              "value": "Pollup Data Services"
+            },
+            {
+              "name": "your_company_activity",
+              "type": "string",
+              "value": "Whether it’s automating recurring tasks, analysing data faster, or personalising customer interactions, we build bespoke AI agents to help your workforce work smarter."
+            },
+            {
+              "name": "your_email",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-1-assignments-2-value"
+              }
+            },
+            {
+              "name": "your_name",
+              "type": "string",
+              "value": "Justin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get linkedin Posts",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "sendHeaders": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "linkedin_url",
+              "value": {
+                "expression": "{{ steps[\"step-11\"].record.linkedin_url }}"
+              }
+            },
+            {
+              "name": "type",
+              "value": "posts"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "fresh-linkedin-profile-data.p.rapidapi.com"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get twitter ID",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "sendHeaders": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "username",
+              "value": {
+                "expression": "{{ steps[\"step-11\"].record.twitter_handler }}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "twitter-api47.p.rapidapi.com"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get tweets",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "sendHeaders": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": {
+                "expression": "{{ record.rest_id }}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "twitter-api47.p.rapidapi.com"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Extract and limit Linkedin",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\noutput = []\nmax_posts = 10\nlet counter = 0\nfor (const item of records[0].json.data) {\n let post = {\n title: item.article_title,\n text: item.text\n }\n output.push(post)\n if(counter++ >= max_posts) break;\n}\n\nreturn {\"linkedIn posts\": output};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Exract and limit X",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\noutput = []\nmax_posts = 10\nlet counter = 0\nfor (const item of records[0].json.tweets) {\n if(!item.content.hasOwnProperty('itemContent')) continue\n let post = {\n text: item.content.itemContent?.tweet_results?.result.legacy?.full_text\n }\n console.log(post)\n output.push(post)\n if(counter++ >= max_posts) break;\n}\n\nreturn {\"Twitter tweets\": output};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchemaExample": {
+          "json": {
+            "subject": "",
+            "cover_letter": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Generate Subject and cover letter based on match",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "## Me\n- My company name is: {{ steps[\"Set your company\\\\'s variables\"].record.your_company_name }}\n- My company's activity is: {{ steps[\"Set your company\\\\'s variables\"].record.your_company_activity }}\n- My name is: {{ steps[\"Set your company\\\\'s variables\"].record.your_name }}\n- My email is: {{ steps[\"Set your company\\\\'s variables\"].record.your_email }}\n\n## My lead:\nHis name: {{ steps[\"step-11\"].record.name }}\n\n## What I want you to do\n- According to the info about me, and the linkedin posts an twitter post of a user given below, I want you to find a common activity that I could propose to this person and generate a cover letter about it\n- Return ONLY the cover letter and the subject as a json like this:\n{\n \"subject\": \"\",\n \"cover_letter\": \"\"\n}\n\nTHe cover letter should be in HTML format\n\n## The Linkedin Posts:\n{{ JSON.stringify(record[\"linkedIn posts\"])}}\n\n## THe Twitter posts:\n{{ JSON.stringify(steps[\"step-6\"].record['Twitter tweets']) }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a helpful Marketing assistant"
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Send Cover letter and CC me",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.output.cover_letter }}"
+        },
+        "options": {},
+        "subject": {
+          "expression": "{{ record.output.subject }}"
+        },
+        "toEmail": {
+          "expression": "{{ steps[\"step-11\"].record.email }}, {{ steps[\"Set your company\\\\'s variables\"].record.your_email }}"
+        },
+        "fromEmail": {
+          "configuration_input": "step-10-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Google Sheets Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRange"
+            }
+          }
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "sheetName": {
+          "configuration_input": "step-11-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-11-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "done": "X",
+            "linkedin_url": {
+              "expression": "{{ steps[\"step-11\"].record.linkedin_url }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "linkedin_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "twitter_handler",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "done",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "row_number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "linkedin_url"
+          ]
+        },
+        "options": {},
+        "operation": "update",
+        "sheetName": {
+          "configuration_input": "step-12-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-12-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.done }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        },
+        "looseTypeValidation": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-13",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-12",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-11"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-assignments-2-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    },
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://fresh-linkedin-profile-data.p.rapidapi.com/get-profile-posts"
+    },
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://twitter-api47.p.rapidapi.com/v2/user/by-username"
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://twitter-api47.p.rapidapi.com/v2/user/tweets"
+    },
+    {
+      "id": "step-10-fromemail",
+      "purpose": "Select the fromEmail for step-10.",
+      "required": true
+    },
+    {
+      "id": "step-11-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/Social Media Analysis and Automated Email Generation.json",
+    "git_blob": "11926e17ac1f3bd07366b9942b04af34f453ceab",
+    "sha256": "00c89e499737dbc4647c86b9d57684186444fedd4365da72d9dcfbe50e8177b5",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/Social%20Media%20Analysis%20and%20Automated%20Email%20Generation.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

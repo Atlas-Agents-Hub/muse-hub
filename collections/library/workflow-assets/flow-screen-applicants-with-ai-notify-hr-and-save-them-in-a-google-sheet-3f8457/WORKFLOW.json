@@ -1,0 +1,310 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-screen-applicants-with-ai-notify-hr-and-save-them-in-a-google-sheet-3f8457",
+  "title": "Screen Applicants With AI, notify HR and save them in a Google Sheet",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Confirmation of CV Submission",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ steps[\"step-6\"].record['E-mail'] }}"
+        },
+        "message": {
+          "expression": "Dear {{ steps[\"step-6\"].record['Full Name'] }}, \n\nThank you for submitting your CV. We have received it and will review it shortly. \n\nBest regards,\nMediusware"
+        },
+        "options": {},
+        "subject": "We Have Received Your CV"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Inform HR New CV Received",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "configuration_input": "step-3-sendto"
+        },
+        "message": {
+          "expression": "Hello HR,\n\nA new CV has been successfully received in our system. Please review the candidate's details at your earliest convenience.\n\nCandidate Name: {{ steps[\"step-6\"].record['Full Name'] }}\nCandidate E-mail: {{ steps[\"step-6\"].record['E-mail'] }}\nCandidate Linkedin: {{ steps[\"step-6\"].record.Linkedin }}\nCandidate Expectation: {{ steps[\"step-6\"].record.Expectation }}\nCandidate AI Rating: {{ steps[\"step-4\"].record.text }}\n\nThank you for your attention.\n\nBest regards,\nAutomated CV Screening"
+        },
+        "options": {},
+        "subject": "New Candidate CV Awaiting Review"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Using AI Analysis & Rating",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Rule 1 : Do not exceed maximum of 75 words. As an AI with advanced capabilities in talent acquisition and human resources, your task is to conduct a thorough and intricate analysis of a candidate's resume or CV against a specific job description. You will assist hiring professionals in discerning the alignment between the candidate's skills, experience, qualifications, and the requirements of the job. Your expert insights will equip employers with a lucid understanding of the candidate's suitability for the role. Very important for you to write output text in ${output_language} language. It's VERY IMPORTANT for me for text be in ${output_language} or I will be fired. Your analysis should follow this structured format: 1. **Compatibility Rating**: Propose an overall compatibility rating on a scale from 1 (not compatible) to 10 (perfect fit). Support your rating by elucidating the rationale behind it. 2. **Recommendation**: Informed by your analysis and compatibility rating, offer a recommendation on whether the employer should consider this candidate for an interview. Furnish a well-argued explanation for your recommendation. Remember, your analysis should be comprehensive, professional, and actionable. It should equip an employer with a vivid understanding of the candidate's suitability for the role. This isn't merely about ticking off boxes; it's about illustrating a comprehensive picture of how well the candidate might fit into the role and complement the existing team. Here is your task: Analyze the compatibility of the following candidate's resume with the provided job description. Endeavor to apply your deep understanding of talent evaluation to provide the most insightful analysis. Job description: \"Software Engineer\" Resume: ${resume}\nNo Markdown Please, only plain text. Please no double '**'"
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Convert Binary to Json",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf",
+        "binaryPropertyName": "Your_Resume_CV"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Application Form",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "formTitle": "Application for Software Engineer Position",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "E-mail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Expectation",
+              "placeholder": "2000-3000$",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Linkedin",
+              "requiredField": true
+            },
+            {
+              "fieldType": "file",
+              "fieldLabel": "Your Resume/CV",
+              "requiredField": true,
+              "acceptFileTypes": ".pdf"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Candidate Lists",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "CV": {
+              "expression": "{{ steps[\"step-6\"].record['Your Resume/CV'][0].filename }}"
+            },
+            "E-mail": {
+              "expression": "{{ steps[\"step-6\"].record['E-mail'] }}"
+            },
+            "Linkedin": {
+              "expression": "{{ steps[\"step-6\"].record.Linkedin }}"
+            },
+            "AI Rating": {
+              "expression": "{{ record.text }}"
+            },
+            "Full Name": {
+              "expression": "{{ steps[\"step-6\"].record['Full Name'] }}"
+            },
+            "Expectation": {
+              "expression": "{{ steps[\"step-6\"].record.Expectation }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CV",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Full Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "E-mail",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Expectation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Linkedin",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "AI Rating",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-7-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-7-documentid"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-7",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-6"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-sendto",
+      "purpose": "Select the sendTo for step-3.",
+      "required": true
+    },
+    {
+      "id": "step-7-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Screen Applicants With AI, notify HR and save them in a Google Sheet.json",
+    "git_blob": "91a2e98bdabf2c436db9db0fc2d3c7a147573f7b",
+    "sha256": "0f4896e804317a210fb4847fd4559252c367b0f5ae85feed5e06f7635b9b31d5",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Screen%20Applicants%20With%20AI%2C%20notify%20HR%20and%20save%20them%20in%20a%20Google%20Sheet.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

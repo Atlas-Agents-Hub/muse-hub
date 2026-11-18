@@ -1,0 +1,33 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-email-processing-autoresponder-and-response-approval-yes-no-b238f8",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-12-sendto": null
+  },
+  "adapters": {
+    "emailreadimap": {
+      "connection": null
+    },
+    "emailsend": {
+      "connection": null
+    },
+    "embedding": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

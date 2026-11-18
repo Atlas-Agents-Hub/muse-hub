@@ -1,0 +1,31 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-vassistant-for-hubspot-chat-using-muse-and-airtable-39c282",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-6-parameters-0-value": null,
+    "step-14-parameters-0-value": null,
+    "step-20-base": null,
+    "step-20-table": null,
+    "step-22-base": null,
+    "step-22-table": null,
+    "step-25-assistantid": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

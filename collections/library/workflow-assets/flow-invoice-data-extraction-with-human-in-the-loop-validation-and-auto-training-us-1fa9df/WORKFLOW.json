@@ -1,0 +1,176 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-invoice-data-extraction-with-human-in-the-loop-validation-and-auto-training-us-1fa9df",
+  "title": "Invoice data extraction with human-in-the-loop validation and auto-training using Cradl AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Gmail Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {
+          "q": "has:attachment subject:invoice",
+          "readStatus": "unread"
+        },
+        "options": {
+          "downloadAttachments": true
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Filter PDF attachments",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let results = [];\n\nfor (const item of records) {\n  for (key of Object.keys(item.binary)) {\n     if (item.binary[key].fileExtension === \"pdf\") { \n      results.push({\n            json: {\n                fileName: item.binary[key].fileName,\n            },\n            binary: {\n                data: item.binary[key],\n            }\n        });\n       } \n    }\n  \n}\n\nreturn results;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Add invoice line to Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-3-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-3-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Mark a message as read",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "messageId": {
+          "expression": "{{ steps[\"step-1\"].record.id }}"
+        },
+        "operation": "markAsRead"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Extract invoice details with AI",
+      "operation": "service-read",
+      "adapter": "cradlai",
+      "parameters": {
+        "agentId": {
+          "configuration_input": "step-5-agentid"
+        },
+        "documentBinaryData": "data"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Split out each invoice line",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "include": "allOtherFields",
+        "options": {},
+        "fieldToSplitOut": "body.output.invoice_lines"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-4",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-agentid",
+      "purpose": "Choose the agentId resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Invoice data extraction with human-in-the-loop validation and auto-training using Cradl AI.json",
+    "git_blob": "965a7913109b8221d8ffc1f94cda2f609eae1b7b",
+    "sha256": "6af3c99352c838b1568dbf159fd964d1b628b0373ecdb941740563b8b964d803",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Invoice%20data%20extraction%20with%20human-in-the-loop%20validation%20and%20auto-training%20using%20Cradl%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

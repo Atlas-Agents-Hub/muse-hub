@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-crew-to-automate-fundamental-stock-analysis-q-a-workflow-d79555",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-6-path": null,
+    "step-8-fileid": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

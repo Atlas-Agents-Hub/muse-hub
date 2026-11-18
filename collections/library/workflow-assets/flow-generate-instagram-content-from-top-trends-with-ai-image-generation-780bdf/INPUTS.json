@@ -1,0 +1,47 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-generate-instagram-content-from-top-trends-with-ai-image-generation-780bdf",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-assignments-0-name": null,
+    "step-10-assignments-0-id": null,
+    "step-10-assignments-0-value": null,
+    "step-12-url": null,
+    "step-12-parameters-1-value": null,
+    "step-13-url": null,
+    "step-13-parameters-1-value": null,
+    "step-15-table": null,
+    "step-15-schema": null,
+    "step-18-table": null,
+    "step-18-schema": null,
+    "step-19-modelid": null,
+    "step-20-modelid": null,
+    "step-27-url": null,
+    "step-27-parameters-0-value": null
+  },
+  "adapters": {
+    "facebookgraphapi": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "postgres": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

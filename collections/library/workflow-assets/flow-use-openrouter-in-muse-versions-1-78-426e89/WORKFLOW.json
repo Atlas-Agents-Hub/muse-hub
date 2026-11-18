@@ -1,0 +1,137 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-use-openrouter-in-muse-versions-1-78-426e89",
+  "title": "Use OpenRouter in Muse versions 1.78",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Settings",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "model",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-1-assignments-0-value"
+              }
+            },
+            {
+              "name": "prompt",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.chatInput }}"
+              }
+            },
+            {
+              "name": "sessionId",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.sessionId }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.prompt }}"
+        },
+        "options": {},
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Chat Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ record.sessionId }}"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "LLM Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-assignments-0-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Use OpenRouter in n8n versions _1.78.json",
+    "git_blob": "e489c07df6ce93023bc4e31aab98b927a2116bb1",
+    "sha256": "24911827706d76e333687e36eb55dd10920c97eea35e75e6e5798bebb8ebe90a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Use%20OpenRouter%20in%20n8n%20versions%20_1.78.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

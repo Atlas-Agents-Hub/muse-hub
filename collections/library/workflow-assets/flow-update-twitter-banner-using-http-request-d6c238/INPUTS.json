@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-update-twitter-banner-using-http-request-d6c238",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-url": null,
+    "step-4-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

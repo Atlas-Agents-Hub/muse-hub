@@ -1,0 +1,31 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-etl-pipeline-for-text-processing-265c15",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "googlecloudnaturallanguage": {
+      "connection": null
+    },
+    "mongodb": {
+      "connection": null
+    },
+    "postgres": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    },
+    "twitter": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,337 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-hacker-news-throwback-machine-see-what-was-hot-on-this-day-every-year-2e78ad",
+  "title": "Hacker News Throwback Machine - See What Was Hot on This Day, Every Year!",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Basic LLM Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "You are a highly skilled news categorizer, specializing in indentifying interesting stuff from Hacker News front-page headlines.\n\nYou are provided with JSON data containing a list of dates and their corresponding top headlines from the Hacker News front page. Each headline will also include a URL linking to the original article or discussion. Importantly, the dates provided will be the SAME DAY across MULTIPLE YEARS (e.g., January 1st, 2023, January 1st, 2022, January 1st, 2021, etc.). You need to indentify key headlines and also analyze how the tech landscape has evolved over the years, as reflected in the headlines for this specific day.\n\nYour task is to indentify top 10-15 headlines from across the years from the given json data and return in Markdown formatted bullet points categorizing into themes and adding markdown hyperlinks to the source URL with Prefixing Year before the headline. Follow the Output Foramt Mentioned.\n\n**Input Format:**\n\n```json\n[\n {\n \"headlines\": [\n \"Headline 1 Title [URL1]\",\n \"Headline 2 Title [URL2]\",\n \"Headline 3 Title [URL3]\",\n ...\n ]\n \"date\": \"YYYY-MM-DD\",\n },\n {\n \"headlines\": [\n \"Headline 1 Title [URL1]\",\n \"Headline 2 Title [URL2]\",\n ...\n ]\n \"date\": \"YYYY-MM-DD\",\n },\n ...\n]\n```\n\n**Output Format In Markdown**\n\n```\n# HN Lookback <FullMonthName-DD> | <start YYYY> to <end YYYY> \n\n## [Theme 1]\n- YYYY [Headline 1](URL1)\n- YYYY [Headline 2](URL2)\n...\n\n## [Theme 2]\n- YYYY [Headline 1](URL1)\n- YYYY [Headline 2](URL2)\n...\n\n... \n\n## <this is optional>\n<if any interesing ternds emerge mention them in oneline>\n```\n\n**Here is the Json data for Hackernews Headlines across the years**\n\n```\n{{ JSON.stringify(record.data) }}\n```"
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 21
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "CreateYearsList",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "for (const item of records) {\n const currentDateStr = item.json.timestamp.split('T')[0];\n const currentDate = new Date(currentDateStr);\n const currentYear = currentDate.getFullYear();\n const currentMonth = currentDate.getMonth(); // 0 for January, 1 for February, etc.\n const currentDay = currentDate.getDate();\n\n const datesToFetch = [];\n for (let year = currentYear; year >= 2007; year--) {\n let targetDate;\n if (year === 2007) {\n // Special handling for 2007 to start from Feb 19\n if (currentMonth > 1 || (currentMonth === 1 && currentDay >= 19))\n {\n targetDate = new Date(2007, 1, 19); // Feb 19, 2007\n } else {\n continue; // Skip 2007 if currentDate is before Feb 19\n }\n } else {\n targetDate = new Date(year, currentMonth, currentDay);\n }\n \n // Format the date as YYYY-MM-DD\n const formattedDate = targetDate.toISOString().split('T')[0];\n datesToFetch.push(formattedDate);\n }\n item.json.datesToFetch = datesToFetch;\n}\n\nreturn records;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "CleanUpYearList",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "datesToFetch",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.datesToFetch }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "SplitOutYearList",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "datesToFetch"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "GetFrontPage",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://news.ycombinator.com/front"
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 3000
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "day",
+              "value": {
+                "expression": "{{ record.datesToFetch }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "ExtractDetails",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": {
+                "expression": "headlines"
+              },
+              "cssSelector": ".titleline",
+              "returnArray": true,
+              "skipSelectors": "span"
+            },
+            {
+              "key": "date",
+              "cssSelector": ".pagetop > font"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "GetHeadlines",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "headlines",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.headlines }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "GetDate",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "date",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.date }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "MergeHeadlinesDate",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "SingleJson",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "chatId": {
+          "configuration_input": "step-13-chatid"
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "appendAttribution": false
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-12",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-13-chatid",
+      "purpose": "Select the chatId for step-13.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Hacker News Throwback Machine - See What Was Hot on This Day, Every Year!.json",
+    "git_blob": "f8313b52495d08597f1bcd0fda30824b0ad1df88",
+    "sha256": "55d1a816affd4b65272c092e5a74dfa974ee2b2f6f8fc2a01ba1e88ae04d8295",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Hacker%20News%20Throwback%20Machine%20-%20See%20What%20Was%20Hot%20on%20This%20Day%2C%20Every%20Year%21.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

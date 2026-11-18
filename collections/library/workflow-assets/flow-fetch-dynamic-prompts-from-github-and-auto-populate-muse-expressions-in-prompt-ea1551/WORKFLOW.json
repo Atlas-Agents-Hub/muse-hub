@@ -1,0 +1,380 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-fetch-dynamic-prompts-from-github-and-auto-populate-muse-expressions-in-prompt-ea1551",
+  "title": "Fetch Dynamic Prompts from GitHub and Auto-Populate Muse Expressions in Prompt",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "GitHub",
+      "operation": "service-read",
+      "adapter": "github",
+      "parameters": {
+        "owner": {
+          "expression": "{{ record.Account }}"
+        },
+        "filePath": {
+          "expression": "{{ record.path }}{{ record.prompt }}"
+        },
+        "resource": "file",
+        "operation": "get",
+        "repository": {
+          "expression": "{{ record.repo }}"
+        },
+        "additionalParameters": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Extract from File",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "text"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "setVars",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "Account",
+              "type": "string",
+              "value": "TPGLLC-US"
+            },
+            {
+              "name": "repo",
+              "type": "string",
+              "value": "PeresPrompts"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "value": "SEO/"
+            },
+            {
+              "name": "prompt",
+              "type": "string",
+              "value": "keyword_research.md"
+            },
+            {
+              "name": "company",
+              "type": "string",
+              "value": "South Nassau Physical Therapy"
+            },
+            {
+              "name": "product",
+              "type": "string",
+              "value": "Manual Therapy"
+            },
+            {
+              "name": "features",
+              "type": "string",
+              "value": "pain relief"
+            },
+            {
+              "name": "sector",
+              "type": "string",
+              "value": "physical therapy"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "replace variables",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Fetch the prompt text\nconst prompt = steps[\"step-8\"].records[0].data; // Ensure the prompt contains placeholders like {{ some.node.value }}\n\n// Example variables object\nconst variables = {\n company: steps[\"step-4\"].records[0].company,\n features: \"Awesome Software\",\n keyword: \"2025-02-07\"\n};\n\n// Function to replace placeholders dynamically\nconst replaceVariables = (text, vars) => {\n return text.replace(/{{(.*?)}}/g, (match, key) => {\n const trimmedKey = key.trim();\n \n // Extract last part after the last dot\n const finalKey = trimmedKey.split('.').pop();\n\n // Replace if key exists, otherwise leave placeholder unchanged\n return vars.hasOwnProperty(finalKey) ? vars[finalKey] : match;\n });\n};\n\n// Replace and return result\nreturn [{\n prompt: replaceVariables(prompt, variables)\n}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.success }}"
+              },
+              "rightValue": {
+                "expression": "{{ steps[\"step-7\"].record.keys()}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Check All Prompt Vars Present",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Get prompt text\nconst prompt = record.data;\n\n// Extract variables inside {{ }} dynamically\nconst matches = [...prompt.matchAll(/{{(.*?)}}/g)];\nconst uniqueVars = [...new Set(matches.map(match => match[1].trim().split('.').pop()))];\n\n// Get variables from the Set Node\nconst setNodeVariables = steps[\"step-4\"].json || {};\n\n// Log extracted variables and Set Node keys\nconsole.log(\"Extracted Variables:\", uniqueVars);\nconsole.log(\"Set Node Keys:\", Object.keys(setNodeVariables));\n\n// Check if all required variables are present in the Set Node\nconst missingKeys = uniqueVars.filter(varName => !setNodeVariables.hasOwnProperty(varName));\n\nconsole.log(\"Missing Keys:\", missingKeys);\n\n// Return false if any required variable is missing, otherwise return true\nreturn [{\n success: missingKeys.length === 0,\n missingKeys: missingKeys\n}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "SetPrompt",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Stop and Error",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "errorMessage": {
+          "expression": "Missing Prompt Variables : {{ steps[\"step-7\"].record.missingKeys }}"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Set Completed Prompt",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "Prompt",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.prompt }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.Prompt }}"
+        },
+        "options": {},
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Prompt Output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "promptResponse",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Ollama Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Fetch Dynamic Prompts from GitHub and Auto-Populate n8n Expressions in Prompt.json",
+    "git_blob": "cc086b5b4f33b14c50c50a7c9783271e75870393",
+    "sha256": "e02d97b7f0bebf3b8ae45ed831517ae624d50900f2fbfed62723326adc9d680a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Fetch%20Dynamic%20Prompts%20from%20GitHub%20and%20Auto-Populate%20n8n%20Expressions%20in%20Prompt.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

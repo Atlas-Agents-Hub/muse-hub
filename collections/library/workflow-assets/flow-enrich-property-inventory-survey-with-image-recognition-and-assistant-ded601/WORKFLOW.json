@@ -1,0 +1,739 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-enrich-property-inventory-survey-with-image-recognition-and-assistant-ded601",
+  "title": "Enrich Property Inventory Survey with Image Recognition and Assistant",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Test workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get Applicable Rows",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-3-base"
+        },
+        "table": {
+          "configuration_input": "step-3-table"
+        },
+        "options": {},
+        "operation": "search",
+        "returnAll": false,
+        "filterByFormula": "AND(Image!=\"\", AI_status=FALSE())"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-5",
+      "label": "Edit Fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": {
+                "expression": "route"
+              },
+              "type": "string",
+              "value": {
+                "expression": "{{ record.route }}"
+              }
+            },
+            {
+              "name": "query",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.query }}"
+              }
+            },
+            {
+              "name": "",
+              "type": "string",
+              "value": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Fallback Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "json": {
+            "response": {
+              "ok": false,
+              "error": "The requested tool was not found or the service may be unavailable. Do not retry."
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "SERP Google Reverse Image API",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-7-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "engine",
+              "value": "google_reverse_image"
+            },
+            {
+              "name": "image_url",
+              "value": {
+                "expression": "{{ record.query }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Reverse Image Search Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": {
+                "expression": "{{ JSON.stringify(record.image_results.map(x => ({ position: x.position, title: x.title, link: x.link, description: x.snippet }))) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Reverse Image Search Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "reverse_image_search",
+        "fields": {
+          "values": [
+            {
+              "name": "route",
+              "stringValue": "serp.google_reverse_image"
+            }
+          ]
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool to perform a reverse image search. Reverse image searches return urls where similar looking products exists. Fetch the returned urls to gather more information. This tool requires the following object request body.\n```\n{\n \"type\": \"object\",\n \"properties\": {\n \"image_url\": { \"type\": \"string\" },\n }\n}\n```\nimage_url should be an absolute URL to the image."
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Firecrawl Scrape API",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-10-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": {
+                "expression": "{{ record.query }}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Scrape Success?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.success }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Firecrawl Scrape Success Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data.markdown.substring(0, 3000) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Firecrawl scrape Error Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": "{ error: \"Unable to scrape website due to unknown error. Do not retry.\" }"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Firecrawl Web Scaper Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "webpage_url_scraper_tool",
+        "fields": {
+          "values": [
+            {
+              "name": "route",
+              "stringValue": "firecrawl.scrape"
+            }
+          ]
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool to retrieve page contents of a url.\n```\n{\n \"type\": \"object\",\n \"properties\": {\n \"url\": { \"type\": \"string\" },\n }\n}\n```\nurl should be an absolute URL."
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "material": {
+                "type": "string"
+              },
+              "color": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Enrich Product Rows",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-16-base"
+        },
+        "table": {
+          "configuration_input": "step-16-table"
+        },
+        "columns": {
+          "value": {
+            "Color": {
+              "expression": "{{ record.output.output.color }}"
+            },
+            "Model": {
+              "configuration_input": "step-16-columns-value-model"
+            },
+            "Title": {
+              "expression": "{{ record.output.output.title }}"
+            },
+            "Material": {
+              "expression": "{{ record.output.output.material }}"
+            },
+            "AI_status": true,
+            "Condition": {
+              "expression": "{{ record.output.output.condition }}"
+            },
+            "Description": {
+              "expression": "{{ record.output.output.description }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Image",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Model",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Material",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Color",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Condition",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "boolean",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "AI_status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ]
+        },
+        "options": {},
+        "operation": "update"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Analyse Image",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Focus on the {{ record.Title }} in the image - we'll refer to this as the \"object\". Identify the following attributes of the object. If you cannot determine confidently, then leave blank and move to next attribute.\n* Decription of the object.\n* The model/make of the object.\n* The material(s) used in the construction of the object.\n* The color(s) of the object\n* The condition of the object. Use one of poor, good, excellent."
+        },
+        "options": {},
+        "resource": "image",
+        "imageUrls": {
+          "expression": "{{ record.Image[0].thumbnails.large.url }}"
+        },
+        "operation": "analyze"
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Object Identifier Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "system: Your role is to help an building surveyor perform a object classification and data collection task whereby the surveyor will take photos of various objects and your job is to try and identify accurately certain product attributes of the objects as detailed below.\n\nThe surveyor has given you the following:\n1) photo url ```{{ steps[\"step-3\"].record.Image[0].thumbnails.large.url }}```.\n2) photo description ```{{ record.content }}```.\n\nFor each product attribute the surveyor is unable to determine, you may:\n1) use the reverse image search tool to search the product on the internet via the provided image url.\n2) use the web scraper tool to read webpages on the internet which may be relevant to the product.\n3) If after using these tools, you are still unable to determine the required product attributes then leave the data blank.\n\nUse all the information provided and gathered, to extract the following product attributes: title, description, model, material, color and condition."
+        },
+        "agent": "openAiFunctionsAgent",
+        "options": {},
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Actions Router",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "serp.google_reverse_image",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.route }}"
+                    },
+                    "rightValue": "serp.google_reverse_image"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "firecrawl.scrape",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.route }}"
+                    },
+                    "rightValue": "firecrawl.scrape"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-18",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-18",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-18",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-18",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://serpapi.com/search.json"
+    },
+    {
+      "id": "step-10-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.firecrawl.dev/v0/scrape"
+    },
+    {
+      "id": "step-16-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-columns-value-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Enrich Property Inventory Survey with Image Recognition and AI Agent.json",
+    "git_blob": "720c2607eb02a79c87811b20d548741ac70aa80e",
+    "sha256": "ac860d1d4f472beef3f7d9a7f3f695eaaa9c5014568b463e2d68ab66fc4995d6",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Enrich%20Property%20Inventory%20Survey%20with%20Image%20Recognition%20and%20AI%20Agent.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,902 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-enrich-faq-sections-on-your-website-pages-at-scale-with-ai-158f73",
+  "title": "Enrich FAQ sections on your website pages at scale with AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Format QA Pair1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "question",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-23\"].record.question }}"
+              }
+            },
+            {
+              "name": "answer",
+              "type": "string",
+              "value": {
+                "expression": "{{\n[\n steps[\"step-23\"].record.answer,\n record.text\n ? record.text[0].toLowerCase() + record.text.substring(1, record.text.length)\n : '',\n steps[\"step-23\"].record.append || '',\n].join(' ').trim()\n}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "For Each Question...1",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Question to List1",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Questions to Object...1",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Format DisplayName + Questions1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "name",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-16\"].records[0].data.displayName || steps[\"step-16\"].records[0].data['Category name'] }}"
+              }
+            },
+            {
+              "name": "questions",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.data }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Create From Text",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "name": {
+          "expression": "{{ record.name + '-' + current_time.format('yyyyMMdd') }}"
+        },
+        "content": {
+          "expression": "{{ JSON.stringify(record, null, 4) }}"
+        },
+        "driveId": {
+          "configuration_input": "step-8-driveid"
+        },
+        "options": {},
+        "folderId": {
+          "expression": "{{ steps[\"step-16\"].records[0].outdir }}"
+        },
+        "operation": "createFromText"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Define Sheets",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "json": {
+            "data": [
+              "Single Integration Native",
+              "Single Integration Cred-only",
+              "Single Integration Non-native",
+              "Categories"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Sheets To List...",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Get Services",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {
+          "returnAllMatches": "returnAllMatches"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": {
+                "expression": "status"
+              }
+            }
+          ]
+        },
+        "sheetName": {
+          "expression": "{{ record.data }}"
+        },
+        "documentId": {
+          "configuration_input": "step-11-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Single Integration Cred-only",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{\n \"data\": [\n {\n \"question\": \"How can I set up {{ record.data.displayName }} integration in n8n?\",\n \"answer\": \"To use {{ record.data.displayName }} integration in n8n, start by adding the HTTP Request node to your workflow canvas and authenticate it using a predefined credential type. This allows you to perform custom operations, without additional authentication setup. Once connected, you can make custom API calls to {{ record.data.displayName }} to query the data you need using the URLs you provide, for example:\",\n \"ai_example\": \"Assume useris advanced in n8n integration and sending HTTP requests, focus instead on examples operations and/or use-cases such as creating records, updating records, or retrieving data.\",\n \"ai_completion\": {{ true }}\n },\n {\n \"question\": \"Do I need any special permissions or API keys to integrate {{ record.data.displayName }} with n8n?\",\n \"answer\": \"Yes, you need an API key with the necessary permissions to integrate {{ record.data.displayName }} with n8n. You will typically need to use the {{ record.data.displayName }} API docs to construct your request via the HTTP Request node. Ensure the API key has the appropriate access rights for the data and actions you want to automate within your workflows.\",\n \"ai_completion\": {{ false }}\n },\n {\n \"question\": \"Can I combine {{ record.data.displayName }} with other apps in n8n workflows?\",\n \"answer\": \"Definitely! n8n enables you to create workflows that combine {{ record.data.displayName }} with other apps and services. For instance,\",\n \"ai_completion\": {{ true }}\n },\n {\n \"question\": \"What are some common use cases for {{ record.data.displayName }} integrations with n8n?\",\n \"answer\": \"Common use cases for {{ record.data.displayName }} automation include\",\n \"append\": \"With n8n, you can customize these workflows to fit your specific needs and extend them by adding other 400+ integrations or incorporating advanced AI logic.\",\n \"ai_completion\": {{ true }}\n },\n {\n \"question\": \"How does n8n’s pricing model benefit me when integrating {{ record.data.displayName }}?\",\n \"answer\": \"n8n’s pricing model is designed to be both affordable and scalable, which is particularly beneficial when integrating with {{ record.data.displayName }}. Unlike other platforms that charge per operation or task, n8n charges only for full workflow executions. This means you can create complex workflows with {{ record.data.displayName }}, involving thousands of tasks or steps, without worrying about escalating costs. For example, if your {{ record.data.displayName }} workflows perform around 100k tasks, you could be paying $500+/month on other platforms, but with n8n's pro plan, you start at around $50. This approach allows you to scale your {{ record.data.displayName }} integrations efficiently while maintaining predictable costs.\",\n \"ai_completion\": {{ false }}\n }\n ]\n}"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Single Integration Native",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{\n \"data\": [\n {\n \"question\": \"How can I set up {{ record.data.displayName }} integration in n8n?\",\n \"answer\": \"To use {{ record.data.displayName }} integration in n8n, start by adding the {{ record.data.displayName }} node to your workflow. You'll need to authenticate your {{ record.data.displayName }} account using supported authentication methods. Once connected, you can choose from the list of supported actions or make custom API calls via the HTTP Request node, for example:\",\n \"ai_completion\": {{ true }}\n },\n {\n \"question\": \"Do I need any special permissions or API keys to integrate {{ record.data.displayName }} with n8n?\",\n \"answer\": \"Yes, you will typically need an API key, token, or similar credentials to add {{ record.data.displayName }} integration to n8n. These can usually be found in your account settings for the service. Ensure that your credentials have the necessary permissions to access and manage the data or actions you want to automate within your workflows.\",\n \"ai_completion\": {{ false }}\n },\n {\n \"question\": \"Can I combine {{ record.data.displayName }} with other apps in n8n workflows?\",\n \"answer\": \"Definitely! n8n enables you to create workflows that combine {{ record.data.displayName }} with other apps and services. For instance,\",\n \"ai_completion\": {{ true }}\n },\n {\n \"question\": \"What are some common use cases for {{ record.data.displayName }} integrations with n8n?\",\n \"answer\": \"Common use cases for {{ record.data.displayName }} automation include\",\n \"append\": \"With n8n, you can customize these workflows to fit your specific needs and extend them by adding other 400+ integrations or incorporating advanced AI logic.\",\n \"ai_completion\": {{ true }}\n },\n {\n \"question\": \"How does n8n’s pricing model benefit me when integrating {{ record.data.displayName }}?\",\n \"answer\": \"n8n’s pricing model is designed to be both affordable and scalable, which is particularly beneficial when integrating with {{ record.data.displayName }}. Unlike other platforms that charge per operation or task, n8n charges only for full workflow executions. This means you can create complex workflows with {{ record.data.displayName }}, involving thousands of tasks or steps, without worrying about escalating costs. For example, if your {{ record.data.displayName }} workflows perform around 100k tasks, you could be paying $500+/month on other platforms, but with n8n's pro plan, you start at around $50. This approach allows you to scale your {{ record.data.displayName }} integrations efficiently while maintaining predictable costs.\",\n \"ai_completion\": {{ false }}\n }\n ]\n}"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Categories",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{\n{\n \"data\": [\n {\n \"question\": `What types of ${record.data['Category name']} tools can I integrate with n8n?`,\n \"answer\": `n8n offers integrations with a wide range of ${record.data['Category name']} tools, including`,\n \"append\": `These integrations allow you to streamline your ${record.data['Category name']} workflows, automate repetitive tasks, and improve collaboration across your team.`,\n \"ai_completion\": true\n },\n {\n \"question\": `Are there any specific requirements or limitations for using ${record.data['Category name']} integrations?`,\n \"answer\": `Yes, each ${record.data['Category name']} integration may have specific requirements. For example,`,\n \"append\": `n8n offers a significant number of pre-built ${record.data['Category name']} integrations (called nodes). If n8n doesn't support the integration you need, use the HTTP Request node or custom code to connect to the service's API. Be sure to review the integration documentation for any app-specific prerequisites. Additionally, consider any API rate limits or usage constraints that might affect your workflows.`,\n \"ai_completion\": true\n },\n {\n \"question\": `What are some popular use cases for ${record.data['Category name']} integrations in n8n?`,\n \"answer\": `${record.data['Category name']} integrations with n8n offer a variety of practical use cases. For example:`,\n \"ai_completion\": true,\n \"ai_completion_format\": \"list\"\n },\n {\n \"question\": `How does n8n’s pricing model benefit ${record.data['Category name']} workflows?`,\n \"answer\": `n8n's pricing model, which charges only for full workflow executions rather than individual tasks or steps, is particularly advantageous for ${record.data['Category name']} workflows. This means you can build complex, multi-step workflows involving various ${record.data['Category name']} tools without worrying about cost increases due to the number of operations. For example, if your ${record.data['Category name']} workflows perform around 100k tasks, you could be paying $500+/month on other platforms, but with n8n's pro plan, you start at around $50. This approach allows you to scale your ${record.data['Category name']} integrations efficiently while maintaining predictable costs.`,\n \"ai_completion\": false\n },\n {\n \"question\": `How can I leverage n8n's AI capabilities in my ${record.data['Category name']} workflows?`,\n \"answer\": `n8n offers powerful AI capabilities that can enhance your ${record.data['Category name']} workflows. For example, you can integrate AI tools like OpenAI with n8n to`,\n \"append\": `To add AI capabilities, navigate to the AI category in n8n's integrations directory and set up the integration with your chosen AI service. This combination of AI and ${record.data['Category name']} integrations can significantly boost your development efficiency and innovation.`,\n \"ai_completion\": true\n }\n ]\n}\n}}"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "For Each Sheet...",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-17",
+      "label": "Execute Workflow",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "mode": "each",
+        "options": {},
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Prepare Job",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sheet",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-15\"].record.data }}"
+              }
+            },
+            {
+              "name": "data",
+              "type": "object",
+              "value": {
+                "expression": "{{ record }}"
+              }
+            },
+            {
+              "name": "outdir",
+              "type": "string",
+              "value": {
+                "expression": "{{\n{\n \"Single Integration Native\": \"Insert the corresponding Google Drive folder ID here\",\n \"Single Integration Cred-only\": \"Insert the corresponding Google Drive folder ID here\",\n \"Single Integration Non-native\": \"Insert the corresponding Google Drive folder ID here\",\n \"Categories\": \"Insert the corresponding Google Drive folder ID here\",\n}[steps[\"step-15\"].record.data]\n}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "For Each Service...",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Update Row Status",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "status": "done",
+            "row_number": {
+              "expression": "{{ steps[\"step-16\"].records[0].data.row_number }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "displayName",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "row_number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "row_number"
+          ]
+        },
+        "options": {},
+        "operation": "update",
+        "sheetName": {
+          "expression": "{{ steps[\"step-16\"].records[0].sheet }}"
+        },
+        "documentId": {
+          "configuration_input": "step-20-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Single Integration Non-native",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{\n{\n \"data\": [\n {\n \"question\": `How can I set up ${record.data.displayName} integration in n8n?`,\n \"answer\": `To use ${record.data.displayName} integration in n8n, start by adding the HTTP Request node to your workflow canvas and authenticate it using a generic authentication method. Once connected, you can make custom API calls to ${record.data.displayName} to query the data you need using the URLs you provide, for example:`,\n \"ai_example\": \"Assume useris advanced in n8n integration and sending HTTP requests, focus instead on examples operations and/or use-cases such as creating records, updating records, or retrieving data.\",\n \"ai_completion\": true\n },\n{\n \"question\": `Do I need any special permissions or API keys to integrate ${record.data.displayName} with n8n?`,\n \"answer\": `Yes, with generic authentication, you'll typically need to provide endpoint URLs, headers, parameters, and any other authentication details specific to **${record.data.displayName}**: - Find the&nbsp;**${record.data.displayName}** API documentation and see if the API supports HTTP requests; - Most APIs require some form of authentication and you can configure this in the HTTP Request mode (Basic Auth, Custom Auth, Digest Auth, Header Auth, OAuth1 API, OAuth2 API, Query Auth).`,\n \"ai_completion\": false\n },\n{\n \"question\": `Can I combine ${record.data.displayName} with other apps in n8n workflows?`,\n \"answer\": `Definitely! n8n enables you to create workflows that combine ${record.data.displayName} with other apps and services. For instance,`,\n \"ai_completion\": true\n },\n {\n \"question\": `What are some common use cases for ${record.data.displayName} integrations with n8n?`,\n \"answer\": `Common use cases for ${record.data.displayName} automation include`,\n \"append\": `With n8n, you can customize these workflows to fit your specific needs and extend them by adding other 400+ integrations or incorporating advanced AI logic.`,\n \"ai_completion\": true\n },\n {\n \"question\": `How does n8n’s pricing model benefit me when integrating ${record.data.displayName}?`,\n \"answer\": `n8n's pricing model is designed to be both affordable and scalable, which is particularly beneficial when integrating with ${ record.data.displayName}. Unlike other platforms that charge per operation or task, n8n charges only for full workflow executions. This means you can create complex workflows with ${ record.data.displayName}, involving thousands of tasks or steps, without worrying about escalating costs. For example, if your ${ record.data.displayName} workflows perform around 100k tasks, you could be paying $500+/month on other platforms, but with n8n's pro plan, you start at around $50. This approach allows you to scale your ${ record.data.displayName} integrations efficiently while maintaining predictable costs.`,\n \"ai_completion\": false\n }\n ]\n}\n}}"
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "If has Data",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.data }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Needs AI Completion?1",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "TEXT_REPLACE",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.ai_completion }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "AI_COMPLETE",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.ai_completion }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Switch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Single - Native",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.sheet }}"
+                    },
+                    "rightValue": "Single Integration Native"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Single - Cred Only",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.sheet }}"
+                    },
+                    "rightValue": "Single Integration Cred-only"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Single - Non Native",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.sheet }}"
+                    },
+                    "rightValue": "Single Integration Non-native"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Categories",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.sheet }}"
+                    },
+                    "rightValue": "Categories"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Strapi",
+      "operation": "service-write",
+      "adapter": "strapi",
+      "parameters": {
+        "operation": "create"
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "AI Completion1",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "### The question\n{{ record.question }}\n### Prefered answer format\n{{ record.ai_completion_format ? 'markdown bullet list' : 'markdown' }}\n### User's answer\n{{ record.answer }}\n{{\nrecord.ai_example\n ? `### Guidance\\nWhen giving answer, follow this blueprint: ${record.ai_example}`\n : ''\n}}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "You are assisting with writing a FAQ for the service, {{ steps[\"step-16\"].records[0].data.displayName || steps[\"step-16\"].records[0].data['Category name'] }}. Complete the user's answer in regards to the given question. Ensure the answer is consistent by assuming the tone and style of the user's answer. Give your answer as succinctly as you can with no more than 3 sentences. Do not mention the user or use markdown, return plain text only as this output will be directly appended."
+              }
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-24",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-29",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-20",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-29",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-19",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1",
+    "step-16"
+  ],
+  "configuration": [
+    {
+      "id": "step-8-driveid",
+      "purpose": "Select the driveId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-20-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Enrich FAQ sections on your website pages at scale with AI.json",
+    "git_blob": "0031598af43b6c891eb3d8af696d5aa0d2c09025",
+    "sha256": "ebf2dc44ce0df5436250a579f2b82f3a6355165c80bcacbd8887c619b63717e6",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Enrich%20FAQ%20sections%20on%20your%20website%20pages%20at%20scale%20with%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

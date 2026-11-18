@@ -1,0 +1,424 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-assistant-that-can-scrape-webpages-52701a",
+  "title": "Assistant that can scrape webpages",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On new manual Chat Message",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.7,
+          "frequencyPenalty": 0.3
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ encodeURI(record.query.url) }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "allowUnauthorizedCerts": true
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Exctract HTML Body",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "HTML",
+              "stringValue": {
+                "expression": "{{ record?.data.match(/<body[^>]*>([\\s\\S]*?)<\\/body>/i)[1] }}"
+              }
+            }
+          ]
+        },
+        "include": "selected",
+        "options": {},
+        "includeFields": "HTML"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Is error?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": {
+                "expression": "{{ record.hasOwnProperty('error') }}"
+              },
+              "value2": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Stringify error message",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "page_content",
+              "stringValue": {
+                "expression": "{{ steps[\"step-11\"].first()?.json?.query?.url == null ? \"INVALID action_input. This should be an HTTP query string like this: \\\"?url=VALIDURL&method=SELECTEDMETHOD\\\". Only a simple string value is accepted. JSON object as an action_input is NOT supported!\" : JSON.stringify(record.error) }}"
+              }
+            }
+          ]
+        },
+        "include": "selected",
+        "options": {},
+        "includeFields": "HTML"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-8",
+      "label": "Remove extra tags",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "HTML",
+              "stringValue": {
+                "expression": "{{ (record.HTML || \"HTML BODY CONTENT FOR THIS SEARCH RESULT IS NOT AVAILABLE\").replace(/<script[^>]*>([\\s\\S]*?)<\\/script>|<style[^>]*>([\\s\\S]*?)<\\/style>|<noscript[^>]*>([\\s\\S]*?)<\\/noscript>|<!--[\\s\\S]*?-->|<iframe[^>]*>([\\s\\S]*?)<\\/iframe>|<object[^>]*>([\\s\\S]*?)<\\/object>|<embed[^>]*>([\\s\\S]*?)<\\/embed>|<video[^>]*>([\\s\\S]*?)<\\/video>|<audio[^>]*>([\\s\\S]*?)<\\/audio>|<svg[^>]*>([\\s\\S]*?)<\\/svg>/ig, '')}}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Simplify output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "HTML",
+              "stringValue": {
+                "expression": "{{ record.HTML.replace(/href\\s*=\\s*\"(.+?)\"/gi, 'href=\"NOURL\"').replace(/src\\s*=\\s*\"(.+?)\"/gi, 'src=\"NOIMG\"')}}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Simplify?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ steps[\"step-12\"].first()?.json?.query?.method }}"
+              },
+              "value2": "simplif",
+              "operation": "contains"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "QUERY_PARAMS",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "query",
+              "type": "objectValue",
+              "objectValue": {
+                "expression": "{{ record.query.substring(record.query.indexOf('?') + 1).split('&').reduce((result, item) => (result[item.split('=')[0]] = decodeURIComponent(item.split('=')[1]), result), {}) }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "CONFIG",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "query.maxlimit",
+              "type": "numberValue",
+              "numberValue": {
+                "expression": "{{ record?.query?.maxlimit == null ? 70000 : Number(record?.query?.maxlimit) }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "ReAct AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "agent": "reActAgent",
+        "options": {
+          "prefix": "Answer the following questions as best you can. You have access to the following tools:",
+          "suffix": "Begin!\n\n\tQuestion: {input}\n\tThought:{agent_scratchpad}",
+          "suffixChat": "Begin! Reminder to always use the exact characters `Final Answer` when responding.",
+          "humanMessageTemplate": "{input}\n\n{agent_scratchpad}"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Convert to Markdown",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.HTML }}"
+        },
+        "options": {},
+        "destinationKey": "page_content"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Send Page Content",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "page_content",
+              "stringValue": {
+                "expression": "{{ record.page_content.length < steps[\"step-12\"].first()?.json?.query?.maxlimit ? record.page_content : \"ERROR: PAGE CONTENT TOO LONG\" }}"
+              }
+            },
+            {
+              "name": "page_length",
+              "type": "numberValue",
+              "numberValue": {
+                "expression": "{{ record.page_content.length }}"
+              }
+            }
+          ]
+        },
+        "include": "selected",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "HTTP_Request_Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "HTTP_Request_Tool",
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool to fetch a webpage content. The input should be a stringified HTTP query parameter like this: \"?url=VALIDURL&method=SELECTEDMETHOD\". \"url\" parameter should contain the valid URL string. \"method\" key can be either \"full\" or \"simplified\". method=full will fetch the whole webpage content in the Markdown format, including page links and image links. method=simplified will return the Markdown content of the page but remove urls and image links from the page content for simplicity. Before calling this tool, think strategically which \"method\" to call. Best of all to use method=simplified. However, if you anticipate that the page request is not final or if you need to extract links from the page, pick method=full.",
+        "responsePropertyName": "page_content"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-12",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-13",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-13",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-7"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI agent that can scrape webpages.json",
+    "git_blob": "ff99eb6bd3ef4c79e93dc218f51d9ab38d67295d",
+    "sha256": "52e14a61b03b94adf4c79bf5bbf1b365e89e9c7ba0b3db507b850333ee18325f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20agent%20that%20can%20scrape%20webpages.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

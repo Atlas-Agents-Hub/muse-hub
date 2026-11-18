@@ -1,0 +1,245 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-daoxe-multi-model-chat-with-automatic-fallback-14eda6",
+  "title": "DaoXE Multi-Model Chat with Automatic Fallback",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking 'Test workflow'",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Set inputs",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "prompt",
+              "value": "Give me three punchy blog-post titles about honest, no-swapping AI API gateways.",
+              "type": "string"
+            },
+            {
+              "name": "system",
+              "value": "You are a concise, helpful assistant. Answer in plain text.",
+              "type": "string"
+            },
+            {
+              "name": "primary_model",
+              "value": "YOUR_DAOXE_MODEL_ID",
+              "type": "string"
+            },
+            {
+              "name": "fallback_model",
+              "value": {
+                "configuration_input": "step-2-assignments-3-value"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Primary model (DaoXE)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{\n  \"model\": {{ JSON.stringify(record.primary_model) }},\n  \"messages\": [\n    { \"role\": \"system\", \"content\": {{ JSON.stringify(record.system) }} },\n    { \"role\": \"user\", \"content\": {{ JSON.stringify(record.prompt) }} }\n  ]\n}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Fallback model (DaoXE)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{\n  \"model\": {{ JSON.stringify(steps[\"step-2\"].record.fallback_model) }},\n  \"messages\": [\n    { \"role\": \"system\", \"content\": {{ JSON.stringify(steps[\"step-2\"].record.system) }} },\n    { \"role\": \"user\", \"content\": {{ JSON.stringify(steps[\"step-2\"].record.prompt) }} }\n  ]\n}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Answer (primary)",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "answer",
+              "value": {
+                "expression": "{{ record.choices[0].message.content }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "served_model",
+              "value": {
+                "expression": "{{ record.model }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "via",
+              "value": "primary",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Answer (fallback)",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "answer",
+              "value": {
+                "expression": "{{ record.choices[0].message.content }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "served_model",
+              "value": {
+                "expression": "{{ record.model }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "via",
+              "value": "fallback",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-3-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://daoxe.com/v1/chat/completions"
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://daoxe.com/v1/chat/completions"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/DaoXE Multi-Model Chat with Automatic Fallback.json",
+    "git_blob": "33cdbdeb7818d0967bc61078e1b1e06cbc689505",
+    "sha256": "b0e6742e6d371e67a5b29d19a039b059ee8ec7b3843bf897df31919951255ed3",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/DaoXE%20Multi-Model%20Chat%20with%20Automatic%20Fallback.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

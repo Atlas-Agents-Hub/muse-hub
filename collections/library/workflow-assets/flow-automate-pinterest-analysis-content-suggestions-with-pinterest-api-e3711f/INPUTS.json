@@ -1,0 +1,36 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automate-pinterest-analysis-content-suggestions-with-pinterest-api-e3711f",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-base": null,
+    "step-2-table": null,
+    "step-5-url": null,
+    "step-5-parameters-0-value": null,
+    "step-7-base": null,
+    "step-7-table": null,
+    "step-10-sendto": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

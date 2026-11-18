@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-supabase-insertion-upsertion-retrieval-a25db1",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-fileid": null,
+    "step-9-tablename": null,
+    "step-14-tablename": null,
+    "step-16-tablename": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

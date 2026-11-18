@@ -1,0 +1,15 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-deterministic-exact-match-quote-guard-for-ai-and-ocr-inputs-3a7643",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-path": null,
+    "step-5-jscode-literal": null
+  },
+  "adapters": {}
+}

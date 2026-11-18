@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-reddit-ai-digest-211eec",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "reddit": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-email-subscription-service-with-muse-forms-airtable-and-ai-96201a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-base": null,
+    "step-2-table": null,
+    "step-3-base": null,
+    "step-3-table": null,
+    "step-10-base": null,
+    "step-10-table": null,
+    "step-11-base": null,
+    "step-11-table": null,
+    "step-14-base": null,
+    "step-14-table": null,
+    "step-15-base": null,
+    "step-15-table": null,
+    "step-16-values-1-placeholder": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "toolwikipedia": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

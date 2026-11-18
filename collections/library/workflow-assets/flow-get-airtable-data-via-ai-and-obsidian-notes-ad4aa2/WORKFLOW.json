@@ -1,0 +1,135 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-get-airtable-data-via-ai-and-obsidian-notes-ad4aa2",
+  "title": "Get Airtable data via AI and Obsidian Notes",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Airtable",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-1-base"
+        },
+        "table": {
+          "configuration_input": "step-1-table"
+        },
+        "options": {},
+        "operation": "search"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.body.content }}"
+        },
+        "options": {},
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Respond to Obsidian",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "text",
+        "responseBody": {
+          "expression": "{{ record.output }}"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Webhook Set Up in Obsidian",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-5-path"
+        },
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-1-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Airtable/Get Airtable data via AI and Obsidian Notes.json",
+    "git_blob": "a12fe2920a546717fa078e7e069c08fb42770786",
+    "sha256": "bcf9a9b019e448a8fb2aea9a0ed53caff7c1d3e2ab9eeab76386b6f79a83b36b",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Airtable/Get%20Airtable%20data%20via%20AI%20and%20Obsidian%20Notes.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

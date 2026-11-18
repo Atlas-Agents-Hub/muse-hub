@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-generate-content-with-ai-agents-through-a-qa-gate-and-human-approval-before-pu-2663eb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-value": null,
+    "step-17-assignments-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

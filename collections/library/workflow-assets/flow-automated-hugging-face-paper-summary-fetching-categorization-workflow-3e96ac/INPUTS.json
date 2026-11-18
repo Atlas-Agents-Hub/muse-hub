@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automated-hugging-face-paper-summary-fetching-categorization-workflow-3e96ac",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-url": null,
+    "step-4-assignments-1-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

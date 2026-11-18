@@ -1,0 +1,41 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-venafi-cloud-slack-cert-bot-df7005",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-applicationid": null,
+    "step-1-certificateissuingtemplateid": null,
+    "step-5-url": null,
+    "step-8-workflowid": null,
+    "step-9-parameters-1-value": null,
+    "step-15-workflowid": null,
+    "step-17-modelid": null,
+    "step-19-channelid": null,
+    "step-20-channelid": null,
+    "step-22-applicationid": null,
+    "step-22-certificateissuingtemplateid": null,
+    "step-23-channelid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    },
+    "venafitlsprotectcloud": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

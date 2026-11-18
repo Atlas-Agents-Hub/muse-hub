@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-auto-categorize-blog-posts-in-wordpress-using-a-i-3efacb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "wordpress": {
+      "connection": null
+    }
+  }
+}

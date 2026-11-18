@@ -1,0 +1,294 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automated-hugging-face-paper-summary-fetching-categorization-workflow-3e96ac",
+  "title": "Automated Hugging Face Paper Summary Fetching & Categorization Workflow",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Embed image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-1-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"inputs\": [\n {\n \"content\": [\n {\n \"type\": \"image_url\",\n \"image_url\": steps[\"step-8\"].records[0].imageURL\n }\n ]\n }\n ],\n \"model\": \"voyage-multimodal-3\",\n \"input_type\": \"document\"\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get similarity of medoids",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-4\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-4\"].records[0].collectionName }}/points/query"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"query\": record.data[0].embedding,\n \"using\": \"voyage\",\n \"limit\": steps[\"step-5\"].records[0].cropsNumber,\n \"with_payload\": true,\n \"filter\": {\n \"must\": [\n { \n \"key\": steps[\"step-4\"].records[0].clusterCenterType,\n \"match\": {\n \"value\": true\n }\n }\n ]\n }\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Compare scores",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "points = _input.first()['json']['result']['points']\nthreshold_type = _('Variables for medoids').first()['json']['clusterThresholdCenterType']\n\nmax_score = -1\ncrop_with_max_score = None\nundefined = True\n\nfor center in points:\n if center['score'] >= center['payload'][threshold_type]:\n undefined = False\n if center['score'] > max_score:\n max_score = center['score']\n crop_with_max_score = center['payload']['crop_name']\n\nif undefined:\n result_message = \"ALERT, we might have a new undefined crop!\"\nelse:\n result_message = f\"Looks similar to {crop_with_max_score}\"\n\nreturn [{\n \"json\": {\n \"result\": result_message\n }\n}]",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Variables for medoids",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "clusterCenterType",
+              "type": "string",
+              "value": "is_medoid"
+            },
+            {
+              "name": "qdrantCloudURL",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-4-assignments-1-value"
+              }
+            },
+            {
+              "name": "collectionName",
+              "type": "string",
+              "value": {
+                "expression": "agricultural-crops"
+              }
+            },
+            {
+              "name": "clusterThresholdCenterType",
+              "type": "string",
+              "value": "is_medoid_cluster_threshold"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Info About Crop Labeled Clusters",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": {
+                "expression": "cropsNumber"
+              },
+              "type": "number",
+              "value": {
+                "expression": "{{ record.result.hits.length }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Total Points in Collection",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.qdrantCloudURL }}/collections/{{ record.collectionName }}/points/count"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"exact\": true\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Each Crop Counts",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-4\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-4\"].records[0].collectionName }}/facet"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"key\": \"crop_name\",\n \"limit\": record.result.count,\n \"exact\": true\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Image URL hardcode",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "imageURL",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.query.imageURL }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-1",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-9"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.voyageai.com/v1/{resource}"
+    },
+    {
+      "id": "step-4-assignments-1-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://152bc6e2-832a-415c-a1aa-fb529f8baf8d.eu-central-1-0.aws.cloud.qdrant.io"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Automated Hugging Face Paper Summary Fetching & Categorization Workflow.json",
+    "git_blob": "4534f39c1d6dbf91cca8a0596e557f128d6aacc9",
+    "sha256": "3d49b51e0459e1a7138ecdbb242ccab5d5b0f829ffba4e8b936e6788b6f6bac7",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Automated%20Hugging%20Face%20Paper%20Summary%20Fetching%20%26%20Categorization%20Workflow.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automate-image-validation-tasks-using-ai-vision-c7d463",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

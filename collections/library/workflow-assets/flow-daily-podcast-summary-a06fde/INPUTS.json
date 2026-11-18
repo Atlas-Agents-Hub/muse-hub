@@ -1,0 +1,34 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-daily-podcast-summary-a06fde",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-5-url": null,
+    "step-9-model": null,
+    "step-11-url": null,
+    "step-11-parameters-2-value": null,
+    "step-11-parameters-3-value": null,
+    "step-12-parameters-2-value": null,
+    "step-12-parameters-3-value": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-complete-business-whatsapp-rag-chatbot-40525b",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-options-systemmessage": null,
+    "step-6-url": null,
+    "step-7-url": null,
+    "step-8-filter-driveid": null,
+    "step-13-path": null,
+    "step-14-path": null,
+    "step-16-phonenumberid": null,
+    "step-17-phonenumberid": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    },
+    "whatsapp": {
+      "connection": null
+    }
+  }
+}

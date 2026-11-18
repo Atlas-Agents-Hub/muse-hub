@@ -1,0 +1,24 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-talk-to-your-sqlite-database-with-a-langchain-assistant-e72a27",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    }
+  }
+}

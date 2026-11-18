@@ -1,0 +1,908 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-survey-insights-with-qdrant-python-and-information-extractor-d7bf53",
+  "title": "Survey Insights with Qdrant, Python and Information Extractor",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "question",
+                "value": {
+                  "expression": "{{ record.question }}"
+                }
+              },
+              {
+                "name": "participant",
+                "value": {
+                  "expression": "{{ record.participant }}"
+                }
+              },
+              {
+                "name": "survey",
+                "value": {
+                  "expression": "{{ steps[\"step-5\"].params.documentId.cachedResultName }}"
+                }
+              }
+            ]
+          }
+        },
+        "jsonData": {
+          "expression": "{{ record.answer }}"
+        },
+        "jsonMode": "expressionData"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Convert to Question Answer Pairs",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "type": "array",
+              "value": {
+                "expression": "{{\n Object.keys(record)\n .filter(key => !['row_number', 'Participant'].includes(key))\n .map(key => ({ question: key, answer: record[key], participant: record.Participant }))\n}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Get Survey Results",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "configuration_input": "step-5-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-5-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Get Survey Headers",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "range": "A1:Z2",
+              "rangeDefinition": "specifyRangeA1"
+            }
+          }
+        },
+        "sheetName": {
+          "expression": "{{ steps[\"step-20\"].records[0].sheetName }}"
+        },
+        "documentId": {
+          "expression": "{{ steps[\"step-20\"].records[0].sheetID }}"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Extract Questions",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "question",
+              "type": "array",
+              "value": {
+                "expression": "{{\n Object.keys(steps[\"step-6\"].record)\n .filter(key => key.includes('?'))\n}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Questions to List",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "question"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Find All Answers",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "http://qdrant:6333/collections/{{ steps[\"step-12\"].record.collectionName }}/points/scroll"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"limit\": 500,\n \"filter\":{\n \"must\": [\n {\n \"key\": \"metadata.question\",\n \"match\": { \"value\": \"{{ steps[\"step-17\"].record.question }}\" }\n },\n {\n \"key\": \"metadata.survey\",\n \"match\": { \"value\": \"{{ steps[\"step-12\"].record.surveyName }}\" }\n }\n ]\n },\n \"with_vector\":true\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Get Payload of Points",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "http://qdrant:6333/collections/{{ steps[\"step-12\"].records[0].collectionName }}/points"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n {\n \"ids\": record.points,\n \"with_payload\": true\n }\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Clusters To List",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "output"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Set Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "collectionName",
+              "type": "string",
+              "value": "ux_survey_insights"
+            },
+            {
+              "name": "surveyName",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.properties.title }}"
+              }
+            },
+            {
+              "name": "insightsSheetName",
+              "type": "string",
+              "value": {
+                "expression": "Insights-{{ current_time.format('yyyyMMdd') }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Prep Output For Export",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{ {\n ...record.output,\n \"Number of Response\": steps[\"step-10\"].record.result.length,\n \"Participant IDs\": steps[\"step-10\"].record.result.map(item =>\n item.payload.metadata.participant\n ).join(','),\n \"Raw Responses\": steps[\"step-10\"].record.result.map(item =>\n `Participant ${item.payload.metadata.participant},${item.payload.content.replaceAll('\"', '\\\"')}`\n ).join('\\n')\n} }}"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Export To Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {},
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "What is your name?",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "The responses indicate that two participants have the same name, 'Kwame Nkosi', which suggests a commonality in names or cultural naming traditions among the respondents. This could highlight the importance of understanding cultural context in survey responses.",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "neutral",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "3",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "77,17,54",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Participant 77,Kwame Nkosi\nParticipant 17,Kwame Nkosi\nParticipant 54,Kwame Nkansah",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "expression": "{{ steps[\"step-12\"].records[0].insightsSheetName }}"
+        },
+        "documentId": {
+          "expression": "{{ steps[\"step-20\"].records[0].sheetID }}"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Export To Sheets1",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {},
+          "schema": [],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "expression": "{{ steps[\"step-12\"].records[0].insightsSheetName }}"
+        },
+        "documentId": {
+          "expression": "{{ steps[\"step-20\"].records[0].sheetID }}"
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "For Each Question...",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Trigger Insights",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "options": {},
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Prep Values For Trigger",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sheetID",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].params.documentId.value }}"
+              }
+            },
+            {
+              "name": "sheetName",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].params.sheetName.value }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-21",
+      "label": "Create Insights Sheet",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "title": {
+          "expression": "{{ steps[\"step-12\"].records[0].insightsSheetName }}"
+        },
+        "options": {},
+        "operation": "create",
+        "documentId": {
+          "expression": "{{ steps[\"step-20\"].records[0].sheetID }}"
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Prep Values For Export",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{\n \"Question\": \"{{ steps[\"step-17\"].record.question }}\",\n \"Insight\": \"No Insight Found\"\n}"
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "QA Pairs to List",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Has Clusters?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.output }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-26",
+      "label": "Get Sheet Details",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://sheets.googleapis.com/v4/spreadsheets/{{ record.sheetID }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Only Clusters With 3+ points",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "array",
+                "operation": "lengthGt",
+                "rightType": "number"
+              },
+              "leftValue": {
+                "expression": "{{ record.points }}"
+              },
+              "rightValue": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Apply K-means Clustering Algorithm",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "import numpy as np\nfrom sklearn.cluster import KMeans\n\n# get vectors for all answers\npoint_ids = [item.id for item in _input.first().json.result.points]\nvectors = [item.vector.to_py() for item in _input.first().json.result.points]\nvectors_array = np.array(vectors)\n\n# apply k-means clustering where n_clusters = 10\n# this is a max and we'll discard some of these clusters later\nkmeans = KMeans(n_clusters=min(len(vectors), 10), random_state=42).fit(vectors_array)\nlabels = kmeans.labels_\nunique_labels = set(labels)\n\n# Extract and print points in each cluster\nclusters = {}\nfor label in set(labels):\n clusters[label] = vectors_array[labels == label]\n\n# return Qdrant point ids for each cluster\n# we'll use these ids to fetch the payloads from the vector store.\noutput = []\nfor cluster_id, cluster_points in clusters.items():\n points = [point_ids[i] for i in range(len(labels)) if labels[i] == cluster_id]\n output.append({\n \"id\": f\"Cluster {cluster_id}\",\n \"total\": len(cluster_points),\n \"points\": points\n })\n\nreturn {\"json\": {\"output\": output } }",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "Qdrant Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "qdrantCollection": {
+          "configuration_input": "step-29-qdrantcollection"
+        }
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "Survey Insights Agent",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "The {{ record.result.length }} participant responses were:\n{{\nrecord.result.map(item =>\n`* Participant ${item.payload.metadata.participant}: \"${item.payload.content.replaceAll('\"', '\\\"')}\"`\n).join('\\n')\n}}"
+        },
+        "options": {
+          "systemPromptTemplate": {
+            "expression": "You help summarise a selection of participant responses to a specific question for a survey called \"{{ record.result[0].payload.metadata.survey }}\".\nThe question asked was \"{{ record.result[0].payload.metadata.question }}\".\nThe {{ record.result.length }} participant responses were selected because their answers were similar in context.\n\nYour task is to: \n* summarise the given participant responses into a short paragraph. Provide an insight from this summary and what we could learn from the answers.\n* determine if the overall sentiment of all the listed responses to be either negative, mildy negative, neutral, mildy positive or positive."
+          }
+        },
+        "schemaType": "fromJson",
+        "jsonSchemaExample": {
+          "json": {
+            "Question": "What do you enjoy most about working remotely, and why?",
+            "Insight": "",
+            "Sentiment": "Positive"
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-24",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-28",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-29",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-30",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-29",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-30",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-17",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-20",
+    "step-25"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-29-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Survey Insights with Qdrant, Python and Information Extractor.json",
+    "git_blob": "cd59f1c0e94b92877d341ac0afb7832da12ff400",
+    "sha256": "13c78d60e5f8dc2af3253f7b7f9b9a9a47d4dbaa548e837921a89adff1d2c1db",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Survey%20Insights%20with%20Qdrant%2C%20Python%20and%20Information%20Extractor.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

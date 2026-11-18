@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-qualifying-appointment-requests-with-ai-muse-forms-8634d0",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-values-1-placeholder": null,
+    "step-12-calendar": null,
+    "step-14-completionmessage": null,
+    "step-15-completionmessage": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googlecalendar": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

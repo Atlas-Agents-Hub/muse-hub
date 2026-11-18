@@ -1,0 +1,606 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-web-researcher-for-sales-fbf499",
+  "title": "AI web researcher for sales",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Test workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Input",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "company_input",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.input }}"
+              }
+            },
+            {
+              "name": "row_number",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.row_number }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.3
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get website content",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "get_website_content",
+        "source": "parameter",
+        "description": "This tool will return the text from the given URL. ",
+        "workflowJson": {
+          "expression": "{\n \"meta\": {\n \"templateCredsSetupCompleted\": true,\n \"instanceId\": \"2b1cc1a8b0a2fb9caab11ab2d5eb3712f9973066051b2e898cf4041a1f2a7757\"\n },\n \"nodes\": [\n {\n \"parameters\": {},\n \"id\": \"475eaf3c-7e11-457e-8b72-4d3e683e2f80\",\n \"name\": \"Execute Workflow Trigger\",\n \"type\": \"n8n-nodes-base.executeWorkflowTrigger\",\n \"typeVersion\": 1,\n \"position\": [\n 260,\n 340\n ]\n },\n {\n \"parameters\": {\n \"url\": \"={{ record.query.url }}\",\n \"options\": {}\n },\n \"id\": \"321fbc74-d749-4f9b-954e-7cad37601ddf\",\n \"name\": \"Visit Website\",\n \"type\": \"n8n-nodes-base.httpRequest\",\n \"typeVersion\": 4.2,\n \"position\": [\n 440,\n 340\n ]\n },\n {\n \"parameters\": {\n \"operation\": \"extractHtmlContent\",\n \"extractionValues\": {\n \"values\": [\n {\n \"key\": \"body\",\n \"cssSelector\": \"html\",\n \"skipSelectors\": \"head\"\n }\n ]\n },\n \"options\": {\n \"cleanUpText\": true\n }\n },\n \"id\": \"6e51732a-4999-4805-838b-f692e9965197\",\n \"name\": \"HTML\",\n \"type\": \"n8n-nodes-base.html\",\n \"typeVersion\": 1.2,\n \"position\": [\n 620,\n 340\n ]\n }\n ],\n \"connections\": {\n \"Execute Workflow Trigger\": {\n \"main\": [\n [\n {\n \"node\": \"Visit Website\",\n \"type\": \"main\",\n \"index\": 0\n }\n ]\n ]\n },\n \"Visit Website\": {\n \"main\": [\n [\n {\n \"node\": \"HTML\",\n \"type\": \"main\",\n \"index\": 0\n }\n ]\n ]\n }\n },\n \"pinData\": {\n \"Execute Workflow Trigger\": [\n {\n \"query\": {\n \"url\": \"https://www.lemlist.com\"\n }\n }\n ]\n }\n}"
+        },
+        "jsonSchemaExample": {
+          "json": {
+            "url": {
+              "configuration_input": "step-4-jsonschemaexample-body-url"
+            }
+          }
+        },
+        "specifyInputSchema": true,
+        "responsePropertyName": "body"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "SerpAPI - Search Google",
+      "operation": "service-read",
+      "adapter": "toolserpapi",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "case_study_link": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "domain": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "linkedinUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "market": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cheapest_plan": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "has_enterprise_plan": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "has_API": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "has_free_trial": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "integrations": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "AI Researcher Output Data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "domain",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output.domain }}"
+              }
+            },
+            {
+              "name": "linkedinUrl",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output.linkedinUrl }}"
+              }
+            },
+            {
+              "name": "market",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output.market }}"
+              }
+            },
+            {
+              "name": "cheapest_plan",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.cheapest_plan }}"
+              }
+            },
+            {
+              "name": "has_enterprise_plan",
+              "type": "boolean",
+              "value": {
+                "expression": "{{ record.output.has_enterprise_plan }}"
+              }
+            },
+            {
+              "name": "has_API",
+              "type": "boolean",
+              "value": {
+                "expression": "{{ record.output.has_API }}"
+              }
+            },
+            {
+              "name": "has_free_trial",
+              "type": "boolean",
+              "value": {
+                "expression": "{{ record.output.has_free_trial }}"
+              }
+            },
+            {
+              "name": "integrations",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.output.integrations }}"
+              }
+            },
+            {
+              "name": "case_study_link",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output.case_study_link }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Google Sheets - Update Row with data",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "domain": {
+              "expression": "{{ record.domain }}"
+            },
+            "market": {
+              "expression": "{{ record.market }}"
+            },
+            "row_number": {
+              "expression": "{{ record.row_number }}"
+            },
+            "linkedinUrl": {
+              "expression": "{{ record.linkedinUrl }}"
+            },
+            "integrations": {
+              "expression": "{{ record.integrations }}"
+            },
+            "cheapest_plan": {
+              "expression": "{{ record.cheapest_plan }}"
+            },
+            "has_free_trial": {
+              "expression": "{{ record.has_free_trial }}"
+            },
+            "enrichment_status": "done",
+            "has_entreprise_plan": {
+              "expression": "{{ record.has_enterprise_plan }}"
+            },
+            "last_case_study_link": {
+              "expression": "{{ record.case_study_link }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "input",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "domain",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "linkedinUrl",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "has_free_trial",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "cheapest_plan",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "has_entreprise_plan",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "last_case_study_link",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "market",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "integrations",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "enrichment_status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "row_number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "row_number"
+          ]
+        },
+        "options": {},
+        "operation": "update",
+        "sheetName": {
+          "configuration_input": "step-9-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-9-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Merge data",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Get rows to enrich",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {
+          "returnAllMatches": "returnAllMatches"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "enrichment_status"
+            }
+          ]
+        },
+        "sheetName": {
+          "configuration_input": "step-11-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-11-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "AI company researcher",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "This is the company I want you to research info about:\n{{ record.company_input }}\n\nReturn me:\n- the linkedin URL of the company\n- the domain of the company. in this format ([domain].[tld])\n- market: if they are B2B or B2C. Only reply by \"B2B\" or \"B2B\"\n- the lowest paid plan the company is offering. If you are not sure, reply null.\n- the latest case study URL published on the website (find case study hub using google, and return the first case study link)\n- tell me if the company offer an API\n- tell me if the company has an enterprise plan\n- tell me if the company has a free trial mentionned in their homepage. reply false if you don't find strong evidence.\n- return an array with up to 5 tools the company is integrated with"
+        },
+        "options": {
+          "maxIterations": 10
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-13",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-13",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-13",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-13",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-7",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1",
+    "step-12"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-jsonschemaexample-body-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://www.lemlist.com"
+    },
+    {
+      "id": "step-9-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI web researcher for sales.json",
+    "git_blob": "eb7dde5351058782db9f9e5951dd3f5cac161c8e",
+    "sha256": "1f0585754c519fce8733559b673101549a479e5cb42a2544bfa1813e66abb941",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20web%20researcher%20for%20sales.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

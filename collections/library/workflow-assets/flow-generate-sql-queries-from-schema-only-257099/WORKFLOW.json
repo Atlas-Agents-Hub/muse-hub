@@ -1,0 +1,486 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-generate-sql-queries-from-schema-only-257099",
+  "title": "Generate SQL queries from schema only",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.2
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "No Operation, do nothing",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "List all tables in a database",
+      "operation": "service-read",
+      "adapter": "mysql",
+      "parameters": {
+        "query": "SHOW TABLES;",
+        "options": {},
+        "operation": "executeQuery"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Extract database schema",
+      "operation": "service-read",
+      "adapter": "mysql",
+      "parameters": {
+        "query": {
+          "expression": "DESCRIBE {{ record.Tables_in_tttytdb2023 }};"
+        },
+        "options": {},
+        "operation": "executeQuery"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Add table name to output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "table",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-4\"].record.Tables_in_tttytdb2023 }}"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Convert data to binary",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "toJson"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Save file locally",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fileName": "./chinook_mysql.json",
+        "operation": "write"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Extract data from file",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "fromJson"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Chat Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Here is the database schema: {{ record.schema }}\nHere is the user request: {{ steps[\"step-10\"].record.chatInput }}"
+        },
+        "agent": "conversationalAgent",
+        "options": {
+          "humanMessage": {
+            "expression": "TOOLS\n------\nAssistant can ask the user to use tools to look up information that may be helpful in answering the users original question. The tools the human can use are:\n\n{tools}\n\n{format_instructions}\n\nUSER'S INPUT\n--------------------\nHere is the user's input (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):\n\n{{input}}"
+          },
+          "systemMessage": "Assistant is a large language model trained by OpenAI.\n\nAssistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.\n\nAssistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.\n\nOverall, Assistant is a powerful system that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.\n\nHelp user to work with the MySQL database.\n\nPlease wrap any sql commands into triple quotes. You don't have a tool to run SQL, so the user will do that instead of you."
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "When clicking \"Test workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-13",
+      "label": "Combine schema data and chat input",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sessionId",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-10\"].records[0].sessionId }}"
+              }
+            },
+            {
+              "name": "action",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-10\"].records[0].action }}"
+              }
+            },
+            {
+              "name": "chatinput",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-10\"].records[0].chatInput }}"
+              }
+            },
+            {
+              "name": "schema",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Load the schema from the local file",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fileSelector": "./chinook_mysql.json"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Extract SQL query",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "query",
+              "type": "string",
+              "value": {
+                "expression": "{{ (record.output.match(/SELECT[\\s\\S]*?;/i) || [])[0] || \"\" }}"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Check if query exists",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.query }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Format query results",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sqloutput",
+              "type": "string",
+              "value": {
+                "expression": "{{ Object.keys($jmespath(records,'[].json')[0]).join(' | ') }} \n{{ ($jmespath(records,'[].json')).map(obj => Object.values(obj).join(' | ')).join('\\n') }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Run SQL query",
+      "operation": "service-read",
+      "adapter": "mysql",
+      "parameters": {
+        "query": {
+          "expression": "{{ record.query }}"
+        },
+        "options": {},
+        "operation": "executeQuery"
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Prepare final output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "output",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output }}\n\nSQL result:\n```markdown\n{{ record.sqloutput }}\n```"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Combine query result and chat answer",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-11",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-16",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-10",
+    "step-12"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Database_and_Storage/Generate SQL queries from schema only - AI-powered.json",
+    "git_blob": "7c4bfeb9200b2d34f5c6d82b6438100009cf5196",
+    "sha256": "e20cabe42ed672b4ec22a24fa75b141bc36817f80465514f804fdf1cda7f47c3",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Database_and_Storage/Generate%20SQL%20queries%20from%20schema%20only%20-%20AI-powered.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

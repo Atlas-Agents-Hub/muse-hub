@@ -1,0 +1,32 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-enrich-faq-sections-on-your-website-pages-at-scale-with-ai-158f73",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-8-driveid": null,
+    "step-11-documentid": null,
+    "step-20-documentid": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "strapi": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

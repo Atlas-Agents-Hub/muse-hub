@@ -1,0 +1,910 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-modular-customizable-email-routing-text-classifier-for-ecommerce-79da78",
+  "title": "Modular & Customizable Email Routing Text Classifier for eCommerce",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On form submission",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "formTitle": "Contacts",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "placeholder": "Email",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Message",
+              "placeholder": "Message",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "formDescription": "Basic Contact Form"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Text Classifier",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "fallback": "other",
+          "systemPromptTemplate": {
+            "expression": "Please classify the text provided by the user into one of the following categories: {categories}, and use the provided formatting instructions below. Don't explain, and only output the json with the selected {categories}."
+          }
+        },
+        "inputText": {
+          "expression": "{{ record.Message }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "Request Quote",
+              "description": "Request for quote"
+            },
+            {
+              "category": "Product info",
+              "description": "General information about a product"
+            },
+            {
+              "category": "General problem",
+              "description": "General problems about a product"
+            },
+            {
+              "category": "Order",
+              "description": "Information about an order placed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Prod. Dep.",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "Name: {{ record.Name }}\nEmail: {{ record.Email }}\n\nMessage:\n{{ record.Message }}\n\nTipo prodotto: {{ record[\"tipo prodotto\"] }}"
+        },
+        "options": {
+          "replyTo": {
+            "expression": "{{ record.Email }}"
+          }
+        },
+        "subject": {
+          "expression": "[n8n Contacts] Product info"
+        },
+        "toEmail": {
+          "configuration_input": "step-4-toemail"
+        },
+        "fromEmail": {
+          "configuration_input": "step-4-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Quote Dep.",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "Name: {{ record.Name }}\nEmail: {{ record.Email }}\n\nMessage:\n{{ record.Message }}\n\nTipo prodotto: {{ record[\"tipo prodotto\"] }}"
+        },
+        "options": {
+          "replyTo": {
+            "expression": "{{ record.Email }}"
+          }
+        },
+        "subject": {
+          "expression": "[n8n Contacts] Quote"
+        },
+        "toEmail": {
+          "configuration_input": "step-5-toemail"
+        },
+        "fromEmail": {
+          "configuration_input": "step-5-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Gen. Dep.",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "Name: {{ record.Name }}\nEmail: {{ record.Email }}\n\nMessage:\n{{ record.Message }}\n\nTipo prodotto: {{ record[\"tipo prodotto\"] }}"
+        },
+        "options": {
+          "replyTo": {
+            "expression": "{{ record.Email }}"
+          }
+        },
+        "subject": {
+          "expression": "[n8n Contacts] General"
+        },
+        "toEmail": {
+          "configuration_input": "step-6-toemail"
+        },
+        "fromEmail": {
+          "configuration_input": "step-6-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Order Dep.",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "Name: {{ record.Name }}\nEmail: {{ record.Email }}\n\nMessage:\n{{ record.Message }}\n\nTipo prodotto: {{ record[\"tipo prodotto\"] }}"
+        },
+        "options": {
+          "replyTo": {
+            "expression": "{{ record.Email }}"
+          }
+        },
+        "subject": {
+          "expression": "[n8n Contacts] Order info"
+        },
+        "toEmail": {
+          "configuration_input": "step-7-toemail"
+        },
+        "fromEmail": {
+          "configuration_input": "step-7-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Other Dep.",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "Name: {{ record.Name }}\nEmail: {{ record.Email }}\n\nMessage:\n{{ record.Message }}\n\nTipo prodotto: {{ record[\"tipo prodotto\"] }}"
+        },
+        "options": {
+          "replyTo": {
+            "expression": "{{ record.Email }}"
+          }
+        },
+        "subject": {
+          "expression": "[n8n Contacts] Other"
+        },
+        "toEmail": {
+          "configuration_input": "step-8-toemail"
+        },
+        "fromEmail": {
+          "configuration_input": "step-8-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Quote DB",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "TO": {
+              "expression": "{{ (JSON.stringify(record.envelope.to)) }}"
+            },
+            "DATA": {
+              "expression": "{{ steps[\"step-2\"].record.submittedAt }}"
+            },
+            "NOME": {
+              "expression": "{{ steps[\"step-2\"].record.Name }}"
+            },
+            "EMAIL": {
+              "expression": "{{ steps[\"step-2\"].record.Email }}"
+            },
+            "CATEGORIA": "info prodotti",
+            "RICHIESTA": {
+              "expression": "{{ steps[\"step-2\"].record.Message }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DATA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "NOME",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "EMAIL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "RICHIESTA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CATEGORIA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "TO",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-9-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-9-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Prod DB",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "TO": {
+              "expression": "{{ (JSON.stringify(record.envelope.to)) }}"
+            },
+            "DATA": {
+              "expression": "{{ steps[\"step-2\"].record.submittedAt }}"
+            },
+            "NOME": {
+              "expression": "{{ steps[\"step-2\"].record.Name }}"
+            },
+            "EMAIL": {
+              "expression": "{{ steps[\"step-2\"].record.Email }}"
+            },
+            "CATEGORIA": "info prodotti",
+            "RICHIESTA": {
+              "expression": "{{ steps[\"step-2\"].record.Message }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DATA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "NOME",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "EMAIL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "RICHIESTA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CATEGORIA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "TO",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-10-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-10-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "General DB",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "TO": {
+              "expression": "{{ (JSON.stringify(record.envelope.to)) }}"
+            },
+            "DATA": {
+              "expression": "{{ steps[\"step-2\"].record.submittedAt }}"
+            },
+            "NOME": {
+              "expression": "{{ steps[\"step-2\"].record.Name }}"
+            },
+            "EMAIL": {
+              "expression": "{{ steps[\"step-2\"].record.Email }}"
+            },
+            "CATEGORIA": "info prodotti",
+            "RICHIESTA": {
+              "expression": "{{ steps[\"step-2\"].record.Message }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DATA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "NOME",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "EMAIL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "RICHIESTA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CATEGORIA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "TO",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-11-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-11-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Order DB",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "TO": {
+              "expression": "{{ (JSON.stringify(record.envelope.to)) }}"
+            },
+            "DATA": {
+              "expression": "{{ steps[\"step-2\"].record.submittedAt }}"
+            },
+            "NOME": {
+              "expression": "{{ steps[\"step-2\"].record.Name }}"
+            },
+            "EMAIL": {
+              "expression": "{{ steps[\"step-2\"].record.Email }}"
+            },
+            "CATEGORIA": "info prodotti",
+            "RICHIESTA": {
+              "expression": "{{ steps[\"step-2\"].record.Message }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DATA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "NOME",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "EMAIL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "RICHIESTA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CATEGORIA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "TO",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-12-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-12-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Other DB",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "TO": {
+              "expression": "{{ (JSON.stringify(record.envelope.to)) }}"
+            },
+            "DATA": {
+              "expression": "{{ steps[\"step-2\"].record.submittedAt }}"
+            },
+            "NOME": {
+              "expression": "{{ steps[\"step-2\"].record.Name }}"
+            },
+            "EMAIL": {
+              "expression": "{{ steps[\"step-2\"].record.Email }}"
+            },
+            "CATEGORIA": "info prodotti",
+            "RICHIESTA": {
+              "expression": "{{ steps[\"step-2\"].record.Message }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DATA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "NOME",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "EMAIL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "RICHIESTA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CATEGORIA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "TO",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-13-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-13-documentid"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 4,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-2",
+      "channel": "main",
+      "branch": 1
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-toemail",
+      "purpose": "Select the toEmail for step-4.",
+      "required": true
+    },
+    {
+      "id": "step-4-fromemail",
+      "purpose": "Select the fromEmail for step-4.",
+      "required": true
+    },
+    {
+      "id": "step-5-toemail",
+      "purpose": "Select the toEmail for step-5.",
+      "required": true
+    },
+    {
+      "id": "step-5-fromemail",
+      "purpose": "Select the fromEmail for step-5.",
+      "required": true
+    },
+    {
+      "id": "step-6-toemail",
+      "purpose": "Select the toEmail for step-6.",
+      "required": true
+    },
+    {
+      "id": "step-6-fromemail",
+      "purpose": "Select the fromEmail for step-6.",
+      "required": true
+    },
+    {
+      "id": "step-7-toemail",
+      "purpose": "Select the toEmail for step-7.",
+      "required": true
+    },
+    {
+      "id": "step-7-fromemail",
+      "purpose": "Select the fromEmail for step-7.",
+      "required": true
+    },
+    {
+      "id": "step-8-toemail",
+      "purpose": "Select the toEmail for step-8.",
+      "required": true
+    },
+    {
+      "id": "step-8-fromemail",
+      "purpose": "Select the fromEmail for step-8.",
+      "required": true
+    },
+    {
+      "id": "step-9-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Modular & Customizable AI-Powered Email Routing_ Text Classifier for eCommerce.json",
+    "git_blob": "8b7226ce63db6e3c434f89049db78cbb7ff1ea97",
+    "sha256": "9206240d786a890a3990eea5061bab24e77dca51333b7040e4bcc624c45e6234",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Modular%20%26%20Customizable%20AI-Powered%20Email%20Routing_%20Text%20Classifier%20for%20eCommerce.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

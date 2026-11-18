@@ -1,0 +1,304 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-simple-expense-tracker-with-muse-chat-assistant-and-google-sheets-366062",
+  "title": "Simple Expense Tracker with Muse Chat, Assistant and Google Sheets",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "maxIterations": 3,
+          "systemMessage": "You are a helpful accountant. Use save to db tool to save expense message to DB. respond with \"Your expense saved, here is the output of save sub-workflow:[data]\""
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Workflow Input Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "input1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Expense text to JSON parser",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "convert expense to JSON: \n\n{{ record.input1 }}"
+        },
+        "options": {},
+        "attributes": {
+          "attributes": [
+            {
+              "name": "cost",
+              "type": "number",
+              "required": true,
+              "description": "expense cost"
+            },
+            {
+              "name": "descr",
+              "required": true,
+              "description": "description of expense"
+            },
+            {
+              "name": "date",
+              "type": "date",
+              "description": "date in UTC format. "
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Save expense into Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "msg": {
+              "expression": "{{ steps[\"step-3\"].record.input1 }}"
+            },
+            "cost": {
+              "expression": "{{ record.output.cost }}"
+            },
+            "date": {
+              "expression": "{{ record.output.date ? record.output.date : current_time }}"
+            },
+            "descr": {
+              "expression": "{{ record.output.descr }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "cost",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "descr",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "msg",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        },
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-8-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-8-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Parse msg and save to Sheets",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "save_expense_in_db",
+        "workflowId": {
+          "configuration_input": "step-9-workflowid"
+        },
+        "description": "Call this tool to save expense in db.",
+        "workflowInputs": {
+          "value": {
+            "input1": {
+              "expression": "{{ record.chatInput }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "input1",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-1",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-1",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2",
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-8-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Simple Expense Tracker with n8n Chat, AI Agent and Google Sheets.json",
+    "git_blob": "b741dc4b75d286bba283a3b9766da7f12820c2e2",
+    "sha256": "764e272c158358dd222d64d39e9f7a54585146f784e08a561cca797bc48a2523",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Simple%20Expense%20Tracker%20with%20n8n%20Chat%2C%20AI%20Agent%20and%20Google%20Sheets.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

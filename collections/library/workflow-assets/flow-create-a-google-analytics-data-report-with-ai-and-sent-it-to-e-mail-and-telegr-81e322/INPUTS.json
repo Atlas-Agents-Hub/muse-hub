@@ -1,0 +1,36 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-create-a-google-analytics-data-report-with-ai-and-sent-it-to-e-mail-and-telegr-81e322",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-propertyid": null,
+    "step-3-toemail": null,
+    "step-3-fromemail": null,
+    "step-4-chatid": null,
+    "step-5-modelid": null,
+    "step-7-propertyid": null,
+    "step-13-modelid": null
+  },
+  "adapters": {
+    "emailsend": {
+      "connection": null
+    },
+    "googleanalytics": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

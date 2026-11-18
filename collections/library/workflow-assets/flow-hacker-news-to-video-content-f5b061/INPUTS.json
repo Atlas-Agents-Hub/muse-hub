@@ -1,0 +1,59 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-hacker-news-to-video-content-f5b061",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-url": null,
+    "step-11-url": null,
+    "step-11-parameters-0-value": null,
+    "step-12-parameters-0-value": null,
+    "step-16-assignments-0-value": null,
+    "step-17-url": null,
+    "step-20-modelid": null,
+    "step-24-fileid": null,
+    "step-30-url": null,
+    "step-33-url": null,
+    "step-35-url": null,
+    "step-35-parameters-0-value": null,
+    "step-36-parameters-0-value": null,
+    "step-37-url": null,
+    "step-39-modelid": null
+  },
+  "adapters": {
+    "dropbox": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "hackernews": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "linkedin": {
+      "connection": null
+    },
+    "microsoftonedrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "s3": {
+      "connection": null
+    },
+    "twitter": {
+      "connection": null
+    },
+    "youtube": {
+      "connection": null
+    }
+  }
+}

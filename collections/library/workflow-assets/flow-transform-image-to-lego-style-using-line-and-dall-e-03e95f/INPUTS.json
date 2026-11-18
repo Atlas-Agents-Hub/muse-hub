@@ -1,0 +1,23 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-transform-image-to-lego-style-using-line-and-dall-e-03e95f",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-modelid": null,
+    "step-5-url": null,
+    "step-5-jsonheaders-body-authorization": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

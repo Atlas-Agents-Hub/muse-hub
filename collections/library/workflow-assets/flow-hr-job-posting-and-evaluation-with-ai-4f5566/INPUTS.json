@@ -1,0 +1,62 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-hr-job-posting-and-evaluation-with-ai-4f5566",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-options-path": null,
+    "step-2-base": null,
+    "step-2-table": null,
+    "step-3-driveid": null,
+    "step-3-folderid": null,
+    "step-9-base": null,
+    "step-9-table": null,
+    "step-12-base": null,
+    "step-12-table": null,
+    "step-13-base": null,
+    "step-13-table": null,
+    "step-14-base": null,
+    "step-14-table": null,
+    "step-15-modelid": null,
+    "step-17-base": null,
+    "step-17-table": null,
+    "step-18-base": null,
+    "step-18-table": null,
+    "step-19-base": null,
+    "step-19-table": null,
+    "step-20-modelid": null,
+    "step-22-fromemail": null,
+    "step-23-modelid": null,
+    "step-24-calendar": null,
+    "step-25-base": null,
+    "step-25-table": null,
+    "step-26-modelid": null,
+    "step-27-base": null,
+    "step-27-table": null,
+    "step-28-base": null,
+    "step-28-table": null,
+    "step-29-base": null,
+    "step-29-table": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "emailsend": {
+      "connection": null
+    },
+    "googlecalendar": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

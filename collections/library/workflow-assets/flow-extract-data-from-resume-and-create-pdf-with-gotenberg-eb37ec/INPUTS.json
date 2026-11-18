@@ -1,0 +1,24 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-extract-data-from-resume-and-create-pdf-with-gotenberg-eb37ec",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-30-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

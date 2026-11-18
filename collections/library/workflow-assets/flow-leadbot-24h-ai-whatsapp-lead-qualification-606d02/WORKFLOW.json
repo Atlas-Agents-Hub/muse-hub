@@ -1,0 +1,189 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-leadbot-24h-ai-whatsapp-lead-qualification-606d02",
+  "title": "LeadBot 24h - AI WhatsApp Lead Qualification",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "WhatsApp Webhook (WAHA)",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "leadbot-24h",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Normalize & Score Lead",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Normalize incoming WhatsApp payload to standard lead format\nconst msg = records[0].json;\nconst lead = {\n  phone: msg.data?.from || msg.from || '',\n  message: msg.data?.body || msg.body || msg.text || '',\n  name: msg.data?.fromName || msg.data?.name || '',\n  timestamp: new Date().toISOString(),\n  source: 'whatsapp'};\n\n// Simple keyword-based urgency detection (no paid API required)\nconst urgentKeywords = ['preço', 'price', 'comprar', 'buy', 'contratar', 'urgente', 'orçamento', 'demissão', 'demissao', 'folha', 'payroll', 'admissão', 'admissao', 'férias'];\nconst msgLower = (lead.message || '').toLowerCase();\nlead.intent_score = urgentKeywords.some(k => msgLower.includes(k)) ? 9 : 5;\nlead.urgency = lead.intent_score >= 8 ? 'HOT' : 'WARM';\n\nreturn [{ json: lead }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Filter Hot Leads",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Route hot leads to CRM / Google Sheets\nconst lead = records[0].json;\nif (lead.urgency === 'HOT') {\n  return [{ json: lead }];\n}\nreturn [];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Save Lead to Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "sheetId": {
+          "configuration_input": "step-4-sheetid"
+        },
+        "range": "Sheet1!A:E",
+        "columns": {
+          "mappings": [
+            {
+              "toField": "A",
+              "value": {
+                "expression": "{{record.phone}}"
+              },
+              "type": "string"
+            },
+            {
+              "toField": "B",
+              "value": {
+                "expression": "{{record.name}}"
+              },
+              "type": "string"
+            },
+            {
+              "toField": "C",
+              "value": {
+                "expression": "{{record.message}}"
+              },
+              "type": "string"
+            },
+            {
+              "toField": "D",
+              "value": {
+                "expression": "{{record.intent_score}}"
+              },
+              "type": "number"
+            },
+            {
+              "toField": "E",
+              "value": {
+                "expression": "{{record.urgency}}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Notify Sales Team (Slack/Webhook)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": {
+                "expression": "🔥 HOT LEAD from WhatsApp\\nPhone: {{record.phone}}\nName: {{record.name}}\nMessage: {{record.message}}\nIntent Score: {{record.intent_score}}/10\nUrgency: {{record.urgency}}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-sheetid",
+      "purpose": "Select the sheetId for step-4.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://hooks.slack.com/services/{resource}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "WhatsApp/LeadBot 24h - AI WhatsApp Lead Qualification.json",
+    "git_blob": "0a0d7e40f6da53f1db237efa775802544c58a726",
+    "sha256": "d16b289c054545a01b43022024ee8e1789aaf180be4dcdd71aafc0f06fdaee39",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/WhatsApp/LeadBot%2024h%20-%20AI%20WhatsApp%20Lead%20Qualification.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

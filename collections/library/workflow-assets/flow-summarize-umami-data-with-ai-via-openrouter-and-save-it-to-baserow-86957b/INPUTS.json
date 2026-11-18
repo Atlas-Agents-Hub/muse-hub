@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-summarize-umami-data-with-ai-via-openrouter-and-save-it-to-baserow-86957b",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-url": null,
+    "step-10-url": null,
+    "step-11-tableid": null,
+    "step-11-databaseid": null
+  },
+  "adapters": {
+    "baserow": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

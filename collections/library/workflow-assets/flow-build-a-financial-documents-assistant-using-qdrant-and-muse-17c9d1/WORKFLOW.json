@@ -1,0 +1,709 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-build-a-financial-documents-assistant-using-qdrant-and-muse-17c9d1",
+  "title": "Build a Financial Documents Assistant using Qdrant and Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Local File Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "/home/node/host_mount/local_file_search",
+        "events": [
+          "add",
+          "change",
+          "unlink"
+        ],
+        "options": {
+          "awaitWriteFinish": true
+        },
+        "triggerOn": "folder"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "When clicking \"Test workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "Set Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "directory",
+              "type": "string",
+              "value": "/home/node/BankStatements"
+            },
+            {
+              "name": "file_added",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.event === 'add' && record.path || ''}}"
+              }
+            },
+            {
+              "name": "file_changed",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.event === 'change' && record.path || '' }}"
+              }
+            },
+            {
+              "name": "file_deleted",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.event === 'unlink' && record.path || '' }}"
+              }
+            },
+            {
+              "name": "qdrant_collection",
+              "type": "string",
+              "value": "local_file_search"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Read File",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fileSelector": {
+          "expression": "{{ record.file_added }}"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Embeddings Mistral Cloud",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "filter_by_filename",
+                "value": {
+                  "expression": "{{ record.file_location }}"
+                }
+              },
+              {
+                "name": "filter_by_created_month",
+                "value": {
+                  "expression": "{{ current_time.year + '-' + current_time.monthShort }}"
+                }
+              },
+              {
+                "name": "filter_by_created_week",
+                "value": {
+                  "expression": "{{ current_time.year + '-' + current_time.monthShort + '-W' + current_time.weekNumber }}"
+                }
+              }
+            ]
+          }
+        },
+        "jsonData": {
+          "expression": "{{ record.data }}"
+        },
+        "jsonMode": "expressionData"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Prepare Embedding Document",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "type": "string",
+              "value": {
+                "expression": "## file location\n{{ [record.directory, record.fileName].join('/') }}\n## file created\n{{ current_time.toISO() }}\n## file contents\n{{ record.binary.data.data.base64Decode() }}"
+              }
+            },
+            {
+              "name": "file_location",
+              "type": "string",
+              "value": {
+                "expression": "{{ [record.directory, record.fileName].join('/') }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Chat Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-10",
+      "label": "Question and Answer Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {}
+    },
+    {
+      "id": "step-11",
+      "label": "Mistral Cloud Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Vector Store Retriever",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-13",
+      "label": "Embeddings Mistral Cloud1",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Remap for File_Added Flow",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "file_added",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-3\"].record.file_changed }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Search For Existing Point",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "http://qdrant:6333/collections/{{ steps[\"step-3\"].record.qdrant_collection }}/points/scroll"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"filter\": {\n \"must\": [\n {\n \"key\": \"metadata.filter_by_filename\",\n \"match\": {\n \"value\": \"{{ record.file_changed }}\"\n }\n }\n ]\n },\n \"limit\": 1,\n \"with_payload\": false,\n \"with_vector\": false\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Has Existing Point?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.result.points }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Delete Existing Point",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "http://qdrant:6333/collections/{{ steps[\"step-3\"].record.qdrant_collection }}/points/delete"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "points",
+              "value": {
+                "expression": "{{ record.result.points.map(point => point.id) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Search For Existing Point1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "http://qdrant:6333/collections/{{ steps[\"step-3\"].record.qdrant_collection }}/points/scroll"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"filter\": {\n \"must\": [\n {\n \"key\": \"metadata.filter_by_filename\",\n \"match\": {\n \"value\": \"{{ record.file_changed }}\"\n }\n }\n ]\n },\n \"limit\": 1,\n \"with_payload\": false,\n \"with_vector\": false\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Has Existing Point?1",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.result.points }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Delete Existing Point1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "http://qdrant:6333/collections/{{ steps[\"step-3\"].record.qdrant_collection }}/points/delete"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "points",
+              "value": {
+                "expression": "{{ record.result.points.map(point => point.id) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Handle File Event",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "file_deleted",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.file_deleted }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "file_changed",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.file_changed }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "file_added",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.file_added }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Qdrant Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "qdrantCollection": {
+          "expression": "{{ steps[\"step-3\"].record.qdrant_collection }}"
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Qdrant Vector Store1",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "qdrantCollection": {
+          "configuration_input": "step-23-qdrantcollection"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-22",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-12",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-10",
+      "channel": "retriever",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-22",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-23",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-20",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-2",
+    "step-9"
+  ],
+  "configuration": [
+    {
+      "id": "step-23-qdrantcollection",
+      "purpose": "Select the qdrantCollection for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Build a Financial Documents Assistant using Qdrant and Mistral.ai.json",
+    "git_blob": "1176f42f22f5ca40687d7a51b223ae7951d401fc",
+    "sha256": "653d13c08c95237f8db3c8c846ae6047b633a20a711fe3cd2bd16b807f31965f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Build%20a%20Financial%20Documents%20Assistant%20using%20Qdrant%20and%20Mistral.ai.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

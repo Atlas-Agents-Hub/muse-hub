@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-extract-validate-and-post-supplier-invoices-with-ai-and-route-exceptions-for-r-755751",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-value": null,
+    "step-15-assignments-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

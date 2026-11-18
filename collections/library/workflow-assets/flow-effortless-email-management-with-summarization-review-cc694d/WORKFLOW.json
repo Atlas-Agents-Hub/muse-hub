@@ -1,0 +1,599 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-effortless-email-management-with-summarization-review-cc694d",
+  "title": "Effortless Email Management with Summarization & Review",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Email Trigger (IMAP)",
+      "operation": "service-read",
+      "adapter": "emailreadimap",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Markdown",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.textHtml }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Send Email",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "{{ steps[\"step-11\"].record.email }}"
+        },
+        "options": {},
+        "subject": {
+          "expression": "Re: {{ steps[\"step-1\"].record.subject }}"
+        },
+        "toEmail": {
+          "expression": "{{ steps[\"step-1\"].record.from }}"
+        },
+        "fromEmail": {
+          "expression": "{{ steps[\"step-1\"].record.to }}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Qdrant Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "options": {},
+        "toolName": "company_knowladge_base",
+        "toolDescription": "Extracts information regarding the request made.",
+        "qdrantCollection": {
+          "expression": "COLLECTION"
+        },
+        "includeDocumentMetadata": false
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Email Summarization Chain",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "binaryDataKey": {
+            "expression": "{{ record.data }}"
+          },
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "prompt": {
+                "expression": "Write a concise summary of the following in max 100 words:\n\n\"{{ record.data }}\"\n\nDo not enter the total number of words used."
+              },
+              "combineMapPrompt": {
+                "expression": "Write a concise summary of the following in max 100 words:\n\n\"{{ record.data }}\"\n\nDo not enter the total number of words used."
+              }
+            }
+          }
+        },
+        "operationMode": "nodeInputBinary"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Write email",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Write the text to reply to the following email:\n\n{{ record.response.text }}"
+        },
+        "options": {
+          "systemMessage": "You are an expert at answering emails. You need to answer them professionally based on the information you have. This is a business email. Be concise and never exceed 100 words. Only the body of the email, not create the subject"
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Gmail",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "configuration_input": "step-9-sendto"
+        },
+        "message": {
+          "expression": "<h3>MESSAGE</h3>\n{{ steps[\"step-1\"].record.textHtml }}\n\n<h3>AI RESPONSE</h3>\n{{ record.email }}"
+        },
+        "options": {},
+        "subject": {
+          "expression": "[Approval Required] {{ steps[\"step-1\"].record.subject }}"
+        },
+        "operation": "sendAndWait",
+        "responseType": "freeText"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Text Classifier",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemPromptTemplate": "Please classify the text provided by the user into one of the following categories: {categories}, and use the provided formatting instructions below. Don't explain, and only output the json."
+        },
+        "inputText": {
+          "expression": "{{ record.data.text }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "Approved",
+              "description": "The email has been reviewed and accepted as-is. The human explicitly or implicity express approva, indicating that no changes ar needed.\n\nExample:\n\"Ok\",\n\"Approvato\",\n\"Invia\""
+            },
+            {
+              "category": "Declined",
+              "description": "The email has been reviewd, but the human request modifications before it sent link tweaks, removing parts, rewording etc... This could include suggested edits, rewording or major revision."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Edit Fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-13",
+      "label": "Create collection",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-13-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "json": {
+            "filter": {}
+          }
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Refresh collection",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-14-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "json": {
+            "filter": {}
+          }
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Get folder",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "filter": {
+          "driveId": {
+            "configuration_input": "step-15-filter-driveid"
+          },
+          "folderId": {
+            "expression": "test-whatsapp"
+          }
+        },
+        "options": {},
+        "resource": "fileFolder"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Download Files",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.id }}"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        },
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "dataType": "binary"
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Token Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "chunkSize": 300,
+        "chunkOverlap": 30
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Qdrant Vector Store1",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "qdrantCollection": {
+          "expression": "COLLECTION"
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Embeddings OpenAI1",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Email Reviewer",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Review at the following email:\n{{ steps[\"step-11\"].record.email }}\n\nFeedback from human:\n{{ record.data.text }}"
+        },
+        "options": {
+          "systemMessage": "If you are an expert in reviewing emails before sending them. You need to review and structure them in such a way that you can send them. It must be in HTML format and you can insert (if you think it is appropriate) only HTML characters such as <br>, <b>, <i>, <p> where necessary. Be concise and never exceed 100 words. Only the body of the email"
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-22",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-17",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-19",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-19",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-22",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-12"
+  ],
+  "configuration": [
+    {
+      "id": "step-9-sendto",
+      "purpose": "Select the sendTo for step-9.",
+      "required": true
+    },
+    {
+      "id": "step-13-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://qdranturl/collections/COLLECTION"
+    },
+    {
+      "id": "step-14-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://qdranturl/collections/COLLECTION/points/delete"
+    },
+    {
+      "id": "step-15-filter-driveid",
+      "purpose": "Select the filter / driveId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Effortless Email Management with AI-Powered Summarization & Review.json",
+    "git_blob": "9a1d8c35835bbe444881139e17700f33968dccea",
+    "sha256": "21fc561c24a43ef537981e005281cd1b1e75de140ac753b07efef218a1640ab8",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Effortless%20Email%20Management%20with%20AI-Powered%20Summarization%20%26%20Review.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-extract-text-from-pdf-and-image-using-vertex-ai-muse-into-csv-29e5d3",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-foldertowatch": null,
+    "step-7-url": null,
+    "step-9-driveid": null,
+    "step-9-folderid": null,
+    "step-11-driveid": null,
+    "step-11-folderid": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

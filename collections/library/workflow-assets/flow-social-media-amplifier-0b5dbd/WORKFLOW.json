@@ -1,0 +1,852 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-social-media-amplifier-0b5dbd",
+  "title": "Social Media Amplifier",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Crawl HN Home",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-1-url"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Extract Meta",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "# Import necessary modules\nimport asyncio\nimport micropip\n\n# Define an asynchronous function to install packages\nasync def install_packages():\n await micropip.install(\"beautifulsoup4\")\n await micropip.install(\"simplejson\")\n\n# Run the asynchronous package installation\nasyncio.get_event_loop().run_until_complete(install_packages())\n\n# Now, import the installed packages\nimport simplejson as json\nfrom bs4 import BeautifulSoup\n\n# Retrieve the HTML content from the first item in the input\n# Assuming n8n passes data as a list of items, each with a 'json' key\nhtml_content = items[0].get('json', {}).get('data', '')\n\n# Initialize BeautifulSoup with the HTML content\nsoup = BeautifulSoup(html_content, 'html.parser')\n\n# Initialize a list to store metadata of GitHub posts\ngithub_posts = []\n\n# Find all 'tr' elements with class 'athing submission'\nposts = soup.find_all('tr', class_='athing submission')\n\nfor post in posts:\n post_id = post.get('id')\n title_line = post.find('span', class_='titleline')\n if not title_line:\n continue # Skip if titleline is not found\n\n # Extract the title and URL\n title_tag = title_line.find('a')\n if not title_tag:\n continue # Skip if title tag is not found\n\n title = title_tag.get_text(strip=True)\n url = title_tag.get('href', '')\n\n # Check if the URL is a GitHub link\n if 'github.com' not in url.lower():\n continue # Skip if not a GitHub link\n\n # Extract the site domain (e.g., github.com/username/repo)\n site_bit = title_line.find('span', class_='sitebit comhead')\n site = site_bit.find('span', class_='sitestr').get_text(strip=True) if site_bit else ''\n\n # The subtext is in the next 'tr' element\n subtext_tr = post.find_next_sibling('tr')\n if not subtext_tr:\n continue # Skip if subtext row is not found\n\n subtext_td = subtext_tr.find('td', class_='subtext')\n if not subtext_td:\n continue # Skip if subtext td is not found\n\n # Extract score\n score_span = subtext_td.find('span', class_='score')\n score = score_span.get_text(strip=True) if score_span else '0 points'\n\n # Extract author\n author_a = subtext_td.find('a', class_='hnuser')\n author = author_a.get_text(strip=True) if author_a else 'unknown'\n\n # Extract age\n age_span = subtext_td.find('span', class_='age')\n age_a = age_span.find('a') if age_span else None\n age = age_a.get_text(strip=True) if age_a else 'unknown'\n\n # Extract comments\n comments_a = subtext_td.find_all('a')[-1] if subtext_td.find_all('a') else None\n comments_text = comments_a.get_text(strip=True) if comments_a else '0 comments'\n\n # Construct the Hacker News URL\n hn_url = f\"https://news.ycombinator.com/item?id={post_id}\"\n\n # Compile the metadata\n post_metadata = {\n 'Post': post_id,\n 'title': title,\n 'url': url,\n 'site': site,\n 'score': score,\n 'author': author,\n 'age': age,\n 'comments': comments_text,\n 'hn_url': hn_url\n }\n\n # Append to the list of GitHub posts\n github_posts.append(post_metadata)\n\n# Prepare the output for n8n\noutput = [{'json': post} for post in github_posts]\n\n# Return the output\nreturn output",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Filter Unposted Items",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const items = [];\n\n// Step 1: Collect all Post IDs from input1 items (those with 'id')\nconst processedPosts = new Set(\n records\n .filter(item => item.json.id)\n .map(item => item.json.Post)\n);\n\n// Step 2: Iterate over all items and filter out duplicates\nfor (const item of records) {\n \n // Only process items without 'id' (input2 items)\n if(!item.json.id){\n \n // Check if the Post ID is already processed\n if(!processedPosts.has(item.json.Post) && item.json.Post!=undefined){\n items.push(item);\n }\n }\n}\n\nreturn items;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Visit GH Page",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.url }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Convert HTML To Markdown",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.data }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Filter Errored",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.error }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "No Operation, do nothing",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-8",
+      "label": "Update X Status",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-8-base"
+        },
+        "table": {
+          "configuration_input": "step-8-table"
+        },
+        "columns": {
+          "value": {
+            "TDone": true
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Post",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Tweet",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "LinkedIn",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "boolean",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "TDone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "boolean",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "LDone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ]
+        },
+        "options": {
+          "typecast": true
+        },
+        "operation": "update"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "LinkedIn",
+      "operation": "service-write",
+      "adapter": "linkedin",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-6\"].record.message.content.linkedin }}"
+        },
+        "person": "afi4Hy9wlI",
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Update L Status",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-10-base"
+        },
+        "table": {
+          "configuration_input": "step-10-table"
+        },
+        "columns": {
+          "value": {
+            "LDone": true
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Post",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Tweet",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "LinkedIn",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "boolean",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "TDone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "boolean",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "LDone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ]
+        },
+        "options": {
+          "typecast": true
+        },
+        "operation": "update"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Search Item",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-11-base"
+        },
+        "table": {
+          "configuration_input": "step-11-table"
+        },
+        "options": {
+          "fields": [
+            "Title",
+            "Url",
+            "Tweet",
+            "Date",
+            "Post"
+          ]
+        },
+        "operation": "search",
+        "filterByFormula": {
+          "expression": "{Post}= {{ record.Post }}"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Create Item",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-12-base"
+        },
+        "table": {
+          "configuration_input": "step-12-table"
+        },
+        "columns": {
+          "value": {
+            "Url": {
+              "expression": "{{ steps[\"step-3\"].record.url }}"
+            },
+            "Post": {
+              "expression": "{{ steps[\"step-3\"].record.Post }}"
+            },
+            "Title": {
+              "expression": "{{ steps[\"step-3\"].record.title }}"
+            },
+            "Tweet": {
+              "expression": "{{ record.message.content.twitter }}"
+            },
+            "LinkedIn": {
+              "expression": "{{ record.message.content.linkedin }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Post",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Tweet",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "LinkedIn",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "create"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Apply the requested service update",
+      "operation": "service-write",
+      "adapter": "twitter",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-6\"].record.message.content.twitter }}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Validate Generate Content",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "if (record.message.content.twitter && record.message.content.linkedin) {\n \n return record;\n} else {\n\n const parsedContent = JSON.parse(record.message.content);\n if (record.message.content.twitter && record.message.content.linkedin) {\n return parsedContent;\n }\n\n console.log(\"Invalid formatting\")\n return {}\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-17",
+      "label": "Generate Content",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-17-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI-powered social media assistant specialized in crafting short-form, engaging posts for Twitter and LinkedIn. Your tone should blend the enthusiasm of a Tech Evangelist with the narrative depth of a Storyteller. The goal is to highlight technological and open-source projects in a friendly, forward-thinking manner, connecting them to real-world use cases. \n\nGuidelines:\n1. Output must be in JSON with separate fields for “twitter” and “linkedin.”\n2. Do not include emojis or marketing buzzwords (“cutting-edge,” “disruptive,” etc.).\n3. Write naturally and concisely. Avoid overly formal or robotic language.\n4. Twitter posts must be under 280 characters (including spaces and URL).\n5. LinkedIn posts should be slightly longer, yet still succinct, and focus on storytelling and real-world applications.\n6. Provide a single call-to-action in each post.\n7. Do not imply ownership of the project unless explicitly stated.\n8. Maintain a professional yet approachable tone in both outputs.\n"
+            },
+            {
+              "content": {
+                "expression": "Using the following details, generate two posts—one for Twitter and one for LinkedIn—incorporating an enthusiastic yet narrative-driven style:\n\nTitle: {{ steps[\"step-3\"].record.title }}\nDetails in markdown: {{ record.data }}\nRepository Link: {{ steps[\"step-3\"].record.url }} (this is the actual link you want to be inserted)\n\nConstraints:\n- No emojis.\n- Keep the Twitter post under 280 characters (including the link).\n- Use a friendly, forward-thinking tone that weaves in a short narrative where possible.\n- Highlight how the project solves a real problem or benefits the user.\n- End each post with one clear CTA (e.g., “Check it out!” or “Learn more.”).\n- **Ensure the tone is neutral and does not imply personal involvement** (e.g., avoid phrases like \"my journey\" or \"I found it fascinating\").\n- **LinkedIn post should be more detailed**: Provide context, explain the key features, highlight how it can be useful to different audiences, and elaborate on the problem it solves or the impact it can have.\n- Output your response in JSON with the structure:\n```json\n{\n \"twitter\": \"Your Twitter post here\",\n \"linkedin\": \"Your LinkedIn post here\"\n}"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Ping Me",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "Hi There, here is your readymade tweet - \n\n {{ record.fields.Tweet }}\n\nAnd your readymade LinkedIn post -\n\n {{ record.fields.LinkedIn }}"
+        },
+        "chatId": {
+          "configuration_input": "step-18-chatid"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Wait for 5 mins before posting",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "unit": "minutes"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-13",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-15"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://news.ycombinator.com/"
+    },
+    {
+      "id": "step-8-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-chatid",
+      "purpose": "Select the chatId for step-18.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI-Powered Social Media Amplifier.json",
+    "git_blob": "f5acf12a3b0b5d389140b7538120954851268dcb",
+    "sha256": "6aff0ac21c1b44f958279740bbedd3dc20919e9ca9c6c2f1662178a563e9e5b8",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI-Powered%20Social%20Media%20Amplifier.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

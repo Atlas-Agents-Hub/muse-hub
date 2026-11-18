@@ -1,0 +1,444 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-upsert-huge-documents-in-a-vector-store-with-supabase-and-notion-7fbd53",
+  "title": "Upsert huge documents in a vector store with Supabase and Notion",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Token Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "chunkSize": 500
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Question and Answer Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Vector Store Retriever",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Limit",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-10",
+      "label": "Limit1",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-11",
+      "label": "Delete old embeddings if exist",
+      "operation": "service-write",
+      "adapter": "supabase",
+      "parameters": {
+        "tableId": {
+          "configuration_input": "step-11-tableid"
+        },
+        "operation": "delete",
+        "filterType": "string",
+        "filterString": {
+          "expression": "metadata->>id=eq.{{ steps[\"step-14\"].record.id }}"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Get page blocks",
+      "operation": "service-read",
+      "adapter": "notion",
+      "parameters": {
+        "blockId": {
+          "expression": "{{ steps[\"step-14\"].record.id }}"
+        },
+        "resource": "block",
+        "operation": "getAll",
+        "returnAll": true,
+        "fetchNestedBlocks": true
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": {
+                  "expression": "{{ steps[\"step-14\"].record.id }}"
+                }
+              },
+              {
+                "name": "name",
+                "value": {
+                  "expression": "{{ steps[\"step-14\"].record.name }}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Input Reference",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-15",
+      "label": "Notion Trigger",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Get updated pages",
+      "operation": "service-read",
+      "adapter": "notion",
+      "parameters": {
+        "filters": {
+          "conditions": [
+            {
+              "key": "Last edited time|last_edited_time",
+              "condition": "equals",
+              "lastEditedTime": {
+                "expression": "{{ current_time.minus(1, 'minutes').toISO() }}"
+              }
+            }
+          ]
+        },
+        "options": {},
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "configuration_input": "step-16-databaseid"
+        },
+        "filterType": "manual"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Supabase Vector Store1",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {},
+        "tableName": {
+          "configuration_input": "step-17-tablename"
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Supabase Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "tableName": {
+          "configuration_input": "step-18-tablename"
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Concatenate to single string",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "field": "content",
+              "separateBy": "\n",
+              "aggregation": "concatenate"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-13",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-18",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-17",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-18",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-5",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "retriever",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-3",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-7",
+    "step-8"
+  ],
+  "configuration": [
+    {
+      "id": "step-11-tableid",
+      "purpose": "Select the tableId for step-11.",
+      "required": true
+    },
+    {
+      "id": "step-16-databaseid",
+      "purpose": "Select the databaseId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-tablename",
+      "purpose": "Select the tableName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-tablename",
+      "purpose": "Select the tableName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Notion/Upsert huge documents in a vector store with Supabase and Notion.json",
+    "git_blob": "0973334df97b7932d031c7cc5bb82b0a12554340",
+    "sha256": "eeb2c35dab9a4fe603f929d316b0de319fe0f718cdc97abb0abc36687963cf70",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Notion/Upsert%20huge%20documents%20in%20a%20vector%20store%20with%20Supabase%20and%20Notion.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

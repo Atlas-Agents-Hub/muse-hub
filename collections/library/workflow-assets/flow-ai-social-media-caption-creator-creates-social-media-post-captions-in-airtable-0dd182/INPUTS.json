@@ -1,0 +1,31 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-social-media-caption-creator-creates-social-media-post-captions-in-airtable-0dd182",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-base": null,
+    "step-4-table": null,
+    "step-7-base": null,
+    "step-7-table": null,
+    "step-8-baseid": null,
+    "step-8-tableid": null,
+    "step-9-base": null,
+    "step-9-table": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-komos-regulated-browser-ops-task-queue-60403f",
+  "title": "Komos Regulated Browser Ops Task Queue",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking 'Test workflow'",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Build Regulated Ops Payload",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "task_id",
+              "value": {
+                "expression": "{{ $env.KOMOS_TASK_ID || 'replace-with-komos-task-id' }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "case_id",
+              "value": "CRA-DEMO-001",
+              "type": "string"
+            },
+            {
+              "name": "workflow_type",
+              "value": {
+                "configuration_input": "step-2-assignments-2-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "industry",
+              "value": "background_screening",
+              "type": "string"
+            },
+            {
+              "name": "applicant_name",
+              "value": "Example Applicant",
+              "type": "string"
+            },
+            {
+              "name": "portal_url",
+              "value": {
+                "configuration_input": "step-2-assignments-5-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "review_required",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Queue Komos Task Run",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ 'https://api.komos.ai/public/v1/tasks/' + ($env.KOMOS_TASK_ID || record.task_id) + '/runs' }}"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-3-parameters-0-value"
+              }
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{\n  \"clientRequestId\": \"n8n-{{ record.case_id }}-{{ Date.now() }}\",\n  \"inputs\": {\n    \"case_id\": \"{{ record.case_id }}\",\n    \"workflow_type\": \"{{ record.workflow_type }}\",\n    \"applicant_name\": \"{{ record.applicant_name }}\",\n    \"portal_url\": \"{{ record.portal_url }}\",\n    \"review_required\": {{ record.review_required }}\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"use_case\": \"regulated_browser_operations\",\n    \"industry\": \"{{ record.industry }}\"\n  }\n}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Format Queue Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "status",
+              "value": "queued",
+              "type": "string"
+            },
+            {
+              "name": "komos_response",
+              "value": {
+                "expression": "{{ record }}"
+              },
+              "type": "object"
+            },
+            {
+              "name": "next_step",
+              "value": "Review the Komos run history for browser actions, logs, and any human approval checkpoint.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-2-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-assignments-5-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://example-portal.local/cases/CRA-DEMO-001"
+    },
+    {
+      "id": "step-3-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Komos Regulated Browser Ops Task Queue.json",
+    "git_blob": "67acd6e99f96cccdc7011ebf9d8c42c96a53e9a3",
+    "sha256": "bba07f9c55cba620677723ca9c8ff9b678334cb015ae2db9dd0f167d9f4849f4",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Komos%20Regulated%20Browser%20Ops%20Task%20Queue.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,1182 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-hacker-news-to-video-content-f5b061",
+  "title": "Hacker News to Video Content",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Hacker News",
+      "operation": "service-read",
+      "adapter": "hackernews",
+      "parameters": {
+        "resource": "all",
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Model Chat Model3",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "HTTP Request1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.url }}"
+        },
+        "toolDescription": "grab the article for the ai agent to use"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "summary": {
+                "type": "string"
+              },
+              "related": {
+                "type": "string"
+              },
+              "image urls": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Upload to Minio",
+      "operation": "service-write",
+      "adapter": "s3",
+      "parameters": {
+        "operation": "upload",
+        "bucketName": {
+          "expression": ""
+        },
+        "additionalFields": {
+          "grantRead": true,
+          "parentFolderKey": {
+            "expression": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "News1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "property_name",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.message.content['Article Title'] }}"
+              }
+            },
+            {
+              "name": "property_text",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.message.content['Article Blurb'] }}"
+              }
+            },
+            {
+              "name": "property_image_url",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-14\"].record.output['image urls'] }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Leo - Improve Prompt",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-9-url"
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "jsonBody": {
+          "expression": "{\n \"prompt\": \"{{ steps[\"step-39\"].record.message.content['Image Prompt 1'] }}\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Leo - Get imageId",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://cloud.leonardo.ai/api/rest/v1/generations/{{ record.body.sdGenerationJob.generationId }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Runway - Create Video",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-11-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "promptImage",
+              "value": {
+                "expression": "{{ record.body.generations_by_pk.generated_images[0].url }}"
+              }
+            },
+            {
+              "name": "promptText",
+              "value": "string"
+            },
+            {
+              "name": "model",
+              "value": "gen3a_turbo"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Runway-Version",
+              "value": {
+                "configuration_input": "step-11-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Runway - Get Video",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.dev.runwayml.com/v1/tasks/{{ record.id }}"
+        },
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Runway-Version",
+              "value": {
+                "configuration_input": "step-12-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Wait2",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "unit": "minutes",
+        "amount": 3
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "If Topic",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.output.related }}"
+              },
+              "rightValue": "yes"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Get Image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].output['image urls'] }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Prompt Settings1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "model",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-16-assignments-0-value"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Leo - Generate Image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-17-url"
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "jsonBody": {
+          "expression": "{\n \"alchemy\": true,\n \"width\": 1024,\n \"height\": 768,\n \"modelId\": \"6b645e3a-d64f-4341-a6d8-7a3690fbf042\",\n \"num_images\": 1,\n \"presetStyle\": \"MONOCHROME\",\n \"prompt\": \"{{ record.body.promptGeneration.prompt }}; Use the rule of thirds, leading lines, & balance. DO NOT INCLUDE ANY WORDS OR LABELS.\",\n \"guidance_scale\": 7,\n \"highResolution\": true,\n \"promptMagic\": false,\n \"promptMagicStrength\": 0.5,\n \"promptMagicVersion\": \"v3\",\n \"public\": false,\n \"ultra\": false,\n \"photoReal\": false,\n \"negative_prompt\": \"\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Wait1",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 30
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Limit",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {
+        "keep": "lastItems",
+        "maxItems": 50
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Image Analysis",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-20-modelid"
+        },
+        "options": {
+          "detail": "auto"
+        },
+        "resource": "image",
+        "imageUrls": {
+          "expression": "{{ record.output['image urls'] }}"
+        },
+        "operation": "analyze"
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Wait3",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Article Analysis",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Can you tell me if the article at {{ record.url }} is related to automation or ai? \n\nthen, create a 250 word summary of the article\n\nAlso, list any image url's related to the article content from the url. Limit to 1 image url."
+        },
+        "options": {
+          "systemMessage": "You are a helpful assistant in summarizing and identifying articles related to automation and ai. \nOutput the results as:\nsummary: \nrelated: yes or no\nimage urls: "
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Dropbox",
+      "operation": "service-read",
+      "adapter": "dropbox",
+      "parameters": {}
+    },
+    {
+      "id": "step-24",
+      "label": "Google Drive",
+      "operation": "service-write",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "configuration_input": "step-24-fileid"
+        },
+        "options": {},
+        "operation": "update"
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Microsoft OneDrive",
+      "operation": "service-read",
+      "adapter": "microsoftonedrive",
+      "parameters": {}
+    },
+    {
+      "id": "step-26",
+      "label": "YouTube",
+      "operation": "service-write",
+      "adapter": "youtube",
+      "parameters": {
+        "options": {},
+        "resource": "video",
+        "operation": "upload"
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Apply the requested service update",
+      "operation": "service-write",
+      "adapter": "twitter",
+      "parameters": {
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Instagram",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "LinkedIn",
+      "operation": "service-write",
+      "adapter": "linkedin",
+      "parameters": {
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "Leo - Improve Prompt2",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-30-url"
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "jsonBody": {
+          "expression": "{\n \"prompt\": \"{{ steps[\"step-39\"].record.message.content['Image Prompt 2'] }}\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-31",
+      "label": "Wait4",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "unit": "minutes",
+        "amount": 3
+      }
+    },
+    {
+      "id": "step-32",
+      "label": "Wait6",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 30
+      }
+    },
+    {
+      "id": "step-33",
+      "label": "Leo - Generate Image2",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-33-url"
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "jsonBody": {
+          "expression": "{\n \"alchemy\": true,\n \"width\": 1024,\n \"height\": 768,\n \"modelId\": \"6b645e3a-d64f-4341-a6d8-7a3690fbf042\",\n \"num_images\": 1,\n \"presetStyle\": \"MONOCHROME\",\n \"prompt\": \"{{ record.body.promptGeneration.prompt }}; Use the rule of thirds, leading lines, & balance. DO NOT INCLUDE ANY WORDS OR LABELS.\",\n \"guidance_scale\": 7,\n \"highResolution\": true,\n \"promptMagic\": false,\n \"promptMagicStrength\": 0.5,\n \"promptMagicVersion\": \"v3\",\n \"public\": false,\n \"ultra\": false,\n \"photoReal\": false,\n \"negative_prompt\": \"\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-34",
+      "label": "Leo - Get imageId2",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://cloud.leonardo.ai/api/rest/v1/generations/{{ record.body.sdGenerationJob.generationId }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-35",
+      "label": "Runway - Create Video2",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-35-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "promptImage",
+              "value": {
+                "expression": "{{ record.body.generations_by_pk.generated_images[0].url }}"
+              }
+            },
+            {
+              "name": "promptText",
+              "value": "string"
+            },
+            {
+              "name": "model",
+              "value": "gen3a_turbo"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Runway-Version",
+              "value": {
+                "configuration_input": "step-35-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-36",
+      "label": "Runway - Get Video2",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.dev.runwayml.com/v1/tasks/{{ record.id }}"
+        },
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Runway-Version",
+              "value": {
+                "configuration_input": "step-36-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-37",
+      "label": "Cre - Generate Video1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-37-url"
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "jsonBody": {
+          "expression": "{\n \"max_width\": 480,\n \"template_id\": \"enterTemplateID\",\n \"modifications\": {\n \"Scenes.elements\": [\n {\n \"name\": \"Intro Comp\",\n \"type\": \"composition\",\n \"track\": 1,\n \"elements\": [\n {\n \"name\": \"Image-1\",\n \"type\": \"image\",\n \"source\": \"{{ steps[\"step-10\"].record.body.generations_by_pk.generated_images[0].url }}\"\n },\n {\n \"name\": \"Subtitles-1\",\n \"type\": \"text\",\n \"transcript_source\": \"Voiceover-1\",\n \"width\": \"86.66%\",\n \"height\": \"37.71%\",\n \"x_alignment\": \"50%\",\n \"y_alignment\": \"50%\",\n \"fill_color\": \"#ffffff\",\n \"stroke_color\": \"#333333\",\n \"stroke_width\": \"1.05 vmin\",\n \"font_family\": \"Inter\",\n \"font_weight\": \"700\",\n \"font_size\": \"8 vmin\",\n \"background_color\": \"rgba(255,255,255,0.2)\",\n \"background_x_padding\": \"26%\",\n \"background_y_padding\": \"7%\",\n \"background_border_radius\": \"28%\",\n \"transcript_effect\": \"highlight\",\n \"transcript_color\": \"#ff5900\"\n },\n {\n \"name\": \"Voiceover-1\",\n \"type\": \"audio\",\n \"source\": \"{{ steps[\"step-8\"].record.property_name }}\",\n \"provider\": \"openai model=tts-1 voice=onyx\"\n }\n ]\n },\n {\n \"name\": \"Auto Scene Comp\",\n \"type\": \"composition\",\n \"track\": 1,\n \"elements\": [\n {\n \"name\": \"Video-2\",\n \"type\": \"video\",\n \"source\": \"{{ steps[\"step-12\"].records[0].output[0] }}\",\n \"loop\": true\n },\n {\n \"name\": \"Subtitles-2\",\n \"type\": \"text\",\n \"transcript_source\": \"Voiceover-2\",\n \"y\": \"78.2173%\",\n \"width\": \"86.66%\",\n \"height\": \"37.71%\",\n \"x_alignment\": \"50%\",\n \"y_alignment\": \"50%\",\n \"fill_color\": \"#ffffff\",\n \"stroke_color\": \"#333333\",\n \"stroke_width\": \"1.05 vmin\",\n \"font_family\": \"Inter\",\n \"font_weight\": \"700\",\n \"font_size\": \"8 vmin\",\n \"background_color\": \"rgba(255,255,255,0.2)\",\n \"background_x_padding\": \"26%\",\n \"background_y_padding\": \"7%\",\n \"background_border_radius\": \"28%\",\n \"transcript_effect\": \"highlight\",\n \"transcript_color\": \"#ff5900\"\n },\n {\n \"name\": \"Voiceover-2\",\n \"type\": \"audio\",\n \"source\": \"{{ steps[\"step-39\"].record.message.content['Summary Blurb 1'] }}\",\n \"provider\": \"openai model=tts-1 voice=onyx\"\n }\n ]\n },\n {\n \"name\": \"Auto Scene Comp\",\n \"type\": \"composition\",\n \"track\": 1,\n \"elements\": [\n {\n \"name\": \"Video-3\",\n \"type\": \"video\",\n \"source\": \"{{ steps[\"step-36\"].records[0].output[0] }}\",\n \"loop\": true\n },\n {\n \"name\": \"Subtitles-3\",\n \"type\": \"text\",\n \"transcript_source\": \"Voiceover-3\",\n \"y\": \"78.2173%\",\n \"width\": \"86.66%\",\n \"height\": \"37.71%\",\n \"x_alignment\": \"50%\",\n \"y_alignment\": \"50%\",\n \"fill_color\": \"#ffffff\",\n \"stroke_color\": \"#333333\",\n \"stroke_width\": \"1.05 vmin\",\n \"font_family\": \"Inter\",\n \"font_weight\": \"700\",\n \"font_size\": \"8 vmin\",\n \"background_color\": \"rgba(255,89,0,0.5)\",\n \"background_x_padding\": \"26%\",\n \"background_y_padding\": \"7%\",\n \"background_border_radius\": \"28%\",\n \"transcript_effect\": \"highlight\",\n \"transcript_color\": \"#ff0040\"\n },\n {\n \"name\": \"Voiceover-3\",\n \"type\": \"audio\",\n \"source\": \"{{ steps[\"step-39\"].record.message.content['Summary Blurb 2'] }}\",\n \"provider\": \"openai model=tts-1 voice=onyx\"\n }\n ]\n }\n ]\n }\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-38",
+      "label": "Cre - Get Video",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.creatomate.com/v1/renders/{{ record.body.body[0].id }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-39",
+      "label": "Article Prep",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-39-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "prepare the following summary for a newsletter where the article will be 1 of several presented in the newsletter:\n\n{{ steps[\"step-22\"].records[0].output.summary }}\n\nMake sure the Article Blurb lenght is less than 15 words.\n\nThen, create 2 Summary Blurbs, making sure each is less than 15 words.\n\nAlso create 2 image prompts that is less than 15 words long for each Summary Blurb"
+              }
+            },
+            {
+              "role": "system",
+              "content": "Output in markdown format\nArticle Title\nArticle Blurb\nSummary Blurb 1\nSummary Blurb 2\nArticle Image\nImage Prompt 1\nImage Prompt 2"
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-27",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-38",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-31",
+      "to": "step-36",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-32",
+      "to": "step-34",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-28",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-39",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-39",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-22",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-34",
+      "to": "step-35",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-22",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-36",
+      "to": "step-37",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-37",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-33",
+      "to": "step-32",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-30",
+      "to": "step-33",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-35",
+      "to": "step-31",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-22",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-39",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-39",
+      "to": "step-30",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-37",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-37",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-39",
+      "to": "step-37",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-37",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-39",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-3",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-9-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://cloud.leonardo.ai/api/rest/v1/prompt/improve"
+    },
+    {
+      "id": "step-11-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.dev.runwayml.com/v1/image_to_video"
+    },
+    {
+      "id": "step-11-parameters-0-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    },
+    {
+      "id": "step-12-parameters-0-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    },
+    {
+      "id": "step-16-assignments-0-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://cloud.leonardo.ai/api/rest/v1/generations"
+    },
+    {
+      "id": "step-20-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-24-fileid",
+      "purpose": "Select the fileId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-30-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://cloud.leonardo.ai/api/rest/v1/prompt/improve"
+    },
+    {
+      "id": "step-33-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://cloud.leonardo.ai/api/rest/v1/generations"
+    },
+    {
+      "id": "step-35-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.dev.runwayml.com/v1/image_to_video"
+    },
+    {
+      "id": "step-35-parameters-0-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    },
+    {
+      "id": "step-36-parameters-0-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    },
+    {
+      "id": "step-37-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.creatomate.com/v1/renders"
+    },
+    {
+      "id": "step-39-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Hacker News to Video Content.json",
+    "git_blob": "ef61f0f8d658136582097fa5a8be8bbb799774a6",
+    "sha256": "40a39040dcd7c1cefd06ec2f200a4572c8801d11b2558d5d54f7a9608f670035",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Hacker%20News%20to%20Video%20Content.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

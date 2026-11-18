@@ -1,0 +1,1154 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-information-from-a-logo-sheet-using-forms-ai-google-sheet-and-airtable-92d863",
+  "title": "Extract Information from a Logo Sheet using forms, AI, Google Sheet and Airtable",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On form submission",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "path": "logo-sheet-feeder"
+        },
+        "formTitle": "AI Logo Sheet Feeder",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "file",
+              "fieldLabel": "The Logo-Sheet as Image",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Addional Prompt (e.g.: What the meaning of the graphic?) *optional but helps from time to time.",
+              "placeholder": "It's a graph chart comparing AI Tools"
+            }
+          ]
+        },
+        "formDescription": "Provide a Image with multiple Logos comparing or bringing multiple Tools into Context with one another."
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Retrieve and Parser Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": "Your task is to retrieve Information from the given Input. Extract Categories and Attributes of all given and shown Tools, Softwares or Products you've got by the user.\n\nProvide the Output Array of Tools with the following Structure as JSON:\n\n[{\n\"name\": \"Name of the Tool, Software, etc.\",\n\"attributes\": [\"Some category or attribute\", \"something else you can see from the context or image\"],\n\"similar\": [\"similar tool, product, etc. from shown context\", \"another similar software, product, tool from context\"]\n},{\n\"name\": \"Name of anotherTool, Software, etc.\",\n\"attributes\": [\"Some category, subcategory or general attribute\", \"something else you can see from the context or image\"],\n\"similar\": [\"similar tool, product, etc. from shown context\", \"another similar software, product, tool from context\"]\n}]\n\nList these structure for all the Products you see!\n\nHere a description of the JSON fields:\n\"name\": Just the Name of the Software.\n\"attribute\": Turn any information from the context or image into multiple useful Attributes for this tool. Could be a category, could be a feature, etc. Try to split this information in multiple specific Attributes or Categories.\n\"similar\": if multiple tools are shown that could compare to this one (like on the same level or in the same category), list those here\n\nTake a deep breath and think step by step.\nTry to extract every mentioned tool. There are for sure multiple listed.",
+          "passthroughBinaryImages": true
+        },
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "JSON it",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{ record.output }}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchemaExample": {
+          "json": {
+            "tools": [
+              {
+                "name": "Name of the Tool, Software, etc.",
+                "attributes": [
+                  "Some category or attribute",
+                  "something else you can see from the context or image"
+                ],
+                "similar": [
+                  "similar tool, product, etc. from shown context",
+                  "another similar software, product, tool from context"
+                ]
+              },
+              {
+                "name": "Name of anotherTool, Software, etc.",
+                "attributes": [
+                  "Some category, subcategory or general attribute",
+                  "something else you can see from the context or image"
+                ],
+                "similar": [
+                  "similar tool, product, etc. from shown context",
+                  "another similar software, product, tool from context"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Check if Attribute exists",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-5-base"
+        },
+        "table": {
+          "configuration_input": "step-5-table"
+        },
+        "columns": {
+          "value": {
+            "Name": {
+              "expression": "{{record.attributes}}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Tools",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Name"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Map Attribute ID",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            },
+            {
+              "name": "attribute",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.attributes }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Loop Over Attributes",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "All Attributes",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{ record }}"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Wait for Attribute Creation",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "chooseBranch"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Change each Attribute to the corresponding RecID",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let knownAttributesOutput = steps[\"step-9\"].all();\nlet knownAttributes = new Map();\nknownAttributesOutput.forEach((nodeOutput)=>{\nknownAttributes.set(nodeOutput.json.attribute.toString().trim(), nodeOutput.json.id);\n});\n\n\nfor (const item of records) {\n item.json.attributes.forEach((attribute, index)=>{\n item.json.attributes[index] = knownAttributes.get(attribute.toString().trim());\n });\n}\n\nreturn records;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Split Out Tools",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "tools"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Split Out each Attribute String",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "attributes"
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Generate Unique Hash for Name",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "value": {
+          "expression": "{{ record.name.toLowerCase().trim() }}"
+        },
+        "dataPropertyName": "hash"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Create if not Exist",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-15-base"
+        },
+        "table": {
+          "configuration_input": "step-15-table"
+        },
+        "columns": {
+          "value": {
+            "Hash": {
+              "expression": "{{record.hash}}"
+            },
+            "Name": {
+              "expression": "{{record.name}}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "options": [],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Attributes",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Hash",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Hash"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Merge Old Data + RecID",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "fieldsToMatchString": "hash"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Only what we need",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "hash",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.fields.Hash }}"
+              }
+            },
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            },
+            {
+              "name": "existingAttributes",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.fields.Attributes ? record.fields.Attributes : [] }}"
+              }
+            },
+            {
+              "name": "existingSimilars",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.fields.Similar ? record.fields.Similar : [] }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Determine Attributes we should save",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let savingAttributes = record.json.existingAttributes ? record.json.existingAttributes : [];\nrecord.json.attributes.forEach((attrId)=>{\nif(record.json.existingAttributes.indexOf(attrId) == -1) savingAttributes.push(attrId);\n});\n\nrecord.json.savingAttributes = savingAttributes;\n\nreturn record;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Split Out similar",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "similar"
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Merge1",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Generate Unique Hash for Similar",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "value": {
+          "expression": "{{ record.similar.toLowerCase().trim() }}"
+        },
+        "dataPropertyName": "hash"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "It Should exists",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-22-base"
+        },
+        "table": {
+          "configuration_input": "step-22-table"
+        },
+        "columns": {
+          "value": {
+            "Hash": {
+              "expression": "{{record.hash}}"
+            },
+            "Name": {
+              "expression": "{{record.similar}}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "options": [],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Attributes",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Hash",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Hash"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "All Similar",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            },
+            {
+              "name": "similar",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.similar }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Merge2",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "chooseBranch"
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Change each Smiliar to the corresponding RecID",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let knownSimilarsOutput = steps[\"step-23\"].all();\nlet knownSimilars = new Map();\nknownSimilarsOutput.forEach((nodeOutput)=>{\n knownSimilars.set(nodeOutput.json.similar.toString().trim(), nodeOutput.json.id);\n});\n\nfor (const item of records) {\n item.json.similar.forEach((similar, index)=>{\n item.json.similar[index] = knownSimilars.get(similar.toString().trim());\n });\n}\n\nreturn records;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Determine Similar we should save",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let savingSimilar = record.json.existingSimilars ? record.json.existingSimilars : [];\nrecord.json.similar.forEach((simId)=>{\nif(record.json.existingSimilars.indexOf(simId) == -1) savingSimilar.push(simId);\n});\n\nrecord.json.savingSimilars = savingSimilar;\n\nreturn record;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Save all this juicy data",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-27-base"
+        },
+        "table": {
+          "configuration_input": "step-27-table"
+        },
+        "columns": {
+          "value": {
+            "Hash": {
+              "expression": "{{record.hash}}"
+            },
+            "Name": {
+              "expression": "{{record.name}}"
+            },
+            "Similar": {
+              "expression": "{{ record.savingSimilars }}"
+            },
+            "Attributes": {
+              "expression": "{{ record.savingAttributes }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "options": [],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Attributes",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Hash",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Similar",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Hash"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Map Agent Input",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "chatInput",
+              "type": "string",
+              "value": {
+                "expression": "{{record.Prompt}}"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "Table: Tools",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-31",
+      "label": "Table: Attributes",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-32",
+      "label": "make it a readable list",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-33",
+      "label": "Get Schema",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-2",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-33",
+      "to": "step-32",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-30",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-30",
+      "to": "step-31",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-28",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-19",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-1",
+      "to": "step-28",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-26",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-31",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-27-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-27-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Extract Information from a Logo Sheet using forms, AI, Google Sheet and Airtable.json",
+    "git_blob": "cd27e7f89ca05f230c22d85089fea1944289fef1",
+    "sha256": "fa8cded052d91988f90db2edb5f90d11995b234a35abd2db32fff298cd4b6782",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Extract%20Information%20from%20a%20Logo%20Sheet%20using%20forms%2C%20AI%2C%20Google%20Sheet%20and%20Airtable.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

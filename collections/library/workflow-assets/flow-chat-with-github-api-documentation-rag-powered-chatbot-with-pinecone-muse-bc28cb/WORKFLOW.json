@@ -1,0 +1,273 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-chat-with-github-api-documentation-rag-powered-chatbot-with-pinecone-muse-bc28cb",
+  "title": "Chat with GitHub API Documentation RAG-Powered Chatbot with Pinecone & Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Pinecone Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-3-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant providing information about the GitHub API and how to use it based on the OpenAPI V3 specifications."
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-10",
+      "label": "Vector Store Tool",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "name": {
+          "configuration_input": "step-10-name"
+        },
+        "description": "Use this tool to get information about the GitHub API. This database contains OpenAPI v3 specifications."
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Model Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Generate User Query Embedding",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Pinecone Vector Store (Querying)",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-13-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Generate Embeddings",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-3",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-10",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-6"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://raw.githubusercontent.com/github/{resource}/refs/heads/main/descriptions/api.github.com/api.github.com.json"
+    },
+    {
+      "id": "step-3-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Chat with GitHub API Documentation_ RAG-Powered Chatbot with Pinecone & OpenAI.json",
+    "git_blob": "47aa04d3672f05b5106ed643aec3013b2ef0cb3e",
+    "sha256": "5c1bff1d38a146fccf500108dca81f2d25b5b7022180c8576993a8080e06e5b1",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Chat%20with%20GitHub%20API%20Documentation_%20RAG-Powered%20Chatbot%20with%20Pinecone%20%26%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

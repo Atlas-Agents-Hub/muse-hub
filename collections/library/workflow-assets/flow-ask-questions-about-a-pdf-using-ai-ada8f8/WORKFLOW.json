@@ -1,0 +1,263 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ask-questions-about-a-pdf-using-ai-ada8f8",
+  "title": "Ask questions about a PDF using AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "configuration_input": "step-1-fileid"
+        },
+        "options": {},
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "chunkSize": 3000,
+        "chunkOverlap": 200
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "dataType": "binary"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Question and Answer Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Embeddings OpenAI2",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Vector Store Retriever",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-9",
+      "label": "Read Pinecone Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-9-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Insert into Pinecone vector store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {
+          "clearNamespace": true
+        },
+        "pineconeIndex": {
+          "configuration_input": "step-10-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "When clicking 'Chat' button below",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-12",
+      "label": "When clicking 'Test Workflow' button",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-13",
+      "label": "Set Google Drive file URL",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "file_url",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-13-assignments-0-value"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-10",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-10",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-5",
+      "channel": "retriever",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-11",
+    "step-12"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-fileid",
+      "purpose": "Select the fileId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://drive.google.com/file/d/{resource}/view"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Ask questions about a PDF using AI.json",
+    "git_blob": "09ae539f4daccd42739e34bf07580f8e85712882",
+    "sha256": "a893275cad97fca07c5f84c668c1e621136dd33ef0140e4407a8fe20e00303f0",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Ask%20questions%20about%20a%20PDF%20using%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

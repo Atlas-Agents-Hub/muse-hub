@@ -1,0 +1,14 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-synthetic-candidate-intake-reliability-harness-1cb702",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-jscode-literal": null
+  },
+  "adapters": {}
+}

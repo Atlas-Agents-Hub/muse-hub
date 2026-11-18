@@ -1,0 +1,125 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-post-new-youtube-videos-to-x-c8322e",
+  "title": "Post New YouTube Videos to X",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Post to X",
+      "operation": "service-write",
+      "adapter": "twitter",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.message.content }}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Generate Post for X with Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-2-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Write an engaging post about my latest YouTube video for X (Twitter) of no more than 140 characters in length. Link to the video at https://youtu.be/{{ record.id.videoId }} use this title and description: {{ record.snippet.title }} {{ record.snippet.description }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Fetch Latest Videos",
+      "operation": "service-read",
+      "adapter": "youtube",
+      "parameters": {
+        "limit": 1,
+        "filters": {
+          "channelId": {
+            "configuration_input": "step-3-filters-channelid"
+          },
+          "publishedAfter": {
+            "expression": "{{ new Date(new Date().getTime() - 30 * 60000).toISOString() }}"
+          }
+        },
+        "options": {},
+        "resource": "video"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Check Every 30 Min",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-filters-channelid",
+      "purpose": "Select the channelId for step-3.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/Post New YouTube Videos to X.json",
+    "git_blob": "ee806c0b1cc2e2cecb6232fc6194b4fbfd513084",
+    "sha256": "1645d140c61bd44662e13261cd13aafba4bcd3b3b496a160cd7a7d9f3295871e",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/Post%20New%20YouTube%20Videos%20to%20X.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

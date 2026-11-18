@@ -1,0 +1,18 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-resilient-rest-api-sync-with-retries-validation-and-sanitized-errors-409974",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-summarize-google-sheets-form-feedback-via-muse-s-muse-f2bf24",
+  "title": "Summarize Google Sheets form feedback via Muse s Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Test workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Get Google Sheets records",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "configuration_input": "step-2-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-2-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Aggregate responses into arrays",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "['What went great?']"
+            },
+            {
+              "fieldToAggregate": "['How can we improve?']"
+            },
+            {
+              "fieldToAggregate": "['What is the chance of recommending our event?']"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Summarize via GPT model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Your task is to summarize event feedback form responses. You will receive answers on three questions:\n1. What went great?\n2. How can we improve?\n3. What is the chance of recommending our event?\n\nEach questions has several answers separated by | character.\nAnalyze each question and prepare a summary report. It should contain an overall sentiment regarding the event, followed by the constructive ideas of what to improve.\n\nReply in Markdown formatting"
+            },
+            {
+              "content": {
+                "expression": "1. What went great: ```{{ record['What went great?'].join(' | ') }}```\n2. How can we improve: ```{{ record['How can we improve?'].join(' | ') }}```\n3. What is the chance of recommending our event: ```{{ record['What is the chance of recommending our event?'].join(' | ') }}```"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3
+        },
+        "resource": "chat",
+        "chatModel": "gpt-4-turbo-preview"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Convet from Markdown to HTML",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "mode": "markdownToHtml",
+        "options": {
+          "completeHTMLDocument": false
+        },
+        "markdown": {
+          "expression": "{{ record.message.content }}"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Send via Gmail",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "configuration_input": "step-6-sendto"
+        },
+        "message": {
+          "expression": "{{ record.data }}"
+        },
+        "options": {
+          "appendAttribution": false
+        },
+        "subject": "Feedback form response"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-sendto",
+      "purpose": "Select the sendTo for step-6.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Summarize Google Sheets form feedback via OpenAI_s GPT-4.json",
+    "git_blob": "f3d1c1e2d4f83d9acca6a3f3154dd571259d0e73",
+    "sha256": "a26c40594b5c4fb26e7c57a5d0ce08ba20fec417ed08301032ea3d5880460a2d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Summarize%20Google%20Sheets%20form%20feedback%20via%20OpenAI_s%20GPT-4.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

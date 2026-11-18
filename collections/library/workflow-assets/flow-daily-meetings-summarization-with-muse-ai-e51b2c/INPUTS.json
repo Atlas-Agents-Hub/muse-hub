@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-daily-meetings-summarization-with-muse-ai-e51b2c",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-channelid": null,
+    "step-2-calendar": null
+  },
+  "adapters": {
+    "googlecalendar": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

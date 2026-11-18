@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-classify-lemlist-replies-using-muse-and-automate-reply-handling-b5c982",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-channelid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "lemlist": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

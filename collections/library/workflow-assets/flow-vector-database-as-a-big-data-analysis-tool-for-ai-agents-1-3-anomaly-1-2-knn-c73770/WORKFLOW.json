@@ -1,0 +1,442 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-vector-database-as-a-big-data-analysis-tool-for-ai-agents-1-3-anomaly-1-2-knn-c73770",
+  "title": "Vector Database as a Big Data Analysis Tool for AI Agents [1 3 anomaly][1 2 KNN]",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Google Cloud Storage",
+      "operation": "service-read",
+      "adapter": "googlecloudstorage",
+      "parameters": {
+        "resource": "object",
+        "returnAll": true,
+        "bucketName": {
+          "configuration_input": "step-2-bucketname"
+        },
+        "listFilters": {
+          "prefix": "agricultural-crops"
+        },
+        "requestOptions": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get fields for Qdrant",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": {
+                "expression": "publicLink"
+              },
+              "type": "string",
+              "value": {
+                "expression": "https://storage.googleapis.com/{{ record.bucket }}/{{ record.selfLink.split('/').splice(-1) }}"
+              }
+            },
+            {
+              "name": "cropName",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id.split('/').slice(-3, -2)[0].toLowerCase()}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Qdrant cluster variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "qdrantCloudURL",
+              "type": "string",
+              "value": {
+                "expression": "https://152bc6e2-832a-415c-a1aa-fb529f8baf8d.eu-central-1-0.aws.cloud.qdrant.io"
+              }
+            },
+            {
+              "name": "collectionName",
+              "type": "string",
+              "value": {
+                "expression": "agricultural-crops"
+              }
+            },
+            {
+              "name": "VoyageEmbeddingsDim",
+              "type": "number",
+              "value": 1024
+            },
+            {
+              "name": "batchSize",
+              "type": "number",
+              "value": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Embed crop image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"inputs\": record.batchVoyage,\n \"model\": \"voyage-multimodal-3\",\n \"input_type\": \"document\"\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Create Qdrant Collection",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-4\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-4\"].records[0].collectionName }}"
+        },
+        "method": "PUT",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"vectors\": {\n \"voyage\": { \n \"size\": steps[\"step-4\"].records[0].VoyageEmbeddingsDim, \n \"distance\": \"Cosine\" \n } \n }\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Check Qdrant Collection Existence",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.qdrantCloudURL }}/collections/{{ record.collectionName }}/exists"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Batches in the API's format",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": {
+                "expression": "batchVoyage"
+              },
+              "type": "array",
+              "value": {
+                "expression": "{{ record.batch.map(item => ({ \"content\": ([{\"type\": \"image_url\", \"image_url\": item[\"publicLink\"]}])}))}}"
+              }
+            },
+            {
+              "name": {
+                "expression": "batchPayloadQdrant"
+              },
+              "type": "array",
+              "value": {
+                "expression": "{{ record.batch.map(item => ({\"crop_name\":item[\"cropName\"], \"image_path\":item[\"publicLink\"]})) }}"
+              }
+            },
+            {
+              "name": "uuids",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.uuids }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Batch Upload to Qdrant",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-4\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-4\"].records[0].collectionName }}/points"
+        },
+        "method": "PUT",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"batch\": {\n \"ids\" : steps[\"Batches in the API\\\\'s format\"].record.uuids,\n \"vectors\": {\"voyage\": record.data.map(item => item[\"embedding\"]) },\n \"payloads\": steps[\"Batches in the API\\\\'s format\"].record.batchPayloadQdrant\n }\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Split in batches, generate uuids for Qdrant points",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "import uuid\n\ncrops = [item.json for item in _input.all()]\nbatch_size = int(_('Qdrant cluster variables').first()['json']['batchSize'])\n\ndef split_into_batches_add_uuids(array, batch_size):\n return [\n {\n \"batch\": array[i:i + batch_size],\n \"uuids\": [str(uuid.uuid4()) for j in range(len(array[i:i + batch_size]))]\n }\n for i in range(0, len(array), batch_size)\n ]\n\n# Split crops into batches\nbatched_crops = split_into_batches_add_uuids(crops, batch_size)\n\nreturn batched_crops",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "If collection exists",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.result.exists }}"
+              },
+              "rightValue": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Payload index on crop_name",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-4\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-4\"].records[0].collectionName }}/index"
+        },
+        "method": "PUT",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"field_name\": \"crop_name\",\n \"field_schema\": \"keyword\"\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Filtering out tomato to test anomalies",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": {
+                "expression": "{{ record.cropName }}"
+              },
+              "rightValue": "tomato"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-9",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-bucketname",
+      "purpose": "Select the bucketName for step-2.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.voyageai.com/v1/{resource}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Vector Database as a Big Data Analysis Tool for AI Agents [1_3 anomaly][1_2 KNN].json",
+    "git_blob": "de84941ea75fdb52af7a37a77428bd68271a68d9",
+    "sha256": "aa2c07cab805b2aa1cfcec87ac35d2b8ffbee4997425280aa0ad679767d796b9",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Vector%20Database%20as%20a%20Big%20Data%20Analysis%20Tool%20for%20AI%20Agents%20%5B1_3%20anomaly%5D%5B1_2%20KNN%5D.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

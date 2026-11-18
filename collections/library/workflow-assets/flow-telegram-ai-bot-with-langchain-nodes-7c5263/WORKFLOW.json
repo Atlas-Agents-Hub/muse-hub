@@ -1,0 +1,337 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-telegram-ai-bot-with-langchain-nodes-7c5263",
+  "title": "Telegram AI bot with LangChain nodes",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.7,
+          "frequencyPenalty": 0.2
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "chat_with_{{ steps[\"step-6\"].records[0].message.chat.id }}"
+        },
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.output }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-6\"].records[0].message.from.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Correct errors",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-11\"].record.output.replace(/&/g, \"&amp;\").replace(/>/g, \"&gt;\").replace(/</g, \"&lt;\").replace(/\"/g, \"&quot;\") }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-6\"].records[0].message.from.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "Listen for incoming events",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Send back an image",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "file": {
+          "expression": "{{ record.data[0].url }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-5\"].records[0].chat_id }}"
+        },
+        "operation": "sendPhoto",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "add response field",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "response",
+              "stringValue": "Success"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Dall-E 3 Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "Draw_Dalle_image",
+        "fields": {
+          "values": [
+            {
+              "name": "chat_id",
+              "stringValue": {
+                "expression": "{{ steps[\"step-6\"].records[0].message.chat.id }}"
+              }
+            }
+          ]
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool to request a Dall-E 3 model, when the user asks to draw something. Please send the user request for an image as an inline query string."
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Generate image in Dall-E 3",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-10-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "dall-e-3"
+            },
+            {
+              "name": "prompt",
+              "value": {
+                "expression": "{{ record.query }}"
+              }
+            },
+            {
+              "name": "n",
+              "value": 1
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.message.text }}"
+        },
+        "options": {
+          "humanMessage": {
+            "expression": "TOOLS\n------\nAssistant can ask the user to use tools to look up information that may be helpful in answering the users original question. The tools the human can use are:\n\n{tools}\n\n{format_instructions}\n\nUSER'S INPUT\n--------------------\nHere is the user's input (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):\n\n{{input}}"
+          },
+          "systemMessage": {
+            "expression": "You are a helpful AI assistant. You are chatting with the user named `{{ record.message.from.first_name }}`. Today is {{ DateTime.fromISO(current_time).toLocaleString(DateTime.DATETIME_FULL) }}\n\nFrom time to time call a user by name (if the user name is provided). In your reply, always send a message in Telegram-supported HTML format. Here are the formatting instructions:\n1. The following tags are currently supported:\n<b>bold</b>, <strong>bold</strong>\n<i>italic</i>, <em>italic</em>\n<u>underline</u>, <ins>underline</ins>\n<s>strikethrough</s>, <strike>strikethrough</strike>, <del>strikethrough</del>\n<span class=\"tg-spoiler\">spoiler</span>, <tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough <span class=\"tg-spoiler\">italic bold strikethrough spoiler</span></s> <u>underline italic bold</u></i> bold</b>\n<a href=\"http://www.example.com/\">inline URL</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n2. Any code that you send should be wrapped in these tags: <pre><code class=\"language-python\">pre-formatted fixed-width code block written in the Python programming language</code></pre>\nOther programming languages are supported as well.\n3. All <, > and & symbols that are not a part of a tag or an HTML entity must be replaced with the corresponding HTML entities (< with &lt;, > with &gt; and & with &amp;)\n4. If the user sends you a message starting with / sign, it means this is a Telegram bot command. For example, all users send /start command as their first message. Try to figure out what these commands mean and reply accodringly"
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-11",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-3",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-5",
+    "step-6"
+  ],
+  "configuration": [
+    {
+      "id": "step-10-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/images/generations"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Telegram AI bot with LangChain nodes.json",
+    "git_blob": "bff94b5d01aa028a369ddbf57e6a6cff4a6436e0",
+    "sha256": "ef548738002ba6c9f4ec9dcfd2dfbf303fde612b411399963544dc0e6456f5db",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Telegram%20AI%20bot%20with%20LangChain%20nodes.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

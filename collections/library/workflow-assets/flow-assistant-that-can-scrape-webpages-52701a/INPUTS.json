@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-assistant-that-can-scrape-webpages-52701a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

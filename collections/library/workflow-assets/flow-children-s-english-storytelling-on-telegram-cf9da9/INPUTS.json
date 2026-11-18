@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-children-s-english-storytelling-on-telegram-cf9da9",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

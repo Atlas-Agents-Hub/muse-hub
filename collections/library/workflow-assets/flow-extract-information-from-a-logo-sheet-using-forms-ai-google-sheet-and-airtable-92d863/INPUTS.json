@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-extract-information-from-a-logo-sheet-using-forms-ai-google-sheet-and-airtable-92d863",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-base": null,
+    "step-5-table": null,
+    "step-15-base": null,
+    "step-15-table": null,
+    "step-22-base": null,
+    "step-22-table": null,
+    "step-27-base": null,
+    "step-27-table": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

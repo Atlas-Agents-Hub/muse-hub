@@ -1,0 +1,334 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-rag-chatbot-for-company-documents-using-google-drive-and-muse-755d80",
+  "title": "RAG Chatbot for Company Documents using Google Drive and Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Pinecone Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-1-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Embeddings Model",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "dataType": "binary",
+        "binaryMode": "specificField"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "chunkOverlap": 100
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful HR assistant designed to answer employee questions based on company policies.\n\nRetrieve relevant information from the provided internal documents and provide a concise, accurate, and informative answer to the employee's question.\n\nUse the tool called \"company_documents_tool\" to retrieve any information from the company's documents.\n\nIf the answer cannot be found in the provided documents, respond with \"I cannot find the answer in the available resources.\""
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Vector Store Tool",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "name": "company_documents_tool",
+        "description": "Retrieve information from any company documents"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Pinecone Vector Store (Retrieval)",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-7-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Embeddings Model (retrieval)",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Download File From Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.id }}"
+        },
+        "options": {
+          "fileName": {
+            "expression": "{{ record.name }}"
+          }
+        },
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Google Drive File Updated",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "event": "fileUpdated",
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "configuration_input": "step-10-foldertowatch"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Google Drive File Created",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "configuration_input": "step-11-foldertowatch"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-13",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Model Chat Model (retrieval)",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-5",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-5",
+      "channel": "main",
+      "branch": 0
+    },
+    {
+      "from": "step-1",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-10",
+    "step-11",
+    "step-13"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-foldertowatch",
+      "purpose": "Select the folderToWatch for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-foldertowatch",
+      "purpose": "Select the folderToWatch for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/RAG Chatbot for Company Documents using Google Drive and Gemini.json",
+    "git_blob": "ddbd7ab4c57d698d80139d84e2b04577016db3cc",
+    "sha256": "8a64ed9e5c3cc3f8c9e6fae8b284d7b668b45fa78464c716cb3b6c2c5f564a3f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/RAG%20Chatbot%20for%20Company%20Documents%20using%20Google%20Drive%20and%20Gemini.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

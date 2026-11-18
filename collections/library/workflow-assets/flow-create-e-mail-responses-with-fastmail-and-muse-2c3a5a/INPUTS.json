@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-create-e-mail-responses-with-fastmail-and-muse-2c3a5a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-url": null,
+    "step-2-url": null,
+    "step-6-modelid": null,
+    "step-8-url": null
+  },
+  "adapters": {
+    "emailreadimap": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

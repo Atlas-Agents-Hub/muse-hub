@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-store-notion-s-pages-as-vector-documents-into-supabase-37f85b",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-databaseid": null,
+    "step-8-tablename": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "notion": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

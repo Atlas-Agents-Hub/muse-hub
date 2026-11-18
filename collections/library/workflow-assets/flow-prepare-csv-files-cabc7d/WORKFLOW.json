@@ -1,0 +1,252 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-prepare-csv-files-cabc7d",
+  "title": "Prepare CSV files",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Execute Workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-2-model"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "content": {
+                "expression": "please create a list of 10 random users. Return back ONLY a JSON array. Character names of famous fiction characters. Make Names and Surnames start with the same letter. Name and Surname can be from different characters. If subscribed is false then make date_subscribed empty. If date_subscribed is not empty then make it random and no later then 2023-10-01. Make JSON in a single line, avoid line breaks. Here's an example: [{\"user_name\": \"Jack Jones\", \"user_email\":\"[configured contact]\",\"subscribed\": true, \"date_subscribed\":\"2023-10-01\" },{\"user_name\": \"Martin Moor\", \"user_email\":\"[configured contact]\",\"subscribed\": false, \"date_subscribed\":\"\" }]"
+              }
+            }
+          ]
+        },
+        "options": {
+          "n": 3,
+          "maxTokens": 2500,
+          "temperature": 1
+        },
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Split In Batches",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "batchSize": 1
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Parse JSON",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "content",
+              "type": "arrayValue",
+              "arrayValue": {
+                "expression": "{{JSON.parse(record.message.content)}}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Make JSON Table",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "content"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Convert to CSV",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "fileName": {
+            "expression": "funny_names_{{ steps[\"step-3\"].record.index+1 }}.{{ $parameter[\"fileFormat\"] }}"
+          },
+          "headerRow": true
+        },
+        "operation": "toFile",
+        "fileFormat": "csv"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Save to Disk",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fileName": {
+          "expression": "./.n8n/{{ $binary.data.fileName }}"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Strip UTF BOM bytes",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "encoding": "utf8",
+          "stripBOM": true,
+          "jsonParse": false,
+          "keepSource": false
+        },
+        "setAllData": false
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Create valid binary",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "mode": "jsonToBinary",
+        "options": {
+          "addBOM": false,
+          "encoding": "utf8",
+          "fileName": {
+            "expression": "funny_names_{{ steps[\"step-3\"].record.index+1 }}.{{ steps[\"step-6\"].first().binary.data.fileExtension }}"
+          },
+          "mimeType": "text/csv",
+          "keepSource": false,
+          "useRawData": true
+        },
+        "convertAllData": false
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Prepare CSV files with GPT-4.json",
+    "git_blob": "910360ed29b72fbf63d300399d5a7ae0a0e5f6f2",
+    "sha256": "88195f502ae9dd407241552d98090b6782d212082357d6e8ec3b45a61e58b94e",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Prepare%20CSV%20files%20with%20GPT-4.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

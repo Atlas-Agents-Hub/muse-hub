@@ -16,6 +16,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import skill_library
+import workflow_library
 
 PROJECT_LICENSE = 'MIT License\n\nCopyright (c) 2026 Muse AI Agent Presets contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the "Software"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n'
 
@@ -176,6 +177,9 @@ def validate(data: dict[str,Any]) -> None:
         import tool_guides
         known_guides={row['id'] for row in tool_guides.load_guides()['guides']}
     for key,w in wf.items():
+        if 'resources' in w:
+            try:workflow_library.validate_resources(w)
+            except ValueError as exc:raise CollectionError(str(exc)) from exc
         for f in ('title','goal','finish'):_text(w.get(f),f'{key}.{f}',10)
         _texts(w.get('skills'),key,2)
         if set(w['skills'])-sk.keys():raise CollectionError(f'unknown skill in workflow {key}')
@@ -430,6 +434,17 @@ def render_workflow(w: dict[str,Any], skills: dict[str,dict[str,Any]]) -> str:
         body+='\n## Finish\n\n'+w['finish']+'\n'
     if w.get('tool_guides'):
         body+='\n## Tools for this workflow\n\nRead [the included tool guides](../TOOL_GUIDES.md) when a stage calls for those tools.\n'
+    if w.get('resources'):
+        key=w['id']
+        body+='\n## Workflow files\n\n'
+        body+=f'Open [WORKFLOW.json]({key}/WORKFLOW.json) for the operation graph, branch conditions, field mappings, and transformations. '
+        body+=f'Fill [INPUTS.json]({key}/INPUTS.json) with your selected sources, destinations, connections, and model capability. '
+        body+='Follow numbered branch edges when a decision has more than one output; carry each named result into the operations that depend on it.\n'
+        body+='\nModel and embedding operations use your available capability. Use the configured service adapter for network operations and local tools for data transformations. '
+        body+='An expression names an input field or earlier step result; a transformation reference describes the calculation to apply to those records. '
+        body+='Check a representative input before continuing through a batch or a loop.\n'
+        body+='\nInspect the dependency order and required connections from the extracted package folder:\n\n'
+        body+=f'```sh\npython -B tools/workflow_graph.py workflows/{key}/WORKFLOW.json\n```\n'
     if w.get('tool_bindings'):
         body+='\n## Included local tools\n\nRun the included examples from the extracted package folder:\n\n```sh\npython -B tools/run.py --demo\n```\n\n'
         body+='For your own JSON input: `python -B tools/run.py --tool SKILL_ID --input input.json`. Python 3.10 or newer is required for these optional tools.\n\n'
@@ -472,7 +487,12 @@ def instruction_files(data: dict[str,Any], skill_ids: list[str], workflow_ids: l
             files['practice/answers/'+case['id']+'.json']=(json.dumps(case['reference_output'],indent=2,ensure_ascii=False)+'\n').encode()
         first=sorted(depth_ids)[0]
         files['practice/README.md']=(f'# Practice examples\n\nTry a supplied case, then check its structured result. From the package folder, run:\n\n```sh\npython -B practice/check_outputs.py check --case practice/{first}.json --output practice/answers/{first}.json\n```\n\nUse your own response file with `--output` when practicing. Review reasoning and visual quality alongside the mechanical checks.\n').encode()
-    for key in workflow_ids:files[f'workflows/{key}.md']=render_workflow(workflows[key],skills).encode()
+    for key in workflow_ids:
+        files[f'workflows/{key}.md']=render_workflow(workflows[key],skills).encode()
+        if workflows[key].get('resources'):
+            try:files.update(workflow_library.package_files(workflows[key],data.get('_library_root',workflow_library.ROOT)))
+            except (ValueError,OSError) as exc:raise CollectionError(str(exc)) from exc
+            files.setdefault('tools/workflow_graph.py',_bounded_source(Path(__file__).with_name('workflow_library.py')))
     selected_guides={guide for key in workflow_ids for guide in workflows[key].get('tool_guides',[])}
     if selected_guides:
         import tool_guides

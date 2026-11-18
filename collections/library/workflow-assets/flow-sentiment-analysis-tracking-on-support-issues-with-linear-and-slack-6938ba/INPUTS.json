@@ -1,0 +1,38 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-sentiment-analysis-tracking-on-support-issues-with-linear-and-slack-6938ba",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-7-base": null,
+    "step-7-table": null,
+    "step-8-base": null,
+    "step-8-table": null,
+    "step-9-baseid": null,
+    "step-9-tableid": null,
+    "step-11-endpoint": null,
+    "step-13-operation": null,
+    "step-14-channelid": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

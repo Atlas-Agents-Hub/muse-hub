@@ -1,0 +1,649 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-create-and-send-pennylane-invoices-from-webhook-data-3d1e96",
+  "title": "Create and send Pennylane invoices from webhook data",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "WH Receive Invoice Data",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pennylane-invoice",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Code Validate Payload",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const webhookItem = records[0].json;\nconst input = webhookItem.body ?? webhookItem;\nconst errors = [];\n\nif (typeof input.customer_name !== 'string' || input.customer_name.trim() === '') {\n  errors.push('customer_name is required');\n}\nif (typeof input.customer_email !== 'string' || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(input.customer_email)) {\n  errors.push('customer_email is required and must be valid');\n}\nif (!Array.isArray(input.items) || input.items.length === 0) {\n  errors.push('items array is required and must contain at least one item');\n} else {\n  input.items.forEach((item, i) => {\n    if (typeof item.label !== 'string' || item.label.trim() === '') errors.push(`items[${i}].label is required`);\n    if (typeof item.quantity !== 'number' || !Number.isFinite(item.quantity) || item.quantity <= 0) errors.push(`items[${i}].quantity must be a number > 0`);\n    if (typeof item.unit_price !== 'number' || !Number.isFinite(item.unit_price) || item.unit_price <= 0) errors.push(`items[${i}].unit_price must be a number > 0`);\n  });\n}\nif (input.customer_country && !/^[A-Z]{2}$/.test(input.customer_country)) {\n  errors.push('customer_country must be an uppercase ISO alpha-2 code');\n}\nif (input.due_date && !/^\\d{4}-\\d{2}-\\d{2}$/.test(input.due_date)) {\n  errors.push('due_date must use YYYY-MM-DD format');\n}\nif (errors.length > 0) throw new Error('Validation failed: ' + errors.join('; '));\n\nreturn [{ json: {\n  customer_name: input.customer_name.trim(),\n  customer_email: input.customer_email.trim().toLowerCase(),\n  customer_address: typeof input.customer_address === 'string' ? input.customer_address : '',\n  customer_postal_code: typeof input.customer_postal_code === 'string' ? input.customer_postal_code : '00000',\n  customer_city: typeof input.customer_city === 'string' ? input.customer_city : 'Non renseigné',\n  customer_country: input.customer_country || 'FR',\n  items: input.items.map(item => ({\n    label: item.label.trim(),\n    quantity: item.quantity,\n    unit_price: item.unit_price,\n    vat_rate: item.vat_rate || 'FR_200'\n  })),\n  due_date: input.due_date || new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],\n  currency: input.currency || 'EUR',\n  reference: input.reference || null,\n  send_email: input.send_email === true\n} }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "PL Search Customer",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "filter",
+              "value": {
+                "expression": "{{ JSON.stringify([{ field: 'emails', operator: 'in', value: record.customer_email }]) }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "IF Customer Exists",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.items.length }}"
+              },
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "PL Create Customer",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ name: steps[\"step-2\"].record.customer_name, emails: [steps[\"step-2\"].record.customer_email], billing_address: { address: steps[\"step-2\"].record.customer_address, postal_code: steps[\"step-2\"].record.customer_postal_code, city: steps[\"step-2\"].record.customer_city, country: steps[\"step-2\"].record.customer_country } }) }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Set Customer ID",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "customer_id",
+              "value": {
+                "expression": "{{ record.id ?? record.items?.[0]?.id }}"
+              },
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "PL Create Invoice",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-7-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify(record) }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Code Build Invoice Payload",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Refs: 'Set Customer ID', 'Code Validate Payload'\nconst data = steps[\"step-2\"].records[0];\nconst customerId = steps[\"step-6\"].records[0].customer_id;\n\nconst invoiceLines = data.items.map(item => ({\n  label: item.label,\n  quantity: item.quantity,\n  unit: 'piece',\n  raw_currency_unit_price: String(item.unit_price.toFixed(2)),\n  vat_rate: item.vat_rate\n}));\n\nconst today = new Date().toISOString().split('T')[0];\n\nconst payload = {\n  customer_id: customerId,\n  date: today,\n  deadline: data.due_date,\n  currency: data.currency,\n  invoice_lines: invoiceLines,\n  draft: false\n};\n\nif (data.reference) {\n  payload.external_reference = data.reference;\n}\n\nreturn [{ json: payload }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "IF Send Email",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ steps[\"step-2\"].record.send_email }}"
+              },
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Set Output Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "name": "invoice_id",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.id }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "invoice_number",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.invoice_number }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "amount",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.currency_amount }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "customer",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.customer_name }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "public_url",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.public_file_url || null }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "email_sent",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.send_email }}"
+              },
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Wait PDF Generation",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "PL Send Invoice Email",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "https://app.pennylane.com/api/external/v2/customer_invoices/{{ steps[\"step-7\"].record.id }}/send_by_email"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Set Email Attempt",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "attempt",
+              "value": {
+                "expression": "{{ (record.attempt ?? 0) + 1 }}"
+              },
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "IF Email Sent",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.statusCode }}"
+              },
+              "rightValue": 204,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Code Evaluate Email Retry",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const statusCode = records[0].json.statusCode;\nconst attempt = steps[\"step-13\"].records[0].attempt;\nreturn [{ json: {\n  attempt,\n  status_code: statusCode,\n  retry: statusCode === 409 && attempt < 5\n} }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "IF Can Retry Email",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.retry }}"
+              },
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Set Email Delivery Failed",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "success",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "name": "invoice_created",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "name": "email_sent",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "name": "invoice_id",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.id }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "invoice_number",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.invoice_number }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "status_code",
+              "value": {
+                "expression": "{{ record.status_code }}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "message",
+              "value": "Invoice created, but Pennylane email delivery did not succeed after bounded retries.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.pennylane.com/api/external/v2/customers"
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.pennylane.com/api/external/v2/company_customers"
+    },
+    {
+      "id": "step-7-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.pennylane.com/api/external/v2/customer_invoices"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Create and send Pennylane invoices from webhook data.json",
+    "git_blob": "c1f9eb632fa1fa98e795c7deea242b74e2345d8d",
+    "sha256": "0b8cc5c2ebd82daaef5d85e9b5077fdb4e925a749b29576006125e176b610953",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Create%20and%20send%20Pennylane%20invoices%20from%20webhook%20data.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

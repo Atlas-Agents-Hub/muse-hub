@@ -1,0 +1,293 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-make-muse-citation-for-file-retrieval-rag-3c0a2a",
+  "title": "Make Muse Citation for File Retrieval RAG",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Aggregate",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "Create a simple Trigger to have the Chat button within N8N",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Model Assistant with Vector Store",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "preserveOriginalTools": false
+        },
+        "resource": "assistant",
+        "assistantId": {
+          "configuration_input": "step-4-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Get ALL Thread Content",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ record.threadId }}/messages"
+        },
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Split all message iterations from a thread",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Split all content from a single message",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "content"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Split all citations from a single message",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "text.annotations"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Retrieve file name from a file ID",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/files/{{ record.file_citation.file_id }}"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Regularize output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            },
+            {
+              "name": "filename",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.filename }}"
+              }
+            },
+            {
+              "name": "text",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].record.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Optional Markdown to HTML",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Finnaly format the output",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let saida = steps[\"step-4\"].record.output;\n\nfor (let i of record.json.data) {\n saida = saida.replaceAll(i.text, \" _(\"+ i.filename+\")_ \");\n}\n\nrecord.json.output = saida;\nreturn record;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-assistantid",
+      "purpose": "Select the assistantId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Make OpenAI Citation for File Retrieval RAG.json",
+    "git_blob": "59db43cd35c70a22ad0cc5e939ba1a5b14b85f33",
+    "sha256": "c245d704ec7cec4d69bfbff3a691fa582d62cb992bf40fa33a1f4743396ff47a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Make%20OpenAI%20Citation%20for%20File%20Retrieval%20RAG.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

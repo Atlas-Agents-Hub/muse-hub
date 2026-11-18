@@ -1,0 +1,53 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-spot-workplace-discrimination-patterns-with-ai-f8a593",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-8-url": null,
+    "step-10-url": null,
+    "step-12-url": null,
+    "step-15-attributes-2-name": null,
+    "step-15-attributes-3-name": null,
+    "step-15-attributes-4-name": null,
+    "step-15-attributes-5-name": null,
+    "step-15-attributes-6-name": null,
+    "step-16-attributes-1-name": null,
+    "step-16-attributes-3-name": null,
+    "step-16-attributes-5-name": null,
+    "step-16-attributes-6-name": null,
+    "step-16-attributes-7-name": null,
+    "step-16-attributes-9-name": null,
+    "step-16-attributes-10-name": null,
+    "step-16-attributes-11-name": null,
+    "step-16-attributes-13-name": null,
+    "step-16-attributes-15-name": null,
+    "step-16-attributes-17-name": null,
+    "step-16-attributes-19-name": null,
+    "step-16-attributes-21-name": null,
+    "step-16-attributes-23-name": null,
+    "step-16-attributes-25-name": null,
+    "step-16-attributes-27-name": null,
+    "step-16-attributes-29-name": null,
+    "step-16-attributes-31-name": null,
+    "step-16-attributes-33-name": null,
+    "step-16-attributes-35-name": null,
+    "step-16-attributes-37-name": null,
+    "step-24-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "quickchart": {
+      "connection": null
+    }
+  }
+}

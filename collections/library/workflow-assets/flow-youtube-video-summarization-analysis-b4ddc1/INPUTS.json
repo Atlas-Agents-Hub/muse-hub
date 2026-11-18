@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-youtube-video-summarization-analysis-b4ddc1",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    },
+    "youtube": {
+      "connection": null
+    }
+  }
+}

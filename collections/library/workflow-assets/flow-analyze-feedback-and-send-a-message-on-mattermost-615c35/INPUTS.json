@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-analyze-feedback-and-send-a-message-on-mattermost-615c35",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-channelid": null
+  },
+  "adapters": {
+    "googlecloudnaturallanguage": {
+      "connection": null
+    },
+    "mattermost": {
+      "connection": null
+    }
+  }
+}

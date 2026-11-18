@@ -1,0 +1,43 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-modular-customizable-email-routing-text-classifier-for-ecommerce-79da78",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-toemail": null,
+    "step-4-fromemail": null,
+    "step-5-toemail": null,
+    "step-5-fromemail": null,
+    "step-6-toemail": null,
+    "step-6-fromemail": null,
+    "step-7-toemail": null,
+    "step-7-fromemail": null,
+    "step-8-toemail": null,
+    "step-8-fromemail": null,
+    "step-9-sheetname": null,
+    "step-9-documentid": null,
+    "step-10-sheetname": null,
+    "step-10-documentid": null,
+    "step-11-sheetname": null,
+    "step-11-documentid": null,
+    "step-12-sheetname": null,
+    "step-12-documentid": null,
+    "step-13-sheetname": null,
+    "step-13-documentid": null
+  },
+  "adapters": {
+    "emailsend": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

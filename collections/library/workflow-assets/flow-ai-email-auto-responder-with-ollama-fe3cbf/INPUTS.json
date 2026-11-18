@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-email-auto-responder-with-ollama-fe3cbf",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-url": null,
+    "step-5-url": null
+  },
+  "adapters": {
+    "emailreadimap": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

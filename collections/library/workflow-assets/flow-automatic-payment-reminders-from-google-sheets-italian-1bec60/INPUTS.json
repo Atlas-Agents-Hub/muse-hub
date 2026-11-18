@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automatic-payment-reminders-from-google-sheets-italian-1bec60",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-documentid": null,
+    "step-2-sheetname": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

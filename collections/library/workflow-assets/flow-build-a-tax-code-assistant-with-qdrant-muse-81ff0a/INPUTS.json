@@ -1,0 +1,36 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-build-a-tax-code-assistant-with-qdrant-muse-81ff0a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-url": null,
+    "step-12-url": null,
+    "step-21-qdrantcollection": null,
+    "step-28-name": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

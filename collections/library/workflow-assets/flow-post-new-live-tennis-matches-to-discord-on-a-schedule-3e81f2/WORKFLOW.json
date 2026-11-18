@@ -1,0 +1,139 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-post-new-live-tennis-matches-to-discord-on-a-schedule-3e81f2",
+  "title": "Post New Live Tennis Matches to Discord on a Schedule",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get Live Matches",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "live"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Split Out Matches",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Only New Matches",
+      "operation": "deduplicate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": {
+          "configuration_input": "step-4-operation"
+        },
+        "dedupeValue": {
+          "expression": "{{ record.id }}"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Discord",
+      "operation": "service-write",
+      "adapter": "discord",
+      "parameters": {
+        "content": {
+          "expression": "🎾 New live match: {{ record.players.p1.name }} vs {{ record.players.p2.name }} — {{ record.status }}"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.livetennisapi.com/api/public/v1/matches"
+    },
+    {
+      "id": "step-4-operation",
+      "purpose": "Choose the operation resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Discord/Post New Live Tennis Matches to Discord on a Schedule.json",
+    "git_blob": "4b9af2f93f90f75ea45de6a95c70ddba05f45eea",
+    "sha256": "bc378853016e7b1d2e9a3835545db76fe0f4e15e3fb6f3a3eeaf5f5c7c75ebd0",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Discord/Post%20New%20Live%20Tennis%20Matches%20to%20Discord%20on%20a%20Schedule.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,614 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-obsidian-notes-read-aloud-using-ai-available-as-a-podcast-feed-19e4c9",
+  "title": "Obsidian Notes Read Aloud using AI Available as a Podcast Feed",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI1",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "input": {
+          "expression": "{{ record.body.content }}"
+        },
+        "options": {
+          "response_format": "mp3"
+        },
+        "resource": "audio"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Webhook GET Note",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-2-path"
+        },
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Webhook GET Podcast Feed",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-3-path"
+        },
+        "options": {},
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Upload Audio to Cloudinary",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "upload_preset",
+              "value": "rb_preset"
+            },
+            {
+              "name": "resource_type",
+              "value": "auto"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Model",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-5-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "{{ record.body.content }}"
+              }
+            },
+            {
+              "role": "system",
+              "content": "Based on the user input text, write a concise and engaging description of 50–150 characters. Highlight the key idea or takeaway while making it compelling and easy to understand. Avoid unnecessary details or repetition."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "Aggregate",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Give Audio Unique Name",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "fileName",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.body.timestamp }}.mp3"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Send Audio to Obsidian",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "content-type",
+                "value": {
+                  "expression": "audio/mpeg"
+                }
+              }
+            ]
+          }
+        },
+        "respondWith": "binary",
+        "responseDataSource": "set"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Rename Fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "title",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.body.filename.split('.md')[0] }}"
+              }
+            },
+            {
+              "name": "link",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data[0].url }}"
+              }
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data[1].message.content }}"
+              }
+            },
+            {
+              "name": "date",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data[0].created_at }}"
+              }
+            },
+            {
+              "name": "duration",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.data[0].duration }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Append Item to Google Sheet",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {},
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "link",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "duration",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-11-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-11-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Get Items from Google Sheets",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "configuration_input": "step-12-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-12-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Write RSS Feed",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Variables from a separate edit node\nconst baseUrl = steps[\"step-15\"].data.baseUrl; \nconst podcastTitle = steps[\"step-15\"].data.podcastTitle;\nconst podcastDescription = steps[\"step-15\"].data.podcastDescription;\nconst authorName = steps[\"step-15\"].data.authorName;\nconst ownerName = steps[\"step-15\"].data.ownerName;\nconst ownerEmail = steps[\"step-15\"].data.ownerEmail;\nconst coverImageUrl = steps[\"step-15\"].data.coverImageUrl;\nconst language = steps[\"step-15\"].data.language || 'en-us';\nconst explicitContent = steps[\"step-15\"].data.explicitContent || false;\nconst itunesCategory = steps[\"step-15\"].data.itunesCategory;\nconst webhookUrl = steps[\"step-3\"].data.webhookUrl\n\n// Get the input items\nconst inputItems = items;\n\n// Function to format date to RFC 822 format\nfunction formatDate(dateString) {\n return new Date(dateString || new Date()).toUTCString();\n}\n\n// Function to convert duration from seconds to HH:MM:SS\nfunction formatDuration(seconds = 0) {\n const hours = Math.floor(seconds / 3600);\n const minutes = Math.floor((seconds % 3600) / 60);\n const remainingSeconds = Math.floor(seconds % 60);\n\n const minutesStr = minutes.toString().padStart(2, '0');\n const secondsStr = remainingSeconds.toString().padStart(2, '0');\n \n if (hours > 0) {\n return `${hours}:${minutesStr}:${secondsStr}`;\n }\n return `${minutesStr}:${secondsStr}`;\n}\n\n// Function to safely sanitize text\nfunction sanitizeText(text) {\n if (text === undefined || text === null) {\n return '';\n }\n return String(text)\n .replace(/&/g, '&amp;')\n .replace(/</g, '&lt;')\n .replace(/>/g, '&gt;')\n .replace(/\"/g, '&quot;')\n .replace(/'/g, '&apos;');\n}\n\n// Generate the RSS feed header\nlet rssFeed = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss xmlns:itunes=\"http://www.itunes.com/dtds/podcast-1.0.dtd\" \n xmlns:content=\"http://purl.org/rss/1.0/modules/content/\"\n xmlns:atom=\"http://www.w3.org/2005/Atom\"\n version=\"2.0\">\n <channel>\n <title>${sanitizeText(podcastTitle)}</title>\n <description>${sanitizeText(podcastDescription)}</description>\n <link>${sanitizeText(baseUrl)}</link>\n <atom:link href=\"${sanitizeText(webhookUrl)}\" rel=\"self\" type=\"application/rss+xml\"/>\n <language>${sanitizeText(language)}</language>\n <copyright>© ${new Date().getFullYear()} ${sanitizeText(authorName)}</copyright>\n <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>\n <itunes:author>${sanitizeText(authorName)}</itunes:author>\n <itunes:owner>\n <itunes:name>${sanitizeText(ownerName)}</itunes:name>\n <itunes:email>${sanitizeText(ownerEmail)}</itunes:email>\n </itunes:owner>\n <itunes:image href=\"${sanitizeText(coverImageUrl)}\"/>\n <itunes:category text=\"${sanitizeText(itunesCategory)}\"/>\n <itunes:explicit>${explicitContent}</itunes:explicit>\n <itunes:type>episodic</itunes:type>\\n`;\n\n// Generate items\nfor (const item of inputItems) {\n const json = item.json;\n \n // Extract values from the json object\n const title = sanitizeText(json.title);\n const description = sanitizeText(json.description);\n const link = sanitizeText(json.link);\n const date = json.date;\n const duration = json.duration;\n \n // Assign episode and season numbers dynamically based on row_number\n const episodeNumber = json.row_number; // Use row_number for the episode number\n const seasonNumber = 1; // You can adjust this logic if your episodes span multiple seasons\n\n rssFeed += ` <item>\n <title>${title}</title>\n <description>${description}</description>\n <link>${link}</link>\n <guid isPermaLink=\"false\">${link}</guid>\n <pubDate>${formatDate(date)}</pubDate>\n <enclosure \n url=\"${link}\"\n length=\"0\"\n type=\"audio/mpeg\"/>\n <itunes:duration>${formatDuration(duration)}</itunes:duration>\n <itunes:summary>${description}</itunes:summary>\n <itunes:episodeType>full</itunes:episodeType>\n <itunes:episode>${episodeNumber}</itunes:episode>\n <itunes:season>${seasonNumber}</itunes:season>\n <itunes:explicit>${explicitContent}</itunes:explicit>\n <content:encoded>\n <![CDATA[\n <p>${description}</p>\n ]]>\n </content:encoded>\n </item>\\n`;\n}\n\n// Close the RSS feed\nrssFeed += ` </channel>\n</rss>`;\n\n// Return the complete RSS feed\nreturn [{\n json: {\n rssFeed\n }\n}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Return Podcast Feed to Webhook",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/xml"
+              }
+            ]
+          }
+        },
+        "respondWith": "text",
+        "responseBody": {
+          "expression": "{{ record.rssFeed }}"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Manually Enter Other Data for Podcast Feed",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "baseUrl",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-15-assignments-0-value"
+              }
+            },
+            {
+              "name": "podcastTitle",
+              "type": "string",
+              "value": "My Notes to Podcast"
+            },
+            {
+              "name": "podcastDescription",
+              "type": "string",
+              "value": "My Notes Read Aloud"
+            },
+            {
+              "name": "authorName",
+              "type": "string",
+              "value": "Your Name"
+            },
+            {
+              "name": "ownerName",
+              "type": "string",
+              "value": "Owner Name"
+            },
+            {
+              "name": "ownerEmail",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-15-assignments-5-value"
+              }
+            },
+            {
+              "name": "coverImageUrl",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-15-assignments-6-value"
+              }
+            },
+            {
+              "name": "language",
+              "type": "string",
+              "value": "en-us"
+            },
+            {
+              "name": "explicitContent",
+              "type": "string",
+              "value": "false"
+            },
+            {
+              "name": "itunesCategory",
+              "type": "string",
+              "value": "Technology"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-11",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-2",
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.cloudinary.com/v1_1/CLOUDINARY_ENV/upload"
+    },
+    {
+      "id": "step-5-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://n8n.io"
+    },
+    {
+      "id": "step-15-assignments-5-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    },
+    {
+      "id": "step-15-assignments-6-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://encrypted-tbn0.gstatic.com/images?q={value}&s={value}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Obsidian Notes Read Aloud using AI_ Available as a Podcast Feed.json",
+    "git_blob": "02edbce1184f770292b8ed19d13a65364d57758e",
+    "sha256": "796acd5d49d97672aa97b98eeed2d4b2981c5eb182d287957e327ca91e8b6b5d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Obsidian%20Notes%20Read%20Aloud%20using%20AI_%20Available%20as%20a%20Podcast%20Feed.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

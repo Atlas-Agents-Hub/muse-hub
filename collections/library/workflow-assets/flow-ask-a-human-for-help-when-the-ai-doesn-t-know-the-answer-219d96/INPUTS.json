@@ -1,0 +1,27 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ask-a-human-for-help-when-the-ai-doesn-t-know-the-answer-219d96",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-channelid": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

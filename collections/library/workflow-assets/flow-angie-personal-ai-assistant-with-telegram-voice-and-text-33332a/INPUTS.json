@@ -1,0 +1,37 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-angie-personal-ai-assistant-with-telegram-voice-and-text-33332a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-calendar": null,
+    "step-12-tableid": null,
+    "step-12-databaseid": null,
+    "step-13-tableid": null,
+    "step-13-databaseid": null
+  },
+  "adapters": {
+    "baserow": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "googlecalendar": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

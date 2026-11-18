@@ -1,0 +1,814 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-invoice-data-extraction-with-llamaparse-and-muse-0fa061",
+  "title": "Invoice data extraction with LlamaParse and Muse",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Model Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "Invoice date": {
+              "type": "date"
+            },
+            "invoice number": {
+              "type": "string"
+            },
+            "Purchase order number": {
+              "type": "string"
+            },
+            "Supplier name": {
+              "type": "string"
+            },
+            "Supplier address": {
+              "type": "object",
+              "properties": {
+                "address 1": {
+                  "type": "string"
+                },
+                "address 2": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "postcode": {
+                  "type": "string"
+                }
+              }
+            },
+            "Supplier VAT identification number": {
+              "type": "string"
+            },
+            "Customer name": {
+              "type": "string"
+            },
+            "Customer address": {
+              "type": "object",
+              "properties": {
+                "address 1": {
+                  "type": "string"
+                },
+                "address 2": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "postcode": {
+                  "type": "string"
+                }
+              }
+            },
+            "Customer VAT identification number": {
+              "type": "string"
+            },
+            "Shipping addresses": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "address 1": {
+                    "type": "string"
+                  },
+                  "address 2": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "postcode": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "Line items": {
+              "type": "array",
+              "items": {
+                "name": "string",
+                "description": "string",
+                "price": "number",
+                "discount": "number"
+              }
+            },
+            "Subtotal without VAT": {
+              "type": "number"
+            },
+            "Subtotal with VAT": {
+              "type": "number"
+            },
+            "Total price": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Upload to LlamaParse",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": {
+                "expression": "attachment_0"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Receiving Invoices",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {
+          "q": "has:attachment",
+          "sender": {
+            "configuration_input": "step-4-filters-sender"
+          }
+        },
+        "options": {
+          "downloadAttachments": true
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Append to Reconciliation Sheet",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {},
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Invoice date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "invoice number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Purchase order number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Supplier name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Supplier address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Supplier VAT identification number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Customer name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Customer address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Customer VAT identification number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Shipping addresses",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Line items",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Subtotal without VAT",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Subtotal with VAT",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Total price",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [
+            "output"
+          ]
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-5-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-5-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Get Processing Status",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.cloud.llamaindex.ai/api/parsing/job/{{ record.id }}"
+        },
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Wait to stay within service limits",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 1
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Is Job Ready?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "SUCCESS",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.status }}"
+                    },
+                    "rightValue": "SUCCESS"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "ERROR",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.status }}"
+                    },
+                    "rightValue": "ERROR"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "CANCELED",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.status }}"
+                    },
+                    "rightValue": "CANCELED"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "PENDING",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.status }}"
+                    },
+                    "rightValue": "PENDING"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": true
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Add \"invoice synced\" Label",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "labelIds": [
+          "Label_5511644430826409825"
+        ],
+        "messageId": {
+          "expression": "{{ steps[\"step-4\"].record.id }}"
+        },
+        "operation": "addLabels"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Get Parsed Invoice Data",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.cloud.llamaindex.ai/api/parsing/job/{{ record.id }}/result/markdown"
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Map Output",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{ record.output }}"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Apply Data Extraction Rules",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Given the following invoice in the <invoice> xml tags, extract the following information as listed below.\nIf you cannot the information for a specific item, then leave blank and skip to the next. \n\n* Invoice date\n* invoice number\n* Purchase order number\n* Supplier name\n* Supplier address\n* Supplier VAT identification number\n* Customer name\n* Customer address\n* Customer VAT identification number\n* Shipping addresses\n* Line items, including a description of the goods or services rendered\n* Price with and without VAT\n* Total price\n\n<invoice>{{ record.markdown }}</invoice>"
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Should Process Email?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.binary.attachment_0.mimeType }}"
+              },
+              "rightValue": "application/pdf"
+            },
+            {
+              "operator": {
+                "type": "array",
+                "operation": "notContains",
+                "rightType": "any"
+              },
+              "leftValue": {
+                "expression": "{{ record.labels }}"
+              },
+              "rightValue": "invoice synced"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Split Out Labels",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "labelIds"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Get Labels Names",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "labelId": {
+          "expression": "{{ record.labelIds }}"
+        },
+        "resource": "label",
+        "operation": "get"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Combine Label Names",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "renameField": true,
+              "outputFieldName": "labels",
+              "fieldToAggregate": "name"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Email with Label Names",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "multiplex"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-11",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-12",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-12",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-8",
+      "channel": "main",
+      "branch": 1
+    },
+    {
+      "from": "step-8",
+      "channel": "main",
+      "branch": 2
+    }
+  ],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.cloud.llamaindex.ai/api/parsing/upload"
+    },
+    {
+      "id": "step-4-filters-sender",
+      "purpose": "Provide the contact, recipient, or message content for sender.",
+      "required": true
+    },
+    {
+      "id": "step-5-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Invoice data extraction with LlamaParse and OpenAI.json",
+    "git_blob": "8566ba6355c54427517137a0e15c53fcef9d0496",
+    "sha256": "729566c782dde4d4122b0e1941fc1f6193b5e74a0a14ec0153773b65af5626a6",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Invoice%20data%20extraction%20with%20LlamaParse%20and%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

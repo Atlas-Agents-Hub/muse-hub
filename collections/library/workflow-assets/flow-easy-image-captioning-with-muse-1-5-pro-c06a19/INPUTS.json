@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-easy-image-captioning-with-muse-1-5-pro-c06a19",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-10-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

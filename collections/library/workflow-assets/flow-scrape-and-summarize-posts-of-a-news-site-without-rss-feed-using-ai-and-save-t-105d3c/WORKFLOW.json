@@ -1,0 +1,532 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-scrape-and-summarize-posts-of-a-news-site-without-rss-feed-using-ai-and-save-t-105d3c",
+  "title": "Scrape and summarize posts of a news site without RSS feed using AI and save them to a NocoDB",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Extract the HTML with the right css class",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "trimValues": true
+        },
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "data",
+              "attribute": "href",
+              "cssSelector": {
+                "expression": "div:nth-child(9) > div:nth-child(3) > a:nth-child(2)"
+              },
+              "returnArray": true,
+              "returnValue": "attribute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Summary",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-2-model"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "content": {
+                "expression": "Create a summary in less than 70 words {{ record[\"content\"] }}"
+              }
+            }
+          ]
+        },
+        "options": {},
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Keywords",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-3-model"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "content": {
+                "expression": "name the 3 most important technical keywords in {{ record[\"content\"] }} ? just name them without any explanations or other sentences"
+              }
+            }
+          ]
+        },
+        "options": {},
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Rename keywords",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "keywords",
+              "stringValue": {
+                "expression": "{{ record[\"message\"][\"content\"] }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Rename Summary",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": {
+                "expression": "summary"
+              },
+              "stringValue": {
+                "expression": "{{ record[\"message\"][\"content\"] }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Extract date",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "data",
+              "cssSelector": "div:nth-child(9) > div:nth-child(2) > span:nth-child(1)",
+              "returnArray": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Select posts of last 7 days",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const currentDate = new Date();\nconst sevenDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 70)); // Change the number of days going back to your liking (e.g. from -7 to -1) -> BUT sync with the cron job (first node)\n\nconst filteredItems = items.filter(item => {\n const postDate = new Date(item.json[\"Date\"]); // Assuming \"Date\" is the field name in the extracted html\n return postDate >= sevenDaysAgo;\n});\n\nreturn filteredItems;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Merge date & links",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "HTTP Request1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record[\"Link\"] }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Merge Content with Date & Link",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Extract individual posts",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "title",
+              "cssSelector": "h1.fl-heading > span:nth-child(1)"
+            },
+            {
+              "key": "content",
+              "cssSelector": ".fl-node-5c7574ae7d5c6 > div:nth-child(1)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Merge Model output with Date & Link",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Retrieve the web page for further processsing",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-14-url"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Schedule Trigger each week",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                3
+              ],
+              "triggerAtHour": 4,
+              "triggerAtMinute": 32
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "NocoDB news database",
+      "operation": "service-write",
+      "adapter": "nocodb",
+      "parameters": {
+        "table": "mhbalmu9aaqcun6",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldName": {
+                "expression": "News_Source"
+              },
+              "fieldValue": {
+                "expression": "Colt"
+              }
+            },
+            {
+              "fieldName": "Title",
+              "fieldValue": {
+                "expression": "{{ record[\"title\"] }}"
+              }
+            },
+            {
+              "fieldName": "Date",
+              "fieldValue": {
+                "expression": "{{ record[\"Date\"] }}"
+              }
+            },
+            {
+              "fieldName": "Link",
+              "fieldValue": {
+                "expression": "{{ record[\"Link\"] }}"
+              }
+            },
+            {
+              "fieldName": "Summary",
+              "fieldValue": {
+                "expression": "{{ record[\"summary\"] }}"
+              }
+            },
+            {
+              "fieldName": "Keywords",
+              "fieldValue": {
+                "expression": "{{ record[\"keywords\"] }}"
+              }
+            }
+          ]
+        },
+        "operation": "create",
+        "projectId": {
+          "configuration_input": "step-16-projectid"
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Create single link items",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "destinationFieldName": "Link"
+        },
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Create single date items",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "destinationFieldName": "Date"
+        },
+        "fieldToSplitOut": "data"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-15"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-3-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-14-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://www.colt.net/resources/type/news/"
+    },
+    {
+      "id": "step-16-projectid",
+      "purpose": "Select the projectId for step-16.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Scrape and summarize posts of a news site without RSS feed using AI and save them to a NocoDB.json",
+    "git_blob": "4924e92192c4ad2bd89788cb3a673dccd87dc115",
+    "sha256": "13318e2ea1cee453cde9b9c586b489fdaad09a28fda424af17c9861fc7d2e63f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Scrape%20and%20summarize%20posts%20of%20a%20news%20site%20without%20RSS%20feed%20using%20AI%20and%20save%20them%20to%20a%20NocoDB.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

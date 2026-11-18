@@ -1,0 +1,35 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-optimize-update-printify-title-and-description-workflow-f90e64",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-11-sheetname": null,
+    "step-11-documentid": null,
+    "step-12-url": null,
+    "step-13-sheetname": null,
+    "step-13-documentid": null,
+    "step-14-sheetname": null,
+    "step-14-documentid": null,
+    "step-19-modelid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "toolwikipedia": {
+      "connection": null
+    }
+  }
+}

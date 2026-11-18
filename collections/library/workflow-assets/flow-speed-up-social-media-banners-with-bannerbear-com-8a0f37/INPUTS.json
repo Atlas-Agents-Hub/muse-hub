@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-speed-up-social-media-banners-with-bannerbear-com-8a0f37",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-path": null,
+    "step-2-url": null,
+    "step-6-guildid": null,
+    "step-6-channelid": null
+  },
+  "adapters": {
+    "bannerbear": {
+      "connection": null
+    },
+    "discord": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

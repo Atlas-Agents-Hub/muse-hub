@@ -1,0 +1,162 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-assistant-for-instagram-dm-inbox-manychat-muse-integration-7ffa5d",
+  "title": "Assistant for Instagram DM inbox. Manychat + Muse integration",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Set your system promt for AI",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "prompt",
+              "type": "string",
+              "value": {
+                "expression": "Persona: You are a instagram influencer.\nContext: You receive a messages from your subscribers\nTask: Answer questions in your writing style and patterns according to your previous posts text. Use your post only for style and patterns reference.\nStyle rules:\nsimple answers"
+              }
+            },
+            {
+              "name": "sessionId",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.body.session_id }}"
+              }
+            },
+            {
+              "name": "chatInput",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.body.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Local n8n memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ steps[\"step-1\"].last().json.sessionId }}"
+        },
+        "sessionIdType": "customKey",
+        "contextWindowLength": 20
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Model model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Send respond",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Getting message from Instagram",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "instagram_chat",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.chatInput }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "{{ record.prompt }}"
+          }
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/AI agent for Instagram DM_inbox. Manychat + Open AI integration.json",
+    "git_blob": "85005f3a1aa32e7e4da911f764787bd022b7a61c",
+    "sha256": "f5d062443f56940474fef9e7458ba3b5b65b5948927c8cb72b51cde7e297f321",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/AI%20agent%20for%20Instagram%20DM_inbox.%20Manychat%20%2B%20Open%20AI%20integration.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

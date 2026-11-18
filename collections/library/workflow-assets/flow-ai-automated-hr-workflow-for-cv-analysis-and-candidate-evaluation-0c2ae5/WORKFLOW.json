@@ -1,0 +1,571 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-automated-hr-workflow-for-cv-analysis-and-candidate-evaluation-0c2ae5",
+  "title": "AI Automated HR Workflow for CV Analysis and Candidate Evaluation",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On form submission",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "formTitle": "Send CV",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldType": "email",
+              "fieldLabel": "Email",
+              "placeholder": "Email",
+              "requiredField": true
+            },
+            {
+              "fieldType": "file",
+              "fieldLabel": "CV",
+              "requiredField": true,
+              "acceptFileTypes": ".pdf"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Extract from File",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf",
+        "binaryPropertyName": "CV"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Qualifications",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        },
+        "attributes": {
+          "attributes": [
+            {
+              "name": "Educational qualification",
+              "required": true,
+              "description": "Summary of your academic career. Focus on your high school and university studies. Summarize in 100 words maximum and also include your grade if applicable."
+            },
+            {
+              "name": "Job History",
+              "required": true,
+              "description": "Work history summary. Focus on your most recent work experiences. Summarize in 100 words maximum"
+            },
+            {
+              "name": "Skills",
+              "required": true,
+              "description": "Extract the candidate’s technical skills. What software and frameworks they are proficient in. Make a bulleted list."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Summarization Chain",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "prompt": {
+                "expression": "Write a concise summary of the following:\n\nCity: {{ record.output.city }}\nBirthdate: {{ record.output.birthdate }}\nEducational qualification: {{ record.output[\"Educational qualification\"] }}\nJob History: {{ record.output[\"Job History\"] }}\nSkills: {{ record.output.Skills }}\n\nUse 100 words or less. Be concise and conversational."
+              },
+              "combineMapPrompt": {
+                "expression": "Write a concise summary of the following:\n\nCity: {{ record.output.city }}\nBirthdate: {{ record.output.birthdate }}\nEducational qualification: {{ record.output[\"Educational qualification\"] }}\nJob History: {{ record.output[\"Job History\"] }}\nSkills: {{ record.output.Skills }}\n\nUse 100 words or less. Be concise and conversational."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineAll"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Profile Wanted",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "profile_wanted",
+              "type": "string",
+              "value": "We are a web agency and we are looking for a full-stack web developer who knows how to use PHP, Python and Javascript. He has experience in the sector and lives in Northern Italy."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "CITY": {
+              "expression": "{{ steps[\"step-5\"].record.output.city }}"
+            },
+            "DATA": {
+              "expression": "{{ current_time.format('dd/LL/yyyy') }}"
+            },
+            "NAME": {
+              "expression": "{{ steps[\"step-1\"].record.Nome }}"
+            },
+            "VOTE": {
+              "expression": "{{ record.output.vote }}"
+            },
+            "EMAIL": {
+              "expression": "{{ steps[\"step-1\"].record.Email }}"
+            },
+            "SKILLS": {
+              "expression": "{{ steps[\"step-5\"].record.output.Skills }}"
+            },
+            "TELEFONO": {
+              "expression": "{{ steps[\"step-5\"].record.output.telephone }}"
+            },
+            "SUMMARIZE": {
+              "expression": "{{ steps[\"step-4\"].record.response.text }}"
+            },
+            "EDUCATIONAL": {
+              "expression": "{{ steps[\"step-5\"].record.output[\"Educational qualification\"] }}"
+            },
+            "JOB HISTORY": {
+              "expression": "{{ steps[\"step-5\"].record.output[\"Job History\"] }}"
+            },
+            "DATA NASCITA": {
+              "expression": "{{ steps[\"step-5\"].record.output.birthdate }}"
+            },
+            "CONSIDERATION": {
+              "expression": "{{ record.output.consideration }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DATA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "NAME",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "PHONE",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CITY",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "EMAIL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DATA NASCITA",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "EDUCATIONAL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "JOB HISTORY",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "SKILLS",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "SUMMARIZE",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "VOTE",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CONSIDERATION",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-7-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-7-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "vote": {
+                "type": "string"
+              },
+              "consideration": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "HR Expert",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Profilo ricercato:\n{{ record.profile_wanted }}\n\nCandidato:\n{{ steps[\"step-4\"].record.response.text }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Sei un esperto HR e devi capire se il candidato è in linea con il profilo ricercato dall'azienda.\n\nDevi dare un voto da 1 a 10 dove 1 significa che il candidato non è in linea con quanto richiesto mentre 10 significa che è il candidato ideale perchè rispecchia in toto il profilo cercato.\n\nInoltre nel campo \"consideration\" motiva il perchè hai dato quel voto. "
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Personal Data",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        },
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "telephone": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "birthdate": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Upload CV",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "name": {
+          "expression": "CV-{{ current_time.format('yyyyLLdd') }}-{{ record.CV[0].filename }}"
+        },
+        "driveId": {
+          "configuration_input": "step-11-driveid"
+        },
+        "options": {},
+        "folderId": {
+          "configuration_input": "step-11-folderid"
+        },
+        "inputDataFieldName": "CV"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-4",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-10",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-11",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-7-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-driveid",
+      "purpose": "Select the driveId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-folderid",
+      "purpose": "Select the folderId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI Automated HR Workflow for CV Analysis and Candidate Evaluation.json",
+    "git_blob": "20023572af4ba46e0c5c23966df8f82754429acd",
+    "sha256": "10d89affc14be30a60569c3011c35b4baf55a424550813f2904798c872f556bc",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20Automated%20HR%20Workflow%20for%20CV%20Analysis%20and%20Candidate%20Evaluation.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

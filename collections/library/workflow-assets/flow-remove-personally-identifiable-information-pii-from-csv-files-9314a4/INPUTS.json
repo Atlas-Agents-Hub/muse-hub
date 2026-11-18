@@ -1,0 +1,24 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-remove-personally-identifiable-information-pii-from-csv-files-9314a4",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-foldertowatch": null,
+    "step-4-modelid": null,
+    "step-6-driveid": null,
+    "step-6-folderid": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

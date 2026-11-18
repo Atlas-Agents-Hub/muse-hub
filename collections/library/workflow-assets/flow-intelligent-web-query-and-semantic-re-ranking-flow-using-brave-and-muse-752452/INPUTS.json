@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-intelligent-web-query-and-semantic-re-ranking-flow-using-brave-and-muse-752452",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-path": null,
+    "step-9-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

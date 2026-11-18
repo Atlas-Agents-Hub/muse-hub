@@ -1,0 +1,540 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-enhance-security-operations-with-the-qualys-slack-shortcut-bot-4d25e6",
+  "title": "Enhance Security Operations with the Qualys Slack Shortcut Bot!",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Parse Webhook",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "object",
+              "value": {
+                "expression": "{{ record.body.payload }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Qualys Create Report",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "options": {},
+        "workflowId": {
+          "configuration_input": "step-2-workflowid"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Required Report Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "report_title",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.report_title.report_title_input.value }}"
+              }
+            },
+            {
+              "name": "base_url",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-3-assignments-1-value"
+              }
+            },
+            {
+              "name": "output_format",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.output_format.output_format_select.selected_option.value }}"
+              }
+            },
+            {
+              "name": "template_name",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.report_template.report_template_select.selected_option.text.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Qualys Start Vulnerability Scan",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "options": {},
+        "workflowId": {
+          "configuration_input": "step-4-workflowid"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Scan Report Task Modal",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"trigger_id\": \"{{ steps[\"step-1\"].record['response']['trigger_id'] }}\",\n \"external_id\": \"Scan Report Generator\",\n \"view\": {\n\t\"title\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Scan Report Generator\",\n\t\t\"emoji\": true\n\t},\n\t\"submit\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Generate Report\",\n\t\t\"emoji\": true\n\t},\n\t\"type\": \"modal\",\n\t\"close\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Cancel\",\n\t\t\"emoji\": true\n\t},\n\t\"blocks\": [\n\t\t{\n\t\t\t\"type\": \"image\",\n\t\t\t\"image_url\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Logo-Qualys.svg/300px-Logo-Qualys.svg.png\",\n\t\t\t\"alt_text\": \"Qualys Logo\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"Select a template and generate a detailed scan report based on the results of your previous scans.\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"report_template\",\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"external_select\",\n\t\t\t\t\"placeholder\": {\n\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\"text\": \"Select a report template\",\n\t\t\t\t\t\"emoji\": true\n\t\t\t\t},\n\t\t\t\t\"action_id\": \"report_template_select\"\n\t\t\t},\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Report Template\",\n\t\t\t\t\"emoji\": true\n\t\t\t},\n\t\t\t\"hint\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Choose a report template from your Qualys account to structure the output.\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"report_title\",\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"plain_text_input\",\n\t\t\t\t\"action_id\": \"report_title_input\",\n\t\t\t\t\"placeholder\": {\n\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\"text\": \"Enter a custom title for the report\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Report Title\",\n\t\t\t\t\"emoji\": true\n\t\t\t},\n\t\t\t\"hint\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Provide a descriptive title for your report. This title will be used in the report header.\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"output_format\",\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"static_select\",\n\t\t\t\t\"placeholder\": {\n\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\"text\": \"Select output format\",\n\t\t\t\t\t\"emoji\": true\n\t\t\t\t},\n\t\t\t\t\"options\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\t\"text\": \"PDF\",\n\t\t\t\t\t\t\t\"emoji\": true\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"value\": \"pdf\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\t\"text\": \"HTML\",\n\t\t\t\t\t\t\t\"emoji\": true\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"value\": \"html\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\t\"text\": \"CSV\",\n\t\t\t\t\t\t\t\"emoji\": true\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"value\": \"csv\"\n\t\t\t\t\t}\n\t\t\t\t],\n\t\t\t\t\"action_id\": \"output_format_select\"\n\t\t\t},\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Output Format\",\n\t\t\t\t\"emoji\": true\n\t\t\t},\n\t\t\t\"hint\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Choose the format in which you want the report to be generated.\"\n\t\t\t}\n\t\t}\n\t]\n}\n}"
+        },
+        "sendBody": true,
+        "jsonQuery": {
+          "json": {
+            "Content-type": "application/json"
+          }
+        },
+        "sendQuery": true,
+        "specifyBody": "json",
+        "specifyQuery": "json"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Vuln Scan Modal",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-6-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"trigger_id\": \"{{ steps[\"step-1\"].record['response']['trigger_id'] }}\",\n \"external_id\": \"Scan Report Generator\",\n \"view\": {\n\t\"title\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Vulnerability Scan\",\n\t\t\"emoji\": true\n\t},\n\t\"submit\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Execute Scan\",\n\t\t\"emoji\": true\n\t},\n\t\"type\": \"modal\",\n\t\"close\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Cancel\",\n\t\t\"emoji\": true\n\t},\n\t\"blocks\": [\n\t\t{\n\t\t\t\"type\": \"image\",\n\t\t\t\"image_url\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Logo-Qualys.svg/300px-Logo-Qualys.svg.png\",\n\t\t\t\"alt_text\": \"Qualys Logo\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Initiate a network-wide scan to detect and assess security vulnerabilities.\",\n\t\t\t\t\"emoji\": true\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"option_title\",\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"plain_text_input\",\n\t\t\t\t\"action_id\": \"text_input-action\",\n\t\t\t\t\"initial_value\": \"Initial Options\"\n\t\t\t},\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Option Title\",\n\t\t\t\t\"emoji\": true\n\t\t\t},\n\t\t\t\"hint\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Specify the title of the option profile to use for the scan.\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"scan_title\",\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"plain_text_input\",\n\t\t\t\t\"action_id\": \"text_input-action\",\n\t\t\t\t\"placeholder\": {\n\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\"text\": \"Enter your scan title\"\n\t\t\t\t},\n\t\t\t\t\"initial_value\": \"n8n Scan 1\"\n\t\t\t},\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Scan Title\",\n\t\t\t\t\"emoji\": true\n\t\t\t},\n\t\t\t\"hint\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Provide a descriptive title for the scan. Up to 2000 characters.\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"asset_groups\",\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"plain_text_input\",\n\t\t\t\t\"action_id\": \"text_input-action\",\n\t\t\t\t\"placeholder\": {\n\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\"text\": \"Enter asset groups\"\n\t\t\t\t},\n\t\t\t\t\"initial_value\": \"Group1\"\n\t\t\t},\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Asset Groups\",\n\t\t\t\t\"emoji\": true\n\t\t\t},\n\t\t\t\"hint\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Specify asset group titles for targeting. Multiple titles must be comma-separated.\"\n\t\t\t}\n\t\t}\n\t]\n}\n}"
+        },
+        "sendBody": true,
+        "jsonQuery": {
+          "json": {
+            "Content-type": "application/json"
+          }
+        },
+        "sendQuery": true,
+        "specifyBody": "json",
+        "specifyQuery": "json"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Route Message",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Vuln Scan Modal",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.response.callback_id }}"
+                    },
+                    "rightValue": "trigger-qualys-vmscan"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Scan Report Modal",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.response.callback_id }}"
+                    },
+                    "rightValue": "qualys-scan-report"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Process Submission",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.response.type }}"
+                    },
+                    "rightValue": "view_submission"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Required Scan Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "platformurl",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-8-assignments-0-value"
+              }
+            },
+            {
+              "name": "option_title",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.option_title['text_input-action'].value }}"
+              }
+            },
+            {
+              "name": "scan_title",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.scan_title['text_input-action'].value }}"
+              }
+            },
+            {
+              "name": "asset_groups",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.asset_groups['text_input-action'].value }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Route Submission",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Vuln Scan",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.response.view.title.text }}"
+                    },
+                    "rightValue": "Vulnerability Scan"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Scan Report",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.response.view.title.text }}"
+                    },
+                    "rightValue": "Scan Report Generator"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Close Modal Popup",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseCode": 204
+        },
+        "respondWith": "noData"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-11-path"
+        },
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Respond to Slack Webhook - Vulnerability",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "noData"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Respond to Slack Webhook - Report",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "noData"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-11",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-11"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-workflowid",
+      "purpose": "Select the workflowId for step-2.",
+      "required": true
+    },
+    {
+      "id": "step-3-assignments-1-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://qualysapi.qg3.apps.qualys.com"
+    },
+    {
+      "id": "step-4-workflowid",
+      "purpose": "Select the workflowId for step-4.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://slack.com/api/views.open"
+    },
+    {
+      "id": "step-6-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://slack.com/api/views.open"
+    },
+    {
+      "id": "step-8-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://qualysapi.qg3.apps.qualys.com"
+    },
+    {
+      "id": "step-11-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Slack/Enhance Security Operations with the Qualys Slack Shortcut Bot!.json",
+    "git_blob": "d8c2b86567502093038c42130123c4c3fc63653a",
+    "sha256": "fb253e8d7253e91ff38e91117ad8f0d779105a33da10a7fece770e07ed59896d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Slack/Enhance%20Security%20Operations%20with%20the%20Qualys%20Slack%20Shortcut%20Bot%21.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-score-inbound-leads-with-ai-reply-by-sms-or-whatsapp-book-calendar-slots-and-a-7fef5e",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-assignments-0-value": null,
+    "step-20-assignments-0-value": null,
+    "step-32-assignments-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

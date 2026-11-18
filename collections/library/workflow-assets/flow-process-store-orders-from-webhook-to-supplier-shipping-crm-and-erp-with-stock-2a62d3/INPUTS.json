@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-process-store-orders-from-webhook-to-supplier-shipping-crm-and-erp-with-stock-2a62d3",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-value": null,
+    "step-2-assignments-1-id": null,
+    "step-2-assignments-1-value": null,
+    "step-23-assignments-0-value": null,
+    "step-24-assignments-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

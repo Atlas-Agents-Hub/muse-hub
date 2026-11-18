@@ -1,0 +1,175 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-tunova-generate-a-song-from-a-form-0f6c42",
+  "title": "Tunova - Generate a song from a form",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On form submission",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "formTitle": "Make a song with AI",
+        "formDescription": "Describe the track you want — Tunova generates it with Suno (v5.5).",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Prompt",
+              "placeholder": "calm rainy-night lofi, mellow piano, vinyl crackle",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Instrumental",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "No"
+                  },
+                  {
+                    "option": "Yes"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Tunova: start generation",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{\n  \"prompt\": {{ JSON.stringify(record.Prompt) }},\n  \"instrumental\": {{ record.Instrumental === 'Yes' }}\n}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Wait for render (~2 min)",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 120,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Tunova: get result",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.tunova.ai/api/jobs/{{ steps[\"step-2\"].record.job_id }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Your track",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "status",
+              "value": {
+                "expression": "{{ record.status }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "audio_url",
+              "value": {
+                "expression": "{{ record.clips?.[0]?.audio_url }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "title",
+              "value": {
+                "expression": "{{ record.clips?.[0]?.title }}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.tunova.ai/api/generate"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Forms_and_Surveys/Tunova - Generate a song from a form.json",
+    "git_blob": "6609c9f862373530a1f0dd8f02f101976d9bfe5b",
+    "sha256": "9bfb0bcdd71dd16eda1f1c99d4a30e7840c190c3ccabf93c4090b50df12f2e74",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Forms_and_Surveys/Tunova%20-%20Generate%20a%20song%20from%20a%20form.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

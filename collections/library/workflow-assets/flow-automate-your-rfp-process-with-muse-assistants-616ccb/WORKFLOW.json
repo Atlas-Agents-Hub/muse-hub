@@ -1,0 +1,361 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automate-your-rfp-process-with-muse-assistants-616ccb",
+  "title": "Automate Your RFP Process with Muse Assistants",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Get RFP Data",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Item List Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "For Each Question...",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Set Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{\n \"doc_title\": \"{{ steps[\"step-12\"].record.body.title }}\",\n \"doc_filename\": \"{{ steps[\"step-12\"].record.body.id }} | {{ steps[\"step-12\"].record.body.title }} | {{ current_time.format('yyyyMMddhhmmss') }}| RFP Response\",\n \"reply_to\": \"{{ steps[\"step-12\"].record.body.reply_to }}\"\n}"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Create new RFP Response Document",
+      "operation": "service-read",
+      "adapter": "googledocs",
+      "parameters": {
+        "title": {
+          "expression": "{{ record.doc_filename }}"
+        },
+        "folderId": {
+          "expression": "1y0I8MH32maIWCJh767mRE_NMHC6A3bUu"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Model Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Send Chat Notification",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": "RFP document \"{{ steps[\"step-4\"].record.title }}\" completed!"
+        },
+        "select": "channel",
+        "channelId": {
+          "configuration_input": "step-7-channelid"
+        },
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Send Email Notification",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ steps[\"step-4\"].record.reply_to }}"
+        },
+        "message": {
+          "expression": "Your RFP document \"{{ steps[\"step-4\"].record.title }}\" is now complete!"
+        },
+        "options": {},
+        "subject": {
+          "expression": "RFP Questionnaire \"{{ steps[\"step-4\"].record.title }}\" Completed!"
+        },
+        "emailType": "text"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Add Metadata to Response Doc",
+      "operation": "service-write",
+      "adapter": "googledocs",
+      "parameters": {
+        "actionsUi": {
+          "actionFields": [
+            {
+              "text": {
+                "expression": "Title: {{ steps[\"step-4\"].record.doc_title }}\nDate generated: {{ current_time.format(\"yyyy-MM-dd @ hh:mm\") }}\nRequested by: {{ steps[\"step-4\"].record.reply_to }}\nExecution Id: http://localhost:5678/workflow/{{ workflow_id }}/executions/{{ run_id }}\n\n---"
+              },
+              "action": "insert"
+            }
+          ]
+        },
+        "operation": "update",
+        "documentURL": {
+          "expression": "{{ record.id }}"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Record Question & Answer in Response Doc",
+      "operation": "service-write",
+      "adapter": "googledocs",
+      "parameters": {
+        "actionsUi": {
+          "actionFields": [
+            {
+              "text": {
+                "expression": "{{ batch_index+1 }}. {{ record.content }}\n{{ record.output }}"
+              },
+              "action": "insert"
+            }
+          ]
+        },
+        "operation": "update",
+        "documentURL": {
+          "expression": "{{ steps[\"step-5\"].record.id }}"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Answer Question with Context",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.response.text }}"
+        },
+        "prompt": "define",
+        "options": {},
+        "resource": "assistant",
+        "assistantId": {
+          "configuration_input": "step-11-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Wait for Request",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-12-path"
+        },
+        "options": {},
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Extract Questions From RFP",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "You have been given a RFP document as part of a tender process of a buyer. Please extract all questions intended for the supplier. You must ensure the questions extracted are exactly has they are written in the RFP document.\n\n<RFP>{{ steps[\"step-1\"].record.text }}<RFP>"
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-13",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-13",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-12"
+  ],
+  "configuration": [
+    {
+      "id": "step-7-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-assistantid",
+      "purpose": "Select the assistantId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Automate Your RFP Process with OpenAI Assistants.json",
+    "git_blob": "cc735f0f3c024e45282365217582fe0b288d8767",
+    "sha256": "74a94c0b5d89dbce1a60a1b1ed3a55bb2d1bfe1b306365429285b6f812a22393",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Automate%20Your%20RFP%20Process%20with%20OpenAI%20Assistants.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

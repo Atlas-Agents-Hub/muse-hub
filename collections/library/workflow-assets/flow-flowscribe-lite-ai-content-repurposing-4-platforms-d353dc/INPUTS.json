@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-flowscribe-lite-ai-content-repurposing-4-platforms-d353dc",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-model": null,
+    "step-5-model": null,
+    "step-6-model": null,
+    "step-7-model": null,
+    "step-8-model": null,
+    "step-10-sheetname": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

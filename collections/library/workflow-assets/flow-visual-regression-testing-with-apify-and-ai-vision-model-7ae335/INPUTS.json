@@ -1,0 +1,43 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-visual-regression-testing-with-apify-and-ai-vision-model-7ae335",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-7-driveid": null,
+    "step-7-folderid": null,
+    "step-8-sheetname": null,
+    "step-8-documentid": null,
+    "step-11-sheetname": null,
+    "step-11-documentid": null,
+    "step-12-url": null,
+    "step-13-url": null,
+    "step-18-teamid": null,
+    "step-20-sheetname": null,
+    "step-20-documentid": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "linear": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

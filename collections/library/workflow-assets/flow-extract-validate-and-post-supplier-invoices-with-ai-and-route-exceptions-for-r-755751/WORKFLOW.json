@@ -1,0 +1,569 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-validate-and-post-supplier-invoices-with-ai-and-route-exceptions-for-r-755751",
+  "title": "Extract, validate and post supplier invoices with AI and route exceptions for review",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Webhook: invoice received (email, drive or upload)",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoice-in",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Config",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "base",
+              "value": {
+                "configuration_input": "step-2-assignments-0-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "auto_approve_limit",
+              "value": "5000",
+              "type": "string"
+            },
+            {
+              "name": "ap_channel",
+              "value": "#accounts-payable",
+              "type": "string"
+            },
+            {
+              "name": "total_tolerance",
+              "value": "0.05",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "AI: extract fields from document",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/documents/extract"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ file_name: steps[\"step-1\"].records[0].body.file_name, mime: \"application/pdf\" }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Accounting: supplier master",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "GET",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/accounting/suppliers"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Accounting: open purchase orders",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "GET",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/accounting/purchase_orders"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Merge lookups",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "numberInputs": 2
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Validate: TRN, duplicate, totals, PO match, limit",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Deterministic validation between the AI extraction and the ledger. No AI decides anything here.\nconst cfg = steps[\"step-2\"].records[0];\nconst x = steps[\"step-3\"].records[0].fields || {};\nconst file = steps[\"step-1\"].records[0].body.file_name;\nconst suppliers = steps[\"step-4\"].records[0].rows;\nconst pos = steps[\"step-5\"].records[0].rows;\nconst norm = s => String(s || '').toLowerCase().replace(/\\b(llc|fze|fzco|ltd|co|company|est)\\b\\.?/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();\nconst sd = $getWorkflowStaticData('global'); sd.seen = sd.seen || {};\nconst reasons = []; let status = 'AUTO_APPROVE';\nconst key = norm(x.supplier) + '|' + String(x.invoice_no || '').toUpperCase();\nif (!x.supplier || !x.invoice_no) { reasons.push('V-00 Extraction incomplete'); status = 'REVIEW'; }\nif (sd.seen[key]) { reasons.push('V-01 Duplicate invoice number for this supplier'); status = 'REJECT'; }\nconst sup = suppliers.find(s => norm(s.supplier_name) === norm(x.supplier));\nif (!sup) { reasons.push('V-02 Supplier not in master, new supplier approval required'); if (status !== 'REJECT') status = 'REVIEW'; }\nelse {\n  const trn = String(x.trn || '');\n  if (!/^\\d{15}$/.test(trn)) { reasons.push(`V-03 TRN format invalid (${trn})`); status = 'REJECT'; }\n  else if (trn !== sup.trn) { reasons.push('V-04 TRN differs from supplier master'); status = 'REJECT'; }\n}\nconst sum = (x.line_items || []).reduce((s, l) => s + Number(l.amount || 0), 0);\nif (Math.abs(sum - Number(x.subtotal || 0)) > Number(cfg.total_tolerance)) { reasons.push('V-05 Line items do not add to subtotal'); if (status !== 'REJECT') status = 'REVIEW'; }\nif (Math.abs(Number(x.subtotal || 0) * 1.05 - Number(x.total || 0)) > Number(cfg.total_tolerance)) { reasons.push('V-06 Total is not subtotal plus 5% VAT'); if (status !== 'REJECT') status = 'REVIEW'; }\nif (Number(x.confidence || 0) < 0.9) { reasons.push(`V-07 Extraction confidence ${x.confidence}`); if (status !== 'REJECT') status = 'REVIEW'; }\nconst po = pos.find(p => norm(p.supplier) === norm(x.supplier) && Math.abs(Number(p.amount) - Number(x.total)) <= 1);\nif (!po && Number(x.total || 0) > Number(cfg.auto_approve_limit)) { reasons.push(`V-08 Over auto approve limit (AED ${cfg.auto_approve_limit}) with no matching PO`); if (status !== 'REJECT') status = 'REVIEW'; }\nif (sup && Number(x.total || 0) > Number(sup.approved_limit_aed || 0) && !po) { reasons.push(`V-09 Over supplier limit AED ${sup.approved_limit_aed}`); if (status !== 'REJECT') status = 'REVIEW'; }\nif (status !== 'REJECT') sd.seen[key] = Date.now();\nreturn [{ json: { file, status, reasons, po_number: po ? po.po_number : null, supplier: x.supplier, trn: x.trn, invoice_no: x.invoice_no, date: x.date, subtotal: x.subtotal, vat: x.vat, total: x.total, currency: x.currency, confidence: x.confidence, line_items: x.line_items } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Route by status",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": {
+                      "expression": "{{ record.status }}"
+                    },
+                    "rightValue": "AUTO_APPROVE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "AUTO_APPROVE"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": {
+                      "expression": "{{ record.status }}"
+                    },
+                    "rightValue": "REVIEW",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "REVIEW"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": {
+                      "expression": "{{ record.status }}"
+                    },
+                    "rightValue": "REJECT",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "REJECT"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Accounting: post bill",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/accounting/bills"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ supplier: record.supplier, invoice_no: record.invoice_no, date: record.date, subtotal: record.subtotal, vat: record.vat, total: record.total, po_number: record.po_number, source_file: record.file }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Review queue: human check",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/review/queue"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ file: record.file, status: record.status, reasons: record.reasons, supplier: record.supplier, total: record.total }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Slack: rejected, AP notified",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].base }}/alerts"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ channel: steps[\"step-2\"].records[0].ap_channel, text: \"Rejected \" + record.file + \" from \" + record.supplier + \": \" + record.reasons.join(\"; \") }) }}"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Outcome",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const v = steps[\"step-7\"].records[0];\nconst r = record;\nreturn [{ json: { file: v.file, status: v.status, reasons: v.reasons, supplier: v.supplier, invoice_no: v.invoice_no, total: v.total, po_number: v.po_number, result: r.bill_id ? { bill_id: r.bill_id } : r.ticket ? { ticket: r.ticket } : { alerted: true } } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Respond 200 (invoice handled)",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ JSON.stringify(record) }}"
+        },
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Error trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-15",
+      "label": "Config (errors)",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "base",
+              "value": {
+                "configuration_input": "step-15-assignments-0-value"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Alert ops (Slack)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-15\"].records[0].base }}/alerts"
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ channel: \"#ops-alerts\", text: \"Invoice intake failed: \" + (record.execution?.error?.message || \"unknown\") }) }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-14"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.your-company.example"
+    },
+    {
+      "id": "step-15-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.your-company.example"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Extract, validate and post supplier invoices with AI and route exceptions for review.json",
+    "git_blob": "4c7bd17ed6f728500ed5c457d274bf7f7f4efa7b",
+    "sha256": "9dc83e7c89494961609ced53d6f3f0c6b9de9d391193ce12b0bb152d6650e1ba",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Extract%2C%20validate%20and%20post%20supplier%20invoices%20with%20AI%20and%20route%20exceptions%20for%20review.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

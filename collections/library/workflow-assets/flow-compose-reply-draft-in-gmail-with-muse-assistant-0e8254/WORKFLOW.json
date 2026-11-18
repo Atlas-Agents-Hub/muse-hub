@@ -1,0 +1,379 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-compose-reply-draft-in-gmail-with-muse-assistant-0e8254",
+  "title": "Compose reply draft in Gmail with Muse Assistant",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Convert raw to base64",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const encoded = Buffer.from(record.raw).toString('base64');\n\nreturn { encoded };",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Add email draft to thread",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\"message\":{\"raw\":\"{{ record.encoded }}\", \"threadId\": \"{{ steps[\"step-5\"].record[\"threadId\"] }}\"}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Remove AI label from email",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "resource": "thread",
+        "threadId": {
+          "expression": "{{ steps[\"step-5\"].record[\"threadId\"] }}"
+        },
+        "operation": "removeLabels"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Schedule trigger (1 min)",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Map fields for further processing",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output }}"
+              }
+            },
+            {
+              "name": "threadId",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record[\"threadId\"] }}"
+              }
+            },
+            {
+              "name": "to",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record[\"from\"][\"text\"] }}"
+              }
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record[\"subject\"] }}"
+              }
+            },
+            {
+              "name": "messageId",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-8\"].record[\"id\"] }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Convert response to HTML",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "mode": "markdownToHtml",
+        "options": {
+          "simpleLineBreaks": false
+        },
+        "markdown": {
+          "expression": "{{ record.response }}"
+        },
+        "destinationKey": "response"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Build email raw",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "raw",
+              "type": "string",
+              "value": {
+                "expression": "To: {{ record.to }}\nSubject: {{ record.subject }}\nContent-Type: text/html; charset=\"utf-8\"\n\n{{ record.response }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Get threads with specific labels",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "filters": {
+          "labelIds": []
+        },
+        "resource": "thread",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Ask Model Assistant",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "prompt": "define",
+        "options": {},
+        "resource": "assistant",
+        "assistantId": {
+          "configuration_input": "step-9-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Loop over threads",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Get thread messages",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "options": {
+          "returnOnlyMessages": true
+        },
+        "resource": "thread",
+        "threadId": {
+          "expression": "{{ record.id }}"
+        },
+        "operation": "get"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Return last message in thread",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {
+        "keep": "lastItems"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Get single message content",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "simple": false,
+        "options": {},
+        "messageId": {
+          "expression": "{{ record.id }}"
+        },
+        "operation": "get"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-7",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://www.googleapis.com/gmail/v1/users/me/drafts"
+    },
+    {
+      "id": "step-9-assistantid",
+      "purpose": "Select the assistantId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Compose reply draft in Gmail with OpenAI Assistant.json",
+    "git_blob": "da4487a33aefba1bbb641efd2f5004e2c7dca534",
+    "sha256": "876f40e2ea016d690a1cdd847eb501ac308ebba61bfde6d98fd711d4d09b04db",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Compose%20reply%20draft%20in%20Gmail%20with%20OpenAI%20Assistant.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

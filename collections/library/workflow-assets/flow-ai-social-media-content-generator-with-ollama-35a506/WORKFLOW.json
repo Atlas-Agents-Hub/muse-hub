@@ -1,0 +1,183 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-social-media-content-generator-with-ollama-35a506",
+  "title": "AI Social Media Content Generator with Ollama",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Manual Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Content Parameters",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "topic",
+              "value": "Benefits of self-hosting AI models",
+              "type": "string"
+            },
+            {
+              "name": "brand_voice",
+              "value": "Tech-savvy, slightly irreverent, helpful. We love open source and privacy.",
+              "type": "string"
+            },
+            {
+              "name": "target_audience",
+              "value": "developers, sysadmins, tech enthusiasts",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Generate All Platform Content (Ollama)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ model: 'llama3:8b', prompt: 'Generate social media content for the topic: \"' + record.topic + '\"\\n\\nBrand voice: ' + record.brand_voice + '\\nTarget audience: ' + record.target_audience + '\\n\\nReturn ONLY valid JSON with this structure:\\n{\\n  \"twitter\": \"Tweet (max 280 chars, include 2-3 relevant hashtags)\",\\n  \"linkedin\": \"LinkedIn post (3-4 paragraphs, professional tone, include hashtags)\",\\n  \"reddit_title\": \"Reddit post title (engaging, not clickbait)\",\\n  \"reddit_body\": \"Reddit post body (informative, genuine value, no hard sell)\",\\n  \"instagram_caption\": \"Instagram caption (engaging, with emoji, 5-10 hashtags at end)\"\\n}', stream: false, options: { temperature: 0.7, num_predict: 2000 } }) }}"
+        },
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Parse Content JSON",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const response = JSON.parse(records[0].json.data).response;\n// Extract JSON from response\nconst match = response.match(/\\{[\\s\\S]*\\}/);\nif (match) {\n  const content = JSON.parse(match[0]);\n  return [{ json: { ...content, topic: steps[\"step-2\"].records[0].topic, generated_at: new Date().toISOString() } }];\n}\nthrow new Error('Failed to parse AI response as JSON');",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Review & Polish (Ollama)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ model: 'llama3:8b', prompt: 'Review this social media content for quality. Check for:\\n1. Grammar and spelling errors\\n2. Tone consistency with brand voice\\n3. Platform-appropriate formatting\\n4. Hashtag relevance\\n\\nContent:\\nTwitter: ' + record.twitter + '\\nLinkedIn: ' + record.linkedin + '\\nReddit: ' + record.reddit_title + ' — ' + record.reddit_body + '\\nInstagram: ' + record.instagram_caption + '\\n\\nIf any issues found, return corrected versions as JSON (same structure). If all good, return the same content. Return ONLY JSON.', stream: false, options: { temperature: 0.2, num_predict: 2000 } }) }}"
+        },
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Final Content Output",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const response = JSON.parse(records[0].json.data).response;\nconst match = response.match(/\\{[\\s\\S]*\\}/);\nconst original = steps[\"step-4\"].records[0];\nif (match) {\n  try {\n    const reviewed = JSON.parse(match[0]);\n    return [{ json: { ...original, ...reviewed, reviewed: true } }];\n  } catch(e) {}\n}\nreturn [{ json: { ...original, reviewed: false } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/AI Social Media Content Generator with Ollama.json",
+    "git_blob": "6d6219e0120162ff1603d4bfc337b97a0b63bb7f",
+    "sha256": "9f63317668277ae1d7797cf315cb9afc2042a78eb959c316a3ea21a3c64a4c79",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/AI%20Social%20Media%20Content%20Generator%20with%20Ollama.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-assistant-with-ollama-for-current-weather-and-wiki-10206d",
+  "title": "Assistant with Ollama for current weather and wiki",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On new manual Chat Message",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Wikipedia",
+      "operation": "service-read",
+      "adapter": "toolwikipedia",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "contextWindowLength": 20
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.input }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "You are a helpful assistant, with weather tool and wiki tool. find out the latitude and longitude information of a location then use the weather tool for current weather and weather forecast. For general info, use the wiki tool."
+          }
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Weather HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "latitude"
+            },
+            {
+              "name": "longitude"
+            },
+            {
+              "name": "forecast_days",
+              "value": "1",
+              "valueProvider": "fieldValue"
+            },
+            {
+              "name": "hourly",
+              "value": "temperature_2m",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        },
+        "toolDescription": "Fetch current temperature for given coordinates."
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Ollama Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.open-meteo.com/v1/forecast"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI Agent with Ollama for current weather and wiki.json",
+    "git_blob": "db3aefe8109346e00c51be89822ee281b96e9dcc",
+    "sha256": "ee4d32cdbc5e9f48570dae87706eb39f6d4ad4760e6c17ce60a1f1b20d7037d2",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20Agent%20with%20Ollama%20for%20current%20weather%20and%20wiki.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

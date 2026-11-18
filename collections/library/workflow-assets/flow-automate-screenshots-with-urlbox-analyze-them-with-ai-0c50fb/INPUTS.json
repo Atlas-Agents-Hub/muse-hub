@@ -1,0 +1,23 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automate-screenshots-with-urlbox-analyze-them-with-ai-0c50fb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-string-1-value": null,
+    "step-2-url": null,
+    "step-2-parameters-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

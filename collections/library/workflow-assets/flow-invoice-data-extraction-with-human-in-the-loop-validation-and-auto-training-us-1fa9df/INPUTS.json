@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-invoice-data-extraction-with-human-in-the-loop-validation-and-auto-training-us-1fa9df",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-sheetname": null,
+    "step-3-documentid": null,
+    "step-5-agentid": null
+  },
+  "adapters": {
+    "cradlai": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    }
+  }
+}

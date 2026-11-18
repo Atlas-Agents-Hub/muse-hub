@@ -1,0 +1,383 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-vector-database-as-a-big-data-analysis-tool-for-ai-agents-2-2-knn-4b5966",
+  "title": "Vector Database as a Big Data Analysis Tool for AI Agents [2 2 KNN]",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Embed image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-1-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"inputs\": [\n {\n \"content\": [\n {\n \"type\": \"image_url\",\n \"image_url\": record.imageURL\n }\n ]\n }\n ],\n \"model\": \"voyage-multimodal-3\",\n \"input_type\": \"document\"\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Query Qdrant",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.qdrantCloudURL }}/collections/{{ record.collectionName }}/points/query"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"query\": record.ImageEmbedding,\n \"using\": \"voyage\",\n \"limit\": record.limitKNN,\n \"with_payload\": true\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Majority Vote",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "from collections import Counter\n\ninput_json = _input.all()[0]\npoints = input_json['json']['result']['points']\nmajority_vote_two_most_common = Counter([point[\"payload\"][\"landscape_name\"] for point in points]).most_common(2)\n\nreturn [{\n \"json\": {\n \"result\": majority_vote_two_most_common \n }\n}]",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Increase limitKNN",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "limitKNN",
+              "type": "number",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.limitKNN + 5}}"
+              }
+            },
+            {
+              "name": "ImageEmbedding",
+              "type": "array",
+              "value": {
+                "expression": "{{ steps[\"step-9\"].records[0].ImageEmbedding }}"
+              }
+            },
+            {
+              "name": "qdrantCloudURL",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-9\"].records[0].qdrantCloudURL }}"
+              }
+            },
+            {
+              "name": "collectionName",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-9\"].records[0].collectionName }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Propagate loop variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": {
+                "expression": "limitKNN"
+              },
+              "type": "number",
+              "value": {
+                "expression": "{{ record.result.points.length}}"
+              }
+            },
+            {
+              "name": "result",
+              "type": "object",
+              "value": {
+                "expression": "{{ record.result }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Image Test URL",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "imageURL",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.query.imageURL }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Return class",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "class",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.result[0][0] }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Check tie",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": {
+                "expression": "{{ record.result.length }}"
+              },
+              "rightValue": 1
+            },
+            {
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.result[0][1] }}"
+              },
+              "rightValue": {
+                "expression": "{{ record.result[1][1] }}"
+              }
+            },
+            {
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              },
+              "leftValue": {
+                "expression": "{{ steps[\"step-5\"].record.limitKNN }}"
+              },
+              "rightValue": 100
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Qdrant variables + embedding + KNN neigbours",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "ImageEmbedding",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.data[0].embedding }}"
+              }
+            },
+            {
+              "name": "qdrantCloudURL",
+              "type": "string",
+              "value": {
+                "expression": "https://152bc6e2-832a-415c-a1aa-fb529f8baf8d.eu-central-1-0.aws.cloud.qdrant.io"
+              }
+            },
+            {
+              "name": "collectionName",
+              "type": "string",
+              "value": {
+                "expression": "land-use"
+              }
+            },
+            {
+              "name": "limitKNN",
+              "type": "number",
+              "value": {
+                "expression": "10"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-10"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.voyageai.com/v1/{resource}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Vector Database as a Big Data Analysis Tool for AI Agents [2_2 KNN].json",
+    "git_blob": "1606a3efe78c265925c79da5961af7d08cf2e4bf",
+    "sha256": "8b3ab5f89197d1bf385163e7b2f3dbc6f65962381ff064c661519c56713c82b3",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Vector%20Database%20as%20a%20Big%20Data%20Analysis%20Tool%20for%20AI%20Agents%20%5B2_2%20KNN%5D.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

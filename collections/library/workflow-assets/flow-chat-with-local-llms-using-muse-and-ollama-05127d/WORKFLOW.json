@@ -1,0 +1,65 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-chat-with-local-llms-using-muse-and-ollama-05127d",
+  "title": "Chat with local LLMs using Muse and Ollama",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Ollama Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Chat LLM Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Chat with local LLMs using n8n and Ollama.json",
+    "git_blob": "27e31a4cbd5292a75856ac0b9a328a97ae46f4aa",
+    "sha256": "4675d261db86de5a8a498b3eea1fd1b985976f7a0d72c41c94d539756e9f048e",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Chat%20with%20local%20LLMs%20using%20n8n%20and%20Ollama.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}
