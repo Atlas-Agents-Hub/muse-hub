@@ -49,6 +49,16 @@ python -B tools/muse_collection.py workflow-demo product-to-implementation
 
 Each report identifies the calculation or review stages that ran and the remaining handoffs. Use its outputs with your project files and the tools required for the next step. [Specialist tools](collection/SPECIALIST_QUICKSTART.md) documents individual commands and input formats.
 
+## Prioritize work that fits
+
+The [Project Prioritization calculator](../collections/muse-starters-v1/skills/project-prioritization/PRIORITIZE.md) ranks a backlog with RICE and chooses a batch that fits each resource's capacity, including prerequisite work. It accepts JSON or CSV and explains deferred tasks. Run the supplied example from the repository root with Python 3.10 or newer:
+
+```sh
+python -B tools/prioritize.py --input collections/muse-starters-v1/skills/project-prioritization/backlog.json
+```
+
+It is also included in the Project Prioritization skill ZIP, the Coordinator and Personal Companion packages, and workflows that use the skill. Each download includes its own guide and example files.
+
 ## Builder delivery
 
 ```sh

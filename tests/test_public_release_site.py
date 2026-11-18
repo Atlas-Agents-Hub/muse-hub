@@ -224,7 +224,9 @@ class GeneratedReleasePresentation(unittest.TestCase):
                         labels=re.findall(r'\bversion\s+v?([0-9]+\.[0-9]+\.[0-9]+)\b',' '.join(page.text),re.IGNORECASE)
                         self.assertEqual(labels,[version.removeprefix('v')]*label_count,name)
                         downloads={url for url in page.links if '/releases/download/' in url}
-                        self.assertEqual(len(downloads),17 if name=='index.html' else 120,name)
+                        self.assertEqual(len(downloads),18 if name=='index.html' else 120,name)
+                        planning_url=self.renderer.REPO+'/releases/download/'+version+'/muse-skill-project-prioritization-'+version+'.zip'
+                        self.assertIn(planning_url,downloads,name)
                         self.assertTrue(downloads<=expected_urls,(name,downloads-expected_urls))
                         releases=[url for url in page.links if '/releases/tag/' in url]
                         self.assertTrue(all(url==self.renderer.REPO+'/releases/tag/'+version for url in releases))

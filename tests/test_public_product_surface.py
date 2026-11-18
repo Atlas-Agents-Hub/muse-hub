@@ -46,7 +46,7 @@ class PublicProductSurfaceTests(unittest.TestCase):
  def test_readme_is_short_product_entrypoint(self):
   readme=(ROOT/"README.md").read_text(encoding="utf-8")
   self.assertLess(len(readme.encode("utf-8")),8000)
-  for text in ("# Muse Hub","v1.2.0","docs/CAPABILITIES.md",
+  for text in ("# Muse Hub","v1.3.0","docs/CAPABILITIES.md",
                "docs/GITHUB_QUICKSTART.md","MIT","docs/TERMINAL.md"):
    self.assertIn(text,readme)
   for role in ROLE_SLUGS:
@@ -97,8 +97,8 @@ class PublicProductSurfaceTests(unittest.TestCase):
  def test_published_download_links_present_without_private_credential_urls(self):
   text="\n".join((ROOT/x).read_text(encoding="utf-8")
                  for x in ("README.md","CHANGELOG.md","docs/RELEASES.md"))
-  self.assertIn("releases/tag/v1.2.0",text)
-  self.assertIn("releases/download/v1.2.0/SHA256SUMS",text)
+  self.assertIn("releases/tag/v1.3.0",text)
+  self.assertIn("releases/download/v1.3.0/SHA256SUMS",text)
   self.assertNotIn("token=",text.lower())
   self.assertNotIn("sethburkhardt21-dev/muse-ai-agent-presets-r32" + "-private",text)
 

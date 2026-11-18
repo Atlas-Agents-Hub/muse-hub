@@ -1,0 +1,7 @@
+id,name,reach,impact,confidence_pct,effort,resource,dependencies,status
+tracking-live,Customer tracking is ready,100,1,100,1,engineering,,done
+prep-data,Prepare the customer data,120,0.5,100,2,engineering,,todo
+onboarding,Improve onboarding,500,2,80,6,engineering,tracking-live;prep-data,todo
+quick-guide,"First-run guide, ""quick start""",160,1,100,2,design,,todo
+billing-rewrite,Rebuild the billing experience,900,3,80,12,engineering,,todo
+mobile-polish,Polish the mobile layout,100,1,50,3,engineering,,todo

@@ -29,6 +29,9 @@ _TEXT_NAMES = frozenset((
     "license", "makefile", "dockerfile", ".gitignore",
     ".gitattributes", ".editorconfig", ".dockerignore",
 ))
+REVIEWED_TEXT_FILES = frozenset({
+    "collections/muse-starters-v1/skills/project-prioritization/backlog.csv",
+})
 _SENSITIVE_NAMES = frozenset((
     ".env", ".env.local", ".env.production", ".env.development",
     "id_rsa", "id_ed25519", "credentials.json", "credentials.yml",
@@ -121,7 +124,8 @@ def audit_public_tree(root: Path, *,
                     else "UNREVIEWED_BINARY_ASSET")
                 continue
             if (path.suffix.lower() not in _TEXT_SUFFIXES and
-                lowered not in _TEXT_NAMES):
+                lowered not in _TEXT_NAMES and
+                path.relative_to(root).as_posix() not in REVIEWED_TEXT_FILES):
                 add(path, "UNREVIEWED_BINARY_ASSET")
                 continue
             try:

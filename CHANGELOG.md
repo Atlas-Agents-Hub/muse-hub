@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.0 - choose work that fits
+
+- Compare a backlog with exact RICE scores and stable rankings.
+- Choose a next batch within each resource's capacity, including prerequisite work and shared dependencies.
+- Import JSON or CSV and export a ranked report with execution order, budgets and reasons for deferred work.
+- Run the calculator directly from the Project Prioritization, Coordinator, Personal Companion and related workflow or starter downloads.
+- Find the planning kit from the homepage and search Downloads for RICE, capacity or prioritization.
+
 ## v1.2.0 - explore the whole Hub
 
 - Find Muse features, specialists, connections, Companion spaces, computer tools, and community resources from six homepage paths.
