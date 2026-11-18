@@ -8,11 +8,9 @@ Choose from **15 independent assistants**, each with Main and **three subchats**
 
 ## Start with what you want to do
 
-| Your goal | A useful route |
-|---|---|
-| [Organize your day](docs/journeys/ORGANIZE_YOUR_DAY.md) | Goals and reminders in Muse, a Personal Companion, calendar connections, and a place for your notes |
-| [Build and automate](docs/journeys/BUILD_AND_AUTOMATE.md) | An engineering specialist, browser or terminal access, a reproducible workflow, and a review handoff |
-| [Create something](docs/journeys/CREATE_SOMETHING.md) | A creative brief, a production plan, media tools, and time to explore the Studio |
+- **[Organize your day](docs/journeys/ORGANIZE_YOUR_DAY.md):** goals and reminders in Muse, a Personal Companion, calendar connections, and a place for your notes.
+- **[Build and automate](docs/journeys/BUILD_AND_AUTOMATE.md):** an engineering specialist, browser or terminal access, a reproducible workflow, and a review handoff.
+- **[Create something](docs/journeys/CREATE_SOMETHING.md):** a creative brief, a production plan, media tools, and time to explore the Studio.
 
 Explore [Muse's features](https://muse.ai/) and choose the Hub tools that fit your task. On the website, **Inside Muse**, **Included with Muse Hub**, and **Community project** labels show where each resource comes from.
 

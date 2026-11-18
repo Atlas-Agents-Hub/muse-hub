@@ -135,13 +135,13 @@ button { cursor:pointer; }
 /* Journeys and discovery share the editorial type, color and spacing of the kits. */
 .journey-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:#bdb9ae; border:1px solid #bdb9ae; }
 .journey-grid article { display:flex; flex-direction:column; min-width:0; background:var(--paper-strong); padding:28px; }
-.journey-kicker { color:#5a5649; font-size:9px; font-weight:800; letter-spacing:.1em; }
+.journey-kicker { color:#5a5649; font-size:11px; font-weight:800; letter-spacing:.1em; }
 .journey-grid h3 { margin:23px 0 13px; font:normal 35px/1.08 var(--serif); letter-spacing:-.035em; }
 .journey-grid p { margin:0 0 12px; color:#555146; font-size:13px; line-height:1.8; }
 .journey-grid a { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:44px; padding-top:20px; margin-top:auto; font-size:12px; font-weight:800; text-decoration:none; }
 .journey-grid a:hover { text-decoration:underline; }
 .experience-section { padding:74px 0 82px; }
-.origin-label { display:inline-block; width:fit-content; max-width:100%; border:1px solid #858474; padding:4px 7px; color:#d5d3c5; font-size:9px; line-height:1.4; font-weight:700; letter-spacing:.025em; }
+.origin-label { display:inline-block; width:fit-content; max-width:100%; border:1px solid #858474; padding:4px 7px; color:#d5d3c5; font-size:11px; line-height:1.4; font-weight:700; letter-spacing:.025em; }
 .section-paper .origin-label { color:#555044; border-color:#aaa594; }
 .section-meta .origin-label { border:0; padding:0; font-size:10px; line-height:inherit; text-transform:none; letter-spacing:.025em; }
 .feature-layout { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr); gap:75px; padding-top:42px; }
