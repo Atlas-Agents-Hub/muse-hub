@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.2 ? consistent release labels
+## v1.1.2 - consistent release labels
 
 - Generate homepage, selected-specialist and download-page version labels from the release catalog.
 - Reject stale release labels and links during the public build check.

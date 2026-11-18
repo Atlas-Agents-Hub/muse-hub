@@ -2,7 +2,7 @@
 
 **Current release: [v1.1.2](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/SHA256SUMS)
 
-## v1.1.2 — smoother setup and navigation
+## v1.1.2 - consistent release labels
 
 [Choose one of the 15 assistants](DOWNLOAD_A_SPECIALIST.md). Each ZIP brings together its Main instructions, three subchat guides, selected skills, workflows, examples, and `START_HERE.md`.
 
@@ -46,7 +46,7 @@ Keep the original ZIP and your customized working copy separately. [Setup and sa
 
 ## Earlier releases
 
-### v1.1.1 ? smoother setup and navigation
+### v1.1.1 - smoother setup and navigation
 
 The [v1.1.1 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1) fixes skill-guide paths, includes kit practice files, improves keyboard and mobile navigation, and clarifies setup guides. Its original archives and checksums remain available.
 
