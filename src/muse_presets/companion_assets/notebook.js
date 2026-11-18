@@ -99,7 +99,7 @@
       pending = null;
       if (observed) {
         resetEditor();
-        status(operation === 'forget' ? 'The note is absent from saved notes. No write was retried.' : 'Note saved and read back from SQLite. No write was retried.');
+        status(operation === 'forget' ? 'Note removed from saved notes.' : 'Note saved.');
       } else {
         blocked = true;
         status('Saved state differs from the attempted change. Your draft is preserved. Review a saved note or choose New note; nothing was retried.');
@@ -183,7 +183,7 @@
   });
   el('room-note-delete').addEventListener('click', () => {
     if (busy || blocked || pending || !current || !current.revision) return;
-    if (window.confirm('Delete this saved note? This is not secure physical erasure.')) perform(() => mutate('forget'));
+    if (window.confirm('Delete this saved note?')) perform(() => mutate('forget'));
   });
   el('notebook-refresh').addEventListener('click', () => perform(async () => {
     // A read is allowed after an uncertain effect; a mutation is never retried.

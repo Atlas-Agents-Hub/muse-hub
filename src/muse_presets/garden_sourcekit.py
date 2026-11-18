@@ -21,7 +21,7 @@ SOURCE_SHA = {
     "examples/garden_calendar_demo.py": "19c1cd3703bbd48aef210c4a2f5cad540c5efd2827c6add7fba791bf18b41344",
     "tests/test_garden_calendar.py": "63fb0c7ed0ea2407a07446ef798c3f9cf580445f32f410fd11dcf67d362b332d",
     "presets/garden-companion/preset.json": "8fa1478f149bc1a7a9cd7690d370266f245f982aeff5fd9c4bd018718784c7fe",
-    "presets/garden-companion/playbook.json": "375a34f906b89680a9b384b9431445d526291963f918797c772cb04e498bd0bf",
+    "presets/garden-companion/playbook.json": "4966f2ea9649b3594752a6754b0d4d92334bddc5a3d7c8131f6c00d4f2207fb6",
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
 }
 SOURCE_MAP = {
@@ -33,42 +33,40 @@ SOURCE_MAP = {
     "presets/garden-companion/playbook.json": "playbook.json",
     "LICENSE": "LICENSE",
 }
-START_HERE = """# Garden Companion — executable local source kit
+START_HERE = """# Garden Companion
 
-Requirements: Python 3.12+ only. No pip, Git, paid API or network is required.
-Verify the ZIP SHA-256 against a separately trusted release record before
-extracting it to a NEW directory. From that directory run:
+Plan garden events, review date changes, and keep a record of each decision.
+
+## Start
+
+Use Python 3.12 or newer. Check the ZIP against the release's SHA256SUMS, then
+extract it into a new folder. Open a terminal in that folder and run:
 
     python -I -B run.py --operation demo
     python -I -B run.py --operation self-test
 
-The demo uses an actual disposable SQLite database: create an event, propose
-a date shift, review/approve with a synthetic local owner, close/reopen the
-connection and recover the receipt. The original bundled engine regression
-suite also tests wrong-owner isolation, stale revisions, transaction rollback,
-conflicting operations, expiry, rejection and recovery. Tests use fixtures;
-they do not authenticate a real person. No external calendar is contacted.
+The demo creates an event in a temporary SQLite database, proposes a date
+change, records approval, and reopens the database to recover the receipt.
+The self-test checks the bundled engine, including ownership, conflicting
+changes, expiry, transaction rollback, and recovery.
 
-The kit includes unchanged garden_calendar.py, database_paths.py, the original
-demo/tests, neutral preset/playbook and LICENSE. The runner verifies fixed
-source pins and refuses unknown files before importing package code. Do not
-add files inside this immutable source kit: keep your own data elsewhere.
-SHA-256 checks are integrity checks, not publisher signatures or permission.
-Python -I isolates imports; it is NOT an OS security sandbox.
+## Use the engine in your project
 
-For a custom local integration import GardenCalendar and GardenScope from
-muse_presets.garden_calendar. Supply a host-side authority callable and an
-explicit database path. GardenScope construction alone is not authentication.
-Never expose that resolver as an agent/browser input. The module documents
-proposal -> review -> decision -> receipt; caller-controlled tests are not a
-native provider. SQLite files are unencrypted and use host filesystem access.
-The package deliberately does not bind an account, schedule jobs, install a
-Muse agent, send Family Link messages, or provide live weather/plant diagnosis.
+Import GardenCalendar and GardenScope from muse_presets.garden_calendar.
+Provide an explicit database path and an authority function controlled by
+your application. Keep that function separate from agent or browser input.
+The bundled demo shows the proposal, review, decision, and receipt sequence.
 
-The verifier accepts only the exact deterministic canonical ZIP, not a
-recompressed equivalent. Obtain a fresh reviewed kit for updates; preserve
-user databases outside the old kit. There is no automatic migration or
-uninstall command that deletes user state.
+Store your garden data and custom code outside the kit folder. The runner
+checks the kit's exact file set before execution. For updates, extract the
+new release into a separate folder and keep your existing database.
+SQLite files use your computer's filesystem permissions; choose a private
+location for personal information.
+
+## Files
+
+The package contains the Garden engine, database utilities, runnable demo,
+regression tests, role preset, playbook, and license.
 """
 RUNNER = r'''"""Offline Garden demo and original tests. No live-provider authority."""
 from __future__ import annotations

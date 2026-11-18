@@ -44,20 +44,23 @@ class CollectionPromotion(unittest.TestCase):
   revisions={row['original_path']:row for row in json.loads((C/'PUBLIC_REVISIONS.json').read_bytes())['entries'] if row['ledger']=='public'}
   self.assertEqual(p['source_commit'],'b75ef3091b8195dbbc090a8ab308c9d9130fd585')
   self.assertEqual(len(p['files']),198)
-  archived=0
+  archived=set()
   for name,expected in p['files'].items():
    with self.subTest(path=name):
     if name.startswith('presets/') and name.endswith('/INSTALL.md'):
      path=R/'docs/history/v1-install'/(pathlib.Path(name).parent.name+'.txt')
-     archived+=1
+     archived.add(name)
     elif name.startswith('presets/') and name.endswith('/README.md'):
      path=R/'docs/history/v1-role-readmes'/(pathlib.Path(name).parent.name+'.txt')
-     archived+=1
+     archived.add(name)
     elif name in revisions:
-     path=R/revisions[name]['archive_path'];archived+=1
+     path=R/revisions[name]['archive_path'];archived.add(name)
     else:path=R/name
     self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),expected)
-  self.assertEqual(archived,30+len(revisions))
+  role_sources={name for name in p['files'] if name.startswith('presets/') and name.endswith(('/INSTALL.md','/README.md'))}
+  self.assertEqual(len(role_sources),30)
+  self.assertLessEqual(set(revisions),set(p['files']))
+  self.assertEqual(archived,role_sources|set(revisions))
   for archive,count in [('v1-install',15),('v1-role-readmes',15)]:
    history=json.loads((R/'docs/history'/archive/'MIGRATION_MANIFEST.json').read_text())
    self.assertEqual(len(history['entries']),count)
@@ -70,15 +73,16 @@ class CollectionPromotion(unittest.TestCase):
   self.assertEqual(x['source_kind'],'OWNER_AUTHORIZED_FIRST_PARTY')
   self.assertFalse(x['private_history_included']);self.assertFalse(x['upstream_code_imported'])
   self.assertTrue(x['incoming_files'])
-  preserved=0
+  preserved=set()
   for name,row in x['incoming_files'].items():
    path=(R/'docs/history/promotion-source/SPECIALIST_QUICKSTART.txt'
          if name=='docs/collection/SPECIALIST_QUICKSTART.md' else
          R/revisions[name]['archive_path'] if name in revisions else R/name)
-   if path!=R/name:preserved+=1
+   if path!=R/name:preserved.add(name)
    self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),row['sha256'])
    self.assertIn(row['rights'],('PROJECT_MIT_ORIGINAL','REFERENCE_ONLY_PUBLIC_SOURCE_METADATA'))
-  self.assertEqual(preserved,1+len(revisions))
+  self.assertLessEqual(set(revisions),set(x['incoming_files']))
+  self.assertEqual(preserved,{'docs/collection/SPECIALIST_QUICKSTART.md'}|set(revisions))
   self.assertTrue((R/'docs/collection/SPECIALIST_QUICKSTART.md').is_file())
   self.assertNotIn('private_repository',x)
  def test_reviewed_current_files_are_pinned_independently_of_history(self):
@@ -128,8 +132,10 @@ class CollectionPromotion(unittest.TestCase):
    self.assertGreaterEqual(body.count('\n## '),3)
    for token in required:self.assertIn(token,body)
   body=(R/'docs/handbook/daily-desk-design.md').read_text(encoding='utf8')
-  for word in ['SpaceCompanion','PersonalCompanion','../spaces/DAILY_DESK.md','stale','restore','3 tasks','2 notes']:
+  for word in ['SpaceCompanion','PersonalCompanion','../spaces/DAILY_DESK.md','stale','restore']:
    self.assertIn(word,body)
+  self.assertRegex(body,r'\b(?:3|three) tasks\b')
+  self.assertRegex(body,r'\b(?:2|two) notes\b')
  def test_documentation_routes_do_not_silently_replace_profile_install(self):
   body=(R/'docs/collection/MUSE_CURATED_COLLECTION.md').read_text(encoding='utf8')
   for s in ['15','75','100','25','existing','memory','portable','overlap','DOWNLOAD_A_SPECIALIST.md','tools/muse_collection.py']:

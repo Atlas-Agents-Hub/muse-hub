@@ -76,10 +76,24 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
      import hashlib
      baseline=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_BASELINE.json").read_bytes())
      revisions=json.loads((ROOT/"collections/muse-starters-v1/PUBLIC_REVISIONS.json").read_bytes())
-     self.assertEqual(revisions["schema"],"muse-collection-reviewed-source-revisions/v1")
+     self.assertEqual(revisions["schema"],"muse-collection-reviewed-source-revisions/v2")
+     previous_path="docs/history/public-revisions-v1.1.0.json.txt"
+     previous_digest="e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324"
+     self.assertEqual(revisions["previous_revision_path"],previous_path)
+     self.assertEqual(revisions["previous_revision_sha256"],previous_digest)
+     previous_raw=(ROOT/previous_path).read_bytes()
+     self.assertEqual(hashlib.sha256(previous_raw).hexdigest(),previous_digest)
+     previous=json.loads(previous_raw)
+     self.assertEqual(previous["schema"],"muse-collection-reviewed-source-revisions/v1")
+     current_entries={(row["ledger"],row["original_path"]):row for row in revisions["entries"]}
+     for prior in previous["entries"]:
+         current=current_entries[(prior["ledger"],prior["original_path"])]
+         for key in ("archive_path","historical_sha256"):
+             self.assertEqual(current[key],prior[key],prior["original_path"])
      revised={row["original_path"]:row for row in revisions["entries"] if row["ledger"]=="public"}
      self.assertEqual(len(baseline["files"]),198)
-     preserved_roles=0
+     preserved_roles={name for name in baseline["files"] if name.startswith("presets/")
+                      and name.endswith(("/INSTALL.md","/README.md"))}
      for name,digest in baseline["files"].items():
          with self.subTest(path=name):
              if name in revised:
@@ -89,17 +103,19 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
                  path=ROOT/revision["archive_path"]
              elif name.startswith("presets/") and name.endswith("/INSTALL.md"):
                  path=ROOT/"docs/history/v1-install"/(Path(name).parent.name+".txt")
-                 preserved_roles+=1
              elif name.startswith("presets/") and name.endswith("/README.md"):
                  path=ROOT/"docs/history/v1-role-readmes"/(Path(name).parent.name+".txt")
-                 preserved_roles+=1
              else:
                  path=ROOT/name
              self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),digest)
-     self.assertEqual(preserved_roles,30)
+     self.assertEqual(len(preserved_roles),30)
      for archive in ("v1-install","v1-role-readmes"):
          history=json.loads((ROOT/"docs/history"/archive/"MIGRATION_MANIFEST.json").read_text())
          self.assertEqual(len(history["entries"]),15)
+         suffix="/INSTALL.md" if archive=="v1-install" else "/README.md"
+         self.assertEqual({entry["original_path"] for entry in history["entries"]},
+                          {name for name in preserved_roles if name.endswith(suffix)})
          for entry in history["entries"]:
+             self.assertEqual(entry["sha256"],baseline["files"][entry["original_path"]])
              self.assertEqual(hashlib.sha256((ROOT/entry["archive_path"]).read_bytes()).hexdigest(),entry["sha256"])
 if __name__=="__main__":unittest.main()

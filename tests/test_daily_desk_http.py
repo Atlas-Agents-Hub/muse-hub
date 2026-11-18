@@ -90,7 +90,7 @@ class DeskHTTP(unittest.TestCase):
   other=make_server(self.root/'old.sqlite',token=self.token,authority=lambda:self.scope)
   thread=threading.Thread(target=other.serve_forever,daemon=True);thread.start()
   try:
-   c=http.client.HTTPConnection('127.0.0.1',other.server_address[1]);c.request('GET','/',headers={});r=c.getresponse();text=r.read().decode();self.assertEqual(r.status,200);self.assertIn('Local companion',text);self.assertNotIn('task-form',text);c.close()
+   c=http.client.HTTPConnection('127.0.0.1',other.server_address[1]);c.request('GET','/',headers={});r=c.getresponse();text=r.read().decode();self.assertEqual(r.status,200);self.assertIn('Companion Workspace',text);self.assertNotIn('task-form',text);c.close()
   finally:other.shutdown();thread.join(5);other.server_close()
 
 if __name__=='__main__':unittest.main(verbosity=2)

@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +20,60 @@ SPEC.loader.exec_module(J)
 
 
 class HubJourneysTest(unittest.TestCase):
+    def _feature_fixture(self, root):
+        data = (ROOT / J.FEATURE_REGISTER).read_bytes()
+        archive = root / J.FEATURE_REGISTER
+        archive.parent.mkdir(parents=True, exist_ok=True)
+        archive.write_bytes(data)
+        tasks = json.loads(data)["tasks"]
+        for task in tasks:
+            for name in task["source_paths"]:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"current checkout fixture\n")
+        return tasks
+
+    def test_historical_graph_is_bound_without_reading_customer_navigation(self):
+        data = (ROOT / J.FEATURE_REGISTER).read_bytes()
+        self.assertEqual(hashlib.sha256(data).hexdigest(),
+                         "487f25e98f24b22218d24a8f62567d60dcec8212493c57949f20ab809afddbaf")
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            tasks = self._feature_fixture(root)
+            navigation = root / "docs/discovery/hub-feature-status.json"
+            navigation.parent.mkdir(parents=True, exist_ok=True)
+            navigation.write_text('{"schema":"muse-hub/distribution-links/v1"}', encoding="utf-8")
+            before = navigation.read_bytes()
+            self.assertEqual(J.load_features(root), tasks)
+            self.assertEqual(navigation.read_bytes(), before)
+
+    def test_missing_archive_does_not_fall_back_to_customer_discovery(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            navigation = root / "docs/discovery/hub-feature-status.json"
+            navigation.parent.mkdir(parents=True)
+            navigation.write_bytes((ROOT / J.FEATURE_REGISTER).read_bytes())
+            with self.assertRaisesRegex(ValueError, "SOURCE_PATH_MISSING"):
+                J.load_features(root)
+
+    def test_changed_historical_bytes_are_refused(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            self._feature_fixture(root)
+            archive = root / J.FEATURE_REGISTER
+            archive.write_bytes(archive.read_bytes() + b"\n")
+            with self.assertRaisesRegex(ValueError, "SOURCE_DOCUMENT_HASH_MISMATCH"):
+                J.load_features(root)
+
+    def test_historical_graph_still_requires_current_source_files(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            tasks = self._feature_fixture(root)
+            self.assertEqual(J.load_features(root), tasks)
+            (root / tasks[0]["source_paths"][0]).unlink()
+            with self.assertRaisesRegex(ValueError, "SOURCE_PATH_MISSING"):
+                J.load_features(root)
+
     def test_all_22_features_and_15_roles_are_source_checked(self):
         result = J.verify_inventory(ROOT)
         self.assertEqual(result["status"], "SOURCE_INVENTORY_VALID_NOT_RUNTIME_VERIFIED")
@@ -100,6 +156,10 @@ class HubJourneysTest(unittest.TestCase):
             J.build_journeys(ROOT, feature="H99")
 
     def test_cli_json_and_markdown_are_read_only(self):
+        paths = {J.FEATURE_REGISTER, "docs/discovery/hub-feature-status.json", "hub/site/roles.json"}
+        paths.update(path for task in J.load_features(ROOT) for path in task["source_paths"])
+        paths.update("presets/" + role["id"] + "/INSTALL.md" for role in J.load_roles(ROOT))
+        before = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths}
         for args in (
             ["--verify"],
             ["--feature", "H19", "--role", "learning-coach"],
@@ -124,6 +184,8 @@ class HubJourneysTest(unittest.TestCase):
             [sys.executable, "-B", str(MODULE), "--feature", "H99"],
             cwd=ROOT, capture_output=True, text=True, timeout=30)
         self.assertNotEqual(invalid.returncode, 0)
+        after = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths}
+        self.assertEqual(after, before)
 
     def test_documented_journey_is_discoverable_and_non_destructive(self):
         doc = (ROOT / "docs/handbook/hub-setup-journeys.md").read_text(encoding="utf-8")

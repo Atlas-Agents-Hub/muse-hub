@@ -19,7 +19,7 @@ MAX_ARCHIVE = 500_000
 SOURCE_SHA = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "examples/learning_session_demo.py": "4600987556e80ad06c27e8fe0a35d916618635ff5cfaaa49705cd6b9bab014ce",
-    "presets/learning-coach/playbook.json": "78135472989a3a097914afb529e32a7a46b178c35f3341245828b33390f19a59",
+    "presets/learning-coach/playbook.json": "fcac671b6edd2d28bf834fada3faa992577670079f5a6900702c88338f9480e7",
     "presets/learning-coach/preset.json": "11ac7532685fdf00e037f69401bf9b5e72a87aec16b31b557335e9313b1a0c84",
     "src/muse_presets/database_paths.py": "1b3cb8a42cb29036aada91e314bffdbf397c46fdecf6227e4177022ac34acc79",
     "src/muse_presets/learning_session.py": "f81e1e786b6956f1f48acc0437e782c5eabe674f65d16322a0b8f3395dae7d3b",
@@ -34,7 +34,48 @@ SOURCE_MAP = {
     "presets/learning-coach/playbook.json": "playbook.json",
     "LICENSE": "LICENSE",
 }
-START_HERE = '# Learning Coach — executable local source kit\n\nRequires Python 3.12+. No pip, Git, paid API or network service is required.\nVerify the ZIP SHA-256 using a separately trusted release record before\nextracting into a NEW directory. From the extracted folder run:\n\n    python -I -B run.py --operation demo\n    python -I -B run.py --operation self-test\n\nThe demo runs the original local SQLite pipeline: admit supplied science\nterms, create quote-backed draft questions, approve with a synthetic owner,\nissue a learner challenge without its answer, record a literal score, close\nand reopen the database, recover the same receipt and project review due\n24 hours later. It removes its disposable database at exit. The 25 original\nengine tests cover source mutation, wrong owner/learner/session, injected\nlesson rejection, stale versions, hidden answers, expiry, duplicate grading,\nconcurrent connections and transaction rollback. Platform skips are reported.\nThese tests use local fixtures; they do not authenticate a real person.\n\nThe engine recognizes only explicit Term :: Definition. source lines. It does\nnot use a language model, verify teaching material or perform semantic grading.\nScores use literal_casefold_whitespace_v1 and due times use\nHEURISTIC_V1_NOT_FSRS: no validated mastery or clinical-learning claim.\n\nThe package includes unchanged learning_session.py, database_paths.py, the\noriginal demo/tests, neutral role preset/playbook and LICENSE. The runner\nchecks fixed source pins, disallows unknown files and refuses symlinked or\nWindows-junction kit paths before imports. Keep custom code and databases\noutside this immutable kit. Hashes establish byte integrity, not publisher\nidentity or permission. Python -I is import isolation, not an OS sandbox.\n\nFor a custom local integration import LearningSession and LearningScope from\nmuse_presets.learning_session. Supply an absolute database path and a protected\nhost-side authority callable. Never allow an agent/browser to choose its own\nauthority resolver. Caller-supplied scope labels are not authentication.\nSQLite stores material and answers unencrypted; this reference is not approved\nfor clinical decisions, PHI, examination secrets or regulated assessments.\nThe full source and limitations are described in the original engine docs.\n\nNo native Muse account, Space, reminder, scheduled job, network connector or\nFamily Link message is installed or invoked. The verifier accepts only the\ncanonical deterministic ZIP, not a recompressed equivalent. Updates are new\nreviewed kits; preserve user databases separately. No automatic migration,\nbackground process or state-deleting uninstall is provided.\n'
+START_HERE = """# Learning Coach
+
+Turn supplied study terms into reviewable questions, record answers, and
+schedule the next review in a SQLite database.
+
+## Start
+
+Use Python 3.12 or newer. Check the ZIP against the release's SHA256SUMS, then
+extract it into a new folder. Open a terminal in that folder and run:
+
+    python -I -B run.py --operation demo
+    python -I -B run.py --operation self-test
+
+The demo reads terms, prepares questions for approval, records an answer,
+reopens the database, and recovers the saved result. It uses a temporary
+database and removes it when finished. The self-test exercises the engine's
+ownership checks, source changes, answer handling, expiry, and recovery.
+
+## Prepare study material
+
+Write each source item as Term :: Definition. Review the generated questions
+before approving them. Answers use literal matching after case and whitespace
+normalization. The review interval is 24 hours. Use this workflow for practice
+with material you have checked.
+
+## Use the engine in your project
+
+Import LearningSession and LearningScope from muse_presets.learning_session.
+Provide an absolute database path and an authority function controlled by
+your application. Keep that function separate from agent or browser input.
+The bundled demo shows how to create, approve, answer, and recover a session.
+
+Keep your study data and custom code outside the kit folder. The runner checks
+the kit's exact file set before execution. For updates, extract the new release
+into a separate folder and keep your existing database. Store study material
+and answers in a private folder protected by your computer's permissions.
+
+## Files
+
+The package contains the Learning engine, database utilities, runnable demo,
+regression tests, role preset, playbook, and license.
+"""
 RUNNER = r'''"""Offline Learning demo and original tests. No live-provider authority."""
 from __future__ import annotations
 import argparse

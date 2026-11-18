@@ -14,7 +14,7 @@ async function api(path,data){
 function resetNote(){noteRevision=0;el('note-id').value=uid('n');el('note-id').readOnly=false;el('note-text').value='';}
 function element(tag,text){const node=document.createElement(tag);node.textContent=text;return node;}
 function render(){
- const adapter=current.adapter;el('policy').textContent=adapter.enabled?'Local requests enabled — provider disconnected':'Disabled by default';
+ const adapter=current.adapter;el('policy').textContent=adapter.enabled?'Request queue enabled':'Disabled by default';
  el('toggle').textContent=adapter.enabled?'Disable local requests':'Enable local requests';el('queue').disabled=!adapter.enabled;
  el('notes').replaceChildren();
  for(const note of current.notes){
@@ -41,11 +41,11 @@ async function perform(fn){
  finally{busy=false;document.body.removeAttribute('aria-busy');}
 }
 el('session-form').addEventListener('submit',event=>{event.preventDefault();perform(async()=>{
- token=el('token').value;await refresh();el('token').value='';el('unlock').hidden=true;el('workspace').hidden=false;resetNote();message('Local workspace opened. Native provider remains disconnected.');el('note-id').focus();
+ token=el('token').value;await refresh();el('token').value='';el('unlock').hidden=true;el('workspace').hidden=false;resetNote();message('Workspace opened.');el('note-id').focus();
 });});
 el('lock').addEventListener('click',()=>{if(busy)return;token='';current=null;noteRevision=0;pendingRequest=null;el('notes').replaceChildren();el('requests').replaceChildren();el('note-text').value='';el('prompt').value='';el('workspace').hidden=true;el('unlock').hidden=false;el('token').value='';message('Session cleared from this page. Local database was not erased.');el('token').focus();});
 el('refresh').addEventListener('click',()=>perform(async()=>{await refresh();message('Original local state read back.');}));
-el('toggle').addEventListener('click',()=>perform(async()=>{await api('/api/config',{enabled:!current.adapter.enabled,expected_revision:current.adapter.revision});await refresh();message('Local policy saved. No jobs dispatched.');}));
+el('toggle').addEventListener('click',()=>perform(async()=>{await api('/api/config',{enabled:!current.adapter.enabled,expected_revision:current.adapter.revision});await refresh();message('Queue setting saved.');}));
 el('note-form').addEventListener('submit',event=>{event.preventDefault();perform(async()=>{await api('/api/note',{note_id:el('note-id').value,text:el('note-text').value,expected_revision:noteRevision});await refresh();resetNote();message('Note persisted and read back from SQLite.');});});
 el('new-note').addEventListener('click',()=>{if(!busy){resetNote();el('note-text').focus();}});
 el('request-form').addEventListener('submit',event=>{event.preventDefault();perform(async()=>{
@@ -54,5 +54,5 @@ el('request-form').addEventListener('submit',event=>{event.preventDefault();perf
  if(!pendingRequest)pendingRequest={request_id:uid('r'),prompt};
  // Keep the exact ID/payload until acknowledgement, including a lost response.
  await api('/api/request',pendingRequest);pendingRequest=null;el('prompt').value='';
- await refresh();message('Local request recorded. Nothing sent to a provider.');
+ await refresh();message('Request recorded.');
 });});

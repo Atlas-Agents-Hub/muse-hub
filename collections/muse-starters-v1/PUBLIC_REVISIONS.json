@@ -505,6 +505,22 @@
       "original_path": "src/muse_presets/engineer_sourcekit.py"
     },
     {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/garden_sourcekit.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "3461fd6959c7d57d8e1356f702168c9f226f568c3191b185f592ca55506e7ccc",
+      "historical_sha256": "bcbf36358a990c3292dd9a71bd9813cdc7fd51879f6b671ea95f1d68b194b276",
+      "ledger": "public",
+      "original_path": "src/muse_presets/garden_sourcekit.py"
+    },
+    {
+      "archive_path": "docs/history/source-revisions/src/muse_presets/learning_sourcekit.py.txt",
+      "change_kind": "RELEASE_PACKAGE_COMPOSITION",
+      "current_sha256": "f75eaeaf0a71f17054fa68487cb1daff23d822ea1a6f24edd96f0389d9971454",
+      "historical_sha256": "6395ab09924df484c301c301e47ede776882e18c6934cfcaf06c794957d14bbe",
+      "ledger": "public",
+      "original_path": "src/muse_presets/learning_sourcekit.py"
+    },
+    {
       "archive_path": "docs/history/source-revisions/src/muse_presets/model_builder_dropin.py.txt",
       "change_kind": "RELEASE_PACKAGE_COMPOSITION",
       "current_sha256": "4d0eb9d3fbef795653bc86db589602a7ed06d81a0f2ea83b17ed1988ffa1bc96",
@@ -3011,7 +3027,7 @@
     {
       "archive_path": "docs/history/source-revisions/tests/test_muse_r5_product.py.txt",
       "change_kind": "REVIEWED_TEST_EXPECTATIONS",
-      "current_sha256": "ddeda3c96ef3bac5a86dc9eae4c53b4455c98a7cac79c00324bc709045366335",
+      "current_sha256": "3001ae666f46e375197a3ae7615cec772a3f78c989910213f8d91998b232cb27",
       "historical_sha256": "31a544e1d309afd56f11bc3bbda6c1387359de7ce999b91c79a40a33e826a0c2",
       "ledger": "promotion",
       "original_path": "tests/test_muse_r5_product.py"
@@ -3031,6 +3047,6 @@
   "promotion_provenance_sha256": "f8bde97a22c6002d38efc5d8c5edf96afdf3fa93585333fd1702e8b44e2324b5",
   "public_baseline_sha256": "755ffbbf3bdb8abeb97bd69a6b59f616d4acd535a292b3228afff8e8e7cfe589",
   "review_base_commit": "49fb71a162173ac2dfb2c0f805e36109c34ac042",
-  "reviewed_file_count": 378,
+  "reviewed_file_count": 380,
   "schema": "muse-collection-reviewed-source-revisions/v2"
 }

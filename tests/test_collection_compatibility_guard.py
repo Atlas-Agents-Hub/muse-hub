@@ -93,7 +93,7 @@ class ReviewedSourceRevisionGuards(unittest.TestCase):
    'collections/muse-starters-v1/PUBLIC_BASELINE.json':'755ffbbf3bdb8abeb97bd69a6b59f616d4acd535a292b3228afff8e8e7cfe589',
    'collections/muse-starters-v1/PROMOTION_PROVENANCE.json':'f8bde97a22c6002d38efc5d8c5edf96afdf3fa93585333fd1702e8b44e2324b5',
    'collections/muse-starters-v1/R3_BASELINE_ASSETS.json':'3d53f30e013a0d9ff3134b4fb852df059ab26f98a3660ec4b635dd29c134203f',
-   'collections/muse-starters-v1/PUBLIC_REVISIONS.json':'1528144d34d26ec9aa448c5368173836169bff77da6448a9ecce6f070a98ff86',
+   'collections/muse-starters-v1/PUBLIC_REVISIONS.json':'617ff43b056896859c04e5fcaff7cb6c0c5abbaa3353e1d1df35e9ecabe0b7d9',
    'docs/history/public-revisions-v1.1.0.json.txt':'e9885c818ebc67a54c97b7c1009f0f874745f799ceb0d6e43bf048ef4e30d324',
   }
   for name,digest in expected.items():
