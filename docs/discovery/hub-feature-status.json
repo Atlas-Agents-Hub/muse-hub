@@ -1,10 +1,10 @@
 {
   "schema": "muse-hub/distribution-links/v1",
-  "release": "v1.1.1",
-  "release_url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1",
+  "release": "v1.1.2",
+  "release_url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2",
   "website_url": "https://atlas-origins.github.io/muse-ai-agent-presets/",
   "downloads_url": "https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html",
-  "release_manifest_url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/RELEASE_MANIFEST.json",
+  "release_manifest_url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/RELEASE_MANIFEST.json",
   "specialist_catalog": "../../presets/catalog.json",
   "capability_catalog": "agent-capabilities.json",
   "historical_feature_register": "../history/hub-feature-status-2026-11-16.json.txt"

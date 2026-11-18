@@ -37,7 +37,7 @@ class MuseHubDeepLinkTests(unittest.TestCase):
             "selectSetupRole()",
             "roleAssets.get(slug)",
             "setupDownload.href =",
-            "releases/download/v1.1.1/muse-${asset}-v1.1.1.zip",
+            "releases/download/v1.1.2/muse-${asset}-v1.1.2.zip",
         ):
             self.assertIn(token, script)
         self.assertIn("if (!knownRoles.has(slug)) return", script)

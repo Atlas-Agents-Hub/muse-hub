@@ -1,6 +1,6 @@
 {
   "schema": "muse-hub/downloads/v1",
-  "version": "v1.1.1",
+  "version": "v1.1.2",
   "counts": {
     "specialist": 15,
     "skill": 75,
@@ -11,36 +11,36 @@
       "id": "specialists",
       "title": "All 15 specialists",
       "description": "Every specialist kit in one download.",
-      "asset": "muse-specialists-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-specialists-v1.1.1.zip"
+      "asset": "muse-specialists-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-specialists-v1.1.2.zip"
     },
     {
       "id": "skills",
       "title": "All 75 skills",
       "description": "The full skill library, with examples and practice checks.",
-      "asset": "muse-skills-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skills-v1.1.1.zip"
+      "asset": "muse-skills-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skills-v1.1.2.zip"
     },
     {
       "id": "workflows",
       "title": "All 25 workflows",
       "description": "Complete workflows and the skills they use.",
-      "asset": "muse-workflows-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflows-v1.1.1.zip"
+      "asset": "muse-workflows-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflows-v1.1.2.zip"
     },
     {
       "id": "starters",
       "title": "100 task starters",
       "description": "Project starting points for your next task.",
-      "asset": "muse-starters-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-starters-v1.1.1.zip"
+      "asset": "muse-starters-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-starters-v1.1.2.zip"
     },
     {
       "id": "specialist-toolkit",
       "title": "Python toolkit",
       "description": "Run Muse Hub tools, examples and your local notebook.",
-      "asset": "muse-specialist-toolkit-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-specialist-toolkit-v1.1.1.zip"
+      "asset": "muse-specialist-toolkit-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-specialist-toolkit-v1.1.2.zip"
     }
   ],
   "items": [
@@ -49,920 +49,920 @@
       "kind": "specialist",
       "title": "Software Engineer",
       "description": "Architecture, debugging, code changes and regression-led delivery.",
-      "asset": "muse-software-engineer-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-software-engineer-v1.1.1.zip"
+      "asset": "muse-software-engineer-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-software-engineer-v1.1.2.zip"
     },
     {
       "id": "data-engineering-architect",
       "kind": "specialist",
       "title": "Data Engineering & Database Architect",
       "description": "Data quality, schema design, pipelines and migration planning.",
-      "asset": "muse-data-engineer-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-data-engineer-v1.1.1.zip"
+      "asset": "muse-data-engineer-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-data-engineer-v1.1.2.zip"
     },
     {
       "id": "automation-engineer",
       "kind": "specialist",
       "title": "Automation Engineer",
       "description": "Workflows, dependencies, approval boundaries and safe recovery.",
-      "asset": "muse-automation-engineer-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-automation-engineer-v1.1.1.zip"
+      "asset": "muse-automation-engineer-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-automation-engineer-v1.1.2.zip"
     },
     {
       "id": "infrastructure-reliability-engineer",
       "kind": "specialist",
       "title": "Infrastructure & Reliability Engineer",
       "description": "Service reliability, incident response, capacity and recovery.",
-      "asset": "muse-reliability-engineer-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-reliability-engineer-v1.1.1.zip"
+      "asset": "muse-reliability-engineer-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-reliability-engineer-v1.1.2.zip"
     },
     {
       "id": "research-evaluator",
       "kind": "specialist",
       "title": "Research Evaluator",
       "description": "Primary-source investigation, controlled studies and evidence synthesis.",
-      "asset": "muse-research-evaluator-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-research-evaluator-v1.1.1.zip"
+      "asset": "muse-research-evaluator-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-research-evaluator-v1.1.2.zip"
     },
     {
       "id": "claims-adjudicator",
       "kind": "specialist",
       "title": "Claims Adjudicator",
       "description": "Resolve disputed claims against source evidence and limitations.",
-      "asset": "muse-claims-adjudicator-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-claims-adjudicator-v1.1.1.zip"
+      "asset": "muse-claims-adjudicator-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-claims-adjudicator-v1.1.2.zip"
     },
     {
       "id": "adversarial-verifier",
       "kind": "specialist",
       "title": "Adversarial Verifier",
       "description": "Authorized negative testing, threat models and verification of fixes.",
-      "asset": "muse-adversarial-verifier-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-adversarial-verifier-v1.1.1.zip"
+      "asset": "muse-adversarial-verifier-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-adversarial-verifier-v1.1.2.zip"
     },
     {
       "id": "reverse-engineering-researcher",
       "kind": "specialist",
       "title": "Reverse Engineering & Security Researcher",
       "description": "Defensive protocol analysis and clean-room behavioral investigation.",
-      "asset": "muse-reverse-engineering-researcher-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-reverse-engineering-researcher-v1.1.1.zip"
+      "asset": "muse-reverse-engineering-researcher-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-reverse-engineering-researcher-v1.1.2.zip"
     },
     {
       "id": "creative-studio",
       "kind": "specialist",
       "title": "Creative Studio",
       "description": "Visual direction, storyboards, animation plans and continuity review.",
-      "asset": "muse-creative-studio-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-creative-studio-v1.1.1.zip"
+      "asset": "muse-creative-studio-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-creative-studio-v1.1.2.zip"
     },
     {
       "id": "product-interface-designer",
       "kind": "specialist",
       "title": "Product & Interface Designer",
       "description": "User journeys, interface states, accessible specifications and review.",
-      "asset": "muse-product-interface-designer-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-product-interface-designer-v1.1.1.zip"
+      "asset": "muse-product-interface-designer-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-product-interface-designer-v1.1.2.zip"
     },
     {
       "id": "model-builder",
       "kind": "specialist",
       "title": "Model Builder",
       "description": "Data preparation, bounded experiments and held-out model evaluation.",
-      "asset": "muse-model-builder-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-model-builder-v1.1.1.zip"
+      "asset": "muse-model-builder-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-model-builder-v1.1.2.zip"
     },
     {
       "id": "learning-coach",
       "kind": "specialist",
       "title": "Learning Coach",
       "description": "Grounded lessons, adaptive practice and targeted review.",
-      "asset": "muse-learning-coach-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-learning-coach-v1.1.1.zip"
+      "asset": "muse-learning-coach-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-learning-coach-v1.1.2.zip"
     },
     {
       "id": "personal-companion",
       "kind": "specialist",
       "title": "Personal Companion",
       "description": "Daily planning, routines, notes and a local Daily Desk workbench.",
-      "asset": "muse-personal-companion-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-personal-companion-v1.1.1.zip"
+      "asset": "muse-personal-companion-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-personal-companion-v1.1.2.zip"
     },
     {
       "id": "garden-companion",
       "kind": "specialist",
       "title": "Garden Companion",
       "description": "Plant observations, seasonal care and practical garden records.",
-      "asset": "muse-garden-companion-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-garden-companion-v1.1.1.zip"
+      "asset": "muse-garden-companion-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-garden-companion-v1.1.2.zip"
     },
     {
       "id": "coordinator",
       "kind": "specialist",
       "title": "Coordinator",
       "description": "Complex goals, dependencies, handoffs and evidence-based completion.",
-      "asset": "muse-coordinator-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-coordinator-v1.1.1.zip"
+      "asset": "muse-coordinator-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-coordinator-v1.1.2.zip"
     },
     {
       "id": "accessibility-routine",
       "kind": "skill",
       "title": "Adapt a Routine to the Person’s Stated Needs",
       "description": "A person wants an everyday routine made easier to read, follow or carry out.",
-      "asset": "muse-skill-accessibility-routine-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-accessibility-routine-v1.1.1.zip"
+      "asset": "muse-skill-accessibility-routine-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-accessibility-routine-v1.1.2.zip"
     },
     {
       "id": "role-fit",
       "kind": "skill",
       "title": "Assess a Job Against the Person’s Actual Evidence",
       "description": "A person is considering a job and wants a grounded fit analysis.",
-      "asset": "muse-skill-role-fit-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-role-fit-v1.1.1.zip"
+      "asset": "muse-skill-role-fit-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-role-fit-v1.1.2.zip"
     },
     {
       "id": "claim-audit",
       "kind": "skill",
       "title": "Audit a Claim Against Its Actual Evidence",
       "description": "Check a factual claim against the evidence that supports it.",
-      "asset": "muse-skill-claim-audit-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-claim-audit-v1.1.1.zip"
+      "asset": "muse-skill-claim-audit-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-claim-audit-v1.1.2.zip"
     },
     {
       "id": "household-project",
       "kind": "skill",
       "title": "Break Down a Household Project",
       "description": "The user needs a practical plan for a move, repair, organizing task or household project.",
-      "asset": "muse-skill-household-project-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-household-project-v1.1.1.zip"
+      "asset": "muse-skill-household-project-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-household-project-v1.1.2.zip"
     },
     {
       "id": "itinerary-plan",
       "kind": "skill",
       "title": "Build a Feasible Itinerary With Contingencies",
       "description": "A trip or day out needs a practical plan matched to the user’s constraints.",
-      "asset": "muse-skill-itinerary-plan-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-itinerary-plan-v1.1.1.zip"
+      "asset": "muse-skill-itinerary-plan-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-itinerary-plan-v1.1.2.zip"
     },
     {
       "id": "literature-triage",
       "kind": "skill",
       "title": "Build a Focused Literature Map",
       "description": "Organize a set of papers into a focused literature map.",
-      "asset": "muse-skill-literature-triage-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-literature-triage-v1.1.1.zip"
+      "asset": "muse-skill-literature-triage-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-literature-triage-v1.1.2.zip"
     },
     {
       "id": "analysis-notebook",
       "kind": "skill",
       "title": "Build a Reproducible Analysis Narrative",
       "description": "A question requires calculations that should be inspectable and reproducible.",
-      "asset": "muse-skill-analysis-notebook-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-analysis-notebook-v1.1.1.zip"
+      "asset": "muse-skill-analysis-notebook-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-analysis-notebook-v1.1.2.zip"
     },
     {
       "id": "storyboard",
       "kind": "skill",
       "title": "Build a Storyboard With Clear Shot Purpose",
       "description": "A video, animation or sequential visual needs a coherent shot plan.",
-      "asset": "muse-skill-storyboard-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-storyboard-v1.1.1.zip"
+      "asset": "muse-skill-storyboard-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-storyboard-v1.1.2.zip"
     },
     {
       "id": "daily-briefing",
       "kind": "skill",
       "title": "Build a Time-Aware Daily Brief",
       "description": "The user asks for today’s priorities, a morning brief or help making a crowded day manageable.",
-      "asset": "muse-skill-daily-briefing-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-daily-briefing-v1.1.1.zip"
+      "asset": "muse-skill-daily-briefing-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-daily-briefing-v1.1.2.zip"
     },
     {
       "id": "service-objectives",
       "kind": "skill",
       "title": "Calculate an Event-Based Reliability Budget",
       "description": "A service owner needs a correctly defined event-ratio objective, remaining error budget or burn-rate calculation from supplied measurements.",
-      "asset": "muse-skill-service-objectives-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-service-objectives-v1.1.1.zip"
+      "asset": "muse-skill-service-objectives-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-service-objectives-v1.1.2.zip"
     },
     {
       "id": "design-token-audit",
       "kind": "skill",
       "title": "Check Real Color Tokens Before Interface Handoff",
       "description": "An interface palette needs reproducible contrast checks against explicit foreground/background token pairs before implementation or review.",
-      "asset": "muse-skill-design-token-audit-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-design-token-audit-v1.1.1.zip"
+      "asset": "muse-skill-design-token-audit-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-design-token-audit-v1.1.2.zip"
     },
     {
       "id": "chart-story",
       "kind": "skill",
       "title": "Choose a Chart That Preserves the Data’s Meaning",
       "description": "An analysis needs a clear visualization for a particular audience.",
-      "asset": "muse-skill-chart-story-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-chart-story-v1.1.1.zip"
+      "asset": "muse-skill-chart-story-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-chart-story-v1.1.2.zip"
     },
     {
       "id": "selector-resilience",
       "kind": "skill",
       "title": "Choose a Locator From Actual Target Observations",
       "description": "A browser workflow has supplied candidate locator observations and needs a unique, visible, stable target before an authorized action.",
-      "asset": "muse-skill-selector-resilience-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-selector-resilience-v1.1.1.zip"
+      "asset": "muse-skill-selector-resilience-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-selector-resilience-v1.1.2.zip"
     },
     {
       "id": "competing-explanations",
       "kind": "skill",
       "title": "Compare Explanations With Discriminating Evidence",
       "description": "Several plausible causes or interpretations fit the same observation.",
-      "asset": "muse-skill-competing-explanations-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-competing-explanations-v1.1.1.zip"
+      "asset": "muse-skill-competing-explanations-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-competing-explanations-v1.1.2.zip"
     },
     {
       "id": "model-comparison",
       "kind": "skill",
       "title": "Compare Model Candidates on the Same Frozen Task",
       "description": "A user wants evidence that a model or prompt change improves results.",
-      "asset": "muse-skill-model-comparison-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-model-comparison-v1.1.1.zip"
+      "asset": "muse-skill-model-comparison-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-model-comparison-v1.1.2.zip"
     },
     {
       "id": "purchase-compare",
       "kind": "skill",
       "title": "Compare Purchases by Fit and Total Cost",
       "description": "Compare products against your requirements, budget and total cost.",
-      "asset": "muse-skill-purchase-compare-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-purchase-compare-v1.1.1.zip"
+      "asset": "muse-skill-purchase-compare-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-purchase-compare-v1.1.2.zip"
     },
     {
       "id": "source-flashcards",
       "kind": "skill",
       "title": "Create Traceable Study Cards",
       "description": "The learner asks for flashcards or short questions from supplied material.",
-      "asset": "muse-skill-source-flashcards-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-source-flashcards-v1.1.1.zip"
+      "asset": "muse-skill-source-flashcards-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-source-flashcards-v1.1.2.zip"
     },
     {
       "id": "edit-and-export",
       "kind": "skill",
       "title": "Deliver Media in the Requested Usable Form",
       "description": "A media draft must become a checked final file or edit specification.",
-      "asset": "muse-skill-edit-and-export-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-edit-and-export-v1.1.1.zip"
+      "asset": "muse-skill-edit-and-export-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-edit-and-export-v1.1.2.zip"
     },
     {
       "id": "service-playbook",
       "kind": "skill",
       "title": "Design a Service Workflow With Recoverable Handoffs",
       "description": "A repeated support or operations task needs a clear process.",
-      "asset": "muse-skill-service-playbook-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-service-playbook-v1.1.1.zip"
+      "asset": "muse-skill-service-playbook-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-service-playbook-v1.1.2.zip"
     },
     {
       "id": "hobby-practice",
       "kind": "skill",
       "title": "Design a Small Practice Session With Feedback",
       "description": "Build a manageable practice session with useful feedback.",
-      "asset": "muse-skill-hobby-practice-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-hobby-practice-v1.1.1.zip"
+      "asset": "muse-skill-hobby-practice-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-hobby-practice-v1.1.2.zip"
     },
     {
       "id": "api-contract",
       "kind": "skill",
       "title": "Design an API Around Consumer Behavior",
       "description": "A service interface needs an implementable contract or compatibility review.",
-      "asset": "muse-skill-api-contract-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-api-contract-v1.1.1.zip"
+      "asset": "muse-skill-api-contract-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-api-contract-v1.1.2.zip"
     },
     {
       "id": "change-brief",
       "kind": "skill",
       "title": "Explain What Changed and Why It Matters",
       "description": "A user needs a dated comparison of a product, policy or public topic.",
-      "asset": "muse-skill-change-brief-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-change-brief-v1.1.1.zip"
+      "asset": "muse-skill-change-brief-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-change-brief-v1.1.2.zip"
     },
     {
       "id": "dataset-intake",
       "kind": "skill",
       "title": "Inspect a Dataset Before Using It",
       "description": "A supplied dataset is about to support analysis or model development.",
-      "asset": "muse-skill-dataset-intake-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-dataset-intake-v1.1.1.zip"
+      "asset": "muse-skill-dataset-intake-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-dataset-intake-v1.1.2.zip"
     },
     {
       "id": "accessible-ui",
       "kind": "skill",
       "title": "Inspect a Real Interface for Access Barriers",
       "description": "A built interface needs a focused accessibility and usability pass.",
-      "asset": "muse-skill-accessible-ui-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-accessible-ui-v1.1.1.zip"
+      "asset": "muse-skill-accessible-ui-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-accessible-ui-v1.1.2.zip"
     },
     {
       "id": "source-and-custody",
       "kind": "skill",
       "title": "Keep Sources and Changes Traceable",
       "description": "A result relies on supplied files, web material or changed artifacts that another person must be able to verify.",
-      "asset": "muse-skill-source-and-custody-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-source-and-custody-v1.1.1.zip"
+      "asset": "muse-skill-source-and-custody-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-source-and-custody-v1.1.2.zip"
     },
     {
       "id": "lecture-map",
       "kind": "skill",
       "title": "Map a Lecture Before Deep Study",
       "description": "The learner wants a conceptual overview of slides or notes before detailed study.",
-      "asset": "muse-skill-lecture-map-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-lecture-map-v1.1.1.zip"
+      "asset": "muse-skill-lecture-map-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-lecture-map-v1.1.2.zip"
     },
     {
       "id": "decision-budget",
       "kind": "skill",
       "title": "Organize a Personal Cost Decision",
       "description": "The user needs to compare recurring costs or understand the budget implications of a practical choice.",
-      "asset": "muse-skill-decision-budget-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-decision-budget-v1.1.1.zip"
+      "asset": "muse-skill-decision-budget-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-decision-budget-v1.1.2.zip"
     },
     {
       "id": "family-archive",
       "kind": "skill",
       "title": "Organize Family Memories With Provenance and Consent",
       "description": "A person wants to organize stories, photographs or family records.",
-      "asset": "muse-skill-family-archive-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-family-archive-v1.1.1.zip"
+      "asset": "muse-skill-family-archive-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-family-archive-v1.1.2.zip"
     },
     {
       "id": "event-plan",
       "kind": "skill",
       "title": "Plan an Event Around Guests and Constraints",
       "description": "A gathering needs an organized but proportionate plan.",
-      "asset": "muse-skill-event-plan-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-event-plan-v1.1.1.zip"
+      "asset": "muse-skill-event-plan-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-event-plan-v1.1.2.zip"
     },
     {
       "id": "exam-plan",
       "kind": "skill",
       "title": "Plan an Exam Preparation Cycle",
       "description": "The learner needs a study plan that fits the exam scope and available time.",
-      "asset": "muse-skill-exam-plan-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-exam-plan-v1.1.1.zip"
+      "asset": "muse-skill-exam-plan-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-exam-plan-v1.1.2.zip"
     },
     {
       "id": "content-system",
       "kind": "skill",
       "title": "Plan Content From Reusable Source Material",
       "description": "Plan consistent content from your existing material and ideas.",
-      "asset": "muse-skill-content-system-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-content-system-v1.1.1.zip"
+      "asset": "muse-skill-content-system-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-content-system-v1.1.2.zip"
     },
     {
       "id": "meal-plan",
       "kind": "skill",
       "title": "Plan Meals Around Real Preferences and Supplies",
       "description": "A household wants a practical meal plan and shopping list.",
-      "asset": "muse-skill-meal-plan-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-meal-plan-v1.1.1.zip"
+      "asset": "muse-skill-meal-plan-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-meal-plan-v1.1.2.zip"
     },
     {
       "id": "care-coordination",
       "kind": "skill",
       "title": "Prepare a Care Handoff Without Changing the Plan",
       "description": "People need to coordinate practical support using an existing care plan.",
-      "asset": "muse-skill-care-coordination-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-care-coordination-v1.1.1.zip"
+      "asset": "muse-skill-care-coordination-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-care-coordination-v1.1.2.zip"
     },
     {
       "id": "appointment-prep",
       "kind": "skill",
       "title": "Prepare a Clear Appointment Summary",
       "description": "A person wants to organize questions and records for a professional appointment.",
-      "asset": "muse-skill-appointment-prep-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-appointment-prep-v1.1.1.zip"
+      "asset": "muse-skill-appointment-prep-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-appointment-prep-v1.1.2.zip"
     },
     {
       "id": "negotiation-prep",
       "kind": "skill",
       "title": "Prepare a Negotiation Around Facts and Alternatives",
       "description": "A person needs to prepare for a work, project or offer discussion.",
-      "asset": "muse-skill-negotiation-prep-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-negotiation-prep-v1.1.1.zip"
+      "asset": "muse-skill-negotiation-prep-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-negotiation-prep-v1.1.2.zip"
     },
     {
       "id": "release-readiness",
       "kind": "skill",
       "title": "Prepare a Release for Delivery",
       "description": "Review a release package, its checks, and the path to delivery.",
-      "asset": "muse-skill-release-readiness-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-release-readiness-v1.1.1.zip"
+      "asset": "muse-skill-release-readiness-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-release-readiness-v1.1.2.zip"
     },
     {
       "id": "project-prioritization",
       "kind": "skill",
       "title": "Prioritize Work Using Dependencies and Capacity",
       "description": "A backlog exceeds the available time or resources.",
-      "asset": "muse-skill-project-prioritization-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-project-prioritization-v1.1.1.zip"
+      "asset": "muse-skill-project-prioritization-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-project-prioritization-v1.1.2.zip"
     },
     {
       "id": "query-plan-review",
       "kind": "skill",
       "title": "Read a Query Plan Before Changing Indexes",
       "description": "A supplied SQLite query plan or measured slow query needs a grounded index and access-path review.",
-      "asset": "muse-skill-query-plan-review-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-query-plan-review-v1.1.1.zip"
+      "asset": "muse-skill-query-plan-review-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-query-plan-review-v1.1.2.zip"
     },
     {
       "id": "spreadsheet-reconcile",
       "kind": "skill",
       "title": "Reconcile a Spreadsheet to Its Source Records",
       "description": "A workbook contains totals, formulas or records that need verification.",
-      "asset": "muse-skill-spreadsheet-reconcile-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-spreadsheet-reconcile-v1.1.1.zip"
+      "asset": "muse-skill-spreadsheet-reconcile-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-spreadsheet-reconcile-v1.1.2.zip"
     },
     {
       "id": "effect-reconciliation",
       "kind": "skill",
       "title": "Reconcile an Uncertain Operation Without Replaying It",
       "description": "A prior connector or application operation has incomplete, contradictory or mismatched result records and must be reconciled before any retry.",
-      "asset": "muse-skill-effect-reconciliation-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-effect-reconciliation-v1.1.1.zip"
+      "asset": "muse-skill-effect-reconciliation-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-effect-reconciliation-v1.1.2.zip"
     },
     {
       "id": "incremental-pipeline",
       "kind": "skill",
       "title": "Reconcile Versioned Events Without Resurrection",
       "description": "An incremental import contains late events, duplicates, deletions or conflicting versions and needs a deterministic reconciliation.",
-      "asset": "muse-skill-incremental-pipeline-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-incremental-pipeline-v1.1.1.zip"
+      "asset": "muse-skill-incremental-pipeline-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-incremental-pipeline-v1.1.2.zip"
     },
     {
       "id": "incident-triage",
       "kind": "skill",
       "title": "Reconstruct One Incident From Dated Evidence",
       "description": "An incident needs a defensible timeline, current state and measured mitigation or resolution intervals from supplied event records.",
-      "asset": "muse-skill-incident-triage-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-incident-triage-v1.1.1.zip"
+      "asset": "muse-skill-incident-triage-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-incident-triage-v1.1.2.zip"
     },
     {
       "id": "interview-rehearsal",
       "kind": "skill",
       "title": "Rehearse an Interview With Specific Feedback",
       "description": "A person wants to practice explaining their experience under realistic questions.",
-      "asset": "muse-skill-interview-rehearsal-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-interview-rehearsal-v1.1.1.zip"
+      "asset": "muse-skill-interview-rehearsal-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-interview-rehearsal-v1.1.2.zip"
     },
     {
       "id": "misconception-clinic",
       "kind": "skill",
       "title": "Repair a Specific Misunderstanding",
       "description": "The learner can state an answer but is confused about why it is true or how related concepts differ.",
-      "asset": "muse-skill-misconception-clinic-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-misconception-clinic-v1.1.1.zip"
+      "asset": "muse-skill-misconception-clinic-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-misconception-clinic-v1.1.2.zip"
     },
     {
       "id": "minimal-repair",
       "kind": "skill",
       "title": "Repair the Smallest Causal Boundary",
       "description": "A reproduced defect has an authorized source boundary and regression test.",
-      "asset": "muse-skill-minimal-repair-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-minimal-repair-v1.1.1.zip"
+      "asset": "muse-skill-minimal-repair-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-minimal-repair-v1.1.2.zip"
     },
     {
       "id": "bug-reproduction",
       "kind": "skill",
       "title": "Reproduce a Defect Before Repairing It",
       "description": "An owned codebase has a reported defect or failing test.",
-      "asset": "muse-skill-bug-reproduction-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-bug-reproduction-v1.1.1.zip"
+      "asset": "muse-skill-bug-reproduction-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-bug-reproduction-v1.1.2.zip"
     },
     {
       "id": "weekly-reset",
       "kind": "skill",
       "title": "Reset a Week Around Real Capacity",
       "description": "The user wants a weekly review, backlog reset or realistic plan for the next several days.",
-      "asset": "muse-skill-weekly-reset-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-weekly-reset-v1.1.1.zip"
+      "asset": "muse-skill-weekly-reset-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-weekly-reset-v1.1.2.zip"
     },
     {
       "id": "resume-without-replay",
       "kind": "skill",
       "title": "Resume Work Without Duplicating Effects",
       "description": "A conversation, process or task stopped before its outcome was clear.",
-      "asset": "muse-skill-resume-without-replay-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-resume-without-replay-v1.1.1.zip"
+      "asset": "muse-skill-resume-without-replay-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-resume-without-replay-v1.1.2.zip"
     },
     {
       "id": "automation-contract",
       "kind": "skill",
       "title": "Review a Bounded Automation Plan Before Execution",
       "description": "A browser, desktop or connector workflow needs an explicit dependency and external-effect contract before the existing host executes it.",
-      "asset": "muse-skill-automation-contract-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-automation-contract-v1.1.1.zip"
+      "asset": "muse-skill-automation-contract-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-automation-contract-v1.1.2.zip"
     },
     {
       "id": "code-review",
       "kind": "skill",
       "title": "Review a Change for Concrete Failure Paths",
       "description": "A source diff needs an actionable correctness and maintainability review.",
-      "asset": "muse-skill-code-review-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-code-review-v1.1.1.zip"
+      "asset": "muse-skill-code-review-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-code-review-v1.1.2.zip"
     },
     {
       "id": "schema-evolution",
       "kind": "skill",
       "title": "Review a Schema Change Before Migration",
       "description": "A table or API-owned record schema must evolve without losing data or silently breaking consumers.",
-      "asset": "muse-skill-schema-evolution-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-schema-evolution-v1.1.1.zip"
+      "asset": "muse-skill-schema-evolution-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-schema-evolution-v1.1.2.zip"
     },
     {
       "id": "bounded-review",
       "kind": "skill",
       "title": "Review Against the Actual Brief",
       "description": "A draft, analysis or artifact needs a focused quality pass before it is used.",
-      "asset": "muse-skill-bounded-review-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-bounded-review-v1.1.1.zip"
+      "asset": "muse-skill-bounded-review-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-bounded-review-v1.1.2.zip"
     },
     {
       "id": "continuity-review",
       "kind": "skill",
       "title": "Review Continuity Across a Creative Sequence",
       "description": "A set of frames, shots or assets needs consistency review.",
-      "asset": "muse-skill-continuity-review-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-continuity-review-v1.1.1.zip"
+      "asset": "muse-skill-continuity-review-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-continuity-review-v1.1.2.zip"
     },
     {
       "id": "interaction-state-coverage",
       "kind": "skill",
       "title": "Review Interface States and Recovery Paths",
       "description": "An interface flow needs an explicit state graph covering entry, loading, success, empty, error and recovery behavior before implementation or QA.",
-      "asset": "muse-skill-interaction-state-coverage-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-interaction-state-coverage-v1.1.1.zip"
+      "asset": "muse-skill-interaction-state-coverage-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-interaction-state-coverage-v1.1.2.zip"
     },
     {
       "id": "metrics-review",
       "kind": "skill",
       "title": "Review Metrics Without Inventing the Story",
       "description": "A team needs to understand a performance change and decide what to do.",
-      "asset": "muse-skill-metrics-review-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-metrics-review-v1.1.1.zip"
+      "asset": "muse-skill-metrics-review-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-metrics-review-v1.1.2.zip"
     },
     {
       "id": "prose-revision",
       "kind": "skill",
       "title": "Revise Prose While Preserving Its Voice",
       "description": "A draft needs clearer structure, tone or rhythm while preserving its substance.",
-      "asset": "muse-skill-prose-revision-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-prose-revision-v1.1.1.zip"
+      "asset": "muse-skill-prose-revision-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-prose-revision-v1.1.2.zip"
     },
     {
       "id": "retrieval-practice",
       "kind": "skill",
       "title": "Run Feedback-Rich Retrieval Practice",
       "description": "The learner wants to be quizzed and receive useful feedback from an agreed source or rubric.",
-      "asset": "muse-skill-retrieval-practice-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-retrieval-practice-v1.1.1.zip"
+      "asset": "muse-skill-retrieval-practice-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-retrieval-practice-v1.1.2.zip"
     },
     {
       "id": "scope-and-route",
       "kind": "skill",
       "title": "Scope a Useful Next Result",
       "description": "A request spans multiple possible skills or the user needs an outcome rather than another plan.",
-      "asset": "muse-skill-scope-and-route-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-scope-and-route-v1.1.1.zip"
+      "asset": "muse-skill-scope-and-route-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-scope-and-route-v1.1.2.zip"
     },
     {
       "id": "offer-design",
       "kind": "skill",
       "title": "Shape an Offer Around a Specific Outcome",
       "description": "A service or product needs a clear, evidence-aware value proposition.",
-      "asset": "muse-skill-offer-design-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-offer-design-v1.1.1.zip"
+      "asset": "muse-skill-offer-design-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-offer-design-v1.1.2.zip"
     },
     {
       "id": "capacity-planning",
       "kind": "skill",
       "title": "Size Capacity With Explicit Utilization and Reserve",
       "description": "A measured workload needs a capacity estimate that includes target utilization, unavailable reserve and a reproducible rounding rule.",
-      "asset": "muse-skill-capacity-planning-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-capacity-planning-v1.1.1.zip"
+      "asset": "muse-skill-capacity-planning-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-capacity-planning-v1.1.2.zip"
     },
     {
       "id": "reflection-journal",
       "kind": "skill",
       "title": "Support Reflection Without Pretending to Diagnose",
       "description": "A person wants help making sense of an experience or writing a private reflection.",
-      "asset": "muse-skill-reflection-journal-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-reflection-journal-v1.1.1.zip"
+      "asset": "muse-skill-reflection-journal-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-reflection-journal-v1.1.2.zip"
     },
     {
       "id": "interview-synthesis",
       "kind": "skill",
       "title": "Synthesize Interviews Without Inventing Consensus",
       "description": "Interview notes need to become findings while retaining dissent and provenance.",
-      "asset": "muse-skill-interview-synthesis-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-interview-synthesis-v1.1.1.zip"
+      "asset": "muse-skill-interview-synthesis-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-interview-synthesis-v1.1.2.zip"
     },
     {
       "id": "resume-tailor",
       "kind": "skill",
       "title": "Tailor a Resume Without Fabricating Experience",
       "description": "A resume needs to emphasize relevant evidence for a specific role.",
-      "asset": "muse-skill-resume-tailor-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-resume-tailor-v1.1.1.zip"
+      "asset": "muse-skill-resume-tailor-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-resume-tailor-v1.1.2.zip"
     },
     {
       "id": "data-quality-review",
       "kind": "skill",
       "title": "Test Data Transformations Against Explicit Invariants",
       "description": "A cleaning or migration step may change the meaning or completeness of records.",
-      "asset": "muse-skill-data-quality-review-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-data-quality-review-v1.1.1.zip"
+      "asset": "muse-skill-data-quality-review-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-data-quality-review-v1.1.2.zip"
     },
     {
       "id": "visual-reference",
       "kind": "skill",
       "title": "Translate References Into Reusable Visual Rules",
       "description": "A user supplies references for an image, interface or visual series.",
-      "asset": "muse-skill-visual-reference-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-visual-reference-v1.1.1.zip"
+      "asset": "muse-skill-visual-reference-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-visual-reference-v1.1.2.zip"
     },
     {
       "id": "inbox-triage",
       "kind": "skill",
       "title": "Triage Messages and Prepare Replies",
       "description": "The user wants an inbox summary, response priorities or drafts for selected messages.",
-      "asset": "muse-skill-inbox-triage-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-inbox-triage-v1.1.1.zip"
+      "asset": "muse-skill-inbox-triage-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-inbox-triage-v1.1.2.zip"
     },
     {
       "id": "habit-experiment",
       "kind": "skill",
       "title": "Try a Small Habit Change and Review What Happens",
       "description": "A person wants a manageable routine experiment rather than an all-or-nothing plan.",
-      "asset": "muse-skill-habit-experiment-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-habit-experiment-v1.1.1.zip"
+      "asset": "muse-skill-habit-experiment-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-habit-experiment-v1.1.2.zip"
     },
     {
       "id": "meeting-to-actions",
       "kind": "skill",
       "title": "Turn a Meeting Into Owned Actions",
       "description": "A transcript or notes need to become a useful decision and follow-up record.",
-      "asset": "muse-skill-meeting-to-actions-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-meeting-to-actions-v1.1.1.zip"
+      "asset": "muse-skill-meeting-to-actions-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-meeting-to-actions-v1.1.2.zip"
     },
     {
       "id": "question-to-evidence",
       "kind": "skill",
       "title": "Turn a Question Into an Evidence Plan",
       "description": "Turn a broad research question into an answerable investigation.",
-      "asset": "muse-skill-question-to-evidence-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-question-to-evidence-v1.1.1.zip"
+      "asset": "muse-skill-question-to-evidence-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-question-to-evidence-v1.1.2.zip"
     },
     {
       "id": "creative-brief",
       "kind": "skill",
       "title": "Turn an Idea Into a Production-Ready Brief",
       "description": "Shape a creative idea into a clear production brief.",
-      "asset": "muse-skill-creative-brief-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-creative-brief-v1.1.1.zip"
+      "asset": "muse-skill-creative-brief-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-creative-brief-v1.1.2.zip"
     },
     {
       "id": "customer-discovery",
       "kind": "skill",
       "title": "Turn Customer Assumptions Into Testable Questions",
       "description": "A product or service idea needs customer evidence before investment.",
-      "asset": "muse-skill-customer-discovery-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-customer-discovery-v1.1.1.zip"
+      "asset": "muse-skill-customer-discovery-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-customer-discovery-v1.1.2.zip"
     },
     {
       "id": "garden-observe",
       "kind": "skill",
       "title": "Turn Garden Observations Into a Useful Care Log",
       "description": "A gardener records a plant change or wants to organize observations.",
-      "asset": "muse-skill-garden-observe-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-garden-observe-v1.1.1.zip"
+      "asset": "muse-skill-garden-observe-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-garden-observe-v1.1.2.zip"
     },
     {
       "id": "portfolio-story",
       "kind": "skill",
       "title": "Turn Real Work Into a Credible Portfolio Story",
       "description": "A project needs to communicate the person’s actual contribution and results.",
-      "asset": "muse-skill-portfolio-story-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-portfolio-story-v1.1.1.zip"
+      "asset": "muse-skill-portfolio-story-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-portfolio-story-v1.1.2.zip"
     },
     {
       "id": "teach-back",
       "kind": "skill",
       "title": "Use Teach-Back to Test Understanding",
       "description": "The learner wants to explain a concept clearly and discover gaps in their understanding.",
-      "asset": "muse-skill-teach-back-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-teach-back-v1.1.1.zip"
+      "asset": "muse-skill-teach-back-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-teach-back-v1.1.2.zip"
     },
     {
       "id": "difficult-message",
       "kind": "skill",
       "title": "Write a Difficult Message With a Clear Ask",
       "description": "A person needs to communicate disagreement, a boundary or a correction.",
-      "asset": "muse-skill-difficult-message-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skill-difficult-message-v1.1.1.zip"
+      "asset": "muse-skill-difficult-message-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skill-difficult-message-v1.1.2.zip"
     },
     {
       "id": "calm-day",
       "kind": "workflow",
       "title": "A Clear and Feasible Day",
       "description": "Turn your commitments into a realistic plan for the day.",
-      "asset": "muse-workflow-calm-day-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-calm-day-v1.1.1.zip"
+      "asset": "muse-workflow-calm-day-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-calm-day-v1.1.2.zip"
     },
     {
       "id": "brief-to-board",
       "kind": "workflow",
       "title": "A Coherent Creative Sequence",
       "description": "Turn a concrete creative brief into a timed sequence with continuity rules.",
-      "asset": "muse-workflow-brief-to-board-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-brief-to-board-v1.1.1.zip"
+      "asset": "muse-workflow-brief-to-board-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-brief-to-board-v1.1.2.zip"
     },
     {
       "id": "model-evaluation",
       "kind": "workflow",
       "title": "A Fair Candidate Comparison",
       "description": "Prepare a valid dataset and compare model candidates under frozen conditions.",
-      "asset": "muse-workflow-model-evaluation-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-model-evaluation-v1.1.1.zip"
+      "asset": "muse-workflow-model-evaluation-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-model-evaluation-v1.1.2.zip"
     },
     {
       "id": "practice-cycle",
       "kind": "workflow",
       "title": "A Feedback-Rich Hobby Session",
       "description": "Choose a small exercise, inspect the attempt and decide what to practice next.",
-      "asset": "muse-workflow-practice-cycle-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-practice-cycle-v1.1.1.zip"
+      "asset": "muse-workflow-practice-cycle-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-practice-cycle-v1.1.2.zip"
     },
     {
       "id": "practical-plan",
       "kind": "workflow",
       "title": "A Practical Personal Plan",
       "description": "Scope a personal project and check it against actual constraints.",
-      "asset": "muse-workflow-practical-plan-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-practical-plan-v1.1.1.zip"
+      "asset": "muse-workflow-practical-plan-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-practical-plan-v1.1.2.zip"
     },
     {
       "id": "personal-routine",
       "kind": "workflow",
       "title": "A Routine That Respects the Person",
       "description": "Make a personal routine accessible and test a small change without pressure.",
-      "asset": "muse-workflow-personal-routine-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-personal-routine-v1.1.1.zip"
+      "asset": "muse-workflow-personal-routine-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-personal-routine-v1.1.2.zip"
     },
     {
       "id": "evidence-brief",
       "kind": "workflow",
       "title": "A Source-Grounded Answer",
       "description": "Investigate a focused question and check the resulting findings.",
-      "asset": "muse-workflow-evidence-brief-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-evidence-brief-v1.1.1.zip"
+      "asset": "muse-workflow-evidence-brief-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-evidence-brief-v1.1.2.zip"
     },
     {
       "id": "application-packet",
       "kind": "workflow",
       "title": "A Truthful Application Story",
       "description": "Map an actual work record to a role and produce credible application material.",
-      "asset": "muse-workflow-application-packet-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-application-packet-v1.1.1.zip"
+      "asset": "muse-workflow-application-packet-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-application-packet-v1.1.2.zip"
     },
     {
       "id": "reproduce-to-repair",
       "kind": "workflow",
       "title": "A Verified Small Repair",
       "description": "Reproduce an owned-code defect, repair it and inspect the changed behavior.",
-      "asset": "muse-workflow-reproduce-to-repair-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-reproduce-to-repair-v1.1.1.zip"
+      "asset": "muse-workflow-reproduce-to-repair-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-reproduce-to-repair-v1.1.2.zip"
     },
     {
       "id": "priority-week",
       "kind": "workflow",
       "title": "A Week That Fits",
       "description": "Choose a feasible week and preserve a simple restart point.",
-      "asset": "muse-workflow-priority-week-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-priority-week-v1.1.1.zip"
+      "asset": "muse-workflow-priority-week-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-priority-week-v1.1.2.zip"
     },
     {
       "id": "draft-to-delivery",
       "kind": "workflow",
       "title": "Finish a Creative Deliverable",
       "description": "Revise a draft within the brief and verify its requested output form.",
-      "asset": "muse-workflow-draft-to-delivery-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-draft-to-delivery-v1.1.1.zip"
+      "asset": "muse-workflow-draft-to-delivery-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-draft-to-delivery-v1.1.2.zip"
     },
     {
       "id": "concept-repair",
       "kind": "workflow",
       "title": "From Confusion to Explanation",
       "description": "Identify a specific learning gap and check understanding in a new example.",
-      "asset": "muse-workflow-concept-repair-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-concept-repair-v1.1.1.zip"
+      "asset": "muse-workflow-concept-repair-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-concept-repair-v1.1.2.zip"
     },
     {
       "id": "incident-recovery",
       "kind": "workflow",
       "title": "From Incident Records to a Bounded Recovery Handoff",
       "description": "Reconstruct the incident, calculate its service budget and size a measured capacity hypothesis while preserving original response authority.",
-      "asset": "muse-workflow-incident-recovery-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-incident-recovery-v1.1.1.zip"
+      "asset": "muse-workflow-incident-recovery-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-incident-recovery-v1.1.2.zip"
     },
     {
       "id": "exam-cycle",
       "kind": "workflow",
       "title": "From Lecture to Retrieval",
       "description": "Turn permitted learning sources into a study map and a checked practice session.",
-      "asset": "muse-workflow-exam-cycle-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-exam-cycle-v1.1.1.zip"
+      "asset": "muse-workflow-exam-cycle-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-exam-cycle-v1.1.2.zip"
     },
     {
       "id": "product-to-implementation",
       "kind": "workflow",
       "title": "From Product Contract to Verified Handoff",
       "description": "Turn a product request into interface, data and automation specifications your team can build.",
-      "asset": "muse-workflow-product-to-implementation-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-product-to-implementation-v1.1.1.zip"
+      "asset": "muse-workflow-product-to-implementation-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-product-to-implementation-v1.1.2.zip"
     },
     {
       "id": "data-to-decision",
       "kind": "workflow",
       "title": "From Raw Records to a Defensible Answer",
       "description": "Check a dataset, perform a reproducible analysis and communicate its meaning.",
-      "asset": "muse-workflow-data-to-decision-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-data-to-decision-v1.1.1.zip"
+      "asset": "muse-workflow-data-to-decision-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-data-to-decision-v1.1.2.zip"
     },
     {
       "id": "interface-quality",
       "kind": "workflow",
       "title": "From Tokens and States to Interface QA",
       "description": "Measure supplied color pairs, find missing interaction states and review target observations before actual rendered-interface acceptance.",
-      "asset": "muse-workflow-interface-quality-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-interface-quality-v1.1.1.zip"
+      "asset": "muse-workflow-interface-quality-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-interface-quality-v1.1.2.zip"
     },
     {
       "id": "operations-review",
       "kind": "workflow",
       "title": "Improve a Repeated Operation",
       "description": "Find operational friction, prioritize a repair and define a recoverable process.",
-      "asset": "muse-workflow-operations-review-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-operations-review-v1.1.1.zip"
+      "asset": "muse-workflow-operations-review-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-operations-review-v1.1.2.zip"
     },
     {
       "id": "open-question",
       "kind": "workflow",
       "title": "Investigate Competing Accounts",
       "description": "Compare the strongest plausible explanations without prematurely choosing a story.",
-      "asset": "muse-workflow-open-question-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-open-question-v1.1.1.zip"
+      "asset": "muse-workflow-open-question-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-open-question-v1.1.2.zip"
     },
     {
       "id": "visit-and-handoff",
       "kind": "workflow",
       "title": "Organize Questions and Practical Support",
       "description": "Prepare for a professional conversation and coordinate logistics without changing the professional plan.",
-      "asset": "muse-workflow-visit-and-handoff-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-visit-and-handoff-v1.1.1.zip"
+      "asset": "muse-workflow-visit-and-handoff-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-visit-and-handoff-v1.1.2.zip"
     },
     {
       "id": "conversation-prep",
       "kind": "workflow",
       "title": "Prepare a Consequential Conversation",
       "description": "Clarify terms, draft a clear message and prepare for an honest exchange.",
-      "asset": "muse-workflow-conversation-prep-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-conversation-prep-v1.1.1.zip"
+      "asset": "muse-workflow-conversation-prep-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-conversation-prep-v1.1.2.zip"
     },
     {
       "id": "automation-readiness",
       "kind": "workflow",
       "title": "Prepare an Automation Without Losing Control of Effects",
       "description": "Check a dependency plan, review unique observed targets and reconcile uncertain prior operations before handing off to the existing executor.",
-      "asset": "muse-workflow-automation-readiness-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-automation-readiness-v1.1.1.zip"
+      "asset": "muse-workflow-automation-readiness-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-automation-readiness-v1.1.2.zip"
     },
     {
       "id": "pipeline-validation",
       "kind": "workflow",
       "title": "Reconcile a Data Pipeline Before Delivery",
       "description": "Review schema changes, reconcile a data batch and inspect query performance.",
-      "asset": "muse-workflow-pipeline-validation-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-pipeline-validation-v1.1.1.zip"
+      "asset": "muse-workflow-pipeline-validation-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-pipeline-validation-v1.1.2.zip"
     },
     {
       "id": "review-to-release",
       "kind": "workflow",
       "title": "Review a Candidate for Delivery",
       "description": "Evaluate an exact candidate against its real acceptance criteria.",
-      "asset": "muse-workflow-review-to-release-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-review-to-release-v1.1.1.zip"
+      "asset": "muse-workflow-review-to-release-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-review-to-release-v1.1.2.zip"
     },
     {
       "id": "idea-to-offer",
       "kind": "workflow",
       "title": "Test an Idea Before Promising It",
       "description": "Explore customer needs and shape a practical offer.",
-      "asset": "muse-workflow-idea-to-offer-v1.1.1.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflow-idea-to-offer-v1.1.1.zip"
+      "asset": "muse-workflow-idea-to-offer-v1.1.2.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflow-idea-to-offer-v1.1.2.zip"
     }
   ]
 }

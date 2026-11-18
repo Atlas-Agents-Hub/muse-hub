@@ -31,7 +31,7 @@ class GitHubMobileNavigation(unittest.TestCase):
 
  def test_homepage_has_four_obvious_actions_before_technical_details(self):
   body=doc(README);first=body.split("## The 15 specialists",1)[0]
-  for phrase in ("Choose an assistant","Download v1.1.1",
+  for phrase in ("Choose an assistant","Download v1.1.2",
                  "Visit Muse Hub","Get started"):
    self.assertIn(phrase,first)
   for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/connectors/README.md",

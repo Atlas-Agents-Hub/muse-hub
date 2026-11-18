@@ -209,7 +209,7 @@ class CleanPublicExportTests(unittest.TestCase):
         entry=(ROOT/"README.md").read_text(encoding="utf-8")
         self.assertIn("MIT",security)
         self.assertIn("private development repositories",security.lower())
-        for term in ("v1.1.1", "SHA256SUMS", "muse-specialist-toolkit-v1.1.1.zip", "START_HERE.md"):
+        for term in ("v1.1.2", "SHA256SUMS", "muse-specialist-toolkit-v1.1.2.zip", "START_HERE.md"):
             self.assertIn(term,release)
         self.assertIn("docs/DOWNLOAD_A_SPECIALIST.md",entry)
         self.assertIn("docs/GETTING_STARTED.md",entry)

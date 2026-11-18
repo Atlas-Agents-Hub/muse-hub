@@ -2,7 +2,7 @@
 
 Organize tasks, notes, preferences, and routines privately.
 
-**[Download Personal Companion](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-personal-companion-v1.1.1.zip)** · [v1.1.1 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/SHA256SUMS)
+**[Download Personal Companion](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-personal-companion-v1.1.2.zip)** · [v1.1.2 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/SHA256SUMS)
 
 ## Set up this assistant
 
@@ -19,6 +19,6 @@ No Python is needed for the assistant instructions. The package's `START_HERE.md
 
 Use the supplied skills and workflows that fit your task. [Explore this specialist's methods and tools](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md), or use the [terminal guide](../../docs/TERMINAL.md) for command-line work.
 
-Role ID: `personal-companion`. Package: `muse-personal-companion-v1.1.1.zip`.
+Role ID: `personal-companion`. Package: `muse-personal-companion-v1.1.2.zip`.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)

@@ -1,8 +1,8 @@
 # Muse Hub downloads and versions
 
-**Current release: [v1.1.1](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/SHA256SUMS)
+**Current release: [v1.1.2](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/SHA256SUMS)
 
-## v1.1.1 — smoother setup and navigation
+## v1.1.2 - consistent release labels
 
 [Choose one of the 15 assistants](DOWNLOAD_A_SPECIALIST.md). Each ZIP brings together its Main instructions, three subchat guides, selected skills, workflows, examples, and `START_HERE.md`.
 
@@ -10,15 +10,15 @@ The collection includes 75 skills, 25 workflows, 100 task starters, and setup re
 
 Extract your package into a new folder and start with its included guide. Assistant instructions require no Python. Optional local programs state their requirements beside their commands; repository examples use Python 3.12+.
 
-This update fixes skill-guide paths, includes the practice files used by older kit exporters, improves keyboard and mobile navigation, and makes setup text consistent across the website and bundled apps.
+This update keeps the homepage, selected-specialist panel, download page, and release links on the same version. Release labels are generated from the catalog and checked before publication.
 
 ## Complete collections
 
-- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-specialist-toolkit-v1.1.1.zip)
-- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-specialists-v1.1.1.zip)
-- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-skills-v1.1.1.zip)
-- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-workflows-v1.1.1.zip)
-- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/muse-starters-v1.1.1.zip)
+- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-specialist-toolkit-v1.1.2.zip)
+- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-specialists-v1.1.2.zip)
+- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-skills-v1.1.2.zip)
+- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-workflows-v1.1.2.zip)
+- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/muse-starters-v1.1.2.zip)
 
 ## Verify your download
 
@@ -27,24 +27,28 @@ Download `SHA256SUMS` from the same release. Calculate the archive's SHA-256 and
 **Windows PowerShell:**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.1.1.zip
+Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.1.2.zip
 ```
 
 **macOS:**
 
 ```sh
-shasum -a 256 muse-personal-companion-v1.1.1.zip
+shasum -a 256 muse-personal-companion-v1.1.2.zip
 ```
 
 **Linux:**
 
 ```sh
-sha256sum muse-personal-companion-v1.1.1.zip
+sha256sum muse-personal-companion-v1.1.2.zip
 ```
 
 Keep the original ZIP and your customized working copy separately. [Setup and saved data](INSTALL_AND_PERSISTENCE.md) explains updates and backup.
 
 ## Earlier releases
+
+### v1.1.1 - smoother setup and navigation
+
+The [v1.1.1 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1) fixes skill-guide paths, includes kit practice files, improves keyboard and mobile navigation, and clarifies setup guides. Its original archives and checksums remain available.
 
 ### v1.1.0 — individual specialists, skills and workflows
 

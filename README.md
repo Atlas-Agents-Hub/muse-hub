@@ -2,7 +2,7 @@
 
 **Independently developed for focused work inside Muse.** Choose from **15 independent assistants**, each with its own Main conversation and **three subchats**. Bring **75 skills**, **25 workflows**, **100 task starters**, and **151 connectors** to your projects, research, creative work, and everyday planning.
 
-**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.1.1](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
+**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.1.2](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
 
 ## Start with an assistant
 

@@ -9,8 +9,8 @@ ROOT=Path(__file__).resolve().parents[1]
 TICK=chr(96)
 REPO="https://github.com/atlas-origins/muse-ai-agent-presets"
 SITE="https://atlas-origins.github.io/muse-ai-agent-presets/"
-RELEASE=REPO+"/releases/tag/v1.1.1"
-DOWNLOAD=REPO+"/releases/download/v1.1.1/"
+RELEASE=REPO+"/releases/tag/v1.1.2"
+DOWNLOAD=REPO+"/releases/download/v1.1.2/"
 ALIASES={"data-engineering-architect":"data-engineer",
          "infrastructure-reliability-engineer":"reliability-engineer"}
 def read(s):return (ROOT/s).read_text(encoding="utf-8")
@@ -31,7 +31,7 @@ class MuseHubPublicProduct(unittest.TestCase):
             with self.subTest(file=name):
                 s=read(name)
                 self.assertIn(RELEASE,s)
-                for stale in ("v1.1.1 draft", "not deployed", "source-only"):
+                for stale in ("v1.1.2 draft", "not deployed", "source-only"):
                     self.assertNotIn(stale,s.lower())
         self.assertIn("releases/latest", read("README.md"))
         self.assertIn(REPO+"/releases/tag/v1.0.0", read("docs/RELEASES.md"))
@@ -50,7 +50,7 @@ class MuseHubPublicProduct(unittest.TestCase):
                 self.assertIn("Main",t)
                 self.assertIn("three subchats",t)
                 self.assertIn(RELEASE,t)
-                self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-v1.1.1.zip",t)
+                self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-v1.1.2.zip",t)
                 self.assertIn("START_HERE.md",t)
                 self.assertNotIn(" ? ",t)
                 self.assertNotIn("This public starter",t)
@@ -71,7 +71,7 @@ class MuseHubPublicProduct(unittest.TestCase):
         self.assertIn("releases/latest", downloads)
         roles=json.loads(read("presets/catalog.json"))["presets"]
         for role in roles:
-            self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-v1.1.1.zip",downloads)
+            self.assertIn(DOWNLOAD+"muse-"+ALIASES.get(role,role)+"-v1.1.2.zip",downloads)
         self.assertNotIn(" ? ",downloads)
 
     def test_active_docs_have_no_escaped_line_breaks(self):

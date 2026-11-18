@@ -1,6 +1,6 @@
 # Muse Hub
 
-[Open the website](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Download version 1.1.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1) · [Get started](../docs/GETTING_STARTED.md)
+[Open the website](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Download Muse Hub](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2) · [Get started](../docs/GETTING_STARTED.md)
 
 Choose from 15 Muse specialists, add skills and workflows, and build a workspace around the work you do.
 

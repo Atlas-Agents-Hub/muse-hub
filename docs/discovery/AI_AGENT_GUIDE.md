@@ -22,7 +22,7 @@ Describe the result of the command actually used. Follow the included instructio
 
 ## Find downloads and verify files
 
-The [v1.1.1 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.1) contains the individual assistant packages and [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.1/SHA256SUMS). Match the archive's digest to its exact filename before extraction. Package guides contain any additional integrity-check commands.
+The [v1.1.2 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.1.2) contains the individual assistant packages and [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.1.2/SHA256SUMS). Match the archive's digest to its exact filename before extraction. Package guides contain any additional integrity-check commands.
 
 ## Find more detail
 

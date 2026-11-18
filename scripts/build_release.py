@@ -18,7 +18,7 @@ def _module(name, path):
 collection = _module("release_collection", ROOT / "tools/muse_collection.py")
 legacy = _module("release_source_checks", ROOT / "scripts/build_v1_release.py")
 REPOSITORY = "https://github.com/atlas-origins/muse-ai-agent-presets"
-DEFAULT_VERSION = "v1.1.1"
+DEFAULT_VERSION = "v1.1.2"
 ALIASES = {"data-engineering-architect":"data-engineer",
            "infrastructure-reliability-engineer":"reliability-engineer"}
 ROLE_WORKFLOWS = {
