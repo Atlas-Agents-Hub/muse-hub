@@ -29,6 +29,7 @@ import skill_library
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_FILE = Path(__file__).with_name('skill_sources.json')
+_DARWIN_ROOT_ALIASES = {'/var':'/private/var', '/tmp':'/private/tmp', '/etc':'/private/etc'}
 IGNORE_DIRS = {'.git', 'node_modules', '__pycache__', '.pytest_cache', '.venv',
                'fixtures', 'evals', '.claude-plugin', 'agents'}
 IGNORE_FILES = {'.DS_Store', '.gitkeep', 'package-lock.json', 'pnpm-lock.yaml',
@@ -81,6 +82,19 @@ CHECKS = {
 
 class IntakeError(ValueError):
     pass
+
+
+def _trusted_darwin_alias(part: Path) -> bool:
+    """Permit only standard root-owned macOS directory aliases."""
+    expected = _DARWIN_ROOT_ALIASES.get(str(part))
+    if sys.platform != 'darwin' or expected is None:
+        return False
+    try:
+        return (part.is_symlink() and part.lstat().st_uid == 0
+                and part.resolve(strict=True) == Path(expected)
+                and Path(expected).is_dir())
+    except (OSError, RuntimeError):
+        return False
 
 
 def digest(raw):
@@ -344,7 +358,7 @@ def portable_package(candidate):
 def write_source_index(library_root, sources, accepted):
     """Keep compact source identities separate from user-facing descriptions."""
     path=Path(library_root)/'SOURCES.json'
-    prior=json.loads(path.read_text()) if path.exists() else {'schema':'muse-skill-origins/v1','sources':[],'skills':[]}
+    prior=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'schema':'muse-skill-origins/v1','sources':[],'skills':[]}
     rows={row['id']:row for row in prior['skills']}
     pins={source['id']:source for source in prior['sources']}
     for source in sources:pins[source['id']]=source
@@ -355,23 +369,23 @@ def write_source_index(library_root, sources, accepted):
         rows[row['id']]=row
     data={'schema':'muse-skill-origins/v1','sources':list(pins.values()),'skills':sorted(rows.values(),key=lambda row:row['id'])}
     temporary=path.with_suffix('.json.new')
-    temporary.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+    temporary.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     temporary.replace(path)
 
 
 def import_sources(sources, roots, library_root, legacy_ids=(), target_total=None):
     library_root=Path(library_root).absolute()
     for path in (library_root,*library_root.parents):
-        if path.is_symlink():raise IntakeError('destination contains a symbolic link')
+        if path.is_symlink() and not _trusted_darwin_alias(path):raise IntakeError('destination contains a symbolic link')
     catalog_path=library_root/'catalog.json'
-    catalog=json.loads(catalog_path.read_text()) if catalog_path.exists() else {'schema':skill_library.SCHEMA,'skills':[]}
+    catalog=json.loads(catalog_path.read_text(encoding='utf-8')) if catalog_path.exists() else {'schema':skill_library.SCHEMA,'skills':[]}
     existing=catalog['skills']; ids={identity(r['id']) for r in existing}|set(legacy_ids)
     bodies=set(); source_bodies=set(); accepted=[]; rejected=[]; additions=[]
     for row in existing:
         folder=library_root/row['path']
-        text=(folder/'SKILL.md').read_text()
+        text=(folder/'SKILL.md').read_text(encoding='utf-8')
         method=folder/'METHOD.md'
-        bodies.add(content_identity(method.read_text() if method.exists() else parse_skill(text)[1]))
+        bodies.add(content_identity(method.read_text(encoding='utf-8') if method.exists() else parse_skill(text)[1]))
     for source in sources:
         if source['id'] not in roots:continue
         options,errors=candidates(source,Path(roots[source['id']]))
@@ -411,7 +425,7 @@ def import_sources(sources, roots, library_root, legacy_ids=(), target_total=Non
         if target_total is not None and len(existing)+len(additions)+len(legacy_ids)>=target_total:break
     catalog['skills']=sorted([*existing,*additions],key=lambda r:r['id'])
     temporary=catalog_path.with_suffix('.json.new')
-    temporary.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n')
+    temporary.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     temporary.replace(catalog_path)
     return {'schema':'muse-skill-import/v1','sources':sources,'added':len(additions),'library_total':len(catalog['skills']),
             'collection_total':len(catalog['skills'])+len(legacy_ids),'accepted':accepted,'rejected':rejected,
@@ -434,16 +448,16 @@ def main(argv=None):
         if not sep or not Path(path).is_dir():parser.error('each --source must be ID=existing-directory')
         if name in roots:parser.error('duplicate source ID')
         roots[name]=Path(path)
-    sources=json.loads(args.sources.read_text())['sources']
+    sources=json.loads(args.sources.read_text(encoding='utf-8'))['sources']
     unknown=set(roots)-{s['id'] for s in sources}
     if unknown:parser.error('unknown source IDs: '+','.join(sorted(unknown)))
     for source in sources:
         if not re.fullmatch(r'[0-9a-f]{40}',source['commit']):parser.error('source commit must be pinned')
-    legacy={r['id'] for r in json.loads(args.legacy.read_text())} if args.legacy.exists() else set()
+    legacy={r['id'] for r in json.loads(args.legacy.read_text(encoding='utf-8'))} if args.legacy.exists() else set()
     result=import_sources(sources,roots,args.library,legacy,args.target_total)
     write_source_index(args.library,sources,result['accepted'])
     args.receipt.parent.mkdir(parents=True,exist_ok=True)
-    args.receipt.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+    args.receipt.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps({k:v for k,v in result.items() if k not in {'sources','accepted','rejected'}}))
 
 

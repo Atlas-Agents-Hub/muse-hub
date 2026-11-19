@@ -4,6 +4,8 @@ import sys
 import tempfile
 import unittest
 import json
+from types import SimpleNamespace
+from unittest import mock
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
@@ -50,6 +52,78 @@ class IntakeTests(unittest.TestCase):
         (folder/'scripts').mkdir();(folder/'scripts/check.py').write_text('import json\nimport sys\nprint(len(json.load(sys.stdin)))\n')
         spec={'id':'test-source','repository':'example/query-skills','commit':'a'*40,'patterns':['skills/*/SKILL.md']}
         return spec
+
+    def alias(self,location,target,owner=0,linked=True):
+        part=mock.MagicMock(spec=Path)
+        part.__str__.return_value=location
+        part.is_symlink.return_value=linked
+        part.lstat.return_value=SimpleNamespace(st_uid=owner)
+        part.resolve.return_value=Path(target)
+        return part
+
+    def test_darwin_root_aliases_require_verified_targets(self):
+        for location in ('/var','/tmp','/etc'):
+            with self.subTest(location=location):
+                part=self.alias(location,'/private'+location)
+                with mock.patch.object(intake.sys,'platform','darwin'), \
+                        mock.patch.object(Path,'is_dir',return_value=True):
+                    self.assertTrue(intake._trusted_darwin_alias(part))
+                part.resolve.assert_called_once_with(strict=True)
+
+    def test_unverified_root_aliases_are_refused(self):
+        cases=(
+            ('linux','/var','/private/var',0,True,True),
+            ('win32','/var','/private/var',0,True,True),
+            ('darwin','/home/owner/var','/private/var',0,True,True),
+            ('darwin','/var/folders/link','/private/var',0,True,True),
+            ('darwin','/var','/private/var',1000,True,True),
+            ('darwin','/var','/private/var',0,False,True),
+            ('darwin','/var','/private/tmp',0,True,True),
+            ('darwin','/var','/private/var',0,True,False),
+        )
+        for platform,location,target,owner,linked,directory in cases:
+            with self.subTest(platform=platform,location=location,target=target,owner=owner,linked=linked,directory=directory):
+                part=self.alias(location,target,owner,linked)
+                with mock.patch.object(intake.sys,'platform',platform), \
+                        mock.patch.object(Path,'is_dir',return_value=directory):
+                    self.assertFalse(intake._trusted_darwin_alias(part))
+        for operation,error in (('lstat',PermissionError('unavailable owner')),
+                                ('resolve',OSError('missing target')),
+                                ('resolve',RuntimeError('link cycle'))):
+            with self.subTest(operation=operation,error=type(error).__name__):
+                part=self.alias('/var','/private/var')
+                getattr(part,operation).side_effect=error
+                with mock.patch.object(intake.sys,'platform','darwin'):
+                    self.assertFalse(intake._trusted_darwin_alias(part))
+
+    def test_import_uses_verified_alias_admission_for_ancestors(self):
+        with tempfile.TemporaryDirectory() as td:
+            base=Path(td).resolve()
+            root=base/'source';root.mkdir();out=base/'library';out.mkdir()
+            spec=self.source(root)
+            original_is_symlink=Path.is_symlink
+            with mock.patch.object(Path,'is_symlink',lambda path:path==base or original_is_symlink(path)), \
+                    mock.patch.object(intake,'_trusted_darwin_alias',side_effect=lambda path:path==base) as admit:
+                result=intake.import_sources([spec],{'test-source':root},out)
+            self.assertEqual(result['added'],1)
+            admit.assert_called_once_with(base)
+            self.assertEqual(len(skill_library.load_library(out)),1)
+
+    def test_linked_destination_and_nested_parent_are_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            base=Path(td).resolve()
+            root=base/'source';root.mkdir();out=base/'library';out.mkdir()
+            spec=self.source(root)
+            alias=base/'linked-library'
+            try:
+                alias.symlink_to(out,target_is_directory=True)
+            except OSError:
+                self.skipTest('This platform requires elevated permission for symlinks')
+            for destination in (alias,alias/'nested'):
+                with self.subTest(destination=str(destination)), \
+                        self.assertRaisesRegex(intake.IntakeError,'symbolic link'):
+                    intake.import_sources([spec],{'test-source':root},destination)
+            self.assertEqual(list(out.iterdir()),[])
 
     def test_converted_package_keeps_executable_and_reference(self):
         with tempfile.TemporaryDirectory() as td:
@@ -117,6 +191,60 @@ class IntakeTests(unittest.TestCase):
             different=intake.import_sources([spec],{'test-source':root},out)
             self.assertEqual(different['added'],0)
             self.assertTrue(any('different files' in x['reason'] for x in different['rejected']))
+
+    def test_unicode_import_resume_and_source_index_are_lossless(self):
+        with tempfile.TemporaryDirectory() as td:
+            base=Path(td).resolve()
+            root=base/'source';root.mkdir();out=base/'library';out.mkdir()
+            spec=self.source(root)
+            folder=root/'skills'/'query-review-\u6570\u636e'
+            (root/'skills/query-review').rename(folder)
+            spec['patterns']=[folder.relative_to(root).as_posix()+'/SKILL.md']
+            marker='caf\u00e9 \u6570\u636e \u2192'
+            description=f'Review SQL {marker} and preserve every returned row while improving the query plan.'
+            entry=folder/'SKILL.md'
+            text=entry.read_text(encoding='utf-8').replace(
+                'description: Review SQL queries and preserve the returned rows while improving the query plan.',
+                'description: '+description,
+            )
+            text+='\n'+''.join(f'- Check row {number}: {marker}; preserve its query result.\n' for number in range(420))
+            entry.write_text(text,encoding='utf-8')
+            reference=f'Check predicate selectivity and preserve the {marker} row.\n'
+            (folder/'references/checklist.md').write_text(reference,encoding='utf-8')
+
+            first=intake.import_sources([spec],{'test-source':root},out)
+            self.assertEqual(first['added'],1)
+            intake.write_source_index(out,[spec],first['accepted'])
+            catalog=json.loads((out/'catalog.json').read_text(encoding='utf-8'))
+            self.assertEqual(catalog['skills'][0]['trigger'],description)
+            package=out/'skills/query-review'
+            members={p.relative_to(package).as_posix():p.read_bytes() for p in package.rglob('*') if p.is_file()}
+            self.assertIn(marker.encode('utf-8'),members['SKILL.md'])
+            self.assertIn(marker.encode('utf-8'),members['METHOD.md'])
+            self.assertEqual(members['references/checklist.md'],reference.encode('utf-8'))
+
+            (out/'catalog.json').unlink()
+            resumed=intake.import_sources([spec],{'test-source':root},out)
+            self.assertEqual(resumed['added'],1)
+            intake.write_source_index(out,[spec],resumed['accepted'])
+            source_index=json.loads((out/'SOURCES.json').read_text(encoding='utf-8'))
+            self.assertEqual(source_index['sources'],[spec])
+            self.assertEqual(source_index['skills'][0]['entry'],spec['patterns'][0])
+
+            sources=base/'sources.json';legacy=base/'legacy.json';receipt=base/'receipt.json'
+            sources.write_text(json.dumps({'sources':[spec]},ensure_ascii=False),encoding='utf-8')
+            legacy.write_text(json.dumps([{'id':'legacy-method','title':marker}],ensure_ascii=False),encoding='utf-8')
+            intake.main(['--sources',str(sources),'--source','test-source='+str(root),
+                         '--library',str(out),'--legacy',str(legacy),'--receipt',str(receipt)])
+            report=json.loads(receipt.read_text(encoding='utf-8'))
+            self.assertEqual(report['added'],0)
+            self.assertEqual(report['collection_total'],2)
+            self.assertEqual(report['rejected'][0]['reason'],'duplicate identity')
+            self.assertEqual(json.loads((out/'catalog.json').read_text(encoding='utf-8')),catalog)
+            self.assertEqual(json.loads((out/'SOURCES.json').read_text(encoding='utf-8')),source_index)
+            self.assertEqual({p.relative_to(package).as_posix():p.read_bytes() for p in package.rglob('*') if p.is_file()},members)
+            for path in (out/'catalog.json',out/'SOURCES.json',receipt):
+                self.assertIn('\u6570\u636e'.encode('utf-8'),path.read_bytes())
 
     def test_shared_reference_is_copied_into_package(self):
         with tempfile.TemporaryDirectory() as td:
