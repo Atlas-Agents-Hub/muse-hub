@@ -11,6 +11,7 @@ import json
 import re
 from pathlib import Path
 from .source_limits import LIBRARY_ASSET_CATALOG, reviewed_library_assets, source_file_limit
+from .planner_package import INVENTORY_PATH as PLANNER_ASSET_INVENTORY, reviewed_planner_assets
 
 # Only VCS internals and local tooling caches are outside the distribution.
 _EXCLUDED_DIRS = frozenset((
@@ -179,6 +180,11 @@ def audit_public_tree(root: Path, *,
     except (OSError, ValueError, TypeError, KeyError):
         reviewed_assets = {}
         add(root / LIBRARY_ASSET_CATALOG, 'INVALID_LIBRARY_ASSET_CATALOG')
+
+    try:
+        reviewed_assets.update(reviewed_planner_assets(root))
+    except (OSError, ValueError, TypeError, KeyError):
+        add(root / PLANNER_ASSET_INVENTORY, 'INVALID_PLANNER_ASSET_INVENTORY')
 
     for dirname, dirs, files in os.walk(root, topdown=True, followlinks=False):
         parent = Path(dirname)

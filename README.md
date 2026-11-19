@@ -67,6 +67,7 @@ Each package brings the role's methods, skills, workflows and examples together.
 - **[Engineering](docs/WORKFLOWS.md#engineering-reproduce-repair-review):** reproduce a failure, make a focused repair, run regression checks, and review the result.
 - **[Family Link](docs/FAMILY_LINK.md):** prepare a handoff with clear context, a recipient role, and an expected result.
 - **[Companion workspaces](docs/COMPANION_HOME.md):** move between five rooms, save room notes, explore the Studio, and take an Arcade break. [Daily Desk](docs/spaces/DAILY_DESK.md) keeps tasks and notes together; [Muse Task Board](docs/spaces/TASK_BOARD.md) moves project cards from To do to Done.
+- **[Muse Planner](docs/spaces/MUSE_PLANNER.md):** capture tasks, organize projects and routines, and keep a portable backup of your saved workspace.
 - **[Connectors](docs/connectors/README.md):** find setup instructions for 273 services, then choose the account and permissions for the service you need.
 
 Explore [specialists by task](docs/handbook/specialists-by-task.md) or browse the [included tools](docs/CAPABILITIES.md).

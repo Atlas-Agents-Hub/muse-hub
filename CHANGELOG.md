@@ -8,6 +8,8 @@
 - Add paginated download search, direct guide links and static subject indexes for easier discovery.
 - Search six resource types from one command and build a custom toolkit with its supporting scripts, references and workflow inputs.
 - Organize projects in the persistent Task Board with editing, removal, undo, portable exports and assistant plan requests.
+- Plan projects, next actions and routines in Muse Planner, with persistent storage, calendar settings and portable backup and restore.
+- Review email with saved preferences, resumable search windows and draft-operation checks, included with Coordinator and Personal Companion.
 - Refresh all specialist installation guides and resource descriptions with practical next steps.
 
 ## v1.5.0 — a larger skill library, organized around your work

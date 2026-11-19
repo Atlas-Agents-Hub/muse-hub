@@ -8,6 +8,7 @@ import tempfile
 import zipfile
 from .neutrality import REVIEWED_TEXT_FILES, audit_public_tree
 from .source_limits import reviewed_library_assets, source_file_limit
+from .planner_package import reviewed_planner_assets
 
 SCHEMA="muse-source-package/v2"
 PUBLIC_DIRS=frozenset({
@@ -129,15 +130,23 @@ def _validate_file(path:Path,relative:Path,*,reviewed_assets:dict[str,str]|None=
         raise PublicExportError("PRIVATE_CONTROL_REFERENCE")
     return raw
 
+def _reviewed_assets(root:Path)->dict[str,str]:
+    try:
+        assets = reviewed_library_assets(root)
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        raise PublicExportError("INVALID_LIBRARY_ASSET_CATALOG") from exc
+    try:
+        assets.update(reviewed_planner_assets(root))
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        raise PublicExportError("INVALID_PLANNER_ASSET_INVENTORY") from exc
+    return assets
+
 def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
     """Inspect current directory bytes; use a frozen archive for final release."""
     root=Path(root)
     if root.is_symlink() or not root.is_dir():
         raise PublicExportError("INVALID_EXPORT_ROOT")
-    try:
-        reviewed_assets = reviewed_library_assets(root)
-    except (OSError, ValueError, TypeError, KeyError) as exc:
-        raise PublicExportError("INVALID_LIBRARY_ASSET_CATALOG") from exc
+    reviewed_assets = _reviewed_assets(root)
     values={}
     total=0
     existing_manifest=None
@@ -236,7 +245,7 @@ def export_public_snapshot(root:Path,destination:Path,*,
         if findings:
             raise PublicExportError("PUBLIC_NEUTRALITY_FAILED:"+",".join(
                 f["reason"] for f in findings[:8]))
-        reviewed_assets = reviewed_library_assets(root)
+        reviewed_assets = _reviewed_assets(root)
         for name,expected in files.items():
             if _validate_file(root/name,Path(name),reviewed_assets=reviewed_assets)!=expected:
                 raise PublicExportError("SOURCE_CHANGED_DURING_PUBLIC_EXPORT")
