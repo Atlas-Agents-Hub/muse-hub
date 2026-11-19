@@ -14,8 +14,8 @@ class FeatureDiscoveryContract(unittest.TestCase):
         release = json.loads((ROOT / "presets/catalog.json").read_bytes())["release"]
         self.assertEqual(current["schema"], "muse-hub/distribution-links/v1")
         self.assertEqual(current["release"], release)
-        self.assertEqual(current["release_url"], "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/" + release)
-        self.assertEqual(current["downloads_url"], "https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html")
+        self.assertEqual(current["release_url"], "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/" + release)
+        self.assertEqual(current["downloads_url"], "https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html")
         catalog = CURRENT.parent / current["setup_guides"]
         value = json.loads(catalog.read_bytes())
         self.assertEqual(value["schema"], "muse-hub/setup-guides/v1")
@@ -31,7 +31,7 @@ class FeatureDiscoveryContract(unittest.TestCase):
             with self.subTest(target=target):
                 self.assertIn("(" + target + ")", text)
                 self.assertTrue((README.parent / target).is_file())
-        self.assertIn("https://atlas-origins.github.io/muse-ai-agent-presets/", text)
+        self.assertIn("https://atlas-agents-hub.github.io/muse-ai-agent-presets/", text)
 
 
 if __name__ == "__main__":

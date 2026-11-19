@@ -46,4 +46,4 @@ Use `--old` and `--new` to compare your own route files. Inputs must be UTF-8 JS
 
 The projected identifiers and eight definitions are provided under the included `nikships/muse-cli` MIT notice. Retain the source revisions and notice when reusing this reference.
 
-[Set up Muse in your terminal](../TERMINAL.md) · [Computer and device resources](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html?route=desktop)
+[Set up Muse in your terminal](../TERMINAL.md) · [Computer and device resources](https://atlas-agents-hub.github.io/muse-ai-agent-presets/public/index.html?route=desktop)

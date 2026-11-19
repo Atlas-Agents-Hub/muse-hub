@@ -4,22 +4,22 @@ Resolve competing factual and technical claims by tracing original evidence, tes
 
 **106 skills · 7 workflows · 16 tool guides** · **4 task starters** · **16 recommended connectors**
 
-[Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-claims-adjudicator-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-claims-adjudicator-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 17 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Business%20%26%20projects) |
-| Creative & games | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Creative%20%26%20games) |
-| Data & AI | 10 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Data%20%26%20AI) |
-| Design & visualization | 7 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Design%20%26%20visualization) |
-| Infrastructure & reliability | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Infrastructure%20%26%20reliability) |
-| Learning & study | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Learning%20%26%20study) |
-| Research & science | 10 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Research%20%26%20science) |
-| Security | 37 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Security) |
-| Software & automation | 20 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Software%20%26%20automation) |
-| Using Muse | 2 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Using%20Muse) |
+| Business & projects | 17 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Business%20%26%20projects) |
+| Creative & games | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Creative%20%26%20games) |
+| Data & AI | 10 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Data%20%26%20AI) |
+| Design & visualization | 7 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Design%20%26%20visualization) |
+| Infrastructure & reliability | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Infrastructure%20%26%20reliability) |
+| Learning & study | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Learning%20%26%20study) |
+| Research & science | 10 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Research%20%26%20science) |
+| Security | 37 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Security) |
+| Software & automation | 20 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Software%20%26%20automation) |
+| Using Muse | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -28,7 +28,7 @@ Resolve competing factual and technical claims by tracing original evidence, tes
 - [Spreadsheet Reconciliation Partner](../../collections/muse-starters-v1/starters/spreadsheet-auditor/STARTER.md) — Trace workbook calculations to source records and explain every material discrepancy.
 - [Record Reconciliation Partner](../../collections/muse-starters-v1/starters/record-reconciler/STARTER.md) — Compare record sets using stable keys and account for changed or missing items.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 7 workflows for this specialist](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 7 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=claims-adjudicator&type=workflow)
 
 ## Connect your services
 

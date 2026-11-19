@@ -10,8 +10,8 @@ from muse_collection import load_collection
 from urllib.parse import urlsplit
 ROOT=Path(__file__).resolve().parents[1]
 TICK=chr(96)
-REPO="https://github.com/atlas-origins/muse-ai-agent-presets"
-SITE="https://atlas-origins.github.io/muse-ai-agent-presets/"
+REPO="https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets"
+SITE="https://atlas-agents-hub.github.io/muse-ai-agent-presets/"
 VERSION=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
 RELEASE=REPO+"/releases/tag/"+VERSION
 DOWNLOAD=REPO+"/releases/download/"+VERSION+"/"
@@ -111,7 +111,7 @@ class MuseHubPublicProduct(unittest.TestCase):
     def test_repository_metadata_describes_the_product_and_search_topics(self):
         metadata=json.loads(read('.github/muse-hub-metadata-proposal.json'))
         self.assertEqual(metadata['product_name'],'Muse Hub')
-        self.assertEqual(metadata['repository'],'atlas-origins/muse-ai-agent-presets')
+        self.assertEqual(metadata['repository'],'Atlas-Agents-Hub/muse-ai-agent-presets')
         self.assertEqual(metadata['homepage'],SITE)
         self.assertEqual(metadata['schema'],'muse-hub/github-metadata/v2')
         self.assertLessEqual(len(metadata['description']),160)

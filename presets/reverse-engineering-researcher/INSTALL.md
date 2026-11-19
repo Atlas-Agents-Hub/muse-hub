@@ -2,7 +2,7 @@
 
 Understand software and protocol behavior with authorized observations, defensive trace analysis, scoped experiments and clean-room reconstructions.
 
-**[Download Reverse Engineering & Security Researcher](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-reverse-engineering-researcher-v1.6.0.zip)** · [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Reverse Engineering & Security Researcher](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-reverse-engineering-researcher-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
 
 **441 skills · 5 workflows · 11 tool guides**. [Explore the full selection](LIBRARY.md).
 

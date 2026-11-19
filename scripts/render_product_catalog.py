@@ -20,8 +20,8 @@ from muse_presets.planner_package import ROLES as PLANNER_ROLES
 from render_downloads import subject
 from render_specialist_directory import AREAS, COPY
 
-REPO='https://github.com/atlas-origins/muse-ai-agent-presets'
-SITE='https://atlas-origins.github.io/muse-ai-agent-presets/'
+REPO='https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets'
+SITE='https://atlas-agents-hub.github.io/muse-ai-agent-presets/'
 # These pages describe the current collection. Historical release notes and the
 # original compatibility fixtures retain their original counts and versions.
 CURRENT_PAGES=(

@@ -71,4 +71,4 @@ Give Muse the ZIP and a concrete task, such as:
 
 Open each included guide for the inputs it needs and the local commands it supplies. Keep working files and outputs in your project folder. After an update, create a new toolkit from the current catalog.
 
-[Specialist library](SPECIALIST_LIBRARY.md) · [Developer quickstart](../GITHUB_QUICKSTART.md) · [Skills](../SKILLS.md) · [All downloads](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html)
+[Specialist library](SPECIALIST_LIBRARY.md) · [Developer quickstart](../GITHUB_QUICKSTART.md) · [Skills](../SKILLS.md) · [All downloads](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html)

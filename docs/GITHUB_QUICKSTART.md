@@ -7,12 +7,12 @@ Run the specialist tools, create an editable assistant kit, or export instructio
 Use Python 3.12+ and Git. These commands work in Windows PowerShell, macOS Terminal, and Linux; use `python3` when appropriate.
 
 ```sh
-git clone https://github.com/atlas-origins/muse-ai-agent-presets.git
+git clone https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets.git
 cd muse-ai-agent-presets
 python -B quickstart.py --all
 ```
 
-The check creates and inspects temporary packages for all 15 roles. The [current release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) also offers downloads with included start guides.
+The check creates and inspects temporary packages for all 15 roles. The [current release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/latest) also offers downloads with included start guides.
 
 ## Create an assistant kit
 

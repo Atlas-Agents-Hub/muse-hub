@@ -4,22 +4,22 @@ Investigate scientific and technical questions, compare explanations, audit prim
 
 **784 skills · 57 workflows · 27 tool guides** · **101 task starters** · **50 recommended connectors**
 
-[Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-research-evaluator-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-research-evaluator-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 7 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Business%20%26%20projects) |
-| Creative & games | 2 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Creative%20%26%20games) |
-| Data & AI | 360 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Data%20%26%20AI) |
-| Home & travel | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Home%20%26%20travel) |
-| Learning & study | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Learning%20%26%20study) |
-| Personal planning | 3 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Personal%20planning) |
-| Research & science | 401 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Research%20%26%20science) |
-| Security | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Security) |
-| Software & automation | 6 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Software%20%26%20automation) |
-| Using Muse | 2 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Using%20Muse) |
+| Business & projects | 7 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Business%20%26%20projects) |
+| Creative & games | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Creative%20%26%20games) |
+| Data & AI | 360 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Data%20%26%20AI) |
+| Home & travel | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Home%20%26%20travel) |
+| Learning & study | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Learning%20%26%20study) |
+| Personal planning | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Personal%20planning) |
+| Research & science | 401 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Research%20%26%20science) |
+| Security | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Security) |
+| Software & automation | 6 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Software%20%26%20automation) |
+| Using Muse | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -36,7 +36,7 @@ Investigate scientific and technical questions, compare explanations, audit prim
 - [Practical Analytics Partner](../../collections/muse-starters-v1/starters/analytics-partner/STARTER.md) — Answer a bounded question with reproducible calculations and understandable limitations.
 - [Experiment Design Partner](../../collections/muse-starters-v1/starters/experiment-planner/STARTER.md) — Define a fair comparison and decisive observations before seeing outcomes.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 57 workflows for this specialist](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 57 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=research-evaluator&type=workflow)
 
 ## Connect your services
 

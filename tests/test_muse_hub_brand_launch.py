@@ -49,8 +49,8 @@ class MuseHubBrandLaunch(unittest.TestCase):
                      "docs/TERMINAL.md",
                      "docs/COMPANION_HOME.md",
                      "docs/handbook/specialists-by-task.md",
-                     "https://atlas-origins.github.io/muse-ai-agent-presets/",
-                     f"https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/{RELEASE}"):
+                     "https://atlas-agents-hub.github.io/muse-ai-agent-presets/",
+                     f"https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/{RELEASE}"):
             self.assertIn(path,text)
         self.assertNotRegex(text, r"\b[HS]\d{2}\b")
         for stale in (f"{RELEASE} draft", "source-only", "not deployed"):

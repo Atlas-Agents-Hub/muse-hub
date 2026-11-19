@@ -14,7 +14,7 @@ Find the setup guide for the part of Muse Hub you want to use.
 | Companion Home | [Open the five-room workspace](COMPANION_HOME.md). |
 | Tasks and notes | [Open Daily Desk](spaces/DAILY_DESK.md). |
 | Setup and recovery | [Start, check, stop, and reopen](handbook/hub-setup-journeys.md). |
-| Downloads and website | [Current release](RELEASES.md) and [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/). |
+| Downloads and website | [Current release](RELEASES.md) and [Muse Hub](https://atlas-agents-hub.github.io/muse-ai-agent-presets/). |
 
 ## Developer records
 

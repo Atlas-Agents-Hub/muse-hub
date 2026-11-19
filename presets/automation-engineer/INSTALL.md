@@ -2,7 +2,7 @@
 
 Build repeatable workflows across tools and services, with dependency graphs, triggers, approval points, idempotency, retry policy and uncertain-effect recovery.
 
-**[Download Automation Engineer](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-automation-engineer-v1.6.0.zip)** · [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Automation Engineer](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-automation-engineer-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
 
 **400 skills · 342 workflows · 14 tool guides**. [Explore the full selection](LIBRARY.md).
 

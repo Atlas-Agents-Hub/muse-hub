@@ -21,7 +21,7 @@ def _module(name, path):
 collection = _module("release_collection", ROOT / "tools/muse_collection.py")
 legacy = _module("release_source_checks", ROOT / "scripts/build_v1_release.py")
 connector_catalog = _module("release_connectors", ROOT / "scripts/connector_catalog.py")
-REPOSITORY = "https://github.com/atlas-origins/muse-ai-agent-presets"
+REPOSITORY = "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets"
 DEFAULT_VERSION = json.loads((ROOT / 'presets/catalog.json').read_bytes())['release']
 SKILLS_PER_PACK = 40
 INDIVIDUAL_SKILL_LIMIT = 600

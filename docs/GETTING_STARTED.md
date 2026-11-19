@@ -34,4 +34,4 @@ Ask for a result you can inspect: a patch and passing check, an evidence table, 
 
 Store your customized instructions, memory, and task files in your private workspace. Keep the downloaded package as a reference. When updating, compare the new instructions with your edits before replacing them. For local notebooks, keep the SQLite database outside the application folder and back it up before moving computers.
 
-[Setup, updates, and recovery](INSTALL_AND_PERSISTENCE.md) · [Downloads and checksums](RELEASES.md) · [Documentation](README.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)
+[Setup, updates, and recovery](INSTALL_AND_PERSISTENCE.md) · [Downloads and checksums](RELEASES.md) · [Documentation](README.md) · [Muse Hub](https://atlas-agents-hub.github.io/muse-ai-agent-presets/)

@@ -2,7 +2,7 @@
 
 Build lessons, flashcards, practice sessions, scored quizzes and adaptive review from trusted study material, keeping learner progress and weak areas visible.
 
-**[Download Learning Coach](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-learning-coach-v1.6.0.zip)** · [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Learning Coach](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-learning-coach-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
 
 **471 skills · 10 workflows · 16 tool guides**. [Explore the full selection](LIBRARY.md).
 

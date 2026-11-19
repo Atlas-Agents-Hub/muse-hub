@@ -2,7 +2,7 @@
 
 Develop original visual media, animation, video and interactive scenes—from creative direction, characters, environments and asset development to motion, render inspection, continuity and delivery.
 
-**[Download Creative Studio](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-creative-studio-v1.6.0.zip)** · [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Creative Studio](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-creative-studio-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
 
 **519 skills · 27 workflows · 22 tool guides**. [Explore the full selection](LIBRARY.md).
 

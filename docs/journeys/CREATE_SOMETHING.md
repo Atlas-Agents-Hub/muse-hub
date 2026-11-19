@@ -83,7 +83,7 @@ Save revised briefs and outputs in separate folders so you can compare them. For
 
 In the **Arcade**, try **Signal Trail**: choose the highlighted tile with touch, a click or keys **1–4**. The game keeps its progress in your browser. Follow the [Companion Home guide](../COMPANION_HOME.md#explore-the-five-rooms) to open the room tour or launch the workspace with saved notes.
 
-For another starting point, explore [companion and creative projects](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html?route=companion). Open a project's details, choose the tools for your idea and follow its setup guide.
+For another starting point, explore [companion and creative projects](https://atlas-agents-hub.github.io/muse-ai-agent-presets/public/index.html?route=companion). Open a project's details, choose the tools for your idea and follow its setup guide.
 
 ## Your first useful result
 

@@ -4,17 +4,17 @@ Improve service reliability using SLOs, error budgets, capacity forecasts, incid
 
 **531 skills · 8 workflows · 20 tool guides** · **5 task starters** · **25 recommended connectors**
 
-[Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-reliability-engineer-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-reliability-engineer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Creative & games | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Creative%20%26%20games) |
-| Data & AI | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Data%20%26%20AI) |
-| Infrastructure & reliability | 524 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Infrastructure%20%26%20reliability) |
-| Software & automation | 4 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Software%20%26%20automation) |
-| Using Muse | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Using%20Muse) |
+| Creative & games | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Creative%20%26%20games) |
+| Data & AI | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Data%20%26%20AI) |
+| Infrastructure & reliability | 524 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Infrastructure%20%26%20reliability) |
+| Software & automation | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Software%20%26%20automation) |
+| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -24,7 +24,7 @@ Improve service reliability using SLOs, error budgets, capacity forecasts, incid
 - [n8n Silent Workflow Check](../../collections/muse-starters-v1/starters/task-muse-silent-workflow-check-715418/STARTER.md) — Use the matching tools and data flow to complete “n8n Silent Workflow Check”.
 - [uptime-ping-alert](../../collections/muse-starters-v1/starters/task-uptime-ping-alert-578663/STARTER.md) — Use the matching tools and data flow to complete “uptime-ping-alert”.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 8 workflows for this specialist](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 8 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reliability-engineer&type=workflow)
 
 ## Connect your services
 

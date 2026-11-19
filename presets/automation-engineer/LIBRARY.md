@@ -4,19 +4,19 @@ Build repeatable workflows across tools and services, with dependency graphs, tr
 
 **400 skills · 342 workflows · 14 tool guides** · **460 task starters** · **94 recommended connectors**
 
-[Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-automation-engineer-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-automation-engineer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 3 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Business%20%26%20projects) |
-| Creative & games | 3 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Creative%20%26%20games) |
-| Data & AI | 9 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Data%20%26%20AI) |
-| Design & visualization | 2 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Design%20%26%20visualization) |
-| Personal planning | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Personal%20planning) |
-| Software & automation | 381 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Software%20%26%20automation) |
-| Using Muse | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Using%20Muse) |
+| Business & projects | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Business%20%26%20projects) |
+| Creative & games | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Creative%20%26%20games) |
+| Data & AI | 9 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Data%20%26%20AI) |
+| Design & visualization | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Design%20%26%20visualization) |
+| Personal planning | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Personal%20planning) |
+| Software & automation | 381 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Software%20%26%20automation) |
+| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -33,7 +33,7 @@ Build repeatable workflows across tools and services, with dependency graphs, tr
 - [Analyze Suspicious Email Contents with ChatGPT Vision](../../collections/muse-starters-v1/starters/task-analyze-suspicious-email-contents-with-muse-vision-666293/STARTER.md) — Use the matching tools and data flow to complete “Analyze Suspicious Email Contents with ChatGPT Vision”.
 - [Auto Categorise Outlook Emails with AI](../../collections/muse-starters-v1/starters/task-auto-categorise-outlook-emails-with-ai-6e6a8d/STARTER.md) — Use the matching tools and data flow to complete “Auto Categorise Outlook Emails with AI”.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 342 workflows for this specialist](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 342 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=automation-engineer&type=workflow)
 
 ## Connect your services
 

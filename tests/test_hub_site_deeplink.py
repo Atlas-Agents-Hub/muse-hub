@@ -27,7 +27,7 @@ class MuseHubDeepLinkTests(unittest.TestCase):
         self.assertEqual(html.count('class="role-card-download"'), 15)
         downloads = re.findall(r'class="role-card-download" href="([^"]+)"', html)
         for url in downloads:
-            self.assertTrue(url.startswith(f"https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/{RELEASE}/muse-"),url)
+            self.assertTrue(url.startswith(f"https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/{RELEASE}/muse-"),url)
             self.assertTrue(url.endswith(f"-{RELEASE}.zip"),url)
         self.assertIn('id="setup-role-download"', html)
 
@@ -45,7 +45,7 @@ class MuseHubDeepLinkTests(unittest.TestCase):
             "setupDownload.href =",
             "card.querySelector('.role-card-download')?.href",
             "roleDownloads.get(slug)",
-            "download.startsWith('https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/')",
+            "download.startsWith('https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/')",
         ):
             self.assertIn(token, script)
         self.assertIn("if (!knownRoles.has(slug)) return", script)

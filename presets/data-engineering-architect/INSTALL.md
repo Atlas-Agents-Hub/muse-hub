@@ -2,7 +2,7 @@
 
 Design and maintain reliable data systems, from schemas and ingestion quality to record identity, event reconciliation, query performance and safe migrations.
 
-**[Download Data Engineering & Database Architect](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-data-engineer-v1.6.0.zip)** · [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Data Engineering & Database Architect](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-data-engineer-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
 
 **373 skills · 58 workflows · 21 tool guides**. [Explore the full selection](LIBRARY.md).
 

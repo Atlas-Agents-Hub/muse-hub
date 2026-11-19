@@ -4,19 +4,19 @@ Design datasets, models and adapters, conduct training experiments, compare cand
 
 **724 skills · 99 workflows · 24 tool guides** · **174 task starters** · **28 recommended connectors**
 
-[Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-model-builder-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-model-builder-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 3 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Business%20%26%20projects) |
-| Creative & games | 2 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Creative%20%26%20games) |
-| Data & AI | 704 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Data%20%26%20AI) |
-| Personal planning | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Personal%20planning) |
-| Research & science | 4 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Research%20%26%20science) |
-| Security | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Security) |
-| Software & automation | 9 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Software%20%26%20automation) |
+| Business & projects | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Business%20%26%20projects) |
+| Creative & games | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Creative%20%26%20games) |
+| Data & AI | 704 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Data%20%26%20AI) |
+| Personal planning | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Personal%20planning) |
+| Research & science | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Research%20%26%20science) |
+| Security | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Security) |
+| Software & automation | 9 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&subject=Software%20%26%20automation) |
 
 ## Start a useful task
 
@@ -33,7 +33,7 @@ Design datasets, models and adapters, conduct training experiments, compare cand
 - [MongoDB Assistant - Intelligent Movie Recommendations](../../collections/muse-starters-v1/starters/task-mongodb-assistant-intelligent-movie-recommendations-5e25e1/STARTER.md) — Use the matching tools and data flow to complete “MongoDB Assistant - Intelligent Movie Recommendations”.
 - [Supabase Insertion & Upsertion & Retrieval](../../collections/muse-starters-v1/starters/task-supabase-insertion-upsertion-retrieval-a25db1/STARTER.md) — Use the matching tools and data flow to complete “Supabase Insertion & Upsertion & Retrieval”.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 99 workflows for this specialist](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 99 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=model-builder&type=workflow)
 
 ## Connect your services
 

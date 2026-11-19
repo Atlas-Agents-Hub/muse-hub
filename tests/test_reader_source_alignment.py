@@ -66,7 +66,7 @@ class ReaderSourceAlignmentTests(unittest.TestCase):
      self.assertEqual(catalog['skill_pack_count'],len(packed))
      self.assertEqual(len({item['asset'] for item in catalog['items']}),len(individual)+len(packed))
      for item in catalog['items']:
-         self.assertEqual(item['url'],'https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/'+version+'/'+item['asset'])
+         self.assertEqual(item['url'],'https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/'+version+'/'+item['asset'])
  def test_local_entrypoints_survive_reader_rewrite(self):
      for page in ['README.md','docs/GITHUB_QUICKSTART.md']:
          body=self.text(page)
@@ -93,7 +93,7 @@ class ReaderSourceAlignmentTests(unittest.TestCase):
      guide=self.text('docs/discovery/AI_AGENT_GUIDE.md')
      self.assertIn('agent-capabilities.json',guide)
      capabilities=json.loads(self.text('docs/discovery/agent-capabilities.json'))
-     self.assertEqual(capabilities['homepage'],'https://atlas-origins.github.io/muse-ai-agent-presets/')
+     self.assertEqual(capabilities['homepage'],'https://atlas-agents-hub.github.io/muse-ai-agent-presets/')
      self.assertEqual(capabilities['release'],json.loads(self.text('presets/catalog.json'))['release'])
      self.assertTrue((ROOT/capabilities['tool_guides']).is_file())
      tools=json.loads(self.text(capabilities.get('tool_guide_catalog','collections/tool-guides.json')))

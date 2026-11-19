@@ -9,7 +9,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "hub" / "site"
-DOCS = "https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/"
+DOCS = "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/blob/main/docs/"
 ROLES = {
     "software-engineer", "data-engineering-architect", "automation-engineer",
     "infrastructure-reliability-engineer", "research-evaluator", "claims-adjudicator",

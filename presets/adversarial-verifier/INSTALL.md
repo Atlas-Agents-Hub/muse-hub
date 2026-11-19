@@ -2,7 +2,7 @@
 
 Challenge authorized software, agent systems and releases with threat models, failure injection, negative controls and independent remediation reviews.
 
-**[Download Adversarial Verifier](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-adversarial-verifier-v1.6.0.zip)** · [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Adversarial Verifier](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-adversarial-verifier-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
 
 **426 skills · 6 workflows · 21 tool guides**. [Explore the full selection](LIBRARY.md).
 

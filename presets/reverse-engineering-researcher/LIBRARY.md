@@ -4,26 +4,26 @@ Understand software and protocol behavior with authorized observations, defensiv
 
 **441 skills · 5 workflows · 11 tool guides** · **1 task starters** · **8 recommended connectors**
 
-[Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-reverse-engineering-researcher-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-reverse-engineering-researcher-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Business%20%26%20projects) |
-| Creative & games | 2 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Creative%20%26%20games) |
-| Data & AI | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Data%20%26%20AI) |
-| Infrastructure & reliability | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Infrastructure%20%26%20reliability) |
-| Learning & study | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Learning%20%26%20study) |
-| Research & science | 3 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Research%20%26%20science) |
-| Security | 416 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Security) |
-| Software & automation | 16 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Software%20%26%20automation) |
+| Business & projects | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Business%20%26%20projects) |
+| Creative & games | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Creative%20%26%20games) |
+| Data & AI | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Data%20%26%20AI) |
+| Infrastructure & reliability | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Infrastructure%20%26%20reliability) |
+| Learning & study | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Learning%20%26%20study) |
+| Research & science | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Research%20%26%20science) |
+| Security | 416 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Security) |
+| Software & automation | 16 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&subject=Software%20%26%20automation) |
 
 ## Start a useful task
 
 - [Compatibility Research Partner](../../collections/muse-starters-v1/starters/compatibility-researcher/STARTER.md) — Compare supplied specifications and authorized observations to identify behavioral compatibility gaps.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 5 workflows for this specialist](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 5 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=reverse-engineering-researcher&type=workflow)
 
 ## Connect your services
 

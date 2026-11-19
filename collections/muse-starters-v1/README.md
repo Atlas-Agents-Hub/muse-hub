@@ -7,7 +7,7 @@ Choose a specialist for your work, apply a focused method with your current assi
 ## Start with a useful task
 
 1. [Choose an assistant](../../docs/DOWNLOAD_A_SPECIALIST.md), a [task starter](CATALOG.md), or a [skill](SKILL_INDEX.md).
-2. Download its ZIP from [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html).
+2. Download its ZIP from [Muse Hub](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html).
 3. Extract it into its own folder, open `START_HERE.md`, and give Muse your task and source material.
 4. Follow the result checklist and keep the output in your working folder.
 

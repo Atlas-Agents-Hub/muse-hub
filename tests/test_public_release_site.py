@@ -29,6 +29,23 @@ class PublicReleaseDownloads(unittest.TestCase):
         cls.checker=load_script('check_release_links')
         cls.directory=json.loads((ROOT/'hub/site/downloads.json').read_text(encoding='utf-8'))
 
+
+    def test_release_and_site_use_atlas_agents_hub(self):
+        from xml.etree import ElementTree
+
+        repository = 'https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets'
+        pages = 'https://atlas-agents-hub.github.io/muse-ai-agent-presets/'
+        release_prefix = repository + '/releases/download/' + self.directory['version'] + '/'
+        self.assertEqual(self.renderer.REPO, repository)
+        self.assertEqual(self.checker.REPOSITORY, repository)
+        for item in self.directory['items'] + self.directory['bundles']:
+            self.assertEqual(item['url'], release_prefix + item['asset'])
+        root = ElementTree.parse(ROOT/'hub/site/sitemap.xml')
+        locations = [node.text for node in root.findall('.//{*}loc')]
+        self.assertIn(pages, locations)
+        self.assertTrue(all(location.startswith(pages) for location in locations))
+        self.checker.check(self.release_fixture(), self.directory)
+
     def test_rendered_directory_matches_validated_collection(self):
         self.assertEqual(self.directory, self.renderer.catalog())
         for name,expected in self.renderer.outputs().items():
@@ -66,7 +83,7 @@ class PublicReleaseDownloads(unittest.TestCase):
         rows=self.directory['items']+self.directory['bundles']
         unique={row['asset']:row for row in rows}
         assets=[{'name':row['asset'],'state':'uploaded','size':123,'browser_download_url':row['url']} for row in unique.values()]
-        base='https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/'+self.directory['version']+'/'
+        base='https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/'+self.directory['version']+'/'
         names=('SHA256SUMS','SPECIALIST_DOWNLOADS.json','SKILL_DOWNLOADS.json',
                'WORKFLOW_DOWNLOADS.json','RELEASE_MANIFEST.json','DOWNLOADS.md',
                'muse-role-procedures-50-'+self.directory['version']+'.zip')
@@ -338,7 +355,7 @@ class ReleaseContentProof(unittest.TestCase):
         rows=list(self.directory['items'])+list(self.directory['bundles'])
         name='muse-role-procedures-50-'+self.directory['version']+'.zip'
         rows.append({'id':'role-procedures-50','asset':name,
-                     'url':'https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/'+self.directory['version']+'/'+name})
+                     'url':'https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/'+self.directory['version']+'/'+name})
         for row in rows:
             raw=bodies[row['asset']]
             records[key.get(row.get('kind'),'bundles')].append({

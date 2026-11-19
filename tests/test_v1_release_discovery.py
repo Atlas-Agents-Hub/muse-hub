@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
-REPO="https://github.com/atlas-origins/muse-ai-agent-presets"
+REPO="https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets"
 TAG=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
 LEGACY_TAG="v1.0.0"
 class ReleaseDiscovery(unittest.TestCase):
@@ -22,7 +22,7 @@ class ReleaseDiscovery(unittest.TestCase):
             "tool-guides":f"muse-tool-guides-{TAG}.zip"}
   self.assertEqual(d["v1_assets"],{k:REPO+"/releases/download/"+TAG+"/"+v for k,v in expected.items()})
   self.assertEqual(d["complete_toolkit"],d["v1_assets"]["source"])
-  self.assertEqual(d["homepage"],"https://atlas-origins.github.io/muse-ai-agent-presets/")
+  self.assertEqual(d["homepage"],"https://atlas-agents-hub.github.io/muse-ai-agent-presets/")
   self.assertEqual(d["downloads_page"],d["homepage"]+"downloads.html")
   roles=json.loads((ROOT/"presets/catalog.json").read_bytes())["presets"]
   aliases={"data-engineering-architect":"data-engineer",

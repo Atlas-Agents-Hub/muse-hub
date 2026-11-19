@@ -21,7 +21,7 @@
     [name, new Set([...control.options].map(option => option.value))]));
   const controls = [search, kind, role, category, reset, clearEmpty];
   const pageSize = 60;
-  const repository = 'https://github.com/atlas-origins/muse-ai-agent-presets';
+  const repository = 'https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets';
   const expectedTotal = Number(results.dataset.total);
   const initialCount = document.querySelectorAll('.download-card').length;
   const groupKinds = {specialists:'specialist',skills:'skill',workflows:'workflow','tool-guides':'tool-guide'};

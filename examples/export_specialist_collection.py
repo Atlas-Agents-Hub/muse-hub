@@ -78,7 +78,7 @@ Choose `data-engineer`, `reliability-engineer`, `automation-engineer` or `produc
 
 ## Compare examples
 
-`reports/` contains the calculated results of the included examples. Use their inputs and output shapes to prepare your own records. `SPECIALISTS.json` lists the full specialist catalog; get complete specialist downloads from [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html).
+`reports/` contains the calculated results of the included examples. Use their inputs and output shapes to prepare your own records. `SPECIALISTS.json` lists the full specialist catalog; get complete specialist downloads from [Muse Hub](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html).
 
 `BUNDLE_MANIFEST.json` records each file's checksum. Every nested ZIP includes its own manifest.
 """.encode()

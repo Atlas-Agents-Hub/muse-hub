@@ -34,7 +34,7 @@ class EditorialClarity(unittest.TestCase):
                          f"{len(starters)} task starters",f"{len(connectors)} connectors","START_HERE.md",
                          "tools/muse_collection.py demo data-engineer",
                          "docs/connectors/README.md","docs/GETTING_STARTED.md", "docs/TERMINAL.md",
-                         f"releases/tag/{release}", "https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html"):
+                         f"releases/tag/{release}", "https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html"):
             with self.subTest(expected=expected):
                 self.assertIn(expected.lower(),body.lower())
         self.assertLess(len(body.encode("utf-8")),8000)

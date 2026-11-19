@@ -4,24 +4,24 @@ Organize plants, growing seasons and gardening projects through observations, ev
 
 **25 skills · 2 workflows · 9 tool guides** · **2 task starters** · **8 recommended connectors**
 
-[Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-garden-companion-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-garden-companion-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Data & AI | 4 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Data%20%26%20AI) |
-| Home & travel | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Home%20%26%20travel) |
-| Research & science | 16 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Research%20%26%20science) |
-| Software & automation | 3 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Software%20%26%20automation) |
-| Using Muse | 1 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Using%20Muse) |
+| Data & AI | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Data%20%26%20AI) |
+| Home & travel | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Home%20%26%20travel) |
+| Research & science | 16 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Research%20%26%20science) |
+| Software & automation | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Software%20%26%20automation) |
+| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&subject=Using%20Muse) |
 
 ## Start a useful task
 
 - [Garden Observation Partner](../../collections/muse-starters-v1/starters/garden-observer/STARTER.md) — Track plants through observations and cautious next checks rather than instant diagnoses.
 - [Plant Journal Partner](../../collections/muse-starters-v1/starters/plant-journaler/STARTER.md) — Organize a growing history that makes changes and care decisions easier to review.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 2 workflows for this specialist](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 2 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=garden-companion&type=workflow)
 
 ## Connect your services
 

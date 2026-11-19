@@ -21,7 +21,7 @@ class ProductPositioningTests(unittest.TestCase):
         for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/GETTING_STARTED.md","docs/TERMINAL.md"):
             self.assertIn(path,text)
         self.assertIn(f"releases/tag/{release}",text)
-        self.assertIn("https://atlas-origins.github.io/muse-ai-agent-presets/",text)
+        self.assertIn("https://atlas-agents-hub.github.io/muse-ai-agent-presets/",text)
         prose=re.sub(r"\]\([^)]+\)","]()",text)
         self.assertNotRegex(prose,r"\b(?:H\d{2}|S[1-5])\b")
         for old in ("source-only","not installed native","not deployed","remain a draft","not additional agents"):

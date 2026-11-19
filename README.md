@@ -4,7 +4,7 @@
 
 Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5242 skills**, **396 workflows**, **51 tool guides**, **558 task starters**, and **273 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
 
-**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
+**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.0](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
 
 ## Start with what you want to do
 
@@ -79,7 +79,7 @@ The [terminal guide](docs/TERMINAL.md) covers chatting with your personal Muse t
 For the toolkit commands below, use Python 3.12+ and Git:
 
 ```sh
-git clone https://github.com/atlas-origins/muse-ai-agent-presets.git
+git clone https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets.git
 cd muse-ai-agent-presets
 python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
 python -B tools/muse_collection.py demo data-engineer
@@ -99,6 +99,6 @@ Filter by specialist, preview a selection with `plan`, then use `build` to creat
 
 ## Explore Muse Hub
 
-Explore [Muse features](https://muse.ai/), companion spaces, computer tools and automation on [the website](https://atlas-origins.github.io/muse-ai-agent-presets/). Search the [63-resource library](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html) for your next tool or project.
+Explore [Muse features](https://muse.ai/), companion spaces, computer tools and automation on [the website](https://atlas-agents-hub.github.io/muse-ai-agent-presets/). Search the [63-resource library](https://atlas-agents-hub.github.io/muse-ai-agent-presets/public/index.html) for your next tool or project.
 
-[All downloads](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html) · [Current release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [Downloads and checksums](docs/RELEASES.md) · [Documentation](docs/README.md) · [AI-agent discovery index](llms.txt) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)
+[All downloads](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html) · [Current release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/latest) · [Downloads and checksums](docs/RELEASES.md) · [Documentation](docs/README.md) · [AI-agent discovery index](llms.txt) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)

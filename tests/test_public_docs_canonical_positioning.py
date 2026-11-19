@@ -19,7 +19,7 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
              text=(ROOT/path).read_text("utf8")
              repository_links.extend(re.findall(r'https://github[.]com/[^/]+/muse-ai-agent-presets',text))
      self.assertTrue(repository_links)
-     self.assertEqual(set(repository_links),{"https://github.com/atlas-origins/muse-ai-agent-presets"})
+     self.assertEqual(set(repository_links),{"https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets"})
  def test_readme_has_clear_specialist_directory_and_setup_routes(self):
      text=(ROOT/"README.md").read_text("utf8")
      self.assertLess(len(text.encode()),8000)
@@ -50,7 +50,7 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
      self.assertIn("handbook/specialists-by-task.md",skills)
  def test_discovery_index_contains_canonical_website(self):
      text=(ROOT/"llms.txt").read_text("utf8")
-     site="https://atlas-origins.github.io/muse-ai-agent-presets/"
+     site="https://atlas-agents-hub.github.io/muse-ai-agent-presets/"
      self.assertIn(site,text)
      self.assertIn(site+"downloads.html",text)
      cap=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_bytes())
