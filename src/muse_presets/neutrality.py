@@ -12,6 +12,7 @@ import re
 from pathlib import Path
 from .source_limits import LIBRARY_ASSET_CATALOG, reviewed_library_assets, source_file_limit
 from .planner_package import INVENTORY_PATH as PLANNER_ASSET_INVENTORY, reviewed_planner_assets
+from .site_social import SOCIAL_CARD_PATH, reviewed_social_digest, valid_social_card
 
 # Only VCS internals and local tooling caches are outside the distribution.
 _EXCLUDED_DIRS = frozenset((
@@ -183,6 +184,9 @@ def audit_public_tree(root: Path, *,
 
     try:
         reviewed_assets.update(reviewed_planner_assets(root))
+        social_digest = reviewed_social_digest(root)
+        if social_digest is not None:
+            reviewed_assets[SOCIAL_CARD_PATH] = social_digest
     except (OSError, ValueError, TypeError, KeyError):
         add(root / PLANNER_ASSET_INVENTORY, 'INVALID_PLANNER_ASSET_INVENTORY')
 
@@ -209,6 +213,14 @@ def audit_public_tree(root: Path, *,
             lowered = name.lower()
             relative = path.relative_to(root).as_posix()
             expected = reviewed_assets.get(relative)
+            if relative == SOCIAL_CARD_PATH:
+                try:
+                    approved = valid_social_card(path.read_bytes(), expected)
+                except OSError:
+                    approved = False
+                if not approved:
+                    add(path, "UNREVIEWED_SOCIAL_PREVIEW")
+                continue
             template=(expected is not None and lowered in {'.env.example','.env.template'})
             if (lowered in _SENSITIVE_NAMES or (lowered.startswith(".env.") and not template)
                 or path.suffix.lower() in _SENSITIVE_SUFFIXES
