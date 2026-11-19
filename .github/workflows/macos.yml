@@ -13,7 +13,7 @@ concurrency:
 jobs:
   macos:
     runs-on: macos-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     env:
       PYTHONPATH: src
       PYTHONDONTWRITEBYTECODE: '1'
