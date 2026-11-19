@@ -28,14 +28,14 @@ class ConnectorCatalogTests(unittest.TestCase):
   self.assertEqual(proof['connector_count'],len(d['connectors']))
   self.assertFalse(proof['upstream_code_executed']);self.assertFalse(proof['connector_code_vendored'])
   for path,digest in proof['distributed_files'].items():self.assertEqual(hashlib.sha256((R/path).read_bytes()).hexdigest(),digest)
-  license=(R/'docs/connectors/UPSTREAM_LICENSE.txt').read_text();self.assertIn('muse-connectors contributors',license)
+  license=(R/'docs/connectors/UPSTREAM_LICENSE.txt').read_text(encoding='utf-8');self.assertIn('muse-connectors contributors',license)
  def test_all_entries_have_browsable_source_fallback(self):
-  body=(R/'docs/connectors/CATALOG.md').read_text();page=(R/'docs/connectors/index.html').read_text()
+  body=(R/'docs/connectors/CATALOG.md').read_text(encoding='utf-8');page=(R/'docs/connectors/index.html').read_text(encoding='utf-8')
   for c in tool().load_catalog()['connectors']:
    self.assertIn(c.get('guide_path',c['source_url']),body);self.assertIn('id="'+c['id']+'"',page)
   for token in ['connector-search','category-filter','specialist-filter','copy-prompt','aria-live','Content-Security-Policy']:
    self.assertIn(token,page)
-  js=(R/'docs/connectors/app.js').read_text();self.assertNotIn('innerHTML',js);self.assertNotIn('eval(',js)
+  js=(R/'docs/connectors/app.js').read_text(encoding='utf-8');self.assertNotIn('innerHTML',js);self.assertNotIn('eval(',js)
   self.assertNotIn('fetch(',js);self.assertNotIn('localStorage',js)
  def test_validate_refuses_malformed_and_false_claims(self):
   m=tool();base=m.load_catalog()
@@ -66,7 +66,7 @@ class ConnectorCatalogTests(unittest.TestCase):
 
 class V1ProductTests(unittest.TestCase):
  def test_hero_leads_with_specialists_skills_workflows_and_connectors(self):
-     s=(R/'README.md').read_text();hero=s.split('\n## ',1)[0]
+     s=(R/'README.md').read_text(encoding='utf-8');hero=s.split('\n## ',1)[0]
      counts=json.loads((R/'hub/site/downloads.json').read_bytes())['counts']
      for value in ('Muse Hub','15 independent assistants',f"{counts['skill']} skills",f"{counts['workflow']} workflows",
                    f"{counts['tool-guide']} tool guides",f"{len(json.loads((R/'collections/muse-starters-v1/starters.json').read_bytes()))} task starters",f"{len(tool().load_catalog()['connectors'])} connectors"):
@@ -85,10 +85,10 @@ class V1ProductTests(unittest.TestCase):
      for path in d['first_use'].values():
          self.assertTrue((R/path.split('#')[0]).is_file(),path)
  def test_first_use_preserves_identity_and_release_history(self):
-     releases=(R/'docs/RELEASES.md').read_text()
+     releases=(R/'docs/RELEASES.md').read_text(encoding='utf-8')
      for version in ('v1.5.0','v1.0.0','v0.4.1-alpha'):
          self.assertIn(version,releases)
-     s=(R/'docs/v1/START_HERE.md').read_text()
+     s=(R/'docs/v1/START_HERE.md').read_text(encoding='utf-8')
      for target in ('../DOWNLOAD_A_SPECIALIST.md','../GETTING_STARTED.md','../TERMINAL.md',
                     '../COMPANION_HOME.md','../connectors/README.md','../INSTALL_AND_PERSISTENCE.md'):
          self.assertIn(target,s)

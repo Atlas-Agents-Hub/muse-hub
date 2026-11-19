@@ -26,7 +26,7 @@ class EditorialClarity(unittest.TestCase):
 
     def test_actions_identify_real_operation_and_expected_result(self):
         body=README.read_text(encoding="utf-8")
-        inventory=json.loads((ROOT/"hub/site/downloads.json").read_text())["counts"]
+        inventory=json.loads((ROOT/"hub/site/downloads.json").read_text(encoding="utf-8"))["counts"]
         starters=json.loads((ROOT/"collections/muse-starters-v1/starters.json").read_bytes())
         connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
         release=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
