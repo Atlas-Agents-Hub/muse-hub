@@ -74,7 +74,7 @@ class IntakeTests(unittest.TestCase):
         cases=(
             ('linux','/var','/private/var',0,True,True),
             ('win32','/var','/private/var',0,True,True),
-            ('darwin','/home/owner/var','/private/var',0,True,True),
+            ('darwin','/opt/muse-fixtures/var','/private/var',0,True,True),
             ('darwin','/var/folders/link','/private/var',0,True,True),
             ('darwin','/var','/private/var',1000,True,True),
             ('darwin','/var','/private/var',0,False,True),
