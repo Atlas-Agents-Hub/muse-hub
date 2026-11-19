@@ -1,6 +1,8 @@
 /* Muse Hub specialist discovery and setup. */
 (() => {
   'use strict';
+  const directory = document.querySelector('.specialist-directory');
+  const setupDisclosure = document.querySelector('.setup-disclosure');
   const search = document.getElementById('role-search');
   const category = document.getElementById('role-category');
   const count = document.getElementById('role-count');
@@ -38,7 +40,7 @@
     if (event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey) {
       const active = document.activeElement;
       const typing = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT' || active.isContentEditable);
-      if (!typing) { event.preventDefault(); search.focus(); }
+      if (!typing) { event.preventDefault(); if (directory) directory.open = true; search.focus(); }
     }
     if (event.key === 'Escape' && document.activeElement === search) {
       search.value = '';
@@ -87,7 +89,9 @@
     const incomingRole = new URL(window.location.href).searchParams.get('role');
     if (incomingRole && knownRoles.has(incomingRole)) {
       setupSelect.value = incomingRole;
+      if (setupDisclosure) setupDisclosure.open = true;
     }
+    if (window.location.hash === '#setup' && setupDisclosure) setupDisclosure.open = true;
     function syncRoleURL(slug) {
       const url = new URL(window.location.href);
       if (slug && knownRoles.has(slug)) {
@@ -113,6 +117,7 @@
         if (!knownRoles.has(slug)) return;
         event.preventDefault();
         setupSelect.value = slug;
+        if (setupDisclosure) setupDisclosure.open = true;
         selectSetupRole();
         syncRoleURL(slug);
         const reduceMotion = window.matchMedia &&

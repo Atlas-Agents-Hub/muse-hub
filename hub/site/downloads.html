@@ -28,10 +28,9 @@
   <link rel="stylesheet" href="site.css">
   <script defer src="downloads.js"></script>
 </head>
-<body id="top">
+<body id="top" class="muse-premium downloads-page">
   <a class="skip-link" href="#main">Skip to downloads</a>
-  <header class="site-header">
-    <div class="shell header-inner">
+  <header class="site-header"><div class="shell header-inner">
       <a class="brand" href="index.html#top" aria-label="Muse Hub home">
         <svg class="brand-symbol" viewBox="0 0 44 44" width="35" height="35" fill="none" aria-hidden="true" focusable="false">
           <path fill="currentColor" d="M3 36V8h10l9 13-6 9-5-8v14H3Z"/>
@@ -39,17 +38,13 @@
         </svg>
         <span class="brand-text">MUSE <span>HUB</span></span>
       </a>
-      <nav aria-label="Muse Hub navigation" class="header-nav">
-        <a href="index.html#explore-muse">Explore Muse</a>
-        <a href="index.html#companion-spaces">Spaces</a>
-        <a href="index.html#specialists">Specialists</a>
-        <a href="downloads.html">Downloads</a>
-        <a href="public/index.html">Resources</a>
-        <a href="index.html#setup">Get started</a>
-      </nav>
-      <a class="header-github" href="https://github.com/Atlas-Agents-Hub/muse-hub" target="_blank" rel="noopener noreferrer" aria-label="Muse Hub source on GitHub">GitHub <span aria-hidden="true">↗</span></a>
-    </div>
-  </header>
+<nav class="header-nav" aria-label="Primary navigation">
+<a href="index.html#companion-spaces">Spaces</a><a href="index.html#specialists">Specialists</a><a href="downloads.html">Library</a></nav>
+<a class="header-github" href="https://github.com/Atlas-Agents-Hub/muse-hub" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+<details class="mobile-navigation"><summary aria-label="Open navigation menu">Menu <span aria-hidden="true">☰</span></summary>
+<nav aria-label="Mobile navigation"><a href="index.html#companion-spaces">Spaces</a><a href="index.html#specialists">Specialists</a>
+<a href="downloads.html">Skills &amp; workflows</a><a href="index.html#setup">Getting started</a>
+<a href="https://github.com/Atlas-Agents-Hub/muse-hub">GitHub repository ↗</a></nav></details></div></header>
   <main id="main">
     <section class="downloads-hero section-dark"><div class="shell">
       <span class="eyebrow signal">MUSE HUB / VERSION 1.6.0</span>
@@ -320,6 +315,12 @@
       <div id="download-empty" class="role-empty" hidden><h2>No matching downloads.</h2><p>Try a shorter search or clear the filters.</p><button id="download-clear-empty" type="button">Show all downloads</button></div>
     </div></div>
   </main>
-  <footer class="site-footer"><div class="shell footer-grid"><div><a href="index.html#top" class="footer-brand" aria-label="Back to Muse Hub homepage">MUSE HUB</a><p>Get more out of Muse.<br>Explore, personalize, connect and create.</p></div><div><span>EXPLORE</span><a href="index.html#explore-muse">Muse features</a><a href="index.html#companion-spaces">Companion spaces</a><a href="index.html#specialists">Specialists</a><a href="public/index.html">Resource library</a><a href="downloads.html">Skills &amp; workflows</a></div><div><span>GET INVOLVED</span><a href="https://github.com/Atlas-Agents-Hub/muse-hub">Source repository</a><a href="https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/docs/RELEASES.md">Versions</a><a href="https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/SECURITY.md">Security</a></div></div><div class="shell footer-bottom"><span>© MUSE HUB · INDEPENDENT OPEN SOURCE</span><span data-release-caption="footer">VERSION 1.6.0 · BUILT FOR MUSE</span></div></footer>
+  <footer class="site-footer premium-footer"><div class="shell premium-footer-main">
+<div><a href="index.html#top" class="footer-brand">MUSE HUB</a><p>Build something useful. Keep making it better.</p></div>
+<nav aria-label="Footer navigation"><a href="index.html#companion-spaces">Spaces</a><a href="index.html#specialists">Specialists</a>
+<a href="downloads.html">Skills &amp; workflows</a><a href="public/index.html">Tools &amp; guides</a>
+<a href="index.html#setup">Get started</a></nav>
+<a class="premium-footer-github" href="https://github.com/Atlas-Agents-Hub/muse-hub">Explore on GitHub ↗</a></div>
+<div class="shell premium-footer-bottom"><span>© MUSE HUB</span><span data-release-caption="footer">MUSE HUB · VERSION 1.6.0</span></div></footer>
 </body>
 </html>

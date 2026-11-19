@@ -51,7 +51,7 @@ DOWNLOAD_PAGE_SIZE = 60
 HOME_CAPTIONS = {
     'packages': 'Complete ZIP packages · Version {version}',
     'specialist': 'YOUR SPECIALIST / VERSION {version}',
-    'footer': 'VERSION {version} · BUILT FOR MUSE',
+    'footer': 'MUSE HUB · VERSION {version}',
 }
 CAPTION = re.compile(
     r'(?P<open><(?P<tag>div|span)\b[^<>]*\bdata-release-caption="(?P<key>[^"]+)"[^<>]*>)'
@@ -416,7 +416,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
   <link rel="stylesheet" href="site.css">
   <script defer src="downloads.js"></script>
 </head>
-<body id="top">
+<body id="top" class="muse-premium downloads-page">
   <a class="skip-link" href="#main">Skip to downloads</a>
 {header}  <main id="main">
     <section class="downloads-hero section-dark"><div class="shell">

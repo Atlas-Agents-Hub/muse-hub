@@ -358,3 +358,188 @@ button { cursor:pointer; }
 .download-entry {font-size:.8rem;line-height:1.5;overflow-wrap:anywhere;}
 .download-entry code {white-space:normal;overflow-wrap:anywhere;}
 .download-card {content-visibility:auto;contain-intrinsic-size:auto 280px;}
+
+
+/* Muse Hub R3: product-first homepage. Scoped to this page only. */
+.muse-premium{--black:#0d1727;--paper:#f7f5ee;--paper-strong:#fffefa;--signal:#80ecd0;--line-dark:#334153;--line-paper:#d9dfdb;background:#0d1727;color:#f7f8f4;font:16px/1.55 Inter,"Segoe UI",Arial,sans-serif}
+.muse-premium .shell{width:min(1160px,calc(100% - 64px))}
+.muse-premium :is(a,button,input,select,summary):focus-visible{outline:3px solid #53dfbd;outline-offset:4px}
+.muse-premium .site-header{background:#0d1727;border-bottom:1px solid #2f3c4b;position:sticky;top:0;z-index:60}
+.muse-premium .header-inner{min-height:78px;gap:26px}
+.muse-premium .brand-text{letter-spacing:.10em;font-weight:820}
+.muse-premium .header-nav{gap:34px}
+.muse-premium .header-nav a{font-size:14px;font-weight:640}
+.muse-premium .header-github{font-size:13px;font-weight:700;border:1px solid #526374;border-radius:9px;padding:10px 15px}
+.muse-premium .mobile-navigation{display:none}
+.muse-premium .premium-eyebrow{display:inline-flex;align-items:center;gap:10px;letter-spacing:.14em;font-size:11px;font-weight:800;color:#398e7d}
+.muse-premium .premium-status-dot{width:8px;height:8px;border-radius:50%;background:#7aebc5;box-shadow:0 0 0 5px #7aebc51f;display:inline-block}
+.muse-premium .premium-hero{padding:84px 0 85px;background:radial-gradient(ellipse at 80% 18%,#284559 0%,#14263b 35%,#0d1727 75%);overflow:hidden}
+.muse-premium .premium-hero-grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(340px,.94fr);align-items:center;gap:65px}
+.muse-premium .premium-hero .premium-eyebrow{color:#9ae9d4}
+.muse-premium .premium-hero h1{font-family:Inter,"Segoe UI",Arial,sans-serif;letter-spacing:-.065em;font-weight:820;font-size:clamp(48px,5.9vw,80px);line-height:1.02;max-width:720px;margin:22px 0 25px;text-wrap:balance}
+.muse-premium .premium-hero h1 span{color:#8ef0d4}
+.muse-premium .premium-lead{font-size:clamp(16px,1.55vw,19px);color:#cfdae0;max-width:595px;line-height:1.67;margin:0}
+.muse-premium .premium-hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:28px}
+.muse-premium .premium-button{display:inline-flex;justify-content:center;align-items:center;gap:20px;text-decoration:none;font-weight:780;font-size:14px;border-radius:11px;min-height:52px;padding:13px 19px;transition:transform .2s ease,background .2s ease,border-color .2s ease;text-align:center}
+.muse-premium .premium-button:hover{transform:translateY(-2px)}
+.muse-premium .premium-button-primary{background:#80ecd0;color:#122733}
+.muse-premium .premium-button-primary:hover{background:#a3f9e3}
+.muse-premium .premium-button-outline{border:1px solid #53677b;color:#f5f9fb;background:#ffffff08}
+.muse-premium .premium-button-outline:hover{border-color:#b0d3d6;background:#ffffff13}
+.muse-premium .premium-release{font-size:11px;color:#8196a8;margin-top:23px}
+.muse-premium .premium-product-preview{min-width:0;border:1px solid #476074;border-radius:24px;background:linear-gradient(160deg,#263d50,#101f31);padding:19px;box-shadow:0 25px 85px #050a14a6, inset 0 1px 0 #ffffff18;transform:rotate(1.5deg)}
+.muse-premium .premium-preview-top{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:10px;letter-spacing:.14em;color:#a9c2ca}
+.muse-premium .premium-preview-top>span:first-child{color:#7ee8d0;letter-spacing:.3em}
+.muse-premium .premium-preview-live{color:#95f4d8;border:1px solid #78eacc50;border-radius:99px;padding:4px 9px;font-size:9px}
+.muse-premium .premium-preview-title{display:flex;flex-direction:column;gap:4px;margin:35px 8px 19px}
+.muse-premium .premium-preview-title small{font-size:10px;letter-spacing:.13em;color:#adc6cc}
+.muse-premium .premium-preview-title strong{font-size:24px;letter-spacing:-.03em}
+.muse-premium .premium-preview-flow{display:grid;gap:9px}
+.muse-premium .premium-preview-flow>div{display:flex;gap:16px;align-items:center;border:1px solid #ffffff19;border-radius:12px;background:#0c1b2d;padding:13px 14px}
+.muse-premium .premium-preview-flow strong,.muse-premium .premium-preview-flow small{display:block}
+.muse-premium .premium-preview-flow strong{font-size:14px;font-weight:730}
+.muse-premium .premium-preview-flow small{font-size:12px;color:#a3b7c1}
+.muse-premium .premium-icon{display:grid;place-items:center;width:37px;height:37px;border-radius:10px;font-size:11px;flex:none}
+.muse-premium .premium-icon.mint{background:#80ecd02c;color:#9af5d6}
+.muse-premium .premium-icon.violet{background:#aa9df02c;color:#dfd5ff}
+.muse-premium .premium-icon.gold{background:#f1c17b26;color:#ffd29b}
+.muse-premium .premium-preview-bottom{display:flex;justify-content:space-between;margin:17px 8px 3px;font-size:11px;color:#aac0c4}
+.muse-premium .premium-section-heading{max-width:710px;margin-bottom:30px}
+.muse-premium .premium-section-heading h2,.muse-premium .premium-library h2{font:790 clamp(32px,4.2vw,49px)/1.09 Inter,"Segoe UI",Arial,sans-serif;letter-spacing:-.05em;margin:14px 0 10px;text-wrap:balance}
+.muse-premium .premium-section-heading p{font-size:16px;color:#64726d;max-width:640px;line-height:1.65;margin:0}
+.muse-premium .premium-paths{background:#f6f8f5;color:#0e2530;padding:78px 0 82px}
+.muse-premium .premium-path-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.muse-premium .premium-path-card{background:#fff;border:1px solid #d8e3df;border-radius:17px;padding:30px 27px;min-height:246px;display:flex;flex-direction:column;text-decoration:none;box-shadow:0 5px 16px #153a2e0a;transition:transform .2s ease,box-shadow .2s ease, border-color .2s ease}
+.muse-premium .premium-path-card:hover{transform:translateY(-4px);border-color:#8fbfb2;box-shadow:0 14px 38px #153a2e15}
+.muse-premium .premium-card-number{font-size:11px;letter-spacing:.13em;font-weight:830;color:#357c74}
+.muse-premium .premium-path-card h3{font:770 27px/1.17 Inter,"Segoe UI",Arial,sans-serif;letter-spacing:-.045em;margin:24px 0 12px}
+.muse-premium .premium-path-card p{font-size:14px;line-height:1.6;color:#586a65;margin:0 0 24px}
+.muse-premium .premium-card-link{display:block;margin-top:auto;color:#176d5e;font-size:13px;font-weight:810}
+.muse-premium .premium-spaces{background:#f7f5ee;color:#132b33;padding:80px 0 88px}
+.muse-premium .premium-heading-inline{max-width:none;display:flex;justify-content:space-between;align-items:end;gap:32px}
+.muse-premium .premium-text-link{font-size:13px;font-weight:780;text-decoration:none;white-space:nowrap;color:#176a60}
+.muse-premium .premium-text-link:hover{text-decoration:underline}
+.muse-premium .premium-space-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.muse-premium .premium-space-card{background:#fff;border-radius:18px;border:1px solid #dadfd9;overflow:hidden;box-shadow:0 10px 40px #1d32220a;min-width:0}
+.muse-premium .premium-space-art{height:177px;padding:20px 20px 16px;overflow:hidden}
+.muse-premium .planner-art{background:#e2f4ed;color:#21453e}
+.muse-premium .board-art{background:#eae7fa;color:#353653}
+.muse-premium .desk-art{background:#f3eadd;color:#4a3931}
+.muse-premium .premium-art-caption{font-size:11px;font-weight:830;letter-spacing:.11em;display:flex;justify-content:space-between;margin-bottom:18px}
+.muse-premium .premium-art-item{font-size:12px;background:#ffffffba;border-radius:9px;margin:6px 0;padding:8px 11px}
+.muse-premium .premium-art-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.muse-premium .premium-art-columns span{min-width:0;background:#ffffffbc;border-radius:9px;padding:12px 7px;font-size:9px;line-height:1.5}
+.muse-premium .premium-art-columns b{font-size:10px;display:block;margin-top:7px;overflow-wrap:anywhere}
+.muse-premium .premium-desk-note{display:flex;flex-direction:column;gap:6px;background:#fff9f1be;border-radius:12px;padding:13px 15px}
+.muse-premium .premium-desk-note small{font-size:9px;letter-spacing:.11em}
+.muse-premium .premium-desk-note strong{font-size:17px}
+.muse-premium .premium-desk-note span{font-size:11px}
+.muse-premium .premium-space-content{padding:24px 24px 27px}
+.muse-premium .premium-space-content h3{font-size:23px;letter-spacing:-.04em;margin:11px 0 8px}
+.muse-premium .premium-space-content p{font-size:14px;color:#566863;min-height:68px;line-height:1.55;margin:0 0 18px}
+.muse-premium .specialists{padding:73px 0 80px}
+.muse-premium .premium-specialist-count{font-size:12px;color:#307d72;background:#d6f1e8;border-radius:99px;padding:9px 16px;white-space:nowrap}
+.muse-premium .specialist-directory,.muse-premium .setup-disclosure{border:1px solid #b6cfc5;border-radius:14px;overflow:clip}
+.muse-premium .specialist-directory>summary,.muse-premium .setup-disclosure>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 23px;font-size:15px;font-weight:800;cursor:pointer;background:#e8f5ef;color:#13493f}
+.muse-premium .specialist-directory>summary::-webkit-details-marker,.muse-premium .setup-disclosure>summary::-webkit-details-marker{display:none}
+.muse-premium .specialist-directory[open]>summary,.muse-premium .setup-disclosure[open]>summary{border-bottom:1px solid #cbdad2}
+.muse-premium .specialist-directory>.role-toolbar{margin:22px 22px 8px}
+.muse-premium .specialist-directory>.role-result-line{margin-inline:22px}
+.muse-premium .specialist-directory>.role-grid{margin:15px 20px 22px}
+.muse-premium .specialist-directory>.section-footnote{margin:18px 22px 25px}
+.muse-premium .premium-library{position:relative;background:#11273a;color:#edf9f6;padding:76px 0}
+.muse-premium .premium-library-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:80px;align-items:center}
+.muse-premium .premium-library h2{max-width:520px}
+.muse-premium .premium-library .premium-eyebrow{color:#99ecdb}
+.muse-premium .premium-library p{color:#bdd2d5;max-width:500px;font-size:16px;line-height:1.65}
+.muse-premium .premium-library-highlights{display:grid;gap:9px}
+.muse-premium .premium-library-highlights>div{border-radius:12px;border:1px solid #486575;background:#ffffff08;padding:15px 21px}
+.muse-premium .premium-library-highlights small,.muse-premium .premium-library-highlights strong,.muse-premium .premium-library-highlights span{display:block}
+.muse-premium .premium-library-highlights small{letter-spacing:.12em;color:#89eaca;font-size:10px;font-weight:780}
+.muse-premium .premium-library-highlights strong{font-size:15px;margin-top:4px}
+.muse-premium .premium-library-highlights span,.muse-premium .premium-library-highlights a{font-size:12px;color:#c9dade;margin-top:4px}
+.muse-premium .setup{padding:75px 0 82px}
+.muse-premium .setup .premium-section-heading p{color:#b4cac9}
+.muse-premium .setup .premium-text-link{color:#9aeacb}
+.muse-premium .setup-disclosure{border-color:#486575}
+.muse-premium .setup-disclosure>summary{background:#183247;color:#dcfbf0}
+.muse-premium .setup-disclosure>.setup-steps{margin:22px}
+.muse-premium .setup-disclosure>.setup-selector{margin:20px}
+.muse-premium .setup-disclosure>.setup-actions,.muse-premium .setup-disclosure>.setup-boundary{margin:20px}
+.muse-premium .premium-footer{background:#eaf1ec;color:#162d34}
+.muse-premium .premium-footer-main{display:grid;grid-template-columns:1.2fr 1.1fr auto;gap:34px;align-items:start;padding:50px 0}
+.muse-premium .premium-footer-main p{margin:10px 0 0;color:#596b63;font-size:13px}
+.muse-premium .premium-footer-main nav{display:flex;gap:10px 22px;flex-wrap:wrap}
+.muse-premium .premium-footer-main nav a,.muse-premium .premium-footer-github{font-size:13px;font-weight:700;text-decoration:none}
+.muse-premium .premium-footer-main nav a:hover{text-decoration:underline}
+.muse-premium .premium-footer-bottom{display:flex;justify-content:space-between;border-top:1px solid #cddcd3;padding:18px 0;color:#63716c;font-size:11px;letter-spacing:.07em}
+.muse-premium [id]{scroll-margin-top:93px}
+@media (max-width: 1020px){
+ .muse-premium .premium-hero-grid{gap:35px;grid-template-columns:1fr 370px}
+ .muse-premium .premium-hero h1{font-size:59px}
+ .muse-premium .premium-library-grid{gap:35px}
+}
+@media (max-width: 850px){
+ .muse-premium .premium-hero-grid{grid-template-columns:1fr}
+ .muse-premium .premium-product-preview{width:min(500px,100%);margin:auto}
+ .muse-premium .premium-path-grid,.muse-premium .premium-space-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .muse-premium .premium-library-grid{grid-template-columns:1fr}
+ .muse-premium .premium-footer-main{grid-template-columns:1fr 1fr}
+ .muse-premium .header-nav{gap:15px}
+}
+@media (max-width: 690px){
+ .muse-premium .shell{width:min(100% - 36px,560px)}
+ .muse-premium .header-inner{min-height:67px;gap:12px}
+ .muse-premium .brand-symbol{width:30px;height:30px}
+ .muse-premium .brand-text{font-size:18px;letter-spacing:.07em}
+ .muse-premium .header-nav,.muse-premium .header-github{display:none}
+ .muse-premium .mobile-navigation{display:block;position:relative;margin-left:auto}
+ .muse-premium .mobile-navigation>summary{list-style:none;cursor:pointer;font-weight:750;border:1px solid #4e6072;border-radius:9px;color:#f1faf6;padding:9px 12px;font-size:13px}
+ .muse-premium .mobile-navigation>summary::-webkit-details-marker{display:none}
+ .muse-premium .mobile-navigation>summary span{margin-left:8px;color:#8beccf}
+ .muse-premium .mobile-navigation nav{position:absolute;right:0;top:calc(100% + 11px);min-width:min(310px,calc(100vw - 36px));z-index:99;padding:8px;background:#1a2c3d;border:1px solid #405b6a;border-radius:12px;box-shadow:0 16px 30px #0009}
+ .muse-premium .mobile-navigation nav a{display:block;padding:11px 14px;border-radius:7px;text-decoration:none;font-size:14px;color:#f3faf8}
+ .muse-premium .mobile-navigation nav a:hover{background:#315065}
+ .muse-premium .premium-hero{padding:57px 0 61px}
+ .muse-premium .premium-hero h1{font-size:clamp(42px,12vw,58px);letter-spacing:-.065em;line-height:1.04;margin:20px 0}
+ .muse-premium .premium-lead{font-size:16px;line-height:1.62}
+ .muse-premium .premium-hero-actions{gap:10px;margin-top:24px}
+ .muse-premium .premium-button{width:100%;min-height:49px;justify-content:space-between;padding:12px 17px}
+ .muse-premium .premium-product-preview{display:none}
+ .muse-premium .premium-paths,.muse-premium .premium-spaces{padding:57px 0 62px}
+ .muse-premium .premium-section-heading h2,.muse-premium .premium-library h2{font-size:34px}
+ .muse-premium .premium-section-heading p{font-size:14px}
+ .muse-premium .premium-path-grid,.muse-premium .premium-space-grid{grid-template-columns:1fr;gap:12px}
+ .muse-premium .premium-path-card{padding:24px;min-height:0}
+ .muse-premium .premium-path-card h3{font-size:23px;margin:16px 0 8px}
+ .muse-premium .premium-path-card p{margin:0 0 17px}
+ .muse-premium .premium-heading-inline{align-items:start;flex-direction:column;gap:12px}
+ .muse-premium .premium-space-art{height:145px}
+ .muse-premium .premium-space-content p{min-height:0}
+ .muse-premium .specialists,.muse-premium .setup,.muse-premium .premium-library{padding:56px 0}
+ .muse-premium .specialist-directory>.role-toolbar{margin:15px}
+ .muse-premium .specialist-directory>.role-grid{margin:12px}
+ .muse-premium .premium-library-highlights{margin-top:4px}
+ .muse-premium .premium-footer-main{grid-template-columns:1fr;gap:24px;padding:39px 0}
+ .muse-premium .premium-footer-main nav{gap:12px 20px}
+ .muse-premium .premium-footer-bottom{font-size:10px}
+}
+@media (max-width: 360px){
+ .muse-premium .shell{width:calc(100% - 28px)}
+ .muse-premium .premium-hero h1{font-size:41px}
+ .muse-premium .brand-text{font-size:16px}
+ .muse-premium .premium-art-columns span{font-size:8px}
+}
+@media (prefers-reduced-motion: reduce){
+ .muse-premium *, .muse-premium *::before, .muse-premium *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+/* Compact, swipeable Space previews: keep all three accessible without a second long vertical catalogue. */
+@media (max-width: 690px){
+ .muse-premium .premium-space-grid{display:flex;gap:13px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:0;-webkit-overflow-scrolling:touch;padding:1px 2px 18px 1px}
+ .muse-premium .premium-space-card{flex:0 0 min(84%,322px);scroll-snap-align:start}
+ .muse-premium .premium-space-grid:focus-visible{outline:3px solid #176b5d;outline-offset:5px}
+ .muse-premium .premium-space-grid::-webkit-scrollbar{height:5px}
+ .muse-premium .premium-space-grid::-webkit-scrollbar-thumb{background:#8ebdad;border-radius:8px}
+ .muse-premium .premium-space-grid::-webkit-scrollbar-track{background:#e2e8df}
+}
