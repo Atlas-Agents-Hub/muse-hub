@@ -30,7 +30,7 @@ SOURCE_PINS = {
     "src/muse_presets/family.py": "af043cc6edc7e0670d2ec098bdd94f7064f4998d58e784f5669cc740bb23780b",
     "src/muse_presets/family_envelope.py": '02fd3b8d6d811bfa21554b09702807f6cf39ec05ed869bb7f672b6e367e5083b',
     "src/muse_presets/neutrality.py": 'f1c50bc1f00299499b26b04f4c74de1a62c0b0007bbbc4b81943801c530d07d6',
-    "src/muse_presets/planner_package.py": '145a180f02c1745e6a6207f8275fdd425552e816b5c7109efad79f40988a9a29',
+    "src/muse_presets/planner_package.py": 'ae34f9e82aaa373be0130e42e6ced40b59af5f8461b7758e7a7f32496393d0c0',
     "src/muse_presets/source_limits.py": '692b4c92957073e97c28347481730729154970f3dcc5e9dfb2cc9a7e91155f7d',
     "src/muse_presets/playbooks.py": 'c3abac0812efe26fbf34698e24fcdc18ebbd0d756bdc771092353b1859e04774',
 }
