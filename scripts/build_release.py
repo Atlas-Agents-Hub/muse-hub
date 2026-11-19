@@ -411,7 +411,10 @@ def _source_archive(version,manifest):
     return proc.stdout
 
 def build_release(destination,expected_head,version=DEFAULT_VERSION):
-    _version(version);target=collection._safe_path(Path(destination))
+    _version(version)
+    if version != DEFAULT_VERSION:
+        raise ValueError("RELEASE_VERSION_MISMATCH")
+    target = collection._safe_path(Path(destination))
     if not target.is_absolute() or target.exists() or not target.parent.is_dir():
         raise ValueError("NEW_ABSOLUTE_OUTPUT_DIRECTORY_REQUIRED")
     if target.is_relative_to(ROOT): raise ValueError("RELEASE_OUTPUT_MUST_BE_OUTSIDE_SOURCE")

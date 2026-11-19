@@ -344,5 +344,17 @@ class ReleasePackagesTests(unittest.TestCase):
         self.assertEqual(list(folder.iterdir()), [sentinel])
 
 
+
+class ReleaseBuildGuardsTests(unittest.TestCase):
+    def test_build_requires_the_source_release_version(self):
+        major, minor, patch = release.DEFAULT_VERSION[1:].split(".")
+        mismatched = f"v{major}.{minor}.{int(patch) + 1}"
+        with tempfile.TemporaryDirectory() as parent:
+            destination = Path(parent) / "release"
+            with self.assertRaisesRegex(ValueError, "RELEASE_VERSION_MISMATCH"):
+                release.build_release(destination, "0" * 40, mismatched)
+            self.assertFalse(destination.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
