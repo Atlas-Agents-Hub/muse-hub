@@ -955,6 +955,40 @@ test("a late workspace refresh preserves an open editor and its unsaved draft", 
   } finally { workspace.remove(); }
 });
 
+test("diagnostics are opt-in while render-failure recovery retains its log", async () => {
+  fetchMode = "populated";
+  const originalUrl = window.location.href;
+  window.history.replaceState(null, "", "/");
+  const workspace = mountWorkspace() as any;
+  const renderWorkspace = workspace.renderWorkspace;
+  try {
+    await waitFor(() => workspace.textContent?.includes(`${fixture.row_count} items loaded`) === true, "Workspace did not open.");
+    expect(workspace.querySelector(".diagnostic-panel").hidden).toBe(true);
+    expect(workspace.querySelector(".top-line").classList.contains("has-diagnostics")).toBe(false);
+    expect(workspace.querySelector("[data-event-log-content]")).not.toBeNull();
+    expect(workspace.querySelector("[data-quick-add]")).not.toBeNull();
+
+    window.history.replaceState(null, "", "?diagnostics=1");
+    workspace.render();
+    expect(workspace.querySelector(".diagnostic-panel").hidden).toBe(false);
+    expect(workspace.querySelector(".top-line").classList.contains("has-diagnostics")).toBe(true);
+
+    window.history.replaceState(null, "", "?diagnostics=true");
+    workspace.render();
+    expect(workspace.querySelector(".diagnostic-panel").hidden).toBe(true);
+    workspace.renderWorkspace = () => { throw new Error("Synthetic render recovery check"); };
+    workspace.render();
+    const recovery = workspace.querySelector(".render-failure pre");
+    expect(recovery).not.toBeNull();
+    expect(recovery.hidden).toBe(false);
+    expect(recovery.textContent).toContain("workspace render failed");
+  } finally {
+    workspace.renderWorkspace = renderWorkspace;
+    workspace.remove();
+    window.history.replaceState(null, "", originalUrl);
+  }
+});
+
 test("diagnostics: failed posts queue locally and flush later; retries are bounded", async () => {
   fetchMode = "diag";
   diagnosticsShouldFail = true;

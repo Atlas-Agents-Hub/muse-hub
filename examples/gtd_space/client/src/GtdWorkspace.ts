@@ -1161,11 +1161,12 @@ class GtdWorkspace extends HTMLElement {
 
   private renderWorkspace() {
     if (this.workspaceState.loaded_at) this.latestHealthReport = null;
+    const showDiagnostics = new URLSearchParams(window.location.search).get("diagnostics") === "1";
     this.innerHTML = `
       <div class="app-shell">
         <header class="planner-brand"><strong>Muse Planner</strong><span>Capture. Plan. Finish.</span></header>
-        <div class="top-line">
-          <div class="diagnostic-panel">
+        <div class="top-line${showDiagnostics ? " has-diagnostics" : ""}">
+          <div class="diagnostic-panel"${showDiagnostics ? "" : " hidden"}>
             <div class="diagnostic-bar" role="group" aria-label="Workspace diagnostics">
               <button type="button" data-event-log-toggle aria-expanded="false" aria-controls="event-log-body"><span class="diagnostic-caret" aria-hidden="true">▸</span><strong>Log</strong><span class="event-count" data-event-log-count>${EVENT_LOG.length}</span></button>
               <button type="button" data-version-log aria-haspopup="dialog" aria-label="Open version log for Release ${CURRENT_RELEASE}">v${CURRENT_RELEASE}</button>

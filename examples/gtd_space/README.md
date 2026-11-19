@@ -132,3 +132,7 @@ node tests/browser-planner.cjs /path/to/bun /path/to/chrome /path/to/new-planner
 ```
 
 The browser runner creates its own preview database and profile, exercises the user journeys, saves screenshots and a JSON report, and closes only the processes it started.
+
+## Troubleshooting
+
+Add `?diagnostics=1` to the Planner URL when you need the event and version logs. Remove that option to return to the everyday toolbar. If a view cannot render, its recovery screen shows the diagnostic log automatically.
