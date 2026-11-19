@@ -779,6 +779,11 @@ def specialist_kit_files(data: dict[str,Any], role_id: str) -> dict[str,bytes]:
     return files
 
 def main(argv: list[str]|None=None) -> int:
+    # Preserve catalog text when output is redirected on Windows or in legacy locales.
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure=getattr(stream,'reconfigure',None)
+        if callable(reconfigure):
+            reconfigure(encoding='utf-8')
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--collection',type=Path,default=DEFAULT_ROOT)
     sub=ap.add_subparsers(dest='command',required=True)

@@ -197,16 +197,37 @@ class CollectionTests(unittest.TestCase):
 
     def test_cli_list_and_show(self):
         import subprocess,sys
-        a=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'list'],capture_output=True,text=True)
+        a=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'list'],capture_output=True,text=True,encoding='utf-8')
         self.assertEqual(a.returncode,0,a.stderr)
         self.assertIn('daily-planner',a.stdout)
-        b=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'show','daily-planner'],capture_output=True,text=True)
+        b=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'show','daily-planner'],capture_output=True,text=True,encoding='utf-8')
         self.assertEqual(b.returncode,0,b.stderr)
         self.assertIn('First task',b.stdout)
 
+    def test_cli_unicode_output_in_legacy_locale(self):
+        import subprocess,sys
+        profile=next(p for p in self.data['starters'] if '\u2728' in p['title'])
+        expected_list=''.join(f"{p['id']}\t{p['title']}\t{p['category']}\n" for p in self.data['starters'])
+        unknown='missing-\u6d4b\u8bd5-\u2192'
+        cases=(
+            (['list'],0,expected_list,''),
+            (['show',profile['id']],0,mod.render_profile(profile)+'\n',''),
+            (['show',unknown],2,'',f'collection error: unknown starter: {unknown}\n'),
+        )
+        for arguments,returncode,stdout,stderr in cases:
+            with self.subTest(arguments=arguments):
+                result=subprocess.run(
+                    [sys.executable,'-B',str(ROOT/'tools/muse_collection.py'),*arguments],
+                    cwd=ROOT,env={**os.environ,'PYTHONIOENCODING':'cp1252'},
+                    capture_output=True,timeout=120,
+                )
+                self.assertEqual(result.returncode,returncode,result.stderr)
+                self.assertEqual(result.stdout.decode('utf-8').replace('\r\n','\n'),stdout)
+                self.assertEqual(result.stderr.decode('utf-8').replace('\r\n','\n'),stderr)
+
     def test_cli_validate(self):
         import subprocess,sys
-        a=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'check'],capture_output=True,text=True)
+        a=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'check'],capture_output=True,text=True,encoding='utf-8')
         self.assertEqual(a.returncode,0,a.stderr)
         result=json.loads(a.stdout)
         self.assertEqual(result['schema'],mod.SCHEMA)
@@ -217,7 +238,7 @@ class CollectionTests(unittest.TestCase):
 
     def test_cli_bad_id_no_traceback(self):
         import subprocess,sys
-        a=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'show','../bad'],capture_output=True,text=True)
+        a=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'show','../bad'],capture_output=True,text=True,encoding='utf-8')
         self.assertEqual(a.returncode,2)
         self.assertNotIn('Traceback',a.stderr)
 
