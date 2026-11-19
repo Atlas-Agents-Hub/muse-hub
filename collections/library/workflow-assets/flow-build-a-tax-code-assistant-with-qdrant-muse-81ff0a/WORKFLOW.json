@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-build-a-tax-code-assistant-with-qdrant-muse-81ff0a",
-  "title": "Build a Tax Code Assistant with Qdrant, Muse",
+  "title": "Build a Tax Code Assistant with Qdrant, Mistral.ai and OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -456,7 +456,7 @@
     },
     {
       "id": "step-26",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

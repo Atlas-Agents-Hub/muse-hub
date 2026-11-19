@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-telegram-to-spotify-86fa4d",
-  "title": "Telegram to Spotify",
+  "title": "Telegram to Spotify with OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -17,7 +17,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model - Ask about a track",
+      "label": "OpenAI - Ask about a track",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

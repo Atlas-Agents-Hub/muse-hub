@@ -168,6 +168,8 @@ def members(expression):
 def clean(value):
     value = value.replace('Activepieces', 'Muse').replace('activepieces connection', 'service connection')
     value = re.sub(r'\s*\(H\d{2}\)', '', value)
+    for local, domain in (('agent', 'yourcompany.com'), ('you', 'yourdomain.com'), ('test', 'user.com')):
+        value = value.replace(local + '@' + domain, local + '@example.com')
     return value
 
 

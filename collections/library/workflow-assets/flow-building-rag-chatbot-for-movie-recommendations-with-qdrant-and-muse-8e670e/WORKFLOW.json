@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-building-rag-chatbot-for-movie-recommendations-with-qdrant-and-muse-8e670e",
-  "title": "Building RAG Chatbot for Movie Recommendations with Qdrant and Muse",
+  "title": "Building RAG Chatbot for Movie Recommendations with Qdrant and Open AI",
   "nodes": [
     {
       "id": "step-1",
@@ -39,7 +39,7 @@
     },
     {
       "id": "step-4",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -114,7 +114,7 @@
     },
     {
       "id": "step-9",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -232,7 +232,7 @@
     },
     {
       "id": "step-19",
-      "label": "Embedding Recommendation Request with Model",
+      "label": "Embedding Recommendation Request with Open AI",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -271,7 +271,7 @@
     },
     {
       "id": "step-20",
-      "label": "Embedding Anti-Recommendation Request with Model",
+      "label": "Embedding Anti-Recommendation Request with Open AI",
       "operation": "http",
       "adapter": "http",
       "parameters": {

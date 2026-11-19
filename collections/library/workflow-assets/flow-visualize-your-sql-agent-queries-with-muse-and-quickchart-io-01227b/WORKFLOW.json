@@ -1,11 +1,11 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-visualize-your-sql-agent-queries-with-muse-and-quickchart-io-01227b",
-  "title": "Visualize your SQL Agent queries with Muse and Quickchart.io",
+  "title": "Visualize your SQL Agent queries with OpenAI and Quickchart.io",
   "nodes": [
     {
       "id": "step-1",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -38,7 +38,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model - Generate Chart definition with Structured Output",
+      "label": "OpenAI - Generate Chart definition with Structured Output",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -167,7 +167,7 @@
     },
     {
       "id": "step-11",
-      "label": "Model Chat Model Classifier",
+      "label": "OpenAI Chat Model Classifier",
       "operation": "model",
       "adapter": "model",
       "parameters": {

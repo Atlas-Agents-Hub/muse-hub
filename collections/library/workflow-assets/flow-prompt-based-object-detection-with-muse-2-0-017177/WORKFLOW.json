@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-prompt-based-object-detection-with-muse-2-0-017177",
-  "title": "Prompt-based Object Detection with Muse 2.0",
+  "title": "Prompt-based Object Detection with Gemini 2.0",
   "nodes": [
     {
       "id": "step-1",
@@ -58,7 +58,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model 2.0 Object Detection",
+      "label": "Gemini 2.0 Object Detection",
       "operation": "http",
       "adapter": "http",
       "parameters": {

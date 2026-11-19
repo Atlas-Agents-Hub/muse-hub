@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-classify-lemlist-replies-using-muse-and-automate-reply-handling-b5c982",
-  "title": "Classify lemlist replies using Muse and automate reply handling",
+  "title": "Classify lemlist replies using OpenAI and automate reply handling",
   "nodes": [
     {
       "id": "step-1",
@@ -30,7 +30,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

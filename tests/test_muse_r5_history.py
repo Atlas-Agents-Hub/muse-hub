@@ -1,6 +1,7 @@
 """Task starters retain stable specialist bindings and resolve current methods."""
 from pathlib import Path
 import json
+import importlib.util
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -25,10 +26,14 @@ class StarterCompatibilityTests(unittest.TestCase):
 
     def test_starter_links_and_specialist_bindings_remain_usable(self):
         starters=read('starters.json')
-        self.assertEqual(len(starters),100)
+        self.assertGreater(len(starters),500)
         self.assertEqual(len(starters),len({row['id'] for row in starters}))
-        skills={row['id'] for row in read('skills.json')}
-        workflows={row['id'] for row in read('workflows.json')}
+        spec=importlib.util.spec_from_file_location('starter_compat_collection',ROOT/'tools/muse_collection.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        collection=module.load_collection(C)
+        self.assertEqual({row['id'] for row in starters},{row['id'] for row in collection['starters']})
+        skills={row['id'] for row in collection['skills']}
+        workflows={row['id'] for row in collection['workflows']}
         roles={row['id'] for row in read('specialists.json')}
         for starter in starters:
             with self.subTest(starter=starter['id']):

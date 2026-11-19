@@ -35,9 +35,9 @@ def verify_package(raw: bytes) -> int:
 
 
 def build_bundle() -> bytes:
-    data = collection.load_collection(collection.DEFAULT_ROOT)
+    data = collection.prepare_collection(collection.load_collection(collection.DEFAULT_ROOT))
     counts = (len(data['specialists']), len(data['skills']), len(data['workflows']), len(data['starters']))
-    if counts[0] != 15 or counts[1] < 75 or counts[2] < 25 or counts[3] != 100:
+    if counts[0] != 15 or counts[1] < 75 or counts[2] < 25 or counts[3] < 100:
         raise ValueError('COLLECTION_INVENTORY_CHANGED_REVIEW_BUNDLE_CONTRACT')
     files = {}
     verified_entries = 0
@@ -54,8 +54,9 @@ def build_bundle() -> bytes:
         if workflow.get('tool_bindings'):
             files['reports/'+workflow['id']+'.json'] = json_bytes(collection.workflow_demo(data, workflow['id']))
     files['SPECIALISTS.json'] = json_bytes(data['specialists'])
-    files['COUNTS.json'] = json_bytes({'specialists_catalogued':15, 'skills':len(data['skills']),
-        'workflows':len(data['workflows']), 'starters_packaged':100, 'standalone_extensions_packaged':4})
+    files['COUNTS.json'] = json_bytes({'specialists_catalogued':counts[0], 'skills':counts[1],
+        'workflows':counts[2], 'starters_packaged':counts[3],
+        'standalone_extensions_packaged':len(collection.EXTENSION_ROLES)})
     files['LICENSE'] = collection.PROJECT_LICENSE.encode()
     files['START_HERE.md'] = """# Task starters and Python toolkits
 
@@ -81,9 +82,11 @@ Choose `data-engineer`, `reliability-engineer`, `automation-engineer` or `produc
 
 `BUNDLE_MANIFEST.json` records each file's checksum. Every nested ZIP includes its own manifest.
 """.encode()
-    manifest = {'schema':'muse-collection-distribution/v1', 'specialists_catalogued':15,
-        'skills':len(data['skills']), 'workflows':len(data['workflows']), 'starters_packaged':100, 'standalone_extensions_packaged':4,
-        'nested_file_entries_verified':verified_entries, 'local_example_reports':9,
+    manifest = {'schema':'muse-collection-distribution/v1', 'specialists_catalogued':counts[0],
+        'skills':counts[1], 'workflows':counts[2], 'starters_packaged':counts[3],
+        'standalone_extensions_packaged':len(collection.EXTENSION_ROLES),
+        'nested_file_entries_verified':verified_entries,
+        'local_example_reports':sum(name.startswith('reports/') for name in files),
         'files':{name:hashlib.sha256(raw).hexdigest() for name,raw in sorted(files.items())}}
     files['BUNDLE_MANIFEST.json'] = json_bytes(manifest)
     return collection.build_file_map_bytes(files)
@@ -98,9 +101,12 @@ def main(argv=None) -> int:
             raise ValueError('EXISTING_OUTPUT_PRESERVED')
         payload = build_bundle()
         collection.write_new_pack(args.to, payload)
+        with zipfile.ZipFile(io.BytesIO(payload)) as archive:
+            inventory = json.loads(archive.read('COUNTS.json'))
         print(json.dumps({'status':'COLLECTION_BUNDLE_BUILT_AND_REOPENED',
             'path':str(args.to), 'bytes':len(payload), 'sha256':hashlib.sha256(payload).hexdigest(),
-            'starters':100, 'standalone_extension_kits':4},sort_keys=True))
+            'starters':inventory['starters_packaged'],
+            'standalone_extension_kits':inventory['standalone_extensions_packaged']},sort_keys=True))
         return 0
     except (ValueError, OSError, UnicodeError, KeyError, zipfile.BadZipFile) as exc:
         print(json.dumps({'error':str(exc)}),file=sys.stderr)

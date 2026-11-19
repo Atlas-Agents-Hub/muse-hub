@@ -73,7 +73,7 @@
     },
     {
       "id": "step-5",
-      "label": "Caption Summary with Model",
+      "label": "Caption Summary with ChatGPT",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

@@ -201,9 +201,10 @@ class CleanPublicExportTests(unittest.TestCase):
         security=(docs/"SECURITY.md").read_text(encoding="utf-8")
         release=(docs/"RELEASES.md").read_text(encoding="utf-8")
         entry=(ROOT/"README.md").read_text(encoding="utf-8")
+        tag=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
         for term in ("permissions", "checksum", "API keys", "backups", "steps to reproduce"):
             self.assertIn(term,security)
-        for term in ("v1.5.0", "SHA256SUMS", "muse-specialist-toolkit-v1.5.0.zip", "START_HERE.md"):
+        for term in (tag, "SHA256SUMS", f"muse-specialist-toolkit-{tag}.zip", "START_HERE.md"):
             self.assertIn(term,release)
         self.assertIn("docs/DOWNLOAD_A_SPECIALIST.md",entry)
         self.assertIn("docs/GETTING_STARTED.md",entry)

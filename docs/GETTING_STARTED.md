@@ -24,9 +24,9 @@ Ask for a result you can inspect: a patch and passing check, an evidence table, 
 
 ## Add what the task needs
 
-- [Skills](SKILLS.md) provide methods for specific tasks; [100 task starters](../collections/muse-starters-v1/CATALOG.md) bundle a useful selection.
+- [Skills](SKILLS.md) provide methods for specific tasks; [558 task starters](../collections/muse-starters-v1/CATALOG.md) bundle a useful selection.
 - [Workflows](WORKFLOWS.md) connect steps such as research, implementation, review, and handoff.
-- [Connectors](connectors/README.md) link to setup instructions for 151 services. Choose your account and requested permissions during that service's setup.
+- [Connectors](connectors/README.md) link to setup instructions for 273 services. Choose your account and requested permissions during that service's setup.
 - [Terminal](TERMINAL.md) covers personal Muse chat and the toolkit's local commands.
 - [Companion Home](COMPANION_HOME.md) offers five rooms, a notebook, Studio motion controls, and an original Arcade game. [Daily Desk](spaces/DAILY_DESK.md) combines tasks and notes.
 

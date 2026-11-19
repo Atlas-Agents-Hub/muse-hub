@@ -262,7 +262,7 @@
           "type": "ProviderField"
         },
         {
-          "description": "Sender email address, e.g. \"Your Name <you@yourdomain.com>\"",
+          "description": "Sender email address, e.g. \"Your Name <you@example.com>\"",
           "label": "From",
           "name": "from",
           "required": true,

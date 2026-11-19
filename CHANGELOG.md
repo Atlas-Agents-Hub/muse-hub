@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.0
+
+- Expand the collection to 5242 skills, 396 workflows, 558 task starters and 273 connectors.
+- Include dependency-complete skill subject packs, concrete automation graphs and named connector action inputs.
+- Add service selections and updated library documentation to all 15 specialist packages.
+- Add paginated download search, direct guide links and static subject indexes for easier discovery.
+
 ## v1.5.0 — a larger skill library, organized around your work
 
 - Choose from 461 skills covering engineering, research, data, design, creative work and everyday projects.

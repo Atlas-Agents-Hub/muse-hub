@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-muse-v3-chat-r1-reasoning-quick-start-affdd5",
-  "title": "🐋Muse V3 Chat & R1 Reasoning Quick Start",
+  "title": "🐋DeepSeek V3 Chat & R1 Reasoning Quick Start",
   "nodes": [
     {
       "id": "step-1",
@@ -26,7 +26,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model",
+      "label": "DeepSeek",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -58,7 +58,7 @@
     },
     {
       "id": "step-6",
-      "label": "Ollama Model",
+      "label": "Ollama DeepSeek",
       "operation": "model",
       "adapter": "model",
       "parameters": {

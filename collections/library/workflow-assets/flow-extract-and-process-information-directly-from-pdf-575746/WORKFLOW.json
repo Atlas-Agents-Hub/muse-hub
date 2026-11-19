@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-extract-and-process-information-directly-from-pdf-575746",
-  "title": "Extract and process information directly from PDF",
+  "title": "Extract and process information directly from PDF using Claude and Gemini",
   "nodes": [
     {
       "id": "step-1",
@@ -35,7 +35,7 @@
     },
     {
       "id": "step-4",
-      "label": "Call Model 2.0 Flash with PDF Capabilities",
+      "label": "Call Gemini 2.0 Flash with PDF Capabilities",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -53,7 +53,7 @@
     },
     {
       "id": "step-5",
-      "label": "Call Model 3.5 Sonnet with PDF Capabilities",
+      "label": "Call Claude 3.5 Sonnet with PDF Capabilities",
       "operation": "http",
       "adapter": "http",
       "parameters": {

@@ -113,7 +113,7 @@ Finds a user by email.
 
 | Input | What to provide | Required |
 | --- | --- | --- |
-| `email` | The teammate email address, for example agent@yourcompany.com. | Yes |
+| `email` | The teammate email address, for example agent@example.com. | Yes |
 
 [Request and response definition](https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/help-scout/src/lib/actions/find-user.ts).
 

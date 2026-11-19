@@ -63,7 +63,7 @@
     },
     {
       "id": "step-7",
-      "label": "Model - Extract",
+      "label": "GPT 4 - Extract",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -184,7 +184,7 @@
     },
     {
       "id": "step-13",
-      "label": "Model - Research",
+      "label": "GPT3.5 - Research",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -196,7 +196,7 @@
     },
     {
       "id": "step-14",
-      "label": "Model - Summarize",
+      "label": "GPT3.5 - Summarize",
       "operation": "model",
       "adapter": "model",
       "parameters": {

@@ -21,7 +21,9 @@ DIGEST = re.compile(r'[0-9a-f]{64}\Z')
 LINK = re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
 MAX_FILE_BYTES = 2_000_000
 MAX_PACKAGE_BYTES = 12_000_000
-MAX_LIBRARY_BYTES = 160_000_000
+MAX_LIBRARY_BYTES = 750_000_000
+MAX_CATALOG_BYTES = 64_000_000
+MAX_LIBRARY_SKILLS = 10_000
 MAX_PACKAGE_FILES = 1000
 
 
@@ -144,7 +146,7 @@ def package_files(row, root=DEFAULT_ROOT):
 
 def load_library(root=DEFAULT_ROOT):
     root = Path(root).absolute()
-    raw = _read(root / 'catalog.json', root, 8_000_000)
+    raw = _read(root / 'catalog.json', root, MAX_CATALOG_BYTES)
     def pairs(items):
         result = {}
         for key, value in items:
@@ -154,7 +156,7 @@ def load_library(root=DEFAULT_ROOT):
     catalog = json.loads(raw, object_pairs_hook=pairs)
     _require(isinstance(catalog, dict) and catalog.get('schema') == SCHEMA, 'SCHEMA')
     rows = catalog.get('skills')
-    _require(isinstance(rows, list) and 1 <= len(rows) <= 1500, 'INVENTORY')
+    _require(isinstance(rows, list) and 1 <= len(rows) <= MAX_LIBRARY_SKILLS, 'INVENTORY')
     seen = set(); bodies = set(); total = 0
     for row in rows:
         validate_entry(row)

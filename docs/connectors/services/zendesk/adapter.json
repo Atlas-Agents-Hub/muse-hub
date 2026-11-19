@@ -256,7 +256,7 @@
           "type": "ProviderField"
         },
         {
-          "description": "Array of identity objects with type and value. Example: [{\"type\": \"email\", \"value\": \"test@user.com\"}, {\"type\": \"twitter\", \"value\": \"username\"}]",
+          "description": "Array of identity objects with type and value. Example: [{\"type\": \"email\", \"value\": \"test@example.com\"}, {\"type\": \"twitter\", \"value\": \"username\"}]",
           "label": "Identities",
           "name": "identities",
           "required": false,

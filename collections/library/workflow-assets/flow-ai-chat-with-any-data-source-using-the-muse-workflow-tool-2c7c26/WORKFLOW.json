@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-ai-chat-with-any-data-source-using-the-muse-workflow-tool-2c7c26",
-  "title": "AI chat with any data source (using the Muse workflow tool)",
+  "title": "AI chat with any data source (using the n8n workflow tool)",
   "nodes": [
     {
       "id": "step-1",
@@ -86,7 +86,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

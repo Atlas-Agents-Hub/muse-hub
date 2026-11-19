@@ -1,24 +1,164 @@
 {
   "files": {
     "README.md": {
-      "bytes": 1345,
-      "sha256": "2506f8abf81ec49582828808f3109674e26d863a4c1d43bd3be6e18ae7f3f359"
+      "bytes": 1347,
+      "sha256": "e8fe0b864e0286ee01560edafd58d2fef4f179245a09d91a12b8cf60021e7dc5"
     },
     "downloads.html": {
-      "bytes": 564002,
-      "sha256": "ea2508cc29862f2327a1862eaca124848263945a0f9b18f13cf9220b211edea2"
+      "bytes": 7267960,
+      "sha256": "8c1ea3a2b3043d978493feb68a10a00d0c9be4b81e1f5cfd307ffc218a0e2e65"
     },
     "downloads.js": {
-      "bytes": 3611,
-      "sha256": "6c38d405df866ee5fde42bd18a0592a61896435e5c9954bbaafeb093a1400094"
+      "bytes": 5455,
+      "sha256": "1f9bcf455dc1850986c0eb3a72fece651f7c4b2d85c9a10c018a88ec3f2dba33"
     },
     "downloads.json": {
-      "bytes": 406388,
-      "sha256": "f88babbb3c64abf8b4db2ecbd9b929aee642c1831def7c985c44b45439cee824"
+      "bytes": 6023299,
+      "sha256": "19327801136a8c5e40b320ec1a4e02978f9009115510bb7480a0974f5072c312"
     },
     "index.html": {
-      "bytes": 51607,
-      "sha256": "d6e914fb2700b50e0e3168939fdd9b3563c8349d7ea5499dbb9b0cba8211fda4"
+      "bytes": 58731,
+      "sha256": "768767543713cef178901a13979551c87759f87689ffd62f134467ee8ef97e04"
+    },
+    "library/business-projects-001.html": {
+      "bytes": 137957,
+      "sha256": "7fc3e14b7f0c239d48ba2ebd0bf158449d84cac1dd4b3fbe8116d5727beb22f5"
+    },
+    "library/business-projects-002.html": {
+      "bytes": 140383,
+      "sha256": "920b91dc7a702f1b51d8910ec52a4ebd38832ef386135b7062e85da66c861ca2"
+    },
+    "library/business-projects-003.html": {
+      "bytes": 124539,
+      "sha256": "a74ab53a7da136c9d6673d8b2904bd900981b45bbffb62883bd9aa44e1a43d81"
+    },
+    "library/creative-games-001.html": {
+      "bytes": 138659,
+      "sha256": "26ed353b203f5af7eabd3e5e50ac00fc517436e933d27ce581d3b924a34f9851"
+    },
+    "library/creative-games-002.html": {
+      "bytes": 98934,
+      "sha256": "050fbb7aa29ad692b98df0e570534ba7957d28b2dcf2e9287d8a845486a14b08"
+    },
+    "library/data-ai-001.html": {
+      "bytes": 150096,
+      "sha256": "f2466599b8f7524254d0e5041a39d9a9a8089ddb643eadaf907d58f191f19e5b"
+    },
+    "library/data-ai-002.html": {
+      "bytes": 154605,
+      "sha256": "aa6c13620c3e56bd2aee6522231fdf41b48ee6d64957aaf502a3442bc4b8434b"
+    },
+    "library/data-ai-003.html": {
+      "bytes": 149906,
+      "sha256": "9645fe60e4e2fa95cf2d19d2cf9fe552ca48913ba41e61c90d3586a130b8e629"
+    },
+    "library/data-ai-004.html": {
+      "bytes": 107344,
+      "sha256": "622789c972d80927118dfefde88185ff746077e2b5b1ad8878c91fdf4bcf029f"
+    },
+    "library/design-visualization-001.html": {
+      "bytes": 112398,
+      "sha256": "8e24514fa800ffe5eaadfa71e6f611dd772e21fe8a08da11eb12f10431926f31"
+    },
+    "library/home-travel-001.html": {
+      "bytes": 6097,
+      "sha256": "21119c7e2d548963eccb347a11881b63f0a330bdb0ee6f36262c65feba00f470"
+    },
+    "library/infrastructure-reliability-001.html": {
+      "bytes": 141784,
+      "sha256": "dce87bda62c390d62c54dcf25d14cf7f7c581fa73bc5ac395c5af15655d01a1b"
+    },
+    "library/infrastructure-reliability-002.html": {
+      "bytes": 151089,
+      "sha256": "893446e741667c8b182b5516577dcc2ad1a5246577209919699466e71eb6ba0c"
+    },
+    "library/infrastructure-reliability-003.html": {
+      "bytes": 96016,
+      "sha256": "4ad8f5cf5a438bb1e23e615e9f23935d74c0897695ff52605dfe962d655861af"
+    },
+    "library/learning-study-001.html": {
+      "bytes": 50655,
+      "sha256": "e5bb8197ec3c9d499c3ac18c26f6d8e7878414dbc91dafb8be14c2e701373558"
+    },
+    "library/personal-planning-001.html": {
+      "bytes": 64829,
+      "sha256": "8a40b6ea9d889389577fadabaf53d10d67a146fde1812f87bdf4586e6d64dc23"
+    },
+    "library/research-science-001.html": {
+      "bytes": 134321,
+      "sha256": "c3c1976eefc92c78c163221c47a3ebb304525abf6c58f648208a21709922af83"
+    },
+    "library/research-science-002.html": {
+      "bytes": 177077,
+      "sha256": "97cf846b90c212bb9f362a088e52a29d96ece7650ece77cf25fda9b8560816ad"
+    },
+    "library/research-science-003.html": {
+      "bytes": 10523,
+      "sha256": "6fc7ef8460c5bea94d496ca195dd6a04f134af9ba27c8129568cb642500ff86b"
+    },
+    "library/security-001.html": {
+      "bytes": 130419,
+      "sha256": "12855a307273624a86f88ed487d5c677352d1dbdccc6759d4cd2d499d52fdfbb"
+    },
+    "library/security-002.html": {
+      "bytes": 137101,
+      "sha256": "e49a5d1811c57d703867fea56ec6b139404894ef7bdd6bee85a2948f145c5a2e"
+    },
+    "library/security-003.html": {
+      "bytes": 17876,
+      "sha256": "c4418dc303c024d2b8ab10426c48b0659e9c20a8c210cf509823bef3eecc3357"
+    },
+    "library/software-automation-001.html": {
+      "bytes": 142054,
+      "sha256": "ff050488f15c1a85a67baea8bcab9696df4a635b8d116cbfafc32e920a282acb"
+    },
+    "library/software-automation-002.html": {
+      "bytes": 143589,
+      "sha256": "95bd38c059e9c4c4a011016899eaaa33e4f23f5ce44d800c083352a88aa589e0"
+    },
+    "library/software-automation-003.html": {
+      "bytes": 139952,
+      "sha256": "f90429bc37143fb5813d9c5bc2b27adbd1e8edd263c7ada3d753b3a993454b7f"
+    },
+    "library/software-automation-004.html": {
+      "bytes": 144749,
+      "sha256": "0a7943674c8f20b5d3345a83db2f5c97b55e82790f6e358ac122e62d5c950de0"
+    },
+    "library/software-automation-005.html": {
+      "bytes": 141592,
+      "sha256": "9599aa79cdf918aa98c8047e9b4753e307ce91da96a8680d8fcd0e75a0a718bd"
+    },
+    "library/software-automation-006.html": {
+      "bytes": 145680,
+      "sha256": "8640e68ca1bebb38913e9b99963192d312874821f6f223e7ea5b51f5be1027ee"
+    },
+    "library/software-automation-007.html": {
+      "bytes": 143949,
+      "sha256": "9883f59f76a27335422607214e31d9c3e8a9d9cb833fe4709f3852e797134ee3"
+    },
+    "library/software-automation-008.html": {
+      "bytes": 144883,
+      "sha256": "9bbfd1ac2a6c87a5b32c3bbd5791d50c6926171adde672bc39cb5a5f9d51c6e6"
+    },
+    "library/software-automation-009.html": {
+      "bytes": 144962,
+      "sha256": "d72964a50f73bb002036ccce4b901782d57c9f533ae80d949b3c7b81c29b19af"
+    },
+    "library/software-automation-010.html": {
+      "bytes": 146621,
+      "sha256": "cb94f43161088344ff1936971c1d0eccb45eab1cb75f33826750c78465665187"
+    },
+    "library/software-automation-011.html": {
+      "bytes": 138315,
+      "sha256": "08fab8de2babe6d3b78b1f3803dc2c654e8d87def2b43cc2f1efb27501241a55"
+    },
+    "library/software-automation-012.html": {
+      "bytes": 89438,
+      "sha256": "fa6397af35aabc65a0922bd2e6fe55750974fbc3258e4b1ee4f2cb6bec1e1d76"
+    },
+    "library/using-muse-001.html": {
+      "bytes": 6618,
+      "sha256": "dd65e55098ca13fb9e2e966fa3c2cc5d7a9005fe82f2f2a3f7aa458062d97835"
     },
     "public/app.js": {
       "bytes": 15918,
@@ -37,20 +177,20 @@
       "sha256": "296171db9ea83686b1450b4ebce845d04deb36f55e504439c969517b541b1e5e"
     },
     "roles.json": {
-      "bytes": 6589,
-      "sha256": "640b532e6c9398dd1368b85785dfeb43240702a238eb021b413eba6c7cded8a5"
+      "bytes": 10330,
+      "sha256": "9913a1b395443ec5f03ff9265264c3752b7845b07f0d1f448cc1b11da51cb2a9"
     },
     "site.css": {
-      "bytes": 27490,
-      "sha256": "eaa7637a730c70906f278438d0484ba1cfb14ed0e7ba03dbb76f8f209a174a66"
+      "bytes": 28058,
+      "sha256": "54c80bfb5e9682afba8f82d05a494d88eb98be3689459a54f831d38151554cfa"
     },
     "site.js": {
-      "bytes": 5989,
-      "sha256": "d5c9f59bf5ce312b41c6fc430a4a2255f6b797f48d69ea89335b9ff6385705e2"
+      "bytes": 6187,
+      "sha256": "fa332f7eb6a53416f7154358d7042767391bfad0af061efd9b6b873ddd0a8463"
     },
     "sitemap.xml": {
-      "bytes": 378,
-      "sha256": "b3d96db8a47efb93d58421eea814fd8e5ebf4bbe237da0e0478f767250d7b8d6"
+      "bytes": 4219,
+      "sha256": "7f73e2c680dbb065bf3d10f4e017c39e012124fd87b214d9e0d3abc9814dfec4"
     }
   },
   "schema": "muse-hub/public-website-overlay/v1",

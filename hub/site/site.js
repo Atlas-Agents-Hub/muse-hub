@@ -55,6 +55,7 @@
   const setupProfile = document.getElementById('setup-role-profile');
   const setupDownload = document.getElementById('setup-role-download');
   const roleAssets = new Map(cards.map(card => [card.dataset.role, card.dataset.asset]));
+  const roleDownloads = new Map(cards.map(card => [card.dataset.role, card.querySelector('.role-card-download')?.href]));
   const knownRoles = new Set(cards.map(card => card.dataset.role));
   const sourceBase = 'https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/';
   const setupReady = setupSelect && setupResult && setupEmpty && setupTitle &&
@@ -75,7 +76,9 @@
     setupDescription.textContent = option.dataset.description || '';
     setupInstall.href = `${sourceBase}${slug}/INSTALL.md`;
     setupProfile.href = `${sourceBase}${slug}/README.md`;
-    setupDownload.href = `https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-${asset}-v1.5.0.zip`;
+    const download = roleDownloads.get(slug);
+    if (!download || !download.startsWith('https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/')) return;
+    setupDownload.href = download;
     setupEmpty.hidden = true;
     setupResult.hidden = false;
   }

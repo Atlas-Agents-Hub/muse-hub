@@ -1,6 +1,6 @@
 # Muse skill library
 
-Explore **461 skills**, **58 workflows** and **51 tool guides** for engineering, research, data, design, creative work and everyday projects.
+Explore **5242 skills**, **396 workflows** and **51 tool guides** for engineering, research, data, design, creative work and everyday projects.
 
 - [Browse every skill](../muse-starters-v1/SKILL_INDEX.md).
 - [Choose a workflow](WORKFLOWS.md).

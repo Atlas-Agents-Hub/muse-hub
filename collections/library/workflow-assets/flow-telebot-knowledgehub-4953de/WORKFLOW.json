@@ -112,7 +112,7 @@
     },
     {
       "id": "step-9",
-      "label": "Model Chat Model",
+      "label": "Groq Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

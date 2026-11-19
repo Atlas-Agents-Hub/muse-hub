@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-muse-automatic-code-review-in-gitlab-mr-f68689",
-  "title": "Muse Automatic Code Review in Gitlab MR",
+  "title": "ChatGPT Automatic Code Review in Gitlab MR",
   "nodes": [
     {
       "id": "step-1",
@@ -42,7 +42,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {

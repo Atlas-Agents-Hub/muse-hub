@@ -20,9 +20,10 @@
         "src/muse_presets/finder.py": "ac843e87c679f43f9aa1068874ba035cbb79aa938ef80f5dacdc60ad3b08fe23",
         "src/muse_presets/native_canary.py": "41dfa48d79dda1891e5b6a203d20eb1e722bc1e2b8121f87f2dc6a5effc06399",
         "src/muse_presets/native_skill_binding.py": "d1bae9a45041a9481450836858908d69b1adaf3ca0a05e4ceef40337c138f976",
-        "src/muse_presets/neutrality.py": "38119ac763825c5c4c3a313b20c8122d787b06d4ebcd30aec015cdcb8bff5e8c",
+        "src/muse_presets/neutrality.py": "9ee91637605ad0289b6a105759b7d09265c7d5e165bad95555906c4b0abd618f",
         "src/muse_presets/playbooks.py": "c3abac0812efe26fbf34698e24fcdc18ebbd0d756bdc771092353b1859e04774",
-        "src/muse_presets/research_evaluator.py": "6af1da789cc31bf7cb2b0044de327c5fbd5c03a76757b262074befd4db05f262"
+        "src/muse_presets/research_evaluator.py": "6af1da789cc31bf7cb2b0044de327c5fbd5c03a76757b262074befd4db05f262",
+        "src/muse_presets/source_limits.py": "549e55d2b568cf0e1782e50a13aa93bb7823d2b7d88849172dcc2772ed7cd186"
       },
       "grade": "EXECUTABLE_COMPONENT",
       "role": "research-evaluator"

@@ -108,7 +108,7 @@ Send an email using your Mailgun domain
 | Input | What to provide | Required |
 | --- | --- | --- |
 | `domain` | Domain | See action definition |
-| `from` | Sender email address, e.g. "Your Name <you@yourdomain.com>" | Yes |
+| `from` | Sender email address, e.g. "Your Name <you@example.com>" | Yes |
 | `to` | Recipient email address. For multiple recipients, separate with commas. | Yes |
 | `cc` | Carbon copy recipients, separated by commas. | Optional |
 | `bcc` | Blind carbon copy recipients, separated by commas. | Optional |

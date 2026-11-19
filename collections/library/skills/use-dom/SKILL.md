@@ -1,0 +1,10 @@
+---
+name: use-dom
+description: "Use Expo DOM components to run web code in a webview on native and as-is on web. Migrate web code to native incrementally."
+---
+
+# Use Dom
+
+Use the task's actual files, connected services, and project settings. Run included helpers from this skill folder. Set `SKILL_DIR` to its full path when a command uses that variable.
+
+Read [the detailed method](METHOD.md) for the procedure, examples, and supporting references.

@@ -5,7 +5,7 @@
   "nodes": [
     {
       "id": "step-1",
-      "label": "Model Chat Model",
+      "label": "Google Gemini Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

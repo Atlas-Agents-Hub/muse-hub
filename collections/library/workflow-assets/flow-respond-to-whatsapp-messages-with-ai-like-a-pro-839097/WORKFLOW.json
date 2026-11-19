@@ -325,7 +325,7 @@
     },
     {
       "id": "step-17",
-      "label": "Model Chat Model",
+      "label": "Google Gemini Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -335,7 +335,7 @@
     },
     {
       "id": "step-18",
-      "label": "Model Audio",
+      "label": "Google Gemini Audio",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -362,7 +362,7 @@
     },
     {
       "id": "step-19",
-      "label": "Model Video",
+      "label": "Google Gemini Video",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -389,7 +389,7 @@
     },
     {
       "id": "step-20",
-      "label": "Model Chat Model1",
+      "label": "Google Gemini Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -399,7 +399,7 @@
     },
     {
       "id": "step-21",
-      "label": "Model Chat Model2",
+      "label": "Google Gemini Chat Model2",
       "operation": "model",
       "adapter": "model",
       "parameters": {

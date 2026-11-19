@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-muse-assistant-with-custom-tools-949d06",
-  "title": "Muse assistant with custom tools",
+  "title": "OpenAI assistant with custom tools",
   "nodes": [
     {
       "id": "step-1",
@@ -12,7 +12,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model Assistant",
+      "label": "OpenAI Assistant",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

@@ -1,6 +1,6 @@
 # Muse Specialist Collection
 
-**15 specialists · 461 reusable skills · 58 workflows · 100 task starters**
+**15 specialists · 5242 reusable skills · 396 workflows · 558 task starters**
 
 Choose a specialist for your work, apply a focused method with your current assistant, or run an included Python tool. Each package brings together instructions, examples, and a start guide.
 
@@ -18,9 +18,9 @@ Assistant instructions need no Python. The [getting-started guide](../../docs/GE
 | Component | Use it for |
 | --- | --- |
 | 15 specialists | Engineering, research, data, creative work, design, planning, and everyday tasks. |
-| 461 skills | A focused procedure with inputs, decisions, examples, and an output checklist. |
-| 58 workflows | A sequence of methods with clear inputs, handoffs, and expected results. |
-| 100 task starters | A useful selection of methods and context for a specific task. |
+| 5242 skills | A focused procedure with inputs, decisions, examples, and an output checklist. |
+| 396 workflows | A sequence of methods with clear inputs, handoffs, and expected results. |
+| 558 task starters | A useful selection of methods and context for a specific task. |
 | 225 practice cases | Worked exercises for trying the methods and checking recovery from common problems. |
 | Python tools | Reproducible calculations, data checks, local records, and package exports. |
 

@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-convert-text-to-speech-67ab2d",
-  "title": "Convert text to speech",
+  "title": "Convert text to speech with OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -28,7 +28,7 @@
     },
     {
       "id": "step-3",
-      "label": "Send HTTP Request to Model's TTS Endpoint",
+      "label": "Send HTTP Request to OpenAI's TTS Endpoint",
       "operation": "http",
       "adapter": "http",
       "parameters": {

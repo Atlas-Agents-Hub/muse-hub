@@ -5,7 +5,7 @@
   "nodes": [
     {
       "id": "step-1",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {

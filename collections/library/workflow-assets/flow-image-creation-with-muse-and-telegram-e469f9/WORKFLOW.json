@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-image-creation-with-muse-and-telegram-e469f9",
-  "title": "Image Creation with Muse and Telegram",
+  "title": "Image Creation with OpenAI and Telegram",
   "nodes": [
     {
       "id": "step-1",
@@ -18,7 +18,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

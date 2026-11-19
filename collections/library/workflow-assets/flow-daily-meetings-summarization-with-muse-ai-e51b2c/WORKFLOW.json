@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-daily-meetings-summarization-with-muse-ai-e51b2c",
-  "title": "Daily meetings summarization with Muse AI",
+  "title": "Daily meetings summarization with Gemini AI",
   "nodes": [
     {
       "id": "step-1",
@@ -78,7 +78,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model Chat Model",
+      "label": "Google Gemini Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

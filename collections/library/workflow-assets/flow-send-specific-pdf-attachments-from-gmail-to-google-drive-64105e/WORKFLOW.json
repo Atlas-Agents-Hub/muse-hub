@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-send-specific-pdf-attachments-from-gmail-to-google-drive-64105e",
-  "title": "Send specific PDF attachments from Gmail to Google Drive",
+  "title": "Send specific PDF attachments from Gmail to Google Drive using OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -115,7 +115,7 @@
     },
     {
       "id": "step-9",
-      "label": "Model matches PDF textual content",
+      "label": "OpenAI matches PDF textual content",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

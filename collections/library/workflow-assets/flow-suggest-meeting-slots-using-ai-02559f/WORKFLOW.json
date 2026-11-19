@@ -24,7 +24,7 @@
     },
     {
       "id": "step-2",
-      "label": "Chat Model",
+      "label": "Chat OpenAI",
       "operation": "model",
       "adapter": "model",
       "parameters": {

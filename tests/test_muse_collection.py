@@ -22,10 +22,11 @@ class CollectionTests(unittest.TestCase):
     def setUpClass(cls):
         cls.data = mod.load_collection(COLLECTION)
 
-    def test_100_distinct_starters(self):
-        self.assertEqual(len(self.data['starters']), 100)
-        self.assertEqual(len({x['id'] for x in self.data['starters']}), 100)
-        self.assertEqual(len({x['first_task'] for x in self.data['starters']}), 100)
+    def test_distinct_starter_inventory(self):
+        count = len(self.data['starters'])
+        self.assertGreater(count, 500)
+        self.assertEqual(len({x['id'] for x in self.data['starters']}), count)
+        self.assertEqual(len({x['first_task'] for x in self.data['starters']}), count)
 
     def test_distinct_skills_have_complete_canonical_entries(self):
         self.assertGreaterEqual(len(self.data['skills']), 400)
@@ -41,9 +42,10 @@ class CollectionTests(unittest.TestCase):
         self.assertEqual(set(mod.CORE_ROLES), {x['base_role'] for x in self.data['starters']})
 
     def test_all_profiles_build(self):
-        for p in self.data['starters']:
+        prepared = mod.prepare_collection(self.data)
+        for p in prepared['starters']:
             with self.subTest(starter=p['id']):
-                content = mod.build_bytes(self.data, p['id'])
+                content = mod.build_bytes(prepared, p['id'])
                 with zipfile.ZipFile(io.BytesIO(content)) as z:
                     self.assertIn('START_HERE.md', z.namelist())
                     self.assertIn('PROFILE.md', z.namelist())
@@ -399,20 +401,22 @@ class DepthBoundaryTests(unittest.TestCase):
         cls.check=importlib.util.module_from_spec(spec);spec.loader.exec_module(cls.check)
 
     def test_candidate_challenge_excludes_its_worked_answer(self):
+        prepared = mod.prepare_collection(self.data)
         for skill in self.data['skills']:
             if not skill.get('depth'):continue
-            packet=mod.challenge_files(self.data,skill['depth']['case_ids'][0],'candidate')
+            packet=mod.challenge_files(prepared,skill['depth']['case_ids'][0],'candidate')
             content=b'\n'.join(packet.values()).decode()
             self.assertNotIn(skill['depth']['worked_example']['result'],content)
             self.assertNotIn('Worked example (authored, synthetic)',content)
 
     def test_all_three_arms_receive_byte_identical_task_data(self):
+        prepared = mod.prepare_collection(self.data)
         for case in self.data['depth_cases']:
             skill=next(s for s in self.data['skills'] if s['id']==case['skill_id'])
             arms=('plain','candidate') if skill.get('origin')=='ORIGINAL_FIRST_PARTY' else ('plain','upstream','candidate')
             if len(arms)==2:
-                with self.assertRaises(mod.CollectionError):mod.challenge_files(self.data,case['id'],'upstream')
-            packets=[mod.challenge_files(self.data,case['id'],a) for a in arms]
+                with self.assertRaises(mod.CollectionError):mod.challenge_files(prepared,case['id'],'upstream')
+            packets=[mod.challenge_files(prepared,case['id'],a) for a in arms]
             self.assertEqual(len({p['TASK.json'] for p in packets}),1)
             for p in packets:
                 data=json.loads(p['TASK.json'])

@@ -4,7 +4,7 @@ import json
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 REPO="https://github.com/atlas-origins/muse-ai-agent-presets"
-TAG="v1.5.0"
+TAG=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
 LEGACY_TAG="v1.0.0"
 class ReleaseDiscovery(unittest.TestCase):
  def test_current_public_link_targets_and_specialist_downloads(self):
@@ -14,12 +14,12 @@ class ReleaseDiscovery(unittest.TestCase):
   self.assertNotIn("example-private-account/muse-ai-agent-presets",d["release_page"])
   self.assertEqual(d["v1_sha256_index"],REPO+"/releases/download/"+TAG+"/SHA256SUMS")
   self.assertEqual(d["sha256_index"],d["v1_sha256_index"])
-  expected={"source":"muse-specialist-toolkit-v1.5.0.zip",
-            "specialists":"muse-specialists-v1.5.0.zip",
-            "skills":"muse-skills-v1.5.0.zip",
-            "workflows":"muse-workflows-v1.5.0.zip",
-            "starters":"muse-starters-v1.5.0.zip",
-            "tool-guides":"muse-tool-guides-v1.5.0.zip"}
+  expected={"source":f"muse-specialist-toolkit-{TAG}.zip",
+            "specialists":f"muse-specialists-{TAG}.zip",
+            "skills":f"muse-skills-{TAG}.zip",
+            "workflows":f"muse-workflows-{TAG}.zip",
+            "starters":f"muse-starters-{TAG}.zip",
+            "tool-guides":f"muse-tool-guides-{TAG}.zip"}
   self.assertEqual(d["v1_assets"],{k:REPO+"/releases/download/"+TAG+"/"+v for k,v in expected.items()})
   self.assertEqual(d["complete_toolkit"],d["v1_assets"]["source"])
   self.assertEqual(d["homepage"],"https://atlas-origins.github.io/muse-ai-agent-presets/")

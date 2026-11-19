@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-fetch-dynamic-prompts-from-github-and-auto-populate-muse-expressions-in-prompt-ea1551",
-  "title": "Fetch Dynamic Prompts from GitHub and Auto-Populate Muse Expressions in Prompt",
+  "title": "Fetch Dynamic Prompts from GitHub and Auto-Populate n8n Expressions in Prompt",
   "nodes": [
     {
       "id": "step-1",

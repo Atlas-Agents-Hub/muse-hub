@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-chat-with-github-api-documentation-rag-powered-chatbot-with-pinecone-muse-bc28cb",
-  "title": "Chat with GitHub API Documentation RAG-Powered Chatbot with Pinecone & Muse",
+  "title": "Chat with GitHub API Documentation RAG-Powered Chatbot with Pinecone & OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -75,7 +75,7 @@
     },
     {
       "id": "step-8",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -104,7 +104,7 @@
     },
     {
       "id": "step-11",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {

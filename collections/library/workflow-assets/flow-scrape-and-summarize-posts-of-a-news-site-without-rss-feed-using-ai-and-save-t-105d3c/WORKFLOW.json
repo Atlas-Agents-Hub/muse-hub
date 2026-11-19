@@ -215,7 +215,7 @@
     },
     {
       "id": "step-13",
-      "label": "Merge Model output with Date & Link",
+      "label": "Merge ChatGPT output with Date & Link",
       "operation": "join",
       "adapter": "local",
       "parameters": {

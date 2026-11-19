@@ -18,7 +18,7 @@
     },
     {
       "id": "step-2",
-      "label": "Embeddings Model",
+      "label": "Embeddings Google Gemini",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -89,7 +89,7 @@
     },
     {
       "id": "step-9",
-      "label": "Model Chat Model1",
+      "label": "Google Gemini Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -99,7 +99,7 @@
     },
     {
       "id": "step-10",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -143,7 +143,7 @@
     },
     {
       "id": "step-13",
-      "label": "Embeddings Model (retrieval)",
+      "label": "Embeddings Google Gemini (retrieval)",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {

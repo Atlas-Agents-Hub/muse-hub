@@ -216,7 +216,7 @@
     },
     {
       "id": "step-10",
-      "label": "Model Classify",
+      "label": "OpenAI Classify",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -231,7 +231,7 @@
     },
     {
       "id": "step-11",
-      "label": "Model Summary Backup",
+      "label": "OpenAI Summary Backup",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

@@ -34,7 +34,6 @@ IDENTIFIER_KEYS = {'id', 'chatid', 'channelid', 'calendarid', 'documentid', 'she
 SECRET = re.compile(r'password|secret|credential|authorization|bearer|access.?token|api.?key|private.?key', re.I)
 EMAIL = re.compile(r'\b[A-Za-z0-9.!#$%&\x27*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+\b')
 OPAQUE = re.compile(r'(?<![A-Za-z0-9_])[A-Za-z0-9_-]{28,}(?![A-Za-z0-9_])')
-PROVIDER = re.compile(r'\b(?:OpenAI|Open AI|ChatGPT|GPT[- ]?[345](?:\.[015])?(?:[- ]?o)?(?:[- ]?mini)?|Google Gemini|Gemini|Anthropic|Claude|Mistral\.ai|DeepSeek|Groq)\b',re.I)
 SAFE_LABEL = re.compile(r'[^A-Za-z0-9 ,.:;!?&()\[\]/+\-_%]')
 
 DOMAIN = {
@@ -110,14 +109,10 @@ def display(value):
 
 
 def clean_title(path):
+    """Describe the source task without renaming products or their versions."""
     title = path.stem.replace('_', ' ')
-    title = PROVIDER.sub('Muse', title)
-    title = re.sub(r'\bn8n\b', 'Muse', title, flags=re.I)
     title = re.sub(r'\bAI[- ]Powered\s*', '', title, flags=re.I)
     title = re.sub(r'\bAI Agent\b', 'Assistant', title, flags=re.I)
-    title = re.sub(r'\bMuse\s*(?:and|&|,)\s*Muse\b', 'Muse', title, flags=re.I)
-    title = re.sub(r'\busing Muse\s*$', '', title, flags=re.I)
-    title = re.sub(r'\bwith Muse\s*$', '', title, flags=re.I)
     title = re.sub(r'\s*[-–—,:]\s*$', '', title).strip()
     return display(title)
 
@@ -278,7 +273,7 @@ class Sanitizer:
         return value
 
 
-def convert(path, source_root, tree, skill_ids):
+def convert(path, source_root, tree, skill_ids, existing_id=None):
     raw = path.read_bytes()
     rel = path.relative_to(source_root).as_posix()
     expected = tree.get(rel)
@@ -295,7 +290,7 @@ def convert(path, source_root, tree, skill_ids):
     if len({n.get('name') for n in nodes}) != len(nodes):
         return None,'duplicate-node-name'
     title = clean_title(path)
-    identity = 'flow-' + slug(title,78) + '-' + hashlib.sha256(rel.encode()).hexdigest()[:6]
+    identity = existing_id or 'flow-' + slug(title,78) + '-' + hashlib.sha256(rel.encode()).hexdigest()[:6]
     names = {n['name']:'step-'+str(i+1) for i,n in enumerate(nodes)}
     sanitizer = Sanitizer(names)
     converted = []
@@ -310,7 +305,7 @@ def convert(path, source_root, tree, skill_ids):
                         if k in ('temperature','maxTokens','topP','frequencyPenalty','presencePenalty')}}
         if operation=='embed':
             parameters={'capability':'text embeddings','settings':{k:v for k,v in parameters.items() if k in ('dimensions','batchSize')}}
-        label = display(PROVIDER.sub('Model',n['name']))
+        label = display(n['name'])
         if len(label)<3:label=OPERATOR[operation][1]
         converted.append({'id':names[n['name']],'label':label,'operation':operation,
                           'adapter':adapter,'parameters':parameters})
@@ -489,11 +484,15 @@ def main(argv=None):
     tree={x['path']:x['sha'] for x in tree_doc['tree'] if x['type']=='blob'}
     skill_ids={x['id'] for x in json.loads((root/'collections/muse-starters-v1/skills.json').read_bytes())}
     skill_ids.update(x['id'] for x in json.loads((root/'collections/library/catalog.json').read_bytes())['skills'])
+    library=root/'collections/library'
+    catalog=json.loads((library/'workflows.json').read_bytes())
+    previous={row['id']:row for row in catalog['workflows'] if row.get('source',{}).get('repository')==REPOSITORY}
+    identities_by_source={row['source']['path']:row['id'] for row in previous.values()}
     imported=[];rejected=[];fingerprints=set();titles=set()
     for rel in sorted(tree):
         if not rel.endswith('.json'):continue
         path=source_root/rel
-        try:result,reason=convert(path,source_root,tree,skill_ids)
+        try:result,reason=convert(path,source_root,tree,skill_ids,identities_by_source.get(rel))
         except (ValueError,TypeError,KeyError) as exc:
             rejected.append({'path':rel,'reason':str(exc)});continue
         if result is None:rejected.append({'path':rel,'reason':reason});continue
@@ -505,9 +504,6 @@ def main(argv=None):
         fingerprints.add(signature);titles.add(normalized);imported.append(result)
     if len(imported)<200:raise ValueError('too few complete distinct workflows')
     license_raw=(source_root/'LICENSE').read_text(encoding='utf-8').replace('\r\n','\n').encode('utf-8')
-    library=root/'collections/library'
-    catalog=json.loads((library/'workflows.json').read_bytes())
-    previous={row['id']:row for row in catalog['workflows'] if row.get('source',{}).get('repository')==REPOSITORY}
     catalog['workflows']=[row for row in catalog['workflows'] if row.get('source',{}).get('repository')!=REPOSITORY]
     current_ids={r['id'] for r in catalog['workflows']}
     for row,graph,category,role in imported:

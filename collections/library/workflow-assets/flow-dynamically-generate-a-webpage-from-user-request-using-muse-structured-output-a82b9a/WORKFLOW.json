@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-dynamically-generate-a-webpage-from-user-request-using-muse-structured-output-a82b9a",
-  "title": "Dynamically generate a webpage from user request using Muse Structured Output",
+  "title": "Dynamically generate a webpage from user request using OpenAI Structured Output",
   "nodes": [
     {
       "id": "step-1",
@@ -27,7 +27,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model - Using Structured Output",
+      "label": "Open AI - Using Structured Output",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -54,7 +54,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model - JSON to HTML",
+      "label": "OpenAI - JSON to HTML",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

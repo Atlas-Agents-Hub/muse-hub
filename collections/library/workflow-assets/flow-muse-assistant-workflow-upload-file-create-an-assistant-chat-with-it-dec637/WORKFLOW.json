@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-muse-assistant-workflow-upload-file-create-an-assistant-chat-with-it-dec637",
-  "title": "Muse Assistant workflow upload file, create an Assistant, chat with it!",
+  "title": "OpenAI Assistant workflow upload file, create an Assistant, chat with it!",
   "nodes": [
     {
       "id": "step-2",
@@ -31,7 +31,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Assistant",
+      "label": "OpenAI Assistant",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -44,7 +44,7 @@
     },
     {
       "id": "step-5",
-      "label": "Upload File to Model",
+      "label": "Upload File to OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

@@ -1,11 +1,11 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-store-notion-s-pages-as-vector-documents-into-supabase-37f85b",
-  "title": "Store Notion s Pages as Vector Documents into Supabase",
+  "title": "Store Notion s Pages as Vector Documents into Supabase with OpenAI",
   "nodes": [
     {
       "id": "step-1",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {

@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-extract-license-plate-number-from-image-uploaded-via-an-muse-form-4cc4fd",
-  "title": "Extract license plate number from image uploaded via an Muse form",
+  "title": "Extract license plate number from image uploaded via an n8n form",
   "nodes": [
     {
       "id": "step-1",

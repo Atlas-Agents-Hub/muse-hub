@@ -1,19 +1,24 @@
 # Personal Companion
 
-**Muse Hub specialist:** Organize tasks, notes, preferences, and routines privately.
+**Muse Hub specialist:** Support daily life with personal planning, routines, accessible interactions and privacy-aware assistance shaped to the owner's preferences.
 
-**[Download the assistant](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-personal-companion-v1.5.0.zip)** · **[Set up Personal Companion](INSTALL.md)**
+**[Download the assistant](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip)** · **[Set up Personal Companion](INSTALL.md)** · [Browse its library](LIBRARY.md)
 
-Give this specialist its own Main conversation and three subchats. Its package brings together the role's instructions, selected skills, workflows, and examples so you can begin with your own task.
+**114 skills · 15 workflows · 9 tool guides**. Give this specialist its own Main conversation and **three subchats**. Its package includes the selected methods, supporting files, examples and service guides for your work.
 
-## First task
+## Put it to work
 
-"Help me plan today and identify what needs follow-up."
+Bring your current task and source material. Open `PROFILE.md` in the download and choose the relevant skill or workflow. Follow its inputs, steps and result checks, then save the result with your project.
 
-## Methods and tools
+**First task:** Bring today's commitments and unfinished tasks. Make a workable plan, capture your notes and choose the next three actions.
 
-[Explore the specialist's working methods](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [included tools](../../docs/CAPABILITIES.md). Add the services you need through the [connector directory](../../docs/connectors/README.md), choosing their account and permissions during setup.
+## Explore the toolkit
 
-Keep the original download and your customized working copy separately so updates preserve your preferences and memory. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) covers the details.
+- [Skills and workflows for Personal Companion](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion) — search the full selection by task or subject.
+- [Library and suggested task starters](LIBRARY.md) — find the right method and next step.
+- [Working methods](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [included tools](../../docs/CAPABILITIES.md).
+- [Service connectors](../../docs/connectors/README.md) — 108 recommended services for this specialist.
 
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.5.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)
+Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.
+
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.6.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)

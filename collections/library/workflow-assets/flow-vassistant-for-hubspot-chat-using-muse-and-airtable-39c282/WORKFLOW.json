@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-vassistant-for-hubspot-chat-using-muse-and-airtable-39c282",
-  "title": "vAssistant for Hubspot Chat using Muse and Airtable",
+  "title": "vAssistant for Hubspot Chat using OpenAi and Airtable",
   "nodes": [
     {
       "id": "step-1",
@@ -17,7 +17,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model Create Thread",
+      "label": "OpenAi Create Thread",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -44,7 +44,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model Run",
+      "label": "OpenAI Run",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -500,7 +500,7 @@
     },
     {
       "id": "step-23",
-      "label": "Model Run1",
+      "label": "OpenAI Run1",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -545,7 +545,7 @@
     },
     {
       "id": "step-25",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-web-scraping-with-jina-google-sheets-and-muse-the-easy-way-1b7ae3",
-  "title": "Web Scraping with Jina, Google Sheets and Muse the EASY way",
+  "title": "Web Scraping with Jina, Google Sheets and OpenAI the EASY way",
   "nodes": [
     {
       "id": "step-1",
@@ -92,7 +92,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

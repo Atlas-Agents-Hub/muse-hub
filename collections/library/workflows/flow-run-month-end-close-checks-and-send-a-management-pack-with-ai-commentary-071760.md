@@ -1,0 +1,192 @@
+# Run month end close checks and send a management pack with AI commentary
+
+Complete “Run month end close checks and send a management pack with AI commentary” with the connected steps, field mappings, and result checks below.
+
+## Bring these inputs
+
+- The request and source material for Run month end close checks and send a management pack with AI commentary.
+- The selected records, date range, and output destination.
+- Complete the named fields in flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/INPUTS.json.
+- Configured connections or tools for http, scheduler.
+
+## 1. Schedule: 2nd working day 08:00
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the requested time zone and cadence to define when this flow starts; retain a manual run option. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-1`, for its exact field mappings, expressions, and settings. Start from the configured inputs.
+
+**Carry forward:** Schedule: 2nd working day 08:00: A trigger specification with a time zone and manual entry.
+
+**Check:** The next occurrence matches the requested local time and frequency.
+
+## 2. Error trigger
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Record the supplied event, file, or record batch and its selection criteria. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-18`, for its exact field mappings, expressions, and settings. Start from the configured inputs.
+
+**Carry forward:** Error trigger: A named input record or bounded batch.
+
+**Check:** The input type, required fields, and selection scope match this request.
+
+## 3. Webhook: run close now
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Record the supplied event, file, or record batch and its selection criteria. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-2`, for its exact field mappings, expressions, and settings. Start from the configured inputs.
+
+**Carry forward:** Webhook: run close now: A named input record or bounded batch.
+
+**Check:** The input type, required fields, and selection scope match this request.
+
+## 4. Config (errors)
+
+Read [the Data Quality Auditor method](../skills/data-quality-auditor/SKILL.md). Apply the field assignments, type conversions, and expressions to the incoming records. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-19`, for its exact field mappings, expressions, and settings. Use the output from step-18 (main, branch 0, input 0).
+
+**Carry forward:** Config (errors): Mapped records with the expected field names and types.
+
+**Check:** Required fields survive mapping and record counts reconcile.
+
+## 5. Config
+
+Read [the Data Quality Auditor method](../skills/data-quality-auditor/SKILL.md). Apply the field assignments, type conversions, and expressions to the incoming records. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-3`, for its exact field mappings, expressions, and settings. Use the output from step-1 (main, branch 0, input 0), step-2 (main, branch 0, input 0).
+
+**Carry forward:** Config: Mapped records with the expected field names and types.
+
+**Check:** Required fields survive mapping and record counts reconcile.
+
+## 6. Alert ops (Slack)
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = POST. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-20`, for its exact field mappings, expressions, and settings. Use the output from step-19 (main, branch 0, input 0).
+
+**Carry forward:** Alert ops (Slack): A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 7. Accounting: trial balance
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = GET. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-4`, for its exact field mappings, expressions, and settings. Use the output from step-3 (main, branch 0, input 0).
+
+**Carry forward:** Accounting: trial balance: A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 8. Accounting: prior period
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = GET. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-5`, for its exact field mappings, expressions, and settings. Use the output from step-3 (main, branch 0, input 0).
+
+**Carry forward:** Accounting: prior period: A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 9. Accounting: close checks
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = GET. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-6`, for its exact field mappings, expressions, and settings. Use the output from step-3 (main, branch 0, input 0).
+
+**Carry forward:** Accounting: close checks: A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 10. Merge sources
+
+Read [the Data Quality Auditor method](../skills/data-quality-auditor/SKILL.md). Join the incoming branches using the declared mode, matching keys, and unmatched-record policy. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-7`, for its exact field mappings, expressions, and settings. Use the output from step-4 (main, branch 0, input 0), step-5 (main, branch 0, input 1), step-6 (main, branch 0, input 2).
+
+**Carry forward:** Merge sources: A joined result with the match and unmatched counts.
+
+**Check:** Duplicate keys and missing partners produce the intended output cardinality.
+
+## 11. Run close checks
+
+Read [the JavaScript method](../skills/javascript-pro/SKILL.md). Implement the included transformation using the current records and named step outputs; preserve its calculations and edge cases. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-8`, for its exact field mappings, expressions, and settings. Use the output from step-7 (main, branch 0, input 0), step-3 (data, branch 0, input 0), step-4 (data, branch 0, input 0), step-5 (data, branch 0, input 0), step-6 (data, branch 0, input 0).
+
+**Carry forward:** Run close checks: Transformed records plus a representative before-and-after example.
+
+**Check:** The example agrees with the transformation and invalid or empty input has a defined result.
+
+## 12. AI: draft commentary
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = POST. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-9`, for its exact field mappings, expressions, and settings. Use the output from step-8 (main, branch 0, input 0), step-3 (data, branch 0, input 0).
+
+**Carry forward:** AI: draft commentary: A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 13. Assemble pack
+
+Read [the JavaScript method](../skills/javascript-pro/SKILL.md). Implement the included transformation using the current records and named step outputs; preserve its calculations and edge cases. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-10`, for its exact field mappings, expressions, and settings. Use the output from step-9 (main, branch 0, input 0), step-8 (data, branch 0, input 0).
+
+**Carry forward:** Assemble pack: Transformed records plus a representative before-and-after example.
+
+**Check:** The example agrees with the transformation and invalid or empty input has a defined result.
+
+## 14. Render management pack (xlsx)
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = POST. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-11`, for its exact field mappings, expressions, and settings. Use the output from step-10 (main, branch 0, input 0), step-3 (data, branch 0, input 0).
+
+**Carry forward:** Render management pack (xlsx): A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 15. Any check failed?
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Evaluate the branch rules in order and route the result to the corresponding numbered output. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-12`, for its exact field mappings, expressions, and settings. Use the output from step-11 (main, branch 0, input 0), step-10 (data, branch 0, input 0).
+
+**Carry forward:** Any check failed?: The selected branch with the values used to make the decision.
+
+**Check:** Both a matching case and the fallback follow the correct edges.
+
+## 16. Slack: close blocked, owners tagged
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = POST. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-13`, for its exact field mappings, expressions, and settings. Use the output from step-12 (main, branch 0, input 0), step-10 (data, branch 0, input 0), step-3 (data, branch 0, input 0).
+
+**Carry forward:** Slack: close blocked, owners tagged: A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 17. Slack: pack ready
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = POST. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-14`, for its exact field mappings, expressions, and settings. Use the output from step-12 (main, branch 1, input 0), step-10 (data, branch 0, input 0), step-3 (data, branch 0, input 0).
+
+**Carry forward:** Slack: pack ready: A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 18. Email pack to owner
+
+Read [the Review a Bounded Automation Plan Before Execution method](../../muse-starters-v1/skills/automation-contract/SKILL.md). Use the configured HTTP method, URL, headers, and body with the expected response format. Operation settings: method = POST. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-15`, for its exact field mappings, expressions, and settings. Use the output from step-14 (main, branch 0, input 0), step-10 (data, branch 0, input 0), step-11 (data, branch 0, input 0), step-3 (data, branch 0, input 0).
+
+**Carry forward:** Email pack to owner: A response with status, typed body, and relevant pagination or job identifiers.
+
+**Check:** The response status and body satisfy the operation contract and the request targets the selected service.
+
+## 19. Run summary
+
+Read [the JavaScript method](../skills/javascript-pro/SKILL.md). Implement the included transformation using the current records and named step outputs; preserve its calculations and edge cases. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-16`, for its exact field mappings, expressions, and settings. Use the output from step-13 (main, branch 0, input 0), step-15 (main, branch 0, input 0), step-10 (data, branch 0, input 0), step-11 (data, branch 0, input 0).
+
+**Carry forward:** Run summary: Transformed records plus a representative before-and-after example.
+
+**Check:** The example agrees with the transformation and invalid or empty input has a defined result.
+
+## 20. Respond 200 (close run)
+
+Read [the Team Communications method](../skills/team-communications/SKILL.md). Format the result for its intended recipient or response channel, including the requested fields and attachments. Read `../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json`, node `step-17`, for its exact field mappings, expressions, and settings. Use the output from step-16 (main, branch 0, input 0).
+
+**Carry forward:** Respond 200 (close run): A finished response with its associated output files.
+
+**Check:** The response destination and contents match the request.
+
+## Check the finished work
+
+- Trace a representative input through the selected branches to its final result.
+- Check record counts, required fields, and the requested output format.
+- Read back each requested service change and preserve its returned identifier.
+
+## Finish
+
+Deliver the requested result for “Run month end close checks and send a management pack with AI commentary”, including the source record identifiers and completed output location.
+
+## Workflow files
+
+Open [WORKFLOW.json](../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json) for the operation graph, branch conditions, field mappings, and transformations. Fill [INPUTS.json](../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/INPUTS.json) with your selected sources, destinations, connections, and model capability. Follow numbered branch edges when a decision has more than one output; carry each named result into the operations that depend on it.
+
+Model and embedding operations use your available capability. Use the configured service adapter for network operations and local tools for data transformations. An expression names an input field or earlier step result; a transformation reference describes the calculation to apply to those records. Check a representative input before continuing through a batch or a loop.
+
+Inspect the dependency order and required connections from the extracted package folder:
+
+```sh
+python -B ../../../tools/workflow_library.py ../workflow-assets/flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760/WORKFLOW.json
+```

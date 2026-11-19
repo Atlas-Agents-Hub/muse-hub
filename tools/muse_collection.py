@@ -134,6 +134,8 @@ def _index(items: Any, kind: str) -> dict[str,dict[str,Any]]:
     return out
 
 def validate(data: dict[str,Any]) -> None:
+    if isinstance(data,_PreparedCollection):
+        return
     if not isinstance(data,dict) or data.get('schema')!=SCHEMA:
         raise CollectionError('unsupported collection schema')
     ss=_index(data.get('sources'),'source')
@@ -453,6 +455,38 @@ def render_workflow(w: dict[str,Any], skills: dict[str,dict[str,Any]]) -> str:
     return body
 
 
+class _FrozenDict(dict):
+    def _readonly(self,*args,**kwargs):raise TypeError('prepared collection is immutable')
+    __setitem__=__delitem__=clear=pop=popitem=setdefault=update=__ior__=_readonly
+
+
+class _FrozenList(list):
+    def _readonly(self,*args,**kwargs):raise TypeError('prepared collection is immutable')
+    __setitem__=__delitem__=append=clear=extend=insert=pop=remove=reverse=sort=__iadd__=__imul__=_readonly
+
+
+def _freeze(value):
+    if isinstance(value,dict):return _FrozenDict({key:_freeze(item) for key,item in value.items()})
+    if isinstance(value,list):return _FrozenList(_freeze(item) for item in value)
+    return value
+
+
+class _PreparedCollection(_FrozenDict):
+    def __init__(self,data):
+        validate(data)
+        dict.__init__(self,{key:_freeze(item) for key,item in data.items()})
+
+
+def prepare_collection(data: dict[str,Any]) -> dict[str,Any]:
+    """Validate and freeze metadata once for a batch of package builds.
+
+    Source files are still read and checked against their declared hashes for
+    every package. The snapshot owns its nested lists and mappings, so editing
+    the original catalog cannot change an in-progress release.
+    """
+    return data if isinstance(data,_PreparedCollection) else _PreparedCollection(data)
+
+
 def instruction_files(data: dict[str,Any], skill_ids: list[str], workflow_ids: list[str]) -> dict[str,bytes]:
     """Compose instruction dependencies once for starters, roles and individual downloads."""
     validate(data)
@@ -548,11 +582,17 @@ def package_files(data: dict[str,Any], starter_id: str) -> dict[str,bytes]:
 def build_bytes(data: dict[str,Any], starter_id: str) -> bytes:
     return build_file_map_bytes(package_files(data,starter_id))
 
-def build_file_map_bytes(files: dict[str,bytes]) -> bytes:
+def build_file_map_bytes(files: dict[str,bytes], *, max_files: int = 12000,
+                         max_member_bytes: int = 8_000_000,
+                         max_total_bytes: int = 160_000_000) -> bytes:
     # Package data may be supplied by library callers, not only our CLI builder.
     # Refuse names that extract differently across POSIX and Windows.
-    if not isinstance(files,dict) or not 1<=len(files)<=12000:
-        raise CollectionError('archive requires 1..12000 regular file entries')
+    if (type(max_files) is not int or not 1 <= max_files <= 60000
+            or type(max_member_bytes) is not int or not 1 <= max_member_bytes <= 512_000_000
+            or type(max_total_bytes) is not int or not 1 <= max_total_bytes <= 1_000_000_000):
+        raise CollectionError('invalid archive resource budget')
+    if not isinstance(files,dict) or not 1<=len(files)<=max_files:
+        raise CollectionError('archive requires a bounded roster of regular file entries')
     normalized=set();total=0
     reserved={'con','prn','aux','nul',*(f'com{i}' for i in range(1,10)),*(f'lpt{i}' for i in range(1,10))}
     for name,content in files.items():
@@ -567,10 +607,10 @@ def build_file_map_bytes(files: dict[str,bytes]) -> bytes:
         key=unicodedata.normalize('NFC',name).casefold()
         if key in normalized:raise CollectionError('cross-platform archive name collision')
         normalized.add(key)
-        if not isinstance(content,bytes) or len(content)>8_000_000:
+        if not isinstance(content,bytes) or len(content)>max_member_bytes:
             raise CollectionError('archive content must be bounded bytes')
         total+=len(content)
-        if total>160_000_000:raise CollectionError('archive uncompressed size budget exceeded')
+        if total>max_total_bytes:raise CollectionError('archive uncompressed size budget exceeded')
     for name in normalized:
         parts=name.split('/')
         if any('/'.join(parts[:i]) in normalized for i in range(1,len(parts))):
@@ -657,9 +697,13 @@ def workflow_demo(data: dict[str,Any], workflow_id: str) -> dict:
             or binding.get('module')!='muse_presets.specialist_extensions' or binding.get('function')!='evaluate'):
             raise CollectionError('workflow tool binding mismatch')
         case=next(c for c in data['depth_cases'] if c['id']==sid+'-r5-standard')
+        # The tool boundary accepts plain JSON, while a prepared catalog owns
+        # immutable metadata. Copy only this trusted example for evaluation.
+        inputs=(json.loads(json.dumps(case['inputs'],allow_nan=False))
+                if isinstance(data,_PreparedCollection) else case['inputs'])
         results.append({'skill_id':sid,'case_id':case['id'],
-            'input_sha256':hashlib.sha256(canonical(case['inputs']).encode()).hexdigest(),
-            'output':evaluate(sid,case['inputs'])})
+            'input_sha256':hashlib.sha256(canonical(inputs).encode()).hexdigest(),
+            'output':evaluate(sid,inputs)})
     executed={r['skill_id'] for r in results}
     return {'workflow':workflow_id,'results':results,
         'unexecuted_skills':[s for s in workflow['skills'] if s not in executed],

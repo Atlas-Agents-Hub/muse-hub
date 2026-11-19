@@ -106,6 +106,39 @@ class SourceContractTests(unittest.TestCase):
         with self.assertRaisesRegex(connector.ConnectorError,'UNKNOWN_INPUTS'):
             connector.plan('trello',action['id'],{'undocumentedField':1})
 
+    def test_planner_checks_known_input_types(self):
+        adapter={'operations':[{'id':'sample','kind':'action','name':'Sample','source_url':'https://example.invalid',
+                 'source_sha256':'a'*64,'inputs':[
+                     {'name':'limit','type':'Number','required':False},
+                     {'name':'enabled','type':'Checkbox','required':False},
+                     {'name':'title','type':'ShortText','required':False},
+                     {'name':'items','type':'Array','required':False},
+                     {'name':'record','type':'Object','required':False},
+                     {'name':'workspace','type':'ProviderField','required':None}]}]}
+        with patch.object(connector,'contract',return_value=adapter):
+            for name,value in [('limit',True),('limit','five'),('limit',float('inf')),
+                               ('enabled','false'),('title',{}),('items','one'),('record',[])]:
+                with self.subTest(name=name,value=value),self.assertRaisesRegex(connector.ConnectorError,'INVALID_INPUT_TYPE'):
+                    connector.plan('sample','sample',{name:value})
+            valid=connector.plan('sample','sample',{'limit':5,'enabled':False,'title':'Hello','items':[],
+                                                    'record':{},'workspace':'workspace-id'})
+            self.assertTrue(valid['ready'])
+            for value in (None,''):
+                unresolved=connector.plan('sample','sample',{'workspace':value})
+                self.assertFalse(unresolved['ready'])
+                self.assertEqual(unresolved['provider_fields_to_resolve'],['workspace'])
+
+    def test_contract_rejects_a_symlinked_service_directory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);(root/'services').mkdir()
+            (root/'ADAPTER_SOURCES.json').write_bytes((DIRECTORY/'ADAPTER_SOURCES.json').read_bytes())
+            try:
+                (root/'services/gmail').symlink_to(DIRECTORY/'services/gmail',target_is_directory=True)
+            except OSError as error:
+                self.skipTest('Symlinks unavailable: '+str(error))
+            with self.assertRaisesRegex(connector.ConnectorError,'SERVICE_CONTRACT_UNAVAILABLE'):
+                connector.contract('gmail',root=root)
+
     def test_all_specialist_packages_include_relevant_connector_closure(self):
         import re
         for role in catalog._roles():
@@ -151,7 +184,7 @@ class HttpReadTests(unittest.TestCase):
         self.output=Path(self.directory.name)/'result.json'
         self.prepared=connector.prepare_read('gmail','read-gmail-v1-users-me-profile')
 
-    def fake_opener(self,raw=b'{"emailAddress":"sample@example.invalid","messagesTotal":3}',status=200):
+    def fake_opener(self,raw=b'{"emailAddress":"sample@example.com","messagesTotal":3}',status=200):
         response=io.BytesIO(raw);response.status=status
         class Opener:
             seen=[]
@@ -185,6 +218,34 @@ class HttpReadTests(unittest.TestCase):
         for values in ({},{'message_id':'x','host':'evil.invalid'}):
             with self.assertRaisesRegex(connector.ConnectorError,'HTTP_INPUTS_MISMATCH'):
                 connector.prepare_read('gmail','read-gmail-v1-users-me-messages-message-id',values)
+
+    def test_dot_segment_parameters_cannot_change_the_request_route(self):
+        for value in ('.','..'):
+            with self.subTest(value=value),self.assertRaisesRegex(connector.ConnectorError,'INVALID_HTTP_INPUT'):
+                connector.prepare_read('gmail','read-gmail-v1-users-me-messages-message-id',{'message_id':value})
+
+    def test_modified_request_cannot_send_credentials(self):
+        changes=[{'url':'https://other.invalid/collect'},
+                 {'headers':{'X-Extra':'injected'}},
+                 {'credential':{'placement':'header','name':'X-Other','prefix':''}},
+                 {'method':'POST'}, {'request_id':'unknown'}]
+        for values in changes:
+            prepared=copy.deepcopy(self.prepared);prepared.update(values)
+            opener=self.fake_opener()
+            with self.subTest(changes=values),self.assertRaises(connector.ConnectorError):
+                connector.execute_read(prepared,'MUSE_GMAIL_TOKEN',self.output,
+                                       environment={'MUSE_GMAIL_TOKEN':'synthetic-test-token'},opener=opener)
+            self.assertEqual(opener.seen,[])
+            self.assertFalse(self.output.exists())
+
+    def test_parameterized_read_rebuilds_the_same_encoded_route(self):
+        prepared=connector.prepare_read('gmail','read-gmail-v1-users-me-messages-message-id',{'message_id':'sample/id?view=full'})
+        opener=self.fake_opener()
+        result=connector.execute_read(prepared,'MUSE_GMAIL_TOKEN',self.output,
+                                      environment={'MUSE_GMAIL_TOKEN':'synthetic-test-token'},opener=opener)
+        self.assertEqual(result['status'],'SAVED')
+        self.assertEqual(opener.seen[0][0].full_url,
+                         'https://gmail.googleapis.com/gmail/v1/users/me/messages/sample%2Fid%3Fview%3Dfull')
 
     def test_missing_token_and_header_injection_fail_before_network(self):
         for value in ('','bad\r\nInjected: true'):

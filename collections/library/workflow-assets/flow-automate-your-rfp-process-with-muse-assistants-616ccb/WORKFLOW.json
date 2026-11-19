@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-automate-your-rfp-process-with-muse-assistants-616ccb",
-  "title": "Automate Your RFP Process with Muse Assistants",
+  "title": "Automate Your RFP Process with OpenAI Assistants",
   "nodes": [
     {
       "id": "step-1",
@@ -60,7 +60,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-scrape-trustpilot-reviews-with-muse-analyze-sentiment-d02355",
-  "title": "Scrape Trustpilot Reviews with Muse, Analyze Sentiment",
+  "title": "Scrape Trustpilot Reviews with DeepSeek, Analyze Sentiment with OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -529,7 +529,7 @@
     },
     {
       "id": "step-15",
-      "label": "Model Chat Model",
+      "label": "DeepSeek Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -539,7 +539,7 @@
     },
     {
       "id": "step-16",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

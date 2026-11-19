@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A calm, persistent task board for Muse. Organize your next actions, move cards, and keep a portable copy of your work.">
+  <title>Muse Task Board</title>
+  <link rel="stylesheet" href="/board.css">
+  <script src="/sortable.min.js" defer></script>
+  <script src="/board.js" defer></script>
+</head>
+<body>
+  <header class="top"><div><p class="eyebrow">MUSE SPACES</p><h1>A little room for your next move.</h1><p>Keep the work in view. Make room for progress.</p></div><span class="mark" aria-hidden="true">m.</span></header>
+  <main>
+    <section id="unlock" class="welcome" aria-labelledby="welcome-heading">
+      <div><p class="eyebrow">YOUR TASK BOARD</p><h2 id="welcome-heading">Pick up where you left off.</h2><p>Enter the session key from your launcher to open your saved board.</p></div>
+      <form id="session-form"><label for="session-key">Session key</label><input id="session-key" type="password" autocomplete="off" required><button type="submit">Open my board</button></form>
+    </section>
+    <section id="workspace" hidden>
+      <div class="toolbar"><div><h2>Your next actions</h2><p id="summary">A clear start for your next project.</p></div><div class="actions"><button type="button" class="quiet" id="refresh">Refresh</button><button type="button" class="quiet" id="export">Export board</button><label class="button quiet" for="import">Import cards<input id="import" type="file" accept="application/json,.json"></label><button type="button" class="quiet" id="lock">Close board</button></div></div>
+      <form id="card-form" class="composer"><div class="field wide"><label for="card-title">What needs doing?</label><input id="card-title" maxlength="120" placeholder="One useful next action" required></div><div class="field detail"><label for="card-details">A little context</label><input id="card-details" maxlength="240" placeholder="A link, a detail, or what done looks like"></div><div class="field"><label for="card-priority">Priority</label><select id="card-priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div><button type="submit">Add card</button></form>
+      <div class="board" aria-label="Task board">
+        <section class="column"><h3><span class="dot todo"></span>To do <span id="count-todo" class="count">0</span></h3><p class="column-note">Good ideas waiting for their moment.</p><div class="cards" id="todo" data-status="todo" aria-label="To do cards"></div></section>
+        <section class="column"><h3><span class="dot doing"></span>In progress <span id="count-doing" class="count">0</span></h3><p class="column-note">The things getting your attention.</p><div class="cards" id="doing" data-status="doing" aria-label="In progress cards"></div></section>
+        <section class="column"><h3><span class="dot done"></span>Done <span id="count-done" class="count">0</span></h3><p class="column-note">A record of the ground you covered.</p><div class="cards" id="done" data-status="done" aria-label="Completed cards"></div></section>
+      </div>
+      <section class="muse-panel" aria-labelledby="muse-heading"><div><p class="eyebrow">WORK WITH MUSE</p><h2 id="muse-heading">Turn the board into a next step.</h2><p>Queue a request for three concrete actions from your current cards.</p><button type="button" id="queue">Queue a board plan</button></div><div id="requests" aria-label="Muse requests"><p>Your requests and saved results will appear here.</p></div></section>
+    </section>
+    <p class="status" id="status" role="status" aria-live="polite">Your board is ready when you are.</p>
+  </main>
+  <footer>Move cards by dragging the handle or using each card’s status menu. Your changes save as you work.</footer>
+</body>
+</html>

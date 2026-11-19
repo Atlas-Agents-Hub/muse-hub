@@ -9,6 +9,7 @@ from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / 'hub' / 'site'
+RELEASE = json.loads((ROOT/'presets/catalog.json').read_bytes())['release']
 
 
 class MuseHubOverlay(unittest.TestCase):
@@ -48,7 +49,7 @@ class MuseHubOverlay(unittest.TestCase):
         for slug, asset, body in cards:
             with self.subTest(role=slug):
                 self.assertEqual(asset, aliases.get(slug, slug))
-                expected = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-" + asset + "-v1.5.0.zip"
+                expected = f"https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/{RELEASE}/muse-{asset}-{RELEASE}.zip"
                 self.assertIn('class="role-card-download" href="' + expected + '"', body)
         self.assertIn('aria-live="polite"', self.html)
 

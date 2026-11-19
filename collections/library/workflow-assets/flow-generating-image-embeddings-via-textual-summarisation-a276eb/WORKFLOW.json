@@ -161,7 +161,7 @@
     },
     {
       "id": "step-12",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {

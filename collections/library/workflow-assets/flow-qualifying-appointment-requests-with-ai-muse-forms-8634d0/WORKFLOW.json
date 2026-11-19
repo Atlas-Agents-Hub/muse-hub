@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-qualifying-appointment-requests-with-ai-muse-forms-8634d0",
-  "title": "Qualifying Appointment Requests with AI & Muse Forms",
+  "title": "Qualifying Appointment Requests with AI & n8n Forms",
   "nodes": [
     {
       "id": "step-1",
@@ -122,7 +122,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -233,7 +233,7 @@
     },
     {
       "id": "step-11",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {

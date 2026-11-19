@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-muse-ai-line-chatbot-cced9a",
-  "title": "Muse AI LINE Chatbot",
+  "title": "Claude AI LINE Chatbot",
   "nodes": [
     {
       "id": "step-1",
@@ -30,7 +30,7 @@
     },
     {
       "id": "step-3",
-      "label": "Ask Model",
+      "label": "Ask Claude",
       "operation": "http",
       "adapter": "http",
       "parameters": {

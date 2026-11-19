@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-build-an-muse-assistant-with-google-drive-integration-81503a",
-  "title": "Build an Muse Assistant with Google Drive Integration",
+  "title": "Build an OpenAI Assistant with Google Drive Integration",
   "nodes": [
     {
       "id": "step-1",
@@ -48,7 +48,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -98,7 +98,7 @@
     },
     {
       "id": "step-8",
-      "label": "Model Assistent",
+      "label": "OpenAI Assistent",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

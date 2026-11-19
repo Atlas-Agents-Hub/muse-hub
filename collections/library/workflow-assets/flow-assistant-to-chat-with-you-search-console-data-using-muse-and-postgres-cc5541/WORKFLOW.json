@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-assistant-to-chat-with-you-search-console-data-using-muse-and-postgres-cc5541",
-  "title": "Assistant to chat with you Search Console Data, using Muse and Postgres",
+  "title": "Assistant to chat with you Search Console Data, using OpenAI and Postgres",
   "nodes": [
     {
       "id": "step-1",
@@ -14,7 +14,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

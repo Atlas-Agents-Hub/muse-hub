@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-handling-job-application-submissions-with-ai-and-muse-forms-d4a504",
-  "title": "Handling Job Application Submissions with AI and Muse Forms",
+  "title": "Handling Job Application Submissions with AI and n8n Forms",
   "nodes": [
     {
       "id": "step-1",
@@ -16,7 +16,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -66,7 +66,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Chat Model2",
+      "label": "OpenAI Chat Model2",
       "operation": "model",
       "adapter": "model",
       "parameters": {

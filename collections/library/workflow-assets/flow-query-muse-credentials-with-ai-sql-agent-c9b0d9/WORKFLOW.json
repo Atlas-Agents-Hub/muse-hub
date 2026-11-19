@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-query-muse-credentials-with-ai-sql-agent-c9b0d9",
-  "title": "Query Muse Credentials with AI SQL Agent",
+  "title": "Query n8n Credentials with AI SQL Agent",
   "nodes": [
     {
       "id": "step-1",
@@ -88,7 +88,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

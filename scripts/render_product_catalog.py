@@ -1,0 +1,238 @@
+"""Keep product counts, specialist guides and discovery metadata together."""
+from __future__ import annotations
+
+import argparse
+from collections import Counter
+import json
+from pathlib import Path
+import re
+import sys
+from urllib.parse import quote
+
+ROOT=Path(__file__).resolve().parents[1]
+sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'scripts')]
+import muse_collection
+import tool_guides
+from collection_compatibility import current_inventory
+from build_release import ALIASES, ROLE_WORKFLOWS, specialist_asset
+from render_downloads import subject
+from render_specialist_directory import AREAS, COPY
+
+REPO='https://github.com/atlas-origins/muse-ai-agent-presets'
+SITE='https://atlas-origins.github.io/muse-ai-agent-presets/'
+# These pages describe the current collection. Historical release notes and the
+# original compatibility fixtures retain their original counts and versions.
+CURRENT_PAGES=(
+    'README.md','START_HERE.md','llms.txt','hub/README.md','hub/site/README.md',
+    'docs/README.md','docs/GETTING_STARTED.md','docs/CAPABILITIES.md','docs/SKILLS.md',
+    'docs/ARCHITECTURE.md','docs/CONNECTORS.md','docs/handbook/README.md',
+    'docs/collection/MUSE_CURATED_COLLECTION.md','docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md',
+    'docs/discovery/AI_AGENT_GUIDE.md','docs/journeys/BUILD_AND_AUTOMATE.md',
+    'collections/muse-starters-v1/README.md',
+)
+
+from muse_presets.product_copy import FIRST_TASKS
+
+def encode(value):
+    return (json.dumps(value,indent=2,ensure_ascii=False)+'\n').encode('utf-8')
+
+def suggested_starters(data, role_id, selected_workflows):
+    """Keep explicit role assignments first, then add supported workflow tasks."""
+    direct=[row for row in data['starters']
+            if role_id in (row['base_role'],row.get('specialist_role'))]
+    if role_id not in muse_collection.EXTENSION_ROLES:
+        return direct
+    seen={row['id'] for row in direct}
+    selected=set(selected_workflows)
+    return direct+[row for row in data['starters']
+                   if row['id'] not in seen and selected.intersection(row['workflows'])]
+
+def outputs(root=ROOT):
+    root=Path(root)
+    data=muse_collection.load_collection(root/'collections/muse-starters-v1')
+    preset_catalog=json.loads((root/'presets/catalog.json').read_bytes())
+    version=preset_catalog['release']
+    connectors=json.loads((root/'docs/connectors/catalog.json').read_bytes())['connectors']
+    guides=tool_guides.load_guides(root)
+    counts={'skills':len(data['skills']),'workflows':len(data['workflows']),
+            'task starters':len(data['starters']),'connectors':len(connectors),
+            'tool guides':len(guides['guides'])}
+    result={}
+    def add(name,body):result[name]=body.encode('utf-8') if isinstance(body,str) else body
+    preset_catalog['downloads']={
+        role:REPO+'/releases/download/'+version+'/'+specialist_asset(role,version)
+        for role in preset_catalog['presets']
+    }
+    add('presets/catalog.json',encode(preset_catalog))
+    def current(text):
+        text=re.sub(r'v1\.5\.0\b',version,text)
+        for term,number in counts.items():
+            text=re.sub(r'\b[0-9]+(?= (?:\*\*)?'+re.escape(term)+r'\b)',str(number),text)
+        text=re.sub(r'\b[0-9]+(?= (?:reusable |developed )skills\b)',str(counts['skills']),text)
+        text=re.sub(r'\b[0-9]+(?= connector guides\b)',str(counts['connectors']),text)
+        text=re.sub(r'one of [0-9]+ focused configurations',f"one of {counts['task starters']} focused configurations",text)
+        text=re.sub(r'for [0-9]+ services',f"for {counts['connectors']} services",text)
+        return text
+    for name in CURRENT_PAGES:
+        path=root/name
+        if path.exists():add(name,current(path.read_text(encoding='utf-8')))
+    add('collections/muse-starters-v1/COUNTS.json',encode(current_inventory(data)))
+    starters=f"# Choose a task starter\n\n**{counts['task starters']} task starters** help you turn a goal into a useful result. Choose a prompt, bring the requested inputs, and follow its skills and workflows with your Muse assistant. [Choose a specialist](../../docs/DOWNLOAD_A_SPECIALIST.md).\n\n"
+    for family in data['specialists']:
+        rows=[row for row in data['starters'] if row['base_role']==family['id']]
+        if not rows:continue
+        starters+='## '+family['title']+'\n\n| Starter | What you will make |\n| --- | --- |\n'
+        for row in sorted(rows,key=lambda row:row['title'].casefold()):
+            starters+=f"| [{row['title'].replace('|','/')}](starters/{row['id']}/STARTER.md) | {row['purpose'].replace('|','/')} |\n"
+        starters+='\n'
+    add('collections/muse-starters-v1/CATALOG.md',starters)
+    roles={row['id']:row for row in data['specialists']}
+    skills={row['id']:row for row in data['skills']}
+    flows={row['id']:row for row in data['workflows']}
+    summaries={}
+    for canonical in ROLE_WORKFLOWS:
+        rid=ALIASES.get(canonical,canonical)
+        role=roles[rid]
+        title,scope,*_=COPY[canonical]
+        selected_flows=list(dict.fromkeys(ROLE_WORKFLOWS[canonical]+role.get('library_workflows',[])))
+        selected=set(role['skills'])|set(role.get('library_skills',[]))
+        for key in selected_flows:selected.update(flows[key]['skills'])
+        selected_guides=set(tool_guides.selected_ids(guides,role=rid))
+        selected_guides.update(gid for key in selected_flows for gid in flows[key].get('tool_guides',[]))
+        selected_connectors=[row for row in connectors if canonical in row['specialists']]
+        starters=suggested_starters(data,rid,selected_flows)
+        summary=f"**{len(selected)} skills · {len(selected_flows)} workflows · {len(selected_guides)} tool guides**"
+        summaries[canonical]={'skills':len(selected),'workflows':len(selected_flows),
+                             'tool_guides':len(selected_guides),'connectors':len(selected_connectors),
+                             'task_starters':len(starters)}
+        url=REPO+'/releases/download/'+version+'/'+specialist_asset(canonical,version)
+        browse=SITE+'downloads.html?role='+rid
+        first=FIRST_TASKS[canonical]
+        readme=f'''# {title}
+
+**Muse Hub specialist:** {scope}
+
+**[Download the assistant]({url})** · **[Set up {title}](INSTALL.md)** · [Browse its library](LIBRARY.md)
+
+{summary}. Give this specialist its own Main conversation and **three subchats**. Its package includes the selected methods, supporting files, examples and service guides for your work.
+
+## Put it to work
+
+Bring your current task and source material. Open `PROFILE.md` in the download and choose the relevant skill or workflow. Follow its inputs, steps and result checks, then save the result with your project.
+
+**First task:** {first}
+
+## Explore the toolkit
+
+- [Skills and workflows for {title}]({browse}) — search the full selection by task or subject.
+- [Library and suggested task starters](LIBRARY.md) — find the right method and next step.
+- [Working methods](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [included tools](../../docs/CAPABILITIES.md).
+- [Service connectors](../../docs/connectors/README.md) — {len(selected_connectors)} recommended services for this specialist.
+
+Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.
+
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [{version} downloads](../../docs/RELEASES.md) · [Muse Hub]({SITE})
+'''
+        install=f'''# {title} | Muse Hub
+
+{scope}
+
+**[Download {title}]({url})** · [{version} release]({REPO}/releases/tag/{version}) · [Checksums]({REPO}/releases/download/{version}/SHA256SUMS)
+
+{summary}. [Explore the full selection](LIBRARY.md).
+
+## Set up this assistant
+
+1. Extract the ZIP into its own folder and open `START_HERE.md`. You can also give Muse the ZIP with your current task.
+2. Choose a **separate Muse assistant** for {title} and add the supplied Main instructions.
+3. Set up its **three subchats** using their included instructions, context, tools and memory documents.
+4. Personalize the assistant's working preferences. Open `PROFILE.md` to choose the methods for your task.
+5. Try the first task below, check the result against the method's expected outputs, and save your work.
+
+**First task to try:** {first}
+
+No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account for each connection you add.
+
+## Use a skill or workflow
+
+Start with [this specialist's library](LIBRARY.md). A skill describes a focused method and includes its reference files. A workflow connects several methods with named inputs, expected results and checks. Load the method that fits the current task; the complete selection remains available in the download.
+
+For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
+
+Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
+
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)
+'''
+        groups=Counter(subject(skills[key]['category']) for key in selected)
+        library=f'# {title}: skills, workflows and connections\n\n{scope}\n\n{summary} · **{len(starters)} task starters** · **{len(selected_connectors)} recommended connectors**\n\n[Download the specialist]({url}) · [Search its methods]({browse}) · [Setup](INSTALL.md)\n\n## Browse by subject\n\n| Subject | Skills | Browse |\n| --- | ---: | --- |\n'
+        for label,number in sorted(groups.items()):
+            library+=f'| {label} | {number} | [Explore]({browse}&subject={quote(label)}) |\n'
+        library+='\n## Start a useful task\n\n'
+        for row in starters[:12]:
+            library+=f"- [{row['title']}](../../collections/muse-starters-v1/starters/{row['id']}/STARTER.md) — {row['purpose']}\n"
+        library+=f'\n[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All {len(selected_flows)} workflows for this specialist]({browse}&type=workflow)\n\n## Connect your services\n\n'
+        for row in selected_connectors[:18]:
+            target='../../docs/connectors/'+row['guide_path'] if row.get('guide_path') else row['source_url']
+            library+=f"- [{row['name']}]({target}) — {row['description'].splitlines()[0][:180]}\n"
+        library+='\n[Complete connector directory](../../docs/connectors/README.md) · [Tools and examples](../../docs/CAPABILITIES.md)\n'
+        add(f'presets/{canonical}/README.md',readme)
+        add(f'presets/{canonical}/INSTALL.md',install)
+        add(f'presets/{canonical}/LIBRARY.md',library)
+        preset=json.loads((root/'presets'/canonical/'preset.json').read_bytes())
+        preset['description']=scope
+        add(f'presets/{canonical}/preset.json',encode(preset))
+    chooser=f'# Choose your Muse assistant\n\nDownload one specialist for the work you want to do. Each package includes Main instructions, three subchat guides, selected skills, workflows, examples and service guides for **one Muse assistant**.\n\n**Current release: [{version}]({REPO}/releases/tag/{version})** · [Checksums]({REPO}/releases/download/{version}/SHA256SUMS) · [Latest release]({REPO}/releases/latest)\n\n'
+    for area,identities in AREAS:
+        chooser+='## '+area+'\n\n| Specialist | What you can work on | Skills | Download |\n| --- | --- | ---: | --- |\n'
+        for rid in identities:
+            title,scope,*_=COPY[rid]
+            chooser+=f"| [{title}](../presets/{rid}/INSTALL.md) | {scope} | {summaries[rid]['skills']} | [Download ZIP]({REPO}/releases/download/{version}/{specialist_asset(rid,version)}) |\n"
+        chooser+='\n'
+    chooser+='## Open your package\n\n1. Download the ZIP and extract it into a new folder.\n2. Open `START_HERE.md`, or give Muse the ZIP and your current task.\n3. Follow the included guide for Main and the three subchats, then try the specialist\'s first task.\n\nNo Python is needed for assistant instructions. Optional local tools include their requirements and commands.\n\n[Get started](GETTING_STARTED.md) · [Setup and updates](INSTALL_AND_PERSISTENCE.md) · [Browse tasks](handbook/specialists-by-task.md) · [Release notes](RELEASES.md)\n'
+    add('docs/DOWNLOAD_A_SPECIALIST.md',chooser)
+    doc=json.loads((root/'docs/discovery/agent-capabilities.json').read_bytes())
+    doc=json.loads(current(json.dumps(doc)))
+    doc['release']=version
+    doc['curated_task_collection'].update(skills=counts['skills'],workflow_recipes=counts['workflows'],starter_configurations=counts['task starters'])
+    doc['configuration_count']=counts['task starters']+15
+    doc['configuration_breakdown']['task_starters']=counts['task starters']
+    doc['skill_collection'].update(developed_task_skills=counts['skills'],workflows=counts['workflows'])
+    doc['custom_connector_count']=counts['connectors']
+    workbenches=doc.setdefault('local_workbenches',[])
+    board={
+        'name':'Muse Task Board','specialist':'personal-companion',
+        'demo':'examples/task_board/run.py','guide':'docs/spaces/TASK_BOARD.md',
+        'storage':'SQLite',
+        'features':['task_cards','drag_and_keyboard_moves','saved_revisions',
+                    'json_export_and_import','assistant_request_and_result'],
+    }
+    workbenches[:]=[row for row in workbenches if row.get('name')!=board['name']]+[board]
+    doc['specialist_libraries']=summaries
+    doc['skill_downloads']={'format':'subject-packs','skills_per_pack_maximum':40,
+                            'entrypoint':'skills/<skill-id>/SKILL.md','directory':SITE+'downloads.html#skills'}
+    add('docs/discovery/agent-capabilities.json',encode(doc))
+    role_directory=json.loads(current((root/'hub/site/roles.json').read_text(encoding='utf-8')))
+    for row in role_directory['roles']:
+        row['description']=COPY[row['id']][1]
+        row['library']=summaries[row['id']]
+    add('hub/site/roles.json',encode(role_directory))
+    return result
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--check',action='store_true')
+    args=parser.parse_args()
+    stale=[]
+    for name,raw in outputs().items():
+        path=ROOT/name
+        if args.check:
+            if not path.is_file() or path.read_bytes()!=raw:stale.append(name)
+        else:
+            path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_bytes(raw)
+    if stale:
+        print(json.dumps({'status':'FAIL','stale':stale}));return 2
+    print('Product catalog is current.' if args.check else 'Product catalog updated.')
+    return 0
+
+if __name__=='__main__':raise SystemExit(main())

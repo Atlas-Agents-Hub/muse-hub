@@ -144,6 +144,17 @@ class ConversionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'blob mismatch'):
                 self.importer.convert(p,root,{'x.json':'0'*40},set())
 
+    def test_product_names_and_versions_survive_title_conversion(self):
+        cases={
+            'Use OpenRouter in n8n versions _1.78.json': 'Use OpenRouter in n8n versions 1.78',
+            'DeepSeek V3 Chat & R1 Reasoning Quick Start.json': 'DeepSeek V3 Chat & R1 Reasoning Quick Start',
+            'Classify with OpenAI and Google Gemini.json': 'Classify with OpenAI and Google Gemini',
+            "Enrich Pipedrive data via OpenAI's ChatGPT.json": "Enrich Pipedrive data via OpenAI's ChatGPT",
+        }
+        for source,expected in cases.items():
+            with self.subTest(source=source):
+                self.assertEqual(self.importer.clean_title(Path(source)),expected)
+
     def test_conversion_preserves_disabled_pass_through_ports_and_empty_branches(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);path=root/'Sample.json'
@@ -165,6 +176,26 @@ class ConversionTests(unittest.TestCase):
             self.assertTrue(graph['nodes'][1]['parameters']['bypass'])
             self.assertEqual(graph['edges'][1]['input'],1)
             self.assertEqual(graph['terminal_branches'],[{'from':'step-3','channel':'main','branch':0}])
+
+    def test_reimport_preserves_identity_and_provider_node_label(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);path=root/'Route with OpenAI.json'
+            source={'nodes':[
+                {'name':'Read','type':'n8n-nodes-base.manualTrigger','parameters':{}},
+                {'name':'OpenAI response','type':'n8n-nodes-base.openAi','parameters':{}},
+                {'name':'Result','type':'n8n-nodes-base.set','parameters':{}}],
+                'connections':{'Read':{'main':[[{'node':'OpenAI response','index':0}]]},
+                    'OpenAI response':{'main':[[{'node':'Result','index':0}]]}}}
+            raw=json.dumps(source).encode();path.write_bytes(raw)
+            digest=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
+            result,reason=self.importer.convert(path,root,{path.name:digest},
+                {'automation-contract','data-quality-auditor'},existing_id='flow-existing-download')
+            self.assertIsNone(reason)
+            row,graph,_,_=result
+            self.assertEqual(row['id'],'flow-existing-download')
+            self.assertEqual(graph['id'],row['id'])
+            self.assertEqual(row['title'],'Route with OpenAI')
+            self.assertEqual(graph['nodes'][1]['label'],'OpenAI response')
 
 
 class PublishedCollectionTests(unittest.TestCase):

@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-assistant-for-instagram-dm-inbox-manychat-muse-integration-7ffa5d",
-  "title": "Assistant for Instagram DM inbox. Manychat + Muse integration",
+  "title": "Assistant for Instagram DM inbox. Manychat + Open AI integration",
   "nodes": [
     {
       "id": "step-1",
@@ -52,7 +52,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model model",
+      "label": "ChatGPT model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

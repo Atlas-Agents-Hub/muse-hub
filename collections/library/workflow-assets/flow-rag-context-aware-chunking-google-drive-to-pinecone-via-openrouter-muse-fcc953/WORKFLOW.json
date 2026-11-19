@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-rag-context-aware-chunking-google-drive-to-pinecone-via-openrouter-muse-fcc953",
-  "title": "RAG Context-Aware Chunking Google Drive to Pinecone via OpenRouter & Muse",
+  "title": "RAG Context-Aware Chunking Google Drive to Pinecone via OpenRouter & Gemini",
   "nodes": [
     {
       "id": "step-1",
@@ -44,7 +44,7 @@
     },
     {
       "id": "step-5",
-      "label": "Embeddings Model",
+      "label": "Embeddings Google Gemini",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {

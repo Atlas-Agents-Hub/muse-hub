@@ -20,7 +20,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -84,7 +84,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

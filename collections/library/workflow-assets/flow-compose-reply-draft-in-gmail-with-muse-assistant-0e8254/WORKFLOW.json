@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-compose-reply-draft-in-gmail-with-muse-assistant-0e8254",
-  "title": "Compose reply draft in Gmail with Muse Assistant",
+  "title": "Compose reply draft in Gmail with OpenAI Assistant",
   "nodes": [
     {
       "id": "step-1",
@@ -163,7 +163,7 @@
     },
     {
       "id": "step-9",
-      "label": "Ask Model Assistant",
+      "label": "Ask OpenAI Assistant",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

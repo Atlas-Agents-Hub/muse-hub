@@ -78,12 +78,13 @@ class ProductTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.tool.validate(d)
 
     def test_selected_starters_reference_all_four_new_specialists_without_new_identities(self):
+        prepared=self.tool.prepare_collection(self.data)
         bindings={p.get('specialist_role') for p in self.data['starters'] if p.get('specialist_role')}
         self.assertEqual(bindings,set(EXTENSIONS))
         for p in self.data['starters']:
             self.assertIn(p['base_role'],self.tool.CORE_ROLES)
             if p.get('specialist_role'):
-                files=self.tool.package_files(self.data,p['id'])
+                files=self.tool.package_files(prepared,p['id'])
                 self.assertFalse(any(Path(f).name in ('IDENTITY.md','SOUL.md','MEMORY.md') for f in files))
                 self.assertIn(p['specialist_role'],files['PROFILE.md'].decode())
 
@@ -92,22 +93,24 @@ class ProductTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.tool.validate(d)
 
     def test_r5_challenge_does_not_include_examples_or_oracle(self):
+        prepared=self.tool.prepare_collection(self.data)
         new=[s for s in self.data['skills'] if s.get('depth',{}).get('revision')=='R5']
         self.assertEqual(len(new),11)
         for s in new:
             cid=s['depth']['case_ids'][0]
-            arms=[self.tool.challenge_files(self.data,cid,a) for a in ('plain','candidate')]
+            arms=[self.tool.challenge_files(prepared,cid,a) for a in ('plain','candidate')]
             self.assertEqual(arms[0]['TASK.json'],arms[1]['TASK.json'])
-            with self.assertRaises(ValueError):self.tool.challenge_files(self.data,cid,'upstream')
+            with self.assertRaises(ValueError):self.tool.challenge_files(prepared,cid,'upstream')
             candidate=b'\n'.join(arms[1].values()).decode()
             self.assertNotIn('reference_output',candidate)
             self.assertNotIn(s['depth']['worked_example']['result'],candidate)
 
     def test_each_specialist_kit_runs_from_clean_directory_without_repository_imports(self):
         self.assertTrue(hasattr(self.tool,'specialist_kit_files'))
+        prepared=self.tool.prepare_collection(self.data)
         for role in EXTENSIONS:
             with self.subTest(role=role),TemporaryDirectory() as temp:
-                files=self.tool.specialist_kit_files(self.data,role)
+                files=self.tool.specialist_kit_files(prepared,role)
                 first=self.tool.build_file_map_bytes(files)
                 self.assertEqual(first,self.tool.build_file_map_bytes(files))
                 base=Path(temp);archive=base/'kit.zip';extracted=base/'extracted'

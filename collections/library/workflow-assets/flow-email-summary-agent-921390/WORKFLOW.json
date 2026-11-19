@@ -47,7 +47,7 @@
     },
     {
       "id": "step-4",
-      "label": "Summarize Emails with Model - Morning",
+      "label": "Summarize Emails with OpenAI - Morning",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

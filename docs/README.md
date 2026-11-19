@@ -20,8 +20,8 @@ Explore Muse, choose a task, and find the assistants, tools, and workspaces that
 
 - [Find specialists by task](handbook/specialists-by-task.md)
 - [Skills and workflows](SKILLS.md)
-- [100 task starters](../collections/muse-starters-v1/CATALOG.md)
-- [151 connectors](connectors/README.md)
+- [558 task starters](../collections/muse-starters-v1/CATALOG.md)
+- [273 connectors](connectors/README.md)
 - [Operating handbook](handbook/README.md)
 - [Specialist methods and included tools](collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
@@ -29,6 +29,7 @@ Explore Muse, choose a task, and find the assistants, tools, and workspaces that
 
 - [Companion Home](COMPANION_HOME.md) — five rooms, room notes, Studio, and Arcade.
 - [Daily Desk](spaces/DAILY_DESK.md) — tasks, notes, backup, and restore.
+- [Muse Task Board](spaces/TASK_BOARD.md) — move projects from To do to Done, save cards and plan the next actions.
 - [Family Link](FAMILY_LINK.md) — prepare and review handoffs.
 - [Learning sessions](LEARNING_LOCAL_STUDY.md) — study methods and a local storage example.
 - [Garden calendar](GARDEN_LOCAL_CALENDAR.md) — observations, planning, and a calendar example.

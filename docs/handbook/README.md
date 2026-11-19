@@ -15,6 +15,6 @@ Keep the right context close, use a focused method, and save work you can reopen
 
 ## Find a method or tool
 
-[Specialists by task](specialists-by-task.md) · [Skills and workflows](../SKILLS.md) · [100 task starters](../../collections/muse-starters-v1/CATALOG.md) · [151 connectors](../connectors/README.md)
+[Specialists by task](specialists-by-task.md) · [Skills and workflows](../SKILLS.md) · [558 task starters](../../collections/muse-starters-v1/CATALOG.md) · [273 connectors](../connectors/README.md)
 
 [Get started](../GETTING_STARTED.md) · [Terminal](../TERMINAL.md) · [Documentation](../README.md)

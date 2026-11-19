@@ -7,6 +7,7 @@ from muse_presets.public_export import PUBLIC_ROOT_FILES,select_public_files
 ROOT=Path(__file__).resolve().parents[1]
 REPO="atlas-origins/muse-ai-agent-presets"
 RELEASE="v0.4.1-alpha"
+CURRENT_RELEASE=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
 EIGHT=("coordinator","software-engineer","model-builder","claims-adjudicator","garden-companion","learning-coach","reverse-engineering-researcher","creative-studio")
 FROZEN=("research-evaluator","adversarial-verifier","personal-companion")
 URL="https://github.com/"+REPO
@@ -18,7 +19,7 @@ class AgentDiscoveryTests(unittest.TestCase):
   text=(ROOT/"llms.txt").read_text(encoding="utf-8")
   self.assertTrue(text.startswith("# Muse Hub\n"))
   self.assertIn("15 specialist assistants",text)
-  self.assertIn(URL+"/releases/tag/v1.5.0",text)
+  self.assertIn(URL+"/releases/tag/"+CURRENT_RELEASE,text)
   self.assertIn(SITE,text)
   links=re.findall(r"(?m)^- \[[^\]]+\]\((https://[^)]+)\)",text)
   self.assertGreaterEqual(len(links),30)
@@ -36,7 +37,7 @@ class AgentDiscoveryTests(unittest.TestCase):
    self.assertIn(target,text)
   for step in ("START_HERE.md","three subchat","SHA256SUMS","quickstart.py --all"):
    self.assertIn(step,text)
-  self.assertIn("releases/tag/v1.5.0",text)
+  self.assertIn("releases/tag/"+CURRENT_RELEASE,text)
   self.assertNotIn("source-only",text)
 
  def test_readme_and_agent_index_agree_on_entrypoints(self):
@@ -59,7 +60,7 @@ class AgentDiscoveryTests(unittest.TestCase):
   doc=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_text(encoding="utf-8"))
   self.assertEqual(doc["schema"],"specialist-ai-agent-kits/discovery/v1")
   self.assertEqual(doc["repository"],URL)
-  self.assertEqual(doc["release"],"v1.5.0")
+  self.assertEqual(doc["release"],CURRENT_RELEASE)
   self.assertEqual(doc["license"],"MIT")
   roles=json.loads((ROOT/"presets/catalog.json").read_text())["presets"]
   self.assertEqual(set(doc["starter_roles"]),set(roles))
@@ -67,13 +68,13 @@ class AgentDiscoveryTests(unittest.TestCase):
   self.assertEqual(doc["released_starter_zip_count"],15)
   aliases={"data-engineering-architect":"data-engineer","infrastructure-reliability-engineer":"reliability-engineer"}
   for role in roles:
-   asset="muse-"+aliases.get(role,role)+"-v1.5.0.zip"
-   expected=URL+"/releases/download/v1.5.0/"+asset
+   asset="muse-"+aliases.get(role,role)+"-"+CURRENT_RELEASE+".zip"
+   expected=URL+"/releases/download/"+CURRENT_RELEASE+"/"+asset
    self.assertEqual(doc["specialist_downloads"][role],expected)
   for entry in doc["executable_kits"]:
    self.assertEqual(entry["download"],doc["specialist_downloads"][entry["role"]])
    self.assertTrue((ROOT/entry["exporter"]).is_file())
-  self.assertEqual(doc["sha256_index"],URL+"/releases/download/v1.5.0/SHA256SUMS")
+  self.assertEqual(doc["sha256_index"],URL+"/releases/download/"+CURRENT_RELEASE+"/SHA256SUMS")
   self.assertEqual(doc["homepage"],SITE)
   self.assertEqual(doc["downloads_page"],SITE+"downloads.html")
 

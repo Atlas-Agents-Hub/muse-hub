@@ -1,24 +1,29 @@
 # Adversarial Verifier | Muse Hub
 
-Challenge authorized releases with negative controls and reproducible evidence.
+Challenge authorized software, agent systems and releases with threat models, failure injection, negative controls and independent remediation reviews.
 
-**[Download Adversarial Verifier](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-adversarial-verifier-v1.5.0.zip)** · [v1.5.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/SHA256SUMS)
+**[Download Adversarial Verifier](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-adversarial-verifier-v1.6.0.zip)** · [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+
+**426 skills · 6 workflows · 21 tool guides**. [Explore the full selection](LIBRARY.md).
 
 ## Set up this assistant
 
 1. Extract the ZIP into its own folder and open `START_HERE.md`. You can also give Muse the ZIP with your current task.
 2. Choose a **separate Muse assistant** for Adversarial Verifier and add the supplied Main instructions.
-3. Set up its **three subchats** using their included instructions, context, tools, and memory documents.
-4. Personalize the role's preferences and working context, then try the task below.
+3. Set up its **three subchats** using their included instructions, context, tools and memory documents.
+4. Personalize the assistant's working preferences. Open `PROFILE.md` to choose the methods for your task.
+5. Try the first task below, check the result against the method's expected outputs, and save your work.
 
-**First task to try:** "Review this proposed release for failure modes, unsafe effects, and missing tests."
+**First task to try:** Bring an application you own and one important user flow. Develop failure cases, test its boundaries, and turn findings into a repair checklist.
 
-No Python is needed for the assistant instructions. The package's `START_HERE.md` explains any optional local tools and their requirements. Choose the account and permissions when adding a connector, and keep credentials and personal memory in your private workspace.
+No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account for each connection you add.
 
-## Make it your own
+## Use a skill or workflow
 
-Use the supplied skills and workflows that fit your task. [Explore this specialist's methods and tools](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md), or use the [terminal guide](../../docs/TERMINAL.md) for command-line work.
+Start with [this specialist's library](LIBRARY.md). A skill describes a focused method and includes its reference files. A workflow connects several methods with named inputs, expected results and checks. Load the method that fits the current task; the complete selection remains available in the download.
 
-Role ID: `adversarial-verifier`. Package: `muse-adversarial-verifier-v1.5.0.zip`.
+For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
+
+Role ID: `adversarial-verifier`. Package: `muse-adversarial-verifier-v1.6.0.zip`.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)

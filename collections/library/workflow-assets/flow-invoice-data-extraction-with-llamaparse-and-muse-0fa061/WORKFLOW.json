@@ -1,11 +1,11 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-invoice-data-extraction-with-llamaparse-and-muse-0fa061",
-  "title": "Invoice data extraction with LlamaParse and Muse",
+  "title": "Invoice data extraction with LlamaParse and OpenAI",
   "nodes": [
     {
       "id": "step-1",
-      "label": "Model Model",
+      "label": "OpenAI Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

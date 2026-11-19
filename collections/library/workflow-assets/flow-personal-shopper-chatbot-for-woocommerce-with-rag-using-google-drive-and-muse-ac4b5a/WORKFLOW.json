@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-personal-shopper-chatbot-for-woocommerce-with-rag-using-google-drive-and-muse-ac4b5a",
-  "title": "Personal Shopper Chatbot for WooCommerce with RAG using Google Drive and Muse",
+  "title": "Personal Shopper Chatbot for WooCommerce with RAG using Google Drive and openAI",
   "nodes": [
     {
       "id": "step-1",
@@ -60,7 +60,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -92,7 +92,7 @@
     },
     {
       "id": "step-8",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -102,7 +102,7 @@
     },
     {
       "id": "step-9",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -182,7 +182,7 @@
     },
     {
       "id": "step-12",
-      "label": "Model Chat Model2",
+      "label": "OpenAI Chat Model2",
       "operation": "model",
       "adapter": "model",
       "parameters": {

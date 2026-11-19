@@ -1,5 +1,6 @@
 """The public exporter admits only the exact sealed Muse Hub website subtree."""
 import tempfile
+import json
 import unittest
 from pathlib import Path
 from muse_presets.public_export import select_public_files, PublicExportError
@@ -11,7 +12,8 @@ SITE_FILES = (
     "public/catalog.json", "INTEGRITY.json"
 )
 SITE_URL = "https://atlas-origins.github.io/muse-ai-agent-presets/"
-RELEASE_URL = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0"
+RELEASE = json.loads((Path(__file__).resolve().parents[1]/"presets/catalog.json").read_bytes())["release"]
+RELEASE_URL = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/" + RELEASE
 
 class HubSitePublicAdmission(unittest.TestCase):
     def setUp(self):

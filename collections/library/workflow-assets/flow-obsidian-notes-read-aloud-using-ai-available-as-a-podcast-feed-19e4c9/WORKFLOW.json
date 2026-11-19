@@ -88,7 +88,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

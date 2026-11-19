@@ -66,7 +66,7 @@ Add a new user to the Zendesk instance.
 | `agent_brand_ids` | Agent_Brand_Ids | See action definition |
 | `tags` | Array of tags to apply to the user | Optional |
 | `user_fields` | User_Fields | See action definition |
-| `identities` | Array of identity objects with type and value. Example: [{"type": "email", "value": "test@user.com"}, {"type": "twitter", "value": "username"}] | Optional |
+| `identities` | Array of identity objects with type and value. Example: [{"type": "email", "value": "test@example.com"}, {"type": "twitter", "value": "username"}] | Optional |
 
 [Request and response definition](https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zendesk/src/lib/actions/create-user.ts).
 

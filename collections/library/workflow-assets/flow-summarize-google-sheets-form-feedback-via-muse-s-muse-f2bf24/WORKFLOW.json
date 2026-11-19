@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-summarize-google-sheets-form-feedback-via-muse-s-muse-f2bf24",
-  "title": "Summarize Google Sheets form feedback via Muse s Muse",
+  "title": "Summarize Google Sheets form feedback via OpenAI s GPT-4",
   "nodes": [
     {
       "id": "step-1",

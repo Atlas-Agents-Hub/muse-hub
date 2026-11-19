@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-automate-siem-alert-enrichment-with-mitre-att-ck-qdrant-zendesk-in-muse-17214b",
-  "title": "Automate SIEM Alert Enrichment with MITRE ATT&CK, Qdrant & Zendesk in Muse",
+  "title": "Automate SIEM Alert Enrichment with MITRE ATT&CK, Qdrant & Zendesk in n8n",
   "nodes": [
     {
       "id": "step-1",
@@ -25,7 +25,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -154,7 +154,7 @@
     },
     {
       "id": "step-13",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -164,7 +164,7 @@
     },
     {
       "id": "step-14",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {

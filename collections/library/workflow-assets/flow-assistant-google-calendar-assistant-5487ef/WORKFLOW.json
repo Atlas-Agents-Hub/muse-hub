@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-assistant-google-calendar-assistant-5487ef",
-  "title": "Assistant Google calendar assistant",
+  "title": "Assistant Google calendar assistant using OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -14,7 +14,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

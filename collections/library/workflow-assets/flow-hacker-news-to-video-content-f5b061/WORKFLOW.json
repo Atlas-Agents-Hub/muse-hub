@@ -31,7 +31,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Chat Model3",
+      "label": "OpenAI Chat Model3",
       "operation": "model",
       "adapter": "model",
       "parameters": {

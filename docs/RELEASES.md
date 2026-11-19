@@ -1,55 +1,70 @@
 # Muse Hub downloads and versions
 
-**Current release: [v1.5.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/SHA256SUMS)
+**Current release: [v1.6.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0)** · [Latest release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/latest) · [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
 
-## v1.5.0 — a larger library for your work
+## v1.6.0 — a toolkit for the work you want to do
 
-[Choose one of the 15 assistants](DOWNLOAD_A_SPECIALIST.md). Each ZIP brings together its Main instructions, three subchat guides, selected skills, workflows, examples, and `START_HERE.md`.
+Explore **5242 skills, 396 workflows, 558 task starters and 273 connectors**. Choose one of [15 specialist assistants](DOWNLOAD_A_SPECIALIST.md), each with Main instructions, three subchats, its expanded library, practical tools and selected service guides.
 
-The collection includes 461 skills, 58 workflows, 100 task starters, and setup references for 151 connectors. The current toolkit also includes Companion Home and its room notebook, Daily Desk, specialist tools, and command-line guides.
+Find methods for building apps, debugging code, scientific research, SQL and data pipelines, retrieval and model evaluation, design, creative production, business operations, learning and daily life. Every skill travels with its supporting reference files, scripts and examples.
 
-Extract your package into a new folder and start with its included guide. Assistant instructions require no Python. Optional local programs state their requirements beside their commands; repository examples use Python 3.12+.
+### Find the right method quickly
 
-This update adds **386 skills** across engineering, research, design, data, operations, creative work and personal planning. Each skill ZIP contains its instructions and supporting files. The [skill index](../collections/muse-starters-v1/SKILL_INDEX.md) groups them by subject.
+The [download directory](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html) searches by task, subject, type and specialist. Share a filtered link, read the guide directly, or download its subject pack. Each result names the exact `skills/<skill-id>/SKILL.md` file to open. The [skill index](../collections/muse-starters-v1/SKILL_INDEX.md) provides readable subject pages on GitHub.
 
-The **33 new workflows** combine methods into complete tasks: build a cited research brief, evaluate a RAG system, prepare a mobile release, audit cloud costs, improve a design system, organize interviews or plan a garden. Every stage names its input, output and result check. [Browse all 58 workflows](../collections/library/WORKFLOWS.md).
+### Connect the steps
 
-**51 tool guides** provide setup steps, practical examples and checks for engineering, search, design, automation, data, research and creative tools. Relevant guides and workflows are included in every [specialist package](collection/SPECIALIST_LIBRARY.md). The [download page](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html) filters by type, specialist and subject, and lets you share a filtered selection.
+The [396 workflows](../collections/library/WORKFLOWS.md) cover useful tasks across research, documents, messaging, data, customer operations and creative work. Converted automation recipes include named inputs, operation settings, branches and dependencies. Their downloadable packages include the skill methods and graph files needed to work through the task with Muse.
+
+### Bring your services
+
+The [273 connectors](connectors/README.md) include 122 new service adapters with 956 named actions and events. Selected connectors are included in all 15 specialist downloads. The request helper explains required inputs, prepares an action plan and supports 24 direct HTTP reads across 14 services. [Follow the connector guide](connectors/RUN_CONNECTORS.md).
+
+### Start with a concrete task
+
+Choose from [558 task starters](../collections/muse-starters-v1/CATALOG.md), including complete workflow requests and focused tasks for extraction, field mapping, branching, retrieval and reconciliation. The [51 tool guides](tools/README.md) connect specialist methods to useful tools and practical examples.
 
 ## Complete collections
 
-- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-specialist-toolkit-v1.5.0.zip)
-- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-specialists-v1.5.0.zip)
-- [Skills](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-skills-v1.5.0.zip)
-- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-workflows-v1.5.0.zip)
-- [Tool guides](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-tool-guides-v1.5.0.zip)
-- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-starters-v1.5.0.zip)
+- [Complete toolkit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-specialist-toolkit-v1.6.0.zip)
+- [All specialists](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-specialists-v1.6.0.zip)
+- [Skills and subject packs](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-skills-v1.6.0.zip)
+- [Workflows](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-workflows-v1.6.0.zip)
+- [Tool guides](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-tool-guides-v1.6.0.zip)
+- [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-starters-v1.6.0.zip)
 
-## Verify your download
+## Open and check your download
 
-Download `SHA256SUMS` from the same release. Calculate the archive's SHA-256 and compare it with the line for that exact filename.
+Extract a package into a new folder and open `START_HERE.md`. Give Muse the guide or ZIP with your task. Assistant instructions require no Python. Optional local programs include commands and requirements beside their examples; repository tools use Python 3.12 or later.
+
+Each package includes `VERIFY.py`. Run `python -B VERIFY.py` in the extracted folder to check its contents. For the archive itself, compare its SHA-256 with `SHA256SUMS` from the same release.
 
 **Windows PowerShell:**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.5.0.zip
+Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.6.0.zip
 ```
 
 **macOS:**
 
 ```sh
-shasum -a 256 muse-personal-companion-v1.5.0.zip
+shasum -a 256 muse-personal-companion-v1.6.0.zip
 ```
 
 **Linux:**
 
 ```sh
-sha256sum muse-personal-companion-v1.5.0.zip
+sha256sum muse-personal-companion-v1.6.0.zip
 ```
 
 Keep the original ZIP and your customized working copy separately. [Setup and saved data](INSTALL_AND_PERSISTENCE.md) explains updates and backup.
 
 ## Earlier releases
+
+### v1.5.0 — a larger practical library
+
+The [v1.5.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0) expanded Muse Hub to 461 skills and 58 workflows, added 51 tool guides and introduced complete specialist libraries with searchable downloads. Its original packages and checksums remain available.
+
 
 ### v1.4.0 — reusable plans and accessibility checks
 

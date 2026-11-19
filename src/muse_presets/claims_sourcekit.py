@@ -21,7 +21,7 @@ MAX_UNPACKED=500_000
 MAX_MEMBERS=20
 SOURCE_SHA={
     "src/muse_presets/claims.py":"af6e5558024cbca4099d1f65ef2f68ae6d062df105db22eb34aa17da7d79a1e9",
-    "presets/claims-adjudicator/preset.json":'256b02fa961aa27561fa1a252c36cc023cc297825d65d485fbdb8c1b3bff3a29',
+    "presets/claims-adjudicator/preset.json":'ea27a5773957a6c21043f20b94de2394183d6fe8a58f6228b256d1cbcae431e1',
     "presets/claims-adjudicator/playbook.json":'c022488af4e493d02cc78c8fa3012a89acdafe7317133c39dfbc86bc6d72ccf3',
     "LICENSE":"af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
 }

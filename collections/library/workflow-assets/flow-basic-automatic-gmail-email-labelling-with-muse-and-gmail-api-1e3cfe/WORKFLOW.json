@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-basic-automatic-gmail-email-labelling-with-muse-and-gmail-api-1e3cfe",
-  "title": "Basic Automatic Gmail Email Labelling with Muse and Gmail API",
+  "title": "Basic Automatic Gmail Email Labelling with OpenAI and Gmail API",
   "nodes": [
     {
       "id": "step-1",
@@ -23,7 +23,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {

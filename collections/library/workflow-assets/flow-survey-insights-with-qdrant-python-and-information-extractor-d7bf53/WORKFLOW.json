@@ -5,7 +5,7 @@
   "nodes": [
     {
       "id": "step-1",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -225,7 +225,7 @@
     },
     {
       "id": "step-13",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

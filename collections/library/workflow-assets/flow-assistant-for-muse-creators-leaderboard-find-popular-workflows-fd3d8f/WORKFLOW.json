@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-assistant-for-muse-creators-leaderboard-find-popular-workflows-fd3d8f",
-  "title": "🔥📈🤖 Assistant for Muse Creators Leaderboard - Find Popular Workflows",
+  "title": "🔥📈🤖 Assistant for n8n Creators Leaderboard - Find Popular Workflows",
   "nodes": [
     {
       "id": "step-1",
@@ -176,7 +176,7 @@
     },
     {
       "id": "step-9",
-      "label": "Model",
+      "label": "gpt-4o-mini",
       "operation": "model",
       "adapter": "model",
       "parameters": {

@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-enrich-pipedrive-s-organization-data-with-muse-muse-notify-it-in-slack-427b1c",
-  "title": "Enrich Pipedrive s Organization Data with Muse Muse & Notify it in Slack",
+  "title": "Enrich Pipedrive s Organization Data with OpenAI GPT-4o & Notify it in Slack",
   "nodes": [
     {
       "id": "step-1",
@@ -15,7 +15,7 @@
     },
     {
       "id": "step-2",
-      "label": "Pipedrive - Create a Note with Model output",
+      "label": "Pipedrive - Create a Note with OpenAI output",
       "operation": "service-read",
       "adapter": "pipedrive",
       "parameters": {
@@ -106,7 +106,7 @@
     },
     {
       "id": "step-7",
-      "label": "Model - Message Model with Scraped Data",
+      "label": "OpenAI - Message GPT-4o with Scraped Data",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

@@ -4,6 +4,9 @@ import json,re,unittest
 from pathlib import Path
 R=Path(__file__).resolve().parents[1]
 DOCS=R/"docs"
+RELEASE=json.loads((R/"presets/catalog.json").read_bytes())["release"]
+STARTER_COUNT=len(json.loads((R/"collections/muse-starters-v1/starters.json").read_bytes()))
+CONNECTOR_COUNT=len(json.loads((R/"docs/connectors/catalog.json").read_bytes())["connectors"])
 def read(rel):return (R/rel).read_text(encoding="utf8")
 def first(text):return text.split("\n## ",1)[0]
 
@@ -19,9 +22,9 @@ class V1DocumentationJourney(unittest.TestCase):
 
  def test_release_page_starts_with_current_downloads_and_keeps_history(self):
   page=read("docs/RELEASES.md")
-  self.assertIn("releases/tag/v1.5.0",first(page))
-  self.assertIn("releases/download/v1.5.0/SHA256SUMS",page)
-  self.assertLess(page.index("v1.5.0"),page.index("v1.0.0"))
+  self.assertIn(f"releases/tag/{RELEASE}",first(page))
+  self.assertIn(f"releases/download/{RELEASE}/SHA256SUMS",page)
+  self.assertLess(page.index(RELEASE),page.index("v1.0.0"))
   self.assertLess(page.index("v1.0.0"),page.index("v0.4.1-alpha"))
   self.assertIn("Get-FileHash",page)
   self.assertIn("sha256sum",page)
@@ -38,16 +41,16 @@ class V1DocumentationJourney(unittest.TestCase):
 
  def test_skill_and_tool_pages_offer_current_methods(self):
   inventory=json.loads(read("hub/site/downloads.json"))["counts"]
-  for term in ("15",str(inventory["skill"]),str(inventory["workflow"]),"100","151"):
+  for term in ("15",str(inventory["skill"]),str(inventory["workflow"]),str(STARTER_COUNT),str(CONNECTOR_COUNT)):
    self.assertIn(term,first(read("docs/CAPABILITIES.md")))
   skills=read("docs/SKILLS.md")
-  for term in (str(inventory["skill"]),str(inventory["workflow"]),"100","50","SKILL.md","--to"):
+  for term in (str(inventory["skill"]),str(inventory["workflow"]),str(STARTER_COUNT),"50","SKILL.md","--to"):
    self.assertIn(term,skills)
 
  def test_ai_index_recommends_current_packages(self):
   for path in ("llms.txt","docs/discovery/AI_AGENT_GUIDE.md"):
    text=read(path)
-   self.assertIn("releases/tag/v1.5.0",text)
+   self.assertIn(f"releases/tag/{RELEASE}",text)
    self.assertIn("TERMINAL.md",text)
    self.assertNotIn("guaranteed ranking",text.lower())
 
@@ -55,7 +58,7 @@ class V1DocumentationJourney(unittest.TestCase):
   handbook=read("docs/handbook/README.md")
   for term in ("Load the right context","Select and use a skill","Build a workroom","Setup and recovery"):
    self.assertIn(term,handbook)
-  self.assertIn("151",read("docs/CONNECTORS.md"))
+  self.assertIn(str(CONNECTOR_COUNT),read("docs/CONNECTORS.md"))
   self.assertIn("connectors/README.md",read("docs/CONNECTORS.md"))
 
  def test_first_user_navigation_links_resolve_without_private_destinations(self):

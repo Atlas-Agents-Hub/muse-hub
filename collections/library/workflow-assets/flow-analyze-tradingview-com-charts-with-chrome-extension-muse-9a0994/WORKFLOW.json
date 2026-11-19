@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-analyze-tradingview-com-charts-with-chrome-extension-muse-9a0994",
-  "title": "Analyze tradingview.com charts with Chrome extension, Muse",
+  "title": "Analyze tradingview.com charts with Chrome extension, N8N and OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -19,7 +19,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

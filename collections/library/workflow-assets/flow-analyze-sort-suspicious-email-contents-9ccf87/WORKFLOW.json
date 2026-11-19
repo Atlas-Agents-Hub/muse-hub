@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-analyze-sort-suspicious-email-contents-9ccf87",
-  "title": "Analyze & Sort Suspicious Email Contents",
+  "title": "Analyze & Sort Suspicious Email Contents with ChatGPT",
   "nodes": [
     {
       "id": "step-1",
@@ -209,7 +209,7 @@
     },
     {
       "id": "step-9",
-      "label": "Analyze Email with Model",
+      "label": "Analyze Email with ChatGPT",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

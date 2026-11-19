@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-prepare-csv-files-cabc7d",
-  "title": "Prepare CSV files",
+  "title": "Prepare CSV files with GPT-4",
   "nodes": [
     {
       "id": "step-1",
@@ -12,7 +12,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

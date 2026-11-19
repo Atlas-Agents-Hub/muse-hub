@@ -1,11 +1,11 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-chat-with-muse-assistant-by-adding-a-memory-58177e",
-  "title": "Chat with Muse Assistant (by adding a memory)",
+  "title": "Chat with OpenAI Assistant (by adding a memory)",
   "nodes": [
     {
       "id": "step-1",
-      "label": "Model Assistant",
+      "label": "OpenAI Assistant",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

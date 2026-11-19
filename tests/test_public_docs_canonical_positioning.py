@@ -56,7 +56,8 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
      cap=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_bytes())
      self.assertEqual(cap["homepage"],site)
      self.assertIn("specialist_engine_index",cap)
-     self.assertEqual(cap["custom_connector_count"],151)
+     connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
+     self.assertEqual(cap["custom_connector_count"],len(connectors))
  def test_architecture_describes_both_procedure_layers(self):
   page=(ROOT/"docs/ARCHITECTURE.md").read_text("utf8")
   for item in ("skill","workflow","task starter","50 unique","SPECIALIST_SCOPE_AND_ENGINES.md"):
@@ -73,8 +74,9 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
  def test_skills_guide_reaches_current_methods_and_tools(self):
      page=(ROOT/"docs/SKILLS.md").read_text("utf8")
      self.assertIn("handbook/specialists-by-task.md",page)
-     self.assertIn(str(len(current_collection()['skills']))+" skills",page)
-     self.assertIn(str(len(current_collection()['workflows']))+" workflows",page)
+     collection=current_collection()
+     self.assertIn(str(len(collection['skills']))+" skills",page)
+     self.assertIn(str(len(collection['workflows']))+" workflows",page)
      self.assertIn("WORKFLOWS.md",page)
      self.assertIn("SKILL_INDEX.md",page)
  def test_current_role_guides_preserve_the_catalog_setup_paths(self):

@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-muse-examples-muse-dalle-2-whisper-1-5-in-1-6dc990",
-  "title": "Muse examples Muse, DALLE-2, Whisper-1 – 5-in-1",
+  "title": "OpenAI examples ChatGPT, DALLE-2, Whisper-1 – 5-in-1",
   "nodes": [
     {
       "id": "step-1",
@@ -26,7 +26,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model-ex2",
+      "label": "ChatGPT-ex2",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -68,7 +68,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model-ex1.1",
+      "label": "ChatGPT-ex1.1",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -89,7 +89,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model-ex1.2",
+      "label": "ChatGPT-ex1.2",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -136,7 +136,7 @@
     },
     {
       "id": "step-9",
-      "label": "Model-ex3.1",
+      "label": "ChatGPT-ex3.1",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -182,7 +182,7 @@
     },
     {
       "id": "step-10",
-      "label": "Model-ex3.2",
+      "label": "ChatGPT-ex3.2",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -226,7 +226,7 @@
     },
     {
       "id": "step-12",
-      "label": "Model-ex4",
+      "label": "ChatGPT-ex4",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -290,7 +290,7 @@
     },
     {
       "id": "step-15",
-      "label": "Model-ex",
+      "label": "ChatGPT-ex",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

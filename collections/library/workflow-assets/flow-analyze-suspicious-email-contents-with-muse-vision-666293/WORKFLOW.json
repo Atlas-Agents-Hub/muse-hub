@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-analyze-suspicious-email-contents-with-muse-vision-666293",
-  "title": "Analyze Suspicious Email Contents with Muse Vision",
+  "title": "Analyze Suspicious Email Contents with ChatGPT Vision",
   "nodes": [
     {
       "id": "step-1",
@@ -219,7 +219,7 @@
     },
     {
       "id": "step-10",
-      "label": "Model Analysis",
+      "label": "ChatGPT Analysis",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

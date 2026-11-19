@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-create-e-mail-responses-with-fastmail-and-muse-2c3a5a",
-  "title": "create e-mail responses with fastmail and Muse",
+  "title": "create e-mail responses with fastmail and OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -123,7 +123,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

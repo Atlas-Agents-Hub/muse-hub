@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-classify-new-bugs-in-linear-with-muse-s-muse-and-move-them-to-the-right-team-42182f",
-  "title": "Classify new bugs in Linear with Muse s Muse and move them to the right team",
+  "title": "Classify new bugs in Linear with OpenAI s GPT-4 and move them to the right team",
   "nodes": [
     {
       "id": "step-1",
@@ -205,7 +205,7 @@
     },
     {
       "id": "step-10",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

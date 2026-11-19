@@ -229,7 +229,7 @@
     },
     {
       "id": "step-7",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -285,7 +285,7 @@
     },
     {
       "id": "step-11",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

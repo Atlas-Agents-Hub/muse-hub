@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-rag-chatbot-for-company-documents-using-google-drive-and-muse-755d80",
-  "title": "RAG Chatbot for Company Documents using Google Drive and Muse",
+  "title": "RAG Chatbot for Company Documents using Google Drive and Gemini",
   "nodes": [
     {
       "id": "step-1",
@@ -18,7 +18,7 @@
     },
     {
       "id": "step-2",
-      "label": "Embeddings Model",
+      "label": "Embeddings Google Gemini",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -82,7 +82,7 @@
     },
     {
       "id": "step-8",
-      "label": "Embeddings Model (retrieval)",
+      "label": "Embeddings Google Gemini (retrieval)",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -169,7 +169,7 @@
     },
     {
       "id": "step-14",
-      "label": "Model Chat Model",
+      "label": "Google Gemini Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -179,7 +179,7 @@
     },
     {
       "id": "step-15",
-      "label": "Model Chat Model (retrieval)",
+      "label": "Google Gemini Chat Model (retrieval)",
       "operation": "model",
       "adapter": "model",
       "parameters": {

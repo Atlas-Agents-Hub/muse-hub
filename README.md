@@ -1,10 +1,10 @@
 # Muse Hub
 
-**Get more out of Muse.** Muse Hub is an open-source resource hub for Meta's Muse AI. Download specialist assistants, choose practical skills and workflows, connect your tools, and create workspaces for everyday plans, software projects, research, and creative work.
+**Get more out of Muse.** Build, research, create and automate with an open-source toolkit for Meta's Muse AI. Download specialist assistants, choose practical skills and workflows, connect your tools, and create workspaces for everyday plans, software projects, research, and creative work.
 
-Choose from **15 independent assistants**, each with Main and **three subchats**. Add **461 skills**, **58 workflows**, **51 tool guides**, **100 task starters**, and guides to **151 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
+Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5242 skills**, **396 workflows**, **51 tool guides**, **558 task starters**, and **273 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
 
-**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.5.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
+**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.0](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0)** · **[Visit Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
 
 ## Start with what you want to do
 
@@ -29,10 +29,10 @@ Choose a field to find its setup guides and first tasks.
 <details>
 <summary><strong>Build and automate</strong> — 4 specialists</summary>
 
-- [Software Engineer](presets/software-engineer/INSTALL.md) — Reproduce a software defect and verify the fix.
-- [Data Engineering & Database Architect](presets/data-engineering-architect/INSTALL.md) — Profile data, check schemas, and plan safe migrations.
+- [Software Engineer](presets/software-engineer/INSTALL.md) — Build apps, design APIs, debug, refactor, test and release software.
+- [Data Engineering & Database Architect](presets/data-engineering-architect/INSTALL.md) — Design databases, build pipelines, analyze SQL and manage data quality.
 - [Automation Engineer](presets/automation-engineer/INSTALL.md) — Connect steps into repeatable workflows, manage permissions, and recover interrupted work.
-- [Infrastructure & Reliability Engineer](presets/infrastructure-reliability-engineer/INSTALL.md) — Diagnose service failures and plan verifiable recovery.
+- [Infrastructure & Reliability Engineer](presets/infrastructure-reliability-engineer/INSTALL.md) — Deploy infrastructure, improve reliability, investigate incidents and plan recovery.
 
 </details>
 <details>
@@ -41,16 +41,16 @@ Choose a field to find its setup guides and first tasks.
 - [Research Evaluator](presets/research-evaluator/INSTALL.md) — Compare research claims against original sources and numerical evidence.
 - [Claims Adjudicator](presets/claims-adjudicator/INSTALL.md) — Check competing claims and document the basis of a verdict.
 - [Adversarial Verifier](presets/adversarial-verifier/INSTALL.md) — Test failure cases, find security weaknesses, and check that fixes hold up.
-- [Reverse Engineering & Security Researcher](presets/reverse-engineering-researcher/INSTALL.md) — Study authorized application behavior and suspicious messages.
+- [Reverse Engineering & Security Researcher](presets/reverse-engineering-researcher/INSTALL.md) — Analyze software, protocols and application behavior in authorized projects.
 
 </details>
 <details>
 <summary><strong>Create and learn</strong> — 4 specialists</summary>
 
-- [Creative Studio](presets/creative-studio/INSTALL.md) — Shape a visual concept, storyboard a sequence, and organize the production plan.
+- [Creative Studio](presets/creative-studio/INSTALL.md) — Create visual concepts, images, animation, video and interactive scenes.
 - [Product & Interface Designer](presets/product-interface-designer/INSTALL.md) — Design and review user journeys, interfaces, states, and accessibility.
-- [Model Builder](presets/model-builder/INSTALL.md) — Plan model training, artifact inspection, and evaluation.
-- [Learning Coach](presets/learning-coach/INSTALL.md) — Turn source material into targeted study and review.
+- [Model Builder](presets/model-builder/INSTALL.md) — Build AI applications, design datasets, plan training and evaluate models.
+- [Learning Coach](presets/learning-coach/INSTALL.md) — Create lessons, flashcards, practice sessions and adaptive study plans.
 
 </details>
 <details>
@@ -58,7 +58,7 @@ Choose a field to find its setup guides and first tasks.
 
 - [Personal Companion](presets/personal-companion/INSTALL.md) — Organize tasks, notes, preferences, and routines privately.
 - [Garden Companion](presets/garden-companion/INSTALL.md) — Track plants, observations, seasons, and care.
-- [Coordinator](presets/coordinator/INSTALL.md) — Organize a project across people and independent assistant workflows.
+- [Coordinator](presets/coordinator/INSTALL.md) — Plan complex goals, coordinate specialists and carry projects through delivery.
 
 </details>
 
@@ -67,11 +67,11 @@ Choose a field to find its setup guides and first tasks.
 - **[Tools for each specialist](docs/collection/SPECIALIST_LIBRARY.md):** find included methods, workflows and recommended plugins for your work.
 - **[51 tool guides](docs/tools/README.md):** follow setup instructions and practical recipes for research, automation, design, software and data tools.
 - **[Skills and workflows](docs/SKILLS.md):** choose a method for the task in front of you, from research checks and data analysis to design reviews and project handoffs.
-- **[Task starters](collections/muse-starters-v1/CATALOG.md):** start from one of 100 focused configurations, then bring your own brief and files.
+- **[Task starters](collections/muse-starters-v1/CATALOG.md):** start from one of 558 focused configurations, then bring your own brief and files.
 - **[Engineering](docs/WORKFLOWS.md#engineering-reproduce-repair-review):** reproduce a failure, make a focused repair, run regression checks, and review the result.
 - **[Family Link](docs/FAMILY_LINK.md):** prepare a handoff with clear context, a recipient role, and an expected result.
 - **[Companion Home](docs/COMPANION_HOME.md):** move between five rooms, save room notes, explore the Studio, and take an Arcade break. [Daily Desk](docs/spaces/DAILY_DESK.md) keeps tasks and notes together.
-- **[Connectors](docs/connectors/README.md):** find setup instructions for 151 services, then choose the account and permissions for the service you need.
+- **[Connectors](docs/connectors/README.md):** find setup instructions for 273 services, then choose the account and permissions for the service you need.
 
 Explore [specialists by task](docs/handbook/specialists-by-task.md) or browse the [included tools](docs/CAPABILITIES.md).
 

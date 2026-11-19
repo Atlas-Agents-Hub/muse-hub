@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -35,7 +36,7 @@ def contract(service, filename='adapter.json', root=ROOT):
         raise ConnectorError('INVALID_CONTRACT_FILE')
     root = Path(root)
     path = root / 'services' / service / filename
-    if path.is_symlink() or not path.is_file():
+    if any(part.is_symlink() for part in (root / 'services', path.parent, path)) or not path.is_file():
         raise ConnectorError('SERVICE_CONTRACT_UNAVAILABLE')
     manifest = _read_json(root / 'ADAPTER_SOURCES.json')
     records = [r for r in manifest['connectors'] if r['id'] == service]
@@ -61,7 +62,7 @@ def inspect(service, root=ROOT):
 
 def plan(service, operation, inputs=None, root=ROOT):
     inputs = {} if inputs is None else inputs
-    if type(inputs) is not dict:
+    if type(inputs) is not dict or any(type(name) is not str for name in inputs):
         raise ConnectorError('INPUTS_MUST_BE_AN_OBJECT')
     adapter = contract(service, root=root)
     matches = [op for op in adapter['operations'] if op['id'] == operation and op['kind'] == 'action']
@@ -72,9 +73,26 @@ def plan(service, operation, inputs=None, root=ROOT):
     unknown = set(inputs) - fields.keys()
     if unknown:
         raise ConnectorError('UNKNOWN_INPUTS:' + ','.join(sorted(unknown)))
+    for name, value in inputs.items():
+        if value is None or value == '':
+            continue
+        kind = fields[name].get('type')
+        valid = True
+        if kind == 'Number':
+            valid = type(value) in (int, float) and (type(value) is int or math.isfinite(value))
+        elif kind == 'Checkbox':
+            valid = type(value) is bool
+        elif kind in ('ShortText', 'LongText', 'DateTime'):
+            valid = type(value) is str
+        elif kind in ('Array', 'MultiSelectDropdown', 'StaticMultiSelectDropdown'):
+            valid = type(value) is list
+        elif kind == 'Object':
+            valid = type(value) is dict
+        if not valid:
+            raise ConnectorError('INVALID_INPUT_TYPE:' + name)
     missing = sorted(name for name, field in fields.items() if field['required'] is True and (name not in inputs or inputs[name] is None or inputs[name] == ''))
     # ProviderField values are resolved from the specific linked action definition.
-    resolve = sorted(name for name, field in fields.items() if field['required'] is None and name not in inputs)
+    resolve = sorted(name for name, field in fields.items() if field['required'] is None and (name not in inputs or inputs[name] is None or inputs[name] == ''))
     return {'service': service, 'action': selected['id'], 'name': selected['name'],
             'inputs': inputs, 'missing_required_inputs': missing, 'provider_fields_to_resolve': resolve,
             'request_definition': selected['source_url'], 'source_sha256': selected['source_sha256'],
@@ -95,7 +113,7 @@ def prepare_read(service, request_id, inputs=None, root=ROOT):
     url = selected['url_template']
     for name in selected['parameters']:
         value = values[name]
-        if type(value) not in (str, int) or not str(value) or len(str(value)) > 2000 or any(ord(c) < 32 for c in str(value)):
+        if type(value) not in (str, int) or not str(value) or str(value) in ('.', '..') or len(str(value)) > 2000 or any(ord(c) < 32 for c in str(value)):
             raise ConnectorError('INVALID_HTTP_INPUT')
         url = url.replace('{' + name + '}', urllib.parse.quote(str(value), safe=''))
     parsed = urllib.parse.urlsplit(url)
@@ -103,6 +121,7 @@ def prepare_read(service, request_id, inputs=None, root=ROOT):
         parsed.port not in (None, 443) or parsed.fragment or '{' in url or '}' in url):
         raise ConnectorError('HTTP_HOST_MISMATCH')
     return {'service': service, 'request_id': request_id, 'method': 'GET', 'url': url,
+            'inputs': dict(values),
             'headers': selected.get('headers', {}), 'credential': selected['credential'],
             'source_url': selected['source_url']}
 
@@ -112,7 +131,15 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
         raise ConnectorError('REDIRECT_REFUSED')
 
 
-def execute_read(prepared, token_env, output, *, environment=None, opener=None):
+def execute_read(prepared, token_env, output, *, environment=None, opener=None, root=ROOT):
+    if type(prepared) is not dict:
+        raise ConnectorError('INVALID_PREPARED_REQUEST')
+    expected = prepare_read(prepared.get('service'), prepared.get('request_id'), prepared.get('inputs'), root)
+    if prepared != expected:
+        raise ConnectorError('PREPARED_REQUEST_CHANGED')
+    # Rebuild from the verified contract before loading a credential or opening
+    # the transport. A prepared request is inspectable data, not an authority.
+    prepared = expected
     if not VARIABLE.fullmatch(token_env):
         raise ConnectorError('INVALID_TOKEN_ENVIRONMENT_NAME')
     environment = os.environ if environment is None else environment

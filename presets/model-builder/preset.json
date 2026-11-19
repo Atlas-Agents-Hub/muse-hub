@@ -2,7 +2,7 @@
   "schema": "muse-presets/preset-v1",
   "id": "model-builder",
   "title": "Model Builder",
-  "description": "Plans and executes approved model training, adapter work and candidate provenance.",
+  "description": "Design datasets, models and adapters, conduct training experiments, compare candidates on held-out data and preserve model, tokenizer and artifact provenance.",
   "maturity": "PROFILE_TEMPLATE",
   "native_muse_status": "UNBOUND",
   "host_profiles": [

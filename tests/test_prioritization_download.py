@@ -32,29 +32,32 @@ REQUIRED = {"tools/prioritize.py", *(ASSET_DIR + name for name in
 class PrioritizationDownloadTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = release.collection.load_collection()
+        cls.data = release.collection.prepare_collection(release.collection.load_collection())
 
     def test_every_containing_package_has_the_executable_dependency_closure(self):
-        packages = [("skill", release.skill_files(self.data, SKILL))]
-        for workflow in self.data["workflows"]:
-            if SKILL in workflow["skills"]:
-                packages.append((workflow["id"], release.workflow_files(self.data, workflow["id"])))
-        for role in release.ROLE_WORKFLOWS:
-            files = release.specialist_files(self.data, role)
-            if ASSET_DIR + "SKILL.md" in files:
-                packages.append((role, files))
-        for starter in self.data["starters"]:
-            files = release.collection.package_files(self.data, starter["id"])
-            if ASSET_DIR + "SKILL.md" in files:
-                packages.append((starter["id"], files))
-        self.assertGreaterEqual(len(packages), 12)
-        for name, files in packages:
+        def containing_packages():
+            yield "skill", release.skill_files(self.data, SKILL)
+            for workflow in self.data["workflows"]:
+                if SKILL in workflow["skills"]:
+                    yield workflow["id"], release.workflow_files(self.data, workflow["id"])
+            for role in release.ROLE_WORKFLOWS:
+                files = release.specialist_files(self.data, role)
+                if ASSET_DIR + "SKILL.md" in files:
+                    yield role, files
+            for starter in self.data["starters"]:
+                files = release.collection.package_files(self.data, starter["id"])
+                if ASSET_DIR + "SKILL.md" in files:
+                    yield starter["id"], files
+        count = 0
+        for name, files in containing_packages():
+            count += 1
             with self.subTest(package=name):
                 self.assertTrue(REQUIRED <= files.keys(), sorted(REQUIRED - files.keys()))
                 self.assertIn(b"PRIORITIZE.md", files[ASSET_DIR + "SKILL.md"])
                 manifest = json.loads(files["MANIFEST.json"])
                 self.assertTrue(REQUIRED <= manifest["files"].keys())
                 self.assertEqual(files["tools/prioritize.py"], (ROOT / "tools/prioritize.py").read_bytes())
+        self.assertGreaterEqual(count, 12)
 
     def test_actual_zip_verifies_and_runs_without_a_checkout(self):
         files = release.skill_files(self.data, SKILL)

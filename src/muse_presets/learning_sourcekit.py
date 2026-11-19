@@ -15,7 +15,7 @@ SOURCE_SHA = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "examples/learning_session_demo.py": "4600987556e80ad06c27e8fe0a35d916618635ff5cfaaa49705cd6b9bab014ce",
     "presets/learning-coach/playbook.json": '389e00d1b2ccdd71aa2bf8fb5abbf8f160365190a6fab9aa54c93411d125f6f2',
-    "presets/learning-coach/preset.json": 'ee6abb91860348085be2def86b224560148b349a804542223998fd9a6299c836',
+    "presets/learning-coach/preset.json": '998490c813a70a28b9bc45ed894f1b73b2ce8e6f3fa6c398cb50347af1178129',
     "src/muse_presets/database_paths.py": '86849fb3fc770109e868d533acd567980681570d4d7218734b56090506feca38',
     "src/muse_presets/learning_session.py": "f81e1e786b6956f1f48acc0437e782c5eabe674f65d16322a0b8f3395dae7d3b",
     "tests/test_learning_session.py": "297abafe69d92dafec903ccb52499b89d7f90d25ec5d8de75884b111a50f4443"

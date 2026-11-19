@@ -337,7 +337,7 @@
       "id": "find_user",
       "inputs": [
         {
-          "description": "The teammate email address, for example agent@yourcompany.com.",
+          "description": "The teammate email address, for example agent@example.com.",
           "label": "Email",
           "name": "email",
           "required": true,

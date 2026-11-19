@@ -36,7 +36,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -113,7 +113,7 @@
     },
     {
       "id": "step-10",
-      "label": "Embeddings Model Retrieval",
+      "label": "Embeddings OpenAI Retrieval",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -123,7 +123,7 @@
     },
     {
       "id": "step-11",
-      "label": "Embeddings Model Insertion",
+      "label": "Embeddings OpenAI Insertion",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -146,7 +146,7 @@
     },
     {
       "id": "step-13",
-      "label": "Embeddings Model Upserting",
+      "label": "Embeddings OpenAI Upserting",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {

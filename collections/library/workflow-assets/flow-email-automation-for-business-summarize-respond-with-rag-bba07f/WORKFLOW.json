@@ -26,7 +26,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model R1",
+      "label": "DeepSeek R1",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -73,7 +73,7 @@
     },
     {
       "id": "step-6",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -321,7 +321,7 @@
     },
     {
       "id": "step-21",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -331,7 +331,7 @@
     },
     {
       "id": "step-22",
-      "label": "Model",
+      "label": "DeepSeek",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -341,7 +341,7 @@
     },
     {
       "id": "step-23",
-      "label": "Model 4-o-mini",
+      "label": "OpenAI 4-o-mini",
       "operation": "model",
       "adapter": "model",
       "parameters": {

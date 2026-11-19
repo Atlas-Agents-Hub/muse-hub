@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-remove-personally-identifiable-information-pii-from-csv-files-9314a4",
-  "title": "Remove Personally Identifiable Information (PII) from CSV Files",
+  "title": "Remove Personally Identifiable Information (PII) from CSV Files with OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -50,7 +50,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

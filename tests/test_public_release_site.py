@@ -36,7 +36,8 @@ class PublicReleaseDownloads(unittest.TestCase):
         collection=self.renderer.load_collection(ROOT/'collections/muse-starters-v1')
         self.assertEqual(self.directory['counts'],{'specialist':15,'skill':len(collection['skills']),
             'workflow':len(collection['workflows']),'tool-guide':51})
-        self.assertEqual(len({row['asset'] for row in self.directory['items']}),sum(self.directory['counts'].values()))
+        self.assertEqual(len({(row['kind'],row['id']) for row in self.directory['items']}),sum(self.directory['counts'].values()))
+        self.assertLessEqual(len({row['asset'] for row in self.directory['items']}),1000)
 
     def test_all_specialist_aliases_agree_between_site_and_discovery(self):
         roles=json.loads((ROOT/'hub/site/roles.json').read_text(encoding='utf-8'))['roles']
@@ -50,7 +51,8 @@ class PublicReleaseDownloads(unittest.TestCase):
 
     def release_fixture(self):
         rows=self.directory['items']+self.directory['bundles']
-        assets=[{'name':row['asset'],'state':'uploaded','size':123,'browser_download_url':row['url']} for row in rows]
+        unique={row['asset']:row for row in rows}
+        assets=[{'name':row['asset'],'state':'uploaded','size':123,'browser_download_url':row['url']} for row in unique.values()]
         base='https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/'+self.directory['version']+'/'
         names=('SHA256SUMS','SPECIALIST_DOWNLOADS.json','SKILL_DOWNLOADS.json',
                'WORKFLOW_DOWNLOADS.json','RELEASE_MANIFEST.json','DOWNLOADS.md',
@@ -169,6 +171,7 @@ class GeneratedReleasePresentation(unittest.TestCase):
             root=Path(directory)
             site=self.fixture(root)
             for name,content in self.renderer.outputs(root).items():
+                (site/name).parent.mkdir(parents=True,exist_ok=True)
                 (site/name).write_bytes(content)
             current=(site/'index.html').read_text(encoding='utf-8')
             for caption in ('Version 0.1.0','Version v0.1.0'):
@@ -190,7 +193,9 @@ class GeneratedReleasePresentation(unittest.TestCase):
             for name,key in (('index.html','packages'),('index.html','specialist'),
                              ('index.html','footer'),('downloads.html','footer')):
                 with self.subTest(page=name,caption=key):
-                    for output,content in expected.items():(site/output).write_bytes(content)
+                    for output,content in expected.items():
+                        (site/output).parent.mkdir(parents=True,exist_ok=True)
+                        (site/output).write_bytes(content)
                     page=expected[name].decode('utf-8')
                     stale,count=re.subn(r'(data-release-caption="'+key+r'"[^>]*>)([^<]+)',
                                         lambda match:match[1]+match[2].replace('9.8.7','0.1.0'),page)
@@ -290,7 +295,8 @@ class ReleaseContentProof(unittest.TestCase):
             raw=bodies[row['asset']]
             records[key.get(row.get('kind'),'bundles')].append({
                 'id':row['id'],'asset':row['asset'],'url':row['url'],
-                'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+                'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),
+                **{field:row[field] for field in ('entry','pack_id','pack_size','pack_kind') if field in row}})
         packages={row['asset']:{'bytes':row['bytes'],'sha256':row['sha256']}
                   for group in records.values() for row in group}
         manifest={'schema':'muse-release/v2','version':self.directory['version'],
@@ -397,8 +403,8 @@ class SpecialistDownloadDiscovery(unittest.TestCase):
                     'Personal planning', 'Home & travel', 'Learning & study', 'Security',
                     'Infrastructure & reliability', 'Using Muse'}
         self.assertEqual(set(self.directory['categories']), expected)
-        self.assertEqual(len(self.directory['items']), 585)
-        self.assertEqual(len({row['url'] for row in self.directory['items']}), 585)
+        self.assertEqual(len(self.directory['items']),sum(self.directory['counts'].values()))
+        self.assertEqual(len({(row['kind'],row['id']) for row in self.directory['items']}),len(self.directory['items']))
         by_id = {(row['kind'], row['id']): row for row in self.directory['items']}
         skills = {row['id']: row for row in self.collection['skills']}
         for skill in skills.values():

@@ -17,7 +17,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -126,7 +126,7 @@
     },
     {
       "id": "step-8",
-      "label": "Generate Ticket Using Model",
+      "label": "Generate Ticket Using ChatGPT",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

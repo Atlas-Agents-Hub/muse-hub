@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections import Counter
+import re
 from pathlib import Path
 import tempfile
 import unittest
@@ -13,6 +15,7 @@ from muse_presets.neutrality import audit_public_tree
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/"hub/site"
 README=ROOT/"README.md"
+RELEASE=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
 
 
 class MuseHubBrandLaunch(unittest.TestCase):
@@ -21,14 +24,15 @@ class MuseHubBrandLaunch(unittest.TestCase):
         hero=text.split("\n## ",1)[0]
         self.assertLess(len(hero.encode("utf-8")),1100)
         self.assertTrue(text.startswith("# Muse Hub\n"))
-        self.assertIn("Muse Hub is an open-source resource hub",hero)
+        self.assertIn("open-source toolkit",hero)
         self.assertIn("Meta's Muse AI",hero)
         counts=json.loads((ROOT/"collections/muse-starters-v1/COUNTS.json").read_text(encoding="utf-8"))
+        connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
         for label in (f"{counts['specialists']} independent assistants","three subchats",
                       f"{counts['skills']} skills",f"{counts['workflows']} workflows",
-                      f"{counts['task_starters']} task starters","151 connectors"):
+                      f"{counts['task_starters']} task starters",f"{len(connectors)} connectors"):
             self.assertIn(label,hero)
-        for action in ("Choose an assistant","Download v1.5.0",
+        for action in ("Choose an assistant",f"Download {RELEASE}",
                        "Visit Muse Hub","Get started"):
             self.assertIn(action,hero)
         self.assertEqual(text.count("<details>"),4)
@@ -46,10 +50,10 @@ class MuseHubBrandLaunch(unittest.TestCase):
                      "docs/COMPANION_HOME.md",
                      "docs/handbook/specialists-by-task.md",
                      "https://atlas-origins.github.io/muse-ai-agent-presets/",
-                     "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0"):
+                     f"https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/{RELEASE}"):
             self.assertIn(path,text)
         self.assertNotRegex(text, r"\b[HS]\d{2}\b")
-        for stale in ("v1.5.0 draft", "source-only", "not deployed"):
+        for stale in (f"{RELEASE} draft", "source-only", "not deployed"):
             self.assertNotIn(stale,text.lower())
         self.assertIn("quickstart.py --role personal-companion --to",text)
 
@@ -57,12 +61,12 @@ class MuseHubBrandLaunch(unittest.TestCase):
         html=(SITE/"index.html").read_text(encoding="utf-8")
         self.assertIn("<title>Muse Hub",html)
         self.assertIn('class="brand-symbol"',html)
-        self.assertIn("INDEPENDENTLY BUILT FOR MUSE",html)
+        self.assertIn("YOUR PERSONAL AI TOOLKIT",html)
         for path in ('href="downloads.html"',
                      "docs/GETTING_STARTED.md",
                      "docs/TERMINAL.md",
                      "docs/COMPANION_HOME.md",
-                     "releases/download/v1.5.0/"):
+                     f"releases/download/{RELEASE}/"):
             self.assertIn(path,html)
         self.assertNotRegex(html, r"\b[HS]\d{2}\b")
         self.assertNotIn("COMMUNITY SOURCE PROJECT",html)
@@ -74,12 +78,20 @@ class MuseHubBrandLaunch(unittest.TestCase):
         meta=json.loads((SITE/"INTEGRITY.json").read_text(encoding="utf-8"))
         self.assertEqual(meta["schema"],"muse-hub/public-website-overlay/v1")
         self.assertEqual(meta["source_kind"],"STATIC_WEBSITE")
-        self.assertEqual(set(meta["files"]),{
+        expected={
             "README.md", "index.html", "site.css", "site.js", "roles.json",
             "downloads.html", "downloads.js", "downloads.json",
             "public/index.html", "public/styles.css", "public/app.js",
             "public/catalog.json", "sitemap.xml",
-        })
+        }
+        catalog=json.loads((SITE/"downloads.json").read_bytes())
+        subjects=Counter(row["category"] for row in catalog["items"])
+        self.assertEqual(set(subjects),set(catalog["categories"]))
+        for subject,count in subjects.items():
+            slug=re.sub(r"[^a-z0-9]+","-",subject.lower()).strip("-")
+            expected.update(f"library/{slug}-{page:03d}.html" for page in range(1,(count+199)//200+1))
+        self.assertEqual(set(meta["files"]),expected)
+        self.assertEqual({path.relative_to(SITE).as_posix() for path in SITE.rglob("*") if path.is_file()},expected|{"INTEGRITY.json"})
         selected=select_public_files(ROOT,verify_manifest=False)
         for path,row in meta["files"].items():
             content=(SITE/path).read_bytes()

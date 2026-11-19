@@ -172,7 +172,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model - Make Shorter",
+      "label": "OpenAI - Make Shorter",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -198,7 +198,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model - Make Longer",
+      "label": "OpenAI - Make Longer",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -224,7 +224,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model - Correct Grammar",
+      "label": "OpenAI - Correct Grammar",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -250,7 +250,7 @@
     },
     {
       "id": "step-7",
-      "label": "Model - To Spanish",
+      "label": "OpenAI - To Spanish",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -276,7 +276,7 @@
     },
     {
       "id": "step-8",
-      "label": "Model - To English",
+      "label": "OpenAI - To English",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

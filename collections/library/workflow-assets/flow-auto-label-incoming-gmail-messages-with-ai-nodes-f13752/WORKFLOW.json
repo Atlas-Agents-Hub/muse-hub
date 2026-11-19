@@ -176,7 +176,7 @@
     },
     {
       "id": "step-11",
-      "label": "Model Chat",
+      "label": "OpenAI Chat",
       "operation": "model",
       "adapter": "model",
       "parameters": {

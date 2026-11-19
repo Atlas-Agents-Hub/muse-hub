@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-telegram-bot-with-supabase-memory-and-muse-assistant-integration-dfbd31",
-  "title": "Telegram Bot with Supabase memory and Muse assistant integration",
+  "title": "Telegram Bot with Supabase memory and OpenAI assistant integration",
   "nodes": [
     {
       "id": "step-1",
@@ -17,7 +17,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model - Create thread",
+      "label": "OPENAI - Create thread",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -73,7 +73,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model - Send message",
+      "label": "OPENAI - Send message",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -110,7 +110,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model - Run assistant",
+      "label": "OPENAI - Run assistant",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -149,7 +149,7 @@
     },
     {
       "id": "step-7",
-      "label": "Model - Get messages",
+      "label": "OPENAI - Get messages",
       "operation": "http",
       "adapter": "http",
       "parameters": {

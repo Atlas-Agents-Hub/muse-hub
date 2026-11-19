@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-configure-your-own-image-creation-api-using-muse-dalle-3-d97055",
-  "title": "Configure your own Image Creation API Using Muse DALLE-3",
+  "title": "Configure your own Image Creation API Using OpenAI DALLE-3",
   "nodes": [
     {
       "id": "step-1",
@@ -28,7 +28,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

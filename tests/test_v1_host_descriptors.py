@@ -10,7 +10,10 @@ class HostDescriptorTests(unittest.TestCase):
   hosts={x["id"]:x["allowed_hosts"] for x in data["connectors"]}
   self.assertIn("your n8n instance host",hosts["n8n"])
   self.assertIn("<your-shop>.myshopify.com",hosts["shopify"])
-  self.assertEqual(len(module.validate_catalog(data)["connectors"]),151)
+  validated=module.validate_catalog(data)["connectors"]
+  self.assertEqual(len(validated),len(data["connectors"]))
+  self.assertGreater(len(validated),250)
+  self.assertEqual(len({row["id"] for row in validated}),len(validated))
  def test_host_description_refuses_control_characters_and_external_schemes(self):
   for value in ("https://attacker.invalid","javascript:alert(1)","example\x00.test","example\n.test"):
    with self.subTest(value=value):

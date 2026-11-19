@@ -1,11 +1,13 @@
 """Shareable, fail-closed onboarding URLs for the 15 reviewed Muse Hub roles."""
 from __future__ import annotations
 import re
+import json
 import unittest
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "hub" / "site"
+RELEASE = json.loads((ROOT / "presets/catalog.json").read_bytes())["release"]
 
 class MuseHubDeepLinkTests(unittest.TestCase):
     def test_every_role_card_uses_its_own_same_page_setup_link(self):
@@ -23,6 +25,10 @@ class MuseHubDeepLinkTests(unittest.TestCase):
                 self.assertEqual(query.fragment, "setup")
                 self.assertEqual(parse_qs(query.query), {"role": [role]})
         self.assertEqual(html.count('class="role-card-download"'), 15)
+        downloads = re.findall(r'class="role-card-download" href="([^"]+)"', html)
+        for url in downloads:
+            self.assertTrue(url.startswith(f"https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/{RELEASE}/muse-"),url)
+            self.assertTrue(url.endswith(f"-{RELEASE}.zip"),url)
         self.assertIn('id="setup-role-download"', html)
 
     def test_local_javascript_reads_only_approved_role_ids_and_rewrites_url(self):
@@ -37,7 +43,9 @@ class MuseHubDeepLinkTests(unittest.TestCase):
             "selectSetupRole()",
             "roleAssets.get(slug)",
             "setupDownload.href =",
-            "releases/download/v1.5.0/muse-${asset}-v1.5.0.zip",
+            "card.querySelector('.role-card-download')?.href",
+            "roleDownloads.get(slug)",
+            "download.startsWith('https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/')",
         ):
             self.assertIn(token, script)
         self.assertIn("if (!knownRoles.has(slug)) return", script)

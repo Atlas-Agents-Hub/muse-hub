@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-conversational-interviews-with-ai-agents-and-muse-forms-ce5de8",
-  "title": "Conversational Interviews with AI Agents and Muse Forms",
+  "title": "Conversational Interviews with AI Agents and n8n Forms",
   "nodes": [
     {
       "id": "step-1",
@@ -491,7 +491,7 @@
     },
     {
       "id": "step-24",
-      "label": "Model Chat Model",
+      "label": "Groq Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

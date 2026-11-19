@@ -1,13 +1,13 @@
 {
-  "executable_specialist_extensions": 4,
-  "negative_practice_examples": 225,
-  "positive_practice_examples": 225,
-  "practice_cases": 225,
   "schema": "muse-hub/library-inventory/v1",
-  "skills": 461,
-  "skills_with_practice_cases": 75,
+  "skills": 5242,
+  "workflows": 396,
+  "task_starters": 558,
   "specialists": 15,
+  "skills_with_practice_cases": 75,
+  "practice_cases": 225,
+  "positive_practice_examples": 225,
+  "negative_practice_examples": 225,
   "task_evaluation_specs": 75,
-  "task_starters": 100,
-  "workflows": 58
+  "executable_specialist_extensions": 4
 }

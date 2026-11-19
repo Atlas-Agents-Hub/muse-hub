@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-chat-assistant-muse-assistant-with-postgres-memory-and-api-calling-capabalitie-940080",
-  "title": "Chat Assistant (Muse assistant) with Postgres Memory And API Calling Capabalities",
+  "title": "Chat Assistant (OpenAI assistant) with Postgres Memory And API Calling Capabalities",
   "nodes": [
     {
       "id": "step-1",
@@ -99,7 +99,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

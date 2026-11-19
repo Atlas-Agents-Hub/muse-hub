@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-generate-audio-from-text-using-muse-and-webhook-text-to-speech-workflow-0e5c40",
-  "title": "Generate audio from text using Muse and Webhook Text to Speech Workflow",
+  "title": "Generate audio from text using OpenAI and Webhook Text to Speech Workflow",
   "nodes": [
     {
       "id": "step-1",
@@ -27,7 +27,7 @@
     },
     {
       "id": "step-3",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

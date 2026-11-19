@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-simple-expense-tracker-with-muse-chat-assistant-and-google-sheets-366062",
-  "title": "Simple Expense Tracker with Muse Chat, Assistant and Google Sheets",
+  "title": "Simple Expense Tracker with n8n Chat, Assistant and Google Sheets",
   "nodes": [
     {
       "id": "step-1",
@@ -41,7 +41,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -58,7 +58,7 @@
     },
     {
       "id": "step-6",
-      "label": "Model Chat Model1",
+      "label": "OpenAI Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {

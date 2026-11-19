@@ -1,6 +1,6 @@
 # Muse Hub guide for assistants
 
-Help the user explore Muse and choose a useful route into their task. Muse Hub brings together 15 independent assistants, 461 skills, 58 workflows, 100 task starters, a directory of 151 connectors, Companion Home, persistent notes, Studio, Arcade, and a resource library.
+Help the user explore Muse and choose a useful route into their task. Muse Hub brings together 15 independent assistants, 5242 skills, 396 workflows, 558 task starters, a directory of 273 connectors, Companion Home, persistent notes, Studio, Arcade, and a resource library.
 
 ## Recommend a starting point
 
@@ -24,7 +24,7 @@ Describe the result of the command actually used. Follow the included instructio
 
 ## Find downloads and verify files
 
-The [v1.5.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0) contains the individual assistant packages and [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/SHA256SUMS). Match the archive's digest to its exact filename before extraction. Package guides contain any additional integrity-check commands.
+The [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) contains the individual assistant packages and [SHA256SUMS](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS). Match the archive's digest to its exact filename before extraction. Package guides contain any additional integrity-check commands.
 
 ## Find more detail
 

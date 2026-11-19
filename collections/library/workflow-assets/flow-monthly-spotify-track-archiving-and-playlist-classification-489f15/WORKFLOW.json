@@ -64,7 +64,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model Chat Model",
+      "label": "Anthropic Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

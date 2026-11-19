@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-automate-content-generator-for-wordpress-with-muse-r1-c70bb3",
-  "title": "Automate Content Generator for WordPress with Muse R1",
+  "title": "Automate Content Generator for WordPress with DeepSeek R1",
   "nodes": [
     {
       "id": "step-1",
@@ -197,7 +197,7 @@
     },
     {
       "id": "step-8",
-      "label": "Generate article with Model",
+      "label": "Generate article with DeepSeek",
       "operation": "generate",
       "adapter": "model",
       "parameters": {
@@ -220,7 +220,7 @@
     },
     {
       "id": "step-9",
-      "label": "Generate title with Model",
+      "label": "Generate title with DeepSeek",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

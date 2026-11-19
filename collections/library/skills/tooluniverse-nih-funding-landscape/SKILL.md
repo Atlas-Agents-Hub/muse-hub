@@ -1,0 +1,10 @@
+---
+name: tooluniverse-nih-funding-landscape
+description: "Analyze NIH grant portfolios and funding history using the OpenNIH FY1985-present corpus, then connect grants to investigators, institutions, publications, clinical trials, patents, targets, or drugs with ToolUniverse. Use for NIH grant discovery, topic or Institute/Center trends, PI and institution profiles, activity-code or mechanism analysis, funding growth and concentration, grant-writing landscape research, SBIR/STTR landscapes, research-policy analysis, expert discovery, funding-to-output translational impact studies, or public-facing NIH explainers for patients, advocates, local and national journalists, trainees, applicants, institutions, entrepreneurs, and taxpayers."
+---
+
+# Tooluniverse Nih Funding Landscape
+
+Use the task's actual files, connected services, and project settings. Run included helpers from this skill folder. Set `SKILL_DIR` to its full path when a command uses that variable.
+
+Read [the detailed method](METHOD.md) for the procedure, examples, and supporting references.

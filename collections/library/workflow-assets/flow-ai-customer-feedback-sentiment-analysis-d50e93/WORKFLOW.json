@@ -125,7 +125,7 @@
     },
     {
       "id": "step-3",
-      "label": "Classify feedback with Model",
+      "label": "Classify feedback with OpenAI",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

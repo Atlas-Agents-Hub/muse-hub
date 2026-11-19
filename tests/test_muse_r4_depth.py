@@ -30,11 +30,14 @@ class Structure(unittest.TestCase):
   t=ast.parse((C/'r4_checks.py').read_text(encoding='utf-8'))
   imports={n.names[0].name.split('.')[0] for n in ast.walk(t) if isinstance(n,ast.Import)}|{(n.module or '').split('.')[0] for n in ast.walk(t) if isinstance(n,ast.ImportFrom)}
   self.assertFalse(imports&{'subprocess','socket','requests','urllib','http','pickle'})
- def test_100_starters_are_skill_bundles_not_agent_identity_installs(self):
+ def test_all_starters_are_skill_bundles_not_agent_identity_installs(self):
   spec=importlib.util.spec_from_file_location('r4_catalog',ROOT/'tools/muse_collection.py')
   module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
-  collection=module.load_collection(ROOT/'collections/muse-starters-v1')
-  self.assertEqual(len(collection['starters']),100)
+  collection=module.prepare_collection(module.load_collection(ROOT/'collections/muse-starters-v1'))
+  source=json.loads((COLLECTION/'starters.json').read_bytes())
+  self.assertGreater(len(source),500)
+  self.assertEqual({row['id'] for row in collection['starters']},{row['id'] for row in source})
+  self.assertEqual(len(collection['starters']),len(source))
   forbidden={'identity.md','soul.md','agents.md','memory.md','heartbeat.md','user.md','tools.md'}
   for starter in collection['starters']:
    with self.subTest(starter=starter['id']):

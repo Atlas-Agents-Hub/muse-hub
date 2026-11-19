@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-muse-assistant-telegram-long-term-memory-039eef",
-  "title": "🐋🤖 Muse Assistant + Telegram + LONG TERM Memory 🧠",
+  "title": "🐋🤖 DeepSeek Assistant + Telegram + LONG TERM Memory 🧠",
   "nodes": [
     {
       "id": "step-1",
@@ -313,7 +313,7 @@
     },
     {
       "id": "step-15",
-      "label": "Model-V3 Chat",
+      "label": "DeepSeek-V3 Chat",
       "operation": "model",
       "adapter": "model",
       "parameters": {

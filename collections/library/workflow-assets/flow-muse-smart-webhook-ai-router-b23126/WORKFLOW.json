@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-muse-smart-webhook-ai-router-b23126",
-  "title": "Muse Smart Webhook AI Router",
+  "title": "Claude Smart Webhook AI Router",
   "nodes": [
     {
       "id": "step-1",
@@ -17,7 +17,7 @@
     },
     {
       "id": "step-2",
-      "label": "Model Classifier",
+      "label": "Claude Classifier",
       "operation": "http",
       "adapter": "http",
       "parameters": {

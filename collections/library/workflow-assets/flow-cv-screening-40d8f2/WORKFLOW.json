@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-cv-screening-40d8f2",
-  "title": "CV Screening",
+  "title": "CV Screening with OpenAI",
   "nodes": [
     {
       "id": "step-1",
@@ -34,7 +34,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model - Analyze CV",
+      "label": "OpenAI - Analyze CV",
       "operation": "http",
       "adapter": "http",
       "parameters": {

@@ -209,23 +209,43 @@ async function runChecks() {
     const sample = downloads.items.find(row => row.kind === 'skill' && row.roles.includes('software-engineer'));
     assert(sample, 'Software engineering skill must be discoverable');
     await navigate('downloads.html?type=skill&role=software-engineer&q=' + encodeURIComponent(sample.id));
-    const visible = await evaluate('[...document.querySelectorAll(".download-card:not([hidden]) a[aria-label]")].map(a=>a.href)');
-    assert(visible.includes(sample.url));
-    assert(visible.every(url => downloads.items.find(row => row.url === url).roles.includes('software-engineer')));
+    const visible = await evaluate('[...document.querySelectorAll(".download-card:not([hidden])")].map(card=>({id:card.dataset.id,kind:card.dataset.kind,url:card.querySelector("a[aria-label]").href}))');
+    assert(visible.some(item => item.id === sample.id && item.url === sample.url));
+    assert(visible.every(item => downloads.items.find(row => row.id === item.id && row.kind === item.kind).roles.includes('software-engineer')));
     await type('#download-search', 'no-matching-download-39715');
     assert.equal(await evaluate('document.querySelector("#download-empty").hidden'), false);
     await click('#download-clear-empty');
-    assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), downloads.items.length);
+    assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(60, downloads.items.length));
     assert.equal(new URL(await evaluate('location.href')).searchParams.has('role'), false);
-    return {individual_downloads:links.length, specialist_search:true, empty_state_reset:true};
+    return {searchable_resources:links.length, specialist_search:true, empty_state_reset:true};
   });
   await check('invalid download filters recover without reflected markup', async () => {
     for (const query of ['type=bad&role=bad', 'type=skill&type=workflow', 'role=%3Cimg%20src=x%3E', 'q='+'x'.repeat(3000)]) {
       await navigate('downloads.html?' + query);
-      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), downloads.items.length);
+      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(60, downloads.items.length));
       assert.equal(await evaluate('document.querySelectorAll("#download-role img").length'), 0);
     }
     return {invalid_queries:4};
+  });
+  await check('download pagination has distinct results and shareable history', async () => {
+    await navigate('downloads.html?type=skill');
+    const visibleIds=() => evaluate('[...document.querySelectorAll(".download-card:not([hidden])")].map(card=>card.dataset.id)');
+    const first=await visibleIds();
+    assert.equal(first.length,60);
+    await click('#download-next');
+    const second=await visibleIds();
+    assert.equal(second.length,60);
+    assert(second.every(id=>!first.includes(id)));
+    assert.equal(new URL(await evaluate('location.href')).searchParams.get('page'),'2');
+    await navigate(await evaluate('location.href'));
+    assert.deepEqual(await visibleIds(),second);
+    await click('#download-previous');
+    assert.deepEqual(await visibleIds(),first);
+    await type('#download-search','no-matching-page-92574');
+    assert.equal(await evaluate('document.querySelector("#download-pages").hidden'),true);
+    await click('#download-clear-empty');
+    assert.equal(await evaluate('document.querySelector("#download-previous").disabled'),true);
+    return {page_size:60, distinct_pages:true, shareable_page:true, filter_resets_page:true};
   });
   await check('all resources without a route', async () => { await navigate('public/index.html'); return assertRoute(null); });
   for (const id of routes.keys()) await check('shareable route: ' + id, async () => {

@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-automated-end-to-end-fine-tuning-of-muse-models-with-google-drive-integration-641300",
-  "title": "Automated End-to-End Fine-Tuning of Muse Models with Google Drive Integration",
+  "title": "Automated End-to-End Fine-Tuning of OpenAI Models with Google Drive Integration",
   "nodes": [
     {
       "id": "step-1",
@@ -50,7 +50,7 @@
     },
     {
       "id": "step-5",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

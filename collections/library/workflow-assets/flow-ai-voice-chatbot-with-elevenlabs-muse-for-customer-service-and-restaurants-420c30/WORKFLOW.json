@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-ai-voice-chatbot-with-elevenlabs-muse-for-customer-service-and-restaurants-420c30",
-  "title": "AI Voice Chatbot with ElevenLabs & Muse for Customer Service and Restaurants",
+  "title": "AI Voice Chatbot with ElevenLabs & OpenAI for Customer Service and Restaurants",
   "nodes": [
     {
       "id": "step-1",
@@ -40,7 +40,7 @@
     },
     {
       "id": "step-4",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -204,7 +204,7 @@
     },
     {
       "id": "step-15",
-      "label": "Model",
+      "label": "OpenAI",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -235,7 +235,7 @@
     },
     {
       "id": "step-18",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

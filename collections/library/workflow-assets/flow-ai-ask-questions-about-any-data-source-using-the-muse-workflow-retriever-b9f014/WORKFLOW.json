@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-ai-ask-questions-about-any-data-source-using-the-muse-workflow-retriever-b9f014",
-  "title": "AI Ask questions about any data source (using the Muse workflow retriever)",
+  "title": "AI Ask questions about any data source (using the n8n workflow retriever)",
   "nodes": [
     {
       "id": "step-1",
@@ -30,7 +30,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

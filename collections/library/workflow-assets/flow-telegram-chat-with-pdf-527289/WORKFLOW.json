@@ -17,7 +17,7 @@
     },
     {
       "id": "step-2",
-      "label": "Embeddings Model",
+      "label": "Embeddings OpenAI",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {
@@ -88,7 +88,7 @@
     },
     {
       "id": "step-9",
-      "label": "Model Chat Model",
+      "label": "Groq Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {

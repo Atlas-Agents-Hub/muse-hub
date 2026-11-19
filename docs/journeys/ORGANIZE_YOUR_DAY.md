@@ -77,7 +77,7 @@ upcoming commitments and a place for review notes.
 
 Muse supports custom planners, trackers and dashboards, with Spaces available in the app's sidebar or main tabs. See [Meta's Muse app description](https://apps.apple.com/us/app/muse-from-meta/id6760173601).
 
-For a workspace on your computer, choose [Daily Desk](../spaces/DAILY_DESK.md) for tasks and notes, or [Companion Home](../COMPANION_HOME.md) for notes organized across five rooms.
+For a workspace on your computer, choose [Daily Desk](../spaces/DAILY_DESK.md) for tasks and notes, [Muse Task Board](../spaces/TASK_BOARD.md) to move project cards from To do to Done, or [Companion Home](../COMPANION_HOME.md) for notes organized across five rooms.
 
 Get a toolkit checkout and Python 3.12+ using the [terminal setup guide](../TERMINAL.md#run-muse-hub-tools). Run the command from the toolkit root, choosing an absolute database path in an existing private directory. Choose the workspace you want to open:
 

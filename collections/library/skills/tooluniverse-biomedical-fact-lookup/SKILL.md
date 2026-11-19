@@ -1,0 +1,10 @@
+---
+name: tooluniverse-biomedical-fact-lookup
+description: "Answer biomedical FACTUAL / recall / multiple-choice questions by querying ToolUniverse database tools instead of answering from memory. Triggers on any 'which gene/drug/variant/disease/pathway/miRNA/TF...' lookup, any question phrased 'according to <database>' (DisGeNet, OMIM, MSigDB, miRDB, GTRD, MGI, Ensembl, ClinVar, ChEMBL, OpenTargets, Reactome, GtoPdb, UniProt...), and multiple-choice biology/medicine knowledge questions where one option must be verified against an authoritative source. NOT for analyzing user-supplied data files (CSV/VCF/h5ad → use the data-analysis router) and NOT for open-ended literature synthesis. Use whenever a single correct answer exists in a public biomedical database and could be looked up rather than guessed."
+---
+
+# Tooluniverse Biomedical Fact Lookup
+
+Use the task's actual files, connected services, and project settings. Run included helpers from this skill folder. Set `SKILL_DIR` to its full path when a command uses that variable.
+
+Read [the detailed method](METHOD.md) for the procedure, examples, and supporting references.

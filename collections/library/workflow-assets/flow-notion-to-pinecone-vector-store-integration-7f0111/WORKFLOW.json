@@ -144,7 +144,7 @@
     },
     {
       "id": "step-7",
-      "label": "Embeddings Model",
+      "label": "Embeddings Google Gemini",
       "operation": "embed",
       "adapter": "embedding",
       "parameters": {

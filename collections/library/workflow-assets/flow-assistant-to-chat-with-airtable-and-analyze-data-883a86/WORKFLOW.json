@@ -5,7 +5,7 @@
   "nodes": [
     {
       "id": "step-1",
-      "label": "Model Chat Model",
+      "label": "OpenAI Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -604,7 +604,7 @@
     },
     {
       "id": "step-23",
-      "label": "Model - Generate search filter",
+      "label": "OpenAI - Generate search filter",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -673,7 +673,7 @@
     },
     {
       "id": "step-26",
-      "label": "Model - Download File",
+      "label": "OpenAI - Download File",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -694,7 +694,7 @@
     },
     {
       "id": "step-27",
-      "label": "Model - Get messages",
+      "label": "OpenAI - Get messages",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -715,7 +715,7 @@
     },
     {
       "id": "step-28",
-      "label": "Model - Run assistant",
+      "label": "OpenAI - Run assistant",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -766,7 +766,7 @@
     },
     {
       "id": "step-29",
-      "label": "Model - Send message",
+      "label": "OpenAI - Send message",
       "operation": "http",
       "adapter": "http",
       "parameters": {
@@ -803,7 +803,7 @@
     },
     {
       "id": "step-30",
-      "label": "Model - Create thread",
+      "label": "OpenAI - Create thread",
       "operation": "http",
       "adapter": "http",
       "parameters": {

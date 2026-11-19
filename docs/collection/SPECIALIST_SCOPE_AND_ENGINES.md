@@ -4,7 +4,7 @@ Each profile has field-specific methods and skills. Some also ship executable Py
 
 The descriptions below cover each role's methods and included software. Muse can also use separately authorized host tools for rendering, development, research or connected services.
 
-[15 role profiles](../../presets/catalog.json) · [100 task starters](../../collections/muse-starters-v1/CATALOG.md) · [Run an example](SPECIALIST_QUICKSTART.md) · [Machine-readable engine index](../discovery/specialist-engine-index.json)
+[15 role profiles](../../presets/catalog.json) · [558 task starters](../../collections/muse-starters-v1/CATALOG.md) · [Run an example](SPECIALIST_QUICKSTART.md) · [Machine-readable engine index](../discovery/specialist-engine-index.json)
 
 ## Build and automate
 

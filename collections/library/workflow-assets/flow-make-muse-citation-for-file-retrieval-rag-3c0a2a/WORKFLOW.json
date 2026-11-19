@@ -1,7 +1,7 @@
 {
   "schema": "muse-workflow-graph/v1",
   "id": "flow-make-muse-citation-for-file-retrieval-rag-3c0a2a",
-  "title": "Make Muse Citation for File Retrieval RAG",
+  "title": "Make OpenAI Citation for File Retrieval RAG",
   "nodes": [
     {
       "id": "step-1",
@@ -31,7 +31,7 @@
     },
     {
       "id": "step-4",
-      "label": "Model Assistant with Vector Store",
+      "label": "OpenAI Assistant with Vector Store",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

@@ -30,6 +30,8 @@ class ReleasePackagesTests(unittest.TestCase):
         cls.extracted = {}
         for group in ("specialists", "skills", "workflows", "tool-guides"):
             for record in cls.records[group]:
+                if record['asset'] in cls.extracted:
+                    continue
                 folder = cls.base / record["asset"][:-4]
                 with zipfile.ZipFile(io.BytesIO(cls.archives[record["asset"]])) as archive:
                     archive.extractall(folder)
@@ -47,7 +49,7 @@ class ReleasePackagesTests(unittest.TestCase):
                               capture_output=True, text=True, encoding="utf-8", timeout=30)
 
     def test_download_inventory_and_exact_aliases(self):
-        self.assertEqual(len(self.archives), sum(len(rows) for rows in self.records.values()))
+        self.assertEqual(set(self.archives), {row['asset'] for rows in self.records.values() for row in rows})
         self.assertEqual([len(self.records[k]) for k in ("specialists", "skills", "workflows")],
                          [15, len(self.data["skills"]), len(self.data["workflows"])])
         self.assertIn("muse-data-engineer-" + release.DEFAULT_VERSION + ".zip", self.archives)
@@ -76,7 +78,7 @@ class ReleasePackagesTests(unittest.TestCase):
                                      len({p.casefold() for p in archive.namelist()}))
 
     def test_all_individual_downloads_verify_in_fresh_directories(self):
-        self.assertEqual(len(self.extracted), sum(len(self.records[k]) for k in ("specialists", "skills", "workflows", "tool-guides")))
+        self.assertEqual(set(self.extracted), {row['asset'] for kind in ("specialists", "skills", "workflows", "tool-guides") for row in self.records[kind]})
         for name, folder in self.extracted.items():
             with self.subTest(asset=name):
                 result = self.run_python(folder, "VERIFY.py")
@@ -217,6 +219,11 @@ class ReleasePackagesTests(unittest.TestCase):
                 for path in ("system-profile/profile", "subchat-scopes/subchats", "role-skills/custom-skills"):
                     self.assertTrue((folder / "assistant" / path).is_dir())
                 self.assertTrue((folder / "FIRST_TASK.md").is_file())
+                first_task=(folder/"FIRST_TASK.md").read_text(encoding="utf-8")
+                self.assertIn(release.FIRST_TASKS[record['id']],first_task)
+                self.assertIn(release.FIRST_TASKS[record['id']],
+                    (ROOT/'presets'/record['id']/'README.md').read_text(encoding='utf-8'))
+                self.assertNotRegex(first_task,r'(?i)\b(?:synthetic|fictional|toy|fixture|canary|seeded)\b')
 
     def test_original_fifty_procedures_remain_distinct(self):
         raw = self.archives["muse-role-procedures-50-" + release.DEFAULT_VERSION + ".zip"]
@@ -228,8 +235,8 @@ class ReleasePackagesTests(unittest.TestCase):
             self.assertIn("50", archive.read("README.md").decode())
 
     def test_bundles_preserve_individual_packages(self):
-        for kind, count in (("specialists",15),("skills",len(self.data["skills"])),
-                            ("workflows",len(self.data["workflows"])),("starters",100),
+        for kind, count in (("specialists",15),("skills",len({r['asset'] for r in self.records['skills']})),
+                            ("workflows",len(self.data["workflows"])),("starters",len(self.data['starters'])),
                             ("tool-guides",len(self.records["tool-guides"]))):
             raw = self.archives["muse-" + kind + "-" + release.DEFAULT_VERSION + ".zip"]
             with zipfile.ZipFile(io.BytesIO(raw)) as archive:

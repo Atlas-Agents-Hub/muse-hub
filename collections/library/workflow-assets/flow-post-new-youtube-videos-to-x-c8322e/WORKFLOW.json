@@ -17,7 +17,7 @@
     },
     {
       "id": "step-2",
-      "label": "Generate Post for X with Model",
+      "label": "Generate Post for X with ChatGPT",
       "operation": "generate",
       "adapter": "model",
       "parameters": {

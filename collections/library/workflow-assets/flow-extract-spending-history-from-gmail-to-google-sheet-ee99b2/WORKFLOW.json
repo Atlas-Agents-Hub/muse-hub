@@ -249,7 +249,7 @@
     },
     {
       "id": "step-8",
-      "label": "Model Chat Model1",
+      "label": "Google Gemini Chat Model1",
       "operation": "model",
       "adapter": "model",
       "parameters": {
@@ -695,7 +695,7 @@
     },
     {
       "id": "step-16",
-      "label": "Model Chat Model",
+      "label": "Groq Chat Model",
       "operation": "model",
       "adapter": "model",
       "parameters": {
