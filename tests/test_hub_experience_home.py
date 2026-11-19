@@ -9,7 +9,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "hub" / "site"
-DOCS = "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/blob/main/docs/"
+DOCS = "https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/docs/"
 ROLES = {
     "software-engineer", "data-engineering-architect", "automation-engineer",
     "infrastructure-reliability-engineer", "research-evaluator", "claims-adjudicator",
@@ -18,7 +18,7 @@ ROLES = {
     "personal-companion", "garden-companion", "coordinator",
 }
 ORIGINS = {
-    "Inside Muse", "Included with Muse Hub", "Community project", "Official Muse resource",
+    "Included with Muse Hub", "Community project", "Official Muse resource",
 }
 ASSET_NAMES = {
     "data-engineering-architect": "data-engineer",
@@ -107,10 +107,9 @@ class HubExperienceHomeTests(unittest.TestCase):
     def test_feature_actions_explain_origin_and_reach_the_right_source(self):
         """Native features, Hub tools and community integrations remain distinct."""
         destinations = {
-            "https://muse.ai/": "Inside Muse",
-            "https://www.meta.com/help/superintelligence/1484325780075655/": "Inside Muse",
-            "https://apps.apple.com/us/app/muse-from-meta/id6760173601": "Inside Muse",
-            "https://platform.muse.ai/docs": "Inside Muse",
+            "https://muse.ai/": "Official Muse resource",
+            "https://www.meta.com/help/superintelligence/1484325780075655/": "Official Muse resource",
+            "https://platform.muse.ai/docs": "Official Muse resource",
             DOCS + "COMPANION_HOME.md": "Included with Muse Hub",
             DOCS + "spaces/DAILY_DESK.md": "Included with Muse Hub",
             DOCS + "FAMILY_LINK.md": "Included with Muse Hub",
@@ -134,6 +133,23 @@ class HubExperienceHomeTests(unittest.TestCase):
                 self.assertTrue(has_context, "The action needs an origin label in its feature context.")
         labels = [node for node in self.page.nodes if "origin-label" in node.attrs.get("class", "").split()]
         self.assertTrue(all(" ".join(node.text().split()) in ORIGINS for node in labels))
+
+    def test_space_templates_link_to_the_working_apps(self):
+        overview = self.page.ids["explore-muse"]
+        self.assertTrue(any(
+            node.tag == "a" and node.attrs.get("href") == "#companion-spaces"
+            and "Space templates" in node.text() for node in overview.descendants()
+        ))
+        templates = self.page.ids["companion-spaces"]
+        sources = {
+            node.attrs["href"] for node in templates.descendants() if node.tag == "a"
+        }
+        self.assertIn(DOCS + "spaces/README.md", sources)
+        self.assertTrue((ROOT / "docs/spaces/README.md").is_file())
+        for path in ("examples/gtd_space", "examples/task_board"):
+            self.assertIn(DOCS.replace("/blob/main/docs/", f"/tree/main/{path}"), sources)
+            self.assertTrue((ROOT / path / "README.md").is_file())
+        self.assertNotIn("Inside Muse", self.page.root.text())
 
     def test_local_navigation_and_reused_header_footer_resolve(self):
         """In-page and downloads-page navigation cannot silently become dead links."""

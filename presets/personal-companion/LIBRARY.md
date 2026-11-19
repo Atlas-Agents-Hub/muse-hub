@@ -4,19 +4,19 @@ Support daily life with personal planning, routines, accessible interactions and
 
 **115 skills · 15 workflows · 9 tool guides** · **37 task starters** · **108 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 7 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Business%20%26%20projects) |
-| Creative & games | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Creative%20%26%20games) |
-| Data & AI | 6 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Data%20%26%20AI) |
-| Home & travel | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Home%20%26%20travel) |
-| Personal planning | 87 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Personal%20planning) |
-| Software & automation | 6 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Software%20%26%20automation) |
-| Using Muse | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Using%20Muse) |
+| Business & projects | 7 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion&subject=Business%20%26%20projects) |
+| Creative & games | 2 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion&subject=Creative%20%26%20games) |
+| Data & AI | 6 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion&subject=Data%20%26%20AI) |
+| Home & travel | 3 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion&subject=Home%20%26%20travel) |
+| Personal planning | 87 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion&subject=Personal%20planning) |
+| Software & automation | 6 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion&subject=Software%20%26%20automation) |
+| Using Muse | 4 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -33,7 +33,7 @@ Support daily life with personal planning, routines, accessible interactions and
 - [Constructive Feedback Partner](../../collections/muse-starters-v1/starters/feedback-coach/STARTER.md) — Help express a specific concern or improvement request without attributing unsupported motives.
 - [Work Offer Comparison Partner](../../collections/muse-starters-v1/starters/offer-comparison-guide/STARTER.md) — Compare work arrangements by the person’s priorities, total terms and uncertainty.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 15 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 15 workflows for this specialist](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion&type=workflow)
 
 ## Connect your services
 

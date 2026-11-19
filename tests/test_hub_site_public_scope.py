@@ -11,9 +11,9 @@ SITE_FILES = (
     "public/index.html", "public/styles.css", "public/app.js",
     "public/catalog.json", "INTEGRITY.json"
 )
-SITE_URL = "https://atlas-agents-hub.github.io/muse-ai-agent-presets/"
+SITE_URL = "https://atlas-agents-hub.github.io/muse-hub/"
 RELEASE = json.loads((Path(__file__).resolve().parents[1]/"presets/catalog.json").read_bytes())["release"]
-RELEASE_URL = "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/" + RELEASE
+RELEASE_URL = "https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/" + RELEASE
 
 class HubSitePublicAdmission(unittest.TestCase):
     def setUp(self):

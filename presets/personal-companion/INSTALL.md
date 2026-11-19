@@ -2,7 +2,7 @@
 
 Support daily life with personal planning, routines, accessible interactions and privacy-aware assistance shaped to the owner's preferences.
 
-**[Download Personal Companion](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Personal Companion](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
 
 **115 skills · 15 workflows · 9 tool guides**. [Explore the full selection](LIBRARY.md).
 

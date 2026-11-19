@@ -1,6 +1,6 @@
 # Muse skills
 
-Choose from **5242 skills**. Each download includes its method and supporting files. [Search by subject or specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html#skills).
+Choose from **5242 skills**. Each download includes its method and supporting files. [Search by subject or specialist](https://atlas-agents-hub.github.io/muse-hub/downloads.html#skills).
 
 ## Browse the library
 

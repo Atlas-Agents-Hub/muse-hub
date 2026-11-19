@@ -2,7 +2,7 @@
 
 Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs.
 
-**[Download Coordinator](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Coordinator](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
 
 **664 skills · 15 workflows · 21 tool guides**. [Explore the full selection](LIBRARY.md).
 

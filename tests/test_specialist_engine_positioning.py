@@ -83,7 +83,7 @@ class SpecialistEnginePositioning(unittest.TestCase):
 
  def test_canonical_discovery_url_matches_organization(self):
   meta=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_bytes())
-  self.assertEqual(meta["repository"],"https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets")
+  self.assertEqual(meta["repository"],"https://github.com/Atlas-Agents-Hub/muse-hub")
   self.assertIn("atlas-origins",meta["specialist_engine_index"])
   self.assertIn("atlas-origins",(ROOT/"llms.txt").read_text(encoding="utf8"))
 

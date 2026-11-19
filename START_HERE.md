@@ -4,7 +4,11 @@ This toolkit includes all 15 specialists, the skill and workflow collection, and
 
 ## Use a specialist with Muse
 
-Open [Getting started](docs/GETTING_STARTED.md), choose a specialist, and give Muse its kit together with your current task. The [download directory](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html) offers specialist kits, workflow downloads, individual starter skills, and subject packs for the expanded skill library. Every skill has its own searchable entry, guide link, and exact file path inside its download.
+Open [Getting started](docs/GETTING_STARTED.md), choose a specialist, and give Muse its kit together with your current task. The [download directory](https://atlas-agents-hub.github.io/muse-hub/downloads.html) offers specialist kits, workflow downloads, individual starter skills, and subject packs for the expanded skill library. Every skill has its own searchable entry, guide link, and exact file path inside its download.
+
+## Build from a Space template
+
+Use the [Space template catalogue](docs/spaces/README.md) to start with Muse Planner, Muse Task Board, or Daily Desk. Each guide points to the source, setup steps, and how to keep your data.
 
 ## Run the included tools
 
@@ -28,4 +32,4 @@ Add a specialist filter such as `--role data-engineering-architect` to narrow th
 
 ## Check your download
 
-Compare the ZIP's SHA-256 digest with `SHA256SUMS` on the [v1.6.0 release page](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0). Keep the extracted toolkit in its own folder so updates preserve your existing work.
+Compare the ZIP's SHA-256 digest with `SHA256SUMS` on the [v1.6.0 release page](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0). Keep the extracted toolkit in its own folder so updates preserve your existing work.

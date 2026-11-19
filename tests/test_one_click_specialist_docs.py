@@ -5,7 +5,7 @@ import re
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 VERSION=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
-RELEASE="https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/"+VERSION+"/"
+RELEASE="https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/"+VERSION+"/"
 ALIAS={"data-engineering-architect":"data-engineer","infrastructure-reliability-engineer":"reliability-engineer"}
 
 class OneClickDocs(unittest.TestCase):

@@ -1,6 +1,6 @@
 {
   "schema": "muse-hub-site/role-directory/v1",
-  "source_repo": "Atlas-Agents-Hub/muse-ai-agent-presets",
+  "source_repo": "Atlas-Agents-Hub/muse-hub",
   "roles": [
     {
       "id": "software-engineer",
@@ -9,7 +9,7 @@
       "category_label": "Build & automate",
       "description": "Build, debug, refactor and release software. Work from reproduction and architecture decisions through implementation, regression tests, source integrity and reviewed delivery.",
       "asset_id": "software-engineer",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-software-engineer-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-software-engineer-v1.6.0.zip",
       "library": {
         "skills": 2517,
         "workflows": 16,
@@ -25,7 +25,7 @@
       "category_label": "Build & automate",
       "description": "Design and maintain reliable data systems, from schemas and ingestion quality to record identity, event reconciliation, query performance and safe migrations.",
       "asset_id": "data-engineer",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-data-engineer-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-data-engineer-v1.6.0.zip",
       "library": {
         "skills": 373,
         "workflows": 58,
@@ -41,7 +41,7 @@
       "category_label": "Build & automate",
       "description": "Build repeatable workflows across tools and services, with dependency graphs, triggers, approval points, idempotency, retry policy and uncertain-effect recovery.",
       "asset_id": "automation-engineer",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-automation-engineer-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-automation-engineer-v1.6.0.zip",
       "library": {
         "skills": 400,
         "workflows": 342,
@@ -57,7 +57,7 @@
       "category_label": "Build & automate",
       "description": "Improve service reliability using SLOs, error budgets, capacity forecasts, incident investigation, recovery plans and evidence from real measurements.",
       "asset_id": "reliability-engineer",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-reliability-engineer-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-reliability-engineer-v1.6.0.zip",
       "library": {
         "skills": 531,
         "workflows": 8,
@@ -73,7 +73,7 @@
       "category_label": "Research & evaluate",
       "description": "Investigate scientific and technical questions, compare explanations, audit primary evidence and design controlled, held-out evaluations.",
       "asset_id": "research-evaluator",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-research-evaluator-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-research-evaluator-v1.6.0.zip",
       "library": {
         "skills": 784,
         "workflows": 57,
@@ -89,7 +89,7 @@
       "category_label": "Research & evaluate",
       "description": "Resolve competing factual and technical claims by tracing original evidence, testing counterexamples, qualifying uncertainty and recording defensible conclusions.",
       "asset_id": "claims-adjudicator",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-claims-adjudicator-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-claims-adjudicator-v1.6.0.zip",
       "library": {
         "skills": 106,
         "workflows": 7,
@@ -105,7 +105,7 @@
       "category_label": "Research & evaluate",
       "description": "Challenge authorized software, agent systems and releases with threat models, failure injection, negative controls and independent remediation reviews.",
       "asset_id": "adversarial-verifier",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-adversarial-verifier-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-adversarial-verifier-v1.6.0.zip",
       "library": {
         "skills": 426,
         "workflows": 6,
@@ -121,7 +121,7 @@
       "category_label": "Research & evaluate",
       "description": "Understand software and protocol behavior with authorized observations, defensive trace analysis, scoped experiments and clean-room reconstructions.",
       "asset_id": "reverse-engineering-researcher",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-reverse-engineering-researcher-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-reverse-engineering-researcher-v1.6.0.zip",
       "library": {
         "skills": 441,
         "workflows": 5,
@@ -137,7 +137,7 @@
       "category_label": "Create & learn",
       "description": "Develop original visual media, animation, video and interactive scenes—from creative direction, characters, environments and asset development to motion, render inspection, continuity and delivery.",
       "asset_id": "creative-studio",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-creative-studio-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-creative-studio-v1.6.0.zip",
       "library": {
         "skills": 519,
         "workflows": 27,
@@ -153,7 +153,7 @@
       "category_label": "Create & learn",
       "description": "Design and evaluate complete product experiences: user research, information architecture, responsive layouts, interaction flows, accessibility and build-ready handoffs.",
       "asset_id": "product-interface-designer",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-product-interface-designer-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-product-interface-designer-v1.6.0.zip",
       "library": {
         "skills": 285,
         "workflows": 6,
@@ -169,7 +169,7 @@
       "category_label": "Create & learn",
       "description": "Design datasets, models and adapters, conduct training experiments, compare candidates on held-out data and preserve model, tokenizer and artifact provenance.",
       "asset_id": "model-builder",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-model-builder-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-model-builder-v1.6.0.zip",
       "library": {
         "skills": 724,
         "workflows": 99,
@@ -185,7 +185,7 @@
       "category_label": "Create & learn",
       "description": "Build lessons, flashcards, practice sessions, scored quizzes and adaptive review from trusted study material, keeping learner progress and weak areas visible.",
       "asset_id": "learning-coach",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-learning-coach-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-learning-coach-v1.6.0.zip",
       "library": {
         "skills": 471,
         "workflows": 10,
@@ -201,7 +201,7 @@
       "category_label": "Life & planning",
       "description": "Support daily life with personal planning, routines, accessible interactions and privacy-aware assistance shaped to the owner's preferences.",
       "asset_id": "personal-companion",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip",
       "library": {
         "skills": 115,
         "workflows": 15,
@@ -217,7 +217,7 @@
       "category_label": "Life & planning",
       "description": "Organize plants, growing seasons and gardening projects through observations, evidence-aware care guidance, planting plans and owner-managed schedules.",
       "asset_id": "garden-companion",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-garden-companion-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-garden-companion-v1.6.0.zip",
       "library": {
         "skills": 25,
         "workflows": 2,
@@ -233,7 +233,7 @@
       "category_label": "Life & planning",
       "description": "Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs.",
       "asset_id": "coordinator",
-      "download_url": "https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip",
+      "download_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip",
       "library": {
         "skills": 664,
         "workflows": 15,

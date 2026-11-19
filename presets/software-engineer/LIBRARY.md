@@ -4,19 +4,19 @@ Build, debug, refactor and release software. Work from reproduction and architec
 
 **2517 skills · 16 workflows · 37 tool guides** · **163 task starters** · **57 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-software-engineer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-software-engineer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Creative & games | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer&subject=Creative%20%26%20games) |
-| Data & AI | 6 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer&subject=Data%20%26%20AI) |
-| Design & visualization | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer&subject=Design%20%26%20visualization) |
-| Infrastructure & reliability | 521 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer&subject=Infrastructure%20%26%20reliability) |
-| Security | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer&subject=Security) |
-| Software & automation | 1982 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer&subject=Software%20%26%20automation) |
-| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer&subject=Using%20Muse) |
+| Creative & games | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer&subject=Creative%20%26%20games) |
+| Data & AI | 6 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer&subject=Data%20%26%20AI) |
+| Design & visualization | 2 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer&subject=Design%20%26%20visualization) |
+| Infrastructure & reliability | 521 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer&subject=Infrastructure%20%26%20reliability) |
+| Security | 4 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer&subject=Security) |
+| Software & automation | 1982 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer&subject=Software%20%26%20automation) |
+| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -33,7 +33,7 @@ Build, debug, refactor and release software. Work from reproduction and architec
 - [Share YouTube Videos with AI Summaries on Discord](../../collections/muse-starters-v1/starters/task-share-youtube-videos-with-ai-summaries-on-discord-133af8/STARTER.md) — Use the matching tools and data flow to complete “Share YouTube Videos with AI Summaries on Discord”.
 - [A Very Simple Human in the Loop Email Response System Using AI and IMAP](../../collections/muse-starters-v1/starters/task-a-very-simple-human-in-the-loop-email-response-system-using-ai-and-imap-cbe456/STARTER.md) — Use the matching tools and data flow to complete “A Very Simple Human in the Loop Email Response System Using AI and IMAP”.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 16 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=software-engineer&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 16 workflows for this specialist](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer&type=workflow)
 
 ## Connect your services
 

@@ -49,7 +49,7 @@ class MuseHubOverlay(unittest.TestCase):
         for slug, asset, body in cards:
             with self.subTest(role=slug):
                 self.assertEqual(asset, aliases.get(slug, slug))
-                expected = f"https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/{RELEASE}/muse-{asset}-{RELEASE}.zip"
+                expected = f"https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/{RELEASE}/muse-{asset}-{RELEASE}.zip"
                 self.assertIn('class="role-card-download" href="' + expected + '"', body)
         self.assertIn('aria-live="polite"', self.html)
 

@@ -5,13 +5,13 @@ from pathlib import Path
 from urllib.parse import urlparse
 from muse_presets.public_export import PUBLIC_ROOT_FILES,select_public_files
 ROOT=Path(__file__).resolve().parents[1]
-REPO="Atlas-Agents-Hub/muse-ai-agent-presets"
+REPO="Atlas-Agents-Hub/muse-hub"
 RELEASE="v0.4.1-alpha"
 CURRENT_RELEASE=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
 EIGHT=("coordinator","software-engineer","model-builder","claims-adjudicator","garden-companion","learning-coach","reverse-engineering-researcher","creative-studio")
 FROZEN=("research-evaluator","adversarial-verifier","personal-companion")
 URL="https://github.com/"+REPO
-SITE="https://atlas-agents-hub.github.io/muse-ai-agent-presets/"
+SITE="https://atlas-agents-hub.github.io/muse-hub/"
 
 class AgentDiscoveryTests(unittest.TestCase):
  def test_llms_index_has_current_releases_roles_and_task_links(self):
@@ -26,7 +26,7 @@ class AgentDiscoveryTests(unittest.TestCase):
   self.assertEqual(len(links),len(set(links)))
   for link in links:
    host=urlparse(link).netloc
-   self.assertIn(host,("github.com","raw.githubusercontent.com","atlas-origins.github.io"))
+   self.assertIn(host,("github.com","raw.githubusercontent.com","atlas-agents-hub.github.io"))
   for role in json.loads((ROOT/"presets/catalog.json").read_text())["presets"]:
    self.assertIn("presets/"+role+"/INSTALL.md",text)
   self.assertIn("llms.txt",select_public_files(ROOT))

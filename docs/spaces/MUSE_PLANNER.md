@@ -2,7 +2,7 @@
 
 Turn a loose idea into a project you can move forward. Muse Planner brings your inbox, projects, daily routines, weekly review, reference notes and calendar into one Muse Space with persistent SQLite storage.
 
-**[Download Muse Planner](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-space-planner-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Complete setup guide](../../examples/gtd_space/README.md)
+**[Download Muse Planner](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-space-planner-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Complete setup guide](../../examples/gtd_space/README.md)
 
 The same complete app is included in the [Coordinator](../../presets/coordinator/INSTALL.md) and [Personal Companion](../../presets/personal-companion/INSTALL.md) downloads. In any of those ZIPs, open `spaces/planner/README.md`.
 

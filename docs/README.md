@@ -25,6 +25,10 @@ Explore Muse, choose a task, and find the assistants, tools, and workspaces that
 - [Operating handbook](handbook/README.md)
 - [Specialist methods and included tools](collection/SPECIALIST_SCOPE_AND_ENGINES.md)
 
+## Build from a Space template
+
+Open the [Space template catalogue](spaces/README.md) for runnable projects, source code, and setup guides.
+
 ## Open a workspace
 
 - [Companion Home](COMPANION_HOME.md) — five rooms, room notes, Studio, and Arcade.
@@ -37,10 +41,10 @@ Explore Muse, choose a task, and find the assistants, tools, and workspaces that
 
 ## Explore Muse and community tools
 
-[Muse features](https://muse.ai/) · [Reminders and scheduled tasks](https://www.meta.com/help/superintelligence/1484325780075655/) · [Muse Gadgets](https://gadgets.muse.ai/) · [63-resource library](https://atlas-agents-hub.github.io/muse-ai-agent-presets/public/index.html)
+[Muse features](https://muse.ai/) · [Reminders and scheduled tasks](https://www.meta.com/help/superintelligence/1484325780075655/) · [Muse Gadgets](https://gadgets.muse.ai/) · [63-resource library](https://atlas-agents-hub.github.io/muse-hub/public/index.html)
 
 ## Build and extend
 
 [Developer quickstart](GITHUB_QUICKSTART.md) · [Tool adapters](TOOL_ADAPTERS.md) · [Runnable workflows](WORKFLOWS.md) · [Included capabilities](CAPABILITIES.md) · [Host setup](HOST_COMPATIBILITY.md) · [Architecture](ARCHITECTURE.md) · [Development](DEVELOPMENT.md) · [Security](SECURITY.md)
 
-[Muse Hub](https://atlas-agents-hub.github.io/muse-ai-agent-presets/) · [Repository](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets) · [Current release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/latest)
+[Muse Hub](https://atlas-agents-hub.github.io/muse-hub/) · [Repository](https://github.com/Atlas-Agents-Hub/muse-hub) · [Current release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/latest)

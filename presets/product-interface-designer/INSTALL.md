@@ -2,7 +2,7 @@
 
 Design and evaluate complete product experiences: user research, information architecture, responsive layouts, interaction flows, accessibility and build-ready handoffs.
 
-**[Download Product & Interface Designer](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-product-interface-designer-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Product & Interface Designer](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-product-interface-designer-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
 
 **285 skills · 6 workflows · 24 tool guides**. [Explore the full selection](LIBRARY.md).
 

@@ -57,7 +57,7 @@
   const roleAssets = new Map(cards.map(card => [card.dataset.role, card.dataset.asset]));
   const roleDownloads = new Map(cards.map(card => [card.dataset.role, card.querySelector('.role-card-download')?.href]));
   const knownRoles = new Set(cards.map(card => card.dataset.role));
-  const sourceBase = 'https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/blob/main/presets/';
+  const sourceBase = 'https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/presets/';
   const setupReady = setupSelect && setupResult && setupEmpty && setupTitle &&
     setupDescription && setupInstall && setupProfile && setupDownload && knownRoles.size === 15;
 
@@ -77,7 +77,7 @@
     setupInstall.href = `${sourceBase}${slug}/INSTALL.md`;
     setupProfile.href = `${sourceBase}${slug}/README.md`;
     const download = roleDownloads.get(slug);
-    if (!download || !download.startsWith('https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/')) return;
+    if (!download || !download.startsWith('https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/')) return;
     setupDownload.href = download;
     setupEmpty.hidden = true;
     setupResult.hidden = false;

@@ -4,20 +4,20 @@ Turn complex goals into scoped work across specialists: sequence dependencies, m
 
 **664 skills · 15 workflows · 21 tool guides** · **22 task starters** · **135 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 561 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Business%20%26%20projects) |
-| Creative & games | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Creative%20%26%20games) |
-| Data & AI | 8 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Data%20%26%20AI) |
-| Home & travel | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Home%20%26%20travel) |
-| Personal planning | 81 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Personal%20planning) |
-| Research & science | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Research%20%26%20science) |
-| Software & automation | 5 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Software%20%26%20automation) |
-| Using Muse | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Using%20Muse) |
+| Business & projects | 561 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&subject=Business%20%26%20projects) |
+| Creative & games | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&subject=Creative%20%26%20games) |
+| Data & AI | 8 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&subject=Data%20%26%20AI) |
+| Home & travel | 2 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&subject=Home%20%26%20travel) |
+| Personal planning | 81 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&subject=Personal%20planning) |
+| Research & science | 2 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&subject=Research%20%26%20science) |
+| Software & automation | 5 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&subject=Software%20%26%20automation) |
+| Using Muse | 4 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -34,7 +34,7 @@ Turn complex goals into scoped work across specialists: sequence dependencies, m
 - [Nonprofit Project Partner](../../collections/muse-starters-v1/starters/nonprofit-organizer/STARTER.md) — Coordinate a mission-focused activity using actual volunteer commitments and limited resources.
 - [Freelance Proposal Partner](../../collections/muse-starters-v1/starters/freelance-proposal-partner/STARTER.md) — Shape a credible project proposal with bounded scope, deliverables and assumptions.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 15 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 15 workflows for this specialist](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator&type=workflow)
 
 ## Connect your services
 

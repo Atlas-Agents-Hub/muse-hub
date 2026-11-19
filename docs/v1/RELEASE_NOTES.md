@@ -17,6 +17,6 @@ Companion Home, Daily Desk, Studio, Arcade, Family Link and the terminal tools r
 
 [Choose an assistant](../DOWNLOAD_A_SPECIALIST.md), extract its ZIP and open `START_HERE.md`. Configure Main and the three subchats, choose a skill from `PROFILE.md`, and bring your first task. Open `CONNECTORS.md` for the services selected for that specialist.
 
-[Browse every download](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html) · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+[Browse every download](https://atlas-agents-hub.github.io/muse-hub/downloads.html) · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
 
 [Get started](../GETTING_STARTED.md) · [Terminal](../TERMINAL.md) · [Setup and saved data](../INSTALL_AND_PERSISTENCE.md) · [Release history](../RELEASES.md)

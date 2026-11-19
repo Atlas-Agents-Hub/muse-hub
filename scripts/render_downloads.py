@@ -17,7 +17,7 @@ from muse_collection import load_collection
 from tool_guides import load_guides
 from build_release import ALIASES, ROLE_WORKFLOWS, skill_download_layout, planner_asset
 
-REPO = 'https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets'
+REPO = 'https://github.com/Atlas-Agents-Hub/muse-hub'
 SITE = ROOT / 'hub/site'
 DOWNLOAD_PAGE_SIZE = 60
 HOME_CAPTIONS = {
@@ -150,10 +150,10 @@ def subject_pages(data: dict) -> dict[str,bytes]:
                 download='Download skill pack' if packed else 'Download ZIP'
                 entry=f'<p class="download-entry"><code>{esc(row["entry"])}</code></p>' if packed else ''
                 cards.append(f'<article class="download-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p><p>{read}<a href="{esc(row["url"])}">{download}</a></p>{entry}</article>')
-            url='https://atlas-agents-hub.github.io/muse-ai-agent-presets/'+route
+            url='https://atlas-agents-hub.github.io/muse-hub/'+route
             schema={'@context':'https://schema.org','@type':'CollectionPage','name':title,
                     'url':url,'description':intros[label],
-                    'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-ai-agent-presets/'}}
+                    'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}}
             body=f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(intros[label])}">
@@ -379,16 +379,16 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
   <meta name="color-scheme" content="dark light">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="description" content="Download {data['counts']['skill']} Muse AI skills, {data['counts']['workflow']} workflows, 15 specialists and practical tool guides. Search by subject or specialist and choose a ready-to-use ZIP.">
-  <link rel="canonical" href="https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html">
+  <link rel="canonical" href="https://atlas-agents-hub.github.io/muse-hub/downloads.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Muse Hub">
-  <meta property="og:url" content="https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html">
+  <meta property="og:url" content="https://atlas-agents-hub.github.io/muse-hub/downloads.html">
   <meta property="og:title" content="Muse AI Skills, Workflows and Specialist Downloads">
   <meta property="og:description" content="Find the skills, workflows and tools for your next task.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Muse Hub Downloads">
   <meta name="twitter:description" content="Muse AI skills, workflows, specialists and tool guides.">
-  <script type="application/ld+json">{json.dumps({'@context':'https://schema.org','@type':'CollectionPage','name':'Muse Hub Downloads','url':'https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html','description':'Muse AI skills, workflows, specialists and tool guides.','isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-ai-agent-presets/'}})}</script>
+  <script type="application/ld+json">{json.dumps({'@context':'https://schema.org','@type':'CollectionPage','name':'Muse Hub Downloads','url':'https://atlas-agents-hub.github.io/muse-hub/downloads.html','description':'Muse AI skills, workflows, specialists and tool guides.','isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}})}</script>
   <title>Muse AI Skills &amp; Workflow Downloads | Muse Hub</title>
 {favicon}
   <link rel="stylesheet" href="site.css">
@@ -437,7 +437,7 @@ def outputs(root: Path = ROOT) -> dict[str,bytes]:
     result.update(subject_pages(data))
     urls=['','downloads.html','public/index.html',*sorted(name for name in result if name.startswith('library/'))]
     result['sitemap.xml']=('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
-        ''.join('<url><loc>https://atlas-agents-hub.github.io/muse-ai-agent-presets/'+name+'</loc></url>\n' for name in urls)+'</urlset>\n').encode('utf-8')
+        ''.join('<url><loc>https://atlas-agents-hub.github.io/muse-hub/'+name+'</loc></url>\n' for name in urls)+'</urlset>\n').encode('utf-8')
     return result
 
 

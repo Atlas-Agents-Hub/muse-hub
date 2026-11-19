@@ -1,10 +1,18 @@
 # Muse Hub
 
-**Get more out of Muse.** Bring AI agent skills, workflow automation and custom tools to your personal AI assistant. This open-source toolkit for Meta's Muse AI helps you build, research, create and plan: choose a specialist, connect your services, and start a useful project.
+**Build, research, create and plan with Muse Hub.** Set up a specialist assistant, build your own toolkit from the searchable library, or start a project with a full-stack Space template.
 
 Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5242 skills**, **396 workflows**, **51 tool guides**, **558 task starters**, and **273 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
 
-**[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.0](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-ai-agent-presets/)** · [Get started](docs/GETTING_STARTED.md)
+**[Browse Space templates](docs/spaces/README.md)** · **[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.0](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)** · [Get started](docs/GETTING_STARTED.md)
+
+## Build from a Space template
+
+- **[Muse Planner](examples/gtd_space)** brings projects, next actions, routines, notes, and calendars together, with backup and restore.
+- **[Muse Task Board](examples/task_board)** moves cards through To do, In progress, and Done. Edit and reorder cards, undo a removal, and import or export board data.
+- **[Daily Desk](docs/spaces/DAILY_DESK.md)** keeps daily tasks and notes together, with saved progress and a backup you can restore.
+
+[See the Space templates and setup guides](docs/spaces/README.md).
 
 ## Start with what you want to do
 
@@ -66,8 +74,7 @@ Each package brings the role's methods, skills, workflows and examples together.
 - **[Task starters](collections/muse-starters-v1/CATALOG.md):** start from one of 558 focused configurations, then bring your own brief and files.
 - **[Engineering](docs/WORKFLOWS.md#engineering-reproduce-repair-review):** reproduce a failure, make a focused repair, run regression checks, and review the result.
 - **[Family Link](docs/FAMILY_LINK.md):** prepare a handoff with clear context, a recipient role, and an expected result.
-- **[Companion workspaces](docs/COMPANION_HOME.md):** move between five rooms, save room notes, explore the Studio, and take an Arcade break. [Daily Desk](docs/spaces/DAILY_DESK.md) keeps tasks and notes together; [Muse Task Board](docs/spaces/TASK_BOARD.md) moves project cards from To do to Done.
-- **[Muse Planner](docs/spaces/MUSE_PLANNER.md):** capture tasks, organize projects and routines, and keep a portable backup of your saved workspace.
+- **[Companion Home](docs/COMPANION_HOME.md):** save room notes, explore the Studio, and take an Arcade break.
 - **[Connectors](docs/connectors/README.md):** find setup instructions for 273 services, then choose the account and permissions for the service you need.
 
 Explore [specialists by task](docs/handbook/specialists-by-task.md) or browse the [included tools](docs/CAPABILITIES.md).
@@ -79,8 +86,8 @@ The [terminal guide](docs/TERMINAL.md) covers chatting with your personal Muse t
 For the toolkit commands below, use Python 3.12+ and Git:
 
 ```sh
-git clone https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets.git
-cd muse-ai-agent-presets
+git clone https://github.com/Atlas-Agents-Hub/muse-hub.git
+cd muse-hub
 python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
 python -B tools/muse_collection.py demo data-engineer
 ```
@@ -99,6 +106,6 @@ Filter by specialist, preview a selection with `plan`, then use `build` to creat
 
 ## Explore Muse Hub
 
-Explore [Muse features](https://muse.ai/), companion spaces, computer tools and automation on [the website](https://atlas-agents-hub.github.io/muse-ai-agent-presets/). Search the [63-resource library](https://atlas-agents-hub.github.io/muse-ai-agent-presets/public/index.html) for your next tool or project.
+Explore [Muse features](https://muse.ai/), companion spaces, computer tools and automation on [the website](https://atlas-agents-hub.github.io/muse-hub/). Search the [63-resource library](https://atlas-agents-hub.github.io/muse-hub/public/index.html) for your next tool or project.
 
-[All downloads](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html) · [Current release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/latest) · [Downloads and checksums](docs/RELEASES.md) · [Documentation](docs/README.md) · [AI-agent discovery index](llms.txt) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)
+[All downloads](https://atlas-agents-hub.github.io/muse-hub/downloads.html) · [Current release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/latest) · [Downloads and checksums](docs/RELEASES.md) · [Documentation](docs/README.md) · [AI-agent discovery index](llms.txt) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)

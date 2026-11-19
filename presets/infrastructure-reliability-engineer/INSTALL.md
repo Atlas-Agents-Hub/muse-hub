@@ -2,7 +2,7 @@
 
 Improve service reliability using SLOs, error budgets, capacity forecasts, incident investigation, recovery plans and evidence from real measurements.
 
-**[Download Infrastructure & Reliability Engineer](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-reliability-engineer-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
+**[Download Infrastructure & Reliability Engineer](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-reliability-engineer-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
 
 **531 skills · 8 workflows · 20 tool guides**. [Explore the full selection](LIBRARY.md).
 

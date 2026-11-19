@@ -59,8 +59,8 @@ These commands and requirements follow the [upstream README](https://github.com/
 Use Python 3.12+ for the repository tools. Git is needed to clone the project and for workflows that work on repositories. Commands below work in PowerShell, macOS Terminal, and Linux shells; use `python3` if that is your Python command.
 
 ```sh
-git clone https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets.git
-cd muse-ai-agent-presets
+git clone https://github.com/Atlas-Agents-Hub/muse-hub.git
+cd muse-hub
 python -B quickstart.py --all
 ```
 

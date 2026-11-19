@@ -4,23 +4,23 @@ Develop original visual media, animation, video and interactive scenes—from cr
 
 **519 skills · 27 workflows · 22 tool guides** · **38 task starters** · **69 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-creative-studio-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-creative-studio-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 21 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Business%20%26%20projects) |
-| Creative & games | 334 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Creative%20%26%20games) |
-| Data & AI | 5 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Data%20%26%20AI) |
-| Design & visualization | 145 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Design%20%26%20visualization) |
-| Home & travel | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Home%20%26%20travel) |
-| Infrastructure & reliability | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Infrastructure%20%26%20reliability) |
-| Personal planning | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Personal%20planning) |
-| Research & science | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Research%20%26%20science) |
-| Security | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Security) |
-| Software & automation | 8 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Software%20%26%20automation) |
-| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&subject=Using%20Muse) |
+| Business & projects | 21 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Business%20%26%20projects) |
+| Creative & games | 334 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Creative%20%26%20games) |
+| Data & AI | 5 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Data%20%26%20AI) |
+| Design & visualization | 145 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Design%20%26%20visualization) |
+| Home & travel | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Home%20%26%20travel) |
+| Infrastructure & reliability | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Infrastructure%20%26%20reliability) |
+| Personal planning | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Personal%20planning) |
+| Research & science | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Research%20%26%20science) |
+| Security | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Security) |
+| Software & automation | 8 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Software%20%26%20automation) |
+| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -37,7 +37,7 @@ Develop original visual media, animation, video and interactive scenes—from cr
 - [Content Strategy Partner](../../collections/muse-starters-v1/starters/content-strategist/STARTER.md) — Build a sustainable content system from real expertise and approved source material.
 - [Data Visualization Partner](../../collections/muse-starters-v1/starters/visualization-designer/STARTER.md) — Turn checked numbers into a readable chart without distorting their meaning.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 27 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=creative-studio&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 27 workflows for this specialist](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=creative-studio&type=workflow)
 
 ## Connect your services
 

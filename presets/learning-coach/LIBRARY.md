@@ -4,20 +4,20 @@ Build lessons, flashcards, practice sessions, scored quizzes and adaptive review
 
 **471 skills · 10 workflows · 16 tool guides** · **13 task starters** · **18 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-learning-coach-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-learning-coach-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&subject=Business%20%26%20projects) |
-| Data & AI | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&subject=Data%20%26%20AI) |
-| Home & travel | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&subject=Home%20%26%20travel) |
-| Learning & study | 63 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&subject=Learning%20%26%20study) |
-| Personal planning | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&subject=Personal%20planning) |
-| Research & science | 395 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&subject=Research%20%26%20science) |
-| Software & automation | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&subject=Software%20%26%20automation) |
-| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&subject=Using%20Muse) |
+| Business & projects | 4 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&subject=Business%20%26%20projects) |
+| Data & AI | 2 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&subject=Data%20%26%20AI) |
+| Home & travel | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&subject=Home%20%26%20travel) |
+| Learning & study | 63 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&subject=Learning%20%26%20study) |
+| Personal planning | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&subject=Personal%20planning) |
+| Research & science | 395 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&subject=Research%20%26%20science) |
+| Software & automation | 4 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&subject=Software%20%26%20automation) |
+| Using Muse | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&subject=Using%20Muse) |
 
 ## Start a useful task
 
@@ -34,7 +34,7 @@ Build lessons, flashcards, practice sessions, scored quizzes and adaptive review
 - [Interview Rehearsal Partner](../../collections/muse-starters-v1/starters/interview-coach/STARTER.md) — Help a person explain their work with specific evidence under realistic follow-up.
 - [Technical Storytelling Coach](../../collections/muse-starters-v1/starters/technical-story-coach/STARTER.md) — Translate technical decisions into a clear explanation suited to the listener.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 10 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=learning-coach&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 10 workflows for this specialist](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach&type=workflow)
 
 ## Connect your services
 

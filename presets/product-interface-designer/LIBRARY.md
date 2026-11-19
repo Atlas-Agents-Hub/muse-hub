@@ -4,27 +4,27 @@ Design and evaluate complete product experiences: user research, information arc
 
 **285 skills · 6 workflows · 24 tool guides** · **1 task starters** · **38 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-product-interface-designer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-product-interface-designer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 69 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Business%20%26%20projects) |
-| Creative & games | 4 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Creative%20%26%20games) |
-| Data & AI | 9 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Data%20%26%20AI) |
-| Design & visualization | 147 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Design%20%26%20visualization) |
-| Infrastructure & reliability | 11 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Infrastructure%20%26%20reliability) |
-| Personal planning | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Personal%20planning) |
-| Research & science | 6 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Research%20%26%20science) |
-| Security | 5 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Security) |
-| Software & automation | 31 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&subject=Software%20%26%20automation) |
+| Business & projects | 69 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Business%20%26%20projects) |
+| Creative & games | 4 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Creative%20%26%20games) |
+| Data & AI | 9 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Data%20%26%20AI) |
+| Design & visualization | 147 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Design%20%26%20visualization) |
+| Infrastructure & reliability | 11 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Infrastructure%20%26%20reliability) |
+| Personal planning | 3 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Personal%20planning) |
+| Research & science | 6 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Research%20%26%20science) |
+| Security | 5 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Security) |
+| Software & automation | 31 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&subject=Software%20%26%20automation) |
 
 ## Start a useful task
 
 - [Frontend Implementation Partner](../../collections/muse-starters-v1/starters/frontend-partner/STARTER.md) — Build or repair interface behavior and inspect the actual user-facing result.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 6 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=product-interface-designer&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 6 workflows for this specialist](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer&type=workflow)
 
 ## Connect your services
 

@@ -4,17 +4,17 @@ Design and maintain reliable data systems, from schemas and ingestion quality to
 
 **373 skills · 58 workflows · 21 tool guides** · **79 task starters** · **19 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-ai-agent-presets/releases/download/v1.6.0/muse-data-engineer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=data-engineer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-data-engineer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=data-engineer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
 | Subject | Skills | Browse |
 | --- | ---: | --- |
-| Business & projects | 3 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=data-engineer&subject=Business%20%26%20projects) |
-| Creative & games | 2 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=data-engineer&subject=Creative%20%26%20games) |
-| Data & AI | 359 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=data-engineer&subject=Data%20%26%20AI) |
-| Personal planning | 1 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=data-engineer&subject=Personal%20planning) |
-| Software & automation | 8 | [Explore](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=data-engineer&subject=Software%20%26%20automation) |
+| Business & projects | 3 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=data-engineer&subject=Business%20%26%20projects) |
+| Creative & games | 2 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=data-engineer&subject=Creative%20%26%20games) |
+| Data & AI | 359 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=data-engineer&subject=Data%20%26%20AI) |
+| Personal planning | 1 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=data-engineer&subject=Personal%20planning) |
+| Software & automation | 8 | [Explore](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=data-engineer&subject=Software%20%26%20automation) |
 
 ## Start a useful task
 
@@ -31,7 +31,7 @@ Design and maintain reliable data systems, from schemas and ingestion quality to
 - [Talk to your SQLite database with a LangChain Assistant](../../collections/muse-starters-v1/starters/task-talk-to-your-sqlite-database-with-a-langchain-assistant-e72a27/STARTER.md) — Use the matching tools and data flow to complete “Talk to your SQLite database with a LangChain Assistant”.
 - [Airtable to Google Sheets Auto-Sync](../../collections/muse-starters-v1/starters/task-airtable-to-google-sheets-auto-sync-dd5af6/STARTER.md) — Use the matching tools and data flow to complete “Airtable to Google Sheets Auto-Sync”.
 
-[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 58 workflows for this specialist](https://atlas-agents-hub.github.io/muse-ai-agent-presets/downloads.html?role=data-engineer&type=workflow)
+[All task starters](../../collections/muse-starters-v1/CATALOG.md) · [All 58 workflows for this specialist](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=data-engineer&type=workflow)
 
 ## Connect your services
 
