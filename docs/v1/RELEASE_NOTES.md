@@ -10,6 +10,10 @@ Build, research, create and automate with a larger library for your personal Mus
 - **273 connectors**, including 122 new service adapters with named actions and input fields.
 - Updated libraries, setup guides and service selections for all **15 specialists**.
 - Searchable subject packs, direct guide links, shareable filters, paginated results and readable subject indexes.
+- [Muse Planner](../spaces/MUSE_PLANNER.md) for projects, routines, calendars, backup and restore. [Muse Task Board](../spaces/TASK_BOARD.md) for moving, editing and exporting project cards.
+- [Inbox Triage](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) for saved preferences, resumable review windows and draft checks.
+
+[Browse the full-stack Space templates](../spaces/README.md) for app source and setup guides.
 
 Companion Home, Daily Desk, Studio, Arcade, Family Link and the terminal tools remain part of the toolkit. Use the [51 tool guides](../tools/README.md) to select tools for your task.
 

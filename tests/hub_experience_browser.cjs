@@ -124,6 +124,7 @@ async function check(name, run) {
   catch (error) { row.status = 'FAIL'; row.error = error.stack || String(error); await screenshot('failure-' + report.checks.length + '.png').catch(() => {}); }
   report.checks.push(row);
   console.log(row.status + ' ' + name);
+  if (row.error) console.error(row.error);
 }
 async function layout() {
   const result = await evaluate('({width:innerWidth,documentWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,brokenAria:[...document.querySelectorAll("[aria-labelledby],[aria-describedby],[aria-controls]")].flatMap(e=>["aria-labelledby","aria-describedby","aria-controls"].flatMap(a=>(e.getAttribute(a)||"").split(/\\s+/).filter(Boolean).filter(id=>!document.getElementById(id)).map(id=>({element:e.id||e.tagName,attribute:a,id}))))})');

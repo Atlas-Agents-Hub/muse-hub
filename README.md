@@ -1,6 +1,6 @@
 # Muse Hub
 
-**Build, research, create and plan with Muse Hub.** Set up a specialist assistant, build your own toolkit from the searchable library, or start a project with a full-stack Space template.
+**Build, research, create and plan with Muse Hub.** This open-source toolkit for Meta's Muse AI brings together specialist assistants, a searchable library, and full-stack Space templates.
 
 Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5242 skills**, **396 workflows**, **51 tool guides**, **558 task starters**, and **273 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
 
