@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -64,6 +65,10 @@ def outputs(root=ROOT):
         for role in preset_catalog['presets']
     }
     add('presets/catalog.json',encode(preset_catalog))
+    feature_status=json.loads((root/'docs/discovery/hub-feature-status.json').read_bytes())
+    feature_status.update(release=version,release_url=REPO+'/releases/tag/'+version,
+                          release_manifest_url=REPO+'/releases/download/'+version+'/RELEASE_MANIFEST.json')
+    add('docs/discovery/hub-feature-status.json',encode(feature_status))
     def current(text):
         text=re.sub(r'v1\.5\.0\b',version,text)
         for term,number in counts.items():
@@ -151,13 +156,15 @@ Keep your customized instructions, preferences and memory in your working copy. 
 
 **First task to try:** {first}
 
-No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account for each connection you add.
+No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account and permissions for each connection you add.
 
 ## Use a skill or workflow
 
 Start with [this specialist's library](LIBRARY.md). A skill describes a focused method and includes its reference files. A workflow connects several methods with named inputs, expected results and checks. Load the method that fits the current task; the complete selection remains available in the download.
 
-For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
+[Find and build your own pack](../../docs/collection/FIND_AND_BUILD.md) to search this specialist's methods, preview the included files and create a ZIP for your task. Add `--role {canonical}` to the toolkit's search command to focus on this specialist.
+
+Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
 
 Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
 
@@ -181,6 +188,11 @@ Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
         preset=json.loads((root/'presets'/canonical/'preset.json').read_bytes())
         preset['description']=scope
         add(f'presets/{canonical}/preset.json',encode(preset))
+    boundaries=json.loads((root/'kits/family-handoff/role-boundaries.json').read_bytes())
+    for canonical in ROLE_WORKFLOWS:
+        profile_path=f'presets/{canonical}/preset.json'
+        boundaries['roles'][canonical]['profile_sha256']=hashlib.sha256(result[profile_path]).hexdigest()
+    add('kits/family-handoff/role-boundaries.json',encode(boundaries))
     chooser=f'# Choose your Muse assistant\n\nDownload one specialist for the work you want to do. Each package includes Main instructions, three subchat guides, selected skills, workflows, examples and service guides for **one Muse assistant**.\n\n**Current release: [{version}]({REPO}/releases/tag/{version})** · [Checksums]({REPO}/releases/download/{version}/SHA256SUMS) · [Latest release]({REPO}/releases/latest)\n\n'
     for area,identities in AREAS:
         chooser+='## '+area+'\n\n| Specialist | What you can work on | Skills | Download |\n| --- | --- | ---: | --- |\n'

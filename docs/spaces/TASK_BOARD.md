@@ -23,6 +23,8 @@ Open the address printed in the terminal on the same computer and enter the sess
 3. Complete one action, move it to **Done**, and choose what comes next.
 4. Use **Export board** to keep a JSON copy. **Import cards** merges cards into your current board while keeping the cards already there.
 
+Choose **Edit** to update a card’s title, context or priority while keeping its position and status. **Remove** frees a card’s place; **Undo removal** restores it until your next saved board change or refresh.
+
 Start with this prompt for your Muse assistant:
 
 ```text
@@ -31,7 +33,7 @@ Suggest a short card title, context, priority and starting status for each
 action. Respect [TIME AND CONSTRAINTS]. End with the next three actions.
 ```
 
-The board supports 24 cards and 7,500 characters of saved board content. Keep a project focused, and export completed work before starting another board.
+The board supports 24 cards and 7,500 characters of saved board content. Keep a project focused, export completed work, and remove finished cards when you need more room.
 
 ## Connect planning to your assistant
 
@@ -45,7 +47,7 @@ python -B examples/task_board/run.py
 
 ## Make a Space of your own
 
-The board combines a small interface, persistent card storage, an export format and the Muse Hub Space request contract. Its drag controls use [SortableJS](https://github.com/SortableJS/Sortable); keyboard and status controls provide another way to move cards. All interface assets are included in the toolkit.
+The board combines a responsive interface, persistent card storage, a portable export and the Muse Hub Space request contract. Move cards with drag handles, keyboard controls or the status menu. All interface assets are included in the toolkit.
 
 Adapt the board into a reading list, research tracker or lesson planner. Keep the card IDs and saved revisions stable, then connect your host's documented storage, authentication and assistant adapters. The [Space starter](OPTIONAL_SPACE_STARTER.md) describes those connections; the [board source and examples](../../examples/task_board/README.md) provide the files to start from.
 

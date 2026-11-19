@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -24,7 +25,8 @@ class ProductCatalogRegression(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
             names=['presets/catalog.json','docs/connectors/catalog.json',
-                   'docs/discovery/agent-capabilities.json','hub/site/roles.json']
+                   'docs/discovery/agent-capabilities.json','docs/discovery/hub-feature-status.json',
+                   'hub/site/roles.json','kits/family-handoff/role-boundaries.json']
             names.extend('presets/'+role+'/preset.json' for role in renderer.ROLE_WORKFLOWS)
             for name in names:
                 target=root/name
@@ -38,6 +40,12 @@ class ProductCatalogRegression(unittest.TestCase):
                  mock.patch.object(renderer.tool_guides,'load_guides',return_value=self.guides):
                 outputs=renderer.outputs(root)
             actual=json.loads(outputs['presets/catalog.json'])
+            boundaries=json.loads(outputs['kits/family-handoff/role-boundaries.json'])
+            discovery=json.loads(outputs['docs/discovery/hub-feature-status.json'])
+            self.assertEqual(discovery['release'],'v9.8.7')
+            self.assertEqual(discovery['release_url'],renderer.REPO+'/releases/tag/v9.8.7')
+            self.assertEqual(discovery['release_manifest_url'],
+                             renderer.REPO+'/releases/download/v9.8.7/RELEASE_MANIFEST.json')
             self.assertEqual(set(actual['downloads']),set(catalog['presets']))
             for role,url in actual['downloads'].items():
                 expected=renderer.REPO+'/releases/download/v9.8.7/'+renderer.specialist_asset(role,'v9.8.7')
@@ -45,6 +53,8 @@ class ProductCatalogRegression(unittest.TestCase):
                 self.assertIn(expected,outputs['presets/'+role+'/README.md'].decode())
                 self.assertIn(expected,outputs['presets/'+role+'/INSTALL.md'].decode())
                 self.assertIn(expected,outputs['presets/'+role+'/LIBRARY.md'].decode())
+                self.assertEqual(boundaries['roles'][role]['profile_sha256'],
+                                 hashlib.sha256(outputs['presets/'+role+'/preset.json']).hexdigest())
 
     def test_explicit_extension_starters_are_discoverable_before_related_tasks(self):
         for role in renderer.muse_collection.EXTENSION_ROLES:

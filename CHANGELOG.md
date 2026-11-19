@@ -6,6 +6,9 @@
 - Include dependency-complete skill subject packs, concrete automation graphs and named connector action inputs.
 - Add service selections and updated library documentation to all 15 specialist packages.
 - Add paginated download search, direct guide links and static subject indexes for easier discovery.
+- Search six resource types from one command and build a custom toolkit with its supporting scripts, references and workflow inputs.
+- Organize projects in the persistent Task Board with editing, removal, undo, portable exports and assistant plan requests.
+- Refresh all specialist installation guides and resource descriptions with practical next steps.
 
 ## v1.5.0 — a larger skill library, organized around your work
 

@@ -7,7 +7,7 @@ description: "To test local web applications, write native Python Playwright scr
 
 Use the task's actual files, connected services, and project settings. Run included helpers from this skill folder. Set `SKILL_DIR` to its full path when a command uses that variable.
 
-Catalog modification: source-review-first and state-based waits; server helper bounds/cleanup updated.
+Inspect the application's source, wait for observable UI states, and keep server startup and cleanup bounded.
 
 To test local web applications, write native Python Playwright scripts.
 

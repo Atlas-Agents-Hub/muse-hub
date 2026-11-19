@@ -113,6 +113,39 @@ class PublicReleaseDownloads(unittest.TestCase):
             for phrase in ('source-only','source only','unpublished draft','not deployed','not additional agents','no authenticated cross-account','not a claim','h11 /','h12 /','h00–h21'):
                 self.assertNotIn(phrase,text,(name,phrase))
 
+    def test_initial_page_is_bounded_and_static_subject_pages_cover_every_item(self):
+        from html.parser import HTMLParser
+
+        class Page(HTMLParser):
+            def __init__(self):
+                super().__init__();self.cards=[];self.links=[];self.results={}
+            def handle_starttag(self,tag,attrs):
+                attrs=dict(attrs)
+                if tag=='article' and attrs.get('class')=='download-card':self.cards.append(attrs)
+                if tag=='a' and 'href' in attrs:self.links.append(attrs['href'])
+                if attrs.get('id')=='download-results':self.results=attrs
+
+        output=self.renderer.outputs()
+        page=Page();page.feed(output['downloads.html'].decode())
+        self.assertEqual(len(page.cards),min(60,len(self.directory['items'])))
+        self.assertEqual(int(page.results['data-total']),len(self.directory['items']))
+        self.assertEqual(page.results['data-version'],self.directory['version'])
+        self.assertLess(len(output['downloads.html']),200000)
+        self.assertEqual([(row['data-kind'],row['data-id']) for row in page.cards],
+                         [(row['kind'],row['id']) for row in self.directory['items'][:60]])
+        subjects={name for name in output if name.startswith('library/')}
+        self.assertEqual({href for href in page.links if href.startswith('library/')},subjects)
+        card_count=0
+        download_links=[]
+        for name in subjects:
+            part=Page();part.feed(output[name].decode())
+            self.assertGreater(len(part.cards),0,name)
+            self.assertLessEqual(len(part.cards),200,name)
+            card_count+=len(part.cards)
+            download_links.extend(href for href in part.links if '/releases/download/' in href)
+        self.assertEqual(card_count,len(self.directory['items']))
+        self.assertCountEqual(download_links,[row['url'] for row in self.directory['items']])
+
 
 
 
@@ -231,9 +264,11 @@ class GeneratedReleasePresentation(unittest.TestCase):
                         labels=re.findall(r'\bversion\s+v?([0-9]+\.[0-9]+\.[0-9]+)\b',' '.join(page.text),re.IGNORECASE)
                         self.assertEqual(labels,[version.removeprefix('v')]*label_count,name)
                         downloads={url for url in page.links if '/releases/download/' in url}
-                        self.assertEqual(len(downloads),18 if name=='index.html' else len(expected_urls),name)
+                        expected_page_urls=({row['url'] for row in data['items'][:60]+data['bundles']})
+                        self.assertEqual(len(downloads),18 if name=='index.html' else len(expected_page_urls),name)
                         planning_url=self.renderer.REPO+'/releases/download/'+version+'/muse-skill-project-prioritization-'+version+'.zip'
-                        self.assertIn(planning_url,downloads,name)
+                        if name=='index.html':self.assertIn(planning_url,downloads,name)
+                        else:self.assertEqual(downloads,expected_page_urls)
                         self.assertTrue(downloads<=expected_urls,(name,downloads-expected_urls))
                         releases=[url for url in page.links if '/releases/tag/' in url]
                         self.assertTrue(all(url==self.renderer.REPO+'/releases/tag/'+version for url in releases))

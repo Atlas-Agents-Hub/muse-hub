@@ -8,7 +8,7 @@ Design safe data contracts, reconcile incremental records and review query acces
 python run.py --demo
 ```
 
-No dependency installation, API key, network access or repository checkout is needed. The result is JSON containing actual local calculations and explicit scope. Python 3.10 or newer is required.
+Use Python 3.10 or newer. The kit runs with the Python standard library and returns a JSON report from your supplied inputs.
 
 For your own supplied records:
 
@@ -35,8 +35,8 @@ The ZIP destination is create-only; use a new name rather than overwriting an ex
 
 ## Use with an assistant
 
-Read `PLAYBOOK.md` and only the relevant skill documents. Keep the assistant's existing identity, memory, user preferences and tool permissions. Ask it to inspect your supplied records, use the local tool when available, explain the result and hand off any external action to your existing supported host.
+Read `PLAYBOOK.md` and the skill documents for your task. Ask Muse to inspect your supplied records, run the relevant tool, explain the result and plan the next action. Keep your assistant's existing identity, memory and working preferences.
 
-## Boundaries
+## Use the results
 
-The kit does not connect to databases, control browsers, change infrastructure, grant approvals or create background jobs. Its reports are useful calculations and consistency reviews, not native-assistant performance certification or evidence that a production action occurred. The archive manifest checks package self-consistency, not publisher identity or a cryptographic signature.
+Use the schema comparison to prepare a migration, the event reconciliation to identify current records, and the query-plan review to choose the next performance investigation. Apply a reviewed change through your database tools, then compare the resulting schema, records or query plan with the expected result.

@@ -3,6 +3,7 @@ const byId = id => document.getElementById(id);
 const states = ['todo', 'doing', 'done'];
 const stateNames = {todo: 'To do', doing: 'In progress', done: 'Done'};
 let token = '', state = null, revision = 0, adapter = null, busy = false, pendingPlan = null;
+let editingId = null, editingRevision = null, undoRemoval = null, writeBlocked = false;
 const sorters = [];
 const message = text => { byId('status').textContent = text; };
 const freshId = prefix => prefix + crypto.randomUUID().replaceAll('-', '');
@@ -47,6 +48,8 @@ async function refresh() {
   state = validateBoard(saved ? JSON.parse(saved.text) : {schema: 'muse-task-board/v1', cards: []});
   revision = saved ? saved.revision : 0;
   adapter = result.adapter;
+  writeBlocked = false;
+  undoRemoval = null;
   render();
 }
 async function perform(action) {
@@ -68,18 +71,72 @@ async function perform(action) {
   }
 }
 async function save(next, focusId) {
+  if (writeBlocked) throw new Error('Refresh the board before saving another change.');
   validateBoard(next);
-  const result = await api('/api/note', {note_id: 'muse-task-board', text: JSON.stringify(next), expected_revision: revision});
+  const text = JSON.stringify(next);
+  let result;
+  try {
+    result = await api('/api/note', {note_id: 'muse-task-board', text, expected_revision: revision});
+    if (result.note_id !== 'muse-task-board' || result.text !== text || result.revision !== revision + 1)
+      throw new Error('The save response could not be confirmed.');
+  } catch (error) {
+    writeBlocked = true;
+    throw error;
+  }
   state = next; revision = result.revision;
-  await refresh();
+  undoRemoval = null;
+  render();
   message('Board saved.');
   if (focusId) byId(focusId)?.focus();
+  return revision;
 }
 function mutate(change, focusId) {
   return perform(async () => {
+    if (!state) return;
     const next = structuredClone(state);
     change(next);
     await save(next, focusId);
+  });
+}
+function resetComposer(focusId) {
+  editingId = null; editingRevision = null;
+  byId('card-title').value = ''; byId('card-details').value = ''; byId('card-priority').value = 'normal';
+  updateComposer();
+  if (focusId) byId(focusId)?.focus();
+}
+function updateComposer() {
+  byId('composer-mode').textContent = editingId ? 'Edit your card' : 'Add a next action';
+  byId('card-submit').textContent = editingId ? 'Save card' : 'Add card';
+  byId('card-submit').disabled = writeBlocked || Boolean(editingId && editingRevision !== revision);
+  byId('cancel-edit').hidden = !editingId;
+}
+function editCard(id) {
+  if (busy || writeBlocked || !state) return;
+  const card = state.cards.find(item => item.id === id);
+  if (!card) return;
+  editingId = id; editingRevision = revision;
+  byId('card-title').value = card.title; byId('card-details').value = card.details;
+  byId('card-priority').value = card.priority;
+  updateComposer(); byId('card-title').focus();
+  message('Edit the title, context or priority, then save your card.');
+}
+function renderUndo() {
+  byId('undo-removal').hidden = !undoRemoval;
+  byId('undo-removal-message').textContent = undoRemoval ? 'Removed “' + undoRemoval.title + '”.' : '';
+  byId('undo-remove').disabled = writeBlocked;
+}
+function removeCard(id) {
+  if (busy || writeBlocked || !state) return;
+  return perform(async () => {
+    const removed = state.cards.find(card => card.id === id);
+    if (!removed) return;
+    const previous = structuredClone(state);
+    const next = structuredClone(state); next.cards = next.cards.filter(card => card.id !== id);
+    const savedRevision = await save(next);
+    if (editingId === id) resetComposer();
+    undoRemoval = {board: previous, revision: savedRevision, cardId: id, title: removed.title};
+    renderUndo(); byId('undo-remove').focus();
+    message('Card removed. Undo is available until your next saved board change or refresh.');
   });
 }
 function render() {
@@ -100,6 +157,7 @@ function render() {
       article.append(make('span', card.priority + ' priority', 'priority ' + card.priority));
       const controls = make('div', '', 'card-controls');
       const select = make('select', ''); select.id = 'move-' + card.id;
+      select.disabled = writeBlocked;
       select.setAttribute('aria-label', 'Move ' + card.title);
       for (const nextState of states) {
         const option = make('option', stateNames[nextState]); option.value = nextState;
@@ -110,6 +168,7 @@ function render() {
         mutate(next => { next.cards.find(item => item.id === card.id).status = target; }, select.id);
       });
       const up = make('button', '↑', 'quiet'); up.type = 'button';
+      up.disabled = writeBlocked;
       up.setAttribute('aria-label', 'Move ' + card.title + ' earlier');
       up.addEventListener('click', () => mutate(next => {
         const at = next.cards.findIndex(item => item.id === card.id);
@@ -117,11 +176,19 @@ function render() {
         while (before >= 0 && next.cards[before].status !== card.status) before--;
         if (before >= 0) [next.cards[before], next.cards[at]] = [next.cards[at], next.cards[before]];
       }, select.id));
-      controls.append(select, up); article.append(controls); list.append(article);
+      controls.append(select, up); article.append(controls);
+      const actions = make('div', '', 'card-actions');
+      const edit = make('button', 'Edit', 'quiet'); edit.type = 'button'; edit.id = 'edit-' + card.id;
+      edit.setAttribute('aria-label', 'Edit ' + card.title); edit.disabled = writeBlocked;
+      edit.addEventListener('click', () => editCard(card.id));
+      const remove = make('button', 'Remove', 'quiet'); remove.type = 'button'; remove.id = 'remove-' + card.id;
+      remove.setAttribute('aria-label', 'Remove ' + card.title); remove.disabled = writeBlocked;
+      remove.addEventListener('click', () => removeCard(card.id));
+      actions.append(edit, remove); article.append(actions); list.append(article);
     }
     sorters.push(new Sortable(list, {group: 'muse-board', animation: 160, handle: '.handle', draggable: '.card',
-      ghostClass: 'sortable-ghost', onMove: () => !busy, onEnd: () => {
-        if (busy) { render(); return; }
+      ghostClass: 'sortable-ghost', onMove: () => !busy && !writeBlocked, onEnd: () => {
+        if (busy || writeBlocked) { render(); return; }
         const order = states.flatMap(status => [...byId(status).querySelectorAll('.card')].map(card => ({id: card.dataset.id, status})));
         mutate(next => {
           const map = new Map(next.cards.map(card => [card.id, card]));
@@ -131,6 +198,7 @@ function render() {
   }
   const complete = state.cards.filter(card => card.status === 'done').length;
   byId('summary').textContent = state.cards.length ? `${state.cards.length} cards · ${complete} finished · a little progress at a time.` : 'A clear start for your next project.';
+  updateComposer(); renderUndo();
   byId('requests').replaceChildren();
   const requests = adapter.requests.filter(request => {
     try { return JSON.parse(request.prompt).schema === 'muse-board-plan/v1'; }
@@ -153,12 +221,45 @@ byId('session-form').addEventListener('submit', event => {
 });
 byId('card-form').addEventListener('submit', async event => {
   event.preventDefault();
+  if (!state || busy) return;
+  if (editingId) {
+    const id = editingId;
+    const saved = await mutate(next => {
+      if (editingRevision !== revision) throw new Error('The board changed while you were editing. Cancel this edit and open the current card.');
+      const current = next.cards.find(card => card.id === id);
+      if (!current) throw new Error('This card is no longer on the board. Cancel this edit to continue.');
+      current.title = byId('card-title').value.trim(); current.details = byId('card-details').value;
+      current.priority = byId('card-priority').value;
+    });
+    if (saved) resetComposer('edit-' + id);
+    return;
+  }
   const card = {id: freshId('card'), title: byId('card-title').value.trim(), details: byId('card-details').value,
     status: 'todo', priority: byId('card-priority').value};
   const saved = await mutate(next => next.cards.push(card), 'card-title');
-  if (saved) { byId('card-title').value = ''; byId('card-details').value = ''; }
+  if (saved) resetComposer('card-title');
 });
-byId('refresh').addEventListener('click', () => perform(async () => { await refresh(); message('Latest board loaded.'); }));
+byId('cancel-edit').addEventListener('click', () => {
+  if (busy) return;
+  const id = editingId;
+  resetComposer(state?.cards.some(card => card.id === id) ? 'edit-' + id : 'card-title');
+  message('Edit cancelled. Your saved card is unchanged.');
+});
+byId('undo-remove').addEventListener('click', () => {
+  if (busy || writeBlocked || !state || !undoRemoval) return;
+  perform(async () => {
+    const undo = undoRemoval;
+    if (revision !== undo.revision) throw new Error('The board changed. Refresh to load the latest cards.');
+    await save(structuredClone(undo.board), 'edit-' + undo.cardId);
+    message('Card restored to its original position.');
+  });
+});
+byId('refresh').addEventListener('click', () => perform(async () => {
+  await refresh();
+  message(editingId && editingRevision !== revision
+    ? 'Latest board loaded. Your draft is kept; cancel the edit and open the current card before saving.'
+    : 'Latest board loaded.');
+}));
 byId('export').addEventListener('click', () => {
   if (busy || !state) return;
   const blob = new Blob([JSON.stringify(state, null, 2) + '\n'], {type: 'application/json'});
@@ -194,6 +295,7 @@ byId('lock').addEventListener('click', () => {
   if (busy) return;
   for (const sorter of sorters) sorter.destroy(); sorters.length = 0;
   token = ''; state = null; revision = 0; adapter = null; pendingPlan = null;
+  undoRemoval = null; writeBlocked = false; resetComposer(); renderUndo();
   for (const status of states) byId(status).replaceChildren();
   byId('requests').replaceChildren(); byId('card-title').value = ''; byId('card-details').value = '';
   byId('workspace').hidden = true; byId('unlock').hidden = false; byId('session-key').focus();

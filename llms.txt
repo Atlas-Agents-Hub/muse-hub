@@ -1,6 +1,6 @@
 # Muse Hub
 
-> Muse Hub is an open-source resource hub for Meta's Muse AI. Download 15 specialist assistants with Main and three subchats, choose from 5242 skills, 396 workflows and 558 task starters, and browse 273 connector guides. Explore Companion Home, persistent notes, Studio, Arcade, terminal tools, and a 63-resource library.
+> Muse Hub is an open-source toolkit for Meta's Muse AI personal assistant, bringing together AI agent skills, workflow automation, custom tools and service connectors. Download 15 specialist assistants with Main and three subchats, choose from 5242 skills, 396 workflows and 558 task starters, and browse 273 connector guides. Explore Companion Home, persistent notes, Studio, Arcade, terminal tools, custom skill packs and a 63-resource library.
 
 ## Start here
 
@@ -47,6 +47,7 @@
 - [Muse AI skills](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/SKILLS.md)
 - [Muse workflows](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/WORKFLOWS.md)
 - [Task starters](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/collections/muse-starters-v1/CATALOG.md)
+- [Find and build a custom pack](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/collection/FIND_AND_BUILD.md)
 - [Specialist tools](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/collection/SPECIALIST_QUICKSTART.md)
 - [Connector directory](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/connectors/README.md)
 - [Companion Home](https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/docs/COMPANION_HOME.md)
@@ -61,4 +62,4 @@
 
 Specialist ZIPs include instructions, subchat guides, selected skills, workflows, and a first task. Use the guides directly in Muse; use Python 3.12+ for the optional toolkit commands.
 
-The website labels resources by where you use them: Inside Muse, Included with Muse Hub, and Community project. Start with a journey for the task, then follow the setup guide for each tool or service you choose.
+Start with a journey for the task, then follow the setup guide for each tool or service you choose. Search the library by task or specialist; preview and build a custom pack when you want a focused set of skills and workflows.

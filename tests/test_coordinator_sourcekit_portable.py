@@ -32,9 +32,9 @@ class PortableCoordinatorSourceKitTests(unittest.TestCase):
                 name.startswith("coordinator/system-files/") or
                 name=="coordinator/receipts/COORDINATOR_RECEIPT.json"):
                 self.assertNotIn(b"\r\n",data,name)
-        # Reviewed v1.1.0 neutral profile bytes, after portable LF normalization.
-        # 's historical macOS pin remains in git history; this release has new copy.
-        release_profile_sha="21d620f75c721d0865f9e008ba7a2624774805b3ef95c283449c2b3319210aaa"
+        # Reviewed v1.6.0 Coordinator scope, after portable LF normalization.
+        # Independently rendered from the profile template and current description.
+        release_profile_sha="e9c10743404e37d047c52622d0cb04995c20508e838c58a3e79f6c6d05389b57"
         profile=contents["coordinator/profile/AGENTS.md"]
         self.assertEqual(hashlib.sha256(profile).hexdigest(),release_profile_sha)
         self.assertEqual(profile,contents["coordinator/system-files/AGENTS.md"])

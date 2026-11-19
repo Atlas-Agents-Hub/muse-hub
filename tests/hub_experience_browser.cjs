@@ -42,6 +42,7 @@ for (const name of ['index.html', 'site.js', 'site.css', 'downloads.html', 'down
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const q = JSON.stringify;
 let chrome, socket, server, base, sequence = 0, loaded = 0, width = 1440;
+let catalogFault = null;
 const pending = new Map();
 let chromeLog = '';
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png' };
@@ -76,6 +77,7 @@ async function navigate(relative, enhanced = true) {
   assert(loaded > previous, 'Page load was not observed');
   await wait('document.readyState === "complete"');
   if (enhanced && new URL(target).pathname.includes('/public/')) await wait('document.body.classList.contains("directory-ready")');
+  if (enhanced && new URL(target).pathname.endsWith('/downloads.html')) await wait('document.body.classList.contains("downloads-ready")');
 }
 async function click(selector) {
   const element = 'document.querySelector(' + q(selector) + ')';
@@ -141,7 +143,13 @@ async function start() {
       if (fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
       file = fs.realpathSync(file);
       assert(contained(site, file) && fs.statSync(file).isFile());
-      const bytes = fs.readFileSync(file);
+      let bytes = fs.readFileSync(file);
+      if (pathname === '/downloads.json' && catalogFault) {
+        if (catalogFault === 'unavailable') { response.writeHead(503); response.end('Temporarily unavailable'); return; }
+        const changed = JSON.parse(bytes);
+        changed.items[0].url = 'https://example.invalid/redirected.zip';
+        bytes = Buffer.from(JSON.stringify(changed));
+      }
       report.requests.push({ path: path.relative(site, file).replaceAll(path.sep, '/'), sha256: sha256(bytes) });
       response.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Content-Length': bytes.length, 'Cache-Control': 'no-store' });
       response.end(request.method === 'HEAD' ? undefined : bytes);
@@ -204,9 +212,10 @@ async function runChecks() {
   await check('download inventory, specialist filters and shareable search', async () => {
     await navigate('downloads.html');
     const links = await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
-    assert.equal(links.length, downloads.items.length);
-    assert.deepEqual(new Set(links), new Set(downloads.items.map(item => item.url)));
-    const sample = downloads.items.find(row => row.kind === 'skill' && row.roles.includes('software-engineer'));
+    assert.equal(links.length, Math.min(60, downloads.items.length));
+    assert.deepEqual(links, downloads.items.slice(0,60).map(item => item.url));
+    assert.equal(await evaluate('Number(document.querySelector("#download-results").dataset.catalogSize)'), downloads.items.length);
+    const sample = downloads.items.slice(60).findLast(row => row.kind === 'skill' && row.roles.includes('software-engineer'));
     assert(sample, 'Software engineering skill must be discoverable');
     await navigate('downloads.html?type=skill&role=software-engineer&q=' + encodeURIComponent(sample.id));
     const visible = await evaluate('[...document.querySelectorAll(".download-card:not([hidden])")].map(card=>({id:card.dataset.id,kind:card.dataset.kind,url:card.querySelector("a[aria-label]").href}))');
@@ -217,7 +226,7 @@ async function runChecks() {
     await click('#download-clear-empty');
     assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(60, downloads.items.length));
     assert.equal(new URL(await evaluate('location.href')).searchParams.has('role'), false);
-    return {searchable_resources:links.length, specialist_search:true, empty_state_reset:true};
+    return {searchable_resources:downloads.items.length, rendered_cards:links.length, specialist_search:true, empty_state_reset:true};
   });
   await check('invalid download filters recover without reflected markup', async () => {
     for (const query of ['type=bad&role=bad', 'type=skill&type=workflow', 'role=%3Cimg%20src=x%3E', 'q='+'x'.repeat(3000)]) {
@@ -245,7 +254,30 @@ async function runChecks() {
     assert.equal(await evaluate('document.querySelector("#download-pages").hidden'),true);
     await click('#download-clear-empty');
     assert.equal(await evaluate('document.querySelector("#download-previous").disabled'),true);
+    await navigate('downloads.html?entry=skills#skills');
+    assert.equal(await evaluate('document.querySelector("#download-kind").value'),'skill');
+    await click('#download-reset');
+    const cleared = await evaluate('location.href');
+    assert.equal(new URL(cleared).hash,'');
+    await navigate(cleared);
+    assert.equal(await evaluate('document.querySelector("#download-kind").value'),'all');
     return {page_size:60, distinct_pages:true, shareable_page:true, filter_resets_page:true};
+  });
+  await check('unavailable or invalid catalog retains safe downloads and subject navigation', async () => {
+    try {
+      for (const fault of ['unavailable','redirected-entry']) {
+        catalogFault = fault;
+        await navigate('downloads.html',false);
+        await wait('document.body.classList.contains("downloads-fallback")');
+        assert.equal(await evaluate('document.querySelector("#download-results").hasAttribute("aria-busy")'),false);
+        assert.equal(await evaluate('document.querySelector("#download-search").disabled'),true);
+        assert.equal(await evaluate('document.querySelector(".catalog-subjects").open'),true);
+        const links=await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
+        assert.deepEqual(links,downloads.items.slice(0,60).map(row=>row.url));
+        await layout();
+      }
+    } finally { catalogFault = null; }
+    return {unavailable_fallback:true, redirected_entry_refused:true, initial_downloads_preserved:true};
   });
   await check('all resources without a route', async () => { await navigate('public/index.html'); return assertRoute(null); });
   for (const id of routes.keys()) await check('shareable route: ' + id, async () => {
@@ -370,9 +402,20 @@ async function runChecks() {
     await call('Emulation.setScriptExecutionDisabled', { value: true });
     try {
       await navigate('downloads.html?role=software-engineer', false);
-      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden]) a[aria-label]").length'), downloads.items.length);
+      const initial=await evaluate('document.querySelectorAll(".download-card:not([hidden]) a[aria-label]").length');
+      assert.equal(initial,Math.min(60,downloads.items.length));
+      await click('.catalog-subjects summary');
+      const subjects=await evaluate('[...document.querySelectorAll("nav[aria-label=\\"Subject library\\"] a")].map(a=>({href:a.href,visible:!!a.getClientRects().length}))');
+      const expectedSubjects=fs.readdirSync(path.join(site,'library')).filter(name=>name.endsWith('.html')).map(name=>new URL('library/'+name,base).href);
+      assert.deepEqual(new Set(subjects.map(row=>row.href)),new Set(expectedSubjects));
+      assert(subjects.every(row=>row.visible));
       await layout();
-      return {visible_downloads:downloads.items.length};
+      await navigate(subjects[0].href,false);
+      const subjectDownloads=await evaluate('[...document.querySelectorAll(".download-card a")].map(a=>a.href).filter(href=>href.includes("/releases/download/"))');
+      assert(subjectDownloads.length>0 && subjectDownloads.length<=200);
+      assert(subjectDownloads.every(href=>downloads.items.some(row=>row.url===href)));
+      await layout();
+      return {initial_downloads:initial, linked_subject_pages:subjects.length, subject_downloads:subjectDownloads.length};
     } finally { await call('Emulation.setScriptExecutionDisabled', { value:false }); }
   });
 }

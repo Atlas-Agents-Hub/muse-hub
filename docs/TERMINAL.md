@@ -72,6 +72,16 @@ python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
 
 ### Choose a starter or run a tool
 
+Search across skills, workflows, starters, specialists, connectors and tool guides, then create a pack for your project:
+
+```sh
+python -B tools/discover.py search "sql query" --role data-engineering-architect
+python -B tools/discover.py plan --skill query-plan-review --workflow pipeline-validation
+python -B tools/discover.py build --skill query-plan-review --workflow pipeline-validation --to "$HOME/my-data-toolkit.zip"
+```
+
+The [finder and custom toolkit guide](collection/FIND_AND_BUILD.md) covers filters, specialist selection, supporting files and reusable exports.
+
 ```sh
 python -B tools/muse_collection.py show daily-planner
 python -B tools/muse_collection.py build daily-planner --to "$HOME/daily-planner.zip"

@@ -4,7 +4,7 @@ This toolkit includes all 15 specialists, the skill and workflow collection, and
 
 ## Use a specialist with Muse
 
-Open [Getting started](docs/GETTING_STARTED.md), choose a specialist, and give Muse its kit together with your current task. The [download directory](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html) has a separate ZIP for every specialist, skill, and workflow.
+Open [Getting started](docs/GETTING_STARTED.md), choose a specialist, and give Muse its kit together with your current task. The [download directory](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html) offers specialist kits, workflow downloads, individual starter skills, and subject packs for the expanded skill library. Every skill has its own searchable entry, guide link, and exact file path inside its download.
 
 ## Run the included tools
 
@@ -15,6 +15,16 @@ python -B tools/muse_collection.py demo data-engineer
 ```
 
 The [terminal guide](docs/TERMINAL.md) covers more commands, Muse chat from the command line, and your local notebook. [The README](README.md) introduces the full collection.
+
+## Find and build your own pack
+
+Search the included catalog for a task:
+
+```sh
+python -B tools/discover.py search "sql query"
+```
+
+Add a specialist filter such as `--role data-engineering-architect` to narrow the results. Preview selected skills and workflows with `plan`, then use `build` to create a custom ZIP with their supporting files. [Follow the find and build guide](docs/collection/FIND_AND_BUILD.md) for complete commands and examples.
 
 ## Check your download
 

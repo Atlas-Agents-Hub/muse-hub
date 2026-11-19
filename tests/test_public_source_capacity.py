@@ -13,9 +13,9 @@ from muse_presets.public_export import (
 
 class PublicSourceCapacityTests(unittest.TestCase):
     def test_capacity_extends_future_reviewed_files_with_explicit_hard_limit(self):
-        self.assertEqual(MAX_FILES, 12000)
+        self.assertEqual(MAX_FILES, 60000)
         self.assertEqual(MAX_FILE_BYTES, 2_000_000)
-        self.assertEqual(MAX_TOTAL_BYTES, 80_000_000)
+        self.assertEqual(MAX_TOTAL_BYTES, 750_000_000)
         with tempfile.TemporaryDirectory(prefix="muse-public-capacity-") as d:
             root = Path(d)
             docs = root / "docs"

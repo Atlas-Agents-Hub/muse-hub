@@ -8,7 +8,7 @@ import re
 
 LIBRARY_ASSET_CATALOG = 'collections/library/catalog.json'
 # A catalog edit must be reviewed before it can admit new support-file bytes.
-LIBRARY_ASSET_CATALOG_SHA256 = '9e0c347346b66304cf90c08462d3340b8144921b22115ddd6836bb0f605024be'
+LIBRARY_ASSET_CATALOG_SHA256 = '89d67da9a01bba0b16b06eafc03a4099c574dcecc3e59b56a9da41b2965346e5'
 
 CATALOG_FILES = frozenset({
     'PUBLIC_SOURCE_MANIFEST.json',

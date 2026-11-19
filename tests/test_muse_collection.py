@@ -208,7 +208,12 @@ class CollectionTests(unittest.TestCase):
         import subprocess,sys
         a=subprocess.run([sys.executable,str(ROOT/'tools/muse_collection.py'),'check'],capture_output=True,text=True)
         self.assertEqual(a.returncode,0,a.stderr)
-        self.assertEqual(json.loads(a.stdout)['starters'],100)
+        result=json.loads(a.stdout)
+        self.assertEqual(result['schema'],mod.SCHEMA)
+        self.assertEqual(result['status'],'VALID')
+        for group in ('starters','skills','workflows','specialists'):
+            with self.subTest(group=group):
+                self.assertEqual(result[group],len(self.data[group]))
 
     def test_cli_bad_id_no_traceback(self):
         import subprocess,sys
@@ -603,8 +608,9 @@ class ParticipantScopeTests(unittest.TestCase):
         cls.check=importlib.util.module_from_spec(spec);spec.loader.exec_module(cls.check)
 
     def test_participant_does_not_receive_unavailable_practice_instructions(self):
-        for case in self.data['depth_cases']:
-            packet=mod.challenge_files(self.data,case['id'],'candidate')
+        prepared=mod.prepare_collection(self.data)
+        for case in prepared['depth_cases']:
+            packet=mod.challenge_files(prepared,case['id'],'candidate')
             depth=packet['skills/'+case['skill_id']+'/DEPTH.md'].decode()
             self.assertNotIn('Practice case IDs:',depth)
             self.assertNotIn('practice/check_outputs.py',depth)

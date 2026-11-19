@@ -183,7 +183,7 @@ def select_public_files(root:Path,*,verify_manifest:bool=True)->dict[str,bytes]:
                 continue
             name=relative.as_posix()
             if ((entry.name=="collections" and not (name.startswith(("collections/muse-starters-v1/","collections/library/")) or name=='collections/tool-guides.json'))
-                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/skill_library.py", "tools/tool_guides.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py", "tools/hub_journeys.py", "tools/prioritize.py", "tools/accessibility_check.py", "tools/workflow_library.py", "tools/import_skill_sources.py", "tools/skill_sources.json"})
+                or (entry.name=="tools" and name not in {"tools/muse_collection.py", "tools/skill_library.py", "tools/tool_guides.py", "tools/collection_compatibility.py", "tools/compare_muse_routes.py", "tools/hub_journeys.py", "tools/prioritize.py", "tools/accessibility_check.py", "tools/workflow_library.py", "tools/import_skill_sources.py", "tools/skill_sources.json", "tools/discover.py"})
                 or (entry.name=="hub" and name not in PUBLIC_HUB_FILES
                     and not re.fullmatch(r'hub/site/library/[a-z0-9]+(?:-[a-z0-9]+)*-[0-9]{3}\.html',name))
                 or (entry.name=="kits" and name not in PUBLIC_KITS_FILES)):

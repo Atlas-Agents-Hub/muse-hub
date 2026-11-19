@@ -16,10 +16,12 @@ Open the printed address on the same computer and enter the session key. Use the
 
 - **Add a card:** write one useful action, a little context, and its priority.
 - **Move it:** drag the handle or use the card’s status menu. The arrow moves a card earlier in its column.
+- **Refine it:** choose Edit to change a card’s title, context or priority. Save card keeps its place and status; Cancel edit keeps the saved version.
+- **Make room:** remove a card when you no longer need it. Undo removal restores the card and its original position until your next saved board change or refresh.
 - **Take a copy:** Export board downloads JSON. Import cards merges a board into the current one and keeps existing cards.
 - **Work with Muse:** Queue a board plan. The request carries the selected cards and asks for three concrete next actions. Results appear beside the board as the host returns them.
 
-The board supports 24 cards and 7,500 characters of saved board content. Export a completed project before starting a new board.
+The board supports 24 cards and 7,500 characters of saved board content. Export completed work, then remove finished cards to make room for your next project.
 
 ## Run the complete example
 
@@ -48,6 +50,6 @@ The notebook stores the board under `muse-task-board`; expected revisions preven
 
 ## Build on it
 
-The interface uses SortableJS for dragging, with keyboard-accessible controls alongside it. All assets are included. Source identities and checksums live in `assets/vendor/SOURCE.json`.
+The interface supports dragging and keyboard-accessible controls, with all assets included. Adapt the layout, card labels and planning prompt to the kind of project you want to organize.
 
 Useful next variations include a reading queue, a research board, a lesson plan, and a household project board. Keep the same card schema, saved revisions, export format, and request/result flow when adapting the presentation.

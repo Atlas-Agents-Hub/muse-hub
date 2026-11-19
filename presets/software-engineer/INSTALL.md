@@ -16,13 +16,15 @@ Build, debug, refactor and release software. Work from reproduction and architec
 
 **First task to try:** Bring a failing test or bug report. Reproduce the problem, make a focused repair, and run a regression check.
 
-No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account for each connection you add.
+No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account and permissions for each connection you add.
 
 ## Use a skill or workflow
 
 Start with [this specialist's library](LIBRARY.md). A skill describes a focused method and includes its reference files. A workflow connects several methods with named inputs, expected results and checks. Load the method that fits the current task; the complete selection remains available in the download.
 
-For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
+[Find and build your own pack](../../docs/collection/FIND_AND_BUILD.md) to search this specialist's methods, preview the included files and create a ZIP for your task. Add `--role software-engineer` to the toolkit's search command to focus on this specialist.
+
+Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
 
 Role ID: `software-engineer`. Package: `muse-software-engineer-v1.6.0.zip`.
 

@@ -19,6 +19,7 @@ from build_release import ALIASES, ROLE_WORKFLOWS, skill_download_layout
 
 REPO = 'https://github.com/atlas-origins/muse-ai-agent-presets'
 SITE = ROOT / 'hub/site'
+DOWNLOAD_PAGE_SIZE = 60
 HOME_CAPTIONS = {
     'packages': 'Complete ZIP packages · Version {version}',
     'specialist': 'YOUR SPECIALIST / VERSION {version}',
@@ -338,10 +339,18 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
     bundle_html = '\n'.join(
         f'<a class="bundle-card" href="{esc(row["url"])}"><span>{esc(row["title"])}</span><p>{esc(row["description"])}</p><strong>Download ZIP ↓</strong></a>'
         for row in data['bundles'])
+    initial_items = data['items'][:DOWNLOAD_PAGE_SIZE]
+    subject_links = []
+    for label in data['categories']:
+        count = sum(row['category'] == label for row in data['items'])
+        pages = (count + 199) // 200
+        for page in range(1, pages + 1):
+            title = label + (f' · Page {page}' if pages > 1 else '')
+            subject_links.append(f'<a href="library/{subject_slug(label)}-{page:03d}.html">{esc(title)}</a>')
     sections=[]
     for kind, heading, anchor in (('specialist','Specialists','specialists'),('skill','Skills','skills'),('workflow','Workflows','workflows'),('tool-guide','Tool guides','tool-guides')):
         cards=[]
-        for row in data['items']:
+        for row in initial_items:
             if row['kind']!=kind:continue
             description=row['description']
             if len(description)>320:
@@ -355,14 +364,14 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
   <span class="download-kind">{esc(row['category'])}</span><h3>{esc(row['title'])}</h3><p>{esc(description)}</p>{read_link}{hint}
   <a href="{esc(row['url'])}" aria-label="Download {esc(row['title'])}{' skill pack' if packed else ' ZIP'}">{esc(label)} <span aria-hidden="true">↓</span></a>
 </article>''')
-        sections.append(f'<section class="download-section" id="{anchor}" aria-labelledby="{anchor}-heading"><h2 id="{anchor}-heading">{heading} <span>{len(cards)}</span></h2><div class="download-grid">'+ '\n'.join(cards)+'</div></section>')
+        sections.append(f'<section class="download-section" data-kind="{kind}" id="{anchor}" aria-labelledby="{anchor}-heading"'+(' hidden' if not cards else '')+f'><h2 id="{anchor}-heading">{heading} <span>{data["counts"][kind]}</span></h2><div class="download-grid">'+ '\n'.join(cards)+'</div></section>')
     return f'''<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="description" content="Download {data['counts']['skill']} Muse AI skills, {data['counts']['workflow']} workflows, 15 specialists and practical tool guides. Search by subject or specialist and choose a ready-to-use ZIP.">
   <link rel="canonical" href="https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html">
   <meta property="og:type" content="website">
@@ -389,7 +398,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
       <p class="downloads-start">Unzip your download and open <strong>START_HERE.md</strong>. Add the kit to your Muse conversation with the task you want to work on.</p>
       <a class="action-primary" href="#download-search">Find a skill or workflow <span aria-hidden="true">↓</span></a>
       <div class="bundle-grid">{bundle_html}</div>
-      <div class="downloads-help"><a href="{REPO}/blob/main/docs/GETTING_STARTED.md">Getting started →</a><a href="{REPO}/blob/main/docs/TERMINAL.md">Terminal guide →</a><a href="{REPO}/releases/tag/{esc(version)}">Release notes and checksums →</a></div>
+      <div class="downloads-help"><a href="{REPO}/blob/main/docs/GETTING_STARTED.md">Getting started →</a><a href="{REPO}/blob/main/docs/collection/FIND_AND_BUILD.md">Build a custom pack →</a><a href="{REPO}/blob/main/docs/TERMINAL.md">Terminal guide →</a><a href="{REPO}/releases/tag/{esc(version)}">Release notes and checksums →</a></div>
     </div></section>
     <div class="downloads-catalog section-paper"><div class="shell">
       <div class="role-toolbar">
@@ -399,10 +408,10 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
         <div class="field-wrap category-wrap"><label for="download-category">Subject</label><select id="download-category" aria-controls="download-results"><option value="all">All subjects</option>{''.join('<option value="'+esc(title)+'">'+esc(title)+'</option>' for title in data['categories'])}</select></div>
         <button id="download-reset" class="reset-btn" type="button">Clear</button>
       </div>
-      <p id="download-count" role="status" aria-live="polite">Showing {len(data['items'])} of {len(data['items'])} downloads</p>
+      <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items'])} downloads</p>
       <nav class="download-jumps" aria-label="Download groups"><a href="#specialists">15 specialists</a><a href="#skills">{data['counts']['skill']} skills</a><a href="#workflows">{data['counts']['workflow']} workflows</a><a href="#tool-guides">{data['counts']['tool-guide']} tool guides</a></nav>
-      <details class="catalog-subjects"><summary>Browse the library by subject</summary><nav class="download-jumps" aria-label="Subject library">{''.join('<a href="library/'+subject_slug(label)+'-001.html">'+esc(label)+'</a>' for label in data['categories'])}</nav></details>
-      <div id="download-results">{''.join(sections)}</div>
+      <details class="catalog-subjects"><summary>Browse every download by subject</summary><nav class="download-jumps" aria-label="Subject library">{''.join(subject_links)}</nav></details>
+      <div id="download-results" data-total="{len(data['items'])}" data-version="{esc(version)}">{''.join(sections)}</div>
       <nav id="download-pages" class="download-pagination" aria-label="Download result pages" hidden><button id="download-previous" class="reset-btn" type="button">Previous</button><span id="download-page-label"></span><button id="download-next" class="reset-btn" type="button">Next</button></nav>
       <div id="download-empty" class="role-empty" hidden><h2>No matching downloads.</h2><p>Try a shorter search or clear the filters.</p><button id="download-clear-empty" type="button">Show all downloads</button></div>
     </div></div>

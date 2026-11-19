@@ -1,6 +1,6 @@
 """Reader docs must preserve the real source/release split and usable commands."""
 from pathlib import Path
-import json,re,unittest
+import importlib.util,json,re,unittest
 ROOT=Path(__file__).resolve().parents[1]
 
 def current_collection():
@@ -37,7 +37,34 @@ class ReaderSourceAlignmentTests(unittest.TestCase):
      self.assertEqual(catalog['version'],version)
      self.assertEqual(catalog['counts'],expected)
      self.assertEqual(len(catalog['items']),sum(expected.values()))
-     self.assertEqual(len({item['asset'] for item in catalog['items']}),len(catalog['items']))
+     self.assertEqual(len({(item['kind'],item['id']) for item in catalog['items']}),len(catalog['items']))
+     spec=importlib.util.spec_from_file_location('reader_release_layout',ROOT/'scripts/build_release.py')
+     builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
+     layout=builder.skill_download_layout(collection,version)
+     skill_items={item['id']:item for item in catalog['items'] if item['kind']=='skill'}
+     self.assertEqual(set(skill_items),set(layout))
+     packed={}
+     for identity,route in layout.items():
+         item=skill_items[identity]
+         with self.subTest(skill=identity):
+             self.assertEqual({key:item[key] for key in route},route)
+             self.assertEqual(item['entry'],'skills/'+identity+'/SKILL.md')
+         packed.setdefault(item['asset'],[]).append(item)
+     for asset,members in packed.items():
+         self.assertTrue(all(item['pack_size']==len(members) for item in members),asset)
+         self.assertLessEqual(len(members),builder.SKILLS_PER_PACK,asset)
+         self.assertEqual(len({item['entry'] for item in members}),len(members),asset)
+     for skill in collection['skills']:
+         if skill.get('format')!='portable-skill':
+             item=skill_items[skill['id']]
+             self.assertEqual(item['asset'],'muse-skill-'+skill['id']+'-'+version+'.zip')
+             self.assertEqual(item['pack_kind'],'skill')
+             self.assertEqual(item['pack_size'],1)
+     individual=[item['asset'] for item in catalog['items'] if item['kind']!='skill']
+     self.assertEqual(len(individual),len(set(individual)))
+     self.assertFalse(set(individual)&set(packed))
+     self.assertEqual(catalog['skill_pack_count'],len(packed))
+     self.assertEqual(len({item['asset'] for item in catalog['items']}),len(individual)+len(packed))
      for item in catalog['items']:
          self.assertEqual(item['url'],'https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/'+version+'/'+item['asset'])
  def test_local_entrypoints_survive_reader_rewrite(self):
