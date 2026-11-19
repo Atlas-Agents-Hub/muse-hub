@@ -5,6 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import MappingProxyType
 import zipfile
 
 from muse_presets.public_export import (PublicExportError, select_public_files,
@@ -14,6 +15,20 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class CleanPublicExportTests(unittest.TestCase):
+    _reference = None
+
+    @classmethod
+    def reference_export(cls):
+        """Create one read-only archive fixture only when an archive test needs it."""
+        if cls._reference is None:
+            temporary=tempfile.TemporaryDirectory(prefix="muse-public-export-reference-")
+            cls.addClassCleanup(temporary.cleanup)
+            cls.addClassCleanup(setattr,cls,"_reference",None)
+            archive=Path(temporary.name)/"reference.zip"
+            receipt=export_public_snapshot(ROOT,archive)
+            cls._reference=(archive,MappingProxyType(receipt))
+        return cls._reference
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -33,9 +48,8 @@ class CleanPublicExportTests(unittest.TestCase):
         self.assertGreater(len(found),150)
 
     def test_reproducible_two_independent_exports(self):
-        left=self.base/"a.zip"
+        left,a=self.reference_export()
         right=self.base/"b.zip"
-        a=export_public_snapshot(ROOT,left)
         b=export_public_snapshot(ROOT,right)
         self.assertEqual(a["status"],"SOURCE_PACKAGE_CREATED")
         self.assertEqual(a["sha256"],b["sha256"])
@@ -43,8 +57,7 @@ class CleanPublicExportTests(unittest.TestCase):
         self.assertGreater(a["file_count"],150)
 
     def test_archive_is_hash_manifest_complete_no_git(self):
-        out=self.base/"candidate.zip"
-        result=export_public_snapshot(ROOT,out)
+        out,result=self.reference_export()
         with zipfile.ZipFile(out) as zipf:
             names=zipf.namelist()
             self.assertIsNone(zipf.testzip())
@@ -154,9 +167,8 @@ class CleanPublicExportTests(unittest.TestCase):
         self.assertNotIn("tests/test_r39_donor_matrix.py",paths)
 
     def test_clean_export_can_be_reexported_from_extracted_source(self):
-        a=self.base/"original.zip"
+        a,first=self.reference_export()
         b=self.base/"reexport.zip"
-        first=export_public_snapshot(ROOT,a)
         root=self.base/"fresh-source"
         with zipfile.ZipFile(a) as z:
             z.extractall(root)
@@ -166,8 +178,7 @@ class CleanPublicExportTests(unittest.TestCase):
         self.assertEqual(a.read_bytes(),b.read_bytes())
 
     def test_tampered_existing_source_manifest_is_rejected(self):
-        output=self.base/"source.zip"
-        export_public_snapshot(ROOT,output)
+        output,_=self.reference_export()
         root=self.base/"fresh-source"
         with zipfile.ZipFile(output) as z:
             z.extractall(root)
@@ -212,8 +223,7 @@ class CleanPublicExportTests(unittest.TestCase):
         self.assertNotIn("Host doctor: determine supported personal Muse",release)
 
     def test_export_receipt_describes_the_created_artifact(self):
-        p=self.base/"candidate.zip"
-        report=export_public_snapshot(ROOT,p)
+        p,report=self.reference_export()
         self.assertEqual(set(report),{"status","sha256","bytes","file_count"})
         self.assertEqual(report["status"],"SOURCE_PACKAGE_CREATED")
         self.assertEqual(report["sha256"],hashlib.sha256(p.read_bytes()).hexdigest())
