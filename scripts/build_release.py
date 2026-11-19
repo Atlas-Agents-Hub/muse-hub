@@ -10,6 +10,7 @@ from muse_presets.playbooks import load_playbook, render_playbook
 from muse_presets.product_copy import FIRST_TASKS
 from muse_presets.standalone_pack import standalone_files
 from muse_presets import portable_skill_export
+from muse_presets import planner_package
 
 def _module(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -95,6 +96,9 @@ def specialist_asset(role,version):
     if role not in ROLE_WORKFLOWS: raise ValueError("UNKNOWN_SPECIALIST")
     return "muse-"+ALIASES.get(role,role)+"-"+_version(version)+".zip"
 
+def planner_asset(version=DEFAULT_VERSION):
+    return 'muse-space-planner-' + _version(version) + '.zip'
+
 def _seal(files,kind,identity,version,**details):
     result=dict(files)
     if "MANIFEST.json" in result: raise ValueError("OUTER_MANIFEST_COLLISION")
@@ -135,6 +139,9 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
     files.update(tool_guides.package_files(guides,ids=guide_ids))
     files.update({"assistant/"+name:raw for name,raw in standalone_files(role).items()})
     files.update(connector_catalog.specialist_package_files(role))
+    spaces = ['planner'] if role in planner_package.ROLES else []
+    if spaces:
+        files.update(planner_package.package_files(ROOT))
     connectors=json.loads(files['connectors/catalog.json'])['connectors']
     selected=sorted(name.split("/")[1] for name in files
                     if name.startswith("skills/") and name.endswith("/SKILL.md"))
@@ -153,6 +160,14 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
     if guide_ids:
         profile+="\n## Recommended tools\n\nRead [the tool guides](TOOL_GUIDES.md) for setup, practical recipes and result checks.\n"
     profile+="\n## Connect your services\n\nUse [the connector directory](CONNECTORS.md) for the "+str(len(connectors))+" services selected for this specialist.\n"
+    planner_note=("\n## Plan in your Muse Space\n\n"
+        "Open [Muse Planner](spaces/planner/README.md) to set up a saved workspace for "
+        "projects, next actions, routines, reference notes and your weekly review. "
+        "The complete app is in `spaces/planner/`; its guide covers Muse Space setup, "
+        "Bun, the host SDK, calendar settings and portable backups.\n") if spaces else ''
+    profile+=planner_note
+    if spaces:
+        files['AGENTS.md']+=planner_note.encode('utf-8')
     files["PROFILE.md"]=profile.encode()
     files["ROLE_PLAYBOOK.md"]=render_playbook(book,display_name=title,role_title=title).encode()
     files["FIRST_TASK.md"]=("# Try "+title+"\n\n"+FIRST_TASKS[role]+
@@ -161,6 +176,8 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
         "## Keep the result\n\nSave the finished work with your project, including useful source links, "
         "calculations or checks. Record the next action so you can resume easily.\n\n"
         "[Working methods and examples](ROLE_PLAYBOOK.md) · [Service connectors](CONNECTORS.md)\n").encode()
+    if spaces:
+        files['FIRST_TASK.md']+=planner_note.encode('utf-8')
     start=_use_text("Start with "+title,"PROFILE.md",files=files)
     start+="\n## Connect your tools\n\nOpen [CONNECTORS.md](CONNECTORS.md) for service guides, action inputs and the included request helper.\n"
     start+=("\n## Use the host-format components\n\n"
@@ -171,11 +188,33 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
         "Keep the extracted package separate from the live assistant home. Review changes "
         "before importing; preserve existing identity, memory and preference files. "
         "For the current task, Muse can read AGENTS.md, PROFILE.md and the selected skills directly.\n")
-    files["START_HERE.md"]=start.encode()
+    files["START_HERE.md"]=(start+planner_note).encode()
     files["SPECIALIST.json"]=_json({"id":role,"collection_id":alias,"title":title,"skills":selected,
         "workflows":workflows,"methods":[m["id"] for m in book["methods"]],"tool_guides":guide_ids,
-        "connectors":[row['id'] for row in connectors]})
-    return _seal(files,"specialist",role,version,skills=selected,workflows=workflows)
+        "connectors":[row['id'] for row in connectors],"spaces":spaces})
+    return _seal(files,"specialist",role,version,skills=selected,workflows=workflows,spaces=spaces)
+
+def planner_files(version=DEFAULT_VERSION):
+    files = planner_package.package_files(ROOT)
+    files['START_HERE.md'] = ("# Muse Planner\n\n"
+        "Turn ideas into projects, choose the next action, and keep your routines and notes "
+        "together in a persistent Muse Space.\n\n"
+        "1. Extract this ZIP into its own folder.\n"
+        "2. Open [the Planner setup guide](spaces/planner/README.md) and give Muse the "
+        "complete `spaces/planner/` folder.\n"
+        "3. Create a TypeScript Space, prepare its host SDK, install the locked dependencies "
+        "with Bun, and build it using the guide.\n"
+        "4. Capture an inbox item, create a project and next action, then reopen the Space "
+        "and export your first backup.\n\n"
+        "The same app is included with Coordinator and Personal Companion. "
+        "Use it with your existing Muse assistant to plan a project or review the week.\n\n"
+        "## Check the downloaded files\n\n"
+        "With Python 3.10 or newer, run from the extracted folder:\n\n"
+        "    python -B VERIFY.py\n").encode('utf-8')
+    return _seal(files, 'space', 'planner', version,
+        entry=planner_package.PACKAGE_PATH+'/README.md',
+        source_files=planner_package.SOURCE_FILE_COUNT,
+        specialists=list(planner_package.ROLES))
 
 def skill_files(data,identity,version=DEFAULT_VERSION):
     entry=next((s for s in data["skills"] if s["id"]==identity),None)
@@ -347,6 +386,12 @@ def compose_downloads(data,version=DEFAULT_VERSION):
     archives[name]=raw
     records["bundles"].append({"id":"role-procedures-50","asset":name,"url":asset_url(name,version),
         "procedures":50,"bytes":len(raw),"sha256":_sha(raw)})
+    name=planner_asset(version);raw=_zip(planner_files(version))
+    archives[name]=raw
+    records['bundles'].append({'id':'space-planner','title':'Muse Planner',
+        'asset':name,'url':asset_url(name,version),'bytes':len(raw),'sha256':_sha(raw),
+        'entry':planner_package.PACKAGE_PATH+'/README.md',
+        'source_files':planner_package.SOURCE_FILE_COUNT,'specialists':list(planner_package.ROLES)})
     # The source ZIP and six index/checksum files are added by build_release.
     if len(archives) + 7 > MAX_RELEASE_ASSETS:
         raise ValueError('RELEASE_ASSET_LIMIT_EXCEEDED')

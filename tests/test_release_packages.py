@@ -161,6 +161,39 @@ class ReleasePackagesTests(unittest.TestCase):
                 self.assertTrue((folder/'docs/tools'/f'{guide}.md').is_file())
                 self.assertIn('docs/tools/'+guide+'.md',index)
 
+    def test_planner_is_complete_alone_and_in_the_two_planning_specialists(self):
+        from muse_presets import planner_package
+        asset = release.planner_asset()
+        self.assertIn(asset, self.archives)
+        record = next(row for row in self.records['bundles'] if row['id'] == 'space-planner')
+        self.assertEqual(record['asset'], asset)
+        self.assertEqual(record['source_files'], 64)
+        self.assertEqual(record['specialists'], ['coordinator', 'personal-companion'])
+        expected = planner_package.source_files(ROOT)
+        prefix = planner_package.PACKAGE_PATH + '/'
+        with zipfile.ZipFile(io.BytesIO(self.archives[asset])) as archive:
+            standalone = {name[len(prefix):]: archive.read(name) for name in archive.namelist()
+                          if name.startswith(prefix)}
+        self.assertEqual(standalone, expected)
+        for role in release.ROLE_WORKFLOWS:
+            folder = self.extracted[release.specialist_asset(role, release.DEFAULT_VERSION)]
+            included = folder / planner_package.PACKAGE_PATH
+            selection = json.loads((folder / 'SPECIALIST.json').read_bytes())
+            manifest = json.loads((folder / 'MANIFEST.json').read_bytes())
+            with self.subTest(role=role):
+                spaces = ['planner'] if role in planner_package.ROLES else []
+                self.assertEqual(selection['spaces'], spaces)
+                self.assertEqual(manifest['spaces'], spaces)
+                self.assertEqual(included.exists(), bool(spaces))
+                if not spaces:
+                    continue
+                actual = {path.relative_to(included).as_posix(): path.read_bytes()
+                          for path in included.rglob('*') if path.is_file()}
+                self.assertEqual(actual, standalone)
+                for name in ('START_HERE.md', 'PROFILE.md', 'FIRST_TASK.md', 'AGENTS.md'):
+                    self.assertIn('[Muse Planner](spaces/planner/README.md)',
+                                  (folder / name).read_text(encoding='utf-8'))
+
     def test_relative_markdown_links_resolve_inside_each_package(self):
         for name, folder in self.extracted.items():
             for document in folder.rglob("*.md"):

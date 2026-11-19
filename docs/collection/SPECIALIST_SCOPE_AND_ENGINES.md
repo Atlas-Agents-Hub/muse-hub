@@ -116,6 +116,8 @@ Supports personal organization and everyday decisions with user preferences, rou
 
 **Included tools:** [Daily Desk](../../src/muse_presets/daily_desk.py) is a working local task-and-note application built on [Personal Companion storage](../../src/muse_presets/personal_companion.py) and the [Space Companion interface](../../src/muse_presets/space_companion.py). It supports revision-checked editing, persistence, backup and create-only restoration.
 
+**Included Space:** [Muse Planner](../spaces/MUSE_PLANNER.md) keeps projects, next actions, routines, reference notes and calendar focus blocks together, with a saved SQLite workspace and portable backups.
+
 [Personal Companion methods](../../presets/personal-companion/playbook.json) · [Run Daily Desk](../../examples/daily_desk.py) · [Application guide](../spaces/DAILY_DESK.md)
 
 ### Garden Companion
@@ -131,6 +133,8 @@ Keeps plant observations, garden records and seasonal care plans organized. Its 
 Manages work spanning multiple specialists or tools. It sets scope, dependencies, owners and success criteria, records handoffs and reconciles interrupted operations before a retry.
 
 **Included tools:** The [coordinator sourcekit](../../src/muse_presets/coordinator_sourcekit.py), [review methods](../../src/muse_presets/coordinator_review.py) and [drop-in implementation](../../src/muse_presets/coordinator_dropin.py) provide local planning, evidence review and handoff checks.
+
+**Included Space:** [Muse Planner](../spaces/MUSE_PLANNER.md) turns outcomes into projects and next actions, keeps daily and weekly reviews visible, and preserves the work between sessions.
 
 [Coordinator methods](../../presets/coordinator/playbook.json) · [Export the coordinator kit](../../examples/export_coordinator_sourcekit.py)
 

@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'scripts'))
 from muse_collection import load_collection
 from tool_guides import load_guides
-from build_release import ALIASES, ROLE_WORKFLOWS, skill_download_layout
+from build_release import ALIASES, ROLE_WORKFLOWS, skill_download_layout, planner_asset
 
 REPO = 'https://github.com/atlas-origins/muse-ai-agent-presets'
 SITE = ROOT / 'hub/site'
@@ -260,6 +260,11 @@ def catalog(root: Path = ROOT) -> dict:
     if counts['tool-guide']:
         asset=f'muse-tool-guides-{version}.zip'
         bundles.append(dict(id='tool-guides',title=f"{counts['tool-guide']} tool guides",description='Setup, recipes and checks for the tools that fit your work.',asset=asset,url=base+asset))
+    asset=planner_asset(version)
+    bundles.append(dict(id='space-planner',title='Muse Planner',
+        description='A full-stack Muse Space for projects, next actions, daily routines, weekly reviews, notes and calendars.',
+        asset=asset,url=base+asset,roles=['coordinator','personal-companion'],
+        guide_url=REPO+'/blob/main/docs/spaces/MUSE_PLANNER.md'))
     connectors_path=root/'docs/connectors/catalog.json'
     connector_count=len(json.loads(connectors_path.read_bytes())['connectors']) if connectors_path.exists() else 151
     return {'schema':'muse-hub/downloads/v1','version':version,'counts':counts,

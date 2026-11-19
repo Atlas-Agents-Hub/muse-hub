@@ -15,7 +15,8 @@ sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'scripts')]
 import muse_collection
 import tool_guides
 from collection_compatibility import current_inventory
-from build_release import ALIASES, ROLE_WORKFLOWS, specialist_asset
+from build_release import ALIASES, ROLE_WORKFLOWS, specialist_asset, planner_asset
+from muse_presets.planner_package import ROLES as PLANNER_ROLES
 from render_downloads import subject
 from render_specialist_directory import AREAS, COPY
 
@@ -48,6 +49,48 @@ def suggested_starters(data, role_id, selected_workflows):
     return direct+[row for row in data['starters']
                    if row['id'] not in seen and selected.intersection(row['workflows'])]
 
+def planner_guide(version):
+    return f'''# Muse Planner: projects, routines and your next action
+
+Turn a loose idea into a project you can move forward. Muse Planner brings your inbox, projects, daily routines, weekly review, reference notes and calendar into one Muse Space with persistent SQLite storage.
+
+**[Download Muse Planner]({REPO}/releases/download/{version}/{planner_asset(version)})** · [{version} release]({REPO}/releases/tag/{version}) · [Complete setup guide](../../examples/gtd_space/README.md)
+
+The same complete app is included in the [Coordinator](../../presets/coordinator/INSTALL.md) and [Personal Companion](../../presets/personal-companion/INSTALL.md) downloads. In any of those ZIPs, open `spaces/planner/README.md`.
+
+## Make a useful workspace
+
+| View | What you can do |
+| --- | --- |
+| Today | Choose your next actions, priorities and scheduled work. |
+| Inbox | Capture ideas, then clarify and route them into the right project. |
+| Projects | Define an outcome and keep its next actions together. |
+| Future | Build daily and weekly routines, reminders and scheduled items. |
+| Week | View connected calendars and reserve focus blocks. |
+| Someday and Reference | Keep future ideas, notes and useful links easy to find. |
+| Done | Review completed work and reopen an item when you need it. |
+
+## Create your Space
+
+1. Extract the download into a new folder and give Muse the complete `spaces/planner/` app folder.
+2. Ask Muse to create a **TypeScript Space** named **Muse Planner**. Follow the app's README to prepare the Muse host's SDK and install the locked dependencies with Bun.
+3. Apply the included SQL migrations in journal order and build through Muse's Space builder.
+4. Capture an inbox item, create a project with a next action, and add a daily routine. Reopen the Space to continue from the saved workspace.
+5. Choose **Export** to keep a portable JSON backup.
+
+The [app guide](../../examples/gtd_space/README.md) includes the exact commands, local preview, calendar settings, backup and restore. Start with your projects and routines; add the calendars you want when you are ready.
+
+## Plan with your specialist
+
+Ask **Coordinator** to turn a project outcome into next actions, dependencies and a weekly plan. Ask **Personal Companion** to shape routines and reminders around your priorities. Copy an item's reference into the conversation so your assistant can discuss the same work.
+
+> Set up my current projects in Muse Planner. Help me capture loose tasks, define each project's outcome, choose a small next action and create a weekly review routine.
+
+Use **Export** before an update or move. **Import** validates a backup and asks you to confirm replacing the current workspace, then restores it as one transaction.
+
+[All workspaces](../README.md#open-a-workspace) · [Setup and saved data](../INSTALL_AND_PERSISTENCE.md) · [Specialist library](../collection/SPECIALIST_LIBRARY.md)
+'''
+
 def outputs(root=ROOT):
     root=Path(root)
     data=muse_collection.load_collection(root/'collections/muse-starters-v1')
@@ -65,6 +108,7 @@ def outputs(root=ROOT):
         for role in preset_catalog['presets']
     }
     add('presets/catalog.json',encode(preset_catalog))
+    add('docs/spaces/MUSE_PLANNER.md',planner_guide(version))
     feature_status=json.loads((root/'docs/discovery/hub-feature-status.json').read_bytes())
     feature_status.update(release=version,release_url=REPO+'/releases/tag/'+version,
                           release_manifest_url=REPO+'/releases/download/'+version+'/RELEASE_MANIFEST.json')
@@ -115,6 +159,8 @@ def outputs(root=ROOT):
         first=FIRST_TASKS[canonical]
         inbox_note=('\n\n## Review email with saved preferences\n\nUse the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) to prepare reply preferences, resume from the last completed review and check the action log. The download includes three Python helpers, an example workspace and Inbox Setup for personalizing it.'
                     if 'inbox-triage' in selected else '')
+        planner_note=('\n\n## Plan in a Muse Space\n\nYour download includes [Muse Planner](../../docs/spaces/MUSE_PLANNER.md), a complete Space for projects, next actions, daily routines, weekly reviews, notes and calendars. Open `spaces/planner/README.md` in the ZIP to create your Space and save your first project.'
+                      if canonical in PLANNER_ROLES else '')
         readme=f'''# {title}
 
 **Muse Hub specialist:** {scope}
@@ -136,7 +182,7 @@ Bring your current task and source material. Open `PROFILE.md` in the download a
 - [Working methods](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [included tools](../../docs/CAPABILITIES.md).
 - [Service connectors](../../docs/connectors/README.md) — {len(selected_connectors)} recommended services for this specialist.
 
-Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.{inbox_note}
+Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.{inbox_note}{planner_note}
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [{version} downloads](../../docs/RELEASES.md) · [Muse Hub]({SITE})
 '''
@@ -166,7 +212,7 @@ Start with [this specialist's library](LIBRARY.md). A skill describes a focused 
 
 [Find and build your own pack](../../docs/collection/FIND_AND_BUILD.md) to search this specialist's methods, preview the included files and create a ZIP for your task. Add `--role {canonical}` to the toolkit's search command to focus on this specialist.
 
-Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.{inbox_note}
+Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.{inbox_note}{planner_note}
 
 Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
 
@@ -186,6 +232,8 @@ Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
         library+='\n[Complete connector directory](../../docs/connectors/README.md) · [Tools and examples](../../docs/CAPABILITIES.md)\n'
         if inbox_note:
             library=library.rstrip()+inbox_note+'\n'
+        if planner_note:
+            library=library.rstrip()+planner_note+'\n'
         add(f'presets/{canonical}/README.md',readme)
         add(f'presets/{canonical}/INSTALL.md',install)
         add(f'presets/{canonical}/LIBRARY.md',library)
@@ -223,6 +271,13 @@ Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
                     'json_export_and_import','assistant_request_and_result'],
     }
     workbenches[:]=[row for row in workbenches if row.get('name')!=board['name']]+[board]
+    spaces=doc.setdefault('spaces',[])
+    planner={'id':'planner','name':'Muse Planner','specialists':list(PLANNER_ROLES),
+        'source':'examples/gtd_space','guide':'docs/spaces/MUSE_PLANNER.md',
+        'download_url':REPO+'/releases/download/'+version+'/'+planner_asset(version),
+        'storage':'SQLite','features':['inbox','projects','next_actions','daily_and_weekly_routines',
+            'reference_notes','calendar_focus_blocks','portable_backup_and_restore']}
+    spaces[:]=[row for row in spaces if row.get('id')!='planner']+[planner]
     doc['specialist_libraries']=summaries
     doc['skill_downloads']={'format':'subject-packs','skills_per_pack_maximum':40,
                             'entrypoint':'skills/<skill-id>/SKILL.md','directory':SITE+'downloads.html#skills'}

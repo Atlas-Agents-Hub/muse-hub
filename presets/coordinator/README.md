@@ -25,4 +25,8 @@ Keep your customized instructions, preferences and memory in your working copy. 
 
 Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) to prepare reply preferences, resume from the last completed review and check the action log. The download includes three Python helpers, an example workspace and Inbox Setup for personalizing it.
 
+## Plan in a Muse Space
+
+Your download includes [Muse Planner](../../docs/spaces/MUSE_PLANNER.md), a complete Space for projects, next actions, daily routines, weekly reviews, notes and calendars. Open `spaces/planner/README.md` in the ZIP to create your Space and save your first project.
+
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.6.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)

@@ -47,6 +47,8 @@ class ProductCatalogRegression(unittest.TestCase):
             self.assertEqual(discovery['release_manifest_url'],
                              renderer.REPO+'/releases/download/v9.8.7/RELEASE_MANIFEST.json')
             self.assertEqual(set(actual['downloads']),set(catalog['presets']))
+            planner_url=renderer.REPO+'/releases/download/v9.8.7/muse-space-planner-v9.8.7.zip'
+            self.assertIn(planner_url,outputs['docs/spaces/MUSE_PLANNER.md'].decode())
             for role,url in actual['downloads'].items():
                 expected=renderer.REPO+'/releases/download/v9.8.7/'+renderer.specialist_asset(role,'v9.8.7')
                 self.assertEqual(url,expected)
@@ -55,6 +57,12 @@ class ProductCatalogRegression(unittest.TestCase):
                 self.assertIn(expected,outputs['presets/'+role+'/LIBRARY.md'].decode())
                 self.assertEqual(boundaries['roles'][role]['profile_sha256'],
                                  hashlib.sha256(outputs['presets/'+role+'/preset.json']).hexdigest())
+                for document in ('README.md','INSTALL.md','LIBRARY.md'):
+                    text=outputs['presets/'+role+'/'+document].decode()
+                    self.assertEqual('spaces/planner/README.md' in text,role in renderer.PLANNER_ROLES)
+                    if role in renderer.PLANNER_ROLES:
+                        self.assertIn('../../docs/spaces/MUSE_PLANNER.md',text)
+                        self.assertIn('inbox workspace',text)
 
     def test_explicit_extension_starters_are_discoverable_before_related_tasks(self):
         for role in renderer.muse_collection.EXTENSION_ROLES:

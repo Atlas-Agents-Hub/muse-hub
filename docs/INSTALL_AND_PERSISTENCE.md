@@ -36,6 +36,12 @@ Follow each package's included command guide. Repository tools use Python 3.12+;
 
 Local programs use your operating-system permissions. Run reviewed code in a workspace you control and provide only the files needed for the task.
 
+## Create a Planner Space
+
+[Muse Planner](spaces/MUSE_PLANNER.md) is included in the Coordinator and Personal Companion downloads and is also available as its own ZIP. Open `spaces/planner/README.md`, give Muse the complete app folder, and follow its TypeScript Space setup. The guide covers the host SDK, locked Bun dependencies, SQL migrations and Space build.
+
+Start with an inbox item, a project and a daily routine, then reopen your Space and export a backup. Keep that portable JSON backup when updating or moving the app. The local preview can use a database path you choose; its README includes the commands for both shells and PowerShell.
+
 ## Save tasks and notes
 
 [Daily Desk](spaces/DAILY_DESK.md) and [Companion Home](COMPANION_HOME.md) store notes in the SQLite database you choose. Put the database outside the application folder, keep its directory private, and reuse the same path after restarting. Their guides explain session tokens, conflicting edits, backup, and restoration.

@@ -339,5 +339,28 @@
     "skills_per_pack_maximum": 40,
     "entrypoint": "skills/<skill-id>/SKILL.md",
     "directory": "https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html#skills"
-  }
+  },
+  "spaces": [
+    {
+      "id": "planner",
+      "name": "Muse Planner",
+      "specialists": [
+        "coordinator",
+        "personal-companion"
+      ],
+      "source": "examples/gtd_space",
+      "guide": "docs/spaces/MUSE_PLANNER.md",
+      "download_url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-space-planner-v1.6.0.zip",
+      "storage": "SQLite",
+      "features": [
+        "inbox",
+        "projects",
+        "next_actions",
+        "daily_and_weekly_routines",
+        "reference_notes",
+        "calendar_focus_blocks",
+        "portable_backup_and_restore"
+      ]
+    }
+  ]
 }

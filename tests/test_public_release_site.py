@@ -49,6 +49,19 @@ class PublicReleaseDownloads(unittest.TestCase):
         self.assertTrue(urls['data-engineering-architect'].endswith('/muse-data-engineer-'+version+'.zip'))
         self.assertTrue(urls['infrastructure-reliability-engineer'].endswith('/muse-reliability-engineer-'+version+'.zip'))
 
+    def test_planner_download_and_discovery_use_the_same_release_and_roles(self):
+        row = next(row for row in self.directory['bundles'] if row['id'] == 'space-planner')
+        version = self.renderer.release_version()
+        self.assertEqual(row['asset'], 'muse-space-planner-' + version + '.zip')
+        self.assertEqual(row['url'], self.renderer.REPO + '/releases/download/' + version + '/' + row['asset'])
+        self.assertEqual(row['roles'], ['coordinator', 'personal-companion'])
+        self.assertTrue(row['guide_url'].endswith('/docs/spaces/MUSE_PLANNER.md'))
+        discovery = json.loads((ROOT / 'docs/discovery/agent-capabilities.json').read_bytes())
+        space = next(space for space in discovery['spaces'] if space['id'] == 'planner')
+        self.assertEqual(space['download_url'], row['url'])
+        self.assertEqual(space['specialists'], row['roles'])
+        self.assertTrue((ROOT / space['guide']).is_file())
+
     def release_fixture(self):
         rows=self.directory['items']+self.directory['bundles']
         unique={row['asset']:row for row in rows}
