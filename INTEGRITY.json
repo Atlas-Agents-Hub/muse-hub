@@ -1,0 +1,58 @@
+{
+  "files": {
+    "README.md": {
+      "bytes": 1351,
+      "sha256": "acf175175f726f658ffe3c3b86769aee9a87bb7756a5fc5f288eb62d45ff0b49"
+    },
+    "downloads.html": {
+      "bytes": 565961,
+      "sha256": "127d280e7fb8b299d11d6704720a1bab3cedd8fe944c56e32e95169daff23a3e"
+    },
+    "downloads.js": {
+      "bytes": 3611,
+      "sha256": "6c38d405df866ee5fde42bd18a0592a61896435e5c9954bbaafeb093a1400094"
+    },
+    "downloads.json": {
+      "bytes": 408314,
+      "sha256": "bc17c0799ee902f063cfd0386cbee3ffcccf6ea8d9c98ca6d83f0fe211523f30"
+    },
+    "index.html": {
+      "bytes": 51799,
+      "sha256": "3401274fcbd670be563be951b7b4f0692e73bce1a7367484a02cccc1ed28f800"
+    },
+    "public/app.js": {
+      "bytes": 15918,
+      "sha256": "467c766cc839ed7dcffa82357b1fd643c15a507cd81545c3d8e8a972bc85c7a4"
+    },
+    "public/catalog.json": {
+      "bytes": 30495,
+      "sha256": "fdcb87b1a9ecb995a692a3203cb21879fd196a2282aa324ff3dae90245feca69"
+    },
+    "public/index.html": {
+      "bytes": 65968,
+      "sha256": "455a88a1923986964eff9fd48b48aa3a29b72d2e73d8f16afb61d375fbb89e9c"
+    },
+    "public/styles.css": {
+      "bytes": 19395,
+      "sha256": "296171db9ea83686b1450b4ebce845d04deb36f55e504439c969517b541b1e5e"
+    },
+    "roles.json": {
+      "bytes": 6634,
+      "sha256": "d8c751db262ea578ecbf63f0ba94f040f3bda292e63b955ccdd9ae86c0e0b931"
+    },
+    "site.css": {
+      "bytes": 27490,
+      "sha256": "eaa7637a730c70906f278438d0484ba1cfb14ed0e7ba03dbb76f8f209a174a66"
+    },
+    "site.js": {
+      "bytes": 5995,
+      "sha256": "f7aba1e683cf0793fea20e15108be8f7924923c80f91a1f36fa2aad275ad45bc"
+    },
+    "sitemap.xml": {
+      "bytes": 387,
+      "sha256": "95c3139ec8818bc0ad0855e7f9b2874b066b4e0f0e9d4ae30ba530828faf8fd4"
+    }
+  },
+  "schema": "muse-hub/public-website-overlay/v1",
+  "source_kind": "STATIC_WEBSITE"
+}
