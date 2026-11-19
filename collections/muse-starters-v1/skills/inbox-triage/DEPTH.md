@@ -1,4 +1,4 @@
-# Triage Messages Without Sending — examples and decisions
+# Inbox Review and Reply Drafts — examples and decisions
 
 Choose the branch that fits the current task, then use its result checks.
 
@@ -76,9 +76,16 @@ Look up the original send operation or sent message before retry. Continue class
 
 **Recheck:** No proposed payment or credential action is presented as safe to perform automatically.
 
+### Messages between recurring reviews are missing from the queue.
+**Likely cause:** A fixed lookback was shorter than the time since the last completed run, or retrieval stopped before its final page.
+
+**Repair:** Use the previous successful window end as the next search start with a small overlap, fetch all requested pages and deduplicate by message ID.
+
+**Recheck:** The saved report records complete coverage and advances the checkpoint only after the run finishes.
+
 ## Preserve for the next turn
 
-Preserve thread and message IDs, last read timestamp, pending drafts and original mutation IDs. Never preserve passwords or unnecessary message bodies in a generic skill package.
+Preserve thread and message IDs, the previous successful interval, pending drafts and original mutation IDs. Resume interrupted retrieval from that interval and reconcile existing drafts before creating replacements.
 
 ## Practice and mechanical checks
 

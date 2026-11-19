@@ -2,7 +2,7 @@
 
 Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs.
 
-**663 skills · 15 workflows · 21 tool guides** · **22 task starters** · **135 recommended connectors**
+**664 skills · 15 workflows · 21 tool guides** · **22 task starters** · **135 recommended connectors**
 
 [Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=coordinator) · [Setup](INSTALL.md)
 
@@ -16,7 +16,7 @@ Turn complex goals into scoped work across specialists: sequence dependencies, m
 | Home & travel | 2 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Home%20%26%20travel) |
 | Personal planning | 81 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Personal%20planning) |
 | Research & science | 2 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Research%20%26%20science) |
-| Software & automation | 4 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Software%20%26%20automation) |
+| Software & automation | 5 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Software%20%26%20automation) |
 | Using Muse | 4 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=coordinator&subject=Using%20Muse) |
 
 ## Start a useful task
@@ -58,3 +58,7 @@ Turn complex goals into scoped work across specialists: sequence dependencies, m
 - [Capsule CRM](../../docs/connectors/services/capsule-crm/SKILL.md) — Capsule CRM: add note to entity, create contact, create project.
 
 [Complete connector directory](../../docs/connectors/README.md) · [Tools and examples](../../docs/CAPABILITIES.md)
+
+## Review email with saved preferences
+
+Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) to prepare reply preferences, resume from the last completed review and check the action log. The download includes three Python helpers, an example workspace and Inbox Setup for personalizing it.

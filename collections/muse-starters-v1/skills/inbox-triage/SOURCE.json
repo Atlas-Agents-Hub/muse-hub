@@ -1,0 +1,21 @@
+{
+  "schema": "muse-skill-support-source/v1",
+  "repository": "alirezarezvani/claude-skills",
+  "revision": "f8593c4941210a621a6629ce1da9e07897976d5f",
+  "entry": "productivity/email/skills/inbox-triage/SKILL.md",
+  "files": {
+    "scripts/draft_safety_validator.py": {
+      "path": "productivity/email/skills/inbox-triage/scripts/draft_safety_validator.py",
+      "sha256": "87955daf82fa9fc5c247c084e155c89b22fb4912eb2a2d326a9d20ab97d7c558"
+    },
+    "scripts/kb_reader.py": {
+      "path": "productivity/email/skills/inbox-triage/scripts/kb_reader.py",
+      "sha256": "0bf70f3b10b1ad76cbaaee83e32bb32e81d319f155ead7b4ac4d9eef390e7e8a"
+    },
+    "scripts/search_window_calculator.py": {
+      "path": "productivity/email/skills/inbox-triage/scripts/search_window_calculator.py",
+      "sha256": "cae2e994c1dff7d2676c2fb46e4b7b13ee7af8bd71ba5d612cb00b1b658530e1"
+    }
+  },
+  "license": "LICENSE.txt"
+}

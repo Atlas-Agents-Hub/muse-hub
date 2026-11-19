@@ -4,7 +4,7 @@ Support daily life with personal planning, routines, accessible interactions and
 
 **[Download Personal Companion](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip)** · [v1.6.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.6.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/SHA256SUMS)
 
-**114 skills · 15 workflows · 9 tool guides**. [Explore the full selection](LIBRARY.md).
+**115 skills · 15 workflows · 9 tool guides**. [Explore the full selection](LIBRARY.md).
 
 ## Set up this assistant
 
@@ -25,6 +25,10 @@ Start with [this specialist's library](LIBRARY.md). A skill describes a focused 
 [Find and build your own pack](../../docs/collection/FIND_AND_BUILD.md) to search this specialist's methods, preview the included files and create a ZIP for your task. Add `--role personal-companion` to the toolkit's search command to focus on this specialist.
 
 Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
+
+## Review email with saved preferences
+
+Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) to prepare reply preferences, resume from the last completed review and check the action log. The download includes three Python helpers, an example workspace and Inbox Setup for personalizing it.
 
 Role ID: `personal-companion`. Package: `muse-personal-companion-v1.6.0.zip`.
 

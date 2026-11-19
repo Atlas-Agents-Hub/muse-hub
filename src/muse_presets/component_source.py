@@ -17,7 +17,7 @@ SCHEMA="muse-presets/component-catalog-v1"
 PINS_SCHEMA="muse-presets/component-source-pins-v1"
 BASE="generic-first-party-source-v1"
 # Immutable local source digest, NOT a publisher signature.
-PINNED_MANIFEST_SHA256="1e2ade3d48f549c091ab2a0067f5a24a952d07cf20db3da21aa2c4521f8c9bae"
+PINNED_MANIFEST_SHA256="73e2a2a5a3d7b62f83b492b436eea6ec9fb885ee243bf3b80680a8106fdcb183"
 MAX_MANIFEST=40_000
 MAX_MODULE=300_000
 MAX_OUTPUT=256_000

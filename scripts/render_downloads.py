@@ -42,6 +42,7 @@ DESCRIPTIONS = {
     'weekly-reset': 'Review your goals, progress and available time, then choose the next useful action. Includes a goal review worksheet and example.',
     'accessible-ui': 'Review accessible interfaces and check HTML for missing language, empty page titles, duplicate IDs and markup to review. Includes a Python checker and example pages.',
     'project-prioritization': 'Rank your backlog with RICE and choose work that fits your dependencies and resource budgets. Includes a Python calculator and JSON/CSV examples.',
+    'inbox-triage': 'Prioritize email threads, prepare replies in your voice and resume from the last completed review. Includes workspace validation, search-window calculation and a draft-operation log checker.',
     'claim-audit': 'Check a factual claim against the evidence that supports it.',
     'release-readiness': 'Review a release package, its checks, and the path to delivery.',
     'purchase-compare': 'Compare products against your requirements, budget and total cost.',
@@ -60,7 +61,7 @@ TITLES = {
     'release-readiness': 'Prepare a Release for Delivery',
     'prose-revision': 'Revise Prose While Preserving Its Voice',
     'literature-triage': 'Build a Focused Literature Map',
-    'inbox-triage': 'Triage Messages and Prepare Replies',
+    'inbox-triage': 'Inbox Review and Reply Drafts',
 }
 
 # Public subjects group the original catalog vocabulary without losing search terms.

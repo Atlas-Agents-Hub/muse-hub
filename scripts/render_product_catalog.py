@@ -113,6 +113,8 @@ def outputs(root=ROOT):
         url=REPO+'/releases/download/'+version+'/'+specialist_asset(canonical,version)
         browse=SITE+'downloads.html?role='+rid
         first=FIRST_TASKS[canonical]
+        inbox_note=('\n\n## Review email with saved preferences\n\nUse the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) to prepare reply preferences, resume from the last completed review and check the action log. The download includes three Python helpers, an example workspace and Inbox Setup for personalizing it.'
+                    if 'inbox-triage' in selected else '')
         readme=f'''# {title}
 
 **Muse Hub specialist:** {scope}
@@ -134,7 +136,7 @@ Bring your current task and source material. Open `PROFILE.md` in the download a
 - [Working methods](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [included tools](../../docs/CAPABILITIES.md).
 - [Service connectors](../../docs/connectors/README.md) — {len(selected_connectors)} recommended services for this specialist.
 
-Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.
+Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.{inbox_note}
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [{version} downloads](../../docs/RELEASES.md) · [Muse Hub]({SITE})
 '''
@@ -164,7 +166,7 @@ Start with [this specialist's library](LIBRARY.md). A skill describes a focused 
 
 [Find and build your own pack](../../docs/collection/FIND_AND_BUILD.md) to search this specialist's methods, preview the included files and create a ZIP for your task. Add `--role {canonical}` to the toolkit's search command to focus on this specialist.
 
-Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
+Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.{inbox_note}
 
 Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
 
@@ -182,6 +184,8 @@ Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
             target='../../docs/connectors/'+row['guide_path'] if row.get('guide_path') else row['source_url']
             library+=f"- [{row['name']}]({target}) — {row['description'].splitlines()[0][:180]}\n"
         library+='\n[Complete connector directory](../../docs/connectors/README.md) · [Tools and examples](../../docs/CAPABILITIES.md)\n'
+        if inbox_note:
+            library=library.rstrip()+inbox_note+'\n'
         add(f'presets/{canonical}/README.md',readme)
         add(f'presets/{canonical}/INSTALL.md',install)
         add(f'presets/{canonical}/LIBRARY.md',library)

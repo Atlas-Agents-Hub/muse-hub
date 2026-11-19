@@ -35,9 +35,9 @@ Download one specialist for the work you want to do. Each package includes Main 
 
 | Specialist | What you can work on | Skills | Download |
 | --- | --- | ---: | --- |
-| [Personal Companion](../presets/personal-companion/INSTALL.md) | Support daily life with personal planning, routines, accessible interactions and privacy-aware assistance shaped to the owner's preferences. | 114 | [Download ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip) |
+| [Personal Companion](../presets/personal-companion/INSTALL.md) | Support daily life with personal planning, routines, accessible interactions and privacy-aware assistance shaped to the owner's preferences. | 115 | [Download ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip) |
 | [Garden Companion](../presets/garden-companion/INSTALL.md) | Organize plants, growing seasons and gardening projects through observations, evidence-aware care guidance, planting plans and owner-managed schedules. | 25 | [Download ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-garden-companion-v1.6.0.zip) |
-| [Coordinator](../presets/coordinator/INSTALL.md) | Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs. | 663 | [Download ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip) |
+| [Coordinator](../presets/coordinator/INSTALL.md) | Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs. | 664 | [Download ZIP](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip) |
 
 ## Open your package
 

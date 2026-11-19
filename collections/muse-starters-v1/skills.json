@@ -673,21 +673,24 @@
   },
   {
     "id": "inbox-triage",
-    "title": "Triage Messages Without Sending",
+    "title": "Inbox Review and Reply Drafts",
     "category": "everyday-life",
-    "trigger": "The user wants an inbox summary, response priorities or drafts for selected messages.",
+    "trigger": "Review complete email threads, prioritize action, draft replies in your voice, and resume recurring inbox reviews from a saved checkpoint.",
     "not_for": "Sending messages, changing calendars or starting recurring work without the user-authorized route.",
     "inputs": [
       "The authorized messages or supplied thread exports",
-      "Response priorities, tone and actions the user has permitted"
+      "Response priorities, tone and actions the user has permitted",
+      "For recurring reviews, an Email/ preferences workspace and the last successfully completed search interval"
     ],
     "steps": [
+      "For recurring work, validate the saved Email/ workspace and calculate the next search interval from the last completed run. Retrieve every requested page and deduplicate overlapping results by message ID.",
       "Read the complete relevant thread in chronological order, including later corrections and owner replies.",
       "Identify who currently owes the next response; a draft is not evidence of delivery and a copied request may already be resolved.",
       "Classify using explicit due dates and the owner's stated rules. Separate suspicious financial or credential requests from ordinary priority work.",
       "Minimize sensitive content in the summary. Keep original source IDs so a reviewer can reopen the decisive message.",
       "Prepare only drafts supported by the thread, preserving recipient, attachments and commitments as distinct fields.",
-      "Before any authorized send or mailbox mutation, re-read the latest thread and confirm the exact target and whether the original operation already succeeded."
+      "Before any authorized send or mailbox mutation, re-read the latest thread and confirm the exact target and whether the original operation already succeeded.",
+      "Save the action queue, draft IDs, follow-ups and operation log. Advance the completed-interval checkpoint only after retrieval and the report finish; preserve the earlier checkpoint after an interruption."
     ],
     "outputs": [
       "A prioritized message-action list",
@@ -698,14 +701,16 @@
       "Already resolved threads are not reopened.",
       "Drafts do not invent availability, promises or attachments.",
       "No message is sent or moved merely because a draft was produced.",
-      "The task-specific structured output is checked against source facts or disclosed adjudication, while semantic usefulness still requires human review."
+      "Queue facts and draft commitments agree with the complete thread history.",
+      "The completed interval has no omitted pages; overlapping messages do not create duplicate drafts."
     ],
-    "recovery": "Preserve thread and message IDs, last read timestamp, pending drafts and original mutation IDs. Never preserve passwords or unnecessary message bodies in a generic skill package.",
+    "recovery": "Preserve thread and message IDs, the previous successful interval, pending drafts and original mutation IDs. Resume interrupted retrieval from that interval and reconcile existing drafts before creating replacements.",
     "example": "Summarize these six threads and draft replies to the two that need decisions; do not send anything.",
     "source_ids": [
       "muse-connectors",
       "grok-briefs",
-      "muse-catalog"
+      "muse-catalog",
+      "alireza-inbox-helpers"
     ],
     "depth": {
       "schema": "muse-skill-depth/v1",
@@ -757,6 +762,12 @@
           "cause": "Urgency classification erased a verification requirement.",
           "repair": "Separate verification-needed items from execution-ready replies.",
           "recheck": "No proposed payment or credential action is presented as safe to perform automatically."
+        },
+        {
+          "symptom": "Messages between recurring reviews are missing from the queue.",
+          "cause": "A fixed lookback was shorter than the time since the last completed run, or retrieval stopped before its final page.",
+          "repair": "Use the previous successful window end as the next search start with a small overlap, fetch all requested pages and deduplicate by message ID.",
+          "recheck": "The saved report records complete coverage and advances the checkpoint only after the run finishes."
         }
       ],
       "worked_example": {
@@ -771,7 +782,7 @@
           "result": "T1 is waiting, linked to S9. No resend. If Sent cannot be checked, report outcome unknown and continue other threads."
         }
       ],
-      "handoff": "Preserve thread and message IDs, last read timestamp, pending drafts and original mutation IDs. Never preserve passwords or unnecessary message bodies in a generic skill package.",
+      "handoff": "Preserve thread and message IDs, the previous successful interval, pending drafts and original mutation IDs. Resume interrupted retrieval from that interval and reconcile existing drafts before creating replacements.",
       "practice_scope": "Use the supplied examples to practice this method. Check the structured output, then review the reasoning, evidence and presentation against the task.",
       "case_ids": [
         "inbox-triage-r3-standard",

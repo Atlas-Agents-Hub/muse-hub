@@ -45900,6 +45900,26 @@
       "guide_url": "https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/collections/library/skills/in-app-messaging/SKILL.md"
     },
     {
+      "id": "inbox-triage",
+      "kind": "skill",
+      "title": "Inbox Review and Reply Drafts",
+      "description": "Prioritize email threads, prepare replies in your voice and resume from the last completed review. Includes workspace validation, search-window calculation and a draft-operation log checker.",
+      "asset": "muse-skill-inbox-triage-v1.6.0.zip",
+      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-skill-inbox-triage-v1.6.0.zip",
+      "category": "Personal planning",
+      "keywords": "everyday-life everyday life",
+      "roles": [
+        "coordinator",
+        "personal-companion"
+      ],
+      "entry": "skills/inbox-triage/SKILL.md",
+      "pack_id": "inbox-triage",
+      "pack_title": "Inbox Review and Reply Drafts",
+      "pack_size": 1,
+      "pack_kind": "skill",
+      "guide_url": "https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/collections/muse-starters-v1/skills/inbox-triage/SKILL.md"
+    },
+    {
       "id": "inbox-setup",
       "kind": "skill",
       "title": "Inbox Setup",
@@ -45909,7 +45929,9 @@
       "category": "Software & automation",
       "keywords": "software-engineering software engineering",
       "roles": [
-        "software-engineer"
+        "coordinator",
+        "software-engineer",
+        "personal-companion"
       ],
       "entry": "skills/inbox-setup/SKILL.md",
       "pack_id": "software-engineering-020",
@@ -94852,26 +94874,6 @@
       "pack_size": 40,
       "pack_kind": "skill-pack",
       "guide_url": "https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/collections/library/skills/triage-issue/SKILL.md"
-    },
-    {
-      "id": "inbox-triage",
-      "kind": "skill",
-      "title": "Triage Messages and Prepare Replies",
-      "description": "The user wants an inbox summary, response priorities or drafts for selected messages.",
-      "asset": "muse-skill-inbox-triage-v1.6.0.zip",
-      "url": "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-skill-inbox-triage-v1.6.0.zip",
-      "category": "Personal planning",
-      "keywords": "everyday-life everyday life",
-      "roles": [
-        "coordinator",
-        "personal-companion"
-      ],
-      "entry": "skills/inbox-triage/SKILL.md",
-      "pack_id": "inbox-triage",
-      "pack_title": "Triage Messages Without Sending",
-      "pack_size": 1,
-      "pack_kind": "skill",
-      "guide_url": "https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/collections/muse-starters-v1/skills/inbox-triage/SKILL.md"
     },
     {
       "id": "triage-validation",

@@ -4,7 +4,7 @@
 
 **[Download the assistant](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip)** · **[Set up Coordinator](INSTALL.md)** · [Browse its library](LIBRARY.md)
 
-**663 skills · 15 workflows · 21 tool guides**. Give this specialist its own Main conversation and **three subchats**. Its package includes the selected methods, supporting files, examples and service guides for your work.
+**664 skills · 15 workflows · 21 tool guides**. Give this specialist its own Main conversation and **three subchats**. Its package includes the selected methods, supporting files, examples and service guides for your work.
 
 ## Put it to work
 
@@ -20,5 +20,9 @@ Bring your current task and source material. Open `PROFILE.md` in the download a
 - [Service connectors](../../docs/connectors/README.md) — 135 recommended services for this specialist.
 
 Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.
+
+## Review email with saved preferences
+
+Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) to prepare reply preferences, resume from the last completed review and check the action log. The download includes three Python helpers, an example workspace and Inbox Setup for personalizing it.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.6.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)

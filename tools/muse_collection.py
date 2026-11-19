@@ -46,6 +46,14 @@ SKILL_ASSETS = {
     'daily-briefing': ('REMINDERS.md','CALENDAR_REVIEW.md'),
     'weekly-reset': ('GOAL_REVIEW.md',),
     'accessible-ui': ('SOURCE_CHECK.md','examples/clean.html','examples/review.html'),
+    'inbox-triage': (
+        'INBOX_WORKSPACE.md', 'SOURCE.json', 'LICENSE.txt', 'NOTICE.txt',
+        'scripts/kb_reader.py', 'scripts/search_window_calculator.py',
+        'scripts/draft_safety_validator.py', 'references/kb_file_contract.md',
+        'references/draft_action_log.md', 'examples/Email/email-taxonomy.md',
+        'examples/Email/email-patterns.md', 'examples/Email/blocklist.md',
+        'examples/Email/tracker.md', 'examples/Email/triage-log/example-run.md',
+    ),
 }
 SKILL_TOOLS = {
     'project-prioritization': 'tools/prioritize.py',
@@ -56,6 +64,7 @@ SKILL_RESOURCE_SECTIONS = {
     'daily-briefing': '## Plan the details\nUse the [reminder worksheet](REMINDERS.md) to set up and follow through on a task. Use the [calendar review](CALENDAR_REVIEW.md) to make room for preparation, travel and focused work. Each includes a blank template and a worked example.\n\n',
     'weekly-reset': '## Review a goal\nUse the [goal review worksheet](GOAL_REVIEW.md) to connect a measurable outcome with this week\'s actions, available time and evidence of progress. Start with the blank template or follow the worked example.\n\n',
     'accessible-ui': '## Check an HTML page\nRun the included [HTML source checker](SOURCE_CHECK.md) to find missing document language, empty page titles, duplicate IDs and markup that needs a closer look. The guide includes two example pages and next steps for browser testing.\n\n',
+    'inbox-triage': '## Keep inbox reviews in sync\nUse the included [inbox workspace](INBOX_WORKSPACE.md) to load your preferences, calculate the next search interval and check the action log. Three local Python helpers and a complete example workspace support first-time setup and resumed reviews.\n\n',
 }
 
 class CollectionError(ValueError):
@@ -560,6 +569,9 @@ def resource_start_guide(files: dict[str,bytes]) -> str:
         parts.append('\n## Check an HTML page\n\nWith Python 3.10 or newer, try the included example:\n\n'
             '    python -B tools/accessibility_check.py --input skills/accessible-ui/examples/clean.html\n\n'
             'Read [the HTML source checker guide](skills/accessible-ui/SOURCE_CHECK.md) for your own pages and browser checks.\n')
+    if 'skills/inbox-triage/scripts/kb_reader.py' in files:
+        parts.append('\n## Review your inbox\n\nUse the [inbox workspace guide](skills/inbox-triage/INBOX_WORKSPACE.md) to prepare preferences, resume from the last completed interval and check draft operations. Try the included workspace with Python 3.10 or newer:\n\n'
+            '    python -B skills/inbox-triage/scripts/kb_reader.py --workspace skills/inbox-triage/examples --output json\n')
     return ''.join(parts)
 
 

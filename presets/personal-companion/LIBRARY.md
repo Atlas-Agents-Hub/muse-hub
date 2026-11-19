@@ -2,7 +2,7 @@
 
 Support daily life with personal planning, routines, accessible interactions and privacy-aware assistance shaped to the owner's preferences.
 
-**114 skills · 15 workflows · 9 tool guides** · **37 task starters** · **108 recommended connectors**
+**115 skills · 15 workflows · 9 tool guides** · **37 task starters** · **108 recommended connectors**
 
 [Download the specialist](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip) · [Search its methods](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion) · [Setup](INSTALL.md)
 
@@ -15,7 +15,7 @@ Support daily life with personal planning, routines, accessible interactions and
 | Data & AI | 6 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Data%20%26%20AI) |
 | Home & travel | 3 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Home%20%26%20travel) |
 | Personal planning | 87 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Personal%20planning) |
-| Software & automation | 5 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Software%20%26%20automation) |
+| Software & automation | 6 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Software%20%26%20automation) |
 | Using Muse | 4 | [Explore](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html?role=personal-companion&subject=Using%20Muse) |
 
 ## Start a useful task
@@ -57,3 +57,7 @@ Support daily life with personal planning, routines, accessible interactions and
 - [Coda](https://github.com/bluman1/muse-connectors/blob/73f302c2d8569fdc65e0e57c26b244c547fcd40e/connectors/coda/SKILL.md) — List docs, read tables and rows, add rows. Your docs as a database.
 
 [Complete connector directory](../../docs/connectors/README.md) · [Tools and examples](../../docs/CAPABILITIES.md)
+
+## Review email with saved preferences
+
+Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) to prepare reply preferences, resume from the last completed review and check the action log. The download includes three Python helpers, an example workspace and Inbox Setup for personalizing it.

@@ -6,13 +6,13 @@ Muse Hub brings together 15 assistants, 5242 skills, 396 workflows, 558 task sta
 
 | Specialist | Included methods and tools |
 | --- | --- |
-| Coordinator | Project plans, dependency review, task handoffs, and completion-evidence checks. |
+| Coordinator | Project plans, dependency review, task handoffs, inbox review, and completion checks. |
 | Software Engineer | Defect reproduction, focused repair, regression tests, Claim Gate, and source provenance. |
 | Model Builder | Dataset preparation, small-model training, held-out metrics, and model-artifact inspection. |
 | Research Evaluator | Quotation tracing, evidence comparison, numerical evaluation, and source-family checks. |
 | Creative Studio | Creative direction, production planning, asset dependencies, shot timelines, continuity records, and storyboard exports. |
 | Adversarial Verifier | Threat modeling, authorized failure testing, negative controls, and remediation review. |
-| Personal Companion | Daily planning, preferences, Daily Desk tasks and notes, and Companion Home's room notebook. |
+| Personal Companion | Daily planning, inbox review and reply drafts, preferences, Daily Desk tasks and notes, and Companion Home's room notebook. |
 | Garden Companion | Plant observations, seasonal planning, versioned records, and a saved local calendar. |
 | Learning Coach | Lessons, practice, scoring, review history, and study-session storage. |
 | Claims Adjudicator | Claim comparison, source tracing, counterexamples, and qualified findings. |
@@ -51,6 +51,8 @@ The first four print reports from worked inputs. Daily Desk exercises task and n
 [Creative Studio](kits/CREATIVE_SOURCEKIT.md) · [Claims](kits/CLAIMS_SOURCEKIT.md) · [Garden](kits/GARDEN_SOURCEKIT.md) · [Learning](kits/LEARNING_SOURCEKIT.md) · [Observation comparison](kits/REVERSE_SOURCEKIT.md) · [Engineering, Coordinator, and Model Builder](WORKFLOWS.md)
 
 ## Personal workspaces
+
+[Inbox Review](../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) keeps reply preferences, follow-ups and completed review windows together. Its three Python helpers validate the workspace, calculate a complete search interval and check the recorded draft operations. Start with the included example workspace, then use Inbox Setup to personalize it.
 
 [Daily Desk](spaces/DAILY_DESK.md) combines tasks and notes with revision checks, backup, and restore. [Companion Home](COMPANION_HOME.md) organizes notes across five rooms with Studio and Arcade activities. Choose a private database path and keep it when updating the application.
 
