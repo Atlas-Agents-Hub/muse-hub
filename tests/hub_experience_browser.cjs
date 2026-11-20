@@ -395,6 +395,39 @@ async function runChecks() {
     assert(await evaluate('document.querySelector(".setup-disclosure").open && document.getElementById("setup-role-select").value==="software-engineer"'));
     return {real_capture:true,mobile_preview:true,search_direct:true,filters:true,clear_empty:true,deep_link:true};
   });
+  await check('authentic Planner captures remain inspectable on phone and desktop', async () => {
+    const observations = [];
+    for (const viewport of [320, 390, 768, 1024, 1440]) {
+      await resize(viewport); await navigate('index.html');
+      const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img"),peek=document.querySelector(".premium-mobile-peek"),links=[...document.querySelectorAll(".premium-capture-inspect a")];return {loaded:img.complete&&img.naturalWidth>0,source:new URL(img.currentSrc).pathname,rect:{width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height},peekVisible:getComputedStyle(peek).display!=="none",links:links.map(a=>a.getAttribute("href")),scrollWidth:document.documentElement.scrollWidth}})()');
+      assert(proof.loaded, 'Planner capture failed to load: ' + viewport);
+      assert(proof.source.endsWith(viewport <= 690 ? '/planner-mobile.png' : '/planner-desktop.png'), JSON.stringify(proof));
+      assert(proof.rect.width >= (viewport <= 690 ? viewport * .75 : Math.min(500,viewport * .55)) && proof.rect.height >= (viewport <= 690 ? 280 : 330), JSON.stringify(proof));
+      assert.equal(proof.peekVisible, viewport > 690, 'Dual-device evidence mode differs from viewport');
+      assert.deepEqual(proof.links, ['planner-desktop.png', 'planner-mobile.png']);
+      for (const name of proof.links) assert(fs.statSync(path.join(site, name)).isFile(), name);
+      assert(proof.scrollWidth <= viewport + 1, 'Showcase caused horizontal overflow');
+      observations.push({viewport, ...proof});
+    }
+    return observations;
+  });
+  await check('outcome shortcuts expose real specialist cards with keyboard focus', async () => {
+    await resize(390); await navigate('index.html');
+    await click('[data-suggest-role="claims-adjudicator"]');
+    const first = await evaluate('({open:document.querySelector(".specialist-directory").open,visible:[...document.querySelectorAll(".role-card:not([hidden])")].map(c=>c.dataset.role),search:document.getElementById("role-search").value,count:document.getElementById("role-count").textContent,pressed:document.querySelector("[data-suggest-role=claims-adjudicator]").getAttribute("aria-pressed"),label:document.getElementById("role-directory-label").textContent,focus:document.activeElement?.dataset?.role})');
+    assert(first.open && first.search === 'Claims Adjudicator' && first.count === 'Showing 1 of 15 specialists' && first.label === 'View 1 matching specialist' && first.pressed === 'true',JSON.stringify(first));
+    assert.deepEqual(first.visible,['claims-adjudicator']);
+    assert.equal(first.focus,'claims-adjudicator');
+    await screenshot('specialist-quickpick-390.png');
+    await click('[data-suggest-role="product-interface-designer"]');
+    const second = await evaluate('({visible:[...document.querySelectorAll(".role-card:not([hidden])")].map(c=>c.dataset.role),pressed:[...document.querySelectorAll("[data-suggest-role][aria-pressed=true]")].map(b=>b.dataset.suggestRole),focused:document.activeElement?.dataset?.role})');
+    assert.deepEqual(second.visible,['product-interface-designer']);
+    assert.deepEqual(second.pressed,['product-interface-designer']);
+    assert.equal(second.focused,'product-interface-designer');
+    await click('#role-reset');
+    assert(await evaluate('document.getElementById("role-search").value==="" && [...document.querySelectorAll(".role-card:not([hidden])")].length===15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
+    return {first,second,reset:true};
+  });
   for (const viewport of [320, 375, 390, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {

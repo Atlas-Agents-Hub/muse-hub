@@ -72,14 +72,26 @@
     <span class="premium-release" data-release-caption="packages">Complete ZIP packages · Version 1.6.0</span>
   </div>
   <figure class="premium-product-preview">
-    <div class="premium-capture-topline"><span class="capture-live-dot" aria-hidden="true"></span> ACTUAL SPACE · MUSE PLANNER <span>WORKING APP</span></div>
-    <picture class="premium-capture-picture">
-      <source media="(max-width: 690px)" srcset="planner-mobile.png">
-      <img src="planner-desktop.png" width="980" height="745" fetchpriority="high" decoding="async" alt="Muse Planner application: daily checklist, weekly rhythm and dated reminders in a real working interface">
-    </picture>
+    <div class="premium-capture-topline"><span class="capture-live-dot" aria-hidden="true"></span> REAL MUSE PLANNER <span>APP SCREENSHOT</span></div>
+    <div class="premium-capture-stage">
+      <picture class="premium-capture-picture">
+        <source media="(max-width: 690px)" srcset="planner-mobile.png">
+        <img src="planner-desktop.png" width="980" height="745" fetchpriority="high" decoding="async" alt="Real Muse Planner application showing the daily checklist, a weekly plan and dated reminders">
+      </picture>
+      <div class="premium-mobile-peek" aria-hidden="true">
+        <span class="premium-peek-label">PHONE VIEW</span>
+        <img src="planner-mobile.png" width="390" height="490" loading="lazy" decoding="async" alt="">
+      </div>
+    </div>
     <figcaption class="premium-product-caption">
-      <span><strong>Muse Planner</strong><small>Plan the week. Track the work. Pick up where you left off.</small></span>
-      <a href="https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/docs/spaces/MUSE_PLANNER.md" aria-label="Explore Muse Planner setup and features">Explore Planner <span aria-hidden="true">↗</span></a>
+      <span class="premium-caption-copy"><strong>Muse Planner</strong><small>Plan the week. Track the work. Pick up where you left off.</small></span>
+      <div class="premium-caption-actions">
+        <div class="premium-capture-inspect" aria-label="Inspect the real app screenshots">
+          <a href="planner-desktop.png" target="_blank" rel="noopener noreferrer" aria-label="View full desktop Planner screenshot">Desktop capture</a>
+          <a href="planner-mobile.png" target="_blank" rel="noopener noreferrer" aria-label="View full phone Planner screenshot">Phone capture</a>
+        </div>
+        <a class="premium-planner-guide" href="https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/docs/spaces/MUSE_PLANNER.md" aria-label="Explore Muse Planner setup and features">Explore Planner <span aria-hidden="true">?</span></a>
+      </div>
     </figcaption>
   </figure>
 </div></section>
@@ -123,8 +135,17 @@
           <button type="button" id="role-reset" class="reset-btn">Clear</button>
         </div>
         <div class="role-result-line"><p id="role-count" role="status" aria-live="polite">Showing 15 of 15 specialists</p><span>Download a kit or open its setup guide</span></div>
+        <div class="role-quickpick" aria-label="Choose a specialist by outcome">
+          <p class="role-quickpick-label">Not sure which specialist? Start with the work.</p>
+          <div class="role-quickpick-actions">
+            <button type="button" class="role-quickpick-button" data-suggest-role="software-engineer" aria-pressed="false"><strong>Build an app</strong><small>Software Engineer</small></button>
+            <button type="button" class="role-quickpick-button" data-suggest-role="claims-adjudicator" aria-pressed="false"><strong>Verify a claim</strong><small>Claims Adjudicator</small></button>
+            <button type="button" class="role-quickpick-button" data-suggest-role="product-interface-designer" aria-pressed="false"><strong>Design an interface</strong><small>Product &amp; Interface Designer</small></button>
+            <button type="button" class="role-quickpick-button" data-suggest-role="coordinator" aria-pressed="false"><strong>Organize a project</strong><small>Coordinator</small></button>
+          </div>
         </div>
-<details class="specialist-directory"><summary><span>Browse all 15 specialists</span><span aria-hidden="true">＋</span></summary>
+        </div>
+<details class="specialist-directory"><summary><span id="role-directory-label">Browse all 15 specialists</span><span aria-hidden="true">＋</span></summary>
 <div id="role-grid" class="role-grid">
                     <article class="role-card" data-role="software-engineer" data-asset="software-engineer" data-category="build" data-search="software engineer build, debug, refactor and release software. work from reproduction and architecture decisions through implementation, regression tests, source integrity and reviewed delivery. specialists build build &amp; automate">
             <div class="role-card-top"><span class="role-type">Build &amp; automate</span><span class="role-order">01 / 15</span></div>

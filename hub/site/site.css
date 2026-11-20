@@ -613,3 +613,65 @@ button { cursor:pointer; }
   .muse-premium .premium-secondary-link{font-size:11px}
   .muse-premium .premium-capture-picture img{height:170px}
 }
+
+/* PR41 R4: real Planner screenshots, visually legible on both device classes. */
+.muse-premium .premium-hero-grid{grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:clamp(26px,3.8vw,58px)}
+.muse-premium .premium-hero h1{font-size:clamp(55px,5.9vw,87px);letter-spacing:-.035em;line-height:1.01}
+.muse-premium .premium-product-preview{transform:none;box-shadow:0 22px 60px rgba(0,0,0,.38);border-color:#575e4c}
+.muse-premium .premium-capture-topline{font-size:11px;letter-spacing:.075em;padding:10px 16px;min-height:42px;background:#202923}
+.muse-premium .premium-capture-topline>span:last-child{color:#e8e9dc;font-weight:700}
+.muse-premium .premium-capture-stage{position:relative;min-width:0;background:#0d1712;isolation:isolate}
+.muse-premium .premium-capture-picture img{height:clamp(360px,35vw,525px);object-fit:cover;object-position:top left}
+.muse-premium .premium-mobile-peek{position:absolute;right:14px;bottom:14px;width:clamp(152px,14vw,198px);padding:5px 5px 0;background:#17201a;box-shadow:0 15px 36px rgba(0,0,0,.6);border:1px solid #a5ad93;z-index:1}
+.muse-premium .premium-peek-label{display:block;color:#f8f6e9;font:750 9px/1.4 var(--sans);letter-spacing:.1em;padding:6px 7px 9px}
+.muse-premium .premium-mobile-peek img{display:block;width:100%;height:auto;max-height:230px;object-fit:cover;object-position:top left}
+.muse-premium .premium-product-caption{gap:20px;flex-wrap:wrap;padding:18px 20px}
+.muse-premium .premium-caption-copy{flex:1 1 210px}
+.muse-premium .premium-caption-copy strong{font-size:19px}
+.muse-premium .premium-caption-copy small{font-size:12px;max-width:280px;line-height:1.45}
+.muse-premium .premium-caption-actions{display:flex;flex-direction:column;align-items:flex-end;gap:7px;min-width:0}
+.muse-premium .premium-capture-inspect{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.muse-premium .premium-capture-inspect a{color:#4b493d;font-size:11px;min-height:26px;font-weight:650;text-decoration:underline;text-underline-offset:3px}
+.muse-premium .premium-capture-inspect a:hover{color:#111}
+.muse-premium .premium-planner-guide{font-size:13px;min-height:30px;color:#101010;font-weight:800;text-decoration:underline;text-underline-offset:4px}
+.muse-premium .premium-product-preview a:focus-visible,.muse-premium .role-quickpick-button:focus-visible{outline:3px solid #151515;outline-offset:3px}
+.muse-premium .premium-product-preview a:focus-visible{background:var(--signal)}
+/* Intent-led discovery opens the existing reviewed specialist rather than a mock result. */
+.muse-premium .role-quickpick{padding-top:17px;margin-top:18px;border-top:1px solid #d2d0c3}
+.muse-premium .role-quickpick-label{margin:0 0 11px;font-size:12px;color:#48463e;font-weight:750}
+.muse-premium .role-quickpick-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.muse-premium .role-quickpick-button{text-align:left;min-width:0;min-height:68px;padding:12px 14px;display:flex;flex-direction:column;gap:5px;align-items:flex-start;justify-content:center;border:1px solid #c9c7bd;background:var(--paper-strong);color:var(--ink);cursor:pointer;font:inherit;transition:background .15s ease,border-color .15s ease}
+.muse-premium .role-quickpick-button strong{font-size:13px;line-height:1.25;font-weight:800}
+.muse-premium .role-quickpick-button small{font-size:10px;line-height:1.3;color:#5b594e}
+.muse-premium .role-quickpick-button:hover,.muse-premium .role-quickpick-button[aria-pressed="true"]{background:var(--signal);border-color:#5a5d24}
+.muse-premium .role-quickpick-button[aria-pressed="true"] small{color:#33351d}
+.muse-premium .role-card:focus-visible{outline:3px solid #25261a;outline-offset:-4px}
+@media(max-width:1000px){
+  .muse-premium .premium-hero-grid{grid-template-columns:1fr;gap:25px}
+  .muse-premium .premium-product-preview{max-width:770px;margin-inline:auto}
+}
+@media(max-width:690px){
+  .muse-premium .premium-hero{padding:31px 0 30px}
+  .muse-premium .premium-hero h1{font-size:clamp(44px,10.9vw,56px);letter-spacing:-.032em;line-height:1.01}
+  .muse-premium .premium-hero-grid{gap:20px}
+  .muse-premium .premium-capture-topline{font-size:10px;min-height:39px;padding:9px 11px;letter-spacing:.04em}
+  .muse-premium .premium-capture-picture img{height:clamp(300px,84vw,420px);object-position:top left}
+  .muse-premium .premium-mobile-peek{display:none}
+  .muse-premium .premium-product-caption{padding:13px;gap:9px;display:flex;flex-direction:column;align-items:stretch}
+  .muse-premium .premium-caption-copy{flex:0 1 auto}
+  .muse-premium .premium-caption-copy strong{font-size:16px}
+  .muse-premium .premium-caption-copy small{font-size:11px;max-width:100%}
+  .muse-premium .premium-caption-actions{align-items:stretch;flex-direction:row;justify-content:space-between;gap:7px;flex-wrap:wrap}
+  .muse-premium .premium-capture-inspect{gap:12px}
+  .muse-premium .premium-capture-inspect a{font-size:10px;min-height:35px}
+  .muse-premium .premium-planner-guide{font-size:11px;min-height:35px}
+  .muse-premium .role-quickpick-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .muse-premium .role-quickpick-button{min-height:72px;padding:11px 12px}
+}
+@media(max-width:340px){
+  .muse-premium .premium-caption-actions{flex-direction:column;align-items:flex-start}
+  .muse-premium .premium-capture-topline{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+  .muse-premium .role-quickpick-button{transition:none}
+}

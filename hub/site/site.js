@@ -2,6 +2,7 @@
 (() => {
   'use strict';
   const directory = document.querySelector('.specialist-directory');
+  const directoryLabel = document.getElementById('role-directory-label');
   const setupDisclosure = document.querySelector('.setup-disclosure');
   const search = document.getElementById('role-search');
   const category = document.getElementById('role-category');
@@ -10,6 +11,7 @@
   const empty = document.getElementById('role-empty');
   const emptyClear = document.getElementById('role-empty-clear');
   const cards = [...document.querySelectorAll('.role-card[data-role]')];
+  const quickPicks = [...document.querySelectorAll('[data-suggest-role]')];
   if (!search || !category || !count || !reset || !empty || !emptyClear || cards.length !== 15) return;
 
   function update() {
@@ -24,13 +26,40 @@
       if (show) visible += 1;
     }
     count.textContent = `Showing ${visible} of ${cards.length} specialists`;
+    if (directoryLabel) {
+      const filtered = !!needle || group !== 'all';
+      directoryLabel.textContent = filtered
+        ? 'View ' + visible + ' matching specialist' + (visible === 1 ? '' : 's')
+        : 'Browse all ' + cards.length + ' specialists';
+    }
     empty.hidden = visible !== 0;
+    for (const button of quickPicks) {
+      const card = cards.find(item => item.dataset.role === button.dataset.suggestRole);
+      const selected = !!card && group === 'all' &&
+        needle === card.querySelector('h3').textContent.toLocaleLowerCase();
+      button.setAttribute('aria-pressed', String(selected));
+    }
   }
   function clear() {
     search.value = '';
     category.value = 'all';
     update();
     search.focus();
+  }
+  // Outcome shortcuts resolve only the 15 reviewed role cards. No arbitrary path input.
+  for (const button of quickPicks) {
+    button.addEventListener('click', () => {
+      const target = cards.find(card => card.dataset.role === button.dataset.suggestRole);
+      const heading = target?.querySelector('h3');
+      if (!target || !heading) return;
+      search.value = heading.textContent.trim();
+      category.value = 'all';
+      if (directory) directory.open = true;
+      update();
+      target.tabIndex = -1;
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ block: 'center', behavior: 'auto' });
+    });
   }
   search.addEventListener('focus', () => { if (directory) directory.open = true; });
   search.addEventListener('input', () => { if (directory) directory.open = true; update(); });
