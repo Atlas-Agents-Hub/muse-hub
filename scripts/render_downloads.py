@@ -470,6 +470,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
       <div id="download-empty" class="role-empty" hidden><h2>No matching downloads.</h2><p>Try a shorter search or clear the filters.</p><button id="download-clear-empty" type="button">Show all downloads</button></div>
     </div></section>
     <section class="downloads-hero section-dark" aria-labelledby="bundle-title"><div class="shell">
+      <span class="eyebrow signal">Version {esc(version.removeprefix('v'))}</span>
       <h2 id="bundle-title">Download complete collections</h2>
       <p>Unzip a collection and open <strong>START_HERE.md</strong> to use it with Muse.</p>
       <div class="bundle-grid">{bundle_html}</div>
