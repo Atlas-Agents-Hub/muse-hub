@@ -279,4 +279,4 @@ body:not(.directory-ready) .catalog-stage { grid-template-columns: minmax(0,1fr)
 .eyebrow,.section-kicker { color:var(--signal) }
 :is(.route-notice strong,.detail-metadata dd) { color:var(--ink) }
 :is(.skip-link,.empty-state button) { color:var(--paper) }
-.filters label,.filter-search input::placeholder,.detail-panel .section-kicker { color:var(--muted) }
+.intro-description,.filters label,.filter-search input::placeholder,.detail-panel .section-kicker { color:var(--muted) }

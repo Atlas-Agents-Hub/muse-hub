@@ -470,6 +470,10 @@ async function runChecks() {
     await resize(viewport); const rows = [];
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
+      if (name === 'resources') {
+        const palette = await evaluate('({text:getComputedStyle(document.querySelector(".intro-description")).color,background:getComputedStyle(document.body).backgroundColor})');
+        assert.deepEqual(palette, {text:'rgb(198, 196, 184)',background:'rgb(21, 21, 21)'});
+      }
       await screenshot(name + '-' + viewport + '.png');
       if (name === 'downloads') {
         const controls = await evaluate('({top:document.querySelector("#download-search").getBoundingClientRect().top,height:innerHeight,background:getComputedStyle(document.body).backgroundColor})');
