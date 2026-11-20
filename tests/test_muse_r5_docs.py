@@ -40,7 +40,7 @@ class ProductDocumentationTests(unittest.TestCase):
         intro=page.split('\n## ',1)[0]
         collection=current_collection()
         self.assertRegex(intro,str(len(collection['skills']))+r' (?:reusable |developed )?skills')
-        self.assertIn("nearly 400 workflows",intro)
+        self.assertIn(str(len(collection['workflows']))+' workflows',intro)
         self.assertNotIn('Current depth: R4',intro)
         self.assertIn('SKILL_INDEX.md',page)
         counts=json.loads((C/'COUNTS.json').read_text('utf-8'))
