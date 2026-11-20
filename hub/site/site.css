@@ -27,7 +27,7 @@ button { cursor:pointer; }
 .site-header { background:var(--black); border-bottom:1px solid var(--line-dark); }
 .header-inner { display:flex; align-items:center; min-height:84px; gap:28px; }
 .brand { display:inline-flex; align-items:center; gap:12px; text-decoration:none; flex-shrink:0; }
-.brand-symbol { color:var(--paper); display:block; }
+.brand-symbol { color:var(--signal); display:block; }
 .brand-text { font-size:16px; font-weight:830; letter-spacing:.105em; white-space:nowrap; }
 .brand-text span { font-weight:450; }
 .header-nav { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:20px; margin-left:auto; }

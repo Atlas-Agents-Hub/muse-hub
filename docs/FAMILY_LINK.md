@@ -1,6 +1,16 @@
-# Family Link handoffs
+# Family Link
 
-Carry work between specialists with a clear task, the context the recipient needs, and an expected result. Family Link helps prepare and review that handoff before you share it through your chosen connection.
+Link two Muse personal assistants so they can communicate through a connection you configure. One assistant can send a request with the relevant context, and the other can return a result. Each assistant keeps its own notes, preferences, and memory.
+
+For example, one Personal Companion can ask another to coordinate a family event. Share the date options and what you need confirmed, then bring the answer back to the requesting assistant.
+
+## Link two personal assistants
+
+1. Set up a [Personal Companion](../presets/personal-companion/INSTALL.md) for each person or workspace.
+2. Choose a [connection](CONNECTORS.md) both sides can use and configure the accounts and permissions it needs.
+3. Use Family Link to prepare and review a request for the other assistant. Send it through that connection and return the reply to the requesting assistant.
+
+The same handoff format works when a Personal Companion needs help from a specialist.
 
 ## Prepare a useful handoff
 

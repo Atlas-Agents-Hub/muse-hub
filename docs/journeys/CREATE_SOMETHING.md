@@ -1,6 +1,6 @@
 # Create something
 
-Start with an idea, shape it into a clear brief and carry it through the tools that make it real. Use Muse for the conversation, Creative Studio for the plan, and the image, design or video tools that suit your project.
+Develop a visual world, storyboard a short film, design a motion sequence, or plan an interactive scene. Bring Creative Studio an idea or reference. Leave with a brief, shot list, storyboard, and asset plan you can take into your image, animation, or video tools.
 
 ## 1. Shape the idea in Muse
 
