@@ -678,3 +678,54 @@ button { cursor:pointer; }
 @media(prefers-reduced-motion:reduce){
   .muse-premium .role-quickpick-button{transition:none}
 }
+
+/* Dark surfaces across the home, library and subject indexes. */
+:root { color-scheme:dark }
+.muse-premium { --panel:#20201e; --panel-raised:#292926; --soft:#c6c4b8; --divider:#515149 }
+.muse-premium :is(.section-paper,.premium-paths,.premium-spaces,.premium-footer) { --focus:var(--signal); background:var(--black); color:var(--paper) }
+.muse-premium :is(.premium-paths,.premium-spaces,.specialists,.premium-footer,.downloads-hero) { border-top:1px solid var(--line-dark) }
+.muse-premium :is(.premium-space-card,.specialist-search-panel,.role-card,.download-card,.premium-product-caption,.role-quickpick-button) { background:var(--panel); color:var(--paper); border-color:var(--divider); box-shadow:none }
+.muse-premium :is(.role-card:hover,.role-quickpick-button:hover) { background:var(--panel-raised) }
+.muse-premium :is(.premium-spaces,.specialists,.premium-footer,.premium-product-caption) :is(p,small,.premium-card-number,.premium-eyebrow),
+.muse-premium :is(.role-card-top,.role-card-profile,.role-result-line,.role-quickpick-label,.role-quickpick-button small,.premium-footer-bottom,.download-kind,.download-section > h2 > span),
+.muse-premium .download-card p { color:var(--soft) }
+.muse-premium :is(.premium-text-link,.premium-product-caption a,.download-card > a:hover) { color:var(--signal) }
+.muse-premium :is(.role-toolbar,.role-grid,.role-card-actions,.role-quickpick,.section-footnote,.premium-footer-bottom,.download-card a,.specialist-directory) { border-color:var(--divider) }
+.muse-premium .role-grid { background:var(--divider) }
+.muse-premium .field-wrap :is(input,select) { background:var(--panel-raised); color:var(--paper); border-color:#77766c }
+.muse-premium .field-wrap input::placeholder { color:var(--soft) }
+.muse-premium .field-wrap select { appearance:auto }
+.muse-premium .specialist-search-panel input:focus { border-color:var(--signal) }
+.muse-premium .reset-btn { background:var(--panel); color:var(--paper); border-color:#77766c; min-height:44px }
+.muse-premium .reset-btn:hover { background:var(--panel-raised) }
+.muse-premium :is(.specialist-directory>summary,.premium-space-art,.premium-art-item,.premium-art-columns span,.premium-desk-note) { background:var(--panel-raised); color:var(--paper) }
+.muse-premium .premium-space-art { border-bottom:1px solid var(--divider) }
+.muse-premium :is(.premium-art-item,.premium-art-columns span,.premium-desk-note) { background:var(--panel); border:1px solid var(--divider) }
+.muse-premium .premium-art-caption { color:var(--signal) }
+.muse-premium :is(.role-quickpick-button,.premium-product-preview a):focus-visible { outline-color:var(--signal) }
+.muse-premium .role-quickpick-button[aria-pressed="true"] { background:var(--signal); color:var(--black) }
+.muse-premium .premium-paths { padding:34px 0 39px }
+.muse-premium .premium-paths h2 { margin:0 0 16px; font:normal clamp(25px,4vw,39px)/1.1 var(--serif) }
+.muse-premium .premium-path-grid { gap:12px; margin:0 }
+.muse-premium .premium-path-card { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; text-align:left; padding:16px; min-height:77px; background:var(--panel); color:var(--paper); border:1px solid var(--divider) }
+.muse-premium .premium-path-card strong,.muse-premium .premium-path-card small { display:block }
+.muse-premium .premium-path-card small { margin-top:5px; color:var(--soft); line-height:1.25 }
+.muse-premium .premium-path-card > span:last-child { color:var(--signal) }
+.muse-premium .premium-path-card:hover,.muse-premium .premium-path-card:focus-visible { border-color:var(--signal); box-shadow:none }
+.muse-premium .catalog-heading h1,.muse-premium #bundle-title { margin:0; font:normal clamp(35px,6vw,67px)/1.05 var(--serif); letter-spacing:-.04em }
+.muse-premium .catalog-heading p { margin:9px 0 12px; color:var(--soft) }
+.muse-premium .downloads-catalog { padding:32px 0 48px }
+.muse-premium a[data-download-type] { display:inline-flex; align-items:center; min-height:44px; text-decoration:none; padding:6px 13px; border:1px solid var(--divider) }
+.muse-premium a[data-download-type][aria-current] { background:var(--signal); color:var(--black); border-color:var(--signal); font-weight:750 }
+.muse-premium .downloads-catalog .role-toolbar { grid-template-columns:minmax(220px,2fr) repeat(4,minmax(135px,1fr)) auto; margin-top:8px }
+.muse-premium .downloads-catalog .field-wrap { min-width:0 }
+.muse-premium .catalog-subjects { border-color:var(--divider) }
+.muse-premium .catalog-subjects summary { min-height:44px; align-content:center }
+@media(max-width:1100px) { .muse-premium .downloads-catalog .role-toolbar { grid-template-columns:repeat(2,minmax(0,1fr)); align-items:end } }
+@media(max-width:690px) {
+  .muse-premium .downloads-catalog .role-toolbar > .field-wrap:first-child { grid-column:1 / -1 }
+  .muse-premium .downloads-catalog .role-toolbar { gap:10px; padding-bottom:12px }
+  .muse-premium .downloads-catalog .download-jumps { gap:6px; padding-top:0 }
+  .muse-premium a[data-download-type] { padding-inline:10px }
+  .muse-premium .premium-path-card { min-height:65px }
+}

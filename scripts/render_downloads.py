@@ -190,9 +190,9 @@ def subject_pages(data: dict) -> dict[str,bytes]:
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(page_description)}">
 {social_meta(url, f'{title} | Page {number} | Muse Hub', page_description)}
-<link rel="canonical" href="{url}"><link rel="stylesheet" href="../site.css">
+<link rel="canonical" href="{url}"><link rel="stylesheet" href="../site.css"><link rel="icon" type="image/png" href="../muse-mark.png">
 <script type="application/ld+json">{json.dumps(schema,ensure_ascii=False)}</script></head>
-<body class="section-paper"><a class="skip-link" href="#main">Skip to resources</a>
+<body class="muse-premium"><a class="skip-link" href="#main">Skip to resources</a>
 <main id="main" class="shell" style="padding-block:2rem"><nav aria-label="Breadcrumb"><a href="../index.html">Muse Hub</a> / <a href="../downloads.html">Downloads</a> / {esc(label)}</nav>
 <h1>{esc(title)}</h1><p>{esc(intros[label])}</p>
 <p>{len(rows)} resources · Page {number} of {len(pages)} · <a href="../downloads.html?subject={quote(label)}">Search this subject</a></p>
@@ -359,6 +359,16 @@ def render_homepage(data: dict, root: Path = ROOT) -> str:
     return release_link.sub(link, home)
 
 
+def display_count(kind: str, count: int) -> str:
+    """Use rounded counts in marketing copy and exact counts in result inventories."""
+    if kind == 'workflow' and 390 <= count < 400:
+        return 'nearly 400'
+    step = {'skill': 100, 'tool-guide': 10, 'starter': 50}.get(kind)
+    if step and count >= step and count % step:
+        return f'{(count // step) * step:,}+'
+    return f'{count:,}'
+
+
 def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
     version = data['version']
     if home is None:
@@ -375,8 +385,17 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
     footer = home[home.index('  <footer'):home.index('\n</body>')]
     footer = home_links(footer)
     esc = html.escape
+    bundle_kinds = {'skills': ('skill', 'skills'), 'workflows': ('workflow', 'workflows'),
+                    'starters': ('starter', 'task starters'), 'tool-guides': ('tool-guide', 'tool guides')}
+    counts = {**data['counts'], 'starter': data['starter_count']}
+    def bundle_title(row):
+        if row['id'] in bundle_kinds:
+            kind, label = bundle_kinds[row['id']]
+            return f'{display_count(kind, counts[kind]).capitalize()} {label}'
+        return row['title']
+
     bundle_html = '\n'.join(
-        f'<a class="bundle-card" href="{esc(row["url"])}"><span>{esc(row["title"])}</span><p>{esc(row["description"])}</p><strong>Download ZIP ↓</strong></a>'
+        f'<a class="bundle-card" href="{esc(row["url"])}"><span>{esc(bundle_title(row))}</span><p>{esc(row["description"])}</p><strong>Download ZIP ↓</strong></a>'
         for row in data['bundles'])
     initial_items = data['items'][:DOWNLOAD_PAGE_SIZE]
     subject_links = []
@@ -403,15 +422,17 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
   <span class="download-kind">{esc(row['category'])}</span><h3>{esc(row['title'])}</h3><p>{esc(description)}</p>{read_link}{hint}
   <a href="{esc(row['url'])}" aria-label="Download {esc(row['title'])}{' skill pack' if packed else ' ZIP'}">{esc(label)} <span aria-hidden="true">↓</span></a>
 </article>''')
-        sections.append(f'<section class="download-section" data-kind="{kind}" id="{anchor}" aria-labelledby="{anchor}-heading"'+(' hidden' if not cards else '')+f'><h2 id="{anchor}-heading">{heading} <span>{data["counts"][kind]}</span></h2><div class="download-grid">'+ '\n'.join(cards)+'</div></section>')
+        count_label = display_count(kind, data['counts'][kind])
+        sections.append(f'<section class="download-section" data-kind="{kind}" id="{anchor}" aria-labelledby="{anchor}-heading"'+(' hidden' if not cards else '')+f'><h2 id="{anchor}-heading">{heading} <span>{count_label}</span></h2><div class="download-grid">'+ '\n'.join(cards)+'</div></section>')
     return f'''<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="color-scheme" content="dark light">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#151515">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <meta name="description" content="Download {data['counts']['skill']} Muse AI skills, {data['counts']['workflow']} workflows, 15 specialists and practical tool guides. Search by subject or specialist and choose a ready-to-use ZIP.">
+  <meta name="description" content="Search {display_count('skill', counts['skill'])} Muse AI skills, {display_count('workflow', counts['workflow'])} workflows, specialist kits and tool guides. Filter by subject or specialist and sort by title.">
   <link rel="canonical" href="https://atlas-agents-hub.github.io/muse-hub/downloads.html">
 {social_meta(SITE_BASE + 'downloads.html', 'Muse AI Skills, Workflows and Specialist Downloads', 'Find the skills, workflows and tools for your next task.')}
   <script type="application/ld+json">{json.dumps({'@context':'https://schema.org','@type':'CollectionPage','name':'Muse Hub Downloads','url':'https://atlas-agents-hub.github.io/muse-hub/downloads.html','image':SOCIAL_IMAGE,'description':'Muse AI skills, workflows, specialists and tool guides.','isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}})}</script>
@@ -423,30 +444,39 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
 <body id="top" class="muse-premium downloads-page">
   <a class="skip-link" href="#main">Skip to downloads</a>
 {header}  <main id="main">
-    <section class="downloads-hero section-dark"><div class="shell">
-      <span class="eyebrow signal">MUSE HUB / VERSION {esc(version.removeprefix('v'))}</span>
-      <h1>Make it yours.</h1>
-      <p>15 specialists. {data['counts']['skill']} skills. {data['counts']['workflow']} workflows. {data['counts']['tool-guide']} tool guides. Choose what you need, or get the collection.</p>
-      <p class="downloads-start">Unzip your download and open <strong>START_HERE.md</strong>. Add the kit to your Muse conversation with the task you want to work on.</p>
-      <a class="action-primary" href="#download-search">Find a skill or workflow <span aria-hidden="true">↓</span></a>
-      <div class="bundle-grid">{bundle_html}</div>
-      <div class="downloads-help"><a href="{REPO}/blob/main/docs/GETTING_STARTED.md">Getting started →</a><a href="{REPO}/blob/main/docs/collection/FIND_AND_BUILD.md">Build a custom pack →</a><a href="{REPO}/blob/main/docs/TERMINAL.md">Terminal guide →</a><a href="{REPO}/releases/tag/{esc(version)}">Release notes and checksums →</a></div>
-    </div></section>
-    <div class="downloads-catalog section-paper"><div class="shell">
+    <section class="downloads-catalog section-dark" id="catalog"><div class="shell">
+      <div class="catalog-heading">
+        <h1>Muse Hub Library</h1>
+        <p>Search {display_count('skill', counts['skill'])} skills, {display_count('workflow', counts['workflow'])} workflows, and {display_count('tool-guide', counts['tool-guide'])} tool guides.</p>
+      </div>
+      <nav class="download-jumps" aria-label="Library types">
+        <a href="downloads.html#catalog" data-download-type="all">All</a>
+        <a href="downloads.html?type=skill#catalog" data-download-type="skill">Skills</a>
+        <a href="downloads.html?type=workflow#catalog" data-download-type="workflow">Workflows</a>
+        <a href="downloads.html?type=specialist#catalog" data-download-type="specialist">Specialists</a>
+        <a href="downloads.html?type=tool-guide#catalog" data-download-type="tool-guide">Tool guides</a>
+      </nav>
       <div class="role-toolbar">
-        <div class="field-wrap"><label for="download-search">Find a download</label><input id="download-search" type="search" placeholder="Try debugging, design, research…" autocomplete="off" aria-controls="download-results"></div>
+        <div class="field-wrap"><label for="download-search">Search the library</label><input id="download-search" type="search" placeholder="Try debugging, design, research…" autocomplete="off" aria-controls="download-results"></div>
         <div class="field-wrap category-wrap"><label for="download-kind">Type</label><select id="download-kind" aria-controls="download-results"><option value="all">Everything</option><option value="specialist">Specialists</option><option value="skill">Skills</option><option value="workflow">Workflows</option><option value="tool-guide">Tool guides</option></select></div>
         <div class="field-wrap category-wrap"><label for="download-role">Specialist</label><select id="download-role" aria-controls="download-results"><option value="all">All specialists</option>{''.join('<option value="'+esc(key)+'">'+esc(title)+'</option>' for key,title in data['roles'].items())}</select></div>
         <div class="field-wrap category-wrap"><label for="download-category">Subject</label><select id="download-category" aria-controls="download-results"><option value="all">All subjects</option>{''.join('<option value="'+esc(title)+'">'+esc(title)+'</option>' for title in data['categories'])}</select></div>
+        <div class="field-wrap category-wrap"><label for="download-sort">Sort by title</label><select id="download-sort" aria-controls="download-results"><option value="catalog">Catalog order</option><option value="az">A to Z</option><option value="za">Z to A</option></select></div>
         <button id="download-reset" class="reset-btn" type="button">Clear</button>
       </div>
-      <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items'])} downloads</p>
-      <nav class="download-jumps" aria-label="Download groups"><a href="#specialists">15 specialists</a><a href="#skills">{data['counts']['skill']} skills</a><a href="#workflows">{data['counts']['workflow']} workflows</a><a href="#tool-guides">{data['counts']['tool-guide']} tool guides</a></nav>
+      <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items']):,} downloads</p>
       <details class="catalog-subjects"><summary>Browse every download by subject</summary><nav class="download-jumps" aria-label="Subject library">{''.join(subject_links)}</nav></details>
       <div id="download-results" data-total="{len(data['items'])}" data-version="{esc(version)}">{''.join(sections)}</div>
       <nav id="download-pages" class="download-pagination" aria-label="Download result pages" hidden><button id="download-previous" class="reset-btn" type="button">Previous</button><span id="download-page-label"></span><button id="download-next" class="reset-btn" type="button">Next</button></nav>
       <div id="download-empty" class="role-empty" hidden><h2>No matching downloads.</h2><p>Try a shorter search or clear the filters.</p><button id="download-clear-empty" type="button">Show all downloads</button></div>
-    </div></div>
+    </div></section>
+    <section class="downloads-hero section-dark" aria-labelledby="bundle-title"><div class="shell">
+      <span class="eyebrow signal">Version {esc(version.removeprefix('v'))}</span>
+      <h2 id="bundle-title">Download complete collections</h2>
+      <p>Unzip a collection and open <strong>START_HERE.md</strong> to use it with Muse.</p>
+      <div class="bundle-grid">{bundle_html}</div>
+      <div class="downloads-help"><a href="{REPO}/blob/main/docs/GETTING_STARTED.md">Getting started →</a><a href="{REPO}/blob/main/docs/collection/FIND_AND_BUILD.md">Build a custom pack →</a><a href="{REPO}/blob/main/docs/TERMINAL.md">Terminal guide →</a><a href="{REPO}/releases/tag/{esc(version)}">Release notes and checksums →</a></div>
+    </div></section>
   </main>
 {footer}
 </body>

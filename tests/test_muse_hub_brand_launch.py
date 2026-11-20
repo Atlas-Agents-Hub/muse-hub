@@ -29,8 +29,8 @@ class MuseHubBrandLaunch(unittest.TestCase):
         counts=json.loads((ROOT/"collections/muse-starters-v1/COUNTS.json").read_text(encoding="utf-8"))
         connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
         for label in (f"{counts['specialists']} independent assistants","three subchats",
-                      f"{counts['skills']} skills",f"{counts['workflows']} workflows",
-                      f"{counts['task_starters']} task starters",f"{len(connectors)} connectors"):
+                      "5,200+ skills","nearly 400 workflows","50+ tool guides",
+                      "550+ task starters",f"{len(connectors)} connectors"):
             self.assertIn(label,hero)
         for action in ("Choose an assistant",f"Download {RELEASE}",
                        "Visit Muse Hub","Get started"):
@@ -85,7 +85,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
             "downloads.html", "downloads.js", "downloads.json",
             "public/index.html", "public/styles.css", "public/app.js",
             "public/catalog.json", "sitemap.xml", "social-card.png",
-            "planner-desktop.png", "planner-mobile.png",
+            "planner-desktop.png", "planner-mobile.png", "muse-mark.png",
         }
         catalog=json.loads((SITE/"downloads.json").read_bytes())
         subjects=Counter(row["category"] for row in catalog["items"])

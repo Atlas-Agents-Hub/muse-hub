@@ -13,7 +13,7 @@ class ProductDocumentationTests(unittest.TestCase):
     def test_readme_explains_current_product_and_actual_first_use(self):
         text=(R/'README.md').read_text('utf-8')
         collection=current_collection()
-        for term in ('15 independent assistants',str(len(collection['skills']))+' skills',str(len(collection['workflows']))+' workflows',str(len(collection['starters']))+' task starters',
+        for term in ('15 independent assistants',"5,200+ skills","nearly 400 workflows","550+ task starters",
                      'tools/muse_collection.py demo data-engineer', 'START_HERE.md',
                      'docs/DOWNLOAD_A_SPECIALIST.md','docs/GETTING_STARTED.md',
                      'docs/TERMINAL.md','docs/GITHUB_QUICKSTART.md'):

@@ -71,7 +71,7 @@ class AuthenticShowcase(unittest.TestCase):
     def test_preview_digests_match_site_integrity(self):
         import json
         manifest=json.loads((SITE/"INTEGRITY.json").read_text(encoding="utf8"))["files"]
-        for name in ("planner-desktop.png","planner-mobile.png"):
+        for name in ("planner-desktop.png","planner-mobile.png","muse-mark.png"):
             data=(SITE/name).read_bytes()
             self.assertEqual(manifest[name]["sha256"],hashlib.sha256(data).hexdigest())
             self.assertEqual(manifest[name]["bytes"],len(data))
@@ -79,7 +79,9 @@ class AuthenticShowcase(unittest.TestCase):
     def test_capture_gate_rejects_modified_pixels_and_geometry(self):
         from muse_presets.site_product import valid_product_capture,reviewed_product_capture_digests
         digests=reviewed_product_capture_digests(ROOT)
-        self.assertEqual(len(digests),2)
+        self.assertEqual(set(digests), {
+            "hub/site/planner-desktop.png", "hub/site/planner-mobile.png", "hub/site/muse-mark.png",
+        })
         for relative,digest in digests.items():
             data=(ROOT/relative).read_bytes()
             self.assertTrue(valid_product_capture(relative,data,digest))

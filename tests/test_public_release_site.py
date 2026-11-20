@@ -224,9 +224,12 @@ class GeneratedReleasePresentation(unittest.TestCase):
                     for region in (header,footer):
                         self.assertIn(f'href="index.html#{section}"',region)
                         self.assertNotIn(f'href="#{section}"',region)
-                    # Download group jumps still target the Downloads page.
-                    self.assertIn('href="#skills"',result)
-                    self.assertIn('href="#workflows"',result)
+                    # Library filters land by the controls. Existing direct
+                    # links can still resolve their original result anchors.
+                    self.assertIn('href="downloads.html?type=skill#catalog"',result)
+                    self.assertIn('href="downloads.html?type=workflow#catalog"',result)
+                    for anchor in ('catalog', 'skills', 'workflows'):
+                        self.assertIn(f'id="{anchor}"',result)
 
     def test_check_rejects_stale_homepage_caption_with_or_without_v_prefix(self):
         with tempfile.TemporaryDirectory() as directory, \

@@ -135,8 +135,10 @@ class MuseHubPublicProduct(unittest.TestCase):
         main=read('README.md')
         connectors=json.loads(read('docs/connectors/catalog.json'))['connectors']
         self.assertIn(str(len(connectors))+' connectors',main)
-        self.assertIn(str(len(skills))+' skills',main)
-        self.assertIn(str(len(workflows))+' workflows',main)
+        self.assertGreaterEqual(len(skills),5200)
+        self.assertTrue(390 <= len(workflows) < 400)
+        self.assertIn("5,200+ skills",main)
+        self.assertIn("nearly 400 workflows",main)
         for name in ('README.md','hub/README.md','docs/README.md'):
             text=read(name)
             self.assertNotIn('private_repository',text)

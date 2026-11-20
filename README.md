@@ -1,8 +1,10 @@
 # Muse Hub
 
-**Turn an idea into something you can use.** Muse Hub is an open-source toolkit for Meta's Muse AI with specialist assistants, a searchable library, and full-stack Space templates.
+<img src="hub/site/muse-mark.png" width="88" height="88" alt="Muse Hub logo">
 
-Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5242 skills**, **396 workflows**, **51 tool guides**, **558 task starters**, and **273 connectors**.
+Muse Hub is an open-source toolkit for Meta's Muse AI. Set up a specialist, search the library, or build on a full-stack Space.
+
+Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5,200+ skills**, **nearly 400 workflows**, **50+ tool guides**, **550+ task starters**, and **273 connectors**.
 
 **[Browse Space templates](docs/spaces/README.md)** · **[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.0](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)** · [Get started](docs/GETTING_STARTED.md)
 
@@ -69,7 +71,7 @@ Each kit includes role-specific skills, workflows, and examples. [Setup and save
 ## Put your assistant to work
 
 - **[Tools for each specialist](docs/collection/SPECIALIST_LIBRARY.md):** find included methods, workflows and recommended plugins for your work.
-- **[51 tool guides](docs/tools/README.md):** follow setup instructions and practical recipes for research, automation, design, software and data tools.
+- **[50+ tool guides](docs/tools/README.md):** follow setup instructions and practical recipes for research, automation, design, software and data tools.
 - **[Skills and workflows](docs/SKILLS.md):** find methods for research, data analysis, design reviews and project handoffs.
 - **[Task starters](collections/muse-starters-v1/CATALOG.md):** start from one of 558 focused configurations, then bring your own brief and files.
 - **[Engineering](docs/WORKFLOWS.md#engineering-reproduce-repair-review):** reproduce a failure, make a focused repair, run regression checks, and review the result.

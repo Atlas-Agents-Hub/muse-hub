@@ -16,7 +16,7 @@ class ProductPositioningTests(unittest.TestCase):
         connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
         guides=json.loads((ROOT/"collections/tool-guides.json").read_bytes())["guides"]
         release=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
-        for term in ("Muse Hub","15 independent assistants",str(len(data["skills"]))+" skills",str(len(data["workflows"]))+" workflows",f"{len(guides)} tool guides",f"{len(data['starters'])} task starters",f"{len(connectors)} connectors"):
+        for term in ("Muse Hub","15 independent assistants","5,200+ skills","nearly 400 workflows","50+ tool guides","550+ task starters",f"{len(connectors)} connectors"):
             self.assertIn(term,hero)
         for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/GETTING_STARTED.md","docs/TERMINAL.md"):
             self.assertIn(path,text)
