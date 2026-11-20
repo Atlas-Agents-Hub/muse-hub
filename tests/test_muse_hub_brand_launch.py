@@ -61,8 +61,8 @@ class MuseHubBrandLaunch(unittest.TestCase):
         html=(SITE/"index.html").read_text(encoding="utf-8")
         self.assertIn("<title>Muse Hub",html)
         self.assertIn('class="brand-symbol"',html)
-        self.assertIn("From idea to",html)
-        self.assertIn("working project.",html)
+        self.assertIn("Start with something",html)
+        self.assertIn("that works.",html)
         self.assertIn('id="companion-spaces"',html)
         self.assertIn('id="specialists"',html)
         for path in ('href="downloads.html"',
@@ -86,6 +86,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
             "downloads.html", "downloads.js", "downloads.json",
             "public/index.html", "public/styles.css", "public/app.js",
             "public/catalog.json", "sitemap.xml", "social-card.png",
+            "planner-desktop.png", "planner-mobile.png",
         }
         catalog=json.loads((SITE/"downloads.json").read_bytes())
         subjects=Counter(row["category"] for row in catalog["items"])
