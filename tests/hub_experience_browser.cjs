@@ -379,7 +379,23 @@ async function runChecks() {
     }
     return { paths: journeys.paths, featured_space_guides: journeys.spaces.length, directory_link: journeys.directory, resource_routes: [...routes.keys()] };
   });
-  for (const viewport of [320, 375, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
+  await check('authentic Planner capture and direct specialist search on mobile', async () => {
+    await resize(375);
+    await navigate('index.html#specialists');
+    const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img");const field=document.getElementById("role-search");return {loaded:!!img&&img.complete&&img.naturalWidth>0,mobile:!!img&&new URL(img.currentSrc).pathname.endsWith("/planner-mobile.png"),searchVisible:!!field&&!!field.getClientRects().length,searchOutside:!!field&&!field.closest("details"),directory:document.querySelector(".specialist-directory").open}})()');
+    assert(proof.loaded && proof.mobile && proof.searchVisible && proof.searchOutside && proof.directory, JSON.stringify(proof));
+    await type('#role-search', 'software engineer');
+    const narrowed = await evaluate('document.querySelectorAll(".role-card:not([hidden])").length');
+    assert(narrowed>=1 && narrowed<15,narrowed);
+    await type('#role-search', 'no-such-specialist-123456');
+    assert(await evaluate('!document.getElementById("role-empty").hidden && document.querySelectorAll(".role-card:not([hidden])").length===0'));
+    await click('#role-empty-clear');
+    assert(await evaluate('document.getElementById("role-search").value==="" && document.querySelectorAll(".role-card:not([hidden])").length===15'));
+    await navigate('index.html?role=software-engineer#setup');
+    assert(await evaluate('document.querySelector(".setup-disclosure").open && document.getElementById("setup-role-select").value==="software-engineer"'));
+    return {real_capture:true,mobile_preview:true,search_direct:true,filters:true,clear_empty:true,deep_link:true};
+  });
+  for (const viewport of [320, 375, 390, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });

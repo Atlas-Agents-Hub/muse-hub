@@ -7,12 +7,14 @@ from pathlib import Path
 import unittest
 from muse_presets.public_export import select_public_files
 from muse_presets.site_social import SOCIAL_CARD_PATH
+from muse_presets.site_product import PRODUCT_CAPTURE_SPECS
 ROOT=Path(__file__).resolve().parents[1]
 
 class CanonicalPublicBytes(unittest.TestCase):
     def test_manifest_sources_are_canonical_lf_not_checkout_dependent(self):
         source=select_public_files(ROOT,verify_manifest=False)
-        noncanonical=[name for name,raw in source.items() if name != SOCIAL_CARD_PATH and b'\r\n' in raw]
+        reviewed_binary={SOCIAL_CARD_PATH,*PRODUCT_CAPTURE_SPECS}
+        noncanonical=[name for name,raw in source.items() if name not in reviewed_binary and b'\r\n' in raw]
         self.assertEqual(noncanonical,[],
                          'Normalize reviewed text before binding manifest hashes; '
                          'never update a verifier to accept stale checkout hashes.')

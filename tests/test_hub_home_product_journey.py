@@ -42,7 +42,7 @@ class HomeJourneys(unittest.TestCase):
         self.assertNotIn("Inside Muse",self.html)
         self.assertNotIn("Included with Muse Hub",self.html)
         self.assertNotIn("independently built for",self.html.casefold())
-        self.assertIn("From idea to <span>working project.</span>",self.html)
+        self.assertIn("Start with something <span>that works.</span>",self.html)
         self.assertIn('class="mobile-navigation"',self.html)
         self.assertIn('class="premium-space-grid"',self.html)
         self.assertIn('class="premium-path-grid"',self.html)

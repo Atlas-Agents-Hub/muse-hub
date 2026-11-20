@@ -30,6 +30,17 @@ Display headings use `Georgia, "Iowan Old Style", Baskerville, serif`, regular w
 - Respect `prefers-reduced-motion`, no horizontal page overflow at 320px and 390px
 - Preserve information architecture and working product links when iterating on the visual design
 
+## Authentic product showcase
+
+The first screen must establish product value by displaying a **real working Muse Space** instead of a decorative mock interface. The homepage currently uses verified Muse Planner browser captures, reproduced as cropped `hub/site/planner-desktop.png` and `planner-mobile.png`. Their byte counts and hashes are part of `hub/site/INTEGRITY.json`.
+
+- Keep actual app data, controls, and states legible at desktop and phone widths; images must be responsive and provide useful alt text.
+- Every showcase should link to the matching app's setup guide and source, not an unrelated generic directory.
+- Keep mobile evidence visible in the first-screen journey. Never hide the only product demonstration on phones.
+- Specialist discovery starts with visible search and an accessible results count, then expands the full directory on input, focus, or in-page navigation.
+- Maintain real links, browser tested keyboard/deep-link behavior, no horizontal overflow, and a clear primary action. Do not imply a static illustration is an interactive application.
+- Preserve deterministic image inventory and fail-closed source distribution controls when adding screenshots; a new image needs explicit asset review and tests.
+
 ## Verification
 
 Run the source-level brand gate and browser interaction gates after any design change:

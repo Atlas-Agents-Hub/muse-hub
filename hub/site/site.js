@@ -32,10 +32,15 @@
     update();
     search.focus();
   }
-  search.addEventListener('input', update);
-  category.addEventListener('change', update);
+  search.addEventListener('focus', () => { if (directory) directory.open = true; });
+  search.addEventListener('input', () => { if (directory) directory.open = true; update(); });
+  category.addEventListener('change', () => { if (directory) directory.open = true; update(); });
   reset.addEventListener('click', clear);
   emptyClear.addEventListener('click', clear);
+  if (window.location.hash === '#specialists' && directory) directory.open = true;
+  for (const link of document.querySelectorAll('a[href="#specialists"]')) {
+    link.addEventListener('click', () => { if (directory) directory.open = true; });
+  }
   document.addEventListener('keydown', event => {
     if (event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey) {
       const active = document.activeElement;

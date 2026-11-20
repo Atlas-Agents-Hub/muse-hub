@@ -116,8 +116,8 @@ class HubExperienceHomeTests(unittest.TestCase):
         text=self.page.root.text()
         for unwanted in ("Inside Muse","Included with Muse Hub","independently built for"):
             self.assertNotIn(unwanted,text)
-        self.assertIn("From idea to working project."," ".join(text.split()))
-        self.assertIn("Find skills & workflows",text)
+        self.assertIn("Start with something that works."," ".join(text.split()))
+        self.assertIn("Find a specialist",text)
         self.assertIn("Start with a working Space.",text)
         self.assertEqual(len([n for n in self.page.nodes if "origin-label" in n.attrs.get("class","").split()]),0)
 

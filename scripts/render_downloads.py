@@ -179,13 +179,15 @@ def subject_pages(data: dict) -> dict[str,bytes]:
                 entry=f'<p class="download-entry"><code>{esc(row["entry"])}</code></p>' if packed else ''
                 cards.append(f'<article class="download-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p><p>{read}<a href="{esc(row["url"])}">{download}</a></p>{entry}</article>')
             url='https://atlas-agents-hub.github.io/muse-hub/'+route
+            page_description=(intros[label] if len(pages)==1 else
+                f'{intros[label]} Browse {label.lower()} resources on page {number} of {len(pages)}.')
             schema={'@context':'https://schema.org','@type':'CollectionPage','name':title,
-                    'url':url,'description':intros[label],'image':SOCIAL_IMAGE,
+                    'url':url,'description':page_description,'image':SOCIAL_IMAGE,
                     'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}}
             body=f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(intros[label])}">
-{social_meta(url, f'{title} | Page {number} | Muse Hub', intros[label])}
+<title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(page_description)}">
+{social_meta(url, f'{title} | Page {number} | Muse Hub', page_description)}
 <link rel="canonical" href="{url}"><link rel="stylesheet" href="../site.css">
 <script type="application/ld+json">{json.dumps(schema,ensure_ascii=False)}</script></head>
 <body class="section-paper"><a class="skip-link" href="#main">Skip to resources</a>

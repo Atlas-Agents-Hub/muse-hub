@@ -13,6 +13,7 @@ from pathlib import Path
 from .source_limits import LIBRARY_ASSET_CATALOG, reviewed_library_assets, source_file_limit
 from .planner_package import INVENTORY_PATH as PLANNER_ASSET_INVENTORY, reviewed_planner_assets
 from .site_social import SOCIAL_CARD_PATH, reviewed_social_digest, valid_social_card
+from .site_product import PRODUCT_CAPTURE_SPECS, reviewed_product_capture_digests, valid_product_capture
 
 # Only VCS internals and local tooling caches are outside the distribution.
 _EXCLUDED_DIRS = frozenset((
@@ -187,6 +188,7 @@ def audit_public_tree(root: Path, *,
         social_digest = reviewed_social_digest(root)
         if social_digest is not None:
             reviewed_assets[SOCIAL_CARD_PATH] = social_digest
+        reviewed_assets.update(reviewed_product_capture_digests(root))
     except (OSError, ValueError, TypeError, KeyError):
         add(root / PLANNER_ASSET_INVENTORY, 'INVALID_PLANNER_ASSET_INVENTORY')
 
@@ -220,6 +222,14 @@ def audit_public_tree(root: Path, *,
                     approved = False
                 if not approved:
                     add(path, "UNREVIEWED_SOCIAL_PREVIEW")
+                continue
+            if relative in PRODUCT_CAPTURE_SPECS:
+                try:
+                    approved = valid_product_capture(relative, path.read_bytes(), expected)
+                except OSError:
+                    approved = False
+                if not approved:
+                    add(path, "UNREVIEWED_PRODUCT_CAPTURE")
                 continue
             template=(expected is not None and lowered in {'.env.example','.env.template'})
             if (lowered in _SENSITIVE_NAMES or (lowered.startswith(".env.") and not template)

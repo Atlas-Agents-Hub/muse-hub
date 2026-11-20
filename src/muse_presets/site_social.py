@@ -30,7 +30,7 @@ def reviewed_social_digest(root: Path) -> str | None:
     return digest
 
 
-def valid_social_card(data: bytes, digest: str | None) -> bool:
+def valid_social_card(data: bytes, digest: str | None, *, dimensions: tuple[int, int] = _SOCIAL_SIZE) -> bool:
     """Validate dimensions, chunk checksums, framing and reviewed hash."""
     if (
         not digest
@@ -57,7 +57,7 @@ def valid_social_card(data: bytes, digest: str | None) -> bool:
             if kind != b"IHDR" or n != 13:
                 return False
             width, height, depth, color_type, comp, filt, interlace = struct.unpack(">IIBBBBB", payload)
-            if ((width, height) != _SOCIAL_SIZE or depth != 8 or color_type not in (2, 6)
+            if ((width, height) != dimensions or depth != 8 or color_type not in (2, 6)
                 or comp != 0 or filt != 0 or interlace != 0):
                 return False
             seen_header = True

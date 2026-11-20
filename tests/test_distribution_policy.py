@@ -10,9 +10,11 @@ class DistributionPolicyTests(unittest.TestCase):
  def test_public_text_bytes_match_declared_lf_checkout_policy(self):
   from muse_presets.public_export import select_public_files
   from muse_presets.site_social import SOCIAL_CARD_PATH
+  from muse_presets.site_product import PRODUCT_CAPTURE_SPECS
   files=select_public_files(ROOT,verify_manifest=False)
-  # The one reviewed PNG includes CRLF in its binary signature; only text is LF-normalized.
-  noncanonical=[name for name,raw in files.items() if name != SOCIAL_CARD_PATH and b'\r\n' in raw]
+  # Reviewed PNGs carry CRLF in binary signatures; only text must be LF-normalized.
+  allowed_binary={SOCIAL_CARD_PATH,*PRODUCT_CAPTURE_SPECS}
+  noncanonical=[name for name,raw in files.items() if name not in allowed_binary and b'\r\n' in raw]
   self.assertEqual(noncanonical,[], 'Manifest hashes must match Git-normalized source on every platform')
 
  def engine(self):
