@@ -124,7 +124,7 @@
       section.hidden = group.length === 0;
     }
     const first = matches.length ? (page - 1) * pageSize + 1 : 0;
-    count.textContent = `Showing ${first}–${Math.min(page * pageSize, matches.length)} of ${matches.length} matching downloads`;
+    count.textContent = `Showing ${first}–${Math.min(page * pageSize, matches.length)} of ${matches.length.toLocaleString('en-US')} matching downloads`;
     empty.hidden = matches.length !== 0;
     if (pager && previous && next && pageLabel) {
       pager.hidden = pageCount <= 1;
@@ -202,7 +202,7 @@
     })
     .catch(() => {
       results.removeAttribute('aria-busy');
-      count.textContent = `Showing 1–${initialCount} of ${expectedTotal} downloads. Browse every download by subject.`;
+      count.textContent = `Showing 1–${initialCount} of ${expectedTotal.toLocaleString('en-US')} downloads. Browse every download by subject.`;
       const subjects = document.querySelector('.catalog-subjects');
       if (subjects) subjects.open = true;
       document.body.classList.add('downloads-fallback');

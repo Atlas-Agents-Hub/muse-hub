@@ -422,7 +422,8 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
   <span class="download-kind">{esc(row['category'])}</span><h3>{esc(row['title'])}</h3><p>{esc(description)}</p>{read_link}{hint}
   <a href="{esc(row['url'])}" aria-label="Download {esc(row['title'])}{' skill pack' if packed else ' ZIP'}">{esc(label)} <span aria-hidden="true">↓</span></a>
 </article>''')
-        sections.append(f'<section class="download-section" data-kind="{kind}" id="{anchor}" aria-labelledby="{anchor}-heading"'+(' hidden' if not cards else '')+f'><h2 id="{anchor}-heading">{heading} <span>{data["counts"][kind]}</span></h2><div class="download-grid">'+ '\n'.join(cards)+'</div></section>')
+        count_label = display_count(kind, data['counts'][kind])
+        sections.append(f'<section class="download-section" data-kind="{kind}" id="{anchor}" aria-labelledby="{anchor}-heading"'+(' hidden' if not cards else '')+f'><h2 id="{anchor}-heading">{heading} <span>{count_label}</span></h2><div class="download-grid">'+ '\n'.join(cards)+'</div></section>')
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -463,7 +464,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
         <div class="field-wrap category-wrap"><label for="download-sort">Sort by title</label><select id="download-sort" aria-controls="download-results"><option value="catalog">Catalog order</option><option value="az">A to Z</option><option value="za">Z to A</option></select></div>
         <button id="download-reset" class="reset-btn" type="button">Clear</button>
       </div>
-      <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items'])} downloads</p>
+      <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items']):,} downloads</p>
       <details class="catalog-subjects"><summary>Browse every download by subject</summary><nav class="download-jumps" aria-label="Subject library">{''.join(subject_links)}</nav></details>
       <div id="download-results" data-total="{len(data['items'])}" data-version="{esc(version)}">{''.join(sections)}</div>
       <nav id="download-pages" class="download-pagination" aria-label="Download result pages" hidden><button id="download-previous" class="reset-btn" type="button">Previous</button><span id="download-page-label"></span><button id="download-next" class="reset-btn" type="button">Next</button></nav>
