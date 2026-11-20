@@ -1,0 +1,119 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automatic-payment-reminders-from-google-sheets-italian-1bec60",
+  "title": "Automatic payment reminders from Google Sheets (Italian)",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Ogni mattina alle 8 (lun-ven)",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1-5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Leggi fatture",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "documentId": {
+          "configuration_input": "step-2-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-2-sheetname"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Trova scadenze imminenti",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Filtra le fatture non pagate in scadenza entro 3 giorni o già scadute\nconst oggi = new Date();\noggi.setHours(0, 0, 0, 0);\n\nconst daAvvisare = [];\n\nfor (const item of records) {\n  const f = item.json;\n  const stato = String(f.Stato || '').trim().toLowerCase();\n  if (stato === 'pagata') continue;\n\n  // Data in formato gg/mm/aaaa\n  const parti = String(f.Scadenza || '').split('/');\n  if (parti.length !== 3) continue;\n  const scadenza = new Date(Number(parti[2]), Number(parti[1]) - 1, Number(parti[0]));\n\n  const giorniMancanti = Math.round((scadenza - oggi) / 86400000);\n\n  if (giorniMancanti <= 3) {\n    daAvvisare.push({\n      json: {\n        ...f,\n        giorniMancanti,\n        scaduta: giorniMancanti < 0,\n        scadenzaTesto: `${parti[0]}/${parti[1]}/${parti[2]}`\n      }\n    });\n  }\n}\n\nreturn daAvvisare;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Invia sollecito",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ record.Email }}"
+        },
+        "subject": {
+          "expression": "{{ record.scaduta ? 'Promemoria: fattura ' + record.Numero + ' scaduta' : 'Promemoria: fattura ' + record.Numero + ' in scadenza' }}"
+        },
+        "message": {
+          "expression": "Gentile {{ record.Cliente }},\n\nle ricordiamo che la fattura n. {{ record.Numero }} di € {{ record.Importo }} {{ record.scaduta ? 'risulta scaduta il' : 'è in scadenza il' }} {{ record.scadenzaTesto }}.\n\nSe il pagamento è già stato effettuato, la preghiamo di ignorare questo messaggio.\n\nPer qualsiasi chiarimento siamo a disposizione.\n\nCordiali saluti,\n[LA TUA AZIENDA]"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Automatic payment reminders from Google Sheets (Italian).json",
+    "git_blob": "27d21bc72d0e9f0984e30f77c23dae11a5b63ebc",
+    "sha256": "b60a1ab46053fc74b724fa443b60fb7665f3188cfb5216a1cc065518269ff4d2",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Automatic%20payment%20reminders%20from%20Google%20Sheets%20%28Italian%29.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

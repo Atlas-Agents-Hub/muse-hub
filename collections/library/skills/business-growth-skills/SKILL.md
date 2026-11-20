@@ -1,0 +1,35 @@
+---
+name: business-growth-skills
+description: "Use when a growth request needs routing between customer-success-manager, sales-engineer, revenue-operations, contract-and-proposal-writer and support-ops."
+---
+
+# Business Growth Skills
+
+Use the task's actual files, connected services, and project settings. Run included helpers from this skill folder. Set `SKILL_DIR` to its full path when a command uses that variable.
+
+This plugin bundles **5 skills** (this router is the 6th folder under `business-growth/skills/`). Each skill is self-contained.
+
+## Routing table
+
+Match the request, then load `business-growth/skills/<skill>/SKILL.md`. If multiple rows match, ask one clarifying question first.
+
+| Request signals | Skill | Path |
+|---|---|---|
+| Customer health scores, churn risk, expansion plays | customer-success-manager | `skills/customer-success-manager/` |
+| RFP/RFI coverage, competitive positioning, PoC plans | sales-engineer | `skills/sales-engineer/` |
+| Pipeline coverage, forecast accuracy (MAPE), GTM efficiency | revenue-operations | `skills/revenue-operations/` |
+| Proposals, contracts, statements of work, DPAs | contract-and-proposal-writer | `skills/contract-and-proposal-writer/` |
+| Support SLAs, agent staffing (Erlang C), ticket deflection | support-ops | `skills/support-ops/` |
+
+## Quick start
+
+```bash
+# Example: route an account-health request
+cat business-growth/skills/customer-success-manager/SKILL.md
+python3 business-growth/skills/customer-success-manager/scripts/health_score_calculator.py --help
+```
+
+## Rules
+
+- Route to exactly one skill, then follow that skill's workflow. This router ships no tools of its own.
+- Use the skills' Python scorers for metrics, not manual estimates; deal/contract outputs are drafts for human legal/commercial review.

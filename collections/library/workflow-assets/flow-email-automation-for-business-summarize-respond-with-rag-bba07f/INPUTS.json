@@ -1,0 +1,38 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-email-automation-for-business-summarize-respond-with-rag-bba07f",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-12-url": null,
+    "step-13-url": null,
+    "step-14-filter-driveid": null
+  },
+  "adapters": {
+    "emailreadimap": {
+      "connection": null
+    },
+    "emailsend": {
+      "connection": null
+    },
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

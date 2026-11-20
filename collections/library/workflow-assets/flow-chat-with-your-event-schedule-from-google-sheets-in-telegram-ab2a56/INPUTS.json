@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-chat-with-your-event-schedule-from-google-sheets-in-telegram-ab2a56",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-assignments-0-value": null,
+    "step-4-sheetname": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

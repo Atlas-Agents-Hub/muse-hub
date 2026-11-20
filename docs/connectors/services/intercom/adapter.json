@@ -1,0 +1,249 @@
+{
+  "allowed_hosts": [
+    "acme.example.com",
+    "api.au.intercom.io",
+    "api.eu.intercom.io",
+    "api.intercom.io",
+    "app.intercom.com",
+    "developers.intercom.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://app.{region}.com/oauth"
+    ],
+    "fields": [
+      {
+        "description": "",
+        "label": "Region",
+        "name": "region",
+        "required": null,
+        "source_expression": "regionProp",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "OAuth 2.0 account connection; Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": [
+      "https://api.{region}.io/auth/eagle/token"
+    ]
+  },
+  "category": "Support",
+  "id": "intercom",
+  "name": "Intercom",
+  "operations": [
+    {
+      "description": "Finds an existing company.",
+      "id": "find-company",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Search Field",
+          "name": "searchField",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Search Value",
+          "name": "searchValue",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Company",
+      "source_path": "intercom/src/lib/actions/find-company.ts",
+      "source_sha256": "2272c9f301fb435e448fadff35d4c6bf1ed7b0274d8053fbabe6469a95266428",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/actions/find-company.ts"
+    },
+    {
+      "description": "Finds an existing lead.",
+      "id": "find-lead",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Search Field",
+          "name": "searchField",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Search Value",
+          "name": "searchValue",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Lead",
+      "source_path": "intercom/src/lib/actions/find-lead.ts",
+      "source_sha256": "86afe3176be799d21a15db3e61b8cdc9da6e135b31d7ce10079d99929d870ed5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/actions/find-lead.ts"
+    },
+    {
+      "description": "Finds an existing user.",
+      "id": "find-user",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Search Field",
+          "name": "searchField",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Search Value",
+          "name": "searchValue",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User",
+      "source_path": "intercom/src/lib/actions/find-user.ts",
+      "source_sha256": "d188bec61a93732c4ce61e6cc0450a5c7ac4228ff7f1eac5ff98a160c1f158a3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/actions/find-user.ts"
+    },
+    {
+      "description": "Gets one company by its Intercom ID or by your own Company ID.",
+      "id": "get_company",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Look Up By",
+          "name": "lookupBy",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Value",
+          "name": "value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Company",
+      "source_path": "intercom/src/lib/actions/get-company.ts",
+      "source_sha256": "c59772d1b5fece9598b59eaa7617044934b532e5a4049b78942bc7adc210f948",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/actions/get-company.ts"
+    },
+    {
+      "description": "Gets one contact (user or lead) by ID, email or external ID.",
+      "id": "get_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Look Up By",
+          "name": "lookupBy",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The contact ID, email or external ID.",
+          "label": "Value",
+          "name": "value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Contact",
+      "source_path": "intercom/src/lib/actions/get-contact.ts",
+      "source_sha256": "89138163d5d5f867769e20588a9e47499bf6b966b10d5c590c5a61245ab99c51",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/actions/get-contact.ts"
+    },
+    {
+      "description": "Gets one ticket by its ID.",
+      "id": "get_ticket",
+      "inputs": [
+        {
+          "description": "The ticket \"id\" from Intercom, not the inbox ticket number.",
+          "label": "Ticket ID",
+          "name": "ticketId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Ticket",
+      "source_path": "intercom/src/lib/actions/get-ticket.ts",
+      "source_sha256": "f91629eaaee6f03be580f283728f7a008a47e33ad9c385b2fdaaa811b02262f9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/actions/get-ticket.ts"
+    },
+    {
+      "description": "Lists the admins (teammates) in the workspace.",
+      "id": "list_admins",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Admins",
+      "source_path": "intercom/src/lib/actions/list-admins.ts",
+      "source_sha256": "419ecdf84f4bdc8a9fca74a6bf5489134012768c519cad4b1200f98a084ddf0d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/actions/list-admins.ts"
+    },
+    {
+      "description": "Lists the teams in the workspace.",
+      "id": "list_teams",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Teams",
+      "source_path": "intercom/src/lib/actions/list-teams.ts",
+      "source_sha256": "fb3c2f4da196a11695fc762b75b12fb8e682f2f9f051c77fad6c4d1fdda21bd3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/actions/list-teams.ts"
+    },
+    {
+      "description": "Triggers when a contact replies to a Conversation in Intercom.",
+      "id": "contactReplied",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Contact Replied",
+      "source_path": "intercom/src/lib/triggers/contact-replied.ts",
+      "source_sha256": "c76fdcd65406729a9a888b335cef320e9ca9738af9e66a324cd463ed91f530f9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/triggers/contact-replied.ts"
+    },
+    {
+      "description": "Triggers when a conversation is assigned to an admin",
+      "id": "conversationAssigned",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Conversation assigned to any Intercom admin",
+      "source_path": "intercom/src/lib/triggers/conversation-assigned.ts",
+      "source_sha256": "2297134c56445b57d8c23c16259bfd9411f1dfaecd902bb7a76aec047533767e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/triggers/conversation-assigned.ts"
+    },
+    {
+      "description": "Triggers when a contact is updated.",
+      "id": "contact-updated",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Type",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Updated Contact",
+      "source_path": "intercom/src/lib/triggers/contact-updated.ts",
+      "source_sha256": "c488dadc699f1ae84708417eb49da0b5c05f0f2e6bdccffce798e9d24257520c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/intercom/src/lib/triggers/contact-updated.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "de61ad999c964c216a7c6697f79edbdfbb7ab857",
+    "index_path": "intercom/src/index.ts",
+    "index_sha256": "84e3d59c6367d7828fe4b08430eab68bd03bceac63308fbd3bff3bbd77a5fe68",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

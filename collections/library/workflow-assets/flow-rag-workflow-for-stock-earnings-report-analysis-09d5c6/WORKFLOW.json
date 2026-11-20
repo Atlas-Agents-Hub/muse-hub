@@ -1,0 +1,347 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-rag-workflow-for-stock-earnings-report-analysis-09d5c6",
+  "title": "RAG Workflow For Stock Earnings Report Analysis",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Pinecone Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-1-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Embeddings Google Gemini",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "loader": "pdfLoader",
+        "options": {},
+        "dataType": "binary"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": "Give me a report on Google's last 3 quarter earnings. Format it in markdown. Focus on the differences and trends. Spot any outliers.",
+        "options": {
+          "systemMessage": "You are a highly skilled financial analyst specializing in analyzing Google's (Alphabet Inc.) financial performance. You have access to two powerful tools:\n\n1. **Vector Store Tool:** This tool allows you to retrieve relevant information from the past three quarters of Google's earnings reports (PDF documents). The documents have been processed and stored as embeddings in a vector database, enabling semantic search. Use this tool to find specific information related to revenue, expenses, profits, losses, growth, key metrics, management commentary, and any other relevant financial data.\n2. **Google Docs Tool:** This tool allows you to create, edit, and format Google Docs. Use this tool to save your findings into a Google Doc.\n\nYour task is to answer user queries related to Google's financial performance based on the last three quarters' earnings reports. When a user asks a question:\n\n1. **Understand the User's Intent:** Carefully analyze the user's query to determine what specific financial information they are seeking. Identify keywords, timeframes (e.g., \"previous quarter\"), and the type of analysis requested (e.g., trend analysis, comparison, explanation).\n2. **Retrieve Relevant Information:** Use the Vector Store Tool to search for and retrieve the most relevant text passages from the earnings reports that address the user's query. Retrieve multiple, diverse chunks to ensure comprehensive coverage.\n3. **Synthesize and Analyze:** Analyze the information from the retrieved text chunks. Identify key trends, patterns, and insights related to the user's query.\n4. **Generate Report in Google Docs:** Use the Google Docs Tool to create a new Google Doc (or append to an existing one, if specified by the user). Structure the report with clear headings, bullet points, and concise paragraphs. Include the following in your report as appropriate:\n * **Executive Summary:** A brief overview of the key findings.\n * **Revenue Analysis:** Report on revenue figures, growth rates, and key revenue drivers.\n * **Expense Analysis:** Report on major expense categories and their impact on profitability.\n * **Profitability Analysis:** Discuss net income, profit margins, and earnings per share (EPS).\n * **Key Metrics:** Include other relevant financial metrics mentioned in the reports (e.g., operating income, cash flow, segment performance).\n * **Management Commentary:** Summarize any relevant insights or explanations provided by Google's management in the earnings calls or reports.\n * **Trend Analysis:** Compare the current quarter's performance to the previous two quarters, highlighting significant changes or trends.\n * **Visualizations:** If possible, use the Google Docs tool to insert basic charts or tables to visually represent the data. (You might need to guide the user on how to do this if the tool has limitations.)\n5. **Cite Sources:** Clearly indicate the source of your information (e.g., \"Q2 2023 Earnings Report\") for each data point or analysis.\n6. **Maintain a Professional Tone:** Write in a clear, concise, and objective tone, as expected of a financial analyst. Avoid speculation or making unsubstantiated claims.\n\nYour ultimate goal is to provide the user with a well-structured, informative, and accurate financial report based on the data available in the last three quarters of Google's earnings reports.\nSave the report in as a Google Doc using the available tool!"
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Vector Store Tool",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "name": {
+          "configuration_input": "step-8-name"
+        },
+        "description": "Retrieve information about the last 3 quarters of Google Earnings"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Google Gemini Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Pinecone Vector Store (Retrieval)",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {},
+        "pineconeIndex": {
+          "configuration_input": "step-11-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Save Report to Google Docs",
+      "operation": "service-write",
+      "adapter": "googledocs",
+      "parameters": {
+        "actionsUi": {
+          "actionFields": [
+            {
+              "text": {
+                "expression": "{{ record.output }}"
+              },
+              "action": "insert"
+            }
+          ]
+        },
+        "operation": "update",
+        "documentURL": {
+          "configuration_input": "step-12-documenturl"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Embeddings Google Gemini (retrieval)",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "List Of Files To Load (Google Sheets)",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "configuration_input": "step-14-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-14-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Download File From Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ steps[\"step-14\"].record['File URL'] }}"
+        },
+        "options": {
+          "fileName": {
+            "expression": "{{ steps[\"step-14\"].record['10Q'] }}"
+          }
+        },
+        "operation": "download"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-8",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-11",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-5",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-6"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-documenturl",
+      "purpose": "Choose the documentURL resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI-Powered RAG Workflow For Stock Earnings Report Analysis.json",
+    "git_blob": "5449ef622f939bc3e642cd09db70bc1a6f6c53cb",
+    "sha256": "69fd2f35a466fb0516aa5969a97194e5d5c583eced04a76fdb23a8b45ade7a49",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI-Powered%20RAG%20Workflow%20For%20Stock%20Earnings%20Report%20Analysis.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

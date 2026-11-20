@@ -1,0 +1,368 @@
+{
+  "allowed_hosts": [
+    "api.bigcommerce.com",
+    "www.bigcommerce.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Instruction",
+        "name": "instruction",
+        "required": false,
+        "type": "MarkDown"
+      },
+      {
+        "description": "Your BigCommerce store hash (e.g., abcd1234)",
+        "label": "Store Hash",
+        "name": "storeHash",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Your BigCommerce API access token",
+        "label": "Access Token",
+        "name": "accessToken",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "E-commerce",
+  "id": "bigcommerce",
+  "name": "BigCommerce",
+  "operations": [
+    {
+      "description": "Finds or creates a customer",
+      "id": "findOrCreateCustomer",
+      "inputs": [
+        {
+          "description": "Customer email address",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Customer first name",
+          "label": "First Name",
+          "name": "first_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Customer last name",
+          "label": "Last Name",
+          "name": "last_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Customer company name",
+          "label": "Company",
+          "name": "company",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Customer phone number",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Customer notes",
+          "label": "Notes",
+          "name": "notes",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find or Create Customer",
+      "source_path": "bigcommerce/src/lib/actions/find-or-create-customer.ts",
+      "source_sha256": "40b6ba164a6cd59837525e72ab76c0ca5429451c9be175a46fecca2d3ea62d73",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/actions/find-or-create-customer.ts"
+    },
+    {
+      "description": "Finds or creates a product",
+      "id": "findOrCreateProduct",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Product Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "SKU",
+          "name": "sku",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Product Type",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Weight",
+          "name": "weight",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Price",
+          "name": "price",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Brand ID",
+          "label": "Brand ID",
+          "name": "brand_id",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find or Create Product",
+      "source_path": "bigcommerce/src/lib/actions/find-or-create-product.ts",
+      "source_sha256": "1b014bdca0cadf0f5066a5d1ccc3ca81248e42d101fb8198ede84497cddd1de7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/actions/find-or-create-product.ts"
+    },
+    {
+      "description": "Gets details of an order",
+      "id": "getOrder",
+      "inputs": [
+        {
+          "description": "The ID of the order to retrieve",
+          "label": "Order ID",
+          "name": "orderId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Order",
+      "source_path": "bigcommerce/src/lib/actions/get-order.ts",
+      "source_sha256": "66b97fe396da2b6ad822cc721879bd849c84d6475e8c0f310ec31ebe5be7576d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/actions/get-order.ts"
+    },
+    {
+      "description": "Lists all categories",
+      "id": "listCategories",
+      "inputs": [
+        {
+          "description": "Filter by category name",
+          "label": "Category Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Categories",
+      "source_path": "bigcommerce/src/lib/actions/list-categories.ts",
+      "source_sha256": "fef560e984155fd220536c61729bc568353de65aac1b548704c46b18253ce961",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/actions/list-categories.ts"
+    },
+    {
+      "description": "Lists all orders",
+      "id": "listOrders",
+      "inputs": [
+        {
+          "description": "Filter by customer ID",
+          "label": "Customer ID",
+          "name": "customer_id",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Filter by status ID",
+          "label": "Status ID",
+          "name": "status_id",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Orders",
+      "source_path": "bigcommerce/src/lib/actions/list-orders.ts",
+      "source_sha256": "c05adcc89ae7c03e9bfcb29e49a72133730078474e4ebc45935e04bab6e03146",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/actions/list-orders.ts"
+    },
+    {
+      "description": "Searches for a registered customer",
+      "id": "searchCustomer",
+      "inputs": [
+        {
+          "description": "Customer email to search for",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone Number to search for",
+          "label": "Phone Number",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Customer name to search for",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Customer",
+      "source_path": "bigcommerce/src/lib/actions/search-customer.ts",
+      "source_sha256": "de1c75ad75ff00f4cf81e5bafcb1aa00ec4970f7c170e4069c0fc26e3b3417c3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/actions/search-customer.ts"
+    },
+    {
+      "description": "Searches for a customer’s address",
+      "id": "searchCustomerAddress",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Customer_Ids",
+          "name": "customer_ids",
+          "required": null,
+          "source_expression": "multiCustomerDropdown({ required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Customer name to search for",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Customer Address",
+      "source_path": "bigcommerce/src/lib/actions/search-customer-address.ts",
+      "source_sha256": "70ae4ba7b2cf420cd8129d123a30cce82a49912b5cd263caaf01cd8ae7431b4d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/actions/search-customer-address.ts"
+    },
+    {
+      "description": "Searches for a product in the catalog",
+      "id": "searchProduct",
+      "inputs": [
+        {
+          "description": "Product name to search for",
+          "label": "Product Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Product SKU to search for",
+          "label": "SKU",
+          "name": "sku",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Product Type",
+          "name": "type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Brand ID to search for",
+          "label": "Brand ID",
+          "name": "brand_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Weight",
+          "name": "weight",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Price",
+          "name": "price",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Product",
+      "source_path": "bigcommerce/src/lib/actions/search-product.ts",
+      "source_sha256": "423eb013974532e62bf2df815d67745a8b4e5229e4b0af2b30f8af9757a90f1b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/actions/search-product.ts"
+    },
+    {
+      "description": "Triggers when a cart is abandoned",
+      "id": "abandonedCart",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Abandoned Cart",
+      "source_path": "bigcommerce/src/lib/triggers/abandoned-cart.ts",
+      "source_sha256": "8955f5905521300a9b6d7a7f0ee12398a73476ce22cb435f3fa4ec4d92312dd5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/triggers/abandoned-cart.ts"
+    },
+    {
+      "description": "Triggers when a new cart is created",
+      "id": "cartCreated",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Cart Created",
+      "source_path": "bigcommerce/src/lib/triggers/cart-created.ts",
+      "source_sha256": "0a57970e70f2ed4612683eaa0687b7ea8f9413ea4327cf9b6fe30b79a51b393b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/triggers/cart-created.ts"
+    },
+    {
+      "description": "Triggers when a new customer address is created",
+      "id": "customerAddressCreated",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Customer Address Created",
+      "source_path": "bigcommerce/src/lib/triggers/customer-address-created.ts",
+      "source_sha256": "ac029400a4a6a779218436917dc8fa5b748108bd97a8697d97b107298d273c79",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bigcommerce/src/lib/triggers/customer-address-created.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "398a7f19a4ea72dba7afdf4a12e283486adf15c6",
+    "index_path": "bigcommerce/src/index.ts",
+    "index_sha256": "a6e53ffbb003ec6274c71f3bc0ace32ab25068d6c06cb148666ff8f2ac03a5b9",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "product-interface-designer"
+  ]
+}

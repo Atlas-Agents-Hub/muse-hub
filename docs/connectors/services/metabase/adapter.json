@@ -1,0 +1,170 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token; Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "metabase",
+  "name": "Metabase",
+  "operations": [
+    {
+      "description": "Enable embedding for a Metabase question and configure parameters",
+      "id": "embedQuestion",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Metabase question ID",
+          "name": "questionId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether to enable embedding for this question",
+          "label": "Enable embedding",
+          "name": "enableEmbedding",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Parameter Settings",
+          "name": "parameterSettings",
+          "required": null,
+          "source_expression": "Property.DynamicProperties<false",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Embed question",
+      "source_path": "metabase/src/lib/actions/embed-question.ts",
+      "source_sha256": "af2042681c12b4985efb04193897339e5909931beba6e6650cb85cfa00f78cd4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/metabase/src/lib/actions/embed-question.ts"
+    },
+    {
+      "description": "Execute all questions across all tabs in a Metabase dashboard and return their consolidated results in a single response",
+      "id": "getDashboardQuestions",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Metabase Dashboard ID",
+          "name": "dashboardId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Dashboard parameters to apply to all questions",
+          "label": "Parameters (slug name -> value)",
+          "name": "parameters",
+          "required": false,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Dashboard Questions",
+      "source_path": "metabase/src/lib/actions/get-dashboard.ts",
+      "source_sha256": "50db80141e03f2dc4f9c0aadf5bfd532064067ffbf595da8cd835aeeeca55ab4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/metabase/src/lib/actions/get-dashboard.ts"
+    },
+    {
+      "description": "Fetch the results of a Metabase question",
+      "id": "getQuestion",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Metabase question ID",
+          "name": "questionId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Parameters (slug name -> value)",
+          "name": "parameters",
+          "required": false,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Get question",
+      "source_path": "metabase/src/lib/actions/get-question.ts",
+      "source_sha256": "9e5e4396a85b0b637ba17054ab0c8694201326d78e7c3c304e7e75900e310fee",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/metabase/src/lib/actions/get-question.ts"
+    },
+    {
+      "description": "Get PNG preview rendering (low resolution) of a Metabase card/question.",
+      "id": "getQuestionPngPreview",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Metabase question ID",
+          "name": "questionId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Question PNG Preview",
+      "source_path": "metabase/src/lib/actions/get-png-rendering.ts",
+      "source_sha256": "26c555e7abe7a403581ae259863207cdf88dea296c9bce7fd3250e42e17570e5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/metabase/src/lib/actions/get-png-rendering.ts"
+    },
+    {
+      "description": "Get the graph of a Metabase question and save it as a png",
+      "id": "getGraphQuestion",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Metabase question ID",
+          "name": "questionId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Parameters (slug name -> value)",
+          "name": "parameters",
+          "required": false,
+          "type": "Object"
+        },
+        {
+          "description": "",
+          "label": "The name of the graph (without the extension)",
+          "name": "graphName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "How long to wait for the graph to render completely in seconds",
+          "label": "Wait Time (seconds)",
+          "name": "waitTime",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get the graph of the question",
+      "source_path": "metabase/src/lib/actions/get-graph-question.ts",
+      "source_sha256": "0434193ea72bd93f34031b38eefc5476de6dd622c1c0a095269ed20602f1000a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/metabase/src/lib/actions/get-graph-question.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "b61e99c20601ae96be9e6eeb7dbf90186848bb3c",
+    "index_path": "metabase/src/index.ts",
+    "index_sha256": "0738905ad20b24b8013cc6bda1a0320b8a4f20ee42ce6b0310dc2a64cea17b64",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

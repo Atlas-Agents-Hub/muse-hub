@@ -1,0 +1,24 @@
+{
+  "id": "pinterest",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "pinterest/src/lib/common/auth.ts",
+      "credential_source_sha256": "65e1454dfd318f62a02a0e56acbc8b2e1139ff3cc837e5047bdf7966bc0111d8",
+      "headers": {},
+      "host": "api.pinterest.com",
+      "id": "read-v5-user-account",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "pinterest/src/lib/common/auth.ts",
+      "source_sha256": "65e1454dfd318f62a02a0e56acbc8b2e1139ff3cc837e5047bdf7966bc0111d8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pinterest/src/lib/common/auth.ts",
+      "url_template": "https://api.pinterest.com/v5/user_account"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-extract-license-plate-number-from-image-uploaded-via-an-muse-form-4cc4fd",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    }
+  }
+}

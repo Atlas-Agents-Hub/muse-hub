@@ -1,0 +1,471 @@
+{
+  "allowed_hosts": [
+    "api.smartsheet.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Project management",
+  "id": "smartsheet",
+  "name": "Smartsheet",
+  "operations": [
+    {
+      "description": "Adds new row to a sheet.",
+      "id": "add_row_to_sheet",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Sheet_Id",
+          "name": "sheet_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.sheet_id()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Cells",
+          "name": "cells",
+          "required": null,
+          "source_expression": "smartsheetCommon.cells",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Add Row to Top or Bottom",
+          "name": "location_type",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Row to Sheet",
+      "source_path": "smartsheet/src/lib/actions/add-row-to-sheet.ts",
+      "source_sha256": "7a59f6a68652178e53891f09f0eb382c72b72c66722a0fd22cd79a51dbe23973",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/actions/add-row-to-sheet.ts"
+    },
+    {
+      "description": "Adds a file attachment to a row.",
+      "id": "attach_file_to_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Sheet_Id",
+          "name": "sheet_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.sheet_id()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Row_Id",
+          "name": "row_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.row_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Type of attachment to add",
+          "label": "Attachment Type",
+          "name": "attachment_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The file to attach (required for FILE type)",
+          "label": "File",
+          "name": "file",
+          "required": false,
+          "type": "File"
+        },
+        {
+          "description": "The URL to attach (required for URL-based attachment types)",
+          "label": "URL",
+          "name": "url",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Name for the attachment (optional, will use file name or URL if not provided)",
+          "label": "Attachment Name",
+          "name": "attachment_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Sub type for Google Drive and Egnyte attachments",
+          "label": "Attachment Sub Type",
+          "name": "attachment_sub_type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "MIME type of the attachment (optional, auto-detected for files)",
+          "label": "MIME Type",
+          "name": "mime_type",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Attach File to Row",
+      "source_path": "smartsheet/src/lib/actions/attach-file-to-row.ts",
+      "source_sha256": "0dff06a8e077cee17c23dec24b714a061ad37e4eda2343be13c4701546d07a6f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/actions/attach-file-to-row.ts"
+    },
+    {
+      "description": "Finds rows in a specific sheet or across all accessible sheets using text queries with advanced filtering options.",
+      "id": "find_rows_by_query",
+      "inputs": [
+        {
+          "description": "Choose whether to search within a specific sheet or across all accessible sheets.",
+          "label": "Search Scope",
+          "name": "search_scope",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Sheet_Id",
+          "name": "sheet_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.sheet_id(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Text to search for. Use double quotes for exact phrase matching (e.g., \"project status\")",
+          "label": "Search Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Specify what types of content to search in (leave empty to search all)",
+          "label": "Search Scopes",
+          "name": "search_scopes",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Include information about which items are marked as favorites",
+          "label": "Include Favorite Flags",
+          "name": "include_favorites",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Only return results modified on or after this date/time",
+          "label": "Modified Since",
+          "name": "modified_since",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Maximum number of results to return (default: 50, max: 100)",
+          "label": "Max Results",
+          "name": "max_results",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Only return results of specific object types (leave empty for all types)",
+          "label": "Filter by Object Types",
+          "name": "object_types_filter",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Row",
+      "source_path": "smartsheet/src/lib/actions/find-rows-by-query.ts",
+      "source_sha256": "798812bb17ded7deac548c8e86d97ca9793915505298c58efdcf15f82867e14a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/actions/find-rows-by-query.ts"
+    },
+    {
+      "description": "Fetches existings sheets matching provided filter criteria.",
+      "id": "find_sheet_by_name",
+      "inputs": [
+        {
+          "description": "Filter sheets by name (partial or exact match). Leave empty to list all sheets.",
+          "label": "Sheet Name Filter",
+          "name": "sheet_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "When filtering by name, require exact match instead of partial match",
+          "label": "Exact Name Match",
+          "name": "exact_match",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "If true, include all results without pagination (overrides page and page size)",
+          "label": "Include All Results",
+          "name": "include_all",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Which page to return (defaults to 1, ignored if \"Include All Results\" is true)",
+          "label": "Page Number",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Maximum number of items to return per page (defaults to 100, max 10000, ignored if \"Include All Results\" is true)",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "API access level for viewing and filtering permissions",
+          "label": "Access API Level",
+          "name": "access_api_level",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Only return sheets where you have specific access levels (leave empty for all)",
+          "label": "Filter by Access Level",
+          "name": "access_level_filter",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Only return sheets modified on or after this date/time",
+          "label": "Modified Since",
+          "name": "modified_since",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Include current version number of each sheet",
+          "label": "Include Sheet Version",
+          "name": "include_sheet_version",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Include information about the source (template/sheet) each sheet was created from",
+          "label": "Include Source Information",
+          "name": "include_source_info",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Return dates as milliseconds since UNIX epoch instead of ISO strings",
+          "label": "Numeric Dates",
+          "name": "numeric_dates",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Filter sheets by creation date range",
+          "label": "Created Date Range",
+          "name": "created_date_range",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "How to sort the returned sheets",
+          "label": "Sort Results By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Sheet(s)",
+      "source_path": "smartsheet/src/lib/actions/find-sheet-by-name.ts",
+      "source_sha256": "f8e5769ed830150cf2df18ecf0884bbed9b11bda91d9b44462b907257030d136",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/actions/find-sheet-by-name.ts"
+    },
+    {
+      "description": "Get all attachments for a specific row in a Smartsheet, including row and discussion-level attachments with comprehensive pagination and filtering options",
+      "id": "find_attachment_by_row_id",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Sheet_Id",
+          "name": "sheet_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.sheet_id()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Row_Id",
+          "name": "row_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.row_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "If true, include all results without pagination (overrides page and page size)",
+          "label": "Include All Results",
+          "name": "include_all",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Which page to return (defaults to 1, ignored if \"Include All Results\" is true)",
+          "label": "Page Number",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Maximum number of items to return per page (defaults to 100, max 10000, ignored if \"Include All Results\" is true)",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Only return attachments of specific types (leave empty for all types)",
+          "label": "Filter by Attachment Type",
+          "name": "attachment_type_filter",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Only return attachments from specific parent types (leave empty for all)",
+          "label": "Filter by Parent Type",
+          "name": "parent_type_filter",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Only return files with size greater than or equal to this value (applies to FILE type only)",
+          "label": "Minimum File Size (KB)",
+          "name": "min_file_size_kb",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Only return files with size less than or equal to this value (applies to FILE type only)",
+          "label": "Maximum File Size (KB)",
+          "name": "max_file_size_kb",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Row Attachments",
+      "source_path": "smartsheet/src/lib/actions/find-attachment-by-row-id.ts",
+      "source_sha256": "98f4bdb9c90c9f1a34cbb0fd22141c6b901103ad582e6d213e69345770670233",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/actions/find-attachment-by-row-id.ts"
+    },
+    {
+      "description": "Updates an existing row.",
+      "id": "update_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Sheet_Id",
+          "name": "sheet_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.sheet_id()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Row_Id",
+          "name": "row_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.row_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Cells",
+          "name": "cells",
+          "required": null,
+          "source_expression": "smartsheetCommon.cells",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Row",
+      "source_path": "smartsheet/src/lib/actions/update-row.ts",
+      "source_sha256": "4416da4492f28c8946ce8b863785f1783444aef35150723567bd56db8801e2d4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/actions/update-row.ts"
+    },
+    {
+      "description": "Triggers when a new attachment is added to a row or sheet.",
+      "id": "new_attachment_",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Sheet_Id",
+          "name": "sheet_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.sheet_id()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Attachment Added",
+      "source_path": "smartsheet/src/lib/triggers/new-attachment-trigger.ts",
+      "source_sha256": "e131942d05b3875e99d5e2b143f64b716a7e34987e151b59dc3cbe4912ae5efe",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/triggers/new-attachment-trigger.ts"
+    },
+    {
+      "description": "Triggers when a new comment is added to a discussion on a sheet.",
+      "id": "new_comment_webhook",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Sheet_Id",
+          "name": "sheet_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.sheet_id()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Comment Added",
+      "source_path": "smartsheet/src/lib/triggers/new-comment-trigger.ts",
+      "source_sha256": "4ce240f915ba8831fc3f5f6d0b09e061b3b51cacd30a9d03e92a31ac8d98c79d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/triggers/new-comment-trigger.ts"
+    },
+    {
+      "description": "Triggers when a new row is added.",
+      "id": "new_row_added",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Sheet_Id",
+          "name": "sheet_id",
+          "required": null,
+          "source_expression": "smartsheetCommon.sheet_id()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Row Added",
+      "source_path": "smartsheet/src/lib/triggers/new-row-trigger.ts",
+      "source_sha256": "5ac68b1e0ceb822d062d1effa6a0684055d32583e6f3023915387cd8da36a50f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/triggers/new-row-trigger.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "47358d73317ffdb79856f4f32eb7b62f505ebf3a",
+    "index_path": "smartsheet/src/index.ts",
+    "index_sha256": "55d2baa0903dd6fb77354ab28e3b7d8b42a154b37c8e142b2e0a617be2ae4034",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

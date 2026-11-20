@@ -203,7 +203,7 @@ class ConnectorTests(unittest.TestCase):
         for term in ("account", "permissions", "credentials", "original service status"):
             self.assertIn(term,doc.casefold())
         directory=(root/"docs/connectors/README.md").read_text(encoding="utf-8")
-        self.assertIn("151",directory)
+        self.assertIn(str(len(json.loads((root/'docs/connectors/catalog.json').read_bytes())['connectors'])),directory)
         self.assertIn("CATALOG.md",directory)
         for word in ("example-owner-user","example-private-host","legacy-role-alpha","legacy-role-eta","example-private-network"):
             self.assertNotIn(word,doc.casefold())
@@ -248,15 +248,19 @@ class ConnectorTests(unittest.TestCase):
             pc.run_offline_fixture(p,[record])
 
     def test_current_release_and_historical_downloads_are_clear(self):
-        doc=(Path(__file__).resolve().parents[1]/"docs/RELEASES.md").read_text(encoding="utf-8")
-        for target in ("releases/tag/v1.5.0", "releases/download/v1.5.0/SHA256SUMS",
-                       "muse-specialist-toolkit-v1.5.0.zip", "DOWNLOAD_A_SPECIALIST.md",
-                       "v1.0.0", "v0.4.1-alpha"):
+        root=Path(__file__).resolve().parents[1]
+        registry=json.loads((root/"presets/catalog.json").read_bytes())
+        release=registry["release"]
+        doc=(root/"docs/RELEASES.md").read_text(encoding="utf-8")
+        for target in (f"releases/tag/{release}", f"releases/download/{release}/SHA256SUMS",
+                       f"muse-specialist-toolkit-{release}.zip", "DOWNLOAD_A_SPECIALIST.md",
+                       "releases/tag/v1.5.0", "releases/tag/v1.0.0", "releases/tag/v0.4.1-alpha"):
             self.assertIn(target,doc)
-        self.assertIn("15 assistants",doc)
+        self.assertRegex(doc,rf"{len(registry['presets'])} (?:specialist )?assistants")
         self.assertIn("START_HERE.md",doc)
-        self.assertIn("Python 3.12+",doc)
-        self.assertIn("exact filename",doc)
+        self.assertRegex(doc,r"Python 3\.12(?:\+| or later)")
+        self.assertIn("VERIFY.py",doc)
+        self.assertIn("downloads.html",doc)
 
 
 if __name__=="__main__":

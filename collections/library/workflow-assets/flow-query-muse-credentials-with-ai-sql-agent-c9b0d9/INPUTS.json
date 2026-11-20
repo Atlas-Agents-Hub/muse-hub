@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-query-muse-credentials-with-ai-sql-agent-c9b0d9",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-2-id": null,
+    "step-2-assignments-2-value": null,
+    "step-5-name": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "n8n": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    }
+  }
+}

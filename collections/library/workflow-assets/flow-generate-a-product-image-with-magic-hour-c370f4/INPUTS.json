@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-generate-a-product-image-with-magic-hour-c370f4",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "magichour": {
+      "connection": null
+    }
+  }
+}

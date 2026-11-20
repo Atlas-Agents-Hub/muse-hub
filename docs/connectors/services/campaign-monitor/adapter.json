@@ -1,0 +1,354 @@
+{
+  "allowed_hosts": [
+    "api.createsend.com",
+    "example.createsend1.com",
+    "www.campaignmonitor.com."
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Marketing",
+  "id": "campaign-monitor",
+  "name": "Campaign Monitor",
+  "operations": [
+    {
+      "description": "Find a subscriber by email in a specific list.",
+      "id": "find_subscriber",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List Id",
+          "name": "listId",
+          "required": null,
+          "source_expression": "listId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The email address of the subscriber to find",
+          "label": "Email Address",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Subscriber",
+      "source_path": "campaign-monitor/src/lib/actions/find-subscriber.ts",
+      "source_sha256": "c830af300ae1e9bdc21b5bbad47c3dec17b300c8637fa8dc409adb2b54351a25",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/actions/find-subscriber.ts"
+    },
+    {
+      "description": "Returns the reporting summary of a sent campaign.",
+      "id": "get_campaign_summary",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Campaign Id",
+          "name": "campaignId",
+          "required": null,
+          "source_expression": "sentCampaignId",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Campaign Summary",
+      "source_path": "campaign-monitor/src/lib/actions/get-campaign-summary.ts",
+      "source_sha256": "3c420486ea130ca0dc4d1abbbd56309dbf7aeb2087b9dbdeebe0c2e36783d7aa",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/actions/get-campaign-summary.ts"
+    },
+    {
+      "description": "Returns subscriber growth and totals for a list.",
+      "id": "get_list_stats",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List Id",
+          "name": "listId",
+          "required": null,
+          "source_expression": "listId",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get List Stats",
+      "source_path": "campaign-monitor/src/lib/actions/get-list-stats.ts",
+      "source_sha256": "b0df8cc75a936dced5fe58e26a06941eb60d98cc1f59592ee5da32e741971769",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/actions/get-list-stats.ts"
+    },
+    {
+      "description": "Returns one page of subscribers in a list, filtered by state.",
+      "id": "get_list_subscribers",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List Id",
+          "name": "listId",
+          "required": null,
+          "source_expression": "listId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "State",
+          "name": "state",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Page number to return, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Subscribers per page, between 10 and 1000.",
+          "label": "Page Size",
+          "name": "pageSize",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Order By",
+          "name": "orderField",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Order Direction",
+          "name": "orderDirection",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Get List Subscribers",
+      "source_path": "campaign-monitor/src/lib/actions/get-list-subscribers.ts",
+      "source_sha256": "15bde8a6893aa38aea96382f1f59b2e1c24b4780a35a3ca48d5d947a65cf6a3b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/actions/get-list-subscribers.ts"
+    },
+    {
+      "description": "Returns all clients in your Campaign Monitor account.",
+      "id": "list_clients",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Clients",
+      "source_path": "campaign-monitor/src/lib/actions/list-clients.ts",
+      "source_sha256": "031713969e50b107f22581e356ac35874bfd5185138cca7bd3e4275e6a3950f2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/actions/list-clients.ts"
+    },
+    {
+      "description": "Returns all subscriber lists of a client.",
+      "id": "list_lists",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Lists",
+      "source_path": "campaign-monitor/src/lib/actions/list-lists.ts",
+      "source_sha256": "eba65e7862f9eb467258909cf21310a39b59a65c8bbd7119a937a581188620bd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/actions/list-lists.ts"
+    },
+    {
+      "description": "Returns one page of campaigns a client has sent.",
+      "id": "list_sent_campaigns",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only campaigns sent on or after this date.",
+          "label": "Sent From Date",
+          "name": "sentFromDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Only campaigns sent before this date (the date itself is excluded).",
+          "label": "Sent To Date",
+          "name": "sentToDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Only campaigns with these tags, as a comma-separated list.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Page number to return, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Campaigns per page, between 10 and 1000.",
+          "label": "Page Size",
+          "name": "pageSize",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Order Direction",
+          "name": "orderDirection",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List Sent Campaigns",
+      "source_path": "campaign-monitor/src/lib/actions/list-sent-campaigns.ts",
+      "source_sha256": "5e81a7f0cea217ad2c87c586925b01169d915f6676bdf56b2bb4a5ea79105c84",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/actions/list-sent-campaigns.ts"
+    },
+    {
+      "description": "Returns the smart transactional emails of a client.",
+      "id": "list_smart_emails",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List Smart Emails",
+      "source_path": "campaign-monitor/src/lib/actions/list-smart-emails.ts",
+      "source_sha256": "fca5d16c6a8d42f72b868cb9f1e670f56538b782eba714375f323a79e0fd9c2e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/actions/list-smart-emails.ts"
+    },
+    {
+      "description": "Triggers when a client sends a new campaign.",
+      "id": "new_campaign_sent",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Campaign Sent",
+      "source_path": "campaign-monitor/src/lib/triggers/new-campaign-sent.ts",
+      "source_sha256": "47d658c122d6c5b809231cc8c51d9d9447b7f346e5b0559705875f4171573f65",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/triggers/new-campaign-sent.ts"
+    },
+    {
+      "description": "Triggered when a new client is added to Campaign Monitor.",
+      "id": "new_client",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Client",
+      "source_path": "campaign-monitor/src/lib/triggers/new-client.ts",
+      "source_sha256": "04b83f5b29e578b5a7f0b298fa542791dcb2642c68af36848cded69090769b5f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/triggers/new-client.ts"
+    },
+    {
+      "description": "Triggered when a new subscriber is added to a list.",
+      "id": "new_subscriber_added",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Client Id",
+          "name": "clientId",
+          "required": null,
+          "source_expression": "clientId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List Id",
+          "name": "listId",
+          "required": null,
+          "source_expression": "listId",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Subscriber Added",
+      "source_path": "campaign-monitor/src/lib/triggers/new-subscriber-added.ts",
+      "source_sha256": "6af88a4ee14a462ab9f4cf322c4b3b8c493394a827bad3aa665e872a8ff166f9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/campaign-monitor/src/lib/triggers/new-subscriber-added.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "af1d7ff310d00996eec2196ce3cbcb7ab1f6c5f5",
+    "index_path": "campaign-monitor/src/index.ts",
+    "index_sha256": "739d95e28f6f6e48e8a6ba0265ff0a73308e4c0fbc3e36a3798c4d3117ec5388",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

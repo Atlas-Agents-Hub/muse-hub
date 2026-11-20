@@ -128,7 +128,7 @@ class EngineerPackStaging(unittest.TestCase):
         copy=self.root/'source-copy'
         shutil.copytree(pack.ENGINE_ROOT,copy)
         cache=copy/'__pycache__'
-        cache.mkdir()
+        cache.mkdir(exist_ok=True)
         (cache/'claim_gate.cpython-312.pyc').write_bytes(b'synthetic bytecode artifact')
         with patch.object(pack,'ENGINE_ROOT',copy), patch.object(pack,'ENGINE_MANIFEST',copy/'ENGINE.json'):
             result=pack.stage_engineer_pack(self.dest)

@@ -1,0 +1,113 @@
+{
+  "id": "smartsheet",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "smartsheet/src/lib/auth.ts",
+      "credential_source_sha256": "ab8254a6ef1e7fb259b132f183e76ca77e92233620a3676d14d8f38b8e8466c1",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "host": "api.smartsheet.com",
+      "id": "read-2-0-sheets",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "smartsheet/src/lib/auth.ts",
+      "source_sha256": "ab8254a6ef1e7fb259b132f183e76ca77e92233620a3676d14d8f38b8e8466c1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/auth.ts",
+      "url_template": "https://api.smartsheet.com/2.0/sheets"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "smartsheet/src/lib/common/index.ts",
+      "credential_source_sha256": "edbe35353fa7a262391dfff5f54954481fc80eda437a549f9c332e0c0c72876d",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "host": "api.smartsheet.com",
+      "id": "read-2-0-sheets-sheetid",
+      "method": "GET",
+      "parameters": [
+        "sheetId"
+      ],
+      "source_path": "smartsheet/src/lib/common/index.ts",
+      "source_sha256": "edbe35353fa7a262391dfff5f54954481fc80eda437a549f9c332e0c0c72876d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/common/index.ts",
+      "url_template": "https://api.smartsheet.com/2.0/sheets/{sheetId}"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "smartsheet/src/lib/common/index.ts",
+      "credential_source_sha256": "edbe35353fa7a262391dfff5f54954481fc80eda437a549f9c332e0c0c72876d",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "host": "api.smartsheet.com",
+      "id": "read-2-0-sheets-sheetid-columns",
+      "method": "GET",
+      "parameters": [
+        "sheetId"
+      ],
+      "source_path": "smartsheet/src/lib/common/index.ts",
+      "source_sha256": "edbe35353fa7a262391dfff5f54954481fc80eda437a549f9c332e0c0c72876d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/common/index.ts",
+      "url_template": "https://api.smartsheet.com/2.0/sheets/{sheetId}/columns?include=columnType"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "smartsheet/src/lib/common/index.ts",
+      "credential_source_sha256": "edbe35353fa7a262391dfff5f54954481fc80eda437a549f9c332e0c0c72876d",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "host": "api.smartsheet.com",
+      "id": "read-2-0-sheets-sheetid-rows-rowid-attachments",
+      "method": "GET",
+      "parameters": [
+        "sheetId",
+        "rowId"
+      ],
+      "source_path": "smartsheet/src/lib/common/index.ts",
+      "source_sha256": "edbe35353fa7a262391dfff5f54954481fc80eda437a549f9c332e0c0c72876d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/common/index.ts",
+      "url_template": "https://api.smartsheet.com/2.0/sheets/{sheetId}/rows/{rowId}/attachments"
+    },
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "smartsheet/src/lib/common/index.ts",
+      "credential_source_sha256": "edbe35353fa7a262391dfff5f54954481fc80eda437a549f9c332e0c0c72876d",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "host": "api.smartsheet.com",
+      "id": "read-2-0-webhooks",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "smartsheet/src/lib/common/index.ts",
+      "source_sha256": "edbe35353fa7a262391dfff5f54954481fc80eda437a549f9c332e0c0c72876d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/smartsheet/src/lib/common/index.ts",
+      "url_template": "https://api.smartsheet.com/2.0/webhooks"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

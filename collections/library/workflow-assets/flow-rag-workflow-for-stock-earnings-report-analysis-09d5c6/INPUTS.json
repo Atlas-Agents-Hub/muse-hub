@@ -1,0 +1,38 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-rag-workflow-for-stock-earnings-report-analysis-09d5c6",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-pineconeindex": null,
+    "step-8-name": null,
+    "step-11-pineconeindex": null,
+    "step-12-documenturl": null,
+    "step-14-sheetname": null,
+    "step-14-documentid": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledocs": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

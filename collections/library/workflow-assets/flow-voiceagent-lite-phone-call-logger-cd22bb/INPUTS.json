@@ -1,0 +1,18 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-voiceagent-lite-phone-call-logger-cd22bb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-sheetname": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    }
+  }
+}

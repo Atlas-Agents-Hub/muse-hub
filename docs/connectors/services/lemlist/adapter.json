@@ -1,0 +1,418 @@
+{
+  "allowed_hosts": [
+    "api.lemlist.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Marketing",
+  "id": "lemlist",
+  "name": "Lemlist",
+  "operations": [
+    {
+      "description": "Add new custom variables to a lead.",
+      "id": "addCustomVariablesOnLead",
+      "inputs": [
+        {
+          "description": "The unique identifier of the lead (e.g. lea_8xJSc7sV7ggpiVnXe). Available as the _id field returned by the Add Lead To A Campaign and Search Lead actions.",
+          "label": "Lead ID",
+          "name": "leadId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "New custom variables to create on the lead. Each key is the variable name and each value is its content. Names must not match an existing default or custom variable.",
+          "label": "Custom Variables",
+          "name": "customVariables",
+          "required": true,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Custom Variables on Lead",
+      "source_path": "lemlist/src/lib/actions/add-custom-variables-on-lead.ts",
+      "source_sha256": "b23a1c41dc6441a6a750e8fd4a9d32cbd3ee402362b6987d69aff694d5fd774e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/actions/add-custom-variables-on-lead.ts"
+    },
+    {
+      "description": "Adds a lead to a specific campaign with optional enrichment and lead details. Enrichment options use lemlist credits.",
+      "id": "addLeadToACampaign",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign Id",
+          "name": "campaignId",
+          "required": null,
+          "source_expression": "campaignsDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The email of the lead to add",
+          "label": "Lead Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Picture URL",
+          "name": "picture",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "LinkedIn URL",
+          "name": "linkedinUrl",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company Name",
+          "name": "companyName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company Domain",
+          "name": "companyDomain",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Icebreaker",
+          "name": "icebreaker",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Refuse the lead if the contact is already in another campaign.",
+          "label": "Deduplicate",
+          "name": "deduplicate",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Run LinkedIn enrichment for this lead. Uses lemlist credits.",
+          "label": "LinkedIn Enrichment",
+          "name": "linkedinEnrichment",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Try to find a verified email for this lead. Uses lemlist credits.",
+          "label": "Find Email",
+          "name": "findEmail",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Verify the lead’s email. Uses lemlist credits.",
+          "label": "Verify Email",
+          "name": "verifyEmail",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Try to find a phone number for this lead. Uses lemlist credits.",
+          "label": "Find Phone",
+          "name": "findPhone",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Lead To A Campaign",
+      "source_path": "lemlist/src/lib/actions/add-lead-to-a-campaign.ts",
+      "source_sha256": "940f4731878deb88bb50c7ebcf8e308273e5158213f37b37603f7294a581e89f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/actions/add-lead-to-a-campaign.ts"
+    },
+    {
+      "description": "Mark a lead as “interested” across all campaigns.",
+      "id": "markLeadFromAllCampaignAsInterested",
+      "inputs": [
+        {
+          "description": "The email of the lead to mark as interested.",
+          "label": "Lead Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Mark Lead From All Campaign as Interested",
+      "source_path": "lemlist/src/lib/actions/mark-lead-from-all-campaign-as-interested.ts",
+      "source_sha256": "668222fe4fd678a082f1053eed315eec5862f8eceb609b397b7c13f4d733e009",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/actions/mark-lead-from-all-campaign-as-interested.ts"
+    },
+    {
+      "description": "Removes a lead from a specific campaign.",
+      "id": "removeLeadFromACampaign",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign Id",
+          "name": "campaignId",
+          "required": null,
+          "source_expression": "campaignsDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The email of the lead to remove.",
+          "label": "Lead Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Remove Lead from A Campaign",
+      "source_path": "lemlist/src/lib/actions/remove-lead-from-a-campaign.ts",
+      "source_sha256": "2c6e66016510e878ceafb4f0eb2dc94b3bc52672e7f8a68e4b0d398dda82db76",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/actions/remove-lead-from-a-campaign.ts"
+    },
+    {
+      "description": "Remove a lead from the “unsubscribe” list so lemlist can contact them again. Only do this when the person opted back in.",
+      "id": "removeLeadFromUnsubscribeList",
+      "inputs": [
+        {
+          "description": "The email of the lead to remove from the unsubscribe list.",
+          "label": "Lead Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Remove Lead From Unsubscribe List",
+      "source_path": "lemlist/src/lib/actions/remove-lead-from-unsubscribe-list.ts",
+      "source_sha256": "72f340b9d60a359e108bb07de6f3740070655d6ff5bab3bf2a468e26722ef207",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/actions/remove-lead-from-unsubscribe-list.ts"
+    },
+    {
+      "description": "Look up a lead by email and campaign.",
+      "id": "searchLead",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign Id",
+          "name": "campaignId",
+          "required": null,
+          "source_expression": "campaignsDropdown({ refreshers: ['auth'], required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The email of the lead to look up",
+          "label": "Lead Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Lead",
+      "source_path": "lemlist/src/lib/actions/search-lead.ts",
+      "source_sha256": "a49474c045616dc6af6e1003414a54c5997c135238c0a12eaf3fc99ceb156862",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/actions/search-lead.ts"
+    },
+    {
+      "description": "Unsubscribe a lead from a campaign.",
+      "id": "unsubscribeALead",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign Id",
+          "name": "campaignId",
+          "required": null,
+          "source_expression": "campaignsDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The email of the lead to unsubscribe.",
+          "label": "Lead Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Unsubscribe a Lead",
+      "source_path": "lemlist/src/lib/actions/unsubscribe-a-lead.ts",
+      "source_sha256": "8008b739a70c7046ec119658c35e636fc32443d681f00173a37c9417a1c1b6d7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/actions/unsubscribe-a-lead.ts"
+    },
+    {
+      "description": "Updates a lead in a specific campaign. Empty fields are left unchanged.",
+      "id": "updateLeadFromCampaign",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign Id",
+          "name": "campaignId",
+          "required": null,
+          "source_expression": "campaignsDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The email of the lead to update.",
+          "label": "Lead Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Picture URL",
+          "name": "picture",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "LinkedIn URL",
+          "name": "linkedinUrl",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company Name",
+          "name": "companyName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company Domain",
+          "name": "companyDomain",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Icebreaker",
+          "name": "icebreaker",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Lead From Campaign",
+      "source_path": "lemlist/src/lib/actions/update-lead-from-campaign.ts",
+      "source_sha256": "96bd8c083e17643a2c1b174354ec731992224563c59ab86e9fc09b8ff888977d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/actions/update-lead-from-campaign.ts"
+    },
+    {
+      "description": "Triggers for each new activity, optionally only some event types or one campaign.",
+      "id": "newActivity",
+      "inputs": [
+        {
+          "description": "Only trigger for these events. Leave empty for every event.",
+          "label": "Event Types",
+          "name": "eventTypes",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "",
+          "label": "Campaign Id",
+          "name": "campaignId",
+          "required": null,
+          "source_expression": "campaignsDropdown({ refreshers: ['auth'], required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Activity",
+      "source_path": "lemlist/src/lib/triggers/new-activity.ts",
+      "source_sha256": "b85280fef60a248c2ff23d18f3754dd758f982c0cb5e8905178c69a2cef54a17",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/triggers/new-activity.ts"
+    },
+    {
+      "description": "Triggers when a recipient unsubscribes.",
+      "id": "unsubscribedRecipient",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Unsubscribed Recipient",
+      "source_path": "lemlist/src/lib/triggers/unsubscribed-recipient.ts",
+      "source_sha256": "15306c37eca7535500e9e42eba6d52f8575e4f5342b516c14a4497fd32bdf18f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lemlist/src/lib/triggers/unsubscribed-recipient.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "38dc8fce8495a7a9d738a2cc3ebf2a4d26f6f54d",
+    "index_path": "lemlist/src/index.ts",
+    "index_sha256": "f178d10640a6df26f3511bc54715a3843f1439ede4c83bb06d2acc07ea1a3712",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "console.cloud.google.com",
+    "docs.google.com",
+    "docs.googleapis.com",
+    "oauth2.googleapis.com",
+    "support.google.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection; Provider connection fields",
+    "scopes": [],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "google-docs",
+  "name": "Google Docs",
+  "operations": [
+    {
+      "description": "Add text to the end of a document.",
+      "id": "append_text",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "documentIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Added to the end of the document.",
+          "label": "Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Append Text",
+      "source_path": "google-docs/src/lib/actions/append-text.ts",
+      "source_sha256": "75efabcccbbbf526ea228b12b133521698fb79fa3f0c8359ba9cd3dc506b6edc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/actions/append-text.ts"
+    },
+    {
+      "description": "Create a document on Google Docs.",
+      "id": "create_document",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": null,
+          "source_expression": "docsCommon.title",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Body",
+          "name": "body",
+          "required": null,
+          "source_expression": "docsCommon.body",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Document",
+      "source_path": "google-docs/src/lib/actions/create-document.ts",
+      "source_sha256": "1ca84a62e7852accdec7802df18cd228e0e3c47fed551a469e734164d15a7cb9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/actions/create-document.ts"
+    },
+    {
+      "description": "Find a document by name, optionally creating it.",
+      "id": "google-docs-find-document",
+      "inputs": [
+        {
+          "description": "Matches any document whose name contains this text.",
+          "label": "Document Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Folder Id",
+          "name": "folderId",
+          "required": null,
+          "source_expression": "folderIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Create If Not Found",
+          "name": "createIfNotFound",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "New Document Properties",
+          "name": "newDocumentProps",
+          "required": true,
+          "type": "DynamicProperties"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Document",
+      "source_path": "google-docs/src/lib/actions/find-document.ts",
+      "source_sha256": "2927b051fbea213795fb70bad846a4bfec3d2768041e6cf34e0b8c82472381f8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/actions/find-document.ts"
+    },
+    {
+      "description": "Get the full content and structure of a Google Docs document",
+      "id": "get_document",
+      "inputs": [
+        {
+          "description": "The ID of the document to read (from the document URL or Search Documents).",
+          "label": "Document ID",
+          "name": "documentId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Document",
+      "source_path": "google-docs/src/lib/actions/get-document.action.ts",
+      "source_sha256": "aa3697957628439f745d16801cb48c97618c58b495af92e44d31f8127f57bbd8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/actions/get-document.action.ts"
+    },
+    {
+      "description": "Get the end index of a Google Docs document body",
+      "id": "get_document_end_index",
+      "inputs": [
+        {
+          "description": "The ID of the document to inspect (from the document URL or Search Documents).",
+          "label": "Document ID",
+          "name": "documentId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Document End Index",
+      "source_path": "google-docs/src/lib/actions/get-document-end-index.action.ts",
+      "source_sha256": "0af32a2b466173960a7da55b18eef09aead8fd3b670e07c67cd9262194e51676",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/actions/get-document-end-index.action.ts"
+    },
+    {
+      "description": "Get the plain text content of a Google Docs document.",
+      "id": "get_document_plaintext",
+      "inputs": [
+        {
+          "description": "The ID of the document to read, found in its URL: 'https://docs.google.com/document/d/<documentId>/edit'. Obtain it from Search Documents or Find Document if you only have a name.",
+          "label": "Document ID",
+          "name": "documentId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Document Plain Text",
+      "source_path": "google-docs/src/lib/actions/get-document-plaintext.action.ts",
+      "source_sha256": "dce5dc596efe21946668a1b49c9ec7e4cf903a2bd4c6f832fa897940c049c32a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/actions/get-document-plaintext.action.ts"
+    },
+    {
+      "description": "Read a document from Google Docs.",
+      "id": "read_document",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Document Id",
+          "name": "documentId",
+          "required": null,
+          "source_expression": "documentIdProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Read Document",
+      "source_path": "google-docs/src/lib/actions/read-document.action.ts",
+      "source_sha256": "a648bbad123882b16b62199abbb78287f5e865c54f36324617bfa2f00c427e00",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/actions/read-document.action.ts"
+    },
+    {
+      "description": "Search Google Drive for Google Docs documents by name or full-text content.",
+      "id": "search_documents",
+      "inputs": [
+        {
+          "description": "Return documents whose name contains this text. Provide this and/or Content Contains.",
+          "label": "Name Contains",
+          "name": "name_contains",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Return documents whose full text content contains this text. Provide this and/or Name Contains.",
+          "label": "Content Contains",
+          "name": "full_text_contains",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of documents to return (1-100).",
+          "label": "Max Results",
+          "name": "max_results",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "How to sort the results.",
+          "label": "Order By",
+          "name": "order_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Token for the next page of results, taken from the nextPageToken of a previous call. Leave empty for the first page.",
+          "label": "Page Token",
+          "name": "page_token",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Documents",
+      "source_path": "google-docs/src/lib/actions/search-documents.action.ts",
+      "source_sha256": "32c1e9ee42c597e94f54e91e030b335af5affca43bd7f484ba9b437100f529ce",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/actions/search-documents.action.ts"
+    },
+    {
+      "description": "Triggers when a new document is created in Drive or a chosen folder.",
+      "id": "new-document",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Folder Id",
+          "name": "folderId",
+          "required": null,
+          "source_expression": "folderIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Document",
+      "source_path": "google-docs/src/lib/triggers/new-document.ts",
+      "source_sha256": "86bc09d09d5c46e2a0d3bdcfcc2eca8d9145070f705df1c94dfaad80cbf1d155",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-docs/src/lib/triggers/new-document.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "c122f5c2eeb2c8bd0153700e5ca42d870c40965f",
+    "index_path": "google-docs/src/index.ts",
+    "index_sha256": "e9536636e559667392de3f79068273ac5bf4a50946683f87bc9c646630b0cf4c",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach",
+    "garden-companion"
+  ]
+}

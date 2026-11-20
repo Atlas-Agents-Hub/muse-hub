@@ -1,0 +1,256 @@
+{
+  "repository": "tangentstorm/muse-gtd",
+  "commit": "594f5bbeb8e5dc255e30819c53a4dfabec7248b3",
+  "files": [
+    {
+      "path": "package.json",
+      "upstream_git_blob": "9dfbf3a88c355fdc9d0dc8ab25c547330a59d4f3",
+      "sha256": "000274d7a686c32b4cff3cbcb0ab147389a7f14503c46bd97abc614e3a961fb9"
+    },
+    {
+      "path": "bunfig.toml",
+      "upstream_git_blob": "60db252e969da46866799f41abe66aa277224946",
+      "sha256": "77c99038fe2cbbdb274e3b324fc20cd0a02a3d3c1db2674d8703e0d2c8b7145e"
+    },
+    {
+      "path": "space.json",
+      "upstream_git_blob": "8853112729735a235c885c73f66ca7911d8429f8",
+      "sha256": "af68d0ca63fa9f3065a4274ee61fac3713969740e507ca15e5ecca8d294a528c"
+    },
+    {
+      "path": "client/build.mjs",
+      "upstream_git_blob": "2923b0efc687b3fb67eb2ebadaf00400ed3fe63e",
+      "sha256": "e828666e5d505cbc481c7ddddd0d16000832fc26faf4177f3e312db2fdf1c4cc"
+    },
+    {
+      "path": "server/src/calendar-config.ts",
+      "upstream_git_blob": "aa18ef2f47357df3734746bf4629635f0a832601",
+      "sha256": "06b2e97b724046fff1a9b934b165f267d5fe1eda9a3a6bf8ba41f6cf69b68709"
+    },
+    {
+      "path": "server/src/privileged.ts",
+      "upstream_git_blob": "c7845880ab73f743b09452a92158a29d0c283da0",
+      "sha256": "68aa32e5cc02b898e6a35e15d99315a9959839b44ea46452c439660b475369a3"
+    },
+    {
+      "path": "client/src/api.ts",
+      "upstream_git_blob": "6884c2f24fe4e39beab633b11685840242ff3324",
+      "sha256": "b37eff4d0ae161ae983d7fe49eab48f352dd64b832deb93d6298d7e689885f69"
+    },
+    {
+      "path": "scripts/serve-standalone.ts",
+      "upstream_git_blob": "85071a0be28df69d2dd6c1e2489b35ccee5ba07f",
+      "sha256": "1603d4cb7796e69207dbac0439ace25339bfbc3cff277c95b311c703040a72ed"
+    },
+    {
+      "path": "scripts/build-client-standalone.mjs",
+      "upstream_git_blob": "b770962fda8145a2af94e9f630abdde378c45c35",
+      "sha256": "e051ee1fed8d21911a5547abb2fab7ad0785762c585f0df31666315e49053285"
+    },
+    {
+      "path": "client/tsconfig.json",
+      "upstream_git_blob": "c2dbb57fb1a67de6af7811ca7901ac5967915103",
+      "sha256": "09ca8be6884a4f7cc270ccd9a83b8fdc64f5b6d59524dfa3afc179f76a664348"
+    },
+    {
+      "path": "server/tsconfig.json",
+      "upstream_git_blob": "978ad3f9f54319d838112defe54e83b0bab4dc2c",
+      "sha256": "3b3565f32ba5e7c5e716ec0785cebbe37874de9105b5ff40983ace1dcf843c23"
+    },
+    {
+      "path": "tsconfig.base.json",
+      "upstream_git_blob": "44e5a5215abb036e0642f86d200c74f85fd6504c",
+      "sha256": "1000b5fb48cee172a53a1ad37c821330b3f48b227f4fc580070b393e1d80ba1f"
+    },
+    {
+      "path": ".gitignore",
+      "upstream_git_blob": "3844a2b0d8d1f002d3af00fc352152431cece0df",
+      "sha256": "bfcf9982714da4495e74e79a64a2c2d9d748f267b1d3f940eeed74ee08cb13a3"
+    },
+    {
+      "path": "LICENSE",
+      "upstream_git_blob": "8eaf03e511c6f32600036b06c19fd41bd636ebea",
+      "sha256": "21b1a55db80e328b770c7dbfef591ca6b3ad550eeab500cfe306111749d74ffa"
+    },
+    {
+      "path": "README.md",
+      "upstream_git_blob": "27990858c01346ff69e77204892f1932eb574b5f",
+      "sha256": "937a1ca3632b839cf414795c0130b0037536bd5b3c9cd02f48aede7f605f734b"
+    },
+    {
+      "path": "bun.lock",
+      "upstream_git_blob": "96e05048307989fa670ae084773470bbac60a749",
+      "sha256": "e110be8c905e3137c3ced17551c670e6adaa634d4485ac6f36b449695e50aa29"
+    },
+    {
+      "path": "client/index.html",
+      "upstream_git_blob": "8b5d84fb0369bc0269960b489d44f47e94bb083c",
+      "sha256": "bb5344a4343fca9fbe810cd472faa64807f3b2b0f739e3120218c4aa0df1e93e"
+    },
+    {
+      "path": "client/src/App.tsx",
+      "upstream_git_blob": "d199564d39b096cdf7e8ecfb5ba9768a94c6ff9d",
+      "sha256": "2b74ce10d814f61501e1e4e228df7ac7762991a07bb6e6d301119f0c81bb70a5"
+    },
+    {
+      "path": "client/src/GtdWorkspace.ts",
+      "upstream_git_blob": "e622c2a654dd73838be9e4d80246d7708bff74e5",
+      "sha256": "8724a4952cd17f7788d38ef44887fd494b29ce4ea5647fefd6b0f5e29a2c33a4"
+    },
+    {
+      "path": "client/src/globals.d.ts",
+      "upstream_git_blob": "cbe652dbe00b29be433328013a005bbf5d5c44c1",
+      "sha256": "35d26ea66c86da9701e4f4b467913481ffeae910761cea34c775c5dacb7f8eaa"
+    },
+    {
+      "path": "client/src/main.tsx",
+      "upstream_git_blob": "ca30d43f558b93d1a657ba47581dd3def617a843",
+      "sha256": "05e8db40d3f6df61365750c92dd31970d5d118110d0d79470b6767603fe85bae"
+    },
+    {
+      "path": "client/src/theme.css",
+      "upstream_git_blob": "b07e57f9e06cc4c783f20d5dd8c84c66efa72466",
+      "sha256": "fea0a62f65bd583bf212d90b3625493dbfd4ab161780c81af213dacd7a0f76ff"
+    },
+    {
+      "path": "client/tests/mounted-workspace.test.tsx",
+      "upstream_git_blob": "e5ba0d8f245a424d7314a40d46d44f191802a756",
+      "sha256": "6f91cd6debc37064f8237acf9482549a2f3a4674acb9ebf4edcbfd2f98faf14d"
+    },
+    {
+      "path": "drizzle/0001_initial.sql",
+      "upstream_git_blob": "832acd83fa996af5558b2d19cb62256a6a467834",
+      "sha256": "f80c5bf6f7a9bf54eda650a2ac2fcc4390051e8c56a52d5be51e5cbf641b7ba9"
+    },
+    {
+      "path": "drizzle/0002_create_gtd_workflow_tables.sql",
+      "upstream_git_blob": "8e732f7beacb8a41e920419b851a964d917dcc26",
+      "sha256": "ba36e6b88fa12b6b19290b6014658fd925eda127f35604ca8189605b7100284e"
+    },
+    {
+      "path": "drizzle/0003_add_inbox_and_reference.sql",
+      "upstream_git_blob": "9749f78e0138c06d2650d085ea42486f71b4f99f",
+      "sha256": "2ec15a6921653bb48eb3661d0184261f1a53dec844c7466534f36771a3785018"
+    },
+    {
+      "path": "drizzle/0004_add_clients_and_project_links.sql",
+      "upstream_git_blob": "b303e1fcf7777b0f45165d6dfdba7d331825d567",
+      "sha256": "0f4680a5550140a759997c28afb232f2d681349c6b8eb6da48dd1b34c25b47e0"
+    },
+    {
+      "path": "drizzle/0005_store_render_health_measurement.sql",
+      "upstream_git_blob": "3cded2979b7d1b9f8a5afadd1d0e016682c8c17d",
+      "sha256": "57cc93c71e2667b63b4fb23e6d79c28111a4cf72efb752b4875404dbfaee384f"
+    },
+    {
+      "path": "drizzle/0006_add_client_diagnostics.sql",
+      "upstream_git_blob": "10d311d9bc3f3c78a3a212b34a8b6051a8938bc2",
+      "sha256": "182d137831ab5d7180b2b66d5b881c676a237737de5a812282cce45d7939f6cd"
+    },
+    {
+      "path": "drizzle/0007_align_client_diagnostics_schema.sql",
+      "upstream_git_blob": "c136ebee92194e0231690d73eb409d39c7adc615",
+      "sha256": "869dff78272812edc89f3f995a808aee70dbd313732b7f84b87f343ddd86cd49"
+    },
+    {
+      "path": "drizzle/0008_add_completion_timestamps.sql",
+      "upstream_git_blob": "f987b4becd4939890c9fde229dd442a45b76c530",
+      "sha256": "841e56ce4215499b57b9c66b9ba76d19eb1937414a86712d8a02f857c3dccd69"
+    },
+    {
+      "path": "drizzle/0009_preserve_historical_completion_dates_as_unknown.sql",
+      "upstream_git_blob": "47369473bc7e49e18477440280989405f28f28ce",
+      "sha256": "47fbabd77011224481dba7184f7ca7fd5db1f10082ac43d94d196285759752d6"
+    },
+    {
+      "path": "drizzle/0010_add_priority_flags.sql",
+      "upstream_git_blob": "6b1a2b3e9667bdeba82023419fe1c9a1834b9f44",
+      "sha256": "6f729a373cbd935806efb35b63484664c4cd1de733fba0beb352fd068923d660"
+    },
+    {
+      "path": "drizzle/0011_calendar_sync.sql",
+      "upstream_git_blob": "ac9460495d796ce54da5fe52685ee6e91f17fdad",
+      "sha256": "f6eb29e37d99d63398048254f755aabad45c3c2694bab76e5e0de302f784075d"
+    },
+    {
+      "path": "drizzle/0012_daily_items.sql",
+      "upstream_git_blob": "89e08554fdd512adad32850145bdee2c0e43b4b0",
+      "sha256": "d2fc22a63765200a9607846e71fb1cc69df438061e4bde83c26080ccdd155bc8"
+    },
+    {
+      "path": "drizzle/0013_weekly_items.sql",
+      "upstream_git_blob": "19eab9beb12efe5e3408b15379742a93a4d13ea3",
+      "sha256": "a64f32748d535ac5a73946001304bf16e4cc522ec9d4687e75c7678f3ec9289b"
+    },
+    {
+      "path": "drizzle/0014_ensure_weekly_items.sql",
+      "upstream_git_blob": "3050cf6da7a50addbecaed0687215b1d187c0dc6",
+      "sha256": "bc16b42f04270660ee6f08be93b0b0d99ab69e605b4761e45c478260ce0cd1da"
+    },
+    {
+      "path": "drizzle/0015_repair_weekly_storage.sql",
+      "upstream_git_blob": "3050cf6da7a50addbecaed0687215b1d187c0dc6",
+      "sha256": "bc16b42f04270660ee6f08be93b0b0d99ab69e605b4761e45c478260ce0cd1da"
+    },
+    {
+      "path": "drizzle/0016_add_item_urls.sql",
+      "upstream_git_blob": "164cac4b3a05c84490f1a8621d17e17a47c2031a",
+      "sha256": "35a8590d2c905be55f467218852d758a595ea47610cbc7bc7543fe9b5a572b82"
+    },
+    {
+      "path": "drizzle/0017_calendar_visibility_preferences.sql",
+      "upstream_git_blob": "4fa5ee6dc4f84f371c6cae61ab5be259eb216cc1",
+      "sha256": "481deba8aa94e8bd835d1cb4c6d246b01777fc95cafcdbee6bde130cbed19dbc"
+    },
+    {
+      "path": "drizzle/0018_backfill_done_completion_dates.sql",
+      "upstream_git_blob": "d2f2fbe6917b735b3fe6cbf60edac6cb09247b61",
+      "sha256": "ad463f5e14099adcb5c8c77ddbb72a7f46e5ab168575bd963b9b55c60d812d9d"
+    },
+    {
+      "path": "drizzle/meta/_journal.json",
+      "upstream_git_blob": "cf05b43e924485cd5906c2d3c031a8a8746650af",
+      "sha256": "cda68a5c3bbcf401dce19df9960f2f2153e18e453334a90138f2e79ce472b369"
+    },
+    {
+      "path": "schema.sql",
+      "upstream_git_blob": "cbdcca13eb8002c3dd429fc5985cd990d562fad1",
+      "sha256": "56bd27af2dbc1ae17a45e50b7abae8efa4b04b618a793cc7425612e00a3af7f4"
+    },
+    {
+      "path": "scripts/check-local-config.ts",
+      "upstream_git_blob": "cc646233676870900dec75c8ea147354200b3604",
+      "sha256": "b7eee14e850228e3459ee846e5f70a8ca53b540e27d9089340688e38acab2311"
+    },
+    {
+      "path": "scripts/migrate.ts",
+      "upstream_git_blob": "48fa7e453499555048c5591222598f3e72104e6e",
+      "sha256": "a36c68b8556f9847026c8fccc1353c4244873171fb9245cfb169d70a7f219751"
+    },
+    {
+      "path": "server/.generated/privileged.contract.ts",
+      "upstream_git_blob": "34cac97e480682bd72455aec081ba0042215c667",
+      "sha256": "f80c56135de2c6879f7ee8a02628ca313ebe22c4bc393a3b5160be6ec057b62b"
+    },
+    {
+      "path": "server/src/actions.ts",
+      "upstream_git_blob": "1960f39af526428226e134c7ff6824e8a83a15cc",
+      "sha256": "da01943cf1b64deb28f04e22b1dd141dcc8136c654d8ed8a4cb95db3813711df"
+    },
+    {
+      "path": "server/src/local-config.example.ts",
+      "upstream_git_blob": "29399fc8e6cbb7aa4fab03ba80982cea85165c7a",
+      "sha256": "9b03cffd37a471475d5006f694b2dc0bf9b09e7ef5990411332684101e09f920"
+    },
+    {
+      "path": "server/src/schema.ts",
+      "upstream_git_blob": "8282d237f6ea0402d6514177e1f5597f63e78dca",
+      "sha256": "7878d88de520391b349ba4f0ce260bdc00c35674d5730b696e40abe6ab460512"
+    },
+    {
+      "path": "tsconfig.json",
+      "upstream_git_blob": "e07535ee6bf4538d2825e0b11f609bb49e011878",
+      "sha256": "31ae276bad3cee1e4ed7c254558821b09f941838ac238465aa2708af10ca95a2"
+    }
+  ]
+}

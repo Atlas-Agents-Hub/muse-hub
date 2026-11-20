@@ -1,0 +1,375 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-narrating-over-a-video-using-multimodal-ai-4e397f",
+  "title": "Narrating over a Video using Multimodal AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Capture Frames",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "import cv2\nimport numpy as np\nimport base64\n\ndef extract_evenly_distributed_frames_from_base64(base64_string, max_frames=90):\n # Decode the Base64 string into bytes\n video_bytes = base64.b64decode(base64_string)\n \n # Write the bytes to a temporary file\n video_path = '/tmp/temp_video.mp4'\n with open(video_path, 'wb') as video_file:\n video_file.write(video_bytes)\n \n # Open the video file using OpenCV\n video_capture = cv2.VideoCapture(video_path)\n \n # Get the total number of frames in the video\n total_frames = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT))\n \n # Calculate the step size to take 'max_frames' evenly distributed frames\n step_size = max(1, total_frames // (max_frames - 1))\n \n # List to store selected frames as base64\n selected_frames_base64 = []\n \n for i in range(0, total_frames, step_size):\n # Set the current frame position\n video_capture.set(cv2.CAP_PROP_POS_FRAMES, i)\n \n # Read the frame\n ret, frame = video_capture.read()\n if ret:\n # Convert frame (NumPy array) to a Base64 string\n frame_base64 = convert_frame_to_base64(frame)\n selected_frames_base64.append(frame_base64)\n if len(selected_frames_base64) >= max_frames:\n break\n \n # Release the video capture object\n video_capture.release()\n\n return selected_frames_base64\n\ndef convert_frame_to_base64(frame):\n # Convert the frame (NumPy array) to JPEG format\n ret, buffer = cv2.imencode('.jpg', frame)\n if not ret:\n return None\n\n # Encode JPEG image to Base64\n frame_base64 = base64.b64encode(buffer).decode('utf-8')\n return frame_base64\n\nbase64_video = _input.item.binary.data.data\nframes_base64 = extract_evenly_distributed_frames_from_base64(base64_video, max_frames=90)\n\nreturn { \"output\": frames_base64 }",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Split Out Frames",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "output"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Download Video",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://cdn.pixabay.com/video/2016/05/12/3175-166339863_small.mp4"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Convert to Binary",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "toBinary",
+        "sourceProperty": "output"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "Combine Script",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Upload to GDrive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "name": {
+          "expression": "narrating-video-using-vision-ai-{{ current_time.format('yyyyMMddHHmmss') }}.mp3"
+        },
+        "driveId": {
+          "configuration_input": "step-8-driveid"
+        },
+        "options": {},
+        "folderId": {
+          "configuration_input": "step-8-folderid"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Stay Within Service Limits",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-10",
+      "label": "For Every 15 Frames",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "batchSize": 15
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Resize Frame",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "width": 768,
+        "height": 768,
+        "options": {
+          "format": "jpeg"
+        },
+        "operation": "resize"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Aggregate Frames",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "includeBinaries": true
+        },
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Use Text-to-Speech",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "input": {
+          "expression": "{{ record.data.map(item => item.text).join('\\n') }}"
+        },
+        "options": {
+          "response_format": "mp3"
+        },
+        "resource": "audio"
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Generate Narration Script",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "These are frames of a video. Create a short voiceover script in the style of David Attenborough. Only include the narration.\n{{\nsteps[\"step-14\"].isExecuted\n ? `Continue from this script:\\n${steps[\"step-14\"].all().map(item => item.json.text.replace(/\\n/g,'')).join('\\n')}`\n : ''\n}}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_1"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_2"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_3"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_4"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_5"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_6"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_7"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_8"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_9"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_10"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_11"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_12"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_13"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "data_14"
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-14",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-6"
+  ],
+  "configuration": [
+    {
+      "id": "step-8-driveid",
+      "purpose": "Select the driveId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-folderid",
+      "purpose": "Select the folderId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Narrating over a Video using Multimodal AI.json",
+    "git_blob": "e04e99df350462fdbd7f9c718d78c3647979c659",
+    "sha256": "e92ffef6673eb396a63edd1087c93a7de70ff77090931f9b97150fbb47ccd77c",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Narrating%20over%20a%20Video%20using%20Multimodal%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

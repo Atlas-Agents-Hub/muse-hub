@@ -1,0 +1,207 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-basic-automatic-gmail-email-labelling-with-muse-and-gmail-api-1e3cfe",
+  "title": "Basic Automatic Gmail Email Labelling with OpenAI and Gmail API",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Gmail Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "filters": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "unit": "minutes",
+              "value": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "maxTokens": 4096
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Gmail - read labels",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "resource": "label",
+        "returnAll": true,
+        "descriptionType": "manual",
+        "toolDescription": "Tool to read all existing gmail labels"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Gmail - get message",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "messageId": {
+          "expression": "{{ $fromAI('gmail_message_id', 'id of the gmail message, like 1944fdc33f544369', 'string') }}"
+        },
+        "operation": "get",
+        "descriptionType": "manual",
+        "toolDescription": "Tool to read a specific message based on the message ID"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Gmail - add label to message",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "labelIds": {
+          "expression": "{{ $fromAI('gmail_categories', 'array of label ids') }}"
+        },
+        "messageId": {
+          "expression": "{{ $fromAI('gmail_message_id') }}"
+        },
+        "operation": "addLabels",
+        "descriptionType": "manual",
+        "toolDescription": "Tool to add label to message"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Gmail - create label",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "name": {
+          "expression": "{{ $fromAI('new_label_name', 'new label name', 'string' ) }}"
+        },
+        "options": {},
+        "resource": "label",
+        "operation": "create",
+        "descriptionType": "manual",
+        "toolDescription": "Tool to create a new label, only use if label does not already exist"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Gmail labelling agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Label the email based on the details below:\n{{ JSON.stringify(record) }}"
+        },
+        "options": {
+          "maxIterations": 5,
+          "systemMessage": "Objective:\nAutomatically categorize incoming emails based on existing Gmail labels or create a new label if none match.\n\nTools:\n- Get message\n- Read all labels\n- Create label\n- Assign label to message\n\nInstructions:\n\nLabel Matching:\n\nAnalyze the email's subject, sender, recipient, keywords, and content.\nCompare with existing Gmail labels to find the most relevant match.\nLabel Assignment:\n\nAssign the email to the most appropriate existing label.`\nRemove the inbox label if the email is of less importance (like ads, promotions, aka \"Reclame\"), keep normal and important emails in the inbox.\nIf no suitable label exists, create a new label based on the existing labels. Try reusing existing labels as much as possible. Always create a label as a sublabel, if no label applies, if the main label already exists, create the new label under the existing label, if no main label exists, create the label AI and create the new label under this label.\nLabel Creation:\n\nEnsure new labels align with the structure of existing ones, including capitalization, delimiters, and prefixes.\nExamples:\n\nIf the email subject is \"Project Alpha Update,\" assign to [Project Alpha] if it exists.\nFor \"New Vendor Inquiry,\" create \"Vendor Inquiry\" if no relevant label exists.\nOutcome:\nEmails are consistently categorized under the appropriate or newly created labels, maintaining Gmail's organizational structure."
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ record.id }}"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Wait",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 1
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Basic Automatic Gmail Email Labelling with OpenAI and Gmail API.json",
+    "git_blob": "99cf089db57b5372bf9c8e2522e1cf0005964beb",
+    "sha256": "54690f3693d4220fba3ddbb4f58adb5e15d200f072106af0a45a0ccafd6f6293",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Basic%20Automatic%20Gmail%20Email%20Labelling%20with%20OpenAI%20and%20Gmail%20API.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-inboxzero-lite-ai-email-classifier-91d5ed",
+  "title": "InboxZero Lite - AI Email Classifier",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Gmail: New Email",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute",
+              "minute": 5
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "readStatus": "unread"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Parse Email",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "try {\n  const e = records[0].json;\n  return [{ json: { messageId: e.id || '', from: e.from?.value?.[0]?.address || '', fromName: e.from?.value?.[0]?.name || '', subject: e.subject || '', snippet: (e.snippet || '').substring(0, 500), date: e.date || new Date().toISOString() } }];\n} catch (e) {\n  throw new Error('Failed to parse email: ' + e.message);\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "AI: Classify",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-3-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Classify this email as: urgent, important, informational, or spam. Also write a 1-sentence summary. JSON: { \"category\": \"...\", \"summary\": \"...\" }"
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "From: {{record.fromName}} <{{record.from}}>\nSubject: {{record.subject}}\n\n{{record.snippet}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2,
+          "maxTokens": 200,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Merge Result",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const email = steps[\"step-2\"].records[0];\nconst aiRaw = records[0].json;\nlet ai;\ntry { ai = JSON.parse(aiRaw.message?.content || '{}'); } catch(e) { ai = { category: 'informational', summary: '' }; }\nreturn [{ json: { ...email, category: ai.category || 'informational', summary: ai.summary || '', classifiedAt: new Date().toISOString() } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Log to Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "expression": "{{ $env.INBOXZERO_SHEET_ID }}"
+        },
+        "sheetName": {
+          "configuration_input": "step-5-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": {
+              "expression": "{{ record.date }}"
+            },
+            "From": {
+              "expression": "{{ record.from }}"
+            },
+            "Subject": {
+              "expression": "{{ record.subject }}"
+            },
+            "Category": {
+              "expression": "{{ record.category }}"
+            },
+            "Summary": {
+              "expression": "{{ record.summary }}"
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-5-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/InboxZero Lite - AI Email Classifier.json",
+    "git_blob": "f866ccb776cbd842522eea8a8d2c849ba2442b92",
+    "sha256": "cbb501ac7d0bb1e711e6c8bfe250d0d07918a047a765023a892752197af69558",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/InboxZero%20Lite%20-%20AI%20Email%20Classifier.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

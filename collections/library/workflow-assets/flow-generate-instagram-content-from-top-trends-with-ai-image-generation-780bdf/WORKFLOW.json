@@ -1,0 +1,1093 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-generate-instagram-content-from-top-trends-with-ai-image-generation-780bdf",
+  "title": "Generate Instagram Content from Top Trends with AI Image Generation",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "If media status is finished",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.status_code }}"
+              },
+              "rightValue": "FINISHED"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "If media status is finished1",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.status_code }}"
+              },
+              "rightValue": "PUBLISHED"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": "Video upload edilmeden önce bir problem oldu",
+        "chatId": {
+          "expression": "{{ steps[\"step-8\"].record.telegram_chat_id }}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Telegram1",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": "Instagram Content is shared",
+        "chatId": {
+          "expression": "{{ steps[\"step-8\"].record.telegram_chat_id }}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Telegram2",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": "There was a problem when execution a upload content to instagram",
+        "chatId": {
+          "expression": "{{ steps[\"step-8\"].record.telegram_chat_id }}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Schedule Trigger1",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "5 13,19 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Telegram Params",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "telegram_chat_id",
+              "type": "string",
+              "value": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Instagram params",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": {
+                "configuration_input": "step-9-assignments-0-name"
+              },
+              "type": "string",
+              "value": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Rapid Api params",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": {
+                "configuration_input": "step-10-assignments-0-id"
+              },
+              "name": "x-rapid-api-key",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-10-assignments-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "filter the image content",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const filteredData = records[0].json.data.items.filter(item=> !item.is_video)\nreturn filteredData.map((item)=>{\n return {\n id: item.id,\n prompt: item.caption.text,\n content_code: item.code,\n thumbnail_url: item.thumbnail_url,\n tag: records[0].json.data.additional_data.name\n }\n})",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "get top trends on instagram #blender3d",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-12-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "sendHeaders": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "hashtag",
+              "value": "blender3d"
+            },
+            {
+              "name": "feed_type",
+              "value": "top"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "instagram-scraper-api2.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": {
+                "configuration_input": "step-12-parameters-1-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "get top trends on instagram #isometric",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-13-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "sendHeaders": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "hashtag",
+              "value": "isometric"
+            },
+            {
+              "name": "feed_type",
+              "value": "top"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "instagram-scraper-api2.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": {
+                "configuration_input": "step-13-parameters-1-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "merge the array content",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-15",
+      "label": "Check Data on Database Is Exist",
+      "operation": "service-read",
+      "adapter": "postgres",
+      "parameters": {
+        "table": {
+          "configuration_input": "step-15-table"
+        },
+        "where": {
+          "values": [
+            {
+              "value": {
+                "expression": "{{record.content_code}}"
+              },
+              "column": "code"
+            }
+          ]
+        },
+        "schema": {
+          "configuration_input": "step-15-schema"
+        },
+        "options": {},
+        "operation": "select"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "If Data is Exist",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ !record.isEmpty() }}"
+              },
+              "rightValue": "we"
+            },
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "",
+              "rightValue": ""
+            }
+          ]
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "send error message to telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": "There was a problem execution a postgresql content",
+        "chatId": {
+          "expression": "{{ steps[\"step-8\"].record.telegram_chat_id}}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "insert data on db",
+      "operation": "service-read",
+      "adapter": "postgres",
+      "parameters": {
+        "table": {
+          "configuration_input": "step-18-table"
+        },
+        "schema": {
+          "configuration_input": "step-18-schema"
+        },
+        "columns": {
+          "value": {
+            "tag": {
+              "expression": "{{steps[\"step-6\"].record.tag}}"
+            },
+            "code": {
+              "expression": "{{steps[\"step-6\"].record.content_code}}"
+            },
+            "prompt": {
+              "expression": "{{steps[\"step-6\"].record.prompt}}"
+            },
+            "isposted": false,
+            "thumbnail_url": {
+              "expression": "{{steps[\"step-6\"].record.thumbnail_url}}"
+            }
+          },
+          "schema": [
+            {
+              "type": "number",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": true,
+              "displayName": "prompt",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "boolean",
+              "display": true,
+              "required": false,
+              "displayName": "isposted",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "dateTime",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "createdat",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "dateTime",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "updatedat",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "dateTime",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "deletedat",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "code",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "tag",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "thumbnail_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Analyze Image and give the content",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": "Create a clear and concise description of the object in the image, focusing on its physical and general features. Avoid detailed environmental aspects like background, lighting, or colors. Describe the shape, texture, size, and any unique characteristics of the object. Mention any notable features that make the object stand out, such as its surface details, materials, and design. The description should be focused on the object itself, not its surroundings.\n\nFor example, describe the following image:\n",
+        "modelId": {
+          "configuration_input": "step-19-modelid"
+        },
+        "options": {},
+        "resource": "image",
+        "imageUrls": {
+          "expression": "{{ steps[\"step-6\"].record.thumbnail_url }}"
+        },
+        "operation": "analyze"
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Analyze Content And Generate Instagram Caption",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-20-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Summarize the following content description into a short, engaging Instagram caption under 150 words. The caption should focus on the content of the image, not the app. Keep it appealing to social media users, and highlight the visual details of the image. Include hashtags relevant to 3D modeling and design, such as #Blender3D, #3DArt, #DigitalArt, #3DModeling, and #ArtCommunity. Ensure the tone is friendly and inviting.\n\n\nContent description to summarize:\n{{ record.content }}\n\nMake sure to craft the caption around the content's features, such as the color contrast, reflective surface, and artistic nature of the image."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Prepare data on Instagram",
+      "operation": "service-read",
+      "adapter": "facebookgraphapi",
+      "parameters": {
+        "edge": "media",
+        "node": {
+          "expression": "{{ steps[\"step-9\"].record.instagram_business_account_id }}"
+        },
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "image_url",
+                "value": {
+                  "expression": "{{ record.output[0] }}"
+                }
+              },
+              {
+                "name": "caption",
+                "value": {
+                  "expression": "{{ steps[\"step-20\"].record.message.content }}"
+                }
+              }
+            ]
+          }
+        },
+        "graphApiVersion": "v20.0",
+        "httpRequestMethod": "POST"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Check Status Of Media Before Uploaded",
+      "operation": "service-read",
+      "adapter": "facebookgraphapi",
+      "parameters": {
+        "node": {
+          "expression": "{{ record.id }}"
+        },
+        "options": {
+          "fields": {
+            "field": [
+              {
+                "name": "id"
+              },
+              {
+                "name": "status"
+              },
+              {
+                "name": "status_code"
+              }
+            ]
+          }
+        },
+        "graphApiVersion": "v20.0"
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Publish Media on Instagram",
+      "operation": "service-read",
+      "adapter": "facebookgraphapi",
+      "parameters": {
+        "edge": "media_publish",
+        "node": {
+          "expression": "{{ steps[\"step-9\"].record.instagram_business_account_id }}"
+        },
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "creation_id",
+                "value": {
+                  "expression": "{{ record.id }}"
+                }
+              }
+            ]
+          }
+        },
+        "graphApiVersion": "v20.0",
+        "httpRequestMethod": "POST"
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Check status of post",
+      "operation": "service-read",
+      "adapter": "facebookgraphapi",
+      "parameters": {
+        "node": {
+          "expression": "{{ steps[\"step-22\"].record.id }}"
+        },
+        "options": {
+          "fields": {
+            "field": [
+              {
+                "name": "id"
+              },
+              {
+                "name": "status"
+              },
+              {
+                "name": "status_code"
+              }
+            ]
+          }
+        },
+        "graphApiVersion": "v20.0"
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "filter the image content-2",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const filteredData = records[0].json.data.items.filter(item=> !item.is_video)\nreturn filteredData.map((item)=>{\n return {\n id: item.id,\n prompt: item.caption.text,\n content_code: item.code,\n thumbnail_url: item.thumbnail_url,\n tag: records[0].json.data.additional_data.name\n }\n})",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Replicate params",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "replicate_token",
+              "type": "string",
+              "value": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Generate image on flux",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-27-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"input\": {\n \"prompt\": \"A highly detailed 3D isometric model of {{steps[\"step-19\"].record.content .replace(/\\\\n/g, ' ') \n.replace(/\\\\t/g, ' ') \n.replace(/\\s+/g, ' ')\n.trim(); }} rendered in a stylized miniature toy aesthetic. Materials: Matte plastic/painted metal/weathered stone texture with no self-shadowing. Lighting: - Completely shadowless rendering - Ultra bright and perfectly even illumination from all angles - Pure ambient lighting without directional shadows - Flat, consistent lighting across all surfaces - No ambient occlusion. Style specifications: - Clean, defined edges and surfaces - Slightly exaggerated proportions - Miniature/toy-like scale - Subtle wear and texturing - Rich color palette with muted tones - Isometric 3/4 view angle - Crisp details and micro-elements. Technical details: - 4K resolution - PBR materials without shadows - No depth of field - High-quality anti-aliasing - Perfect uniform lighting. Environment: Pure white background with zero shadows or gradients. Post-processing: High key lighting, maximum brightness, shadow removal.\",\n \"output_format\": \"jpg\",\n \"output_quality\": 100,\n \"go_fast\":false\n }\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": {
+          "expression": "json"
+        },
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-27-parameters-0-value"
+              }
+            },
+            {
+              "name": "Prefer",
+              "value": "wait"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-21",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-21",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-24",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-27",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-3",
+      "channel": "main",
+      "branch": 0
+    },
+    {
+      "from": "step-6",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-7"
+  ],
+  "configuration": [
+    {
+      "id": "step-9-assignments-0-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-assignments-0-id",
+      "purpose": "Select the id for step-10.",
+      "required": true
+    },
+    {
+      "id": "step-10-assignments-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-12-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://instagram-scraper-api2.p.rapidapi.com/v1/hashtag"
+    },
+    {
+      "id": "step-12-parameters-1-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-13-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://instagram-scraper-api2.p.rapidapi.com/v1/hashtag"
+    },
+    {
+      "id": "step-13-parameters-1-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-15-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-schema",
+      "purpose": "Select the schema for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-schema",
+      "purpose": "Select the schema for this task.",
+      "required": true
+    },
+    {
+      "id": "step-19-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-20-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-27-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions"
+    },
+    {
+      "id": "step-27-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/Generate Instagram Content from Top Trends with AI Image Generation.json",
+    "git_blob": "8dae3bab5ac502ce8f0c78ca66b73cce18be61c2",
+    "sha256": "cf3c178849ef8536806708279f38e1cbc77c98a6e243571f2e3f385c99e45a66",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/Generate%20Instagram%20Content%20from%20Top%20Trends%20with%20AI%20Image%20Generation.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,354 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-inbox-rail-audit-gmail-payment-rails-to-google-sheets-fef51f",
+  "title": "Inbox Rail Audit - Gmail payment rails to Google Sheets",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Execute workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Set window",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "WINDOW_AFTER",
+              "value": "2025/08/01",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Gmail PayPal",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "operation": "getAll",
+        "simple": true,
+        "filters": {
+          "q": {
+            "expression": "{{ 'after:' + steps[\"step-2\"].records[0].WINDOW_AFTER + ' (from:paypal.com OR from:paypal.nl OR from:[configured contact]) (betaling OR receipt OR ontvangstbewijs OR \"automatische betaling\" OR payment)' }}"
+          }
+        },
+        "options": {
+          "downloadAttachments": false,
+          "maxResults": 200
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Gmail Apple",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "operation": "getAll",
+        "simple": true,
+        "filters": {
+          "q": {
+            "expression": "{{ 'after:' + steps[\"step-2\"].records[0].WINDOW_AFTER + ' (from:apple.com OR from:email.apple.com) (invoice OR factuur OR receipt OR Apple Pay)' }}"
+          }
+        },
+        "options": {
+          "downloadAttachments": false,
+          "maxResults": 200
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Gmail Google Play",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "operation": "getAll",
+        "simple": true,
+        "filters": {
+          "q": {
+            "expression": "{{ 'after:' + steps[\"step-2\"].records[0].WINDOW_AFTER + ' (from:googleplay OR from:google.com OR subject:\"Google Play\") (subscription OR abonnement OR \"Google LLC\" OR receipt)' }}"
+          }
+        },
+        "options": {
+          "downloadAttachments": false,
+          "maxResults": 200
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Gmail Google Pay",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "operation": "getAll",
+        "simple": true,
+        "filters": {
+          "q": {
+            "expression": "{{ 'after:' + steps[\"step-2\"].records[0].WINDOW_AFTER + ' (\"Google Pay\" OR GPay OR \"kaart toegevoegd\" OR \"card added\")' }}"
+          }
+        },
+        "options": {
+          "downloadAttachments": false,
+          "maxResults": 200
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Gmail Stripe/Paddle",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "operation": "getAll",
+        "simple": true,
+        "filters": {
+          "q": {
+            "expression": "{{ 'after:' + steps[\"step-2\"].records[0].WINDOW_AFTER + ' (from:stripe.com OR from:paddle.com OR from:lemonsqueezy.com) (receipt OR invoice OR payment)' }}"
+          }
+        },
+        "options": {
+          "downloadAttachments": false,
+          "maxResults": 200
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Gmail SEPA",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "operation": "getAll",
+        "simple": true,
+        "filters": {
+          "q": {
+            "expression": "{{ 'after:' + steps[\"step-2\"].records[0].WINDOW_AFTER + ' (incasso OR \"automatische incasso\" OR sepa OR machtiging OR \"direct debit\")' }}"
+          }
+        },
+        "options": {
+          "downloadAttachments": false,
+          "maxResults": 200
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Gmail Klarna",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "operation": "getAll",
+        "simple": true,
+        "filters": {
+          "q": {
+            "expression": "{{ 'after:' + steps[\"step-2\"].records[0].WINDOW_AFTER + ' (from:klarna OR from:afterpay) -unsubscribe -nieuwsbrief' }}"
+          }
+        },
+        "options": {
+          "downloadAttachments": false,
+          "maxResults": 200
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Wait for all rails",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "numberInputs": 7
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Classify rails",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "function last4(text) {\n  const s = String(text || '');\n  const m = s.match(/(?:ending in|eindigend op|card ending|xxxx|••••)\\s*(\\d{4})/i);\n  if (m) return m[1];\n  return '';\n}\nfunction amountOf(text) {\n  const s = String(text || '');\n  const m = s.match(/\\u20ac\\s*[\\d.,]+|\\$\\s*[\\d.,]+|[\\d.,]+\\s*EUR|[\\d.,]+\\s*USD/i);\n  return m ? m[0] : '';\n}\nfunction currencyOf(amount) {\n  const a = String(amount || '');\n  if (a.indexOf('\\u20ac') !== -1 || /EUR/i.test(a)) return 'EUR';\n  if (a.indexOf('$') !== -1 || /USD/i.test(a)) return 'USD';\n  return '';\n}\nfunction isCardAdded(text) {\n  return /card added|kaart toegevoegd/i.test(String(text || ''));\n}\nfunction isEmptyMsg(j) {\n  if (!j) return true;\n  return !(j.snippet || j.text || j.textPlain || j.subject || j.from);\n}\nfunction row(j, rail) {\n  const snippet = j.snippet || j.text || j.textPlain || '';\n  const subject = j.subject || '';\n  const blob = (subject + ' ' + snippet);\n  const date = j.date || j.internalDate || '';\n  const from = j.from || '';\n  const amt = amountOf(blob);\n  const added = isCardAdded(blob);\n  let evidence = amt ? 'VERIFIED' : 'UNCERTAIN';\n  let note = '';\n  if (added && !amt) {\n    evidence = 'UNCERTAIN';\n    note = 'Card added / kaart toegevoegd is not a charge';\n  }\n  if (rail === 'Stripe/Paddle' && /onboard|connect your|payout/i.test(blob) && !amt) {\n    note = 'Possible seller onboarding, not spend';\n  }\n  return {\n    rail: rail,\n    merchant: String(subject).slice(0, 120),\n    amount: amt,\n    currency: currencyOf(amt),\n    cadence: '',\n    last_charge: date,\n    last4: last4(blob),\n    evidence: evidence,\n    note: note,\n    from: from,\n    subject: subject,\n    snippet: String(snippet).slice(0, 240)\n  };\n}\nconst rails = [\n  ['Gmail PayPal', 'PayPal'],\n  ['Gmail Apple', 'Apple'],\n  ['Gmail Google Play', 'Google Play'],\n  ['Gmail Google Pay', 'Google Pay'],\n  ['Gmail Stripe/Paddle', 'Stripe/Paddle'],\n  ['Gmail SEPA', 'SEPA'],\n  ['Gmail Klarna', 'Klarna']\n];\nconst out = [];\nfor (let r = 0; r < rails.length; r++) {\n  const name = rails[r][0];\n  const rail = rails[r][1];\n  try {\n    const items = $(name).all();\n    for (let i = 0; i < items.length; i++) {\n      if (isEmptyMsg(items[i].json)) continue;\n      out.push(row(items[i].json, rail));\n    }\n  } catch (e) {}\n}\nreturn out.map(function (json) { return { json: json }; });",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Append sheet",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "configuration_input": "step-12-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-12-sheetname"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 2
+    },
+    {
+      "from": "step-6",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 3
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 4
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 5
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 6
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-12-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Inbox Rail Audit - Gmail payment rails to Google Sheets.json",
+    "git_blob": "d4c026fc88e4e3c14ef0d6eb0e1708a9fdf3a11d",
+    "sha256": "55d7f4606e6ef9a3d061a8d20c115a226991ee72031d579bfccd29e6f9013e61",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Inbox%20Rail%20Audit%20-%20Gmail%20payment%20rails%20to%20Google%20Sheets.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

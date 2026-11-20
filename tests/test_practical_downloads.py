@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+from itertools import chain
 import io
 import json
 import os
@@ -32,7 +33,7 @@ REQUIRED = {
 class PracticalDownloadsTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = release.collection.load_collection()
+        cls.data = release.collection.prepare_collection(release.collection.load_collection())
 
     def assert_complete(self, files):
         manifest = json.loads(files["MANIFEST.json"])
@@ -51,10 +52,12 @@ class PracticalDownloadsTests(unittest.TestCase):
                     self.assertIn(name.encode(), files["START_HERE.md"])
 
     def test_dependencies_reach_skills_roles_workflows_and_starters(self):
-        packages = [(key, release.skill_files(self.data, key)) for key in REQUIRED]
-        packages += [(key, release.specialist_files(self.data, key)) for key in release.ROLE_WORKFLOWS]
-        packages += [(row["id"], release.workflow_files(self.data, row["id"])) for row in self.data["workflows"]]
-        packages += [(row["id"], release.collection.package_files(self.data, row["id"])) for row in self.data["starters"]]
+        packages = chain(
+            ((key, release.skill_files(self.data, key)) for key in REQUIRED),
+            ((key, release.specialist_files(self.data, key)) for key in release.ROLE_WORKFLOWS),
+            ((row["id"], release.workflow_files(self.data, row["id"])) for row in self.data["workflows"]),
+            ((row["id"], release.collection.package_files(self.data, row["id"])) for row in self.data["starters"]),
+        )
         for name, files in packages:
             with self.subTest(package=name):
                 self.assert_complete(files)

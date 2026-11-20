@@ -1,0 +1,23 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-flux-dev-image-generation-fal-ai-to-google-drive-9b30e8",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-url": null,
+    "step-4-driveid": null,
+    "step-4-folderid": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    }
+  }
+}

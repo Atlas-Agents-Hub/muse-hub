@@ -1,0 +1,138 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-assistant-to-chat-with-supabase-postgresql-db-2d9771",
+  "title": "Assistant to chat with Supabase PostgreSQL DB",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "DB Schema",
+      "operation": "service-read",
+      "adapter": "postgres",
+      "parameters": {
+        "query": "SELECT table_schema, table_name\nFROM information_schema.tables\nWHERE table_type = 'BASE TABLE' AND table_schema = 'public';",
+        "options": {},
+        "operation": "executeQuery",
+        "descriptionType": "manual",
+        "toolDescription": "Get list of all tables in database"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get table definition",
+      "operation": "service-read",
+      "adapter": "postgres",
+      "parameters": {
+        "query": {
+          "expression": "SELECT \n c.column_name,\n c.data_type,\n c.is_nullable,\n c.column_default,\n tc.constraint_type,\n ccu.table_name AS referenced_table,\n ccu.column_name AS referenced_column\nFROM \n information_schema.columns c\nLEFT JOIN \n information_schema.key_column_usage kcu \n ON c.table_name = kcu.table_name \n AND c.column_name = kcu.column_name\nLEFT JOIN \n information_schema.table_constraints tc \n ON kcu.constraint_name = tc.constraint_name\n AND tc.constraint_type = 'FOREIGN KEY'\nLEFT JOIN\n information_schema.constraint_column_usage ccu\n ON tc.constraint_name = ccu.constraint_name\nWHERE \n c.table_name = '{{ $fromAI(\"table_name\") }}' -- Your table name\n AND c.table_schema = 'public' -- Ensure it's in the right schema\nORDER BY \n c.ordinal_position;"
+        },
+        "options": {},
+        "operation": "executeQuery",
+        "descriptionType": "manual",
+        "toolDescription": "Get table definition to find all columns and types."
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-1\"].record.chatInput }}"
+        },
+        "agent": "openAiFunctionsAgent",
+        "options": {
+          "systemMessage": "You are DB assistant. You need to run queries in DB aligned with user requests.\n\nRun custom SQL query to aggregate data and response to user.\n\nFetch all data to analyse it for response if needed.\n"
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Run SQL Query",
+      "operation": "service-read",
+      "adapter": "postgres",
+      "parameters": {
+        "query": {
+          "expression": "{{ $fromAI(\"query\",\"SQL query for PostgreSQL DB in Supabase\") }}"
+        },
+        "options": {},
+        "operation": "executeQuery",
+        "descriptionType": "manual",
+        "toolDescription": "Run custom SQL queries using knowledge about Output structure to provide needed response for user request.\nUse ->> operator to extract JSON data."
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI Agent to chat with Supabase_PostgreSQL DB.json",
+    "git_blob": "1ccbe4cb42ec844cbfe51d328c2bfe6ad06a034e",
+    "sha256": "7585e6342d6e291a6f6e759e2a10962f9a0376dc6b846e2ad01516c8db897315",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20Agent%20to%20chat%20with%20Supabase_PostgreSQL%20DB.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,473 @@
+{
+  "allowed_hosts": [
+    "login.mailchimp.com",
+    "mailchimp.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://login.mailchimp.com/oauth2/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [],
+    "token_urls": [
+      "https://login.mailchimp.com/oauth2/token"
+    ]
+  },
+  "category": "Marketing",
+  "id": "mailchimp",
+  "name": "Mailchimp",
+  "operations": [
+    {
+      "description": "Create a new audience (list) in your Mailchimp account",
+      "id": "create_audience",
+      "inputs": [
+        {
+          "description": "The name of the list",
+          "label": "List Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Company name for list contact information",
+          "label": "Company",
+          "name": "company",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Street address for list contact information",
+          "label": "Address Line 1",
+          "name": "address1",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Additional address information (optional)",
+          "label": "Address Line 2",
+          "name": "address2",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "City for list contact information",
+          "label": "City",
+          "name": "city",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "State or province for list contact information",
+          "label": "State/Province",
+          "name": "state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "ZIP or postal code for list contact information",
+          "label": "ZIP/Postal Code",
+          "name": "zip",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Country for list contact information",
+          "label": "Country",
+          "name": "country",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone number for list contact information (optional)",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The permission reminder for the list",
+          "label": "Permission Reminder",
+          "name": "permission_reminder",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Default from name for campaigns",
+          "label": "Default From Name",
+          "name": "from_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Default from email address for campaigns",
+          "label": "Default From Email",
+          "name": "from_email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Default subject line for campaigns",
+          "label": "Default Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Default language for campaigns (e.g., \"en\", \"es\", \"fr\")",
+          "label": "Language",
+          "name": "language",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether the list supports multiple email formats (HTML/plain text)",
+          "label": "Email Type Option",
+          "name": "email_type_option",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether campaigns use the Archive Bar in archives by default",
+          "label": "Use Archive Bar",
+          "name": "use_archive_bar",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Email address to send subscribe notifications to (optional)",
+          "label": "Notify on Subscribe",
+          "name": "notify_on_subscribe",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Email address to send unsubscribe notifications to (optional)",
+          "label": "Notify on Unsubscribe",
+          "name": "notify_on_unsubscribe",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether to require subscriber confirmation via email",
+          "label": "Double Opt-in",
+          "name": "double_optin",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the list has marketing permissions (GDPR) enabled",
+          "label": "Marketing Permissions",
+          "name": "marketing_permissions",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Audience",
+      "source_path": "mailchimp/src/lib/actions/create-audience.ts",
+      "source_sha256": "324ef4d38f134bf1001f804e2b3b6262370938433914896d217076641bc7dc2e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/actions/create-audience.ts"
+    },
+    {
+      "description": "Create a new tag in a Mailchimp audience",
+      "id": "create_tag",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpListIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The name of the tag to create",
+          "label": "Tag Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Tag",
+      "source_path": "mailchimp/src/lib/actions/create-tag.ts",
+      "source_sha256": "e2132fee5e8674d34a5ba0a6707eae3d5c5099d52a2bd3cf75db6aca47745f00",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/actions/create-tag.ts"
+    },
+    {
+      "description": "Search all campaigns for the specified query terms",
+      "id": "find_campaign",
+      "inputs": [
+        {
+          "description": "Search terms to find campaigns",
+          "label": "Search Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Comma-separated list of fields to return",
+          "label": "Fields",
+          "name": "fields",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Comma-separated list of fields to exclude",
+          "label": "Exclude Fields",
+          "name": "exclude_fields",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Campaign",
+      "source_path": "mailchimp/src/lib/actions/find-campaign.ts",
+      "source_sha256": "c084711d321fd108984067d8f790b079b820733a6b42a9428f4b4a8c9b8eb7c5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/actions/find-campaign.ts"
+    },
+    {
+      "description": "Find a customer by email address in a store",
+      "id": "find_customer",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Store_Id",
+          "name": "store_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpStoreIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Email address to search for",
+          "label": "Email Address",
+          "name": "email_address",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Comma-separated list of fields to return",
+          "label": "Include Fields",
+          "name": "fields",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Comma-separated list of fields to exclude",
+          "label": "Exclude Fields",
+          "name": "exclude_fields",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Number of records to return (max 1000)",
+          "label": "Count",
+          "name": "count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of records to skip for pagination",
+          "label": "Offset",
+          "name": "offset",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Customer",
+      "source_path": "mailchimp/src/lib/actions/find-customer.ts",
+      "source_sha256": "4e340121fc2b63c7af8a2ce0138b2fb6b65a4a3aa42a502de74a61dcc8982c6f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/actions/find-customer.ts"
+    },
+    {
+      "description": "Search for subscribers across all lists or within a specific list. This action provides comprehensive subscriber information including merge fields, interests, and activity data.",
+      "id": "find_subscriber",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpListIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Email address of the subscriber to search for",
+          "label": "Email Address",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Fields to include in the response (leave empty for all fields). Use dot notation for nested fields (e.g., \"merge_fields.FNAME\")",
+          "label": "Include Fields",
+          "name": "include_fields",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Fields to exclude from the response. Use dot notation for nested fields",
+          "label": "Exclude Fields",
+          "name": "exclude_fields",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Subscriber",
+      "source_path": "mailchimp/src/lib/actions/find-subscriber.ts",
+      "source_sha256": "dccdc205ce8d942920a717e8690b7c4b670e5a76155fbd1c212a137b1b517d77",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/actions/find-subscriber.ts"
+    },
+    {
+      "description": "Search for tags on a list by name",
+      "id": "find_tag",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpListIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Search query to filter tags (optional - if empty, returns all tags)",
+          "label": "Tag Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Tag",
+      "source_path": "mailchimp/src/lib/actions/find-tag.ts",
+      "source_sha256": "96d67b6318ada6efe657b3721a543a3552ae1adfd745ad28b1fad11e80e21137",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/actions/find-tag.ts"
+    },
+    {
+      "description": "Get comprehensive report details for a specific sent campaign including opens, clicks, bounces, and performance metrics",
+      "id": "get_campaign_report",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign_Id",
+          "name": "campaign_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpCampaignIdDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Comma-separated list of fields to return (e.g., \"opens.unique_opens,clicks.click_rate\")",
+          "label": "Include Fields",
+          "name": "fields",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Comma-separated list of fields to exclude (e.g., \"timeseries,_links\")",
+          "label": "Exclude Fields",
+          "name": "exclude_fields",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Campaign Report",
+      "source_path": "mailchimp/src/lib/actions/get-campaign-report.ts",
+      "source_sha256": "33a444d47161caf1060635601c4cd631a170fef32d9ae327f05c1355da43e0e3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/actions/get-campaign-report.ts"
+    },
+    {
+      "description": "Send a draft campaign to the subscribers in its audience, segment, or tag",
+      "id": "send_campaign",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign_Id",
+          "name": "campaign_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpDraftCampaignIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Campaign",
+      "source_path": "mailchimp/src/lib/actions/send-campaign.ts",
+      "source_sha256": "8ba5bb90f981caeb3c39d0a1614162590b43e90997e1cfe2e3fb81e8ab91cc84",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/actions/send-campaign.ts"
+    },
+    {
+      "description": "Fires when a recipient opens a an email in a specific campaign",
+      "id": "email_opened",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpListIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Email Opened",
+      "source_path": "mailchimp/src/lib/triggers/email-opened-trigger.ts",
+      "source_sha256": "713db73d58d91f3bca26632e537d86da5b73b649f969467e87036664f5286fd5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/triggers/email-opened-trigger.ts"
+    },
+    {
+      "description": "Fires when a recipient clicks a specified link in a campaign",
+      "id": "link_clicked",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpListIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Link Clicked",
+      "source_path": "mailchimp/src/lib/triggers/link-clicked-trigger.ts",
+      "source_sha256": "33f9e366e81626b7845231003db0a2b928fa6da4d53181a900c0221a6375f0ad",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/triggers/link-clicked-trigger.ts"
+    },
+    {
+      "description": "Fires when a new campaign is created or sent",
+      "id": "new_campaign",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "mailchimpCommon.mailChimpListIdDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Campaign",
+      "source_path": "mailchimp/src/lib/triggers/new-campaign-trigger.ts",
+      "source_sha256": "614a7445c6863fd26eea0140623c9d122cc477fa95b3a74bfb957167ffd5627e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/lib/triggers/new-campaign-trigger.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "3053ff69249f055665447dc1b9ca195e7b60a2b7",
+    "index_path": "mailchimp/src/index.ts",
+    "index_sha256": "6305e3171fe496ae72cb71cd1db00cd2a271355ef5307036e2b542498deff12f",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

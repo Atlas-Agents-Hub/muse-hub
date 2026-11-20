@@ -1,0 +1,95 @@
+{
+  "allowed_hosts": [
+    "app.chatwoot.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Chatwoot instance URL (e.g. https://app.chatwoot.com)",
+        "label": "Chatwoot URL",
+        "name": "baseUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api Access Token",
+        "name": "apiAccessToken",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Access Token', description: 'Your user API access token from Profile Settings', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Your numeric account ID (visible in the dashboard URL)",
+        "label": "Account ID",
+        "name": "accountId",
+        "required": true,
+        "type": "Number"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Support",
+  "id": "chatwoot",
+  "name": "Chatwoot",
+  "operations": [
+    {
+      "description": "Send a message reply to a Chatwoot conversation",
+      "id": "send_message",
+      "inputs": [
+        {
+          "description": "The numeric conversation display ID. Available from the trigger output.",
+          "label": "Conversation ID",
+          "name": "conversationId",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "The text message to send",
+          "label": "Message",
+          "name": "message",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "If checked, sends as a private note visible only to agents (not the contact)",
+          "label": "Private Note",
+          "name": "isPrivate",
+          "required": true,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Message",
+      "source_path": "chatwoot/src/lib/actions/send-message.ts",
+      "source_sha256": "81248389a511f619280d7aacacaebf5f91743a4479b64620ddd44f7654f6259e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chatwoot/src/lib/actions/send-message.ts"
+    },
+    {
+      "description": "Triggers when a contact sends a new message in a Chatwoot conversation",
+      "id": "new_message",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Incoming Message",
+      "source_path": "chatwoot/src/lib/triggers/new-message.ts",
+      "source_sha256": "fe040d786d2a9dad054f18b91680ff4f6600b77dd2be65e0d69b89a93ed9cb34",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chatwoot/src/lib/triggers/new-message.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7d2e2982e761400adadf241004a6741ef7d14954",
+    "index_path": "chatwoot/src/index.ts",
+    "index_sha256": "918012e037700684607c53484ce70504cd8d772e5b61d483402c6877f4e34598",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

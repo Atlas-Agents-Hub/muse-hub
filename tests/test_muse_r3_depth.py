@@ -20,7 +20,9 @@ class R3DepthTests(unittest.TestCase):
         self.assertEqual(len(authored),75)
         self.assertTrue(set(SELECTED)<=set(authored))
         self.assertGreaterEqual(len(self.skills),len(authored))
-        self.assertEqual(len(self.data['starters']),100)
+        self.assertEqual(len(self.data['starters']),len(json.loads((C/'starters.json').read_bytes())))
+        self.assertGreater(len(self.data['starters']),500)
+        self.assertEqual(len(self.data['starters']),len({row['id'] for row in self.data['starters']}))
         self.assertGreaterEqual(len(self.data['workflows']),25)
     def test_authored_depth_has_complete_case_references(self):
         for skill in self.skills.values():
@@ -42,12 +44,13 @@ class R3DepthTests(unittest.TestCase):
                 with self.subTest(sid=sid,value=repr(o)):
                     self.assertFalse(self.checks.check_case(c,o)['passed'])
     def test_comparison_task_inputs_are_identical_and_examples_absent(self):
+        prepared=self.tool.prepare_collection(self.data)
         for sid in SELECTED:
             self.assertIn('depth',self.skills[sid])
             depth=self.skills[sid]['depth']
             for cid in depth['case_ids']:
                 with self.subTest(cid=cid):
-                    packets=[self.tool.challenge_files(self.data,cid,arm) for arm in ('plain','upstream','candidate')]
+                    packets=[self.tool.challenge_files(prepared,cid,arm) for arm in ('plain','upstream','candidate')]
                     self.assertEqual(packets[0]['TASK.json'],packets[1]['TASK.json'])
                     self.assertEqual(packets[1]['TASK.json'],packets[2]['TASK.json'])
                     text=b'\n'.join(packets[2].values()).decode()

@@ -1,0 +1,226 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-email-auto-responder-with-ollama-fe3cbf",
+  "title": "AI Email Auto-Responder with Ollama",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Check Every 5 Minutes",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get Unread Emails (IMAP)",
+      "operation": "service-read",
+      "adapter": "emailreadimap",
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 10,
+        "filters": {
+          "readStatus": "unread"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "1. Classify Email (Ollama)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ model: 'llama3:8b', prompt: 'Classify this email into one of these categories: URGENT, QUESTION, FEEDBACK, SPAM, OTHER.\\n\\nFrom: ' + record.from + '\\nSubject: ' + record.subject + '\\nBody: ' + (record.text || '').substring(0, 1000) + '\\n\\nRespond with ONLY the category name, nothing else.', stream: false, options: { temperature: 0.1, num_predict: 20 } }) }}"
+        },
+        "options": {
+          "timeout": 60000
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Filter Spam",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "combinator": "or",
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ JSON.parse(record.data).response.trim() }}"
+              },
+              "rightValue": "SPAM",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "2. Draft Reply (Ollama)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ model: 'llama3:8b', prompt: 'Write a professional, helpful email reply to this message. Be concise and friendly.\\n\\nFrom: ' + steps[\"step-2\"].record.from + '\\nSubject: ' + steps[\"step-2\"].record.subject + '\\nBody: ' + (steps[\"step-2\"].record.text || '').substring(0, 2000) + '\\n\\nWrite ONLY the reply body (no subject line, no greeting format instructions). Sign off as the team.', stream: false, options: { temperature: 0.5, num_predict: 1000 } }) }}"
+        },
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Prepare Draft for Review",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "draft_reply",
+              "value": {
+                "expression": "{{ JSON.parse(record.data).response }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "original_from",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.from }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "original_subject",
+              "value": {
+                "expression": "{{ 'Re: ' + steps[\"step-2\"].record.subject }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "category",
+              "value": {
+                "expression": "{{ JSON.parse(steps[\"step-3\"].record.data).response.trim() }}"
+              },
+              "type": "string"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/AI Email Auto-Responder with Ollama.json",
+    "git_blob": "10d68a05d5a426cd1bac7b64883fad018907bf4c",
+    "sha256": "0b23c5ee98f7be4033c1c912eefe26d2dc58363c1774f8defcf9625ed86abd6f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/AI%20Email%20Auto-Responder%20with%20Ollama.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

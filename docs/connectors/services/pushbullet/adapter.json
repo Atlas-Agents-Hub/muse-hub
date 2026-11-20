@@ -1,0 +1,131 @@
+{
+  "allowed_hosts": [
+    "api.pushbullet.com",
+    "example.com.",
+    "www.pushbullet.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Communication",
+  "id": "pushbullet",
+  "name": "Pushbullet",
+  "operations": [
+    {
+      "description": "Sends a clickable link notification to your devices, one device or an email address.",
+      "id": "sendALink",
+      "inputs": [
+        {
+          "description": "The link that opens when the notification is clicked, e.g. https://example.com.",
+          "label": "URL to send",
+          "name": "url",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The headline of the notification.",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional text shown under the title.",
+          "label": "Body",
+          "name": "body",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Device",
+          "name": "device",
+          "required": null,
+          "source_expression": "pushbulletProps.device",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": null,
+          "source_expression": "pushbulletProps.email",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Send a Link",
+      "source_path": "pushbullet/src/lib/actions/send-a-link.ts",
+      "source_sha256": "ef6df22bb0c1abe6d17e986955d311251fb8267d207f274d724ab9585ba3d373",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushbullet/src/lib/actions/send-a-link.ts"
+    },
+    {
+      "description": "Sends a text notification to your devices, one device or an email address.",
+      "id": "sendANote",
+      "inputs": [
+        {
+          "description": "The headline of the notification.",
+          "label": "Note Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The text shown under the title.",
+          "label": "Note Body",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Device",
+          "name": "device",
+          "required": null,
+          "source_expression": "pushbulletProps.device",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": null,
+          "source_expression": "pushbulletProps.email",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Send a Note",
+      "source_path": "pushbullet/src/lib/actions/send-a-note.ts",
+      "source_sha256": "a8aee3f2f7ff0d902532b444157d0e1065498769cf3cac41461d28778a394f00",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushbullet/src/lib/actions/send-a-note.ts"
+    },
+    {
+      "description": "Triggers when a new push (note, link or file) appears on your Pushbullet account.",
+      "id": "new_push",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Push",
+      "source_path": "pushbullet/src/lib/triggers/new-push.ts",
+      "source_sha256": "af2ab1af8a7ba145bef8fc58170fc1ecbf10508ec05334d3f2356efaa417d19a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pushbullet/src/lib/triggers/new-push.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "dc93c2eadba64083598352f858f400c97902fc40",
+    "index_path": "pushbullet/src/index.ts",
+    "index_sha256": "7077c7308aedf109c6d0b9a4e24de27582a2d51cb689512781ccb40c1fb4dc50",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "automation-engineer"
+  ]
+}

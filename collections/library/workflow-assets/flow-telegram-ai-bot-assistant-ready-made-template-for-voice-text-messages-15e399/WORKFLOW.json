@@ -1,0 +1,420 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-telegram-ai-bot-assistant-ready-made-template-for-voice-text-messages-15e399",
+  "title": "Telegram AI bot assistant ready-made template for voice & text messages",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.7,
+          "frequencyPenalty": 0.2
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "chat_with_{{ steps[\"step-4\"].records[0].message.chat.id }}"
+        },
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Correct errors",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-11\"].record.output.replace(/&/g, \"&amp;\").replace(/>/g, \"&gt;\").replace(/</g, \"&lt;\").replace(/\"/g, \"&quot;\") }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-4\"].records[0].message.from.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Listen for incoming events",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Download voice file",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "fileId": {
+          "expression": "{{record.message.voice.file_id}}"
+        },
+        "resource": "file"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Combine content and set properties",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "CombinedMessage",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.message && record.message.text ? record.message.text : (record.text ? record.text : '') }}"
+              }
+            },
+            {
+              "name": "Message Type ",
+              "type": "string",
+              "value": {
+                "expression": "{{ record?.message?.text && !record?.text ? \"text query\" : (!record?.message?.text && record?.text ? \"voice message\" : \"unknown type message\") }}"
+              }
+            },
+            {
+              "name": "Source Type",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-4\"].record.message.forward_origin ? \" forwarded\" : \"\" }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Send final reply",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.output }} \n\nThank you for your{{ steps[\"step-6\"].record['Source Type'] }} {{ steps[\"step-6\"].record['Message Type '] }} 🤗"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-4\"].records[0].message.from.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Send error message",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "Sorry, {{ steps[\"step-4\"].records[0].message.from.first_name }}! This command is not supported yet. Please send text or voice messages."
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-4\"].records[0].message.from.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Convert audio to text",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "language": "",
+          "temperature": 0.7
+        },
+        "resource": "audio",
+        "operation": "transcribe"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Send Typing action",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-4\"].records[0].message.from.id }}"
+        },
+        "operation": "sendChatAction"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.CombinedMessage }}"
+        },
+        "options": {
+          "humanMessage": {
+            "expression": "TOOLS\n------\nAssistant can ask the user to use tools to look up information that may be helpful in answering the users original question. The tools the human can use are:\n\n{tools}\n\n{format_instructions}\n\nUSER'S INPUT\n--------------------\nHere is the user's input (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):\n\n{{input}}"
+          },
+          "systemMessage": {
+            "expression": "You are a helpful AI assistant. You are chatting with the user named `{{ steps[\"step-12\"].record.message.from.first_name }}`. You need to address the user by their name. Today is {{ DateTime.fromISO(current_time).toLocaleString(DateTime.DATETIME_FULL) }}\n\nIn your reply, always send a message in Telegram-supported HTML format. Here are the formatting instructions:\n1. The following tags are currently supported:\n<b>bold</b>, <strong>bold</strong>\n<i>italic</i>, <em>italic</em>\n<u>underline</u>, <ins>underline</ins>\n<s>strikethrough</s>, <strike>strikethrough</strike>, <del>strikethrough</del>\n<span class=\"tg-spoiler\">spoiler</span>, <tg-spoiler>spoiler</tg-spoiler>\n<b>bold <i>italic bold <s>italic bold strikethrough <span class=\"tg-spoiler\">italic bold strikethrough spoiler</span></s> <u>underline italic bold</u></i> bold</b>\n<a href=\"http://www.example.com/\">inline URL</a>\n<code>inline fixed-width code</code>\n<pre>pre-formatted fixed-width code block</pre>\n2. Any code that you send should be wrapped in these tags: <pre><code class=\"language-python\">pre-formatted fixed-width code block written in the Python programming language</code></pre>\nOther programming languages are supported as well.\n3. All <, > and & symbols that are not a part of a tag or an HTML entity must be replaced with the corresponding HTML entities (< with &lt;, > with &gt; and & with &amp;)\n4. If the user sends you a message starting with / sign, it means this is a Telegram bot command. For example, all users send /start command as their first message. Try to figure out what these commands mean and reply accodringly"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Determine content type",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Text",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.message.text }}"
+                    },
+                    "rightValue": "/"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Voice",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.message.voice}}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-11",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-7",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Telegram AI bot assistant_ ready-made template for voice & text messages.json",
+    "git_blob": "904819bf4c7343cf61ded988d8353f748fbe83eb",
+    "sha256": "a4ac92349a6e53abb7bd0e298fed710779728ca80a9971c019b01127d2dc39d7",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Telegram%20AI%20bot%20assistant_%20ready-made%20template%20for%20voice%20%26%20text%20messages.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

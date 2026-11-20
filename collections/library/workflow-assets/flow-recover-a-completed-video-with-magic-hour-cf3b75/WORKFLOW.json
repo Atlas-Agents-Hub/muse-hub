@@ -1,0 +1,139 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-recover-a-completed-video-with-magic-hour-cf3b75",
+  "title": "Recover a completed video with Magic Hour",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Run manually",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Magic Hour",
+      "operation": "service-read",
+      "adapter": "magichour",
+      "parameters": {
+        "resource": "video",
+        "operation": "get",
+        "videoProjectId": {
+          "configuration_input": "step-2-videoprojectid"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Require complete",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.status }}"
+              },
+              "rightValue": "complete",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Download result",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.downloads[0].url }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Stop incomplete job",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "errorMessage": {
+          "expression": "{{ \"Generation is \" + record.status + \". Keep project ID \" + record.id + \" and resume with Get Details. Do not create another generation to retrieve it.\" }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-videoprojectid",
+      "purpose": "Choose the videoProjectId resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Recover a completed video with Magic Hour.json",
+    "git_blob": "41be75e3f909c71a6a4bebc063b1369300a4cb7f",
+    "sha256": "e0ef84d81bdcda0773fc00ca67d36acb63d2d8a73f1c4a51d913a6ae42173c26",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Recover%20a%20completed%20video%20with%20Magic%20Hour.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

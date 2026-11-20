@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-screen-applicants-with-ai-notify-hr-and-save-them-in-a-google-sheet-3f8457",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-sendto": null,
+    "step-7-sheetname": null,
+    "step-7-documentid": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

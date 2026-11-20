@@ -4,13 +4,14 @@ import hashlib,json,os,re,tempfile
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote
+from .source_limits import source_file_limit
 
 IGNORED={'.git','__pycache__','.pytest_cache','.mypy_cache','.ruff_cache','.venv','venv'}
 PRIVATE_DIRS={'control','.atlas','scratch','evidence','receipts','checkpoints'}
 OLD_DOCS={'STATUS.md','GITHUB_ROLE_ACCEPTANCE.md','GITHUB_RELEASE_SCOPE.md',
  'CAPABILITY_FIT_AUDIT.md','RELEASE_CHECKLIST.md','PRIVACY_RELEASE_ASSURANCE.md',
  'COMMUNITY_RESEARCH.md','NEUTRALITY_AND_PROVENANCE.md'}
-WORK_ID=re.compile(r'\b(?:R\d{2,}|T\d{2,})(?:\b|_)|\bAsana\b|\bprepush\b|\bsource candidate\b',re.I)
+WORK_ID=re.compile(r'\b(?:internal\s+)?(?:task|packet|gate|candidate|handoff|milestone)\s+[RT]\d{2,}\b|\b[RT]\d{2,}\s+(?:source|candidate|gate|handoff|status|packet)\b|\bAsana\s+(?:task|project)\s*(?:[:#]\s*)?(?:[RT]?\d{2,}|https://)|\bprepush\b|\bsource candidate\b',re.I)
 MILESTONE=re.compile(r'^R\d{2,}[_-]',re.I)
 LINK=re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
 MODULE=re.compile(r'^muse_presets\.[a-z][a-z0-9_]*$')
@@ -77,7 +78,7 @@ def product_findings(root:Path)->list[dict[str,str]]:
    if name in IGNORED:dirs.remove(name);continue
    if p.is_symlink() or (hasattr(p,'is_junction') and p.is_junction()):
     add(rel,'SYMLINK_REFUSED');dirs.remove(name)
-   elif name.lower() in PRIVATE_DIRS:
+   elif name.lower() in PRIVATE_DIRS and rel!='collections/library/skills/evidence':
     add(rel,'INTERNAL_ARTIFACT');dirs.remove(name)
   for name in files:
    p=base/name;rel=p.relative_to(root).as_posix()
@@ -91,7 +92,7 @@ def product_findings(root:Path)->list[dict[str,str]]:
     add(rel,'INTERNAL_ARTIFACT');continue
    if not ((doc and p.suffix.lower()=='.md') or ui):continue
    try:
-    if p.stat().st_size>MAX_TEXT:raise ValueError('too large')
+    if p.stat().st_size>source_file_limit(rel,MAX_TEXT):raise ValueError('too large')
     body=p.read_text(encoding='utf-8')
    except (OSError,UnicodeError,ValueError):add(rel,'UNREADABLE_PRODUCT_PAGE');continue
    if '\ufffd' in body or '\u00e2\u20ac' in body:add(rel,'CORRUPTED_PRODUCT_TEXT')

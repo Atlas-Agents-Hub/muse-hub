@@ -1,0 +1,261 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-remove-personally-identifiable-information-pii-from-csv-files-9314a4",
+  "title": "Remove Personally Identifiable Information (PII) from CSV Files with OpenAI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Google Drive Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "event": "fileCreated",
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "configuration_input": "step-1-foldertowatch"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.id }}"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        },
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Extract from File",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-4-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Analyze the provided tabular data and identify the columns that contain personally identifiable information (PII). Return only the column names that contain PII, separated by commas. Key name: 'content'. Do not include any additional text or explanation."
+            },
+            {
+              "content": {
+                "expression": "Here is some tabular data with column headers and two example rows.\n\nHeaders: {{Object.keys(record)}}\n\nExample Row 1: {{Object.values(record)}}"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "numberInputs": 3
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Upload to Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "name": {
+          "expression": "{{ record.fileName }}"
+        },
+        "content": {
+          "expression": "{{ record.content }}"
+        },
+        "driveId": {
+          "configuration_input": "step-6-driveid"
+        },
+        "options": {},
+        "folderId": {
+          "configuration_input": "step-6-folderid"
+        },
+        "operation": "createFromText"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get filename",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "destinationFieldName": "originalFilename"
+        },
+        "fieldToSplitOut": "name"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Get result",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "destinationFieldName": "data"
+        },
+        "fieldToSplitOut": "message.content.content"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Remove PII columns",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Input: All items from the previous node\nconst input = records;\n\n// Step 1: Extract the PII column names from the first item\nconst firstItem = input[0];\nif (!firstItem.json.data || !firstItem.json.data) {\n throw new Error(\"PII column names are missing in the input data.\");\n}\nconst piiColumns = firstItem.json.data.split(',').map(col => col.trim());\n//console.log(\"PII Columns to Remove:\", piiColumns);\n\n// Step 2: Remove the first two items and process the remaining rows\nlet rows = input.slice(2).map(item => item.json); // Exclude the first item\n//console.log(\"Rows to convert (before skipping last):\", rows);\n\n\n// Ensure there are rows to process\nif (rows.length === 0) {\n throw new Error(\"No rows to convert to CSV.\");\n}\n\n// Step 3: Remove PII columns from each row\nconst sanitizedRows = rows.map(row => {\n const sanitizedRow = { ...row }; // Copy the row\n piiColumns.forEach(column => delete sanitizedRow[column]); // Remove PII columns\n return sanitizedRow;\n});\n//console.log(\"Sanitized Rows:\", sanitizedRows);\n\n// Step 4: Extract headers from sanitized rows\nconst headers = Object.keys(sanitizedRows[0]); // Extract updated headers\n//console.log(\"CSV Headers:\", headers);\n\n// Step 5: Convert rows to CSV format\nconst csvRows = [\n headers.join(','), // Add header row\n ...sanitizedRows.map(row => \n headers.map(header => String(row[header] || '').replace(/,/g, '')).join(',') // Match headers with rows\n )\n];\n\n// Join all rows with a newline character\nconst csvContent = csvRows.join('\\n');\n//console.log(\"CSV Content:\", csvContent);\n\nconst originalFileName = input[1].json.originalFilename;\n\n// Step 7: Generate a new filename\nconst fileExtension = originalFileName.split('.').pop();\nconst baseName = originalFileName.replace(`.${fileExtension}`, '');\nconst newFileName = `${baseName}_PII_removed.${fileExtension}`;\n//console.log(\"New Filename:\", newFileName);\n\n// Step 8: Return the CSV content and filename as JSON\nreturn [\n {\n json: {\n fileName: newFileName, // New file name\n content: csvContent // CSV content as plain text\n }\n }\n];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 2
+    },
+    {
+      "from": "step-9",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-6",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-foldertowatch",
+      "purpose": "Select the folderToWatch for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-driveid",
+      "purpose": "Select the driveId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-folderid",
+      "purpose": "Select the folderId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Remove Personally Identifiable Information (PII) from CSV Files with OpenAI.json",
+    "git_blob": "f5b4392ee06aefa020f9e95d2d18492d6a9b0983",
+    "sha256": "b11929b5de6f70c8e892a886af3ab880a654c98fc7eeba0aaee27396847a1d8d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Remove%20Personally%20Identifiable%20Information%20%28PII%29%20from%20CSV%20Files%20with%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

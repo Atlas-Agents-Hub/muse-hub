@@ -1,0 +1,500 @@
+{
+  "allowed_hosts": [
+    "contoso.sharepoint.com",
+    "graph.microsoft.com",
+    "graph.microsoft.us",
+    "learn.microsoft.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://{cloud}/common/oauth2/v2.0/authorize"
+    ],
+    "fields": [
+      {
+        "description": "",
+        "label": "Cloud",
+        "name": "cloud",
+        "required": null,
+        "source_expression": "microsoftCloudProperty",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "Files.ReadWrite.All",
+      "Sites.Manage.All",
+      "Sites.Read.All",
+      "Sites.ReadWrite.All",
+      "email",
+      "offline_access",
+      "openid",
+      "profile"
+    ],
+    "token_urls": [
+      "https://{cloud}/common/oauth2/v2.0/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "microsoft-sharepoint",
+  "name": "Microsoft SharePoint",
+  "operations": [
+    {
+      "description": "Copy a file or folder from one site to another within the same tenant, with overwrite option.",
+      "id": "microsoft_sharepoint_copy_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Drive Id",
+          "name": "driveId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.driveId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Item Id",
+          "name": "itemId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.itemId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Destination_Site_Id",
+          "name": "destination_site_id",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Destination_Drive_Id",
+          "name": "destination_drive_id",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.createDriveDropdown({ displayName: 'Destination Drive', refreshers: ['destination_site_id'], })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Destination_Folder_Id",
+          "name": "destination_folder_id",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.destinationFolderId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "A new name for the copied item. If not provided, the original name is used.",
+          "label": "New Name (Optional)",
+          "name": "new_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Action to take if a file with the same name already exists.",
+          "label": "Conflict Behavior",
+          "name": "conflict_behavior",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Copy File or Folder (Across Sites)",
+      "source_path": "microsoft-sharepoint/src/lib/actions/copy-item.ts",
+      "source_sha256": "f9c9165042ef670f5e1fb66666f6fb207b46c43624b3502760fe803fff0bdb3c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/actions/copy-item.ts"
+    },
+    {
+      "description": "Creates a new list.",
+      "id": "microsoft_sharepoint_create_list",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List Name",
+          "name": "displayName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "List Description",
+          "name": "description",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create List",
+      "source_path": "microsoft-sharepoint/src/lib/actions/create-list.ts",
+      "source_sha256": "1d36e412dd7d048bbc89ed7684a306405bbdfe2f4ba4c5445ee8fcc4802da944",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/actions/create-list.ts"
+    },
+    {
+      "description": "Look up a file by its name or path.",
+      "id": "microsoft_sharepoint_find_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Drive Id",
+          "name": "driveId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.driveId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Choose how to find the file.",
+          "label": "Find Method",
+          "name": "findMethod",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The exact path to the file from the drive's root. **Required if finding by path.** Example: `Documents/Reports/Q1-Report.docx`",
+          "label": "File Path",
+          "name": "filePath",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The file name or keyword to search for. **Required if searching by name.** Example: `Q1-Report.docx`",
+          "label": "Search Query",
+          "name": "searchQuery",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The folder to search within. If not specified, the entire drive will be searched. **Only applies when searching by name.**",
+          "label": "Folder to Search In (Optional)",
+          "name": "searchFolderId",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find File",
+      "source_path": "microsoft-sharepoint/src/lib/actions/find-file.ts",
+      "source_sha256": "d81ccd5e2245b1f9a2e740eb77605459dda73e2a2df970f723aa7a58b120c10a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/actions/find-file.ts"
+    },
+    {
+      "description": "Finds a item in a list based on name.",
+      "id": "microsoft_sharepoint_search_list_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List Id",
+          "name": "listId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.listId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Item title to search",
+          "label": "Title",
+          "name": "searchValue",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find List Item",
+      "source_path": "microsoft-sharepoint/src/lib/actions/search-list-item.ts",
+      "source_sha256": "9fa67e1de70f2a2f31e8645b8c10aed6c1c5279c0beeca957ca45bb6ed78df80",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/actions/search-list-item.ts"
+    },
+    {
+      "description": "Search for SharePoint sites by name and return matching results.",
+      "id": "microsoft_sharepoint_find_site",
+      "inputs": [
+        {
+          "description": "The name or keyword to search for.",
+          "label": "Site Name",
+          "name": "searchTerm",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Site",
+      "source_path": "microsoft-sharepoint/src/lib/actions/find-site.ts",
+      "source_sha256": "fe9a772d759fff4e178be8cf8f2faa214eb39927610e8ce3782b30492794c4ee",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/actions/find-site.ts"
+    },
+    {
+      "description": "List all files and subfolders in a specified folder, optionally with detailed metadata.",
+      "id": "microsoft_sharepoint_get_folder_contents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Drive Id",
+          "name": "driveId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.driveId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The folder whose contents you want to list. Select \"Root Folder\" for the top-level folder.",
+          "label": "Folder",
+          "name": "folderId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Check this to include SharePoint-specific metadata (custom columns). This may slow down the request.",
+          "label": "Include Custom Metadata",
+          "name": "includeCustomFields",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The maximum number of items to return. The API default is 200. If more items exist, the output will contain a field `@odata.nextLink` that you can use in a custom API call to get the next page.",
+          "label": "Page Size",
+          "name": "top",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "A comma-separated list of properties to return. Example: `id,name,size,webUrl`",
+          "label": "Select Fields (Optional)",
+          "name": "select",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Specifies how to sort the returned items. Example: `name asc` or `lastModifiedDateTime desc`",
+          "label": "Order By (Optional)",
+          "name": "orderby",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Folder Contents",
+      "source_path": "microsoft-sharepoint/src/lib/actions/get-folder-contents.ts",
+      "source_sha256": "cd05837094eb7e899d11a3f1f883f16290b98292bb36672be3822aa12a3b478b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/actions/get-folder-contents.ts"
+    },
+    {
+      "description": "Fetch metadata of a SharePoint site (site ID, title, URL, description, etc.).",
+      "id": "microsoft_sharepoint_get_site_information",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "A comma-separated list of properties to return. If left blank, all default properties are returned. Example: `id,displayName,webUrl,description`",
+          "label": "Select Fields (Optional)",
+          "name": "select",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Site Information",
+      "source_path": "microsoft-sharepoint/src/lib/actions/get-site-information.ts",
+      "source_sha256": "34df50b265a4a5fa74fe355134f696fe9776f077afe113fd740d2ca2afabf321",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/actions/get-site-information.ts"
+    },
+    {
+      "description": "Move a file from one folder to another within the same drive.",
+      "id": "microsoft_sharepoint_move_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Drive Id",
+          "name": "driveId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.driveId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The file you want to move.",
+          "label": "File to Move",
+          "name": "fileId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "The folder to move the file into. Select \"Root\" to move to the top level of the drive.",
+          "label": "Destination Folder",
+          "name": "destinationFolderId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Provide a new name to rename the file during the move.",
+          "label": "New Name (Optional)",
+          "name": "newName",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Move File",
+      "source_path": "microsoft-sharepoint/src/lib/actions/move-file.ts",
+      "source_sha256": "aca8b7f2f227cc107f84c5874342dd34da4d239a7b50aee19b283e84ae7f2d1b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/actions/move-file.ts"
+    },
+    {
+      "description": "Fires when a new file is created or added in a specific folder.",
+      "id": "new_file_in_folder",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Drive Id",
+          "name": "driveId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.driveId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The folder to watch for new files. Select \"Root Folder\" for the top-level folder of the drive.",
+          "label": "Folder to Monitor",
+          "name": "folderId",
+          "required": true,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New File in Folder",
+      "source_path": "microsoft-sharepoint/src/lib/triggers/new-file-in-folder.ts",
+      "source_sha256": "55978bd59e0d8c015bc8a9e3100f3893c804fdcc24b2064f23af1a0851b1bac0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/triggers/new-file-in-folder.ts"
+    },
+    {
+      "description": "Fires when a new file is added anywhere in the first-level subfolders of a folder. Note: This trigger will not monitor subfolders created after the flow is activated.",
+      "id": "new_file_in_subfolders",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Drive Id",
+          "name": "driveId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.driveId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The parent folder whose subfolders you want to monitor.",
+          "label": "Parent Folder",
+          "name": "parentFolderId",
+          "required": true,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New File in Subfolders",
+      "source_path": "microsoft-sharepoint/src/lib/triggers/new-file-in-subfolders.ts",
+      "source_sha256": "21960645d83d411a8f6df840ffae88b3ec50321fbc64e0c2499ac4ea22d0ded9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/triggers/new-file-in-subfolders.ts"
+    },
+    {
+      "description": "Triggers when a new item is created in a SharePoint list.",
+      "id": "new_list_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Id",
+          "name": "siteId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.siteId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List Id",
+          "name": "listId",
+          "required": null,
+          "source_expression": "microsoftSharePointCommon.listId",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New List Item",
+      "source_path": "microsoft-sharepoint/src/lib/triggers/new-list-item.ts",
+      "source_sha256": "c80c4e529bd0ea53418861d27dc4128cbc75fa3b35f52a32f5ffb5d9253265b2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-sharepoint/src/lib/triggers/new-list-item.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "4b7e12de0bc7eb2ef268a54becc73331f9b32d1a",
+    "index_path": "microsoft-sharepoint/src/index.ts",
+    "index_sha256": "1eb11f02c0f2c5f36f365be07d0cbb108da11b884ed58e65342f63de3cfa38a1",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach"
+  ]
+}

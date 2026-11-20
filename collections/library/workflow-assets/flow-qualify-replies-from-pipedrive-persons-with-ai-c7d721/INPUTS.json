@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-qualify-replies-from-pipedrive-persons-with-ai-c7d721",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-model": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "pipedrive": {
+      "connection": null
+    }
+  }
+}

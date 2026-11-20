@@ -1,0 +1,20 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-transcribe-authorized-pt-br-support-calls-with-speaker-labels-using-apify-2d8121",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-0-value": null,
+    "step-3-jscode-literal": null,
+    "step-4-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

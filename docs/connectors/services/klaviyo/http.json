@@ -1,0 +1,27 @@
+{
+  "id": "klaviyo",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Klaviyo-API-Key "
+      },
+      "credential_source_path": "klaviyo/src/lib/common/auth.ts",
+      "credential_source_sha256": "54665a39d6fbd19788acff0fe0e34592378b610b8ad5dec9ffc3e6f8ae21efa5",
+      "headers": {
+        "accept": "application/vnd.api+json",
+        "revision": "2025-04-15"
+      },
+      "host": "a.klaviyo.com",
+      "id": "read-api-accounts",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "klaviyo/src/lib/common/auth.ts",
+      "source_sha256": "54665a39d6fbd19788acff0fe0e34592378b610b8ad5dec9ffc3e6f8ae21efa5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/klaviyo/src/lib/common/auth.ts",
+      "url_template": "https://a.klaviyo.com/api/accounts"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

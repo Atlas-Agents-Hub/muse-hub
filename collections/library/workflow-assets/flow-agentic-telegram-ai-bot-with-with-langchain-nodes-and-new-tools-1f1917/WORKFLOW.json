@@ -1,0 +1,208 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-agentic-telegram-ai-bot-with-with-langchain-nodes-and-new-tools-1f1917",
+  "title": "Agentic Telegram AI bot with with LangChain nodes and new tools",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.7,
+          "frequencyPenalty": 0.2
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "chat_with_{{ steps[\"step-3\"].records[0].message.chat.id }}"
+        },
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Listen for incoming events",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Send final reply",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.output }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-3\"].records[0].message.from.id }}"
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Send back an image",
+      "operation": "service-read",
+      "adapter": "telegram",
+      "parameters": {
+        "file": {
+          "expression": "{{ $fromAI(\"url\", \"a valid url of an image\", \"string\", \" \") }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-3\"].records[0].message.from.id }}"
+        },
+        "operation": "sendDocument",
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Generate image in Dalle",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-6-url"
+        },
+        "method": "POST",
+        "sendBody": true,
+        "parametersBody": {
+          "values": [
+            {
+              "name": "model",
+              "value": "dall-e-3",
+              "valueProvider": "fieldValue"
+            },
+            {
+              "name": "prompt"
+            }
+          ]
+        },
+        "toolDescription": "Call this tool to request a Dall-E-3 model, when the user asks to draw something. If you gеt a response from this tool, forward it to the Telegram tool."
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.message.text }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "You are a helpful assistant. You are communicating with a user named {{ record.message.from.first_name }}. Address the user by name every time. If the user asks for an image, always send the link to the image in the final reply."
+          }
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-7",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-6-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/images/generations"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Agentic Telegram AI bot with with LangChain nodes and new tools.json",
+    "git_blob": "b67453cc4b9a771f0f4d15d71779d3bbe3117069",
+    "sha256": "786270f0dd4bf3a06232fd0d308a26b9e3cb7a27ba2d7cc83336ddbef0a9ba91",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Agentic%20Telegram%20AI%20bot%20with%20with%20LangChain%20nodes%20and%20new%20tools.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

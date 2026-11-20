@@ -1,0 +1,207 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-add-positive-feedback-messages-to-a-table-in-notion-e37737",
+  "title": "Add positive feedback messages to a table in Notion",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Typeform Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "formId": "fBYjtY5e"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Google Cloud Natural Language",
+      "operation": "service-read",
+      "adapter": "googlecloudnaturallanguage",
+      "parameters": {
+        "content": {
+          "expression": "{{record[\"Any suggestions for us? \"]}}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": {
+                "expression": "{{steps[\"step-2\"].json[\"documentSentiment\"][\"score\"]}}"
+              },
+              "operation": "larger"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Notion",
+      "operation": "service-read",
+      "adapter": "notion",
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "configuration_input": "step-4-databaseid"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Name|title",
+              "title": {
+                "expression": "{{steps[\"step-1\"].json[\"Name\"]}}"
+              }
+            },
+            {
+              "key": "Feedback|rich_text",
+              "textContent": {
+                "expression": "{{steps[\"step-1\"].json[\"Any suggestions for us? \"]}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Slack",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "channel": "general",
+        "blocksUi": {
+          "blocksValues": []
+        },
+        "attachments": [
+          {
+            "text": {
+              "expression": "{{steps[\"step-1\"].json[\"Any suggestions for us? \"]}}"
+            },
+            "title": {
+              "expression": "{{steps[\"step-1\"].json[\"Name\"]}} {{steps[\"step-2\"].json[\"documentSentiment\"][\"score\"]}}"
+            }
+          }
+        ],
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Trello",
+      "operation": "service-read",
+      "adapter": "trello",
+      "parameters": {
+        "name": {
+          "expression": "Score: {{record[\"documentSentiment\"][\"score\"]}}"
+        },
+        "listId": {
+          "configuration_input": "step-6-listid"
+        },
+        "description": {
+          "expression": "Score: {{record[\"documentSentiment\"][\"score\"]}}\nFeedback: {{steps[\"step-1\"].json[\"Any suggestions for us? \"]}}\nUser: {{steps[\"step-1\"].json[\"Name\"]}}"
+        },
+        "additionalFields": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-databaseid",
+      "purpose": "Select the databaseId for step-4.",
+      "required": true
+    },
+    {
+      "id": "step-6-listid",
+      "purpose": "Select the listId for step-6.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Notion/Add positive feedback messages to a table in Notion.json",
+    "git_blob": "7dfe4b18c11da6015ba51914266cfd0b3bdd4bb4",
+    "sha256": "cf94980cc7c7173c3d727406ea8c6d02b4fa03f9c043e051b895b24258cdc843",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Notion/Add%20positive%20feedback%20messages%20to%20a%20table%20in%20Notion.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

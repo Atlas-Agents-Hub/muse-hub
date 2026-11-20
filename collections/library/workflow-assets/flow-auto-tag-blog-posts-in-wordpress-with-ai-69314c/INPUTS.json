@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-auto-tag-blog-posts-in-wordpress-with-ai-69314c",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-10-url": null,
+    "step-11-url": null,
+    "step-12-url": null,
+    "step-21-workflowid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "wordpress": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

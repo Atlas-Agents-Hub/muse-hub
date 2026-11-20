@@ -171,7 +171,6 @@
     const metadata = elt('dl', 'detail-metadata');
     makeMeta('Platform', item.platform, metadata);
     makeMeta('Getting started', item.install_method, metadata);
-    makeMeta('Rights', item.license_class.replaceAll('_', ' ').toLowerCase() + ' — see project license', metadata);
     detailBody.append(category, heading, summary, metadata);
     const link = sourceLink(item, 'detail-source', 'Open project');
     if (link) detailBody.append(link);

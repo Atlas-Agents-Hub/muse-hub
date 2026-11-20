@@ -16,7 +16,7 @@ SOURCE_SHA = {
     "src/muse_presets/database_paths.py": '86849fb3fc770109e868d533acd567980681570d4d7218734b56090506feca38',
     "examples/garden_calendar_demo.py": "19c1cd3703bbd48aef210c4a2f5cad540c5efd2827c6add7fba791bf18b41344",
     "tests/test_garden_calendar.py": "63fb0c7ed0ea2407a07446ef798c3f9cf580445f32f410fd11dcf67d362b332d",
-    "presets/garden-companion/preset.json": 'a17cebd32f4b91bf063fd3dee37349da3d1b44f06f9f42f971d26dd108d8ad8a',
+    "presets/garden-companion/preset.json": 'c073dbee4ace0f399f51ef9dfec8c94872e75d1248f602e5a1dfb0ebd2fa67c3',
     "presets/garden-companion/playbook.json": 'b311a4c96e440e0d2d9545f07119717fae87ba32d8a04d7cc17b4bcaf862fa26',
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
 }

@@ -1,0 +1,283 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-qualify-replies-from-pipedrive-persons-with-ai-c7d721",
+  "title": "Qualify replies from Pipedrive persons with AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Search Person in CRM",
+      "operation": "service-read",
+      "adapter": "pipedrive",
+      "parameters": {
+        "term": {
+          "expression": "{{ record.from.value[0].address }}"
+        },
+        "limit": 1,
+        "resource": "person",
+        "operation": "search",
+        "additionalFields": {
+          "includeFields": ""
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "In campaign?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ record.in_campaign }}"
+              },
+              "value2": "True"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get person from CRM",
+      "operation": "service-read",
+      "adapter": "pipedrive",
+      "parameters": {
+        "personId": {
+          "expression": "{{ record.id }}"
+        },
+        "resource": "person",
+        "operation": "get",
+        "resolveProperties": true
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Is interested?",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-4-model"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "content": {
+                "expression": "You are the best sales development representative in the world. You send cold email messages daily to CEOs and founders of companies. You do this to persuade them to make contact. This could be a phone call or a video meeting. \n\nYour task is to assess whether someone is interested in meeting up or calling sometime. You do this by attentively evaluating their response.\n\nThis is the email:\n{{ steps[\"step-5\"].record.text }}\n\nThe response format should be:\n{\"interested\": [yes/no],\n\"reason\": reason\n}\n\nJSON:"
+              }
+            }
+          ]
+        },
+        "options": {},
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Get email",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "email",
+              "stringValue": {
+                "expression": "{{ record.text }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Create deal in CRM",
+      "operation": "service-read",
+      "adapter": "pipedrive",
+      "parameters": {
+        "title": {
+          "expression": "{{ steps[\"step-3\"].record.Name }} Deal"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "IF interested",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ record.interested }}"
+              },
+              "value2": "yes"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Get response",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let interested = JSON.parse(record[\"message\"][\"content\"]).interested\nlet reason = JSON.parse(record[\"message\"][\"content\"]).reason\n\nreturn {json:{\n interested: interested,\n reason: reason\n}}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Email box 1",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {
+          "labelIds": []
+        },
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Email box 2",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {
+          "labelIds": []
+        },
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-9",
+    "step-10"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Qualify replies from Pipedrive persons with AI.json",
+    "git_blob": "07738298037db14d72e922e8b378c7afd7982bf5",
+    "sha256": "76ffba024f646024215602d54a8594dfdec183884eca55ca9c17f355c7300da9",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Qualify%20replies%20from%20Pipedrive%20persons%20with%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

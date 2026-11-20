@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-gmail-ai-auto-responder-create-draft-replies-to-incoming-emails-d642e1",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

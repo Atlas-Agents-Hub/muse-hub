@@ -1,0 +1,16 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-force-ai-to-use-a-specific-output-format-baf7bb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    }
+  }
+}

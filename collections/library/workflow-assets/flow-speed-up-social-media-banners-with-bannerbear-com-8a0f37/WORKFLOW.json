@@ -1,0 +1,334 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-speed-up-social-media-banners-with-bannerbear-com-8a0f37",
+  "title": "Speed Up Social Media Banners With BannerBear.com",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "n8n Form Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-1-path"
+        },
+        "options": {},
+        "formTitle": "BannerBear Clone",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Template",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "n8n Meetup Template"
+                  },
+                  {
+                    "option": "AI Meetup Template"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Title of Event",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Location of Event",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Date of Event",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Image Prompt",
+              "requiredField": true
+            }
+          ]
+        },
+        "formDescription": "Generate an image and apply text"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Upload to Cloudinary",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendQuery": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "upload_preset",
+              "value": "n8n-workflows-preset"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Send to Bannerbear Template",
+      "operation": "service-read",
+      "adapter": "bannerbear",
+      "parameters": {
+        "templateId": {
+          "expression": "{{ steps[\"step-4\"].record.template_id }}"
+        },
+        "modificationsUi": {
+          "modificationsValues": [
+            {
+              "name": "placeholder_image",
+              "text": {
+                "expression": ""
+              },
+              "imageUrl": {
+                "expression": "{{ record.secure_url.replace('upload/','upload/f_auto,q_auto/') }}"
+              }
+            },
+            {
+              "name": "placeholder_text",
+              "text": {
+                "expression": "{{ steps[\"step-4\"].record.title }}"
+              }
+            },
+            {
+              "name": "placeholder_location",
+              "text": {
+                "expression": "{{ steps[\"step-4\"].record.location }}"
+              }
+            },
+            {
+              "name": "placeholder_date",
+              "text": {
+                "expression": "{{ steps[\"step-4\"].record.date }}"
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "waitForImage": true,
+          "waitForImageMaxTries": 10
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Set Parameters",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "template_id",
+              "type": "string",
+              "value": {
+                "expression": "{{ {\n'AI Meetup Template': 'lzw71BD6VNLgD0eYkn',\n'n8n Meetup Template': 'n1MJGd52o696D7LaPV'\n}[record.Template] ?? '' }}"
+              }
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "value": {
+                "expression": "{{ record[\"Title of Event\"] }}"
+              }
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "value": {
+                "expression": "{{ record[\"Location of Event\"] }}"
+              }
+            },
+            {
+              "name": "date",
+              "type": "string",
+              "value": {
+                "expression": "{{ record[\"Date of Event\"] }}"
+              }
+            },
+            {
+              "name": "image_prompt",
+              "type": "string",
+              "value": {
+                "expression": "{{ record[\"Image Prompt\"] }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Download Banner",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.image_url_jpg }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Discord",
+      "operation": "service-write",
+      "adapter": "discord",
+      "parameters": {
+        "files": {
+          "values": [
+            {}
+          ]
+        },
+        "content": {
+          "expression": "📅 New Event Alert! {{ steps[\"step-4\"].record.title }} being held at {{ steps[\"step-4\"].record.location }} on the {{ steps[\"step-4\"].record.date }}! Don't miss it!"
+        },
+        "guildId": {
+          "configuration_input": "step-6-guildid"
+        },
+        "options": {},
+        "resource": "message",
+        "channelId": {
+          "configuration_input": "step-6-channelid"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Generate AI Banner Image",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "{{ record.image_prompt }}"
+        },
+        "options": {
+          "size": "1024x1024",
+          "quality": "standard"
+        },
+        "resource": "image"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.cloudinary.com/v1_1/daglih2g8/image/upload"
+    },
+    {
+      "id": "step-6-guildid",
+      "purpose": "Select the guildId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/Speed Up Social Media Banners With BannerBear.com.json",
+    "git_blob": "971ff9c6ce0093a6ff7bd3a03a75caa9855ac997",
+    "sha256": "4134ef95f99b3e863b18422b1aa2fd7f2b82ffd6211459243acc43283c40bf47",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/Speed%20Up%20Social%20Media%20Banners%20With%20BannerBear.com.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

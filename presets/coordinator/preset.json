@@ -2,7 +2,7 @@
   "schema": "muse-presets/preset-v1",
   "id": "coordinator",
   "title": "Coordinator",
-  "description": "Coordinates bounded work, memory, leases and independent acceptance.",
+  "description": "Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs.",
   "maturity": "PROFILE_TEMPLATE",
   "native_muse_status": "UNBOUND",
   "host_profiles": [

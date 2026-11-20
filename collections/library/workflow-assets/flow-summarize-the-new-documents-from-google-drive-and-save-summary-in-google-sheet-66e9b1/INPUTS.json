@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-summarize-the-new-documents-from-google-drive-and-save-summary-in-google-sheet-66e9b1",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-sheetname": null,
+    "step-4-documentid": null,
+    "step-5-foldertowatch": null,
+    "step-6-modelid": null
+  },
+  "adapters": {
+    "googledocs": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "toolwikipedia": {
+      "connection": null
+    }
+  }
+}

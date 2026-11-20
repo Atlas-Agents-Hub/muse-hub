@@ -1,0 +1,342 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-customer-support-channel-and-ticketing-system-with-slack-and-linear-f17cf8",
+  "title": "Customer Support Channel and Ticketing System with Slack and Linear",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Slack",
+      "operation": "service-read",
+      "adapter": "slack",
+      "parameters": {
+        "limit": 10,
+        "query": "in:#n8n-tickets has::ticket:",
+        "options": {},
+        "operation": "search"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              },
+              "ideas": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "priority": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Get Values",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{\n \"id\": \"#{{ record.permalink.split('/').last() }}\",\n \"type\": \"{{ record.type }}\",\n \"title\": \"__NOT_SET__\",\n \"channel\": \"{{ record.channel.name }}\",\n \"user\": \"{{ record.username }} ({{ record.user }})\",\n \"ts\": \"{{ record.ts }}\",\n \"permalink\": \"{{ record.permalink }}\",\n \"message\": \"{{ record.text.replaceAll('\"','\\\\\"').replaceAll('\\n', '\\\\n') }}\"\n}"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Create New Ticket?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ Boolean((record.hashes ?? []).includes(record.id)) }}"
+              },
+              "rightValue": {
+                "expression": "false"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get Existing Issues",
+      "operation": "service-read",
+      "adapter": "linear",
+      "parameters": {
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Generate Ticket Using ChatGPT",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "The \"user issue\" is enclosed by 3 backticks:\n```\n{{ steps[\"step-5\"].record.message }}\n```\nYou will complete the following 4 tasks:\n1. Generate a title intended for a support ticket based on the user issue only. Be descriptive but use no more than 10 words.\n2. Summarise the user issue only by identifying the key expectations and steps that were taken to reach the conclusion.\n3. Offer at most 3 suggestions to debug or resolve the user issue only. ignore the previous issues for this task.\n4. Identify the urgency of the user issue only and denote the priority as one of \"low\", \"medium\", \"high\" or \"urgent\". If you cannot determine the urgency of the issue, then assign the \"low\" priority. Also consider that requests which require action either today or tomorrow should be prioritised as \"high\"."
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Create Ticket",
+      "operation": "service-read",
+      "adapter": "linear",
+      "parameters": {
+        "title": {
+          "expression": "{{ record.output.title }}"
+        },
+        "teamId": {
+          "configuration_input": "step-9-teamid"
+        },
+        "additionalFields": {
+          "stateId": {
+            "configuration_input": "step-9-additionalfields-stateid"
+          },
+          "priorityId": {
+            "expression": "{{ { 'urgent': 1, 'high': 2, 'medium': 3, 'low': 4 }[record.output.priority.toLowerCase()] ?? 0 }}"
+          },
+          "description": {
+            "expression": "## {{ record.output.summary }}\n\n### Suggestions\n{{ record.output.ideas.map(idea => '* ' + idea).join('\\n') }}\n\n## Original Message\n{{ steps[\"step-5\"].record[\"user\"] }} asks:\n> {{ steps[\"step-5\"].record[\"message\"] }}\n\n### Metadata\nchannel: {{ steps[\"step-5\"].record.channel }}\nts: {{ steps[\"step-5\"].record.ts }}\npermalink: {{ steps[\"step-5\"].record.permalink }}\nhash: {{ steps[\"step-5\"].record.id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Get Hashes Only",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "hashes",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.descriptions.map(desc => desc.match(/hash\\:\\s([\\w#]+)/i)[1]) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Collect Descriptions",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "renameField": true,
+              "outputFieldName": "descriptions",
+              "fieldToAggregate": "description"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-10",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-9-teamid",
+      "purpose": "Select the teamId for step-9.",
+      "required": true
+    },
+    {
+      "id": "step-9-additionalfields-stateid",
+      "purpose": "Choose the stateId resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Slack/Customer Support Channel and Ticketing System with Slack and Linear.json",
+    "git_blob": "98d50dd3e8fe5fc3dde06a61098cefac172ced8e",
+    "sha256": "812784778ef07c90a603726db6da18ca51f3f713e7b6308866e9d73c40b41369",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Slack/Customer%20Support%20Channel%20and%20Ticketing%20System%20with%20Slack%20and%20Linear.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

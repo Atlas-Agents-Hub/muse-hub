@@ -1,0 +1,33 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-hr-it-helpdesk-chatbot-with-audio-transcription-6c94b5",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

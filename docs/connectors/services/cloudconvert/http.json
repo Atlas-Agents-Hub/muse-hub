@@ -1,0 +1,24 @@
+{
+  "id": "cloudconvert",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "cloudconvert/src/lib/common/auth.ts",
+      "credential_source_sha256": "dfc9472e6cf84e77161db946b059eb0c6a428b02157f6376c561cf2f7a2394b8",
+      "headers": {},
+      "host": "api.cloudconvert.com",
+      "id": "read-v2-users-me",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "cloudconvert/src/lib/common/auth.ts",
+      "source_sha256": "dfc9472e6cf84e77161db946b059eb0c6a428b02157f6376c561cf2f7a2394b8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/cloudconvert/src/lib/common/auth.ts",
+      "url_template": "https://api.cloudconvert.com/v2/users/me"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

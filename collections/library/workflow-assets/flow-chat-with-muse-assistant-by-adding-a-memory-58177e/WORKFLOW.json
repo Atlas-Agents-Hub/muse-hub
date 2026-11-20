@@ -1,0 +1,244 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-chat-with-muse-assistant-by-adding-a-memory-58177e",
+  "title": "Chat with OpenAI Assistant (by adding a memory)",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Assistant",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "## Our Previous Conversation:\n{{ record[\"messages\"].map(m => `\nHuman: ${m.human}\nAI Assistant: ${m.ai}\n`) }}\n## Current message:\n{{ steps[\"step-8\"].record.chatInput }}"
+        },
+        "options": {},
+        "assistantId": {
+          "configuration_input": "step-1-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Calculator",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "Chat Memory Manager",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Chat Memory Manager1",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "mode": "insert",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "user",
+              "message": {
+                "expression": "{{ steps[\"step-8\"].record.chatInput }}"
+              }
+            },
+            {
+              "type": "ai",
+              "message": {
+                "expression": "{{ record.output }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Aggregate",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "messages"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Edit Fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "output",
+              "stringValue": {
+                "expression": "{{ steps[\"step-1\"].record.output }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Limit",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-8",
+      "label": "Chat Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {
+          "loadPreviousSession": "memory"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ steps[\"step-8\"].record.sessionId }}123"
+        },
+        "contextWindowLength": 20
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-7",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-3",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-4",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-1",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-8"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-assistantid",
+      "purpose": "Select the assistantId for step-1.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Chat with OpenAI Assistant (by adding a memory).json",
+    "git_blob": "dbebc3c148a2c6d93def38cf5e45988b8403d996",
+    "sha256": "5858d1b30da3243bee62d2d7774cbdf25b4a9a7a8f0d8792c2115eba14e6797a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Chat%20with%20OpenAI%20Assistant%20%28by%20adding%20a%20memory%29.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

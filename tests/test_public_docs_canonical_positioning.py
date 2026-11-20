@@ -17,9 +17,9 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
      for path in CURRENT:
          with self.subTest(path=path):
              text=(ROOT/path).read_text("utf8")
-             repository_links.extend(re.findall(r'https://github[.]com/[^/]+/muse-ai-agent-presets',text))
+             repository_links.extend(re.findall(r'https://github[.]com/[^/]+/muse-hub',text))
      self.assertTrue(repository_links)
-     self.assertEqual(set(repository_links),{"https://github.com/atlas-origins/muse-ai-agent-presets"})
+     self.assertEqual(set(repository_links),{"https://github.com/Atlas-Agents-Hub/muse-hub"})
  def test_readme_has_clear_specialist_directory_and_setup_routes(self):
      text=(ROOT/"README.md").read_text("utf8")
      self.assertLess(len(text.encode()),8000)
@@ -50,13 +50,14 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
      self.assertIn("handbook/specialists-by-task.md",skills)
  def test_discovery_index_contains_canonical_website(self):
      text=(ROOT/"llms.txt").read_text("utf8")
-     site="https://atlas-origins.github.io/muse-ai-agent-presets/"
+     site="https://atlas-agents-hub.github.io/muse-hub/"
      self.assertIn(site,text)
      self.assertIn(site+"downloads.html",text)
      cap=json.loads((ROOT/"docs/discovery/agent-capabilities.json").read_bytes())
      self.assertEqual(cap["homepage"],site)
      self.assertIn("specialist_engine_index",cap)
-     self.assertEqual(cap["custom_connector_count"],151)
+     connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
+     self.assertEqual(cap["custom_connector_count"],len(connectors))
  def test_architecture_describes_both_procedure_layers(self):
   page=(ROOT/"docs/ARCHITECTURE.md").read_text("utf8")
   for item in ("skill","workflow","task starter","50 unique","SPECIALIST_SCOPE_AND_ENGINES.md"):
@@ -73,8 +74,9 @@ class PublicDocsCanonicalPositioning(unittest.TestCase):
  def test_skills_guide_reaches_current_methods_and_tools(self):
      page=(ROOT/"docs/SKILLS.md").read_text("utf8")
      self.assertIn("handbook/specialists-by-task.md",page)
-     self.assertIn(str(len(current_collection()['skills']))+" skills",page)
-     self.assertIn(str(len(current_collection()['workflows']))+" workflows",page)
+     collection=current_collection()
+     self.assertIn(str(len(collection['skills']))+" skills",page)
+     self.assertIn(str(len(collection['workflows']))+" workflows",page)
      self.assertIn("WORKFLOWS.md",page)
      self.assertIn("SKILL_INDEX.md",page)
  def test_current_role_guides_preserve_the_catalog_setup_paths(self):

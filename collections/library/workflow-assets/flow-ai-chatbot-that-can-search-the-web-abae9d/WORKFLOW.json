@@ -1,0 +1,117 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-chatbot-that-can-search-the-web-abae9d",
+  "title": "AI chatbot that can search the web",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On new manual Chat Message",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Chat OpenAI",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.3
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Wikipedia",
+      "operation": "service-read",
+      "adapter": "toolwikipedia",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "contextWindowLength": 20
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "SerpAPI",
+      "operation": "service-read",
+      "adapter": "toolserpapi",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.input }}"
+        },
+        "options": {},
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI chatbot that can search the web.json",
+    "git_blob": "8dce6146778167cf3728d5143a49cad7fde935a8",
+    "sha256": "1f2b752e610734f2c49510fbf515d5c3bd6c9a33a1c5c99ead6a1b22b13fe81a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI%20chatbot%20that%20can%20search%20the%20web.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

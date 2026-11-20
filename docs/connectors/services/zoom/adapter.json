@@ -1,0 +1,343 @@
+{
+  "allowed_hosts": [
+    "api.zoom.us",
+    "marketplace.zoom.us",
+    "zoom.us"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://zoom.us/oauth/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [],
+    "token_urls": [
+      "https://zoom.us/oauth/token"
+    ]
+  },
+  "category": "Communication",
+  "id": "zoom",
+  "name": "Zoom",
+  "operations": [
+    {
+      "description": "Create a new Zoom Meeting",
+      "id": "zoom_create_meeting",
+      "inputs": [
+        {
+          "description": "The meeting's topic",
+          "label": "Meeting's topic",
+          "name": "topic",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Meeting start date-time, for example 2026-11-01T15:00:00 (read in the Timezone below) or 2026-11-01T15:00:00Z (UTC).",
+          "label": "Start Time",
+          "name": "start_time",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "IANA timezone for the start time, for example America/New_York. Defaults to UTC.",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Duration of the meeting",
+          "label": "Duration (in Minutes)",
+          "name": "duration",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Auto Recording",
+          "name": "auto_recording",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Audio",
+          "name": "audio",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The meeting's agenda",
+          "label": "Agenda",
+          "name": "agenda",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The password required to join the meeting. By default, a password can only have a maximum length of 10 characters and only contain alphanumeric characters and the @, -, _, and * characters.",
+          "label": "Password",
+          "name": "password",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether the prescheduled meeting was created via the GSuite app.",
+          "label": "Pre Schedule",
+          "name": "pre_schedule",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The email address or user ID of the user to schedule a meeting for.",
+          "label": "Schedule for",
+          "name": "schedule_for",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Not used by Zoom (kept for compatibility). Zoom creates the join URL and returns it in the output.",
+          "label": "Join URL",
+          "name": "join_url",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "When on, only participants signed in to a Zoom account can join. Turn off to let anyone with the link join.",
+          "label": "Require Zoom Sign-in to Join",
+          "name": "require_authentication",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Zoom Meeting",
+      "source_path": "zoom/src/lib/actions/create-meeting.ts",
+      "source_sha256": "1513ca0f089866637bb994d4290aa476f3ae0d017ef2183dd4cf2ac7ab2f09df",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/lib/actions/create-meeting.ts"
+    },
+    {
+      "description": "Delete a meeting, or one occurrence of a recurring meeting.",
+      "id": "zoom_delete_meeting",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Meeting_Id",
+          "name": "meeting_id",
+          "required": null,
+          "source_expression": "zoomProps.meetingId({ description: 'The numeric Zoom meeting ID to delete, for example 85746065432. Find it with List Meetings.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Occurrence_Id",
+          "name": "occurrence_id",
+          "required": null,
+          "source_expression": "zoomProps.occurrenceId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Email the host and alternative hosts that the meeting was cancelled.",
+          "label": "Notify Host and Alternative Hosts",
+          "name": "schedule_for_reminder",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Email registrants that the meeting was cancelled.",
+          "label": "Notify Registrants",
+          "name": "cancel_meeting_reminder",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Meeting",
+      "source_path": "zoom/src/lib/actions/delete-meeting.ts",
+      "source_sha256": "906ef3a67a032c07276aa4bf8c8e8423daaca02c0bcb17d07e5dc4a28c241bcb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/lib/actions/delete-meeting.ts"
+    },
+    {
+      "description": "Retrieve the details of an existing meeting.",
+      "id": "zoom_find_meeting",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Meeting_Id",
+          "name": "meeting_id",
+          "required": null,
+          "source_expression": "zoomMeetingDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Meeting Occurrence ID. Provide this field to view meeting details of a particular occurrence of the recurring meeting.",
+          "label": "Occurrence ID",
+          "name": "occurrence_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Set to true if you would like to view meeting details of all previous occurrences of a recurring meeting.",
+          "label": "Show Previous Occurrences",
+          "name": "show_previous_occurrences",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Zoom Meeting",
+      "source_path": "zoom/src/lib/actions/find-meeting.ts",
+      "source_sha256": "94de027ce0345539a9817cce8dd03eb5205091b629cc4f69e1f8b13fb82683e0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/lib/actions/find-meeting.ts"
+    },
+    {
+      "description": "Get the profile of the Zoom user behind this connection.",
+      "id": "zoom_get_current_user",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Current User",
+      "source_path": "zoom/src/lib/actions/get-current-user.ts",
+      "source_sha256": "8d95de94427ada061fd6cf90e340429e2c68083af1e2b39c5ede473c015295ac",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/lib/actions/get-current-user.ts"
+    },
+    {
+      "description": "Get the details of a meeting by its meeting ID.",
+      "id": "zoom_get_meeting",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Meeting_Id",
+          "name": "meeting_id",
+          "required": null,
+          "source_expression": "zoomProps.meetingId({ description: 'The numeric Zoom meeting ID, for example 85746065432.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Occurrence_Id",
+          "name": "occurrence_id",
+          "required": null,
+          "source_expression": "zoomProps.occurrenceId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "For recurring meetings: also include occurrences that already happened.",
+          "label": "Show Previous Occurrences",
+          "name": "show_previous_occurrences",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Meeting",
+      "source_path": "zoom/src/lib/actions/get-meeting.ts",
+      "source_sha256": "1c00b4144bdb42d3ffc33a4c54ac54464c4ddaf4333e320094ca26689652abc1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/lib/actions/get-meeting.ts"
+    },
+    {
+      "description": "List the cloud recordings of the connected user between two dates (paid Zoom plan with cloud recording).",
+      "id": "zoom_list_recordings",
+      "inputs": [
+        {
+          "description": "Start date in YYYY-MM-DD format (UTC), for example 2026-10-01.",
+          "label": "From Date",
+          "name": "from",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "End date in YYYY-MM-DD format (UTC), at most one month after From Date. Defaults to today, or to one month after From Date if that is earlier. Required with Next Page Token: use the To value from the previous page so every page covers the same dates.",
+          "label": "To Date",
+          "name": "to",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Page_Size",
+          "name": "page_size",
+          "required": null,
+          "source_expression": "zoomProps.pageSize()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Next_Page_Token",
+          "name": "next_page_token",
+          "required": null,
+          "source_expression": "zoomProps.nextPageToken()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Cloud Recordings",
+      "source_path": "zoom/src/lib/actions/list-recordings.ts",
+      "source_sha256": "941affcd807b6eba6f1397e1e4c7a53726f191bde178110baa0d5a3f7a83cb4d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/lib/actions/list-recordings.ts"
+    },
+    {
+      "description": "List the meetings of the connected Zoom user, one page at a time.",
+      "id": "zoom_list_meetings",
+      "inputs": [
+        {
+          "description": "Which meetings to list.",
+          "label": "Meeting Type",
+          "name": "type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Page_Size",
+          "name": "page_size",
+          "required": null,
+          "source_expression": "zoomProps.pageSize()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Next_Page_Token",
+          "name": "next_page_token",
+          "required": null,
+          "source_expression": "zoomProps.nextPageToken()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Meetings",
+      "source_path": "zoom/src/lib/actions/list-meetings.ts",
+      "source_sha256": "de24bb0fc99fafc47fc4518181c6b0252b84c79c7f733fa8a1a1efdd1ab3eb94",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/lib/actions/list-meetings.ts"
+    },
+    {
+      "description": "List the ended instances (UUID and start time) of a meeting.",
+      "id": "zoom_list_past_meeting_instances",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Meeting_Id",
+          "name": "meeting_id",
+          "required": null,
+          "source_expression": "zoomProps.meetingId({ description: 'The numeric Zoom meeting ID, for example 85746065432.' })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Past Meeting Instances",
+      "source_path": "zoom/src/lib/actions/list-past-meeting-instances.ts",
+      "source_sha256": "66bec2a79ad56cdbec7cf9ee6fb5f1f525eba28a19ef5b15606c0c35f5a16d41",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/lib/actions/list-past-meeting-instances.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "410014b9e1dfd6b62c23c6cbd916201395aa87e5",
+    "index_path": "zoom/src/index.ts",
+    "index_sha256": "b1f0fec56f2973674ac2700e640766f8cae5bd2ab11453548be943e80855defc",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "automation-engineer"
+  ]
+}

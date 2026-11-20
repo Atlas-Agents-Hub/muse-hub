@@ -1,0 +1,763 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-assistant-for-muse-creators-leaderboard-find-popular-workflows-fd3d8f",
+  "title": "🔥📈🤖 Assistant for n8n Creators Leaderboard - Find Popular Workflows",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "stats_aggregate_creators",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.path }}{{ record['creators-filename'] }}.json"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "stats_aggregate_workflows",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.path }}{{ record['workflows-filename'] }}.json"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Global Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "path",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-3-assignments-0-value"
+              }
+            },
+            {
+              "name": "workflows-filename",
+              "type": "string",
+              "value": {
+                "expression": "stats_aggregate_workflows"
+              }
+            },
+            {
+              "name": "creators-filename",
+              "type": "string",
+              "value": {
+                "expression": "stats_aggregate_creators"
+              }
+            },
+            {
+              "name": "chart-filename",
+              "type": "string",
+              "value": {
+                "expression": "stats_aggregate_chart"
+              }
+            },
+            {
+              "name": "datetime",
+              "type": "string",
+              "value": {
+                "expression": "{{ current_time.format('yyyy-MM-dd') }}"
+              }
+            },
+            {
+              "name": "username",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.query.username }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Parse Workflow Data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.data }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Parse Creators Data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.data }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Take Top 25 Creators",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {
+        "maxItems": 25
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Aggregate",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Filter By Creator Username",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.username }}"
+              },
+              "rightValue": {
+                "expression": "{{ steps[\"step-3\"].record.username }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "gpt-4o-mini",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.1
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "When Executed by Another Workflow",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": {
+          "json": {
+            "query": {
+              "username": "joe"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Workflow Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "n8n_creator_stats",
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool to get n8n Creator Stats.",
+        "jsonSchemaExample": {
+          "json": {
+            "username": "n8n creator username"
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "creator-summary",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "fileName": {
+            "expression": "creator-summary"
+          }
+        },
+        "operation": "toText",
+        "sourceProperty": "output"
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Workflow Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "n8n Creator Stats Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.chatInput }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "You are tasked with generating a **comprehensive Markdown report** about a specific n8n community workflow contributor using the provided tools. Your report should not only address the user's query but also provide meaningful insights into the contributor's impact on the n8n community. Follow the structure below:\n\n## Detailed Summary\n- Provide a thorough summary of the contributor's workflows.\n- Highlight unique features, key use cases, and notable technical components for each workflow.\n\n## Workflows\nCreate a well-formatted markdown table with these columns:\n- **Workflow Name**: The name of the workflow. Keep the emojies of they exist.\n- **Description**: A brief overview of its purpose and functionality.\n- **Unique Weekly Visitors**: The number of unique users who visited this workflow weekly.\n- **Unique Monthly Visitors**: The number of unique users who visited this workflow monthly.\n- **Unique Weekly Inserters**: The number of unique users who inserted this workflow weekly.\n- **Unique Monthly Inserters**: The number of unique users who inserted this workflow monthly.\n- **Why It’s Popular**: Explain what makes this workflow stand out (e.g., innovative features, ease of use, specific use cases).\n\n## Community Analysis\n- Analyze why these workflows are popular and valued by the n8n community.\n- Discuss any trends, patterns, or feedback that highlight their significance.\n\n## Additional Insights\n- If available, provide extra information about the contributor's overall impact, such as their engagement in community forums or other notable contributions.\n\n## Formatting Guidelines\n- Use Markdown formatting exclusively (headers, lists, and tables) for clarity and organization.\n- Ensure your response is concise yet comprehensive, structured for easy navigation.\n\n## Error Handling\n- If data is unavailable or incomplete, clearly state this in your response and suggest possible reasons or next steps.\n\n## TOOLS\n\n### n8n_creator_stats \n- Use this tool to retrieve detailed statistics about the n8n creator."
+          }
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Save creator-summary.md",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "append": true
+        },
+        "fileName": {
+          "expression": "C:\\\\Users\\\\joe\\Downloads\\\\{{ $binary.data.fileName }}-{{ current_time.format('yyyy-MM-dd-hh-mm-ss') }}.md"
+        },
+        "operation": "write"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Summary Report",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "output",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Creators Data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "name",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.user.name }}"
+              }
+            },
+            {
+              "name": "username",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.user.username }}"
+              }
+            },
+            {
+              "name": "bio",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.user.bio }}"
+              }
+            },
+            {
+              "name": "sum_unique_weekly_inserters",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.sum_unique_weekly_inserters }}"
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-19-assignments-4-name"
+              },
+              "type": "number",
+              "value": {
+                "expression": "{{ record.sum_unique_monthly_inserters }}"
+              }
+            },
+            {
+              "name": "sum_unique_inserters",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.sum_unique_inserters }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Workflows Data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "template_url",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.template_url }}"
+              }
+            },
+            {
+              "name": "wf_detais.name",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.wf_detais.name }}"
+              }
+            },
+            {
+              "name": "wf_detais.createdAt",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.wf_detais.createdAt }}"
+              }
+            },
+            {
+              "name": "wf_detais.description",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.wf_detais.description }}"
+              }
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.user.name }}"
+              }
+            },
+            {
+              "name": "username",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.user.username }}"
+              }
+            },
+            {
+              "name": "unique_weekly_inserters",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.unique_weekly_inserters }}"
+              }
+            },
+            {
+              "name": "unique_monthly_inserters",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.unique_monthly_inserters }}"
+              }
+            },
+            {
+              "name": "unique_weekly_visitors",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.unique_weekly_visitors }}"
+              }
+            },
+            {
+              "name": "unique_monthly_visitors",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.unique_monthly_visitors }}"
+              }
+            },
+            {
+              "name": "user.avatar",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.user.avatar }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Merge Creators & Workflows",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "joinMode": "enrichInput1",
+        "fieldsToMatchString": "username"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Split Out Creators",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Split Out Workflows",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Sort By Top Weekly Creator Inserts",
+      "operation": "sort",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "order": "descending",
+              "fieldName": "sum_unique_weekly_inserters"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Sort By Top Weekly Workflow Inserts",
+      "operation": "sort",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "order": "descending",
+              "fieldName": "unique_weekly_inserters"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Take Top 300 Workflows",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {
+        "maxItems": 300
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-7",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-15",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-15",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-13",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-15",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-10",
+    "step-11"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://raw.githubusercontent.com/teds-tech-talks/{resource}/refs/heads/main/"
+    },
+    {
+      "id": "step-19-assignments-4-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/🔥📈🤖 AI Agent for n8n Creators Leaderboard - Find Popular Workflows.json",
+    "git_blob": "3e4d562706da4fdff9de848c43ee6db56b7ee1b4",
+    "sha256": "0a545eb1837a51d086537c48725ca034f5b31f23b58c6f986c2b273b83cc08a9",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/%F0%9F%94%A5%F0%9F%93%88%F0%9F%A4%96%20AI%20Agent%20for%20n8n%20Creators%20Leaderboard%20-%20Find%20Popular%20Workflows.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

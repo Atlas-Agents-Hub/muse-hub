@@ -1,0 +1,20 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-convert-url-html-to-markdown-format-and-get-page-links-59fe31",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-value-body-0": null,
+    "step-5-value-body-1": null,
+    "step-10-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

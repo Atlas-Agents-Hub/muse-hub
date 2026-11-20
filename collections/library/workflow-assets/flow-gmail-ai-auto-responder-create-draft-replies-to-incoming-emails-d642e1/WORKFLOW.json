@@ -1,0 +1,242 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-gmail-ai-auto-responder-create-draft-replies-to-incoming-emails-d642e1",
+  "title": "Gmail AI Auto-Responder Create Draft Replies to incoming emails",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Gmail Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {
+          "q": "-from:me"
+        },
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "If Needs Reply",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.needsReply }}"
+              },
+              "rightValue": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "JSON Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "needsReply": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "needsReply"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI Chat",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Gmail - Create Draft",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "message": {
+          "expression": "{{ record.text.replace(/\\n/g, \"<br />\\n\") }}"
+        },
+        "options": {
+          "sendTo": {
+            "expression": "{{ steps[\"step-1\"].record.headers.from }}"
+          },
+          "threadId": {
+            "expression": "{{ steps[\"step-1\"].record.threadId }}"
+          }
+        },
+        "subject": {
+          "expression": "Re: {{ steps[\"step-1\"].record.headers.subject }}"
+        },
+        "resource": "draft",
+        "emailType": "html"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Assess if message needs a reply",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "Subject: {{ record.subject }}\nMessage:\n{{ record.textAsHtml }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Your task is to assess if the message requires a response. Return in JSON format true if it does, false otherwise.\nMarketing emails don't require a response."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Generate email reply",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Subject: {{ steps[\"step-1\"].record.subject }}\nMessage: {{ steps[\"step-1\"].record.textAsHtml }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You're a helpful personal assistant and your task is to draft replies on my behalf to my incoming emails. Whenever I provide some text from an email, return an appropriate draft reply for it and nothing else.\nEnsure that the reply is suitable for a professional email setting and addresses the topic in a clear, structured, and detailed manner.\nDo not make things up.\n\nDetailed instructions:\n- Be concise and maintain a business casual tone.\n- Start with \"Hello,\", and end with \"Best,\"\n- When replying to yes-no questions, draft 2 responses: one affirmative and one negative separated by \" - - - - - - - OR - - - - - - - \"\n- If you don't know an answer, you can leave placeholders like \"[YOUR_ANSWER_HERE]\".\n- Don't use any special formatting, only plain text.\n- Reply in the same language as the inbound email."
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Gmail AI Auto-Responder_ Create Draft Replies to incoming emails.json",
+    "git_blob": "041182a42233479671b068ebf39399828e21b942",
+    "sha256": "1182fcc95492893afacb5d7335e7e0ed61c36eca80c1a679645aa24e20e5c63f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Gmail%20AI%20Auto-Responder_%20Create%20Draft%20Replies%20to%20incoming%20emails.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

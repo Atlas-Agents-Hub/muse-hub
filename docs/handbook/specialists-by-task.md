@@ -2,7 +2,7 @@
 
 Pick the specialist closest to your task. Each entry explains its scope, the tools included with the toolkit and a concrete starting point.
 
-[Download an assistant](../DOWNLOAD_A_SPECIALIST.md) · [Get started](../GETTING_STARTED.md) · [Methods and tools](../collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [100 task starters](../../collections/muse-starters-v1/CATALOG.md)
+[Download an assistant](../DOWNLOAD_A_SPECIALIST.md) · [Get started](../GETTING_STARTED.md) · [Methods and tools](../collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [Task starters](../../collections/muse-starters-v1/CATALOG.md)
 
 ### Build and automate
 

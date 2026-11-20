@@ -1,0 +1,31 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-product-imagines-355242",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-filter-folderid": null,
+    "step-4-modelid": null,
+    "step-5-filter-folderid": null,
+    "step-7-modelid": null,
+    "step-12-url": null,
+    "step-16-modelid": null,
+    "step-17-driveid": null,
+    "step-17-folderid": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

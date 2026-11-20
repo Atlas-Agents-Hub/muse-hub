@@ -1,0 +1,1818 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-spot-workplace-discrimination-patterns-with-ai-f8a593",
+  "title": "Spot Workplace Discrimination Patterns with AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "OpenAI Chat Model2",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "SET company_name",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "company_name",
+              "type": "string",
+              "value": {
+                "expression": "Twilio"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Define dictionary of demographic keys",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "asian",
+              "type": "string",
+              "value": "Asian"
+            },
+            {
+              "name": "hispanic",
+              "type": "string",
+              "value": "Hispanic or Latinx"
+            },
+            {
+              "name": "white",
+              "type": "string",
+              "value": "White"
+            },
+            {
+              "name": "pacific_islander",
+              "type": "string",
+              "value": "Native Hawaiian or other Pacific Islander"
+            },
+            {
+              "name": "black",
+              "type": "string",
+              "value": "Black or African American"
+            },
+            {
+              "name": "middle_eastern",
+              "type": "string",
+              "value": "Middle Eastern"
+            },
+            {
+              "name": "indigenous",
+              "type": "string",
+              "value": "Indigenous American or Native Alaskan"
+            },
+            {
+              "name": "male",
+              "type": "string",
+              "value": "Men"
+            },
+            {
+              "name": "female",
+              "type": "string",
+              "value": "Women"
+            },
+            {
+              "name": "trans",
+              "type": "string",
+              "value": "Transgender and/or Non-Binary"
+            },
+            {
+              "name": "hetero",
+              "type": "string",
+              "value": "Heterosexual"
+            },
+            {
+              "name": "lgbtqia",
+              "type": "string",
+              "value": "LGBTQ+"
+            },
+            {
+              "name": "nondisabled",
+              "type": "string",
+              "value": "Non-Disabled"
+            },
+            {
+              "name": "disabled",
+              "type": "string",
+              "value": "People with Disabilities"
+            },
+            {
+              "name": "caregiver",
+              "type": "string",
+              "value": "Caregivers"
+            },
+            {
+              "name": "parent",
+              "type": "string",
+              "value": "Parents/Guardians"
+            },
+            {
+              "name": "nonparent",
+              "type": "string",
+              "value": "Not a Parent or Caregiver"
+            },
+            {
+              "name": "nonveteran",
+              "type": "string",
+              "value": "Non-Veterans"
+            },
+            {
+              "name": "veteran",
+              "type": "string",
+              "value": "Veterans"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "ScrapingBee Search Glassdoor",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-8-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": {
+                "expression": "https://www.glassdoor.com/Search/results.htm?keyword={{ record.company_name.toLowerCase().urlEncode() }}"
+              }
+            },
+            {
+              "name": "premium_proxy",
+              "value": "true"
+            },
+            {
+              "name": "block_resources",
+              "value": "false"
+            },
+            {
+              "name": "stealth_proxy",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Extract company url path",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "url_path",
+              "attribute": "href",
+              "cssSelector": "body main div a",
+              "returnValue": "attribute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "ScrapingBee GET company page contents",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-10-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": {
+                "expression": "https://www.glassdoor.com{{ record.url_path }}"
+              }
+            },
+            {
+              "name": "premium_proxy",
+              "value": "true"
+            },
+            {
+              "name": "block_resources",
+              "value": "false"
+            },
+            {
+              "name": "stealth_proxy",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Extract reviews page url path",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "url_path",
+              "attribute": "href",
+              "cssSelector": "#reviews a",
+              "returnValue": "attribute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "ScrapingBee GET Glassdoor Reviews Content",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-12-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": {
+                "expression": "https://www.glassdoor.com{{ record.url_path }}"
+              }
+            },
+            {
+              "name": "premium_proxy",
+              "value": "True"
+            },
+            {
+              "name": "block_resources",
+              "value": "False"
+            },
+            {
+              "name": "stealth_proxy",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Extract Overall Review Summary",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "review_summary",
+              "cssSelector": "div[data-test=\"review-summary\"]",
+              "returnValue": "html"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Extract Demographics Module",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "demographics_content",
+              "cssSelector": "div[data-test=\"demographics-module\"]",
+              "returnValue": "html"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Extract overall ratings and distribution percentages",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.review_summary }}"
+        },
+        "options": {},
+        "attributes": {
+          "attributes": [
+            {
+              "name": "average_rating",
+              "type": "number",
+              "required": true,
+              "description": "The overall average rating for this company."
+            },
+            {
+              "name": "total_number_of_reviews",
+              "type": "number",
+              "required": true,
+              "description": "The total number of reviews for this company."
+            },
+            {
+              "name": {
+                "configuration_input": "step-15-attributes-2-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": "The percentage distribution of 5 star reviews"
+            },
+            {
+              "name": {
+                "configuration_input": "step-15-attributes-3-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": "The percentage distribution of 4 star reviews"
+            },
+            {
+              "name": {
+                "configuration_input": "step-15-attributes-4-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": "The percentage distribution of 3 star reviews"
+            },
+            {
+              "name": {
+                "configuration_input": "step-15-attributes-5-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": "The percentage distribution of 2 star reviews"
+            },
+            {
+              "name": {
+                "configuration_input": "step-15-attributes-6-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": "The percentage distribution of 1 star reviews"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Extract demographic distributions",
+      "operation": "extract-fields",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.demographics_content }}"
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may use 0 for the attribute's value."
+        },
+        "attributes": {
+          "attributes": [
+            {
+              "name": "asian_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as asian."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-1-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as asian."
+              }
+            },
+            {
+              "name": "hispanic_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as hispanic."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-3-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as hispanic."
+              }
+            },
+            {
+              "name": "white_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as white."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-5-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as white."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-6-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as native hawaiian or pacific islander."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-7-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as native hawaiian or pacific islander."
+              }
+            },
+            {
+              "name": "black_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as black."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-9-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as black."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-10-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as middle eastern."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-11-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as middle_eastern."
+              }
+            },
+            {
+              "name": "indigenous_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as indigenous american or native alaskan."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-13-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as indigenous american or native alaskan."
+              }
+            },
+            {
+              "name": "male_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as men."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-15-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as men."
+              }
+            },
+            {
+              "name": "female_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as women."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-17-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as women."
+              }
+            },
+            {
+              "name": "trans_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as transgender and/or non-binary."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-19-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as trans and/or non-binary."
+              }
+            },
+            {
+              "name": "hetero_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as heterosexual."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-21-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as heterosexual."
+              }
+            },
+            {
+              "name": "lgbtqia_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as lgbtqia+."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-23-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as lgbtqia+."
+              }
+            },
+            {
+              "name": "nondisabled_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as non-disabled."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-25-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as non-disabled."
+              }
+            },
+            {
+              "name": "disabled_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as people with disabilities."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-27-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as people with disabilities."
+              }
+            },
+            {
+              "name": "caregiver_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as caregivers."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-29-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as caregivers."
+              }
+            },
+            {
+              "name": "parent_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as parents/guardians."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-31-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as parents/guardians."
+              }
+            },
+            {
+              "name": "nonparent_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as not a parent or caregiver."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-33-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as not a parent or guardian."
+              }
+            },
+            {
+              "name": "nonveteran_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as non-veterans."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-35-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as non-veterans."
+              }
+            },
+            {
+              "name": "veteran_average_rating",
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The average rating for this company by employees who self identified as veterans."
+              }
+            },
+            {
+              "name": {
+                "configuration_input": "step-16-attributes-37-name"
+              },
+              "type": "number",
+              "required": true,
+              "description": {
+                "expression": "The number of reviews for this company by employees who self-identified as veterans."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Define contributions to variance",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "contribution_to_variance.5_star",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output['5_star_distribution_percentage'] / 100) * Math.pow(5 - record.output.average_rating,2) }}"
+              }
+            },
+            {
+              "name": "contribution_to_variance.4_star",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output['4_star_distribution_percentage'] / 100) * Math.pow(4 - record.output.average_rating,2) }}"
+              }
+            },
+            {
+              "name": "contribution_to_variance.3_star",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output['3_star_distribution_percentage'] / 100) * Math.pow(3 - record.output.average_rating,2) }}"
+              }
+            },
+            {
+              "name": "contribution_to_variance.2_star",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output['2_star_distribution_percentage'] / 100) * Math.pow(2 - record.output.average_rating,2) }}"
+              }
+            },
+            {
+              "name": "contribution_to_variance.1_star",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output['1_star_distribution_percentage'] / 100) * Math.pow(1 - record.output.average_rating,2) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Set variance and std_dev",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "variance",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.contribution_to_variance.values().sum() }}"
+              }
+            },
+            {
+              "name": "average_rating",
+              "type": "number",
+              "value": {
+                "expression": "{{ steps[\"step-15\"].record.output.average_rating }}"
+              }
+            },
+            {
+              "name": "total_number_of_reviews",
+              "type": "number",
+              "value": {
+                "expression": "{{ steps[\"step-15\"].record.output.total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "std_dev",
+              "type": "number",
+              "value": {
+                "expression": "{{ Math.sqrt(record.contribution_to_variance.values().sum()) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Calculate P-Scores",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Approximate CDF for standard normal distribution\nfunction normSDist(z) {\n const t = 1 / (1 + 0.3275911 * Math.abs(z));\n const d = 0.254829592 * t - 0.284496736 * t * t + 1.421413741 * t * t * t - 1.453152027 * t * t * t * t + 1.061405429 * t * t * t * t * t;\n return 0.5 * (1 + Math.sign(z) * d * Math.exp(-z * z / 2));\n}\n\nfor (const item of records) {\n if (!item.json.population_analysis.p_scores) {\n item.json.population_analysis.p_scores = {};\n }\n\n for (const score of Object.keys(item.json.population_analysis.z_scores)) {\n // Check if review count exists and is greater than zero\n if (item.json.population_analysis.review_count[score] > 0) {\n // Apply the p_score formula: 2 * NORM.S.DIST(-ABS(z_score))\n const p_score = 2 * normSDist(-Math.abs(item.json.population_analysis.z_scores[score]));\n\n // Store the calculated p_score\n item.json.population_analysis.p_scores[score] = p_score;\n } else {\n // Remove z_scores, effect_sizes, and p_scores for groups with no reviews\n delete item.json.population_analysis.z_scores[score];\n delete item.json.population_analysis.effect_sizes[score];\n delete item.json.population_analysis.p_scores[score];\n }\n }\n}\n\nreturn records;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Sort Effect Sizes",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "population_analysis.effect_sizes",
+              "type": "object",
+              "value": {
+                "expression": "{{ Object.fromEntries(Object.entries(record.population_analysis.effect_sizes).sort(([,a],[,b]) => a-b )) }}"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Calculate Z-Scores and Effect Sizes",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "population_analysis.z_scores.asian",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.asian_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.asian_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.asian",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.asian_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.hispanic",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.hispanic_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.hispanic_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.white",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.white_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.white_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.pacific_islander",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.pacific_islander_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.pacific_islander_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.black",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.black_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.black_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.middle_eastern",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.middle_eastern_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.middle_eastern_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.indigenous",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.indigenous_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.indigenous_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.male",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.male_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.male_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.female",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.female_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.female_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.trans",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.trans_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.trans_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.hetero",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.hetero_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.hetero_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.lgbtqia",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.lgbtqia_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.lgbtqia_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.nondisabled",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.nondisabled_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.nondisabled_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.disabled",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.disabled_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.disabled_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.caregiver",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.caregiver_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.caregiver_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.parent",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.parent_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.parent_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.nonparent",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.nonparent_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.nonparent_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.nonveteran",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.nonveteran_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.nonveteran_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.z_scores.veteran",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.veteran_average_rating - record.average_rating) / (record.std_dev / Math.sqrt(record.output.veteran_total_number_of_reviews)) }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.hispanic",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.hispanic_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.white",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.white_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.pacific_islander",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.pacific_islander_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.black",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.black_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.middle_eastern",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.middle_eastern_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.indigenous",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.indigenous_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.male",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.male_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.female",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.female_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.trans",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.trans_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.hetero",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.hetero_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.lgbtqia",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.lgbtqia_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.nondisabled",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.nondisabled_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.disabled",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.disabled_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.caregiver",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.caregiver_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.parent",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.parent_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.nonparent",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.nonparent_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.nonveteran",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.nonveteran_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.effect_sizes.veteran",
+              "type": "number",
+              "value": {
+                "expression": "{{ (record.output.veteran_average_rating - record.average_rating) / record.std_dev }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.asian",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.asian_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.hispanic",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.hispanic_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.pacific_islander",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.pacific_islander_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.black",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.black_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.middle_eastern",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.middle_eastern_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.indigenous",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.indigenous_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.male",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.male_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.female",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.female_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.trans",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.trans_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.hetero",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.hetero_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.lgbtqia",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.lgbtqia_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.nondisabled",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.nondisabled_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.disabled",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.disabled_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.caregiver",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.caregiver_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.parent",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.parent_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.nonparent",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.nonparent_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.nonveteran",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.nonveteran_total_number_of_reviews }}"
+              }
+            },
+            {
+              "name": "population_analysis.review_count.veteran",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.output.veteran_total_number_of_reviews }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Format dataset for scatterplot",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Iterate through the input data and format the dataset for QuickChart\nfor (const item of records) {\n // Ensure the data object exists and initialize datasets\n item.json.data = {\n datasets: []\n };\n\n const z_scores = item.json.population_analysis.z_scores;\n const effect_sizes = item.json.population_analysis.effect_sizes;\n const review_count = item.json.population_analysis.review_count;\n\n // Ensure z_scores, effect_sizes, and review_count are defined and are objects\n if (z_scores && effect_sizes && review_count && typeof z_scores === 'object' && typeof effect_sizes === 'object' && typeof review_count === 'object') {\n // Initialize the dataset object\n const dataset = {\n label: 'Demographics Data',\n data: []\n };\n\n // Iterate through the demographic keys\n for (const key in z_scores) {\n // Check if review count for the demographic is greater than 0\n if (z_scores.hasOwnProperty(key) && effect_sizes.hasOwnProperty(key) && review_count[key] > 0) {\n\n // Add each demographic point to the dataset\n dataset.data.push({\n x: z_scores[key], // x = z_score\n y: effect_sizes[key], // y = effect_size\n label: steps[\"step-7\"].records[0][key],\n });\n }\n }\n\n // Only add the dataset if it contains data\n if (dataset.data.length > 0) {\n item.json.data.datasets.push(dataset);\n }\n\n delete item.json.population_analysis\n }\n}\n\n// Return the updated input with the data object containing datasets and labels\nreturn records;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Specify additional parameters for scatterplot",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "ignoreConversionErrors": false
+        },
+        "assignments": {
+          "assignments": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "scatter"
+            },
+            {
+              "name": "options",
+              "type": "object",
+              "value": {
+                "expression": "{\n \"title\": {\n \"display\": true,\n \"position\": \"top\",\n \"fontSize\": 12,\n \"fontFamily\": \"sans-serif\",\n \"fontColor\": \"#666666\",\n \"fontStyle\": \"bold\",\n \"padding\": 10,\n \"lineHeight\": 1.2,\n \"text\": \"{{ steps[\"step-6\"].record.company_name }} Workplace Population Bias\"\n },\n \"legend\": {\n \"display\": false\n },\n \"scales\": {\n \"xAxes\": [\n {\n \"scaleLabel\": {\n \"display\": true,\n \"labelString\": \"Z-Score\",\n \"fontColor\": \"#666666\",\n \"fontSize\": 12,\n \"fontFamily\": \"sans-serif\"\n }\n }\n ],\n \"yAxes\": [\n {\n \"scaleLabel\": {\n \"display\": true,\n \"labelString\": \"Effect Score\",\n \"fontColor\": \"#666666\",\n \"fontSize\": 12,\n \"fontFamily\": \"sans-serif\"\n }\n }\n ]\n },\n \"plugins\": {\n \"datalabels\": {\n \"display\": true,\n \"align\": \"top\",\n \"anchor\": \"center\",\n \"backgroundColor\": \"#eee\",\n \"borderColor\": \"#ddd\",\n \"borderRadius\": 6,\n \"borderWidth\": 1,\n \"padding\": 4,\n \"color\": \"#000\",\n \"font\": {\n \"family\": \"sans-serif\",\n \"size\": 10,\n \"style\": \"normal\"\n }\n }\n }\n }"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Quickchart Scatterplot",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-24-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "c",
+              "value": {
+                "expression": "{{ record.toJsonString() }}"
+              }
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "encoding",
+              "value": "url"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "QuickChart Bar Chart",
+      "operation": "service-read",
+      "adapter": "quickchart",
+      "parameters": {
+        "data": {
+          "expression": "{{ record.population_analysis.effect_sizes.values() }}"
+        },
+        "output": "bar_chart",
+        "labelsMode": "array",
+        "labelsArray": {
+          "expression": "{{ record.population_analysis.effect_sizes.keys() }}"
+        },
+        "chartOptions": {
+          "format": "png"
+        },
+        "datasetOptions": {
+          "label": {
+            "expression": "{{ steps[\"step-6\"].record.company_name }} Effect Size on Employee Experience"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Text Analysis of Bias Data",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "This data compares the average rating given by different demographic groups against a baseline (the overall mean rating).\n\nObjective:\n1. Analyze the data and offer between 2 and 5 key takeaways with a title and short (one-sentence) summary.\n2. Below the key takeaways, Include a heading called \"Employee Experiences\". Under this heading, include a subheader and paragraph describing the possible perception of the workplace for members of any groups reporting significantly worse (or better) experiences than others.\n3. Ensure there are between 2-5 key takeaways and employee experiences\n\nData for analysis:\n{{ record.population_analysis.toJsonString() }}"
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-26",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-16",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-15",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-8-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.scrapingbee.com/api/v1"
+    },
+    {
+      "id": "step-10-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.scrapingbee.com/api/v1"
+    },
+    {
+      "id": "step-12-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.scrapingbee.com/api/v1"
+    },
+    {
+      "id": "step-15-attributes-2-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-attributes-3-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-attributes-4-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-attributes-5-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-attributes-6-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-1-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-3-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-5-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-6-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-7-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-9-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-10-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-11-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-13-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-15-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-17-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-19-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-21-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-23-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-25-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-27-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-29-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-31-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-33-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-35-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-attributes-37-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-24-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://quickchart.io/chart"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Spot Workplace Discrimination Patterns with AI.json",
+    "git_blob": "c8e51699f3a891ba315016e1a95b1010b5da1610",
+    "sha256": "293676df31fe563a3b41dc867634d358c486e10d236eb39a78628abace540d20",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Spot%20Workplace%20Discrimination%20Patterns%20with%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

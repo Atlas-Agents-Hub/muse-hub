@@ -1,0 +1,24 @@
+{
+  "id": "linkedin",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "linkedin/src/lib/common/index.ts",
+      "credential_source_sha256": "4c8920d6dc25b3e3150e9108cd2d2b2bc9c4457f62868d8b05354a9739dd6d88",
+      "headers": {},
+      "host": "api.linkedin.com",
+      "id": "read-v2-userinfo",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "linkedin/src/lib/actions/get-current-member-profile.ts",
+      "source_sha256": "0d5dbef25a19d928249dd0ecea6262a01781fd19149d965e2da8e406531e65b5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/linkedin/src/lib/actions/get-current-member-profile.ts",
+      "url_template": "https://api.linkedin.com/v2/userinfo"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

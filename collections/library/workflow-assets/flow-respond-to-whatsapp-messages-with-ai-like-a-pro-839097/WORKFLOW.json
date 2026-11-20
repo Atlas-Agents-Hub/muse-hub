@@ -1,0 +1,711 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-respond-to-whatsapp-messages-with-ai-like-a-pro-839097",
+  "title": "Respond to WhatsApp Messages with AI Like a Pro!",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "WhatsApp Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "messages"
+        ]
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get Audio URL",
+      "operation": "service-write",
+      "adapter": "whatsapp",
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": {
+          "expression": "{{ record.audio.id }}"
+        },
+        "requestOptions": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get Video URL",
+      "operation": "service-write",
+      "adapter": "whatsapp",
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": {
+          "expression": "{{ record.video.id }}"
+        },
+        "requestOptions": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get Image URL",
+      "operation": "service-write",
+      "adapter": "whatsapp",
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": {
+          "expression": "{{ record.image.id }}"
+        },
+        "requestOptions": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Download Video",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.url }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Download Audio",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.url }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Download Image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.url }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "whatsapp-tutorial-{{ record.from }}"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Get User's Message",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "message_type",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-10\"].record.type }}"
+              }
+            },
+            {
+              "name": "message_text",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.text }}"
+              }
+            },
+            {
+              "name": "from",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.messages[0].from }}"
+              }
+            },
+            {
+              "name": "message_caption",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-12\"].record.video && steps[\"step-12\"].record.video.caption || '' }}\n{{ steps[\"step-12\"].record.image && steps[\"step-12\"].record.image.caption || ''}}\n{{ steps[\"step-12\"].record.audio && steps[\"step-12\"].record.audio.caption || ''}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Split Out Message Parts",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "messages"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Wikipedia",
+      "operation": "service-read",
+      "adapter": "toolwikipedia",
+      "parameters": {}
+    },
+    {
+      "id": "step-12",
+      "label": "Redirect Message Types",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Audio Message",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.type == 'audio' && Boolean(record.audio) }}"
+                    },
+                    "rightValue": "audio"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Video Message",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.type == 'video' && Boolean(record.video) }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Image Message",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.type == 'image' && Boolean(record.image) }}"
+                    },
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Text Message"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Get Text",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 0
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Respond to User",
+      "operation": "service-write",
+      "adapter": "whatsapp",
+      "parameters": {
+        "textBody": {
+          "expression": "{{ record.output }}"
+        },
+        "operation": "send",
+        "phoneNumberId": {
+          "configuration_input": "step-14-phonenumberid"
+        },
+        "requestOptions": {},
+        "additionalFields": {},
+        "recipientPhoneNumber": {
+          "expression": "{{ steps[\"step-1\"].record.messages[0].from }}"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Image Explainer",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": "Here is an image sent by the user. Describe the image and transcribe any text visible in the image.",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary"
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Format Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.candidates[0].content.parts[0].text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Google Gemini Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Google Gemini Audio",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-18-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"contents\": [{\n \"parts\":[\n {\"text\": \"Transcribe this audio\"},\n {\"inlineData\": {\n \"mimeType\": `audio/${$binary.data.fileExtension}`,\n \"data\": record.binary.data.data }\n }\n ]\n }]\n}\n}}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Google Gemini Video",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-19-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"contents\": [{\n \"parts\":[\n {\"text\": \"Describe this video\"},\n {\"inlineData\": {\n \"mimeType\": `video/${$binary.data.fileExtension}`,\n \"data\": record.binary.data.data }\n }\n ]\n }]\n}\n}}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Google Gemini Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Google Gemini Chat Model2",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Format Response1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.candidates[0].content.parts[0].text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Text Summarizer",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text.body || record.text }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Summarize the user's message succinctly."
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "The user sent the following message\nmessage type: {{ record.message_type }}\nmessage text or description:\n```{{ record.message_text }}```\n{{ record.message_caption ? `message caption: ${record.message_caption.trim()}` : '' }}"
+        },
+        "options": {
+          "systemMessage": "You are a general knowledge assistant made available to the public via whatsapp. Help answer the user's query succiently and factually."
+        },
+        "promptType": "define"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-24",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-24",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-24",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-24",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-15",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-23",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-14-phonenumberid",
+      "purpose": "Provide the contact, recipient, or message content for phoneNumberId.",
+      "required": true
+    },
+    {
+      "id": "step-18-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent"
+    },
+    {
+      "id": "step-19-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "WhatsApp/Respond to WhatsApp Messages with AI Like a Pro!.json",
+    "git_blob": "2fb03cc28cfc8f3dd60e4eb15315a492c5ff0727",
+    "sha256": "a7262b7231a0a9ade80e3de236b48cbb09b96b5258afc33bded049a1aeb0df52",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/WhatsApp/Respond%20to%20WhatsApp%20Messages%20with%20AI%20Like%20a%20Pro%21.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

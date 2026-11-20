@@ -1,0 +1,548 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your ServiceNow instance URL without trailing slash (e.g., https://dev12345.service-now.com)",
+        "label": "Instance URL",
+        "name": "instanceUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Your ServiceNow username (not email)",
+        "label": "Username",
+        "name": "username",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Your ServiceNow password (not API token)",
+        "label": "Password",
+        "name": "password",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Support",
+  "id": "service-now",
+  "name": "ServiceNow",
+  "operations": [
+    {
+      "description": "Append a customer-visible comment or an internal work note to a record (incident, request, problem, change, etc.)",
+      "id": "add_comment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "tableDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record",
+          "name": "record",
+          "required": null,
+          "source_expression": "recordDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Enter the sys_id directly if not found in dropdown",
+          "label": "Or Enter Sys ID Manually",
+          "name": "manual_sys_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Customer-visible comment or internal work note",
+          "label": "Type",
+          "name": "comment_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The text to append to the record",
+          "label": "Comment",
+          "name": "comment",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Comment or Work Note",
+      "source_path": "service-now/src/lib/actions/add-comment.ts",
+      "source_sha256": "34e7cf429b8381fe69c7da41bbf52c8afd803880c5c68f83d5128c5cefed6442",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/actions/add-comment.ts"
+    },
+    {
+      "description": "List or download file attachments from a record",
+      "id": "find_file",
+      "inputs": [
+        {
+          "description": "List attachments or download a file",
+          "label": "Action Type",
+          "name": "action_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "tableDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record",
+          "name": "record",
+          "required": null,
+          "source_expression": "recordDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Record sys_id (for listing attachments)",
+          "label": "Or Enter Record Sys ID Manually",
+          "name": "manual_sys_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter attachments by filename (optional)",
+          "label": "Filename Filter",
+          "name": "filename",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Attachment sys_id to download",
+          "label": "Attachment Sys ID",
+          "name": "attachment_sys_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "File type to accept when downloading",
+          "label": "Accept Type",
+          "name": "accept_type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Format for returned file data",
+          "label": "Return Format",
+          "name": "return_format",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find File",
+      "source_path": "service-now/src/lib/actions/find-file.ts",
+      "source_sha256": "b233ee49b7e31162dc85c7128691df3d34ad390e960f7c552e177c8d131f32d2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/actions/find-file.ts"
+    },
+    {
+      "description": "Search for records in a table using a query",
+      "id": "find_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "tableDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Encoded query string (e.g., state=1^priority=1)",
+          "label": "Query",
+          "name": "query",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Maximum records to return",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Specific fields to include in response (optional)",
+          "label": "Fields to Return",
+          "name": "fields",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "How to format the response data",
+          "label": "Return Display Values",
+          "name": "sysparm_display_value",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Exclude API links for reference fields",
+          "label": "Exclude Reference Links",
+          "name": "sysparm_exclude_reference_link",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Include records from all domains",
+          "label": "Query No Domain",
+          "name": "sysparm_query_no_domain",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "View context for returned fields",
+          "label": "UI View",
+          "name": "sysparm_view",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Records",
+      "source_path": "service-now/src/lib/actions/find-record.ts",
+      "source_sha256": "00c6f8a75df1c43f31db7787f718716ce25144dd8402a23fd03eb93925f8aa6b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/actions/find-record.ts"
+    },
+    {
+      "description": "Retrieve full details of a catalog item including its variable definitions. Use this before \"Submit Catalog Request\" to discover the variables expected by the item.",
+      "id": "get_catalog_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Item_Sys_Id",
+          "name": "item_sys_id",
+          "required": null,
+          "source_expression": "catalogItemDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Provide the catalog item sys_id directly if it is not in the dropdown",
+          "label": "Or Enter Catalog Item Sys ID Manually",
+          "name": "manual_item_sys_id",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Catalog Item",
+      "source_path": "service-now/src/lib/actions/get-catalog-item.ts",
+      "source_sha256": "2a8ec676331a1741904ef32ca55ff761026bad252266055150127109525a5bbf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/actions/get-catalog-item.ts"
+    },
+    {
+      "description": "Retrieve the full content of a knowledge article by sys_id",
+      "id": "get_knowledge_article",
+      "inputs": [
+        {
+          "description": "sys_id of the article. Use \"Search Knowledge Articles\" first if you only have a KB number.",
+          "label": "Article Sys ID",
+          "name": "article_sys_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether to increment the article view counter when fetching",
+          "label": "Increment View Count",
+          "name": "update_view",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Knowledge Article",
+      "source_path": "service-now/src/lib/actions/get-knowledge-article.ts",
+      "source_sha256": "9f8d6e709054a2630c62d1759a441e7b66b678fa36cefbd1f23a01fdfdb1cb17",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/actions/get-knowledge-article.ts"
+    },
+    {
+      "description": "Retrieve a specific record by its ID",
+      "id": "get_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "tableDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record",
+          "name": "record",
+          "required": null,
+          "source_expression": "recordDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Enter the sys_id directly if not found in dropdown",
+          "label": "Or Enter Sys ID Manually",
+          "name": "manual_sys_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "How to format the response data",
+          "label": "Return Display Values",
+          "name": "sysparm_display_value",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Exclude API links for reference fields",
+          "label": "Exclude Reference Links",
+          "name": "sysparm_exclude_reference_link",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Specific fields to include in response (optional)",
+          "label": "Fields to Return",
+          "name": "sysparm_fields",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Include records from all domains",
+          "label": "Query No Domain",
+          "name": "sysparm_query_no_domain",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "View context for returned fields",
+          "label": "UI View",
+          "name": "sysparm_view",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Record",
+      "source_path": "service-now/src/lib/actions/get-record.ts",
+      "source_sha256": "582254848d8026a704dc8451e05d9462d6b41a6e97911af2dc17ea9ebed4965a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/actions/get-record.ts"
+    },
+    {
+      "description": "Search published knowledge base articles using free text. Requires the Knowledge API plugin to be active.",
+      "id": "search_knowledge_articles",
+      "inputs": [
+        {
+          "description": "Free-text search query",
+          "label": "Search Text",
+          "name": "query",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional. Limit search to a specific knowledge base.",
+          "label": "Knowledge Base sys_id",
+          "name": "kb",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional ISO language code (e.g., en, de, fr)",
+          "label": "Language",
+          "name": "language",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of articles to return (1-100)",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of articles to skip for pagination",
+          "label": "Offset",
+          "name": "offset",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Optional list of article field names to include in the response",
+          "label": "Fields",
+          "name": "fields",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Knowledge Articles",
+      "source_path": "service-now/src/lib/actions/search-knowledge-articles.ts",
+      "source_sha256": "6f75fc197ec5538e767a8428f8e4b5f6fec310fb7a0c568c47bb818cdeca24b2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/actions/search-knowledge-articles.ts"
+    },
+    {
+      "description": "Send an email through your ServiceNow instance using the Email API. Requires the email outbound capability to be configured.",
+      "id": "send_email",
+      "inputs": [
+        {
+          "description": "One or more recipient email addresses",
+          "label": "To",
+          "name": "to",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Email subject line",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Email body. HTML is supported by ServiceNow.",
+          "label": "Body",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Optional sender address. Defaults to the instance email-from setting.",
+          "label": "From",
+          "name": "from",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional CC recipients",
+          "label": "CC",
+          "name": "cc",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Optional BCC recipients",
+          "label": "BCC",
+          "name": "bcc",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Email",
+      "source_path": "service-now/src/lib/actions/send-email.ts",
+      "source_sha256": "94c3f89c8612566bf6f7ec175e8fab375540eafc2202fd3d93eec34d89992957",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/actions/send-email.ts"
+    },
+    {
+      "description": "Triggers when a new comment or work note is added to a record in the selected table",
+      "id": "new_comment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "tableDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Which journal entries to watch",
+          "label": "Entry Type",
+          "name": "entry_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "If set, only fire for comments on this specific record sys_id",
+          "label": "Record Sys ID Filter (optional)",
+          "name": "record_sys_id",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Comment or Work Note",
+      "source_path": "service-now/src/lib/triggers/new-comment.ts",
+      "source_sha256": "01fadedf70233ef002991d25b80f903c14731801e0fd51dcad18c5ec8de868d1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/triggers/new-comment.ts"
+    },
+    {
+      "description": "Triggers when a new record is created in a table",
+      "id": "new_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "tableDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Encoded query to filter records (e.g., priority=1^state=1)",
+          "label": "Filter Query",
+          "name": "filter",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Record",
+      "source_path": "service-now/src/lib/triggers/new-record.ts",
+      "source_sha256": "338620b582ddb82a2dff50950f3a311a5db9c6dc998e54eac3dd9664918a795e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/triggers/new-record.ts"
+    },
+    {
+      "description": "Triggers when a record is updated in a table",
+      "id": "updated_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table",
+          "name": "table",
+          "required": null,
+          "source_expression": "tableDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Encoded query to filter records (e.g., priority=1^state=1)",
+          "label": "Filter Query",
+          "name": "filter",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Updated Record",
+      "source_path": "service-now/src/lib/triggers/updated-record.ts",
+      "source_sha256": "eaa912114e4865e94cd3390638c6241ab9e74123e5aeb0feeca10ab3785fd0b2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/service-now/src/lib/triggers/updated-record.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "ad8e7bd9d49b3a05c68ca9813ec1df00ae6edbbb",
+    "index_path": "service-now/src/index.ts",
+    "index_sha256": "19097b7793f912daefcdbf4cd529ce8b841d611f4caf9042b4f2c9ca35eae52b",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

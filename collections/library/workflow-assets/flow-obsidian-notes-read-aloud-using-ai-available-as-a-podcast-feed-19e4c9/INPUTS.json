@@ -1,0 +1,34 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-obsidian-notes-read-aloud-using-ai-available-as-a-podcast-feed-19e4c9",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-path": null,
+    "step-3-path": null,
+    "step-4-url": null,
+    "step-5-modelid": null,
+    "step-11-sheetname": null,
+    "step-11-documentid": null,
+    "step-12-sheetname": null,
+    "step-12-documentid": null,
+    "step-15-assignments-0-value": null,
+    "step-15-assignments-5-value": null,
+    "step-15-assignments-6-value": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

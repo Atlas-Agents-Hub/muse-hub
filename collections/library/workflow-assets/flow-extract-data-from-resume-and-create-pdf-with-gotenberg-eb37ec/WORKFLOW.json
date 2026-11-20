@@ -1,0 +1,952 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-data-from-resume-and-create-pdf-with-gotenberg-eb37ec",
+  "title": "Extract data from resume and create PDF with Gotenberg",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Convert education to HTML",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "function convertToHTML(list) {\n let html = '';\n\n list.forEach((education, index) => {\n if (index > 0) {\n html += '<br /><br />'; // Add a new line if it's not the first item\n }\n html += `<b>Institution:</b> ${education.institution}<br />\n<b>Start year:</b> ${education.start_year}<br />\n<b>Degree:</b> ${education.degree}`;\n });\n\n return html;\n}\n\n// Assuming payload is already defined\nconst payload = record.json.education;\n\nconst htmlOutput = convertToHTML(payload);\nreturn {\n htmlOutput\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Auto-fixing Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "personal_info": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "github": {
+                    "type": "string"
+                  },
+                  "linkedin": {
+                    "type": "string"
+                  }
+                }
+              },
+              "employment_history": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "position": {
+                      "type": "string"
+                    },
+                    "company": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "string"
+                    },
+                    "responsibilities": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "education": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "institution": {
+                      "type": "string"
+                    },
+                    "start_year": {
+                      "type": "integer"
+                    },
+                    "degree": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "projects": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "year": {
+                      "type": "integer"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "technologies": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "volunteering": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "activity": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    },
+                    "date": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "programming_languages": {
+                "type": "object",
+                "properties": {
+                  "languages": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tools": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "methodologies": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "foreign_languages": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "language": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Convert employment history to HTML",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "function convertToHTML(list) {\n let html = '';\n\n list.forEach((item, index) => {\n if (index > 0) {\n html += '<br />'; // Add a new line if it's not the first item\n }\n html += `<b>Position:</b> ${item.position}\n<b>Company:</b> ${item.company}\n<br />\n<b>Duration:</b> ${item.duration}\n<br />\n<b>Responsibilities:</b>\n`;\n\n item.responsibilities.forEach((responsibility, i) => {\n html += `- ${responsibility}`;\n if (i < item.responsibilities.length - 1 || index < list.length - 1) {\n html += '<br />'; // Add new line if it's not the last responsibility in the last item\n }\n });\n });\n\n return html;\n}\n\n// Assuming payload is already defined\nconst payload = record.json.employment_history;\n\nconst htmlOutput = convertToHTML(payload);\nreturn {\n htmlOutput\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Convert projects to HTML",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "function convertToHTML(list) {\n let html = '';\n\n list.forEach((project, index) => {\n if (index > 0) {\n html += '<br />'; // Add a new line if it's not the first project\n }\n html += `<b>Name:</b> ${project.name}<br />\n<b>Year:</b> ${project.year}<br />\n<b>Description:</b> ${project.description}<br /><br />\n<b>Technologies:</b>\n<br />`;\n\n project.technologies.forEach((technology, i) => {\n html += `- ${technology}`;\n if (i < project.technologies.length - 1 || index < list.length - 1) {\n html += '<br />'; // Add new line if it's not the last technology in the last project\n }\n });\n });\n\n return html;\n}\n\n// Assuming payload is already defined\nconst payload = record.json.projects;\n\nconst htmlOutput = convertToHTML(payload);\nreturn {\n htmlOutput\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Convert volunteering to HTML",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "function convertToHTML(list) {\n let html = '';\n\n list.forEach((event, index) => {\n if (index > 0) {\n html += '<br />'; // Add a new line if it's not the first volunteering event\n }\n html += `<b>Activity:</b> ${event.activity}<br />\n<b>Location:</b> ${event.location}<br />\n<b>Date:</b> ${event.date}<br />\n<b>Description:</b> ${event.description}<br />`;\n });\n\n return html;\n}\n\n// Assuming payload is already defined\nconst payload = record.json.volunteering;\n\nconst htmlOutput = convertToHTML(payload);\nreturn {\n htmlOutput\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Telegram trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Auth",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.message.chat.id }}"
+              },
+              "rightValue": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "No operation (unauthorized)",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-12",
+      "label": "Check if start message",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": {
+                "expression": "{{ record.message.text }}"
+              },
+              "rightValue": "/start"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "No operation (start message)",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-14",
+      "label": "Get file",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.message.document.file_id }}"
+        },
+        "resource": "file"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Extract text from PDF",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Set parsed fileds",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Personal info",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "personal_info",
+              "stringValue": {
+                "expression": "<b><u>Personal info</u></b>\n<br /><br />\n<b>Name:</b> {{ record.personal_info.name }}\n<br />\n<b>Address:</b> {{ record.personal_info.address }}\n<br />\n<b>Email:</b> {{ record.personal_info.email }}\n<br />\n<b>GitHub:</b> {{ record.personal_info.github }}\n<br />"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Technologies",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "technologies",
+              "stringValue": {
+                "expression": "<b><u>Technologies</u></b>\n<br /><br />\n<b>Programming languages:</b> {{ record.programming_languages.languages.join(', ') }}\n<br />\n<b>Tools:</b> {{ record.programming_languages.tools.join(', ') }}\n<br />\n<b>Methodologies:</b> {{ record.programming_languages.methodologies.join(', ') }}\n<br />"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Employment history",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "employment_history",
+              "stringValue": {
+                "expression": "<b><u>Employment history</u></b>\n<br /><br />\n{{ record[\"htmlOutput\"] }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Education",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "education",
+              "stringValue": {
+                "expression": "<b><u>Education</u></b>\n<br /><br />\n{{ record[\"htmlOutput\"] }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Projects",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "projects",
+              "stringValue": {
+                "expression": "<b><u>Projects</u></b>\n<br /><br />\n{{ record[\"htmlOutput\"] }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Volunteering",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "volunteering",
+              "stringValue": {
+                "expression": "<b><u>Volunteering</u></b>\n<br /><br />\n{{ record[\"htmlOutput\"] }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Merge education and employment history",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Merge projects and volunteering",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Merge personal info and technologies",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Merge all",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Set final data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "output",
+              "stringValue": {
+                "expression": "{{ record.personal_info }}\n<br /><br />\n{{ record.employment_history }}\n<br /><br />\n{{ record.education }}\n<br /><br />\n{{ record.projects }}\n<br /><br />\n{{ record.volunteering }}\n<br /><br />\n{{ record.technologies }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Convert raw to base64",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const encoded = Buffer.from(record.output).toString('base64');\n\nreturn { encoded };",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "Convert to HTML",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "fileName": "index.html",
+          "mimeType": "text/html"
+        },
+        "operation": "toBinary",
+        "sourceProperty": "encoded"
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "Generate plain PDF doc",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-30-url"
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "files",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-31",
+      "label": "Send PDF to the user",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-9\"].record[\"message\"][\"chat\"][\"id\"] }}"
+        },
+        "operation": "sendDocument",
+        "binaryData": true,
+        "additionalFields": {
+          "fileName": {
+            "expression": "{{ steps[\"step-16\"].record[\"personal_info\"][\"name\"].toLowerCase().replace(' ', '-') }}.pdf"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-32",
+      "label": "Parse resume data",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "{{ record.text }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Your task is to extract all necessary data such as first name, last name, experience, known technologies etc. from the provided resume text and return in well-unified JSON format. Do not make things up."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-33",
+      "label": "Merge other data",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "multiplex"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-26",
+      "to": "step-27",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-22",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-17",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-28",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-33",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-32",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-32",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-28",
+      "to": "step-29",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-32",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-30",
+      "to": "step-31",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-32",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-33",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-6",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-33",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-31",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-31",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-9"
+  ],
+  "configuration": [
+    {
+      "id": "step-30-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "http://gotenberg/forms/chromium/convert/html"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Extract data from resume and create PDF with Gotenberg.json",
+    "git_blob": "371bdc418973b6447a1c426e75ad744649986b8b",
+    "sha256": "224d83c337b76125ae3bf64e100469cf77b091770e1037201b9cc3dbf375c051",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Extract%20data%20from%20resume%20and%20create%20PDF%20with%20Gotenberg.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

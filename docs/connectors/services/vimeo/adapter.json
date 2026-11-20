@@ -1,0 +1,249 @@
+{
+  "allowed_hosts": [
+    "api.vimeo.com",
+    "developer.vimeo.com",
+    "i.vimeocdn.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://api.vimeo.com/oauth/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "delete",
+      "edit",
+      "interact",
+      "private",
+      "public",
+      "upload"
+    ],
+    "token_urls": [
+      "https://api.vimeo.com/oauth/access_token"
+    ]
+  },
+  "category": "Video",
+  "id": "vimeo",
+  "name": "Vimeo",
+  "operations": [
+    {
+      "description": "Adds an existing video to a user's folder",
+      "id": "add_video_to_folder",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Video Id",
+          "name": "videoId",
+          "required": null,
+          "source_expression": "userVideoDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Folder Id",
+          "name": "folderId",
+          "required": null,
+          "source_expression": "userFolderDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Video to Folder",
+      "source_path": "vimeo/src/lib/actions/add-video-to-folder.ts",
+      "source_sha256": "df17d4e283c842adafd9007ea0cc9163674ebbd6c215b7ca1eec49ead3137c39",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/vimeo/src/lib/actions/add-video-to-folder.ts"
+    },
+    {
+      "description": "Adds an existing video to a user's showcase",
+      "id": "add_video_to_showcase",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Video Id",
+          "name": "videoId",
+          "required": null,
+          "source_expression": "userVideoDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "ID of the showcase to add the video to",
+          "label": "Showcase ID",
+          "name": "showcaseId",
+          "required": true,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Video to Showcase",
+      "source_path": "vimeo/src/lib/actions/add-video-to-showcase.ts",
+      "source_sha256": "5d70a1182fe9a456fd00bc5750a92f64a38d4b70cac6a04a9e8a4c932176170d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/vimeo/src/lib/actions/add-video-to-showcase.ts"
+    },
+    {
+      "description": "Delete a video from Vimeo",
+      "id": "delete_video",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Video Id",
+          "name": "videoId",
+          "required": null,
+          "source_expression": "userVideoDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Video",
+      "source_path": "vimeo/src/lib/actions/delete-video.ts",
+      "source_sha256": "0692e2e7bd425041992d1cc418596b4de09823b6747a219ebda1ebe38413faac",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/vimeo/src/lib/actions/delete-video.ts"
+    },
+    {
+      "description": "Upload a video to your Vimeo account",
+      "id": "upload_video",
+      "inputs": [
+        {
+          "description": "URL of the video file to upload",
+          "label": "Video URL",
+          "name": "videoUrl",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Name for the video",
+          "label": "Video Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Description for the video",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Privacy setting for the video",
+          "label": "Privacy",
+          "name": "privacy",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Privacy",
+          "name": "password",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "Allow others to embed this video",
+          "label": "Allow Embedding",
+          "name": "allowEmbed",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Allow others to download this video (not available for free Vimeo users)",
+          "label": "Allow Download",
+          "name": "allowDownload",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Content rating for the video",
+          "label": "Content Rating",
+          "name": "contentRating",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "",
+          "label": "Folder Id",
+          "name": "folderId",
+          "required": null,
+          "source_expression": "userFolderDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Language code for the video",
+          "label": "Language",
+          "name": "language",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "License for the video",
+          "label": "License",
+          "name": "license",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Upload Video",
+      "source_path": "vimeo/src/lib/actions/upload-video.ts",
+      "source_sha256": "a6256cd911bdff699c4aa92c40f20dc94edf018733a32e2847c74cc583b73fcc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/vimeo/src/lib/actions/upload-video.ts"
+    },
+    {
+      "description": "Triggers when a new video is added that matches a search query",
+      "id": "new_video_by_search",
+      "inputs": [
+        {
+          "description": "Search term to monitor for new videos",
+          "label": "Search Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Video by Search",
+      "source_path": "vimeo/src/lib/triggers/new-video-by-search.ts",
+      "source_sha256": "a2841888e428228c35207f66448fc47efec84016182a84822890c40f7ceeac5c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/vimeo/src/lib/triggers/new-video-by-search.ts"
+    },
+    {
+      "description": "Triggers when another specified user adds a video",
+      "id": "new_video_by_user",
+      "inputs": [
+        {
+          "description": "ID of the user to monitor for new videos",
+          "label": "User ID",
+          "name": "userId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Video by User",
+      "source_path": "vimeo/src/lib/triggers/new-video-by-user.ts",
+      "source_sha256": "a5908f4a34b3cc3b6bcc57214ead58396ea17f4ab23145183e1d386b1694acd5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/vimeo/src/lib/triggers/new-video-by-user.ts"
+    },
+    {
+      "description": "Triggers when you like a new video on Vimeo",
+      "id": "new_video_liked",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Video I've Liked",
+      "source_path": "vimeo/src/lib/triggers/new-video-liked.ts",
+      "source_sha256": "3619e96a0d5c047781f3015ad58da1b5497dd1ec31a8ad2e48f0daebc6e59006",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/vimeo/src/lib/triggers/new-video-liked.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "8699a0724d1b930a8458d73e5b13b4558bc454d3",
+    "index_path": "vimeo/src/index.ts",
+    "index_sha256": "2585e7c3e6cc1dbeca7b6585946c45db440bb6921720e0232be6116c723ec5d8",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "learning-coach"
+  ]
+}

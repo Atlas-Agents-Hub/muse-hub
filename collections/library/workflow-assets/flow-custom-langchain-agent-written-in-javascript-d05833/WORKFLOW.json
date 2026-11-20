@@ -1,0 +1,196 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-custom-langchain-agent-written-in-javascript-d05833",
+  "title": "Custom LangChain agent written in JavaScript",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "When clicking \"Execute Workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "Set",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "input",
+              "value": "Tell me a joke"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Set1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "input",
+              "value": "What year was Einstein born?"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Chat OpenAI",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Custom - Wikipedia",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "code": {
+          "supplyData": {
+            "code": "console.log('Custom Wikipedia Node runs');\nconst { WikipediaQueryRun } = require('langchain/tools');\nreturn new WikipediaQueryRun();"
+          }
+        },
+        "outputs": {
+          "output": [
+            {
+              "type": "ai_tool"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Custom - LLM Chain Node",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "code": {
+          "execute": {
+            "code": "const { PromptTemplate } = require('langchain/prompts');\n\nconst query = $input.item.json.input;\nconst prompt = PromptTemplate.fromTemplate(query);\nconst llm = await this.getInputConnectionData('ai_languageModel', 0);\nlet chain = prompt.pipe(llm);\nconst output = await chain.invoke();\nreturn [ {json: { output } } ];"
+          }
+        },
+        "inputs": {
+          "input": [
+            {
+              "type": "main"
+            },
+            {
+              "type": "ai_languageModel",
+              "required": true,
+              "maxConnections": 1
+            }
+          ]
+        },
+        "outputs": {
+          "output": [
+            {
+              "type": "main"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Custom LangChain agent written in JavaScript.json",
+    "git_blob": "9ba16634b8b565e7ac02a120a73b787c5b3a628c",
+    "sha256": "365a948efa28517a83908a44fe113d580a842e034d64d716acb65fd4fedb1881",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Custom%20LangChain%20agent%20written%20in%20JavaScript.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

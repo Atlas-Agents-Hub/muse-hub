@@ -1,0 +1,33 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-rag-chatbot-for-company-documents-using-google-drive-and-muse-755d80",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-pineconeindex": null,
+    "step-7-pineconeindex": null,
+    "step-10-foldertowatch": null,
+    "step-11-foldertowatch": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

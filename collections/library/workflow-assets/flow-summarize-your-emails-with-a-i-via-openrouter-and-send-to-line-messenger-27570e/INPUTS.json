@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-summarize-your-emails-with-a-i-via-openrouter-and-send-to-line-messenger-27570e",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-3-url": null
+  },
+  "adapters": {
+    "emailreadimap": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    }
+  }
+}

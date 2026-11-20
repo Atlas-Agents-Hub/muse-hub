@@ -1,6 +1,6 @@
 # Connect tools and services
 
-Choose the service needed for your task from the [151-connector directory](connectors/README.md). Each entry links to its setup guide, available operations, and account requirements.
+Find the service you need among [273 connectors](connectors/README.md). Each entry links to its setup guide, available operations, and account requirements.
 
 ## Set up a connection
 

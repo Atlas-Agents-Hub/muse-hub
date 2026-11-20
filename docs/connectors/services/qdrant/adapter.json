@@ -1,0 +1,275 @@
+{
+  "allowed_hosts": [
+    "qdrant.tech"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The url of the Qdrant instance.",
+        "label": "Server Address",
+        "name": "serverAddress",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Key",
+        "name": "key",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API KEY', required: true, description: 'Enter the API Key of your Qdrant account', })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "qdrant",
+  "name": "Qdrant",
+  "operations": [
+    {
+      "description": "Insert a point (= embedding or vector + other infos) to a specific collection, if the collection does not exist it will be created",
+      "id": "add_points_to_collection",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Collection Name",
+          "name": "collectionName",
+          "required": null,
+          "source_expression": "qdrantProps.collectionName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Embeddings (= vectors) for the points",
+          "label": "Embeddings",
+          "name": "embeddings",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "The ids of the embeddings for the points. If not provided, the ids will be generated automatically",
+          "label": "Embeddings Ids",
+          "name": "embeddingsIds",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Distance",
+          "name": "distance",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<QdrantDistance",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Please follow [payload documentation](https://qdrant.tech/documentation/concepts/payload/) to add additional information to the points.",
+          "label": "Additional Payload",
+          "name": "payload",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "Define where points will be stored",
+          "label": "Storage",
+          "name": "storage",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Add points to collection",
+      "source_path": "qdrant/src/lib/actions/add-points.ts",
+      "source_sha256": "41892a1911c68f29a580396629e56b1049eebfc2774c8af289a99f8c0bd49369",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/qdrant/src/lib/actions/add-points.ts"
+    },
+    {
+      "description": "Delete a collection of your database",
+      "id": "delete_collection",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Collection Name",
+          "name": "collectionName",
+          "required": null,
+          "source_expression": "qdrantProps.collectionName({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Collection",
+      "source_path": "qdrant/src/lib/actions/delete-collection.ts",
+      "source_sha256": "f0ad3efd95daabcd8e18629d57c6d6250750bedfbfe6d1f3e98d349bd2c99387",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/qdrant/src/lib/actions/delete-collection.ts"
+    },
+    {
+      "description": "Delete points of a specific collection",
+      "id": "delete_points",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Collection Name",
+          "name": "collectionName",
+          "required": null,
+          "source_expression": "qdrantProps.collectionName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Get Points By",
+          "name": "getPointsBy",
+          "required": null,
+          "source_expression": "qdrantProps.getPointsBy({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Infos To Get Point",
+          "name": "infosToGetPoint",
+          "required": null,
+          "source_expression": "qdrantProps.infosToGetPoint({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Points",
+      "source_path": "qdrant/src/lib/actions/delete-points.ts",
+      "source_sha256": "da5fa9cd02f79403368251699d439a22065b6d0eb3867a85d7a085423e087793",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/qdrant/src/lib/actions/delete-points.ts"
+    },
+    {
+      "description": "Get the all the infos of a specific collection",
+      "id": "collection_infos",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Collection Name",
+          "name": "collectionName",
+          "required": null,
+          "source_expression": "qdrantProps.collectionName({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Collection Infos",
+      "source_path": "qdrant/src/lib/actions/get-collection-infos.ts",
+      "source_sha256": "4bfd6bffb50013c451c1deb4fd5bfe00ed8d5ab5cafa2e3a3488ab83b91dbfaf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/qdrant/src/lib/actions/get-collection-infos.ts"
+    },
+    {
+      "description": "Get the list of all the collections of your database",
+      "id": "collection_list",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Collection List",
+      "source_path": "qdrant/src/lib/actions/get-collection-list.ts",
+      "source_sha256": "29f0d55010bd4256f35c643efc337d9a6a300c6379347bde8f6dcc35be810f9a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/qdrant/src/lib/actions/get-collection-list.ts"
+    },
+    {
+      "description": "Get the points of a specific collection",
+      "id": "get_points",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Collection Name",
+          "name": "collectionName",
+          "required": null,
+          "source_expression": "qdrantProps.collectionName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Get Points By",
+          "name": "getPointsBy",
+          "required": null,
+          "source_expression": "qdrantProps.getPointsBy({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Infos To Get Point",
+          "name": "infosToGetPoint",
+          "required": null,
+          "source_expression": "qdrantProps.infosToGetPoint({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Points",
+      "source_path": "qdrant/src/lib/actions/get-points.ts",
+      "source_sha256": "d8b3bbf076974d2158a456092aec0290c65f2b48dc0b3db048e1d5d4ff955fa6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/qdrant/src/lib/actions/get-points.ts"
+    },
+    {
+      "description": "Search for points closest to your given vector (= embedding)",
+      "id": "search_points",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Collection Name",
+          "name": "collectionName",
+          "required": null,
+          "source_expression": "qdrantProps.collectionName({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The vector (= embedding) you want to search for.",
+          "label": "Embedding",
+          "name": "vector",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "",
+          "label": "Must",
+          "name": "must",
+          "required": null,
+          "source_expression": "qdrantProps.must({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Must_Not",
+          "name": "must_not",
+          "required": null,
+          "source_expression": "qdrantProps.mustNot({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The vector (= embedding) you want to be the farthest.",
+          "label": "Negative Vector",
+          "name": "negativeVector",
+          "required": false,
+          "type": "File"
+        },
+        {
+          "description": "The max number of results you want to get.",
+          "label": "Limit Result",
+          "name": "limitResult",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Points",
+      "source_path": "qdrant/src/lib/actions/search-points.ts",
+      "source_sha256": "d05e688c8b4b705953d659550d315d007a44e3b5a73fb99ebe7a91c21c6993c1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/qdrant/src/lib/actions/search-points.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "22e69dd2ce0a8956900fcb43994f98ac090df045",
+    "index_path": "qdrant/src/index.ts",
+    "index_sha256": "b3509c4ba04026865b01d054f76eb5b1922d6e35beda9179864ecb115aa0d6b7",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

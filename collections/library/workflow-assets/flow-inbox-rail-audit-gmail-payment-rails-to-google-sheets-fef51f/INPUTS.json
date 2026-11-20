@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-inbox-rail-audit-gmail-payment-rails-to-google-sheets-fef51f",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-12-documentid": null,
+    "step-12-sheetname": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    }
+  }
+}

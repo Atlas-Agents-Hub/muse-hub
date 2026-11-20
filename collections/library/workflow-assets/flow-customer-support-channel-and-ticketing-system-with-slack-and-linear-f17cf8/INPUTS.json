@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-customer-support-channel-and-ticketing-system-with-slack-and-linear-f17cf8",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-teamid": null,
+    "step-9-additionalfields-stateid": null
+  },
+  "adapters": {
+    "linear": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,959 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-vector-database-as-a-big-data-analysis-tool-for-ai-agents-2-3-anomaly-788070",
+  "title": "Vector Database as a Big Data Analysis Tool for AI Agents [2 3 - anomaly]",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Total Points in Collection",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].record.qdrantCloudURL }}/collections/{{ steps[\"step-22\"].record.collectionName }}/points/count"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"exact\": true\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Cluster Distance Matrix",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points/search/matrix/offsets"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"sample\": record.maxClusterSize,\n \"limit\": record.maxClusterSize,\n \"using\": \"voyage\",\n \"filter\": {\n \"must\": {\n \"key\": \"crop_name\",\n \"match\": { \"value\": record.cropName }\n }\n }\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Scipy Sparse Matrix",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "from scipy.sparse import coo_array\n\ncluster = _input.item.json['result']\n\nscores = list(cluster['scores'])\noffsets_row = list(cluster['offsets_row'])\noffsets_col = list(cluster['offsets_col'])\n\ncluster_matrix = coo_array((scores, (offsets_row, offsets_col)))\nthe_most_similar_to_others = cluster_matrix.sum(axis=1).argmax()\n\nreturn {\n \"json\": {\n \"medoid_id\": cluster[\"ids\"][the_most_similar_to_others]\n }\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Set medoid id",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points/payload"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"payload\": {\"is_medoid\": true},\n \"points\": [record.medoid_id]\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Get Medoid Vector",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"ids\": [record.medoid_id],\n \"with_vector\": true,\n \"with_payload\": true\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Prepare for Searching Threshold",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "oppositeOfCenterVector",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.result[0].vector.voyage.map(value => value * -1)}}"
+              }
+            },
+            {
+              "name": "cropName",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.result[0].payload.crop_name }}"
+              }
+            },
+            {
+              "name": "centerId",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.result[0].id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Searching Score",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points/query"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"query\": record.oppositeOfCenterVector,\n \"using\": \"voyage\",\n \"exact\": true,\n \"filter\": {\n \"must\": [\n {\n \"key\": \"crop_name\",\n \"match\": {\"value\": record.cropName }\n }\n ]\n },\n \"limit\": steps[\"step-20\"].records[0].furthestFromCenter,\n \"with_payload\": true\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Threshold Score",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "thresholdScore",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.result.points.last().score * -1 }}"
+              }
+            },
+            {
+              "name": "centerId",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.centerId }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Set medoid threshold score",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points/payload"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"payload\": {\"is_medoid_cluster_threshold\": record.thresholdScore },\n \"points\": [record.centerId]\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Split Out1",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "destinationFieldName": ""
+        },
+        "fieldToSplitOut": "['text anchors']"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "fieldsToMatchString": "cropName"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Textual (visual) crop descriptions",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "json": {
+            "text anchors": [
+              {
+                "cropName": "pearl_millet(bajra)",
+                "cropDescription": "pearl_millet(bajra) - Tall stalks with cylindrical, spiked green grain heads."
+              },
+              {
+                "cropName": "tobacco-plant",
+                "cropDescription": "tobacco-plant - Broad, oval leaves and small tubular flowers, typically pink or white."
+              },
+              {
+                "cropName": "cherry",
+                "cropDescription": "cherry - Small, glossy red fruits on a medium-sized tree with slender branches and serrated leaves."
+              },
+              {
+                "cropName": "cotton",
+                "cropDescription": "cotton - Bushy plant with fluffy white fiber-filled pods and lobed green leaves."
+              },
+              {
+                "cropName": "banana",
+                "cropDescription": "banana - Tall herbaceous plant with broad, elongated green leaves and hanging bunches of yellow fruits."
+              },
+              {
+                "cropName": "cucumber",
+                "cropDescription": "cucumber - Creeping vine with yellow flowers and elongated green cylindrical fruits."
+              },
+              {
+                "cropName": "maize",
+                "cropDescription": "maize - Tall stalks with broad leaves, tassels at the top, and ears of corn sheathed in husks."
+              },
+              {
+                "cropName": "wheat",
+                "cropDescription": "wheat - Slender, upright stalks with narrow green leaves and golden, spiky grain heads."
+              },
+              {
+                "cropName": "clove",
+                "cropDescription": "clove - Small tree with oval green leaves and clusters of unopened reddish flower buds."
+              },
+              {
+                "cropName": "jowar",
+                "cropDescription": "jowar - Tall grass-like plant with broad leaves and round, compact grain clusters at the top."
+              },
+              {
+                "cropName": "olive-tree",
+                "cropDescription": "olive-tree - Medium-sized tree with silvery-green leaves and small oval green or black fruits."
+              },
+              {
+                "cropName": "soyabean",
+                "cropDescription": "soyabean - Bushy plant with trifoliate green leaves and small pods containing rounded beans."
+              },
+              {
+                "cropName": "coffee-plant",
+                "cropDescription": "coffee-plant - Shrub with shiny dark green leaves and clusters of small white flowers, followed by red berries."
+              },
+              {
+                "cropName": "rice",
+                "cropDescription": "rice - Short, water-loving grass with narrow green leaves and drooping golden grain heads."
+              },
+              {
+                "cropName": "lemon",
+                "cropDescription": "lemon - Small tree with glossy green leaves and oval yellow fruits."
+              },
+              {
+                "cropName": "mustard-oil",
+                "cropDescription": "mustard-oil - Small herbaceous plant with yellow flowers and slender seed pods."
+              },
+              {
+                "cropName": "vigna-radiati(mung)",
+                "cropDescription": "vigna-radiati(mung) - Low-growing plant with trifoliate leaves and small green pods containing mung beans."
+              },
+              {
+                "cropName": "coconut",
+                "cropDescription": "coconut - Tall palm tree with feathery leaves and large round fibrous fruits."
+              },
+              {
+                "cropName": "gram",
+                "cropDescription": "gram - Low bushy plant with feathery leaves and small pods containing round seeds."
+              },
+              {
+                "cropName": "pineapple",
+                "cropDescription": "pineapple - Low plant with spiky, sword-shaped leaves and large, spiky golden fruits."
+              },
+              {
+                "cropName": "sugarcane",
+                "cropDescription": "sugarcane - Tall, jointed stalks with long narrow leaves and a sweet interior."
+              },
+              {
+                "cropName": "sunflower",
+                "cropDescription": "sunflower - Tall plant with rough green leaves and large bright yellow flower heads."
+              },
+              {
+                "cropName": "chilli",
+                "cropDescription": "chilli - Small bushy plant with slender green or red elongated fruits."
+              },
+              {
+                "cropName": "fox_nut(makhana)",
+                "cropDescription": "fox_nut(makhana) - Aquatic plant with floating round leaves and spiny white seeds."
+              },
+              {
+                "cropName": "jute",
+                "cropDescription": "jute - Tall plant with long, straight stalks and narrow green leaves."
+              },
+              {
+                "cropName": "papaya",
+                "cropDescription": "papaya - Medium-sized tree with hollow trunk, large lobed leaves, and yellow-orange pear-shaped fruits."
+              },
+              {
+                "cropName": "tea",
+                "cropDescription": "tea - Small shrub with glossy dark green leaves and small white flowers."
+              },
+              {
+                "cropName": "cardamom",
+                "cropDescription": "cardamom - Low tropical plant with broad leaves and clusters of small, light green pods."
+              },
+              {
+                "cropName": "almond",
+                "cropDescription": "almond - Medium-sized tree with serrated leaves and oval green pods containing edible nuts."
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Embed text",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-14-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"inputs\": [\n {\n \"content\": [\n {\n \"type\": \"text\",\n \"text\": record.cropDescription\n }\n ]\n }\n ],\n \"model\": \"voyage-multimodal-3\",\n \"input_type\": \"query\"\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Get Medoid by Text",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points/query"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"query\": record.data[0].embedding,\n \"using\": \"voyage\",\n \"exact\": true,\n \"filter\": {\n \"must\": [\n {\n \"key\": \"crop_name\",\n \"match\": {\"value\": steps[\"step-12\"].record.cropName }\n }\n ]\n },\n \"limit\": 1,\n \"with_payload\": true,\n \"with_vector\": true\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Set text medoid id",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points/payload"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"payload\": {\"is_text_anchor_medoid\": true},\n \"points\": [record.result.points[0].id]\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Prepare for Searching Threshold1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "oppositeOfCenterVector",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.result.points[0].vector.voyage.map(value => value * -1)}}"
+              }
+            },
+            {
+              "name": "cropName",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.result.points[0].payload.crop_name }}"
+              }
+            },
+            {
+              "name": "centerId",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.result.points[0].id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Threshold Score1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "thresholdScore",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.result.points.last().score * -1 }}"
+              }
+            },
+            {
+              "name": "centerId",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-17\"].record.centerId }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Searching Text Medoid Score",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points/query"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"query\": record.oppositeOfCenterVector,\n \"using\": \"voyage\",\n \"exact\": true,\n \"filter\": {\n \"must\": [\n {\n \"key\": \"crop_name\",\n \"match\": {\"value\": record.cropName }\n }\n ]\n },\n \"limit\": steps[\"step-21\"].records[0].furthestFromCenter,\n \"with_payload\": true\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Medoids Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "furthestFromCenter",
+              "type": "number",
+              "value": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Text Medoids Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "furthestFromCenter",
+              "type": "number",
+              "value": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Qdrant cluster variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "qdrantCloudURL",
+              "type": "string",
+              "value": {
+                "expression": "https://152bc6e2-832a-415c-a1aa-fb529f8baf8d.eu-central-1-0.aws.cloud.qdrant.io"
+              }
+            },
+            {
+              "name": "collectionName",
+              "type": "string",
+              "value": {
+                "expression": "agricultural-crops"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Info About Crop Clusters",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": {
+                "expression": "cropsNumber"
+              },
+              "type": "number",
+              "value": {
+                "expression": "{{ record.result.hits.length }}"
+              }
+            },
+            {
+              "name": "maxClusterSize",
+              "type": "number",
+              "value": {
+                "expression": "{{ Math.max(...record.result.hits.map(item => item.count)) }}"
+              }
+            },
+            {
+              "name": "cropNames",
+              "type": "array",
+              "value": {
+                "expression": "{{ record.result.hits.map(item => item.value)}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Crop Counts",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/facet"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"key\": \"crop_name\",\n \"limit\": record.result.count,\n \"exact\": true\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "include": "allOtherFields",
+        "options": {
+          "destinationFieldName": "cropName"
+        },
+        "fieldToSplitOut": "cropNames"
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Set text medoid threshold score",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ steps[\"step-22\"].records[0].qdrantCloudURL }}/collections/{{ steps[\"step-22\"].records[0].collectionName }}/points/payload"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{{\n{\n \"payload\": {\"is_text_anchor_medoid_cluster_threshold\": record.thresholdScore },\n \"points\": [record.centerId]\n}\n}}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-24",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-24",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-26",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-5",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-14-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.voyageai.com/v1/{resource}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Vector Database as a Big Data Analysis Tool for AI Agents [2_3 - anomaly].json",
+    "git_blob": "562d0395eeb28c0df8db8fa9a5ad23f7b541acac",
+    "sha256": "ad9a712778c701bf21fabb5e8aa735506993adc36b68bab75045c6e0eea8e290",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Vector%20Database%20as%20a%20Big%20Data%20Analysis%20Tool%20for%20AI%20Agents%20%5B2_3%20-%20anomaly%5D.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

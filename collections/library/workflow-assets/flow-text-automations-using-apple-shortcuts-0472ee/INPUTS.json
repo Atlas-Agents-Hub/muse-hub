@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-text-automations-using-apple-shortcuts-0472ee",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-modelid": null,
+    "step-5-modelid": null,
+    "step-6-modelid": null,
+    "step-7-modelid": null,
+    "step-8-modelid": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    }
+  }
+}

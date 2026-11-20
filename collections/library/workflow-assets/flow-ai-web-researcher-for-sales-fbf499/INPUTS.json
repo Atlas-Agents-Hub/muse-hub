@@ -1,0 +1,34 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-web-researcher-for-sales-fbf499",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-jsonschemaexample-body-url": null,
+    "step-9-sheetname": null,
+    "step-9-documentid": null,
+    "step-11-sheetname": null,
+    "step-11-documentid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "toolserpapi": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,650 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-analyze-sort-suspicious-email-contents-9ccf87",
+  "title": "Analyze & Sort Suspicious Email Contents with ChatGPT",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Gmail Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {},
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Microsoft Outlook Trigger",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Screenshot HTML",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendQuery": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "html",
+              "value": {
+                "expression": "{{ steps[\"step-17\"].record.htmlBody }}"
+              }
+            }
+          ]
+        },
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Retrieve Screenshot",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.url }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Set Outlook Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "htmlBody",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.body.content }}"
+              }
+            },
+            {
+              "name": "headers",
+              "type": "string",
+              "value": {
+                "expression": "{{ record}}"
+              }
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.subject }}"
+              }
+            },
+            {
+              "name": "recipient",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.toRecipients[0].emailAddress.address }}"
+              }
+            },
+            {
+              "name": "textBody",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].record.body.content }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Set Gmail Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "htmlBody",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.html }}"
+              }
+            },
+            {
+              "name": "headers",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.headers }}"
+              }
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.subject }}"
+              }
+            },
+            {
+              "name": "recipient",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.to.text }}"
+              }
+            },
+            {
+              "name": "textBody",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Retrieve Headers of Email",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://graph.microsoft.com/v1.0/me/messages/{{ record.id }}?$select=internetMessageHeaders,body"
+        },
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "outlook.body-content-type=\"text\""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Format Headers",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const input = steps[\"step-7\"].record.internetMessageHeaders;\n\nconst result = input.reduce((acc, { name, value }) => {\n if (!acc[name]) acc[name] = [];\n acc[name].push(value);\n return acc;\n}, {});\n\nreturn result;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Analyze Email with ChatGPT",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-9-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Describe the following email using the HTML body and headers. Determine if the email could be a phishing email. \n\nHere is the HTML body:\n{{ steps[\"step-17\"].record.htmlBody }}\n\nThe message headers are as follows:\n{{ steps[\"step-17\"].record.headers }}"
+              }
+            },
+            {
+              "role": "system",
+              "content": "Please make sure to output all responses using the following structured JSON output:\n{\n \"malicious\": false,\n \"summary\": \"The email appears to be a legitimate communication from a known sender. It contains no suspicious links, attachments, or language that indicates phishing or malicious intent.\"\n}\n\nFormat the response for Jira who uses a wiki-style renderer. Do not include ``` around your response. Make the summary as verbose as possible including a full breakdown of why the email is benign or malicious."
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Create Potentially Malicious Ticket",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "project": {
+          "configuration_input": "step-10-project"
+        },
+        "summary": {
+          "expression": "Potentially Malicious - Phishing Email Reported: \"{{ steps[\"step-17\"].record.subject }}\""
+        },
+        "issueType": {
+          "configuration_input": "step-10-issuetype"
+        },
+        "additionalFields": {
+          "description": {
+            "expression": "A phishing email was reported by {{ steps[\"step-17\"].record.recipient }} with the subject line \"{{ steps[\"step-17\"].record.subject }}\"\n\\\\\nh2. Here is ChatGPT's analysis of the email:\n{{ record.message.content.summary }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Create Potentially Benign Ticket",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "project": {
+          "configuration_input": "step-11-project"
+        },
+        "summary": {
+          "expression": "Potentially Benign - Phishing Email Reported: \"{{ steps[\"step-17\"].record.subject }}\""
+        },
+        "issueType": {
+          "configuration_input": "step-11-issuetype"
+        },
+        "additionalFields": {
+          "description": {
+            "expression": "A phishing email was reported by {{ steps[\"step-17\"].record.recipient }} with the subject line \"{{ steps[\"step-17\"].record.subject }}\"\n\\\\\nh2. Here is ChatGPT's analysis of the email:\n{{ record.message.content.summary }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Rename Screenshot",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "steps[\"step-4\"].item.binary.data.fileName = 'emailScreenshot.png'\n\nreturn steps[\"step-4\"].item;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Set Jira ID",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Upload Screenshot of Email to Jira",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "issueKey": {
+          "expression": "{{ steps[\"step-13\"].record.key }}"
+        },
+        "resource": "issueAttachment"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Upload Email Body to Jira",
+      "operation": "service-read",
+      "adapter": "jira",
+      "parameters": {
+        "issueKey": {
+          "expression": "{{ steps[\"step-13\"].record.key }}"
+        },
+        "resource": "issueAttachment"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Convert Email Body to File",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "fileName": "emailBody.txt"
+        },
+        "operation": "toText",
+        "sourceProperty": "textBody"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Set Email Variables",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Rename Email Body Screenshot",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "steps[\"step-16\"].item.binary.data.fileName = 'emailBody.txt'\n\nreturn steps[\"step-16\"].item;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Check if Malicious",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content.malicious }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://hcti.io/v1/image"
+    },
+    {
+      "id": "step-9-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-project",
+      "purpose": "Select the project for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-issuetype",
+      "purpose": "Select the issueType for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-project",
+      "purpose": "Select the project for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-issuetype",
+      "purpose": "Select the issueType for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Analyze & Sort Suspicious Email Contents with ChatGPT.json",
+    "git_blob": "b36a8925a3e6007d46c4d51b06fbbf4d125eb36e",
+    "sha256": "bc228da441906ebce42cea2b9b881e107d1512c757f3c2aabade2ddcbfcc3deb",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Analyze%20%26%20Sort%20Suspicious%20Email%20Contents%20with%20ChatGPT.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

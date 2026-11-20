@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-detect-toxic-language-in-telegram-messages-e9b593",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "googleperspective": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,295 @@
+{
+  "allowed_hosts": [
+    "api.apify.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Apikey",
+        "name": "apikey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', required: true, description: 'Find your API key on Apify in the settings, API & Integrations section.', })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "AI & ML",
+  "id": "apify",
+  "name": "Apify",
+  "operations": [
+    {
+      "description": "Searches the public Apify Store for Actors by name or keyword.",
+      "id": "apify_find_actor",
+      "inputs": [
+        {
+          "description": "Name or keyword to search the Apify Store for (e.g. \"instagram scraper\"). Leave empty to list popular store actors.",
+          "label": "Search Query",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of actors to return. Default 50.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of actors to skip at the start. Default 0.",
+          "label": "Offset",
+          "name": "offset",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Actor",
+      "source_path": "apify/src/lib/actions/find-actor.ts",
+      "source_sha256": "dd04f1cf480ce416c7aa2217c37108abe1817193af62d54e3ddf514779120410",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/actions/find-actor.ts"
+    },
+    {
+      "description": "Retrieves the authenticated Apify account profile.",
+      "id": "apify_get_account",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Account",
+      "source_path": "apify/src/lib/actions/get-account.ts",
+      "source_sha256": "66fcb652ccebf43e229b7533c0d81f6c5b56e0904b0d7dfb8a45f2ea75f5fb4a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/actions/get-account.ts"
+    },
+    {
+      "description": "Retrieves metadata for a single Apify Actor by ID.",
+      "id": "apify_get_actor",
+      "inputs": [
+        {
+          "description": "The ID (or \"username~actor-name\") of the Actor. Obtain it from Find Actor or List Actors.",
+          "label": "Actor ID",
+          "name": "actorId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Actor",
+      "source_path": "apify/src/lib/actions/get-actor.ts",
+      "source_sha256": "406af8af5ecbc83c8dd27d01efaa243de86e89da5259a05b425292748b7b51da",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/actions/get-actor.ts"
+    },
+    {
+      "description": "Retrieves the status and metadata of an Actor build by build ID.",
+      "id": "apify_get_build",
+      "inputs": [
+        {
+          "description": "The ID of the build to read. Obtain it from an actor's build list or a run's buildId.",
+          "label": "Build ID",
+          "name": "buildId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional. Block server-side up to this many seconds (max 60) waiting for the build to finish before returning. Leave empty for an immediate status read.",
+          "label": "Wait For Finish (seconds)",
+          "name": "waitForFinish",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Build",
+      "source_path": "apify/src/lib/actions/get-build.ts",
+      "source_sha256": "f82ab9183166b680a4e01d96156197d984ffc45ff36255bbddbc2180ee0a5103",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/actions/get-build.ts"
+    },
+    {
+      "description": "Retrieves metadata for an Apify dataset by dataset ID.",
+      "id": "apify_get_dataset",
+      "inputs": [
+        {
+          "description": "The ID of the dataset. Obtain it from List Datasets or a run's defaultDatasetId (Get Actor Run).",
+          "label": "Dataset ID",
+          "name": "datasetId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Dataset",
+      "source_path": "apify/src/lib/actions/get-dataset.ts",
+      "source_sha256": "d982aa79632ad98c994cd59da2e84c3451003a6cd209d9e0b013f96e03f39d35",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/actions/get-dataset.ts"
+    },
+    {
+      "description": "Retrieves metadata for a saved Actor task by task ID.",
+      "id": "apify_get_task",
+      "inputs": [
+        {
+          "description": "The ID of the saved task. Obtain it from List Tasks.",
+          "label": "Task ID",
+          "name": "taskId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Task",
+      "source_path": "apify/src/lib/actions/get-task.ts",
+      "source_sha256": "428de47433459797ad84bd91f87c79afdb1dd82466fdda92bafd075ac984b8f0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/actions/get-task.ts"
+    },
+    {
+      "description": "Lists Actor runs across the whole account.",
+      "id": "apify_list_runs",
+      "inputs": [
+        {
+          "description": "Optionally filter runs by status.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Maximum number of runs to return. Default 50.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of runs to skip at the start. Default 0.",
+          "label": "Offset",
+          "name": "offset",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Runs",
+      "source_path": "apify/src/lib/actions/list-runs.ts",
+      "source_sha256": "6f18a5238b84d32611d945d086fdbcc19a98af445f9e13e69651a9763e60df09",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/actions/list-runs.ts"
+    },
+    {
+      "description": "Lists the saved Actor tasks in the authenticated account.",
+      "id": "apify_list_tasks",
+      "inputs": [
+        {
+          "description": "Maximum number of tasks to return. Default 50.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of tasks to skip at the start. Default 0.",
+          "label": "Offset",
+          "name": "offset",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Tasks",
+      "source_path": "apify/src/lib/actions/list-tasks.ts",
+      "source_sha256": "c0e24616bd78eac941fe1272d548876937a151b0d4f33d40f6bf93b1c2e5cb1f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/actions/list-tasks.ts"
+    },
+    {
+      "description": "Fires when a run of the Actor ends with a chosen status.",
+      "id": "watchActorRunsTrigger",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Webhook Info",
+          "name": "webhookInfo",
+          "required": null,
+          "source_expression": "createWebhookInfoProperty()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Actor Source",
+          "name": "actorSource",
+          "required": null,
+          "source_expression": "createActorSourceProperty()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Actorid",
+          "name": "actorid",
+          "required": null,
+          "source_expression": "createActorIdProperty()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Statuses",
+          "name": "statuses",
+          "required": null,
+          "source_expression": "createStatusesProperty()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Watch Actor Runs",
+      "source_path": "apify/src/lib/triggers/watch-actor-runs.ts",
+      "source_sha256": "91a2fa5566b462b7f077ead7123b9cbd9e297c9aac198e4dd843d1a2e932d5ea",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/triggers/watch-actor-runs.ts"
+    },
+    {
+      "description": "Fires when a run of the task ends with a chosen status.",
+      "id": "watchTaskRunsTrigger",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Webhook Info",
+          "name": "webhookInfo",
+          "required": null,
+          "source_expression": "createWebhookInfoProperty()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Taskid",
+          "name": "taskid",
+          "required": null,
+          "source_expression": "createTaskIdProperty()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Statuses",
+          "name": "statuses",
+          "required": null,
+          "source_expression": "createStatusesProperty()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Watch Task Runs",
+      "source_path": "apify/src/lib/triggers/watch-task-runs.ts",
+      "source_sha256": "a6030d83dc6ecc4a3810368791be6641dd51e7b53d1a6e08a82e6483c137c9bd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/apify/src/lib/triggers/watch-task-runs.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "b066df7c213379d45e3a43aa67619e207b66773c",
+    "index_path": "apify/src/index.ts",
+    "index_sha256": "40a6d934a49a2728e9c14048d42b65bbcd0e8df047d8ce48a5ed47a9e5df6b4c",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "model-builder",
+    "research-evaluator",
+    "software-engineer"
+  ]
+}

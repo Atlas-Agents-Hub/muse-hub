@@ -1,0 +1,147 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-bitcoin-price-alert-to-telegram-with-coinpaprika-1ebd41",
+  "title": "Bitcoin price alert to Telegram with CoinPaprika",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Every 15 minutes",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get BTC price (CoinPaprika)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Big 24h move?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.quotes.USD.percent_change_24h }}"
+              },
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "leftValue": {
+                "expression": "{{ record.quotes.USD.percent_change_24h }}"
+              },
+              "rightValue": -5,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Send Telegram alert",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "configuration_input": "step-4-chatid"
+        },
+        "text": {
+          "expression": "Bitcoin big 24h move alert\n\nPrice: ${{ record.quotes.USD.price.toFixed(2) }}\n24h change: {{ record.quotes.USD.percent_change_24h.toFixed(2) }}%\n7d change: {{ record.quotes.USD.percent_change_7d.toFixed(2) }}%\n\nSource: CoinPaprika (keyless, no API key)"
+        },
+        "additionalFields": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-3",
+      "channel": "main",
+      "branch": 1
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.coinpaprika.com/v1/tickers/btc-bitcoin"
+    },
+    {
+      "id": "step-4-chatid",
+      "purpose": "Select the chatId for step-4.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Bitcoin price alert to Telegram with CoinPaprika.json",
+    "git_blob": "b9c5cdfe586b3e4b72e502b645af6fad322650e4",
+    "sha256": "86e37ab02b69f8802d9aeca2049059d3b1cf5e25c71e69d6e140671fff80f101",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Bitcoin%20price%20alert%20to%20Telegram%20with%20CoinPaprika.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

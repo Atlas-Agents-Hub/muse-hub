@@ -1,0 +1,16 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-convert-markdown-into-a-branded-pdf-with-a-table-of-contents-using-pdfmint-a43009",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "pdfmint": {
+      "connection": null
+    }
+  }
+}

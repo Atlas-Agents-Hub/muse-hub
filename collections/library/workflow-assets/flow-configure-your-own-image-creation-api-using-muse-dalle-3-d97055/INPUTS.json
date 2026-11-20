@@ -1,0 +1,18 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-configure-your-own-image-creation-api-using-muse-dalle-3-d97055",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-path": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    }
+  }
+}

@@ -1,8 +1,8 @@
 # Muse Hub website
 
-[Open Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/) · [Download kits](https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html)
+[Open Muse Hub](https://atlas-agents-hub.github.io/muse-hub/) · [Download kits](https://atlas-agents-hub.github.io/muse-hub/downloads.html)
 
-The website brings together Muse feature guides, 15 specialists, 461 skills, 58 workflows, Companion spaces, computer and device tools, and a directory of 63 resources. Three guided journeys connect the right tools to everyday planning, engineering, and creative work.
+The website brings together Muse feature guides, 15 specialists, 5242 skills, 396 workflows, full-stack Space templates, computer and device tools, and a directory of 63 resources. Three guided journeys connect the right tools to everyday planning, engineering, and creative work.
 
 ## Pages
 

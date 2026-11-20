@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-analyze-feedback-using-aws-comprehend-and-send-it-to-a-mattermost-channel-8ed66b",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-channelid": null
+  },
+  "adapters": {
+    "awscomprehend": {
+      "connection": null
+    },
+    "mattermost": {
+      "connection": null
+    }
+  }
+}

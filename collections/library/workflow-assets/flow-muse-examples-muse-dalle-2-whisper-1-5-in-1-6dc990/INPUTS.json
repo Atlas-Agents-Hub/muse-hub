@@ -1,0 +1,23 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-muse-examples-muse-dalle-2-whisper-1-5-in-1-6dc990",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-url": null,
+    "step-12-model": null,
+    "step-15-model": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

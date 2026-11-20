@@ -1,0 +1,687 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-information-monitoring-with-muse-google-sheets-jina-ai-and-slack-2106de",
+  "title": "Information Monitoring with OpenAI, Google Sheets, Jina AI and Slack",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Basic LLM Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.data }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "You are an AI assistant responsible for summarizing articles **in English** and formatting them into Slack-compatible messages. \nYour job is to create a clear and concise summary following the guidelines below and format it in Slack-specific Markdown format. \n\n---\n\n## 1. Title with Link \n\n- Format the article title as a **clickable link** using Slack's Markdown syntax: \n `<URL|*Title of the article*>`. \n- The title should be clear and engaging to encourage readers to click. \n\n---\n\n## 2. Section Headings \n\n- Use **bold text** to introduce different sections of the summary by wrapping the text with `*` symbols. \n- Ensure headings are descriptive and guide the reader through the content effectively. \n\n---\n\n## 3. Key Points \n\n- Present key insights using **bullet points**, using the `•` symbol for listing important information. \n- Each point should be concise, informative, and directly related to the article's topic. \n\n---\n\n## 4. Content Summary \n\n- Provide a brief but comprehensive overview of the article's content. \n- Use plain text and line breaks to separate paragraphs for improved readability. \n- Focus on the most important aspects without unnecessary details. \n\n---\n\n## 5. Context and Relevance \n\n- Explain why the article is important and how it relates to the reader's interests. \n- Highlight its relevance to ongoing trends or industry developments. \n\n---\n\n## Message Structure \n\nThe output should follow this structured format: \n\n1. **Title with link** – Present the article as a clickable link formatted in Slack Markdown. \n2. **Summary sections** – Organized under clear headings to enhance readability. \n3. **Key insights** – Presented as bullet points for quick scanning. \n4. **Contextual analysis** – A brief explanation of the article's relevance and importance. \n\n---\n\n## Slack Markdown Formatting Guide \n\nEnsure the message follows Slack's Markdown syntax for proper display: \n\n- **Bold text:** Use `*bold text*`. \n- **Italic text:** Use `_italic text_`. \n- **Bullet points:** Use `•` or `-` for lists. \n- **Links:** Format as `<URL|*text*>` to create clickable links. \n- **Line breaks:** Use a blank line to separate paragraphs for readability. \n\n---\n\n## Example of Slack-formatted Output \n\n🔔 *New article from n8n Blog* \n\n<https://blog.n8n.io/self-hosted-ai/|*Introducing the Self-hosted AI Starter Kit: Run AI locally for privacy-first solutions*> \n\n*Summary of the article* \nn8n has launched the Self-hosted AI Starter Kit, a Docker Compose template designed to simplify the deployment of local AI tools. This initiative addresses the growing need for on-premise AI solutions that enhance data privacy and reduce reliance on external APIs. The starter kit includes tools like Ollama, Qdrant, and PostgreSQL, providing a foundation for building self-hosted AI workflows. While it's tailored for proof-of-concept projects, users can customize it to fit specific requirements. \n\n*Key Points* \n• The Self-hosted AI Starter Kit facilitates quick setup of local AI environments using Docker Compose. \n• It includes preconfigured AI workflow templates and essential tools such as Ollama, Qdrant, and PostgreSQL. \n• Running AI on-premise offers benefits like improved data privacy and cost savings by minimizing dependence on external API calls. \n• The kit is designed for easy deployment on local machines or personal cloud instances like Digital Ocean and runpod.io. \n• n8n emphasizes the flexibility of their platform, allowing integration with over 400 services, including Google, Slack, Twilio, and JIRA, to streamline AI application development. \n\n*Context and Relevance* \nThis article introduces a practical solution for organizations and developers seeking to implement AI workflows locally. By providing a ready-to-use starter kit, n8n addresses common challenges associated with setting up and maintaining on-premise AI systems, promoting greater control over data and potential cost efficiencies.\n \n---\n\nEnsure that the message is formatted according to Slack's requirements to improve readability and engagement."
+              }
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "RSS Read",
+      "operation": "service-read",
+      "adapter": "rssfeedread",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.rss_feed_url }}"
+        },
+        "options": {
+          "ignoreSSL": false
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Relevance Classification for Topic Monitoring",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "fallback": "discard"
+        },
+        "inputText": {
+          "expression": "{{ record.title }}\n{{ record.contentSnippet }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "relevant",
+              "description": "Articles related to artificial intelligence (AI), data science, machine learning, algorithms, big data, or innovations in these fields."
+            },
+            {
+              "category": "not_relevant",
+              "description": "Articles not directly related to artificial intelligence (AI), data science, machine learning, algorithms, big data, or innovations in these fields."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Google Sheets - Get RSS Feed url followed",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "configuration_input": "step-6-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-6-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Slack1",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "select": "channel",
+        "channelId": {
+          "configuration_input": "step-7-channelid"
+        },
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Google Sheets - Get article monitored database",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "configuration_input": "step-8-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-8-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Code",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Retrieve data from RSS feed and Google Sheets\nconst rssItems = items; // Contains RSS articles\nconst sheetItems = $items(\"Set field - existing_url\", 0);\n\n// Extract the links of articles present in Google Sheets\nconst existingUrls = sheetItems.map(entry => entry.json.existing_url);\n\n// Filter RSS articles to keep only those not present in Google Sheets\nconst newArticles = rssItems.filter(rssItem => {\n return !existingUrls.includes(rssItem.json.link);\n});\n\n// If new articles are found, return them\nif (newArticles.length > 0) {\n return newArticles;\n}\n\n// If no new articles, return an informational message\nreturn [{ json: { message: \"No new articles found.\" } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "No Operation, do nothing",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-11",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": {
+                "expression": "{{ record.message }}"
+              },
+              "rightValue": "No new articles found."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Jina AI - Read URL",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://r.jina.ai/{{ record.link }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Set field - existing_url",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "existing_url",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.article_url.extractUrl() }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Set fields - Not relevant articles",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "article_url",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.link }}"
+              }
+            },
+            {
+              "name": "summarized",
+              "type": "string",
+              "value": "NO (not relevant)"
+            },
+            {
+              "name": "website",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-6\"].record.website }}"
+              }
+            },
+            {
+              "name": "fetched_at",
+              "type": "string",
+              "value": {
+                "expression": "{{current_time}}"
+              }
+            },
+            {
+              "name": "publish_date",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.pubDate.toDateTime().format('yyyy-MM-dd') }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Google Sheets - Add relevant articles",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {},
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "article_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "summarized",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "summary",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "fetched_at",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "publish_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-16-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-16-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Google Sheets - Add relevant article",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {},
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "article_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "summarized",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "summary",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "fetched_at",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "publish_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-17-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-17-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Set Fields - Relevant Articles",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "article_url",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.link }}"
+              }
+            },
+            {
+              "name": "summarized",
+              "type": "string",
+              "value": "YES"
+            },
+            {
+              "name": "summary",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.text }}"
+              }
+            },
+            {
+              "name": "website",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-6\"].record.website }}"
+              }
+            },
+            {
+              "name": "fetched_at",
+              "type": "string",
+              "value": {
+                "expression": "{{current_time}}"
+              }
+            },
+            {
+              "name": "publish_date",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.pubDate.toDateTime().format('yyyy-MM-dd') }}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-11",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-17",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-6-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Slack/AI-Powered Information Monitoring with OpenAI, Google Sheets, Jina AI and Slack.json",
+    "git_blob": "c7b3291db3aa5620990e456c8604ee82ced23aa0",
+    "sha256": "8c79bdd0b1b4cd386458bfe5154777cb3efdb1ff0b2406e6059215047d7c2b41",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Slack/AI-Powered%20Information%20Monitoring%20with%20OpenAI%2C%20Google%20Sheets%2C%20Jina%20AI%20and%20Slack.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

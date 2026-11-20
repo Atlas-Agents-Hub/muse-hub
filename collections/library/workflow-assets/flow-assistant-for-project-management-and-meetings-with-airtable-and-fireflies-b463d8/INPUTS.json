@@ -1,0 +1,39 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-assistant-for-project-management-and-meetings-with-airtable-and-fireflies-b463d8",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-workflowid": null,
+    "step-7-base": null,
+    "step-7-table": null,
+    "step-8-calendar": null,
+    "step-9-path": null,
+    "step-10-url": null,
+    "step-10-parameters-0-value": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "googlecalendar": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

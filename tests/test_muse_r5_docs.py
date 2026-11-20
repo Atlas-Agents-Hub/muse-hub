@@ -12,7 +12,8 @@ def current_collection():
 class ProductDocumentationTests(unittest.TestCase):
     def test_readme_explains_current_product_and_actual_first_use(self):
         text=(R/'README.md').read_text('utf-8')
-        for term in ('15 independent assistants',str(len(current_collection()['skills']))+' skills',str(len(current_collection()['workflows']))+' workflows','100 task starters',
+        collection=current_collection()
+        for term in ('15 independent assistants',str(len(collection['skills']))+' skills',str(len(collection['workflows']))+' workflows',str(len(collection['starters']))+' task starters',
                      'tools/muse_collection.py demo data-engineer', 'START_HERE.md',
                      'docs/DOWNLOAD_A_SPECIALIST.md','docs/GETTING_STARTED.md',
                      'docs/TERMINAL.md','docs/GITHUB_QUICKSTART.md'):
@@ -37,10 +38,11 @@ class ProductDocumentationTests(unittest.TestCase):
     def test_current_collection_docs_do_not_use_old_inventory_as_current(self):
         page=(C/'README.md').read_text('utf-8')
         intro=page.split('\n## ',1)[0]
-        self.assertRegex(intro,str(len(current_collection()['skills']))+r' (?:reusable |developed )?skills')
-        self.assertIn(str(len(current_collection()['workflows']))+' workflows',intro)
+        collection=current_collection()
+        self.assertRegex(intro,str(len(collection['skills']))+r' (?:reusable |developed )?skills')
+        self.assertIn(str(len(collection['workflows']))+' workflows',intro)
         self.assertNotIn('Current depth: R4',intro)
         self.assertIn('SKILL_INDEX.md',page)
         counts=json.loads((C/'COUNTS.json').read_text('utf-8'))
-        self.assertEqual(counts['skills'],len(current_collection()['skills']))
+        self.assertEqual(counts['skills'],len(collection['skills']))
 if __name__=='__main__':unittest.main()

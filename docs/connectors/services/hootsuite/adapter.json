@@ -1,0 +1,134 @@
+{
+  "allowed_hosts": [
+    "developer.hootsuite.com.",
+    "platform.hootsuite.com",
+    "twitter.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://platform.hootsuite.com/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "offline",
+      "post"
+    ],
+    "token_urls": [
+      "https://platform.hootsuite.com/oauth2/token"
+    ]
+  },
+  "category": "Social",
+  "id": "hootsuite",
+  "name": "Hootsuite",
+  "operations": [
+    {
+      "description": "Permanently deletes a post. Only posts in a deletable state (e.g. SCHEDULED) can be removed.",
+      "id": "delete_message",
+      "inputs": [
+        {
+          "description": "The unique ID of the post to delete. You can get this from the \"Schedule Post\" or \"Get Post Details\" action.",
+          "label": "Post ID",
+          "name": "messageId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Post",
+      "source_path": "hootsuite/src/lib/actions/delete-message.ts",
+      "source_sha256": "834bc6ad57e557b960c9f0d0d57e3887df703727ba724af01aa26d16d6c1016b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/hootsuite/src/lib/actions/delete-message.ts"
+    },
+    {
+      "description": "Retrieves the details of a specific scheduled or published post by its ID.",
+      "id": "get_message",
+      "inputs": [
+        {
+          "description": "The unique ID of the post. You can get this from a previous \"Schedule Post\" action output or from the Hootsuite dashboard URL.",
+          "label": "Post ID",
+          "name": "messageId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Post Details",
+      "source_path": "hootsuite/src/lib/actions/get-message.ts",
+      "source_sha256": "e200a9ed6678c841d7931051f3554ba346ee12bd311fb3543935a92d6ecaa7fc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/hootsuite/src/lib/actions/get-message.ts"
+    },
+    {
+      "description": "Schedules or immediately publishes a post to one or more social media profiles.",
+      "id": "create_message",
+      "inputs": [
+        {
+          "description": "Select the social media profiles to post to.",
+          "label": "Social Profiles",
+          "name": "socialProfileIds",
+          "required": true,
+          "type": "MultiSelectDropdown"
+        },
+        {
+          "description": "The text content of your post.",
+          "label": "Post Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "When to publish the post (UTC, must be at least 5 minutes in the future). Leave empty to post immediately.",
+          "label": "Scheduled Time",
+          "name": "scheduledSendTime",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Send an email notification when the post is published.",
+          "label": "Email Notification",
+          "name": "emailNotification",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Schedule Post",
+      "source_path": "hootsuite/src/lib/actions/create-message.ts",
+      "source_sha256": "338e17f0c21355d5cd335730a8acb3766de42e279ec408d5fbbbc473d45d3e4b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/hootsuite/src/lib/actions/create-message.ts"
+    },
+    {
+      "description": "Triggers when a post is published (sent) in Hootsuite.",
+      "id": "new_published_post",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Published Post",
+      "source_path": "hootsuite/src/lib/triggers/new-published-post.ts",
+      "source_sha256": "3afe42b1989d85fc072cb274b231f75b5aef5094cc283f09747c3e667cc5af3d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/hootsuite/src/lib/triggers/new-published-post.ts"
+    },
+    {
+      "description": "Triggers when a new post is scheduled in Hootsuite.",
+      "id": "new_scheduled_post",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Scheduled Post",
+      "source_path": "hootsuite/src/lib/triggers/new-scheduled-post.ts",
+      "source_sha256": "fc315b24023a2f52436d56dc621a4a5465bed8d75a2d59fd60fccbb850012b21",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/hootsuite/src/lib/triggers/new-scheduled-post.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "88d7533264e0ed2139d0792d13f280b2cd77ca7e",
+    "index_path": "hootsuite/src/index.ts",
+    "index_sha256": "f11250cba45e1d0f9b1338a60726be4d835208c69fc83d1c017dece5f439f314",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "personal-companion",
+    "coordinator"
+  ]
+}

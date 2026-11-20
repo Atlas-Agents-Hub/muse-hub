@@ -1,0 +1,463 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-suggest-meeting-slots-using-ai-02559f",
+  "title": "Suggest meeting slots using AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Gmail Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "filters": {
+          "readStatus": "unread",
+          "includeSpamTrash": false
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Chat OpenAI",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.1
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Workflow Tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "Calendar_Availability",
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool to get my calendar availability as stringified JSON array."
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Chat OpenAI1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Google Calendar",
+      "operation": "service-read",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "options": {
+          "timeMax": {
+            "expression": "{{ current_time.plus(1, 'month').toISO() }}"
+          },
+          "timeMin": {
+            "expression": "{{ current_time.minus(1, 'day').toISO() }}"
+          },
+          "singleEvents": true
+        },
+        "calendar": {
+          "configuration_input": "step-5-calendar"
+        },
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "Format response",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "include": "allFieldsExcept",
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "operation": "concatenateItems",
+        "fieldsToExclude": "sort",
+        "destinationFieldName": "response"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Stringify Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "response",
+              "value": {
+                "expression": "{{ JSON.stringify(record.response) }}"
+              }
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Extract start, end and name",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "start",
+              "value": {
+                "expression": "{{ DateTime.fromISO(record.start.dateTime).toLocaleString(DateTime.DATE_HUGE) }}, {{ DateTime.fromISO(record.start.dateTime).toLocaleString(DateTime.TIME_24_WITH_SHORT_OFFSET) }}"
+              }
+            },
+            {
+              "name": "end",
+              "value": {
+                "expression": "{{ DateTime.fromISO(record.end.dateTime).toLocaleString(DateTime.DATE_HUGE) }}, {{ DateTime.fromISO(record.end.dateTime).toLocaleString(DateTime.TIME_24_WITH_SHORT_OFFSET) }}"
+              }
+            },
+            {
+              "name": "name",
+              "value": {
+                "expression": "{{ record.summary }}"
+              }
+            },
+            {
+              "name": "sort",
+              "value": {
+                "expression": "{{ record.start.dateTime }}"
+              }
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Filter only confirmed and with set time",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ record.status }}"
+              },
+              "value2": "confirmed"
+            }
+          ],
+          "boolean": [
+            {
+              "value1": {
+                "expression": "{{ record.start.dateTime }}"
+              },
+              "value2": {
+                "expression": "{{ undefined }}"
+              },
+              "operation": "notEqual"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Is appointment request",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ record.is_appointment }}"
+              },
+              "value2": "true"
+            }
+          ],
+          "boolean": [
+            {
+              "value1": {
+                "expression": "{{ record.is_appointment }}"
+              },
+              "value2": true
+            }
+          ]
+        },
+        "combineOperation": "any"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Classify appointment",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "Please evaluate the following email to determine if it suggests scheduling a meeting or a call:\nSubject: {{ encodeURI(record.Subject) }}\nSnippet: {{ encodeURI(record.snippet) }}\nIndicate your assessment by responding with \"true\" if it suggests a meeting or call, or \"false\" otherwise. Use lowercase for your response."
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "is_appointment": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Sort",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "sort",
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "sort"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Mark as read",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "messageId": {
+          "expression": "{{ steps[\"step-1\"].record.id }}"
+        },
+        "operation": "markAsRead"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Send Reply",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "message": {
+          "expression": "{{ record.output }}"
+        },
+        "options": {
+          "replyToSenderOnly": true
+        },
+        "messageId": {
+          "expression": "{{ steps[\"step-1\"].record.id }}"
+        },
+        "operation": "reply"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Sender: {{ steps[\"step-1\"].record.From }}\\nSubject: {{ steps[\"step-1\"].record.Subject }}\\nEmail Text: {{ steps[\"step-1\"].record.snippet }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "You are an email scheduling assistant. Based on the received email, check my availability and propose an appropriate response. \nAim to get a specific time, rather than just a day. When checking my availability, make sure that there's enough time in between meetings.\nIf I'm not available, ALWAYS propose a new time based on my availability. When proposing a new time, always leave 15 minutes buffer from previous meeting.\nToday date and time is: {{ current_time.toISO() }}."
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-14",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-12",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-17",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-17",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-6"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Suggest meeting slots using AI.json",
+    "git_blob": "7c46da5cdbaa2b07a62bb699149514b72954d66c",
+    "sha256": "61a93d9b48bfaeb5f73dd02629d8747613e3be098ff04fc014e207321370518c",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Suggest%20meeting%20slots%20using%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

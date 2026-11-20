@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-enrich-pipedrive-s-organization-data-with-muse-muse-notify-it-in-slack-427b1c",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-url": null,
+    "step-4-parameters-0-value": null,
+    "step-6-channelid": null,
+    "step-7-modelid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "pipedrive": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

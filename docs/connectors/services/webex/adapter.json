@@ -1,0 +1,232 @@
+{
+  "allowed_hosts": [
+    "example-webhook-url.com",
+    "webexapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://webexapis.com/v1/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "meeting:schedules_read",
+      "spark:all"
+    ],
+    "token_urls": [
+      "https://webexapis.com/v1/access_token"
+    ]
+  },
+  "category": "Communication",
+  "id": "webex",
+  "name": "Cisco Webex Meetings",
+  "operations": [
+    {
+      "description": "Post a plain text or rich text message to a Webex room or send a direct message",
+      "id": "createMessage",
+      "inputs": [
+        {
+          "description": "Choose between sending to a room or a direct message to a person",
+          "label": "Message Type",
+          "name": "messageType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Destination",
+          "name": "destination",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "The message to send",
+          "label": "Message Text",
+          "name": "text",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "The message in Markdown format for rich text. If provided, text will be used as alternate text",
+          "label": "Message Markdown",
+          "name": "markdown",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The parent message ID to reply to (optional)",
+          "label": "Parent Message ID",
+          "name": "parentId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Public URLs to files to attach (only one file per message)",
+          "label": "File URLs",
+          "name": "files",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Message",
+      "source_path": "webex/src/lib/actions/create-message.ts",
+      "source_sha256": "a92b0b4b8b0bca83d4cc4e64fe8a280758753f5f50a6bc706cf0ad025e0e2ba0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/webex/src/lib/actions/create-message.ts"
+    },
+    {
+      "description": "Create a new Webex room (space). The authenticated user is automatically added as a member.",
+      "id": "createRoom",
+      "inputs": [
+        {
+          "description": "A user-friendly name for the room",
+          "label": "Room Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The description of the room. Required if isPublic is true.",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The ID for the team with which this room is associated (optional)",
+          "label": "Team ID",
+          "name": "teamId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The classificationId for the room (optional)",
+          "label": "Classification ID",
+          "name": "classificationId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Make the room public and discoverable within the org. Note: description is required if this is true.",
+          "label": "Public Room",
+          "name": "isPublic",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Set the space as locked/moderated. The creator becomes a moderator.",
+          "label": "Locked/Moderated",
+          "name": "isLocked",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Sets the space into announcement mode. Only moderators can post messages. Note: space must be locked (moderated) to enable this.",
+          "label": "Announcement Only",
+          "name": "isAnnouncementOnly",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Room",
+      "source_path": "webex/src/lib/actions/create-room.ts",
+      "source_sha256": "514571918fb6ec2b05a49201e3cf5e184ab137253aa277e969b1671540b7fd6c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/webex/src/lib/actions/create-room.ts"
+    },
+    {
+      "description": "Create a new Webex team. The authenticated user is automatically added as a member.",
+      "id": "createTeam",
+      "inputs": [
+        {
+          "description": "A user-friendly name for the team",
+          "label": "Team Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The description of the team (optional)",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Team",
+      "source_path": "webex/src/lib/actions/create-team.ts",
+      "source_sha256": "6e70362612f5fb124f7c992870e33f3e1ba47b3c827a97ab0edd235702733efa",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/webex/src/lib/actions/create-team.ts"
+    },
+    {
+      "description": "Retrieve details for a specific message by message ID",
+      "id": "findMessage",
+      "inputs": [
+        {
+          "description": "The unique identifier for the message",
+          "label": "Message ID",
+          "name": "messageId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Message",
+      "source_path": "webex/src/lib/actions/find-message.ts",
+      "source_sha256": "5d7aae6434ab557e618251f340933bcb1f14cf35974008f7e57831fcb1c2df97",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/webex/src/lib/actions/find-message.ts"
+    },
+    {
+      "description": "Retrieve details for a specific room by room id",
+      "id": "findRoom",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Room Id",
+          "name": "roomId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find room",
+      "source_path": "webex/src/lib/actions/find-room.ts",
+      "source_sha256": "004bb51448700a4237865fd042472f263b6e49bddbfeaf68f3d45ae9d913b2a2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/webex/src/lib/actions/find-room.ts"
+    },
+    {
+      "description": "Triggers when a new meeting is created.",
+      "id": "newMeeting",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New meeting",
+      "source_path": "webex/src/lib/triggers/new-meeting.ts",
+      "source_sha256": "954b69f2760645f8871bb5ed792fd7458fd5c35161725cbbac7d2566cd64318c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/webex/src/lib/triggers/new-meeting.ts"
+    },
+    {
+      "description": "Triggers when a new room is created",
+      "id": "newRoom",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New room",
+      "source_path": "webex/src/lib/triggers/new-room.ts",
+      "source_sha256": "20a97512e1b7e1dff5d80e23c0d9c8c6e82eadc44f2c0aa5a2323ccf5ec5ac0e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/webex/src/lib/triggers/new-room.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "014be4da146c4943b94ca0b1f4b06045b8ad7b1c",
+    "index_path": "webex/src/index.ts",
+    "index_sha256": "bf7c84e3e85fcf497a3cd68d1a2bce1f03f9e4a48aefed81bd59e888922f53b7",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "automation-engineer"
+  ]
+}

@@ -1,0 +1,423 @@
+{
+  "allowed_hosts": [
+    "api.baserow.io"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Choose **Database Token** (recommended) for scoped, per-table access compatible with 2FA. Choose **Email & Password** only if you need automatic webhook registration on triggers — 2FA accounts are not supported.",
+        "label": "Authentication Method",
+        "name": "authType",
+        "required": true,
+        "type": "StaticDropdown"
+      },
+      {
+        "description": "Your Baserow instance URL. Leave the default for Baserow Cloud.",
+        "label": "API URL",
+        "name": "apiUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Md_Token",
+        "name": "md_token",
+        "required": false,
+        "type": "MarkDown"
+      },
+      {
+        "description": "",
+        "label": "Token",
+        "name": "token",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Database Token', description: 'Your Baserow database token. Leave blank when using Email & Password.', required: false, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Md_Jwt",
+        "name": "md_jwt",
+        "required": false,
+        "type": "MarkDown"
+      },
+      {
+        "description": "Your Baserow account email. Leave blank when using Database Token.",
+        "label": "Email",
+        "name": "email",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', description: 'Your Baserow account password. Leave blank when using Database Token.', required: false, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "baserow",
+  "name": "Baserow",
+  "operations": [
+    {
+      "description": "Finds a row by matching a field value. Returns the first match.",
+      "id": "baserow_find_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowCommon.tableId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The column to look in.",
+          "label": "Field",
+          "name": "field_name",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Returns the first row whose value equals this exactly.",
+          "label": "Field Value",
+          "name": "field_value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Row",
+      "source_path": "baserow/src/lib/actions/find-row.ts",
+      "source_sha256": "08742b959da5ce4ae584a5ad16e2dc400929ab923d6175dec8cd49164f1c9873",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/actions/find-row.ts"
+    },
+    {
+      "description": "Finds the first row whose field equals a value.",
+      "id": "baserow_find_row_ai",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowAiProps.tableIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Exact name of the field to match on. Resolve with Get Table Fields.",
+          "label": "Field Name",
+          "name": "field_name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The value the field must equal.",
+          "label": "Value",
+          "name": "value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Row",
+      "source_path": "baserow/src/lib/actions/find-row-ai.ts",
+      "source_sha256": "577a25ac9b9e92373b3b3df4a9fb0c28e3eea93f43950c0dc3748f4f0ef56f98",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/actions/find-row-ai.ts"
+    },
+    {
+      "description": "Gets a single row by its ID from a table.",
+      "id": "baserow_get_row",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowCommon.tableId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Row_Id",
+          "name": "row_id",
+          "required": null,
+          "source_expression": "baserowCommon.rowId()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Row",
+      "source_path": "baserow/src/lib/actions/get-row.ts",
+      "source_sha256": "b17474796a7282a615816614240716cc7f18b3a0f84298189aa731ffcee43051",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/actions/get-row.ts"
+    },
+    {
+      "description": "Gets a single row by its ID.",
+      "id": "baserow_get_row_ai",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowAiProps.tableIdProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Row_Id",
+          "name": "row_id",
+          "required": null,
+          "source_expression": "baserowAiProps.rowIdProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Row",
+      "source_path": "baserow/src/lib/actions/get-row-ai.ts",
+      "source_sha256": "f06fe5d293dba0a286542d0663ca13e853477618d35901169a4c9f1f42205e49",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/actions/get-row-ai.ts"
+    },
+    {
+      "description": "Gets a table by its ID.",
+      "id": "baserow_get_table",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowAiProps.tableIdProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Table",
+      "source_path": "baserow/src/lib/actions/get-table.ts",
+      "source_sha256": "665f3702276363371f16180849406239719491f752f0b09cacbc3ec67e53e3d8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/actions/get-table.ts"
+    },
+    {
+      "description": "Lists rows from a table with optional search, sorting, and filtering.",
+      "id": "baserow_list_rows",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowCommon.tableId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Which page of results to return, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Rows per page, up to 200.",
+          "label": "Page Size",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Returns rows with this text in any cell.",
+          "label": "Search",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Column name to sort by. Start it with - to sort in reverse.",
+          "label": "Sort By",
+          "name": "order_by",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether rows must match every filter or just one.",
+          "label": "Match",
+          "name": "filter_type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Filter_Instructions",
+          "name": "filter_instructions",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "One JSON filter per entry. Empty returns all rows.",
+          "label": "Filters",
+          "name": "filters",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "List Rows",
+      "source_path": "baserow/src/lib/actions/list-rows.ts",
+      "source_sha256": "8ad1c6a1d68eff2d31df8dc99814ff1e45ef3b48fd00d6d5e8e6a21d8f09c433",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/actions/list-rows.ts"
+    },
+    {
+      "description": "Lists the tables the connection can access.",
+      "id": "baserow_list_tables",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Tables",
+      "source_path": "baserow/src/lib/actions/list-tables.ts",
+      "source_sha256": "0a0d2716ab15dc9f2cb481d202cb3b4362093e93988659c5cbad40d3dce7cd2c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/actions/list-tables.ts"
+    },
+    {
+      "description": "Lists the views of a table.",
+      "id": "baserow_list_views",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowAiProps.tableIdProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Views",
+      "source_path": "baserow/src/lib/actions/list-views.ts",
+      "source_sha256": "0867bd940ba74bffc731632966ceaa1957f486c08093b4ab3024a4d78dc0a6c0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/actions/list-views.ts"
+    },
+    {
+      "description": "Triggers when a row is created, updated or deleted in a table.",
+      "id": "baserow_row_event",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowCommon.tableId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Webhook_Url",
+          "name": "webhook_url",
+          "required": null,
+          "source_expression": "webhookUrlInfo()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Instructions",
+          "name": "instructions",
+          "required": null,
+          "source_expression": "dynamicWebhookInstructions('Rows created, Rows updated, and Rows deleted')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Any Row Change",
+      "source_path": "baserow/src/lib/triggers/row-event.ts",
+      "source_sha256": "231025a07c04a6f5b3de0e1eb44704e1b4741ce310f07f365870e0a192730c81",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/triggers/row-event.ts"
+    },
+    {
+      "description": "Triggers when a row is deleted from a Baserow table.",
+      "id": "baserow_row_deleted",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowCommon.tableId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Webhook_Url",
+          "name": "webhook_url",
+          "required": null,
+          "source_expression": "webhookUrlInfo()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Instructions",
+          "name": "instructions",
+          "required": null,
+          "source_expression": "dynamicWebhookInstructions('Rows deleted')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Deleted Row",
+      "source_path": "baserow/src/lib/triggers/row-deleted.ts",
+      "source_sha256": "aab2e419b0106b37971d44a6a31c778e963cc8d75cf2b0b2e95d070ec19b7966",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/triggers/row-deleted.ts"
+    },
+    {
+      "description": "Triggers when a new row is created in a Baserow table.",
+      "id": "baserow_row_created",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Table_Id",
+          "name": "table_id",
+          "required": null,
+          "source_expression": "baserowCommon.tableId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Webhook_Url",
+          "name": "webhook_url",
+          "required": null,
+          "source_expression": "webhookUrlInfo()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Instructions",
+          "name": "instructions",
+          "required": null,
+          "source_expression": "dynamicWebhookInstructions('Rows created')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Row",
+      "source_path": "baserow/src/lib/triggers/row-created.ts",
+      "source_sha256": "1537bdc1528e2940735864844f411efc71940057ec66a4a0a2ffe92123140e22",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/baserow/src/lib/triggers/row-created.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "02034ffcb4e527afbf552718a2eb49daa5344761",
+    "index_path": "baserow/src/index.ts",
+    "index_sha256": "0b38c7fd263d3e22b54ca866893de54d9e7403f9fe39747d782e5523aed304f0",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

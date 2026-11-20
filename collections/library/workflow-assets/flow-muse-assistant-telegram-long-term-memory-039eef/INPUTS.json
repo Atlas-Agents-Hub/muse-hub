@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-muse-assistant-telegram-long-term-memory-039eef",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "googledocs": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

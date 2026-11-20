@@ -1,0 +1,752 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-microsoft-outlook-ai-email-assistant-with-contact-support-from-monday-and-airt-f6ff48",
+  "title": "Microsoft Outlook AI Email Assistant with contact support from Monday and Airtable",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Microsoft Outlook23",
+      "operation": "service-read",
+      "adapter": "microsoftoutlook",
+      "parameters": {
+        "limit": 10,
+        "fields": [
+          "flag",
+          "from",
+          "importance",
+          "replyTo",
+          "sender",
+          "subject",
+          "toRecipients",
+          "body",
+          "categories",
+          "isRead"
+        ],
+        "output": "fields",
+        "options": {},
+        "filtersUI": {
+          "values": {
+            "filters": {
+              "custom": "flag/flagStatus eq 'notFlagged' and not categories/any()",
+              "foldersToInclude": [
+                {
+                  "configuration_input": "step-2-filters-folderstoinclude-0"
+                }
+              ]
+            }
+          }
+        },
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.2
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Set Category",
+      "operation": "service-write",
+      "adapter": "microsoftoutlook",
+      "parameters": {
+        "messageId": {
+          "expression": "{{ record.output.id }}"
+        },
+        "operation": "update",
+        "updateFields": {
+          "categories": {
+            "expression": "{{ [record.output.category] }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The email id"
+              },
+              "subject": {
+                "type": "string",
+                "description": "The email subject line"
+              },
+              "category": {
+                "type": "string",
+                "description": "Primary classification of the email"
+              },
+              "subCategory": {
+                "type": "string",
+                "description": "Optional sub-classification if applicable"
+              },
+              "analysis": {
+                "type": "string",
+                "description": "Reasoning behind the categorization"
+              }
+            },
+            "required": [
+              "id",
+              "subject",
+              "category",
+              "analysis"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ steps[\"step-8\"].record.output.subCategory }}"
+              },
+              "rightValue": "Action"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Set Importance",
+      "operation": "service-write",
+      "adapter": "microsoftoutlook",
+      "parameters": {
+        "messageId": {
+          "expression": "{{ steps[\"step-8\"].record.output.id }}"
+        },
+        "operation": "update",
+        "updateFields": {
+          "importance": "High"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "AI: Analyse Email",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Categorise the following email:\n<email>\n{{ steps[\"step-19\"].record.toJsonString() }}\n</email>\n\n<Contact>\n{{ steps[\"step-18\"].all().toJsonString() }}\n</Contact>\n\n<DeleteRules>\n{{ steps[\"step-17\"].all().toJsonString() }}\n</DeleteRules>\n\n<Categories>\n{{ steps[\"step-16\"].all().toJsonString() }}\n</Categories>\n\nEnsure your final output is valid JSON with no additional text or token in the following format:\n\n{\n \"subject\": \"SUBJECT_LINE\",1\n \"category\": \"CATEGORY\",\n \"subCategory\": \"SUBCATEGORY\", //use sparingly\n \"analysis\": \"ANALYSIS_REASONING\"\n}\n\nRemember you can only use ONE of the following category 'Name' values from the 'Categories' defined above. No other categories can be used. Use the subcategory for additional context, for example, if a client email requires action or if a supplier email requires action. Do not create any additional subcategories; you can only use ONE of the category 'Name' values from the 'Categories' defined above."
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "Categories: \"\"\"{{ steps[\"step-16\"].all().toJsonString() }}\"\"\"\n\nYou are an AI email assistant for the *insert role & title*. Your task is to categorize incoming emails using one of the category 'Name' values defined in 'Categories' above.\n\nYou may also use the subcategory:\n- Action\n\nInstructions:\nAnalyse the email subject, body, and sender's email address to determine the appropriate category by referring to the 'Usage', 'Sender Indicators' and 'Subject Indicators' defined in the 'Categories' above.\n\n\nOutput Format:\nProduce output in valid JSON format:\n{\n \"id\": \"{{ steps[\"step-19\"].record.id }}\",\n \"subject\": \"SUBJECT_LINE\",\n \"category\": \"PRIMARY CATEGORY\",\n \"subCategory\": \"SUBCATEGORY\", // use sparingly\n \"analysis\": \"Brief 1-2 sentence explanation of category choice\"\n}\n- Replace \"SUBJECT_LINE\" with the actual subject of the email.\n- \"PRIMARY CATEGORY\" should be one of the categories listed above.\n- \"SUBCATEGORY\" should be \"Action\" if applicable; otherwise, omit or leave blank.\n- The \"analysis\" should be a brief 1-2 sentence explanation of why the category was chosen. Also, indicate if there was a match for the 'Contact' email and the email sender.\n\nImportant:\nYou may only use the categories and the subcategory listed above; do not create any additional categories or subcategories.\n\nNo additional text or tokens should be included outside the JSON output."
+          }
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Check Mail Schedule Trigger",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Update Contacts Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Monday.com - Get Contacts",
+      "operation": "service-read",
+      "adapter": "mondaycom",
+      "parameters": {
+        "boardId": {
+          "configuration_input": "step-11-boardid"
+        },
+        "groupId": "topics",
+        "resource": "boardItem",
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Airtable - Contacts",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-12-base"
+        },
+        "table": {
+          "configuration_input": "step-12-table"
+        },
+        "columns": {
+          "value": {
+            "Type": {
+              "expression": "{{ record.column_values[1].text }}"
+            },
+            "Email": {
+              "expression": "{{ record.column_values[6].text }}"
+            },
+            "Last Name": {
+              "expression": "{{ record.name.split(\" \",2).last() }}"
+            },
+            "First Name": {
+              "expression": "{{ record.name.split(\" \",2).first() }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "First Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Last Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Type",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Email"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Convert to Markdown",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.body.content }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Email Messages",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.subject }}"
+              }
+            },
+            {
+              "name": "importance",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.importance }}"
+              }
+            },
+            {
+              "name": "sender",
+              "type": "object",
+              "value": {
+                "expression": "{{ record.sender.emailAddress }}"
+              }
+            },
+            {
+              "name": "from",
+              "type": "object",
+              "value": {
+                "expression": "{{ record.from.emailAddress }}"
+              }
+            },
+            {
+              "name": "body",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.data\n .replace(/<[^>]*>/g, '') // Remove HTML tags\n .replace(/\\[(.*?)\\]\\((.*?)\\)/g, '') // Remove Markdown links like [text](link)\n .replace(/!\\[.*?\\]\\(.*?\\)/g, '') // Remove Markdown images like ![alt](image-link)\n .replace(/\\|/g, '') // Remove table separators \"|\"\n .replace(/-{3,}/g, '') // Remove horizontal rule \"---\"\n .replace(/\\n+/g, ' ') // Remove multiple newlines\n .replace(/([^\\w\\s.,!?@])/g, '') // Remove special characters except essential ones\n .replace(/\\s{2,}/g, ' ') // Replace multiple spaces with a single space\n .trim() // Trim leading/trailing whitespace\n}}"
+              }
+            },
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Rules",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-15-base"
+        },
+        "table": {
+          "configuration_input": "step-15-table"
+        },
+        "options": {},
+        "operation": "search"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Categories",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-16-base"
+        },
+        "table": {
+          "configuration_input": "step-16-table"
+        },
+        "options": {},
+        "operation": "search"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Delete Rules",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-17-base"
+        },
+        "table": {
+          "configuration_input": "step-17-table"
+        },
+        "options": {},
+        "operation": "search"
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Contact",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-18-base"
+        },
+        "table": {
+          "configuration_input": "step-18-table"
+        },
+        "options": {},
+        "operation": "search",
+        "filterByFormula": {
+          "expression": "{Email}='{{ steps[\"step-19\"].record.from.address }}'"
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "chooseBranch",
+        "numberInputs": 4
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-18",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 2
+    },
+    {
+      "from": "step-17",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 3
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-8",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-19",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1",
+    "step-10"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-filters-folderstoinclude-0",
+      "purpose": "Choose the 0 resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-boardid",
+      "purpose": "Select the boardId for step-11.",
+      "required": true
+    },
+    {
+      "id": "step-12-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Microsoft Outlook AI Email Assistant with contact support from Monday and Airtable.json",
+    "git_blob": "89160b9aec56427d96b7b524e7de2aa478f6f8f3",
+    "sha256": "3e173c61ba3a54e3348ee86afad5641f75537b6817af84388c108fcdf53a7ff9",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Microsoft%20Outlook%20AI%20Email%20Assistant%20with%20contact%20support%20from%20Monday%20and%20Airtable.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

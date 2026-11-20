@@ -1,0 +1,40 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-personal-shopper-chatbot-for-woocommerce-with-rag-using-google-drive-and-muse-ac4b5a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-7-qdrantcollection": null,
+    "step-13-filter-driveid": null,
+    "step-13-filter-folderid": null,
+    "step-19-url": null,
+    "step-20-qdrantcollection": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    },
+    "woocommerce": {
+      "connection": null
+    }
+  }
+}

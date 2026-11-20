@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-clientflow-lite-client-onboarding-automation-8c2d7b",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-sheetname": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    }
+  }
+}

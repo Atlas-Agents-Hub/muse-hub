@@ -1,0 +1,319 @@
+{
+  "allowed_hosts": [
+    "confluence.invalid",
+    "developer.atlassian.com",
+    "support.atlassian.com",
+    "your-domain.atlassian.net"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Account email for basic auth",
+        "label": "Account Email",
+        "name": "username",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API token', required: true, description: 'API token for basic auth', })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Example value - https://your-domain.atlassian.net (without trailing slash)",
+        "label": "Confluence Domain",
+        "name": "confluenceDomain",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Project management",
+  "id": "confluence",
+  "name": "Confluence",
+  "operations": [
+    {
+      "description": "Finds a page by exact title, optionally scoped to a space.",
+      "id": "find-page-by-title",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Space Id",
+          "name": "spaceId",
+          "required": null,
+          "source_expression": "confluenceProps.spaceId({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Exact title to match.",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Page by Title",
+      "source_path": "confluence/src/lib/actions/find-page-by-title.ts",
+      "source_sha256": "bc89a6f66a9665ef29975d661de2b3661b112c04e54e063e82f430d639d7a84a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/actions/find-page-by-title.ts"
+    },
+    {
+      "description": "Looks up Confluence users by name, email, or keyword.",
+      "id": "find-user",
+      "inputs": [
+        {
+          "description": "Username, email, or display name to search for.",
+          "label": "Keyword",
+          "name": "keyword",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User",
+      "source_path": "confluence/src/lib/actions/find-user.ts",
+      "source_sha256": "fd3ab92972ccd52b229f14e4235c920ca8f2b89f6ad1e557c7b5088d5000ef2c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/actions/find-user.ts"
+    },
+    {
+      "description": "Fetches a page by its Confluence web URL (extracts the page ID automatically).",
+      "id": "get-page-by-url",
+      "inputs": [
+        {
+          "description": "Paste any Confluence page URL, e.g. https://your-domain.atlassian.net/wiki/spaces/DOCS/pages/12345/My+Page",
+          "label": "Page URL",
+          "name": "url",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Body Format",
+          "name": "bodyFormat",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Page by URL",
+      "source_path": "confluence/src/lib/actions/get-page-by-url.ts",
+      "source_sha256": "00a9cf588c90d8a1a899212e3efcb4ef795a9322cdf3622b59edb236f0f485c3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/actions/get-page-by-url.ts"
+    },
+    {
+      "description": "Get page content and optionally all its descendants",
+      "id": "getPageContent",
+      "inputs": [
+        {
+          "description": "Get this from the page URL of your Confluence Cloud",
+          "label": "Page ID",
+          "name": "pageId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "If checked, will fetch all child pages recursively.",
+          "label": "Include Descendants ?",
+          "name": "includeDescendants",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Dynamic Properties",
+          "name": "dynamic",
+          "required": true,
+          "type": "DynamicProperties"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Page Content",
+      "source_path": "confluence/src/lib/actions/get-page-content.ts",
+      "source_sha256": "416f71dfc168374c56feddd17919edc1baea883939b77895aa5849986b866f86",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/actions/get-page-content.ts"
+    },
+    {
+      "description": "Lists all attachments on a page.",
+      "id": "list-attachments",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Space Id",
+          "name": "spaceId",
+          "required": null,
+          "source_expression": "confluenceProps.spaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Page Id",
+          "name": "pageId",
+          "required": null,
+          "source_expression": "confluenceProps.pageId({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Attachments",
+      "source_path": "confluence/src/lib/actions/list-attachments.ts",
+      "source_sha256": "01e13e3be02631a7e922bb965d370767723497beacd74d877be3bdd67315fcf4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/actions/list-attachments.ts"
+    },
+    {
+      "description": "Lists footer and/or inline comments on a page.",
+      "id": "list-comments",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Space Id",
+          "name": "spaceId",
+          "required": null,
+          "source_expression": "confluenceProps.spaceId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Page Id",
+          "name": "pageId",
+          "required": null,
+          "source_expression": "confluenceProps.pageId({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Comment Type",
+          "name": "commentType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Body Format",
+          "name": "bodyFormat",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List Comments",
+      "source_path": "confluence/src/lib/actions/list-comments.ts",
+      "source_sha256": "e10e8fb3f35f811c388bad0c7c3b3852ab9243516ef769955d0e23391ddaf496",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/actions/list-comments.ts"
+    },
+    {
+      "description": "Lists all spaces the authenticated user can access.",
+      "id": "list-spaces",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Type",
+          "name": "type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "List Spaces",
+      "source_path": "confluence/src/lib/actions/list-spaces.ts",
+      "source_sha256": "cf0b70c937ffa93cb5c5a2df353f9f0430d235bc951cfcffc5dd3a92aa45551b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/actions/list-spaces.ts"
+    },
+    {
+      "description": "Search Confluence content with CQL (Confluence Query Language). Example: `type = \"page\" AND space = \"DOCS\" AND title ~ \"release\"`.",
+      "id": "search-pages",
+      "inputs": [
+        {
+          "description": "Confluence Query Language expression. See https://developer.atlassian.com/cloud/confluence/advanced-searching-using-cql/",
+          "label": "CQL",
+          "name": "cql",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Max Results",
+          "name": "maxResults",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Comma-separated list of properties to expand (e.g. `body.storage,version,space,history`).",
+          "label": "Expand",
+          "name": "expand",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Content (CQL)",
+      "source_path": "confluence/src/lib/actions/search-pages.ts",
+      "source_sha256": "2b91f7f641e2250816306c009bfb6c0eb70425190fdc692e2b429a0f819d74ec",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/actions/search-pages.ts"
+    },
+    {
+      "description": "Triggers when a new attachment is uploaded to the selected page.",
+      "id": "new-attachment",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Attachment",
+      "source_path": "confluence/src/lib/triggers/new-attachment.ts",
+      "source_sha256": "d13035d70770411906fe2f76281e156bf51a13eef1d598f4177244cbe256baf1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/triggers/new-attachment.ts"
+    },
+    {
+      "description": "Triggers when a new blog post is published in the selected space.",
+      "id": "new-blog-post",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Blog Post",
+      "source_path": "confluence/src/lib/triggers/new-blog-post.ts",
+      "source_sha256": "13be06a67ff14fea489231e25975ca93a51a2875e0b750d731d51c897a457c13",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/triggers/new-blog-post.ts"
+    },
+    {
+      "description": "Triggers when a new footer comment is added to the selected page.",
+      "id": "new-comment",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Comment on Page",
+      "source_path": "confluence/src/lib/triggers/new-comment.ts",
+      "source_sha256": "fc4d63bade7e13bd8b0f792d23902fd55febc1ceea88f8690a5739dcc36ee2c5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/confluence/src/lib/triggers/new-comment.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "5c099952bac317dd038ab1a416b2620942cdbc2c",
+    "index_path": "confluence/src/index.ts",
+    "index_sha256": "a14fa85d6458ef8e123915787713a99e53000e3cbeb10343e2514779bb4ddf22",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

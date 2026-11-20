@@ -1,0 +1,23 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-dynamically-generate-a-webpage-from-user-request-using-muse-structured-output-a82b9a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-3-modelid": null,
+    "step-5-path": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

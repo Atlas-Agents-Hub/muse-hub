@@ -1,0 +1,305 @@
+{
+  "allowed_hosts": [
+    "api.dropboxapi.com",
+    "content.dropboxapi.com",
+    "www.dropbox.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://www.dropbox.com/oauth2/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "files.content.read",
+      "files.content.write",
+      "files.metadata.read",
+      "files.metadata.write"
+    ],
+    "token_urls": [
+      "https://api.dropboxapi.com/oauth2/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "dropbox",
+  "name": "Dropbox",
+  "operations": [
+    {
+      "description": "Check whether a file is locked",
+      "id": "get_dropbox_file_lock",
+      "inputs": [
+        {
+          "description": "The file to check. Accepts a path (/folder/file.txt) or an id (id:abc123), but not a rev: value.",
+          "label": "Path",
+          "name": "path",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get File Lock",
+      "source_path": "dropbox/src/lib/actions/get-file-lock.ts",
+      "source_sha256": "8c81b20b06726ab13f141eba7d2d77100c4c62b2c0d05fe8b367d0ed1736e56c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/dropbox/src/lib/actions/get-file-lock.ts"
+    },
+    {
+      "description": "Get metadata for a file or folder",
+      "id": "get_dropbox_file_metadata",
+      "inputs": [
+        {
+          "description": "The file or folder to inspect. Accepts a path (/folder/file.txt), an id (id:abc123) or a revision (rev:a1c10ce0dd78).",
+          "label": "Path",
+          "name": "path",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Return metadata for a deleted entry instead of failing when the path no longer exists.",
+          "label": "Include Deleted",
+          "name": "include_deleted",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Include photo and video metadata when available.",
+          "label": "Include Media Info",
+          "name": "include_media_info",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Include whether the entry has explicit shared members assigned.",
+          "label": "Include Shared Members Flag",
+          "name": "include_has_explicit_shared_members",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Get File Metadata",
+      "source_path": "dropbox/src/lib/actions/get-file-metadata.ts",
+      "source_sha256": "a6ce16f05d9ab384b8dd7e8245f5b2d93cdd7822c325fdb2b28e0b03b88db960",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/dropbox/src/lib/actions/get-file-metadata.ts"
+    },
+    {
+      "description": "Get a PDF or HTML preview of a document",
+      "id": "get_dropbox_file_preview",
+      "inputs": [
+        {
+          "description": "The document to preview. Accepts a path (/folder/report.docx), an id (id:abc123) or a revision (rev:a1c10ce0dd78).",
+          "label": "Path",
+          "name": "path",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get File Preview",
+      "source_path": "dropbox/src/lib/actions/get-file-preview.ts",
+      "source_sha256": "81cef9b311a470478aba563f265d8963cc7807946b380dd0510a844e27ec5808",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/dropbox/src/lib/actions/get-file-preview.ts"
+    },
+    {
+      "description": "Get a thumbnail image for a file",
+      "id": "get_dropbox_file_thumbnail",
+      "inputs": [
+        {
+          "description": "The image file to thumbnail. Accepts a path (/folder/photo.jpg), an id (id:abc123) or a revision (rev:a1c10ce0dd78).",
+          "label": "Path",
+          "name": "path",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Format",
+          "name": "format",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Size",
+          "name": "size",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Strict keeps the requested dimensions exactly; the bestfit modes preserve the aspect ratio.",
+          "label": "Mode",
+          "name": "mode",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Get File Thumbnail",
+      "source_path": "dropbox/src/lib/actions/get-file-thumbnail.ts",
+      "source_sha256": "1a5b369495ccb70a2cc0b032ceaed46c522ed793819920d5d43220a4cd94fb12",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/dropbox/src/lib/actions/get-file-thumbnail.ts"
+    },
+    {
+      "description": "Get a download link that expires after 4 hours",
+      "id": "get_dropbox_file_link",
+      "inputs": [
+        {
+          "description": "File to link to. The link expires after 4 hours.",
+          "label": "Path",
+          "name": "path",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Temporary File Link",
+      "source_path": "dropbox/src/lib/actions/get-file-link.ts",
+      "source_sha256": "2e53c6868c39ee1966a8352059f200baaa7e0143e2fd526484730f0704146b02",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/dropbox/src/lib/actions/get-file-link.ts"
+    },
+    {
+      "description": "List the files and subfolders in a folder",
+      "id": "list_dropbox_folder",
+      "inputs": [
+        {
+          "description": "Folder to list, starting with /. Use / for the root.",
+          "label": "Path",
+          "name": "path",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Also list everything inside subfolders.",
+          "label": "Include Subfolders",
+          "name": "recursive",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "About how many entries to return. Empty: 2,000.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Folder",
+      "source_path": "dropbox/src/lib/actions/list-a-folder.ts",
+      "source_sha256": "8bd3085c6e67b06519e55f8f436c57ba28c554e4f7ff4eeeb49da64d1b5aa89b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/dropbox/src/lib/actions/list-a-folder.ts"
+    },
+    {
+      "description": "Search for files and folders",
+      "id": "search_dropbox",
+      "inputs": [
+        {
+          "description": "Words to find in file and folder names or contents.",
+          "label": "Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Folder to search in. Empty: the whole Dropbox.",
+          "label": "Path",
+          "name": "path",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum matches to return, up to 1,000. Empty: 100.",
+          "label": "Max Results",
+          "name": "max_results",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "How to sort the matches. Empty: by relevance.",
+          "label": "Order By",
+          "name": "order_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Current or deleted files. Empty: current files.",
+          "label": "File Status",
+          "name": "file_status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Match names only, not file contents.",
+          "label": "Filename Only",
+          "name": "filename_only",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Comma-separated, without the dot.",
+          "label": "File Extensions",
+          "name": "file_extensions",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Comma-separated: image, document, pdf, spreadsheet, presentation, audio, video, folder, paper, others.",
+          "label": "File Categories",
+          "name": "file_categories",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Team accounts: only this member's files. Starts with dbid:.",
+          "label": "Account ID",
+          "name": "account_id",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search",
+      "source_path": "dropbox/src/lib/actions/search.ts",
+      "source_sha256": "4665a766f782077e8c218bab49b2e92c437a8d67549ef349dab27aab969c588b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/dropbox/src/lib/actions/search.ts"
+    },
+    {
+      "description": "Triggers when a new folder is created inside a watched Dropbox folder.",
+      "id": "new_folder",
+      "inputs": [
+        {
+          "description": "Folder to watch, starting with /. Use / for the root.",
+          "label": "Path",
+          "name": "path",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Also fire for folders created inside subfolders.",
+          "label": "Include Subfolders",
+          "name": "recursive",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Folder",
+      "source_path": "dropbox/src/lib/triggers/new-folder.ts",
+      "source_sha256": "afd399f6fd1d45cdcdea940b6816fbd2c64402165818cc88e38120b57be29641",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/dropbox/src/lib/triggers/new-folder.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "ec6b2731328dcd7c0e387f64399b306a575a072b",
+    "index_path": "dropbox/src/index.ts",
+    "index_sha256": "6d9ded1a2f164d08f889762c72801a35144f9f2679f052cb96335cf72a7c6aaf",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach"
+  ]
+}

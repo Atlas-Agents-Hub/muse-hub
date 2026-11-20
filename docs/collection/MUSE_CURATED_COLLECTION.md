@@ -1,6 +1,6 @@
 # Specialist collection
 
-Explore **15 specialist packages, 461 skills, 58 workflows, and 100 task starters**. Start with [an assistant download](../DOWNLOAD_A_SPECIALIST.md), a [task starter](../../collections/muse-starters-v1/CATALOG.md), or the [tool quickstart](SPECIALIST_QUICKSTART.md).
+Explore **15 specialist packages, 5242 skills, 396 workflows, and 558 task starters**. Start with [an assistant download](../DOWNLOAD_A_SPECIALIST.md), a [task starter](../../collections/muse-starters-v1/CATALOG.md), or the [tool quickstart](SPECIALIST_QUICKSTART.md).
 
 ## Choose a method for your task
 

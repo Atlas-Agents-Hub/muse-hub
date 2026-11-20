@@ -1,0 +1,43 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-generate-9-16-images-from-content-and-brand-guidelines-90a835",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-base": null,
+    "step-3-table": null,
+    "step-4-base": null,
+    "step-4-table": null,
+    "step-7-base": null,
+    "step-7-table": null,
+    "step-11-modelid": null,
+    "step-14-url": null,
+    "step-16-assignments-0-value": null,
+    "step-17-url": null,
+    "step-19-url": null,
+    "step-21-assignments-0-value": null,
+    "step-22-url": null,
+    "step-25-base": null,
+    "step-25-table": null,
+    "step-26-base": null,
+    "step-26-table": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "toolwikipedia": {
+      "connection": null
+    }
+  }
+}

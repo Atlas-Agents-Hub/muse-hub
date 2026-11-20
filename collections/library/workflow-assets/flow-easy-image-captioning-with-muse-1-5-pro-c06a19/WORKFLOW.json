@@ -1,0 +1,292 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-easy-image-captioning-with-muse-1-5-pro-c06a19",
+  "title": "Easy Image Captioning with Gemini 1.5 Pro",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Google Gemini Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchemaExample": {
+          "json": {
+            "caption_title": "",
+            "caption_text": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get Info",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "operation": "information"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Resize For AI",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "width": 512,
+        "height": 512,
+        "options": {},
+        "operation": "resize"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Calculate Positioning",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const { size, output } = record.json;\n\nconst lineHeight = 35;\nconst fontSize = Math.round(size.height / lineHeight);\nconst maxLineLength = Math.round(size.width/fontSize) * 2;\nconst text = `\"${output.caption_title}\". ${output.caption_text}`;\nconst numLinesOccupied = Math.round(text.length / maxLineLength);\n\nconst verticalPadding = size.height * 0.02;\nconst horizontalPadding = size.width * 0.02;\nconst rectPosX = 0;\nconst rectPosY = size.height - (verticalPadding * 2.5) - (numLinesOccupied * fontSize);\nconst textPosX = horizontalPadding;\nconst textPosY = size.height - (numLinesOccupied * fontSize) - (verticalPadding/2);\n\nreturn {\n caption: {\n fontSize,\n maxLineLength,\n numLinesOccupied,\n rectPosX,\n rectPosY,\n textPosX,\n textPosY,\n verticalPadding,\n horizontalPadding,\n }\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Apply Caption to Image",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "multiStep",
+        "operations": {
+          "operations": [
+            {
+              "color": {
+                "expression": "#0000008c"
+              },
+              "operation": "draw",
+              "endPositionX": {
+                "expression": "{{ record.size.width }}"
+              },
+              "endPositionY": {
+                "expression": "{{ record.size.height }}"
+              },
+              "startPositionX": {
+                "expression": "{{ record.caption.rectPosX }}"
+              },
+              "startPositionY": {
+                "expression": "{{ record.caption.rectPosY }}"
+              }
+            },
+            {
+              "font": "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf",
+              "text": {
+                "expression": "\"{{ record.output.caption_title }}\". {{ record.output.caption_text }}"
+              },
+              "fontSize": {
+                "expression": "{{ record.caption.fontSize }}"
+              },
+              "fontColor": "#FFFFFF",
+              "operation": "text",
+              "positionX": {
+                "expression": "{{ record.caption.textPosX }}"
+              },
+              "positionY": {
+                "expression": "{{ record.caption.textPosY }}"
+              },
+              "lineLength": {
+                "expression": "{{ record.caption.maxLineLength }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Merge Image & Caption",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Merge Caption & Positions",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Get Image",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-10-url"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Image Captioning Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": "Generate a caption for this image.",
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "You role is to provide an appropriate image caption for user provided images.\n\nThe individual components of a caption are as follows: who, when, where, context and miscellaneous. For a really good caption, follow this template: who + when + where + context + miscellaneous\n\nGive the caption a punny title."
+              }
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary"
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-8",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-11",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-10-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://images.pexels.com/photos/{resource}/{resource}.jpeg?auto={value}&cs={value}&w={value}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Easy Image Captioning with Gemini 1.5 Pro.json",
+    "git_blob": "51996a1cd83a2b1102172faab1f7797ba9220239",
+    "sha256": "7384a371a61c2963b8483e2f34a9b84db21a56122b765a316f9ae71b244de938",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Easy%20Image%20Captioning%20with%20Gemini%201.5%20Pro.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

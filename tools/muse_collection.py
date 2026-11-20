@@ -16,6 +16,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import skill_library
+import workflow_library
 
 PROJECT_LICENSE = 'MIT License\n\nCopyright (c) 2026 Muse AI Agent Presets contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the "Software"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n'
 
@@ -45,6 +46,14 @@ SKILL_ASSETS = {
     'daily-briefing': ('REMINDERS.md','CALENDAR_REVIEW.md'),
     'weekly-reset': ('GOAL_REVIEW.md',),
     'accessible-ui': ('SOURCE_CHECK.md','examples/clean.html','examples/review.html'),
+    'inbox-triage': (
+        'INBOX_WORKSPACE.md', 'SOURCE.json', 'LICENSE.txt', 'NOTICE.txt',
+        'scripts/kb_reader.py', 'scripts/search_window_calculator.py',
+        'scripts/draft_safety_validator.py', 'references/kb_file_contract.md',
+        'references/draft_action_log.md', 'examples/Email/email-taxonomy.md',
+        'examples/Email/email-patterns.md', 'examples/Email/blocklist.md',
+        'examples/Email/tracker.md', 'examples/Email/triage-log/example-run.md',
+    ),
 }
 SKILL_TOOLS = {
     'project-prioritization': 'tools/prioritize.py',
@@ -55,6 +64,7 @@ SKILL_RESOURCE_SECTIONS = {
     'daily-briefing': '## Plan the details\nUse the [reminder worksheet](REMINDERS.md) to set up and follow through on a task. Use the [calendar review](CALENDAR_REVIEW.md) to make room for preparation, travel and focused work. Each includes a blank template and a worked example.\n\n',
     'weekly-reset': '## Review a goal\nUse the [goal review worksheet](GOAL_REVIEW.md) to connect a measurable outcome with this week\'s actions, available time and evidence of progress. Start with the blank template or follow the worked example.\n\n',
     'accessible-ui': '## Check an HTML page\nRun the included [HTML source checker](SOURCE_CHECK.md) to find missing document language, empty page titles, duplicate IDs and markup that needs a closer look. The guide includes two example pages and next steps for browser testing.\n\n',
+    'inbox-triage': '## Keep inbox reviews in sync\nUse the included [inbox workspace](INBOX_WORKSPACE.md) to load your preferences, calculate the next search interval and check the action log. Three local Python helpers and a complete example workspace support first-time setup and resumed reviews.\n\n',
 }
 
 class CollectionError(ValueError):
@@ -133,6 +143,8 @@ def _index(items: Any, kind: str) -> dict[str,dict[str,Any]]:
     return out
 
 def validate(data: dict[str,Any]) -> None:
+    if isinstance(data,_PreparedCollection):
+        return
     if not isinstance(data,dict) or data.get('schema')!=SCHEMA:
         raise CollectionError('unsupported collection schema')
     ss=_index(data.get('sources'),'source')
@@ -176,6 +188,9 @@ def validate(data: dict[str,Any]) -> None:
         import tool_guides
         known_guides={row['id'] for row in tool_guides.load_guides()['guides']}
     for key,w in wf.items():
+        if 'resources' in w:
+            try:workflow_library.validate_resources(w)
+            except ValueError as exc:raise CollectionError(str(exc)) from exc
         for f in ('title','goal','finish'):_text(w.get(f),f'{key}.{f}',10)
         _texts(w.get('skills'),key,2)
         if set(w['skills'])-sk.keys():raise CollectionError(f'unknown skill in workflow {key}')
@@ -430,12 +445,55 @@ def render_workflow(w: dict[str,Any], skills: dict[str,dict[str,Any]]) -> str:
         body+='\n## Finish\n\n'+w['finish']+'\n'
     if w.get('tool_guides'):
         body+='\n## Tools for this workflow\n\nRead [the included tool guides](../TOOL_GUIDES.md) when a stage calls for those tools.\n'
+    if w.get('resources'):
+        key=w['id']
+        body+='\n## Workflow files\n\n'
+        body+=f'Open [WORKFLOW.json]({key}/WORKFLOW.json) for the operation graph, branch conditions, field mappings, and transformations. '
+        body+=f'Fill [INPUTS.json]({key}/INPUTS.json) with your selected sources, destinations, connections, and model capability. '
+        body+='Follow numbered branch edges when a decision has more than one output; carry each named result into the operations that depend on it.\n'
+        body+='\nModel and embedding operations use your available capability. Use the configured service adapter for network operations and local tools for data transformations. '
+        body+='An expression names an input field or earlier step result; a transformation reference describes the calculation to apply to those records. '
+        body+='Check a representative input before continuing through a batch or a loop.\n'
+        body+='\nInspect the dependency order and required connections from the extracted package folder:\n\n'
+        body+=f'```sh\npython -B tools/workflow_graph.py workflows/{key}/WORKFLOW.json\n```\n'
     if w.get('tool_bindings'):
         body+='\n## Included local tools\n\nRun the included examples from the extracted package folder:\n\n```sh\npython -B tools/run.py --demo\n```\n\n'
         body+='For your own JSON input: `python -B tools/run.py --tool SKILL_ID --input input.json`. Python 3.10 or newer is required for these optional tools.\n\n'
         body+='\n'.join('- `'+b['skill_id']+'`: carry its returned JSON into the next relevant step.' for b in w['tool_bindings'])
         body+='\n\n## Input artifacts\n'+_list(w['input_contract'])+'\n\n## Output artifacts\n'+_list(w['output_contract'])+'\n'
     return body
+
+
+class _FrozenDict(dict):
+    def _readonly(self,*args,**kwargs):raise TypeError('prepared collection is immutable')
+    __setitem__=__delitem__=clear=pop=popitem=setdefault=update=__ior__=_readonly
+
+
+class _FrozenList(list):
+    def _readonly(self,*args,**kwargs):raise TypeError('prepared collection is immutable')
+    __setitem__=__delitem__=append=clear=extend=insert=pop=remove=reverse=sort=__iadd__=__imul__=_readonly
+
+
+def _freeze(value):
+    if isinstance(value,dict):return _FrozenDict({key:_freeze(item) for key,item in value.items()})
+    if isinstance(value,list):return _FrozenList(_freeze(item) for item in value)
+    return value
+
+
+class _PreparedCollection(_FrozenDict):
+    def __init__(self,data):
+        validate(data)
+        dict.__init__(self,{key:_freeze(item) for key,item in data.items()})
+
+
+def prepare_collection(data: dict[str,Any]) -> dict[str,Any]:
+    """Validate and freeze metadata once for a batch of package builds.
+
+    Source files are still read and checked against their declared hashes for
+    every package. The snapshot owns its nested lists and mappings, so editing
+    the original catalog cannot change an in-progress release.
+    """
+    return data if isinstance(data,_PreparedCollection) else _PreparedCollection(data)
 
 
 def instruction_files(data: dict[str,Any], skill_ids: list[str], workflow_ids: list[str]) -> dict[str,bytes]:
@@ -472,7 +530,12 @@ def instruction_files(data: dict[str,Any], skill_ids: list[str], workflow_ids: l
             files['practice/answers/'+case['id']+'.json']=(json.dumps(case['reference_output'],indent=2,ensure_ascii=False)+'\n').encode()
         first=sorted(depth_ids)[0]
         files['practice/README.md']=(f'# Practice examples\n\nTry a supplied case, then check its structured result. From the package folder, run:\n\n```sh\npython -B practice/check_outputs.py check --case practice/{first}.json --output practice/answers/{first}.json\n```\n\nUse your own response file with `--output` when practicing. Review reasoning and visual quality alongside the mechanical checks.\n').encode()
-    for key in workflow_ids:files[f'workflows/{key}.md']=render_workflow(workflows[key],skills).encode()
+    for key in workflow_ids:
+        files[f'workflows/{key}.md']=render_workflow(workflows[key],skills).encode()
+        if workflows[key].get('resources'):
+            try:files.update(workflow_library.package_files(workflows[key],data.get('_library_root',workflow_library.ROOT)))
+            except (ValueError,OSError) as exc:raise CollectionError(str(exc)) from exc
+            files.setdefault('tools/workflow_graph.py',_bounded_source(Path(__file__).with_name('workflow_library.py')))
     selected_guides={guide for key in workflow_ids for guide in workflows[key].get('tool_guides',[])}
     if selected_guides:
         import tool_guides
@@ -506,6 +569,9 @@ def resource_start_guide(files: dict[str,bytes]) -> str:
         parts.append('\n## Check an HTML page\n\nWith Python 3.10 or newer, try the included example:\n\n'
             '    python -B tools/accessibility_check.py --input skills/accessible-ui/examples/clean.html\n\n'
             'Read [the HTML source checker guide](skills/accessible-ui/SOURCE_CHECK.md) for your own pages and browser checks.\n')
+    if 'skills/inbox-triage/scripts/kb_reader.py' in files:
+        parts.append('\n## Review your inbox\n\nUse the [inbox workspace guide](skills/inbox-triage/INBOX_WORKSPACE.md) to prepare preferences, resume from the last completed interval and check draft operations. Try the included workspace with Python 3.10 or newer:\n\n'
+            '    python -B skills/inbox-triage/scripts/kb_reader.py --workspace skills/inbox-triage/examples --output json\n')
     return ''.join(parts)
 
 
@@ -528,11 +594,17 @@ def package_files(data: dict[str,Any], starter_id: str) -> dict[str,bytes]:
 def build_bytes(data: dict[str,Any], starter_id: str) -> bytes:
     return build_file_map_bytes(package_files(data,starter_id))
 
-def build_file_map_bytes(files: dict[str,bytes]) -> bytes:
+def build_file_map_bytes(files: dict[str,bytes], *, max_files: int = 12000,
+                         max_member_bytes: int = 8_000_000,
+                         max_total_bytes: int = 160_000_000) -> bytes:
     # Package data may be supplied by library callers, not only our CLI builder.
     # Refuse names that extract differently across POSIX and Windows.
-    if not isinstance(files,dict) or not 1<=len(files)<=12000:
-        raise CollectionError('archive requires 1..12000 regular file entries')
+    if (type(max_files) is not int or not 1 <= max_files <= 60000
+            or type(max_member_bytes) is not int or not 1 <= max_member_bytes <= 512_000_000
+            or type(max_total_bytes) is not int or not 1 <= max_total_bytes <= 1_000_000_000):
+        raise CollectionError('invalid archive resource budget')
+    if not isinstance(files,dict) or not 1<=len(files)<=max_files:
+        raise CollectionError('archive requires a bounded roster of regular file entries')
     normalized=set();total=0
     reserved={'con','prn','aux','nul',*(f'com{i}' for i in range(1,10)),*(f'lpt{i}' for i in range(1,10))}
     for name,content in files.items():
@@ -547,10 +619,10 @@ def build_file_map_bytes(files: dict[str,bytes]) -> bytes:
         key=unicodedata.normalize('NFC',name).casefold()
         if key in normalized:raise CollectionError('cross-platform archive name collision')
         normalized.add(key)
-        if not isinstance(content,bytes) or len(content)>8_000_000:
+        if not isinstance(content,bytes) or len(content)>max_member_bytes:
             raise CollectionError('archive content must be bounded bytes')
         total+=len(content)
-        if total>160_000_000:raise CollectionError('archive uncompressed size budget exceeded')
+        if total>max_total_bytes:raise CollectionError('archive uncompressed size budget exceeded')
     for name in normalized:
         parts=name.split('/')
         if any('/'.join(parts[:i]) in normalized for i in range(1,len(parts))):
@@ -637,9 +709,13 @@ def workflow_demo(data: dict[str,Any], workflow_id: str) -> dict:
             or binding.get('module')!='muse_presets.specialist_extensions' or binding.get('function')!='evaluate'):
             raise CollectionError('workflow tool binding mismatch')
         case=next(c for c in data['depth_cases'] if c['id']==sid+'-r5-standard')
+        # The tool boundary accepts plain JSON, while a prepared catalog owns
+        # immutable metadata. Copy only this trusted example for evaluation.
+        inputs=(json.loads(json.dumps(case['inputs'],allow_nan=False))
+                if isinstance(data,_PreparedCollection) else case['inputs'])
         results.append({'skill_id':sid,'case_id':case['id'],
-            'input_sha256':hashlib.sha256(canonical(case['inputs']).encode()).hexdigest(),
-            'output':evaluate(sid,case['inputs'])})
+            'input_sha256':hashlib.sha256(canonical(inputs).encode()).hexdigest(),
+            'output':evaluate(sid,inputs)})
     executed={r['skill_id'] for r in results}
     return {'workflow':workflow_id,'results':results,
         'unexecuted_skills':[s for s in workflow['skills'] if s not in executed],
@@ -703,6 +779,11 @@ def specialist_kit_files(data: dict[str,Any], role_id: str) -> dict[str,bytes]:
     return files
 
 def main(argv: list[str]|None=None) -> int:
+    # Preserve catalog text when output is redirected on Windows or in legacy locales.
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure=getattr(stream,'reconfigure',None)
+        if callable(reconfigure):
+            reconfigure(encoding='utf-8')
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--collection',type=Path,default=DEFAULT_ROOT)
     sub=ap.add_subparsers(dest='command',required=True)

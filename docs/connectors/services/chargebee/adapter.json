@@ -1,0 +1,491 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Chargebee site subdomain. For acme.chargebee.com, enter acme.",
+        "label": "Site",
+        "name": "site",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api_Key",
+        "name": "api_key",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', description: 'Go to Settings > Configure Chargebee > API Keys and Webhooks > API Keys tab. Click Add an API Key, select Full-Access Key, and copy the generated key.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Finance & Commerce",
+  "id": "chargebee",
+  "name": "Chargebee",
+  "operations": [
+    {
+      "description": "Cancel a Chargebee subscription immediately, at end of term, or on a specific date.",
+      "id": "cancel_subscription",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Subscription ID",
+          "name": "subscription_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "When to cancel the subscription. Not applicable when the subscription has a contract term — use Contract Term Cancel Option instead.",
+          "label": "Cancel Option",
+          "name": "cancel_option",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "UTC timestamp in seconds for when to cancel. Required when Cancel Option is \"Specific Date\".",
+          "label": "Cancel At (Unix Seconds)",
+          "name": "cancel_at",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Reason code from Settings > Configure Chargebee > Reason Codes > Subscriptions > Subscription Cancellation. Case-sensitive.",
+          "label": "Cancel Reason Code",
+          "name": "cancel_reason_code",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "How to handle credits for current term charges when canceling immediately.",
+          "label": "Credit Option for Current Term Charges",
+          "name": "credit_option_for_current_term_charges",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "How to handle unbilled charges when canceling immediately.",
+          "label": "Unbilled Charges Option",
+          "name": "unbilled_charges_option",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Required when the subscription has a contract term. Determines when to cancel the subscription and contract term.",
+          "label": "Contract Term Cancel Option",
+          "name": "contract_term_cancel_option",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "How to handle past due invoices when canceling immediately.",
+          "label": "Account Receivables Handling",
+          "name": "account_receivables_handling",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "How to handle refundable credits when canceling immediately.",
+          "label": "Refundable Credits Handling",
+          "name": "refundable_credits_handling",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Document date displayed on the invoice PDF. Defaults to the current date. Provide to backdate the invoice.",
+          "label": "Invoice Date (Unix Seconds)",
+          "name": "invoice_date",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "When true, all subscription operations will be disabled except deletion. This is irreversible.",
+          "label": "Decommission",
+          "name": "decommissioned",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The unique ID of the charge item price representing the termination fee. Used only when the subscription has a contract term.",
+          "label": "Termination Fee Item Price ID",
+          "name": "termination_fee_item_price_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Quantity for the termination fee. Applicable only for quantity-based item prices.",
+          "label": "Termination Fee Quantity",
+          "name": "termination_fee_quantity",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The termination fee in cents. For quantity-based items, this is the fee per unit.",
+          "label": "Termination Fee Unit Price (cents)",
+          "name": "termination_fee_unit_price",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Service period of the termination fee in days, starting from the current date.",
+          "label": "Termination Fee Service Period (Days)",
+          "name": "termination_fee_service_period_days",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Cancel Subscription",
+      "source_path": "chargebee/src/lib/actions/cancel-subscription.ts",
+      "source_sha256": "73994efa08fa07ef34174b868b5f1d8e898a7aa4e37ba7d7141e15e2665ac74b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chargebee/src/lib/actions/cancel-subscription.ts"
+    },
+    {
+      "description": "Create a customer in Chargebee.",
+      "id": "create_customer",
+      "inputs": [
+        {
+          "description": "Optional custom customer identifier.",
+          "label": "Customer ID",
+          "name": "id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "first_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "last_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company",
+          "name": "company",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "For example: en-US, fr-CA.",
+          "label": "Locale",
+          "name": "locale",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "ISO 4217 currency code (e.g. USD, EUR). Requires Multi-currency pricing to be enabled.",
+          "label": "Preferred Currency Code",
+          "name": "preferred_currency_code",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether invoices should be automatically charged when possible.",
+          "label": "Auto Collection",
+          "name": "auto_collection",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Number of days within which the customer must pay their invoices.",
+          "label": "Net Term Days",
+          "name": "net_term_days",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Whether the customer can pay via Direct Debit.",
+          "label": "Allow Direct Debit",
+          "name": "allow_direct_debit",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The VAT/tax registration number for the customer.",
+          "label": "VAT Number",
+          "name": "vat_number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Specifies if the customer is liable for tax.",
+          "label": "Taxability",
+          "name": "taxability",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "A customer-facing note added to all invoices for this customer.",
+          "label": "Invoice Notes",
+          "name": "invoice_notes",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Key-value pairs to store extra information on the customer.",
+          "label": "Metadata",
+          "name": "meta_data",
+          "required": false,
+          "type": "Object"
+        },
+        {
+          "description": "",
+          "label": "Billing Address: First Name",
+          "name": "billing_address_first_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address: Last Name",
+          "name": "billing_address_last_name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address: Line 1",
+          "name": "billing_address_line1",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address: Line 2",
+          "name": "billing_address_line2",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address: City",
+          "name": "billing_address_city",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address: State",
+          "name": "billing_address_state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address: ZIP / Postal Code",
+          "name": "billing_address_zip",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Two-letter ISO 3166-1 alpha-2 country code (e.g. US, GB).",
+          "label": "Billing Address: Country",
+          "name": "billing_address_country",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Customer",
+      "source_path": "chargebee/src/lib/actions/create-customer.ts",
+      "source_sha256": "4c9726ac80531115fd747fd8b6ee4700773ea0936ebac1167f11cae6805db69b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chargebee/src/lib/actions/create-customer.ts"
+    },
+    {
+      "description": "Create a subscription for an existing customer using a Chargebee item price.",
+      "id": "create_subscription",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Customer ID",
+          "name": "customer_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The Chargebee item price ID to subscribe the customer to.",
+          "label": "Item Price ID",
+          "name": "item_price_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Quantity",
+          "name": "quantity",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Whether to automatically charge the customer. Defaults to the customer setting.",
+          "label": "Auto Collection",
+          "name": "auto_collection",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Number of billing cycles before the subscription ends. Defaults to the item price setting.",
+          "label": "Billing Cycles",
+          "name": "billing_cycles",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "UTC timestamp in seconds when the trial period ends. Set to 0 for no trial.",
+          "label": "Trial End (Unix Seconds)",
+          "name": "trial_end",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "UTC timestamp in seconds when the subscription starts. Defaults to now. Provide a past value to backdate.",
+          "label": "Start Date (Unix Seconds)",
+          "name": "start_date",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "A coupon ID or code to apply to this subscription.",
+          "label": "Coupon ID",
+          "name": "coupon_ids",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Purchase order number to associate with this subscription.",
+          "label": "PO Number",
+          "name": "po_number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Customer-facing note added to all invoices for this subscription.",
+          "label": "Invoice Notes",
+          "name": "invoice_notes",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "ID of the payment source to attach to this subscription.",
+          "label": "Payment Source ID",
+          "name": "payment_source_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Invoice any charges raised at creation time immediately rather than adding them to unbilled charges.",
+          "label": "Invoice Immediately",
+          "name": "invoice_immediately",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Number of days within which invoices for this subscription must be paid (Net D). Must match a value configured in Chargebee.",
+          "label": "Net Term Days",
+          "name": "net_term_days",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Key-value pairs to store extra information on the subscription.",
+          "label": "Metadata",
+          "name": "meta_data",
+          "required": false,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Subscription",
+      "source_path": "chargebee/src/lib/actions/create-subscription.ts",
+      "source_sha256": "074ce2cd3469f3cb5b3c203b7f7d6d72a0776878fcbb09cf38744ed0bb6a1ee2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chargebee/src/lib/actions/create-subscription.ts"
+    },
+    {
+      "description": "Retrieve a customer from Chargebee by ID.",
+      "id": "get_customer",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Customer ID",
+          "name": "customer_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Customer",
+      "source_path": "chargebee/src/lib/actions/get-customer.ts",
+      "source_sha256": "a531f3fcb89b1c051eff1a1d82bca48e96f94db38f1ce5bad881f640fa45e82a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chargebee/src/lib/actions/get-customer.ts"
+    },
+    {
+      "description": "Triggers when a new customer is created in Chargebee.",
+      "id": "customer_created",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Customer Created",
+      "source_path": "chargebee/src/lib/triggers/customer-created.ts",
+      "source_sha256": "2b37a4248f1f397fe1705d4875d4c206c402bbeedb48e9c9e891ed481be3f890",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chargebee/src/lib/triggers/customer-created.ts"
+    },
+    {
+      "description": "Triggers when a new invoice is generated for a subscription.",
+      "id": "invoice_generated",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Invoice Generated",
+      "source_path": "chargebee/src/lib/triggers/invoice-generated.ts",
+      "source_sha256": "1be50576cf36179e1e65fa787ab15af53095060f873f7040045477c0b4309d83",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chargebee/src/lib/triggers/invoice-generated.ts"
+    },
+    {
+      "description": "Triggers when a payment attempt fails. Useful for dunning and retry workflows.",
+      "id": "payment_failed",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Payment Failed",
+      "source_path": "chargebee/src/lib/triggers/payment-failed.ts",
+      "source_sha256": "276437601fdddad182a96e8ce31e9032b4ee32a7506dc993232f5fdfdcf37723",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/chargebee/src/lib/triggers/payment-failed.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "22d1e4c7ede6d60fdf01c4df8f49d1066bbe84de",
+    "index_path": "chargebee/src/index.ts",
+    "index_sha256": "826a1a112d833f6add1c373f9259c99a05e3648d5e7d6f4864592f1acb5e5ec7",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "claims-adjudicator"
+  ]
+}

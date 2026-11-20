@@ -1,0 +1,40 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-utm-link-creator-qr-code-generator-with-scheduled-google-analytics-reports-86ae4b",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-propertyid": null,
+    "step-5-assignments-0-value": null,
+    "step-7-base": null,
+    "step-7-table": null,
+    "step-11-sendto": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "googleanalytics": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,615 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-bitrix24-chatbot-application-workflow-example-with-webhook-integration-1640ab",
+  "title": "Bitrix24 Chatbot Application Workflow example with Webhook Integration",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Bitrix24 Handler",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "bitrix24/handler.php",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Credentials",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "CLIENT_ID",
+              "type": "string",
+              "value": "YOUR_CLIENT_ID"
+            },
+            {
+              "id": {
+                "configuration_input": "step-2-assignments-1-id"
+              },
+              "name": "CLIENT_SECRET",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-2-assignments-1-value"
+              }
+            },
+            {
+              "name": "application_token",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.body['auth[application_token]'] }}"
+              }
+            },
+            {
+              "name": "domain",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.body['auth[domain]'] }}"
+              }
+            },
+            {
+              "id": {
+                "configuration_input": "step-2-assignments-4-id"
+              },
+              "name": "access_token",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-2-assignments-4-value"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Validate Token",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "or",
+          "conditions": [
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.CLIENT_ID }}"
+              },
+              "rightValue": {
+                "expression": "{{ record.application_token }}"
+              }
+            },
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "1",
+              "rightValue": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Route Event",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "ONIMBOTMESSAGEADD",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.event }}"
+                    },
+                    "rightValue": "ONIMBOTMESSAGEADD"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "ONIMBOTJOINCHAT",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.event }}"
+                    },
+                    "rightValue": "ONIMBOTJOINCHAT"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "ONAPPINSTALL",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.event }}"
+                    },
+                    "rightValue": "ONAPPINSTALL"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "ONIMBOTDELETE",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.event }}"
+                    },
+                    "rightValue": "ONIMBOTDELETE"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Process Message",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "functionCode": {
+          "language": "javascript",
+          "reference": "// Process Message Node\nconst items = records;\nconst item = items[0];\n\n// Get message data from the correct path\nconst message = item.json.body['data[PARAMS][MESSAGE]'];\nconst dialogId = item.json.body['data[PARAMS][DIALOG_ID]'];\n\n// Get auth data\nconst auth = {\n access_token: item.json.access_token,\n domain: item.json.domain\n};\n\nif (message.toLowerCase() === \"what's hot\") {\n return {\n json: {\n DIALOG_ID: dialogId,\n MESSAGE: \"Hi! I am an example-bot.\\nI repeat what you say\",\n AUTH: auth.access_token,\n DOMAIN: auth.domain\n }\n };\n} else {\n return {\n json: {\n DIALOG_ID: dialogId,\n MESSAGE: `You said:\\n${message}`,\n AUTH: auth.access_token,\n DOMAIN: auth.domain\n }\n };\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Process Join",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "functionCode": {
+          "language": "javascript",
+          "reference": "// Process Join Node\nconst items = records;\nconst item = items[0];\n\n// Get dialog ID from the correct path\nconst dialogId = item.json.body['data[PARAMS][DIALOG_ID]'];\n\n// Get auth data\nconst auth = {\n access_token: item.json.access_token,\n domain: item.json.domain\n};\n\nreturn {\n json: {\n DIALOG_ID: dialogId,\n MESSAGE: 'Hi! I am an example-bot. I repeat what you say',\n AUTH: auth.access_token,\n DOMAIN: auth.domain\n }\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Process Install",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "functionCode": {
+          "language": "javascript",
+          "reference": "// Process Install Node\nconst items = records;\nconst item = items[0];\n\n// Get the webhook URL from input\nconst handlerBackUrl = item.json.webhookUrl;\n\n// Get auth data directly from item.json\nconst auth = {\n access_token: item.json.access_token,\n application_token: item.json.application_token,\n domain: item.json.domain\n};\n\nreturn {\n json: {\n handler_back_url: handlerBackUrl,\n CODE: 'LocalExampleBot',\n TYPE: 'B',\n EVENT_MESSAGE_ADD: handlerBackUrl,\n EVENT_WELCOME_MESSAGE: handlerBackUrl,\n EVENT_BOT_DELETE: handlerBackUrl,\n PROPERTIES: {\n NAME: 'Bot',\n LAST_NAME: 'Example',\n COLOR: 'AQUA',\n EMAIL: '[configured contact]',\n PERSONAL_BIRTHDAY: '2020-07-18',\n WORK_POSITION: 'Report on affairs',\n PERSONAL_GENDER: 'M'\n },\n // Use the auth data from item.json\n AUTH: auth.access_token,\n CLIENT_ID: auth.application_token,\n DOMAIN: auth.domain\n }\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Register Bot",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://{{ record.DOMAIN }}/rest/imbot.register?auth={{record.AUTH}}"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "CODE",
+              "value": "LocalExampleBot"
+            },
+            {
+              "name": "TYPE",
+              "value": "B"
+            },
+            {
+              "name": "EVENT_MESSAGE_ADD",
+              "value": {
+                "expression": "{{record.handler_back_url}}"
+              }
+            },
+            {
+              "name": "EVENT_WELCOME_MESSAGE",
+              "value": {
+                "expression": "{{record.handler_back_url}}"
+              }
+            },
+            {
+              "name": "EVENT_BOT_DELETE",
+              "value": {
+                "expression": "{{record.handler_back_url}}"
+              }
+            },
+            {
+              "name": "PROPERTIES",
+              "value": {
+                "expression": "{{ {\n NAME: 'Bot',\n LAST_NAME: 'Example',\n COLOR: 'AQUA',\n EMAIL: '[configured contact]',\n PERSONAL_BIRTHDAY: '2020-07-18',\n WORK_POSITION: 'Report on affairs',\n PERSONAL_GENDER: 'M'\n} }}"
+              }
+            },
+            {
+              "name": "CLIENT_ID",
+              "value": {
+                "expression": "{{ record.CLIENT_ID }}"
+              }
+            },
+            {
+              "name": "CLIENT_SECRET",
+              "value": {
+                "configuration_input": "step-8-parameters-7-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Send Message",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://{{record.DOMAIN}}/rest/imbot.message.add?auth={{record.AUTH}}"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "DIALOG_ID",
+              "value": {
+                "expression": "{{ record.DIALOG_ID }}"
+              }
+            },
+            {
+              "name": "MESSAGE",
+              "value": {
+                "expression": "{{ record.MESSAGE }}"
+              }
+            },
+            {
+              "name": "AUTH",
+              "value": {
+                "expression": "{{ record.AUTH }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Send Join Message",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://{{record.DOMAIN}}/rest/imbot.message.add"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "DIALOG_ID",
+              "value": {
+                "expression": "{{ record.DIALOG_ID }}"
+              }
+            },
+            {
+              "name": "MESSAGE",
+              "value": {
+                "expression": "{{ record.MESSAGE }}"
+              }
+            },
+            {
+              "name": "AUTH",
+              "value": {
+                "expression": "{{ record.AUTH }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Process Delete",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-12",
+      "label": "Success Response",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{\n \"result\": true\n}"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Error Response",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseCode": 401
+        },
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{\n \"result\": false,\n \"error\": \"Invalid application token\"\n}}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-4",
+      "channel": "main",
+      "branch": 4
+    },
+    {
+      "from": "step-4",
+      "channel": "main",
+      "branch": 5
+    },
+    {
+      "from": "step-4",
+      "channel": "main",
+      "branch": 6
+    },
+    {
+      "from": "step-4",
+      "channel": "main",
+      "branch": 7
+    },
+    {
+      "from": "step-4",
+      "channel": "main",
+      "branch": 8
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-1-id",
+      "purpose": "Select the id for step-2.",
+      "required": true
+    },
+    {
+      "id": "step-2-assignments-1-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-2-assignments-4-id",
+      "purpose": "Select the id for step-2.",
+      "required": true
+    },
+    {
+      "id": "step-2-assignments-4-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-8-parameters-7-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Bitrix24 Chatbot Application Workflow example with Webhook Integration.json",
+    "git_blob": "60e44187798780830cad93c820ac2c8822cd474c",
+    "sha256": "1b13948497bf9fae3ab4c997e7acf89f0a79f5671487c4e30a18e3c96ddd86e8",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Bitrix24%20Chatbot%20Application%20Workflow%20example%20with%20Webhook%20Integration.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

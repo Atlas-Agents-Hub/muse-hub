@@ -1,0 +1,308 @@
+{
+  "allowed_hosts": [
+    "api.pagerduty.com",
+    "your-subdomain.pagerduty.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Monitoring",
+  "id": "pagerduty",
+  "name": "PagerDuty",
+  "operations": [
+    {
+      "description": "Acknowledge an existing PagerDuty incident.",
+      "id": "acknowledge_incident",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Incident Id",
+          "name": "incidentId",
+          "required": null,
+          "source_expression": "incidentIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "From Email",
+          "name": "fromEmail",
+          "required": null,
+          "source_expression": "fromEmailProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Acknowledge Incident",
+      "source_path": "pagerduty/src/lib/actions/acknowledge-incident.ts",
+      "source_sha256": "fb738bac7b5b99aafb26e8cf0f3d9e26e42019bfd0dfa50505d3b70918ffc04b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pagerduty/src/lib/actions/acknowledge-incident.ts"
+    },
+    {
+      "description": "Create a new PagerDuty incident using the REST API.",
+      "id": "create_incident",
+      "inputs": [
+        {
+          "description": "",
+          "label": "From Email",
+          "name": "fromEmail",
+          "required": null,
+          "source_expression": "fromEmailProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Service Id",
+          "name": "serviceId",
+          "required": null,
+          "source_expression": "serviceIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Incident title / summary.",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Urgency",
+          "name": "urgency",
+          "required": null,
+          "source_expression": "urgencyProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Additional incident body text.",
+          "label": "Details",
+          "name": "details",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "A string that identifies the incident. Duplicate requests with the same key and open incident on the same service will be rejected (de-duplication).",
+          "label": "Incident Key",
+          "name": "incidentKey",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Comma-separated list of PagerDuty user IDs to assign the incident to. Cannot be used together with Escalation Policy ID.",
+          "label": "Assignee IDs",
+          "name": "assigneeIds",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "The ID of the priority to assign to this incident.",
+          "label": "Priority ID",
+          "name": "priorityId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone number of the conference bridge.",
+          "label": "Conference Number",
+          "name": "conferenceNumber",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "URL for the conference bridge.",
+          "label": "Conference URL",
+          "name": "conferenceUrl",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Incident",
+      "source_path": "pagerduty/src/lib/actions/create-incident.ts",
+      "source_sha256": "6953c77f1088010fdd4b60ee88b77593a7d001b1811cb40c4247863fb8aae664",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pagerduty/src/lib/actions/create-incident.ts"
+    },
+    {
+      "description": "Retrieve a PagerDuty incident by ID.",
+      "id": "get_incident",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Incident Id",
+          "name": "incidentId",
+          "required": null,
+          "source_expression": "incidentIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Incident",
+      "source_path": "pagerduty/src/lib/actions/get-incident.ts",
+      "source_sha256": "6b16648df3459ad6bf149354b3909694ba172282d9d4f90ce91b64aeb7830db8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pagerduty/src/lib/actions/get-incident.ts"
+    },
+    {
+      "description": "List PagerDuty incidents with optional filters and pagination.",
+      "id": "list_incidents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Statuses",
+          "name": "statuses",
+          "required": null,
+          "source_expression": "statusesProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Urgency",
+          "name": "urgency",
+          "required": null,
+          "source_expression": "optionalUrgencyProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Optional start of the search window.",
+          "label": "Since",
+          "name": "since",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Optional end of the search window.",
+          "label": "Until",
+          "name": "until",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Maximum number of incidents to return (1–100).",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Pagination offset (number of records to skip).",
+          "label": "Offset",
+          "name": "offset",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Incidents",
+      "source_path": "pagerduty/src/lib/actions/list-incidents.ts",
+      "source_sha256": "658b22c8c5df84f142eba8134446ed98a590ffb3488e466f1016890baed29584",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pagerduty/src/lib/actions/list-incidents.ts"
+    },
+    {
+      "description": "Resolve an existing PagerDuty incident.",
+      "id": "resolve_incident",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Incident Id",
+          "name": "incidentId",
+          "required": null,
+          "source_expression": "incidentIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "From Email",
+          "name": "fromEmail",
+          "required": null,
+          "source_expression": "fromEmailProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Optional resolution note. PagerDuty adds this to the resolve log entry.",
+          "label": "Resolution",
+          "name": "resolution",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Resolve Incident",
+      "source_path": "pagerduty/src/lib/actions/resolve-incident.ts",
+      "source_sha256": "c2e75cee51d787ae1d6bde265defbe87bfd6ae4e4bca9f4f83f3480975d3f6bc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pagerduty/src/lib/actions/resolve-incident.ts"
+    },
+    {
+      "description": "Triggers when an incident is acknowledged.",
+      "id": "incidentAcknowledged",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Instruction",
+          "name": "instruction",
+          "required": null,
+          "source_expression": "instructionProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Incident Acknowledged",
+      "source_path": "pagerduty/src/lib/triggers/incident-acknowledged.ts",
+      "source_sha256": "778e4fd6cd742ba30f76b0310ddc8552b45420de409ba9b37c53ec145b516083",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pagerduty/src/lib/triggers/incident-acknowledged.ts"
+    },
+    {
+      "description": "Triggers when an incident is resolved.",
+      "id": "incidentResolved",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Instruction",
+          "name": "instruction",
+          "required": null,
+          "source_expression": "instructionProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Incident Resolved",
+      "source_path": "pagerduty/src/lib/triggers/incident-resolved.ts",
+      "source_sha256": "0bd33a3380503e0255284f036d2aa955cc0e767c348469dd3a9e59ddaed7118c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pagerduty/src/lib/triggers/incident-resolved.ts"
+    },
+    {
+      "description": "Triggers when a new incident is created",
+      "id": "newIncident",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Instruction",
+          "name": "instruction",
+          "required": null,
+          "source_expression": "instructionProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Incident",
+      "source_path": "pagerduty/src/lib/triggers/new-incident.ts",
+      "source_sha256": "1962df571c4d8dbd9be4d19883ece0e586f874e833bdea0c1e117a25396b3fef",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pagerduty/src/lib/triggers/new-incident.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "43f82f50016b3e982a57e043e858505cc5d99c8a",
+    "index_path": "pagerduty/src/index.ts",
+    "index_sha256": "035a06148500c865bd7a0e8e4da758e75c3e4a42853164e6f448a4d760e8f064",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "infrastructure-reliability-engineer",
+    "software-engineer",
+    "adversarial-verifier",
+    "reverse-engineering-researcher"
+  ]
+}

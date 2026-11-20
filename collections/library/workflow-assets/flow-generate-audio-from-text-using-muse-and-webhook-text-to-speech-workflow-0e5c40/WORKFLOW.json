@@ -1,0 +1,75 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-generate-audio-from-text-using-muse-and-webhook-text-to-speech-workflow-0e5c40",
+  "title": "Generate audio from text using OpenAI and Webhook Text to Speech Workflow",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Respond to Webhook",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "binary"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "generate_audio",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "OpenAI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "input": {
+          "expression": "{{ record.body.text_to_convert }}"
+        },
+        "voice": "fable",
+        "options": {},
+        "resource": "audio"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Generate audio from text using OpenAI and Webhook _ Text to Speech Workflow.json",
+    "git_blob": "9736cbbc504c4ca1dc5fdadf3cd2a97095d6c12b",
+    "sha256": "dc9670654fa0d0d1301a87704bf485237c18429c1c5adb7d0d3d68556b6d2671",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Generate%20audio%20from%20text%20using%20OpenAI%20and%20Webhook%20_%20Text%20to%20Speech%20Workflow.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

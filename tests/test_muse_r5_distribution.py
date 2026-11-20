@@ -16,11 +16,16 @@ class DistributionTests(unittest.TestCase):
     def require_bundle(self):
         self.assertTrue(hasattr(self,'payload'),'Reproducible collection bundle exporter has not been implemented')
 
-    def test_download_contains_100_starters_and_four_real_extension_kits(self):
+    def test_download_contains_all_starters_and_four_real_extension_kits(self):
         self.require_bundle()
         with zipfile.ZipFile(io.BytesIO(self.payload)) as z:
             names=z.namelist()
-            self.assertEqual(len([n for n in names if n.startswith('starters/') and n.endswith('.zip')]),100)
+            starters=json.loads((R/'collections/muse-starters-v1/starters.json').read_bytes())
+            self.assertGreater(len(starters),500)
+            self.assertEqual(len(starters),len({row['id'] for row in starters}))
+            packaged=[n for n in names if n.startswith('starters/') and n.endswith('.zip')]
+            self.assertEqual(len(packaged),len(starters))
+            self.assertEqual(set(packaged),{f"starters/{row['id']}.zip" for row in starters})
             self.assertEqual(len([n for n in names if n.startswith('kits/') and n.endswith('.zip')]),4)
             self.assertEqual(len(json.loads(z.read('SPECIALISTS.json'))),15)
             self.assertIn('START_HERE.md',names)

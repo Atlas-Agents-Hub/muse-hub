@@ -1,0 +1,387 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-telegram-bot-with-supabase-memory-and-muse-assistant-integration-dfbd31",
+  "title": "Telegram Bot with Supabase memory and OpenAI assistant integration",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Get New Message",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "OPENAI - Create thread",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Create User",
+      "operation": "service-read",
+      "adapter": "supabase",
+      "parameters": {
+        "tableId": {
+          "configuration_input": "step-3-tableid"
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "telegram_id",
+              "fieldValue": {
+                "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+              }
+            },
+            {
+              "fieldId": "openai_thread_id",
+              "fieldValue": {
+                "expression": "{{ steps[\"step-2\"].record.id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-5",
+      "label": "OPENAI - Send message",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ steps[\"step-4\"].record.openai_thread_id }}/messages"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "role",
+              "value": "user"
+            },
+            {
+              "name": "content",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.message.text }}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "OPENAI - Run assistant",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ steps[\"step-4\"].record.openai_thread_id }}/runs"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "assistant_id",
+              "value": {
+                "configuration_input": "step-6-parameters-0-value"
+              }
+            },
+            {
+              "name": "stream",
+              "value": {
+                "expression": "{{true}}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "OPENAI - Get messages",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ steps[\"step-4\"].record.openai_thread_id }}/messages"
+        },
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Send Message to User",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-7\"].record.data[0].content[0].text.value }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "If User exists",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.id }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Find User",
+      "operation": "service-read",
+      "adapter": "supabase",
+      "parameters": {
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telegram_id",
+              "keyValue": {
+                "expression": "{{ record.message.chat.id }}"
+              },
+              "condition": "eq"
+            }
+          ]
+        },
+        "tableId": {
+          "configuration_input": "step-10-tableid"
+        },
+        "operation": "getAll"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-9",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/threads"
+    },
+    {
+      "id": "step-3-tableid",
+      "purpose": "Select the tableId for step-3.",
+      "required": true
+    },
+    {
+      "id": "step-6-parameters-0-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-tableid",
+      "purpose": "Select the tableId for step-10.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Telegram Bot with Supabase memory and OpenAI assistant integration.json",
+    "git_blob": "a48274a7b886b6a1b2b73db73f2b5d46d012b6be",
+    "sha256": "592944d55e1561afe04557b498a12823638ac8d8573b7b048db248c95bfde67b",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Telegram%20Bot%20with%20Supabase%20memory%20and%20OpenAI%20assistant%20integration.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

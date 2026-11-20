@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-learn-anything-from-hn-get-top-resource-recommendations-from-hacker-news-5ff94e",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-7-values-1-placeholder": null,
+    "step-8-fromemail": null
+  },
+  "adapters": {
+    "emailsend": {
+      "connection": null
+    },
+    "hackernews": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

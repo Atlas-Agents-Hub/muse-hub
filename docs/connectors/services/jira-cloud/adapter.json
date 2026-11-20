@@ -1,0 +1,464 @@
+{
+  "allowed_hosts": [
+    "community.developer.atlassian.com",
+    "developer.atlassian.com",
+    "example.atlassian.net",
+    "id.atlassian.com",
+    "support.atlassian.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The link of your Jira instance (e.g https://example.atlassian.net)",
+        "label": "Instance URL",
+        "name": "instanceUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The email you use to login to Jira",
+        "label": "Email",
+        "name": "email",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api Token",
+        "name": "apiToken",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Token', description: 'Your Jira API Token', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Project management",
+  "id": "jira-cloud",
+  "name": "Jira Cloud",
+  "operations": [
+    {
+      "description": "Assigns an issue to a user.",
+      "id": "assign_issue",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "getProjectIdDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Issue Id",
+          "name": "issueId",
+          "required": null,
+          "source_expression": "getIssueIdDropdown({ refreshers: ['projectId'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Assignee",
+          "name": "assignee",
+          "required": null,
+          "source_expression": "getUsersDropdown({ displayName: 'Assignee', description: 'The person who will own the issue.', refreshers: ['projectId'], required: true, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Assign Issue",
+      "source_path": "jira-cloud/src/lib/actions/assign-issue.ts",
+      "source_sha256": "70c489f5606c5852138a18c6ced55c3c70ea85b403a7f3003a3255fbeab065ea",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/actions/assign-issue.ts"
+    },
+    {
+      "description": "Creates a new issue in a project.",
+      "id": "create_issue",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "getProjectIdDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Issue Type Id",
+          "name": "issueTypeId",
+          "required": null,
+          "source_expression": "issueTypeIdProp('Issue Type')",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Fields",
+          "name": "issueFields",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "Fields whose value is Atlassian Document Format JSON, not plain text.",
+          "label": "Fields Given as ADF JSON",
+          "name": "adfFields",
+          "required": false,
+          "type": "MultiSelectDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Issue",
+      "source_path": "jira-cloud/src/lib/actions/create-issue.ts",
+      "source_sha256": "0f302a37f89376e9f6b26494e72f7d2e6b12300b73b6006188bce1946f76b06c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/actions/create-issue.ts"
+    },
+    {
+      "description": "Finds an existing user.",
+      "id": "find-user",
+      "inputs": [
+        {
+          "description": "Matches part of a name or email address.",
+          "label": "Keyword",
+          "name": "keyword",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User",
+      "source_path": "jira-cloud/src/lib/actions/find-user.ts",
+      "source_sha256": "2da81a858321c8658590b868fe149e126b9dfa0ac730fe8f6471f4c174f9bf4a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/actions/find-user.ts"
+    },
+    {
+      "description": "Gets an issue's fields and details.",
+      "id": "get_issue",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "getProjectIdDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Issue Id",
+          "name": "issueId",
+          "required": null,
+          "source_expression": "getIssueIdDropdown({ refreshers: ['projectId'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "More sections to include in the output.",
+          "label": "Extra Data",
+          "name": "expand",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Key fields by their name instead of their ID.",
+          "label": "Map Field Names",
+          "name": "mapNames",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Adds the issue's transitions, keyed by name.",
+          "label": "Map Transition Names",
+          "name": "mapTransitions",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Issue",
+      "source_path": "jira-cloud/src/lib/actions/get-issue.ts",
+      "source_sha256": "01f9440cf27ae89b61a73741078fe7083aea4339606c4e82ba4eff6aa8d12992",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/actions/get-issue.ts"
+    },
+    {
+      "description": "Gets an attachment's details and downloads its file.",
+      "id": "get-issue-attachment",
+      "inputs": [
+        {
+          "description": "Found in a Get Issue step's output, under fields → attachment.",
+          "label": "Attachment ID",
+          "name": "attachmentId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Issue Attachment",
+      "source_path": "jira-cloud/src/lib/actions/get-issue-attachment.ts",
+      "source_sha256": "67a23f6a5f55bd5fc0e84c5cb018ae3f3c0e3c21dae40daf4edc4759ab16f0ce",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/actions/get-issue-attachment.ts"
+    },
+    {
+      "description": "Creates a link between two issues.",
+      "id": "link-issues",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Link Info",
+          "name": "linkInfo",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "First Issue Id",
+          "name": "firstIssueId",
+          "required": null,
+          "source_expression": "issueIdOrKeyProp('First Issue', true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Issue Link Type Id",
+          "name": "issueLinkTypeId",
+          "required": null,
+          "source_expression": "issueLinkTypeIdProp('Link Type', true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Second Issue Id",
+          "name": "secondIssueId",
+          "required": null,
+          "source_expression": "issueIdOrKeyProp('Second Issue', true)",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Link Issues",
+      "source_path": "jira-cloud/src/lib/actions/link-issues.ts",
+      "source_sha256": "9ab7c747433da8c2e0f34524d58a6f3ff4f6e9d893039680b8ebd68ff07bc825",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/actions/link-issues.ts"
+    },
+    {
+      "description": "Lists an issue's comments, newest or oldest first.",
+      "id": "list_issue_comments",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "getProjectIdDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Issue Id",
+          "name": "issueId",
+          "required": null,
+          "source_expression": "getIssueIdDropdown({ refreshers: ['projectId'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Order By",
+          "name": "orderBy",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Most comments to return.",
+          "label": "Max Results",
+          "name": "limit",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Issue Comments",
+      "source_path": "jira-cloud/src/lib/actions/list-issue-comments.ts",
+      "source_sha256": "d8180fd9938bb00f660b6f087c29a362186eada75531587f4bfdb66a3d0f14bf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/actions/list-issue-comments.ts"
+    },
+    {
+      "description": "Finds issues that match a JQL query.",
+      "id": "search_issues",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Memory Warning",
+          "name": "memoryWarning",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "Put text and dates in single quotes.",
+          "label": "JQL",
+          "name": "jql",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Field IDs, e.g. summary. Use *all for every field.",
+          "label": "Fields to Return",
+          "name": "fields",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Key fields by their name instead of their ID.",
+          "label": "Map Field Names",
+          "name": "mapNames",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Most issues to return, up to 5,000.",
+          "label": "Max Results",
+          "name": "maxResults",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Jira swaps names you can't view for IDs before the search runs.",
+          "label": "Sanitize JQL",
+          "name": "sanitizeJql",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Issues",
+      "source_path": "jira-cloud/src/lib/actions/search-issues.ts",
+      "source_sha256": "548fd6cac53940ea13d1a0788e3f74d361536d998ef64ad00bb5e220d484f7d6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/actions/search-issues.ts"
+    },
+    {
+      "description": "Triggers when an issue is assigned to someone.",
+      "id": "issue_assigned",
+      "inputs": [
+        {
+          "description": "Watches the connected account only. Overrides Assignee.",
+          "label": "Only Assignments to Me",
+          "name": "assignedToMe",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Assignee",
+          "name": "assignee",
+          "required": null,
+          "source_expression": "getUsersDropdown({ displayName: 'Assignee', description: 'Empty: assignments to anyone.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Filter Help",
+          "name": "filterHelp",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "JQL query. Empty: every issue is watched.",
+          "label": "Issue Filter",
+          "name": "jql",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Jira swaps names you can't view for IDs before the search runs.",
+          "label": "Sanitize JQL",
+          "name": "sanitizeJql",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Issue Assigned",
+      "source_path": "jira-cloud/src/lib/triggers/issue-assigned.ts",
+      "source_sha256": "57a7b90be75c5b70c827068999aa154dde69419d94ee46dd5e446574b6ddec3d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/triggers/issue-assigned.ts"
+    },
+    {
+      "description": "Triggers when a file is attached to an issue.",
+      "id": "new_attachment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Filter Help",
+          "name": "filterHelp",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "JQL query. Empty: every issue is watched.",
+          "label": "Issue Filter",
+          "name": "jql",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Jira swaps names you can't view for IDs before the search runs.",
+          "label": "Sanitize JQL",
+          "name": "sanitizeJql",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Attachment on Issue",
+      "source_path": "jira-cloud/src/lib/triggers/new-attachment.ts",
+      "source_sha256": "5f86ca99057c6d6da074037ab34ef047a2f3d09d42bb746ebb827d1c44bc3a58",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/triggers/new-attachment.ts"
+    },
+    {
+      "description": "Triggers when a comment is added to an issue.",
+      "id": "new_comment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Filter Help",
+          "name": "filterHelp",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "JQL query. Empty: every issue is watched.",
+          "label": "Issue Filter",
+          "name": "jql",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Jira swaps names you can't view for IDs before the search runs.",
+          "label": "Sanitize JQL",
+          "name": "sanitizeJql",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Comment",
+      "source_path": "jira-cloud/src/lib/triggers/new-comment.ts",
+      "source_sha256": "ff74f100034a366712f345dd4e85053271ae31928d4a0f4f084f3c60be3d0189",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jira-cloud/src/lib/triggers/new-comment.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "5f2d56070c72d4d7575532857e3719725013c763",
+    "index_path": "jira-cloud/src/index.ts",
+    "index_sha256": "2cf2ad58577d6fce7c4e66363337a10480ae80ce346c883873e4708204143a23",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-twitter-virtual-ai-influencer-1c1d5c",
+  "title": "Twitter Virtual AI Influencer",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Post tweet",
+      "operation": "service-write",
+      "adapter": "twitter",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.message.content.tweet }}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Schedule posting every 6 hours",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6,
+              "triggerAtMinute": {
+                "expression": "{{ Math.floor(Math.random() * 60) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Trigger posting manually",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Verify tweet constraints",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content.tweet.length }}"
+              },
+              "rightValue": 280
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Generate tweet content",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-5-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": {
+                "expression": "You are a successful modern Twitter influencer. Your tweets always go viral."
+              }
+            },
+            {
+              "role": "system",
+              "content": {
+                "expression": "You have a specific writing style: {{ record.style }}"
+              }
+            },
+            {
+              "role": "system",
+              "content": {
+                "expression": "You follow the principles described in your inspiration sources closely and you write your tweets based on that: {{ record.inspiration }}"
+              }
+            },
+            {
+              "role": "system",
+              "content": {
+                "expression": "You have a very specific niche: {{ record.niche }}"
+              }
+            },
+            {
+              "role": "system",
+              "content": {
+                "expression": "Answer with the viral tweet and nothing else as a response. Keep the tweet within 280 characters. Current date and time are {{DateTime.now()}}. Add hashtags and emojis where relevant."
+              }
+            },
+            {
+              "content": "Write a tweet that is certain to go viral. Take your time in writing it. Think. Use the vast knowledge you have."
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Configure your influencer profile",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "niche",
+              "type": "string",
+              "value": "Modern Stoicism. You tweet about the greatest stoics, their ideas, their quotes, and how their wisdom applies in today's modern life. You love sharing personal stories and experiences."
+            },
+            {
+              "name": "style",
+              "type": "string",
+              "value": "All of your tweets are very personal. "
+            },
+            {
+              "name": "inspiration",
+              "type": "string",
+              "value": "Your inspiration comes from tens of books on stoicism, psychology, and how to influence people. Books such as \"Contagious\" by Jonah Bergen, \"How To Be Internet Famous\" by Brendan Cox, \"How to Win Friends and Influence People\" by Dale Carnegie, and \"Influencers and Creators\" by Robert V Kozinets, Ulrike Gretzel, Rossella Gambetti strongly influence the way you write your tweets. "
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2",
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/Twitter Virtual AI Influencer.json",
+    "git_blob": "6e0c3b0d596933b49338f62058c53a90dbbea1e7",
+    "sha256": "36d3794b4b750cbe80dc8bd0f4fad68a75dadde6602aae656dbefc08c1dc4563",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/Twitter%20Virtual%20AI%20Influencer.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

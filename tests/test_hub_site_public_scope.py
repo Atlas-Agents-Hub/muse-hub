@@ -1,5 +1,6 @@
 """The public exporter admits only the exact sealed Muse Hub website subtree."""
 import tempfile
+import json
 import unittest
 from pathlib import Path
 from muse_presets.public_export import select_public_files, PublicExportError
@@ -8,10 +9,11 @@ SITE_FILES = (
     "README.md", "index.html", "site.css", "site.js", "roles.json",
     "downloads.html", "downloads.js", "downloads.json", "sitemap.xml",
     "public/index.html", "public/styles.css", "public/app.js",
-    "public/catalog.json", "INTEGRITY.json"
+    "public/catalog.json", "INTEGRITY.json", "social-card.png"
 )
-SITE_URL = "https://atlas-origins.github.io/muse-ai-agent-presets/"
-RELEASE_URL = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0"
+SITE_URL = "https://atlas-agents-hub.github.io/muse-hub/"
+RELEASE = json.loads((Path(__file__).resolve().parents[1]/"presets/catalog.json").read_bytes())["release"]
+RELEASE_URL = "https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/" + RELEASE
 
 class HubSitePublicAdmission(unittest.TestCase):
     def setUp(self):
@@ -25,7 +27,14 @@ class HubSitePublicAdmission(unittest.TestCase):
         for filename in SITE_FILES:
             file = self.root/"hub/site"/filename
             file.parent.mkdir(parents=True,exist_ok=True)
-            file.write_text("{}\n" if file.suffix==".json" else "reviewed Muse Hub source\n",encoding="utf-8")
+            if filename == "social-card.png":
+                file.write_bytes((Path(__file__).resolve().parents[1]/"hub/site/social-card.png").read_bytes())
+            else:
+                file.write_text("{}\n" if file.suffix==".json" else "reviewed Muse Hub source\n",encoding="utf-8")
+        image=(self.root/"hub/site/social-card.png").read_bytes()
+        (self.root/"hub/site/INTEGRITY.json").write_text(json.dumps(
+            {"files":{"social-card.png":{"sha256":__import__("hashlib").sha256(image).hexdigest(),"bytes":len(image)}}}
+        ),encoding="utf-8")
 
     def test_only_exact_reviewed_website_files_are_exportable(self):
         self.create_site()

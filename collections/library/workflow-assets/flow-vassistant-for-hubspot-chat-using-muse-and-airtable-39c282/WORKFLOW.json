@@ -1,0 +1,905 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-vassistant-for-hubspot-chat-using-muse-and-airtable-39c282",
+  "title": "vAssistant for Hubspot Chat using OpenAi and Airtable",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "getHubspotMessage",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.hubapi.com/conversations/v3/conversations/threads/{{ record[\"body\"][0][\"objectId\"] }}/messages/{{ record[\"body\"][0][\"messageId\"] }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAi Create Thread",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"messages\": [\n {\n \"role\": \"user\",\n \"content\": \"{{ steps[\"step-1\"].record[\"text\"] }}\"\n }\n ]\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "OpenAI Run",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ record[\"OpenAI Thread ID\"] }}/runs"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"assistant_id\": \"asst_MA71Jq0SElVpdjmJa212CTFd\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get Run",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ record[\"thread_id\"] }}/runs/{{ record[\"id\"] }}"
+        },
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Get Last Message",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ record[\"thread_id\"] }}/messages"
+        },
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://www.listafirme.ro/api/search-v1.asp"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": {
+                "configuration_input": "step-6-parameters-0-value"
+              }
+            },
+            {
+              "name": "src",
+              "value": {
+                "expression": "{{JSON.parse(record[\"required_action\"][\"submit_tool_outputs\"][\"tool_calls\"][0][\"function\"][\"arguments\"]).src}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Completed, Action or Inprogress",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value2": "completed"
+            },
+            {
+              "output": 1,
+              "value2": "requires_action"
+            },
+            {
+              "output": 2,
+              "value2": "in_progress",
+              "operation": {
+                "expression": "equal"
+              }
+            },
+            {
+              "output": 3,
+              "value2": "queued"
+            }
+          ]
+        },
+        "value1": {
+          "expression": "{{ record.status }}"
+        },
+        "dataType": "string"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Wait",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Wait1",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Submit Data",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ steps[\"step-11\"].record[\"thread_id\"] }}/runs/{{ steps[\"step-11\"].record[\"id\"] }}/submit_tool_outputs"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"tool_outputs\": [\n {\n \"tool_call_id\": \"{{ steps[\"step-11\"].record[\"required_action\"][\"submit_tool_outputs\"][\"tool_calls\"][0][\"id\"] }}\",\n \"output\": \"{{record.escapedJsonString}}\"\n }\n ]\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Select Function",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value2": "getAWBbyOrder"
+            },
+            {
+              "output": 1,
+              "value2": "get_awb_history"
+            }
+          ]
+        },
+        "value1": {
+          "expression": "{{ record.required_action.submit_tool_outputs.tool_calls[0].function.name }}"
+        },
+        "dataType": "string"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Code1",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const item1 = records[0]?.json;\nconst jsonString = JSON.stringify(item1);\nconst escapedJsonString = jsonString.replace(/\"/g, '\\\\\"');\n\nreturn { escapedJsonString };",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Wait2",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "HTTP Request1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://www.listafirme.ro/api/info-v1.asp"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": {
+                "configuration_input": "step-14-parameters-0-value"
+              }
+            },
+            {
+              "name": "data",
+              "value": {
+                "expression": "{\"TaxCode\":\"{{JSON.parse(record[\"required_action\"][\"submit_tool_outputs\"][\"tool_calls\"][0][\"function\"][\"arguments\"]).src}}\",\"NACE\":\"info\",\"VAT\":\"\", \"RegNo\":\"\", \"Status\":\"\", \"LegalForm\":\"\", \"Name\":\"\", \"Date\":\"\", \"TownCode\":\"\", \"County\":\"\", \"City\":\"\", \"Address\":\"\", \"Administrators\":\"\", \"Shareholders\":\"\", \"Balance\":\"latest\", \"Phone\":\"\", \"Mobile\":\"\", \"Fax\":\"\", \"Email\":\"\", \"Web\":\"\", \"Geolocation\":\"\", \"Description\":\"\", \"Trademarks\":\"\", \"Subsidiaries\":\"\", \"Branches\":\"\", \"FiscalActivity\":\"\", \"Obligations\":\"\", \"Links\":\"\"}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Code",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const item1 = records[0]?.json;\nconst jsonString = JSON.stringify(item1);\nconst escapedJsonString = jsonString.replace(/\"/g, '\\\\\"');\n\nreturn { escapedJsonString };",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Submit Data1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ steps[\"step-11\"].record[\"thread_id\"] }}/runs/{{ steps[\"step-11\"].record[\"id\"] }}/submit_tool_outputs"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"tool_outputs\": [\n {\n \"tool_call_id\": \"{{ steps[\"step-11\"].record[\"required_action\"][\"submit_tool_outputs\"][\"tool_calls\"][0][\"id\"] }}\",\n \"output\": \"{{record.escapedJsonString}}\"\n }\n ]\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Wait3",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "respondHubspotMessage1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.hubapi.com/conversations/v3/conversations/threads/{{ steps[\"step-1\"].record[\"conversationsThreadId\"] }}/messages"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": "MESSAGE"
+            },
+            {
+              "name": "richText",
+              "value": {
+                "expression": "{{ record.data[0].content[0].text.value }}"
+              }
+            },
+            {
+              "name": "senderActorId",
+              "value": "A-5721819"
+            },
+            {
+              "name": "channelId",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.channelId }}"
+              }
+            },
+            {
+              "name": "channelAccountId",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.channelAccountId }}"
+              }
+            },
+            {
+              "name": "text",
+              "value": {
+                "expression": "{{ record.data[0].content[0].text.value }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ steps[\"step-1\"].record[\"senders\"][0][\"actorId\"] }}"
+              },
+              "value2": "A-5721819",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Airtable",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-20-base"
+        },
+        "table": {
+          "configuration_input": "step-20-table"
+        },
+        "options": {},
+        "operation": "search",
+        "filterByFormula": {
+          "expression": "{Hubspot Thread ID}=\"{{ record.conversationsThreadId }}\""
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "IF1",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ steps[\"step-20\"].record.id }}"
+              },
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "createThread",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-22-base"
+        },
+        "table": {
+          "configuration_input": "step-22-table"
+        },
+        "columns": {
+          "value": {
+            "OpenAI Thread ID": {
+              "expression": "{{ record[\"id\"] }}"
+            },
+            "Hubspot Thread ID": {
+              "expression": "{{ steps[\"step-1\"].record.conversationsThreadId }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Hubspot Thread ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "OpenAI Thread ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "create"
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "OpenAI Run1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.openai.com/v1/threads/{{ steps[\"step-20\"].record[\"OpenAI Thread ID\"] }}/runs"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"assistant_id\": \"asst_MA71Jq0SElVpdjmJa212CTFd\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "IF2",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ record[\"body\"][0][\"messageId\"] }}"
+              },
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "OpenAI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-1\"].record[\"text\"] }}"
+        },
+        "prompt": "define",
+        "options": {
+          "baseURL": {
+            "expression": "https://api.openai.com/v1/threads/{{ steps[\"step-20\"].record[\"OpenAI Thread ID\"] }}/messages"
+          }
+        },
+        "resource": "assistant",
+        "assistantId": {
+          "configuration_input": "step-25-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "hubspot-tinder",
+        "options": {},
+        "httpMethod": "POST"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-25",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-26"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/threads"
+    },
+    {
+      "id": "step-6-parameters-0-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-parameters-0-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-20-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-20-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-25-assistantid",
+      "purpose": "Select the assistantId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Airtable/vAssistant for Hubspot Chat using OpenAi and Airtable.json",
+    "git_blob": "4dd6f0f737937146b5700900e43a6e0018ff7d11",
+    "sha256": "f20e3701d2fd83b67f10f549c7d2d5d73989f40f38fb6348d2bc192244ce69c1",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Airtable/vAssistant%20for%20Hubspot%20Chat%20using%20OpenAi%20and%20Airtable.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

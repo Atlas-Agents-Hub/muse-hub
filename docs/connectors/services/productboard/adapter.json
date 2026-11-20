@@ -1,0 +1,256 @@
+{
+  "allowed_hosts": [
+    "api.productboard.com",
+    "app.productboard.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Project management",
+  "id": "productboard",
+  "name": "Productboard",
+  "operations": [
+    {
+      "description": "Create a new feature in Productboard",
+      "id": "create_feature",
+      "inputs": [
+        {
+          "description": "Name of the feature",
+          "label": "Feature Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Description of the feature",
+          "label": "Description",
+          "name": "description",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Type of the feature",
+          "label": "Type",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "productboardProps.status_id()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Parent Type",
+          "name": "parent_type",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "",
+          "label": "Parent",
+          "name": "parent_id",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "A flag denoting if the feature is archived. If null, it will default to `false`.",
+          "label": "Archived",
+          "name": "archived",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Feature",
+      "source_path": "productboard/src/lib/actions/create-feature.ts",
+      "source_sha256": "ae7bfad2fc23274b88aaea1cb3f3b1383ce1436525ab4c23a0980707308c233a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/productboard/src/lib/actions/create-feature.ts"
+    },
+    {
+      "description": "Creates a new note in Productboard",
+      "id": "create_note",
+      "inputs": [
+        {
+          "description": "Title of the feedback note",
+          "label": "Note Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "HTML-encoded rich text content of the feedback note",
+          "label": "Content",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Email address of a user to be attached to the note. This field can't be combined with `Company Domain`.",
+          "label": "User Email",
+          "name": "user_email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Domain of a company the note should be linked to. This field can't be combined with `User Email`.",
+          "label": "Company Domain",
+          "name": "company_domain",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "URL where the external entity can be accessed.",
+          "label": "Display URL",
+          "name": "display_url",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "A unique string identifying the external system from which the data came.",
+          "label": "Source Origin",
+          "name": "source_origin",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique id of the record in the origin system.",
+          "label": "Source Record ID",
+          "name": "source_record_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "A set of tags for categorizing the note.",
+          "label": "Tags",
+          "name": "tags",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Note",
+      "source_path": "productboard/src/lib/actions/create-note.ts",
+      "source_sha256": "e9a83f21f52b8e6bf1b292dfa58d1b845f7e6fb1a9abdf0afa7251cdfd4733fb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/productboard/src/lib/actions/create-note.ts"
+    },
+    {
+      "description": "Get an existing feature in Productboard",
+      "id": "get_feature",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Feature_Id",
+          "name": "feature_id",
+          "required": null,
+          "source_expression": "productboardProps.feature_id()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Feature",
+      "source_path": "productboard/src/lib/actions/get-feature.ts",
+      "source_sha256": "2449ac2991eda3ad0a281b5e3fbc85f08836f890f0d3fff53c2cf8a32f7db8bd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/productboard/src/lib/actions/get-feature.ts"
+    },
+    {
+      "description": "Updates an existing feature in Productboard.",
+      "id": "update_feature",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Feature_Id",
+          "name": "feature_id",
+          "required": null,
+          "source_expression": "productboardProps.feature_id()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "New name for the feature.",
+          "label": "Feature Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "New description for the feature.",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "productboardProps.status_id(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Whether the feature is archived.",
+          "label": "Archived",
+          "name": "archived",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Feature",
+      "source_path": "productboard/src/lib/actions/update-feature.ts",
+      "source_sha256": "f9322473aac22e5f30f8ddb83ee41d1bc7aec4f18719cf874a82a0a246900859",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/productboard/src/lib/actions/update-feature.ts"
+    },
+    {
+      "description": "Triggers when a new feature is created in Productboard",
+      "id": "new_feature",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Feature",
+      "source_path": "productboard/src/lib/triggers/new-feature.ts",
+      "source_sha256": "480997e0f0479c6e7c2ff5c1a6edf188e2ee88e90d8caeb96da80960f9d3dc8d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/productboard/src/lib/triggers/new-feature.ts"
+    },
+    {
+      "description": "Triggers when a new note is created in Productboard",
+      "id": "new_note",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Note",
+      "source_path": "productboard/src/lib/triggers/new-note.ts",
+      "source_sha256": "604e341ab74bc038424ce42fb1c579ece4855d1c9480fcc34d57bfc8af075688",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/productboard/src/lib/triggers/new-note.ts"
+    },
+    {
+      "description": "Triggers when an existing feature is updated in Productboard",
+      "id": "updated_feature",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Updated Feature",
+      "source_path": "productboard/src/lib/triggers/updated-feature.ts",
+      "source_sha256": "9aedafc0846ad955303b32340eb26472b4a6ba797d9caafa05d6bf795cddc8d5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/productboard/src/lib/triggers/updated-feature.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7e6b5576cc35a9c0390118ec3352868e7d2da417",
+    "index_path": "productboard/src/index.ts",
+    "index_sha256": "d3ad640a28ef9cd97ea3646f62a3f75ff24b346e428ab6a1735d65a78ef6b837",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

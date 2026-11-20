@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-fitness-coach-strava-data-analysis-and-personalized-training-insights-87f3a0",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-8-toemail": null,
+    "step-8-fromemail": null
+  },
+  "adapters": {
+    "emailsend": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

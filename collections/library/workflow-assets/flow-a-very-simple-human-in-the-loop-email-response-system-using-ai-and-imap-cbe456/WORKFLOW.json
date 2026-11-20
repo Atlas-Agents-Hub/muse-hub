@@ -1,0 +1,303 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-a-very-simple-human-in-the-loop-email-response-system-using-ai-and-imap-cbe456",
+  "title": "A Very Simple Human in the Loop Email Response System Using AI and IMAP",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Email Trigger (IMAP)",
+      "operation": "service-read",
+      "adapter": "emailreadimap",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Markdown",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.textHtml }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Send Email",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "{{ steps[\"step-9\"].record.email }}"
+        },
+        "options": {},
+        "subject": {
+          "expression": "Re: {{ steps[\"step-1\"].record.subject }}"
+        },
+        "toEmail": {
+          "expression": "{{ steps[\"step-1\"].record.from }}"
+        },
+        "fromEmail": {
+          "expression": "{{ steps[\"step-1\"].record.to }}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Email Summarization Chain",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "binaryDataKey": {
+            "expression": "{{ record.data }}"
+          },
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "prompt": {
+                "expression": "Write a concise summary of the following in max 100 words:\n\n\"{{ record.data }}\"\n\nDo not enter the total number of words used."
+              },
+              "combineMapPrompt": {
+                "expression": "Write a concise summary of the following in max 100 words:\n\n\"{{ record.data }}\"\n\nDo not enter the total number of words used."
+              }
+            }
+          }
+        },
+        "operationMode": "nodeInputBinary"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Write email",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Write the text to reply to the following email:\n\n{{ record.response.text }}"
+        },
+        "options": {
+          "systemMessage": "You are an expert at answering emails. You need to answer them professionally based on the information you have. This is a business email. Be concise and never exceed 100 words. Only the body of the email, not create the subject"
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "OpenAI",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Approve Email",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "message": {
+          "expression": "<h3>MESSAGE</h3>\n{{ steps[\"step-1\"].record.textHtml }}\n\n<h3>AI RESPONSE</h3>\n{{ record.email }}"
+        },
+        "options": {},
+        "subject": {
+          "expression": "[Approval Required] {{ steps[\"step-1\"].record.subject }}"
+        },
+        "toEmail": {
+          "configuration_input": "step-7-toemail"
+        },
+        "fromEmail": {
+          "configuration_input": "step-7-fromemail"
+        },
+        "operation": "sendAndWait"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Set Email text",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.output }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Approved?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.data.approved }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-4",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-10",
+      "channel": "main",
+      "branch": 1
+    }
+  ],
+  "entrypoints": [
+    "step-1",
+    "step-6",
+    "step-8"
+  ],
+  "configuration": [
+    {
+      "id": "step-7-toemail",
+      "purpose": "Select the toEmail for step-7.",
+      "required": true
+    },
+    {
+      "id": "step-7-fromemail",
+      "purpose": "Select the fromEmail for step-7.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/A Very Simple _Human in the Loop_ Email Response System Using AI and IMAP.json",
+    "git_blob": "8a1a23e588702ddfe11e7cc26362456d88accce4",
+    "sha256": "b6a10636fb24e5192d5dca4e9e486b1321fe7ced5790c748ab76473f05b1dd85",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/A%20Very%20Simple%20_Human%20in%20the%20Loop_%20Email%20Response%20System%20Using%20AI%20and%20IMAP.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

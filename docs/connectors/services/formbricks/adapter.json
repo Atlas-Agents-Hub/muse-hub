@@ -1,0 +1,290 @@
+{
+  "allowed_hosts": [
+    "app.formbricks.com",
+    "app.formbricks.com."
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "App URL",
+        "name": "appUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Productivity",
+  "id": "formbricks",
+  "name": "Formbricks",
+  "operations": [
+    {
+      "description": "Finds a contact by email or user ID.",
+      "id": "find_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "formbricksProps.workspace({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Fill in the email or the user ID.",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "User ID",
+          "name": "userId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Contact",
+      "source_path": "formbricks/src/lib/actions/find-contact.ts",
+      "source_sha256": "c8e1be8c85e19308c9f10fbcc8d692115dde032a0a943def5a71deb2083f782b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/formbricks/src/lib/actions/find-contact.ts"
+    },
+    {
+      "description": "Generates a survey link tied to one contact, so the response is linked to them.",
+      "id": "get_contact_survey_link",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "formbricksProps.workspace({ required: false, description: 'Narrows the survey list. Optional.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Survey Id",
+          "name": "surveyId",
+          "required": null,
+          "source_expression": "formbricksProps.survey({ required: true, description: 'A link survey.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Use Find Contact to get the ID from an email.",
+          "label": "Contact ID",
+          "name": "contactId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "1 to 365. Leave empty for a link that never expires.",
+          "label": "Expires After (days)",
+          "name": "expirationDays",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Personal Survey Link",
+      "source_path": "formbricks/src/lib/actions/get-contact-survey-link.ts",
+      "source_sha256": "cf224482916902ccbcd7524b89b38a1ccb48bbad21b2d5df45014ab783314955",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/formbricks/src/lib/actions/get-contact-survey-link.ts"
+    },
+    {
+      "description": "Gets a single survey response by its ID.",
+      "id": "get_response",
+      "inputs": [
+        {
+          "description": "From a Formbricks trigger or List Responses.",
+          "label": "Response ID",
+          "name": "responseId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Response",
+      "source_path": "formbricks/src/lib/actions/get-response.ts",
+      "source_sha256": "e819f9f48de374b1c1fff7b41849b6f6a74189be8c8e749d2342d6730e806924",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/formbricks/src/lib/actions/get-response.ts"
+    },
+    {
+      "description": "Gets a survey with its questions and their IDs.",
+      "id": "get_survey",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "formbricksProps.workspace({ required: false, description: 'Narrows the survey list. Optional.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Survey Id",
+          "name": "surveyId",
+          "required": null,
+          "source_expression": "formbricksProps.survey({ required: true })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Survey",
+      "source_path": "formbricks/src/lib/actions/get-survey.ts",
+      "source_sha256": "75930ee4dafa10c2c0830e27025f185461fe7dd3b6202ec800d9f2573eab0a72",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/formbricks/src/lib/actions/get-survey.ts"
+    },
+    {
+      "description": "Lists the user actions (action classes) that can trigger in-app surveys.",
+      "id": "list_action_classes",
+      "inputs": [
+        {
+          "description": "Only actions of this workspace. Leave empty for all.",
+          "label": "Workspace ID",
+          "name": "workspaceId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Actions",
+      "source_path": "formbricks/src/lib/actions/list-action-classes.ts",
+      "source_sha256": "b1c9429a19aeb2316d15902b596ecaf721dc9252fbc5ad5ba03db8173b455fcc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/formbricks/src/lib/actions/list-action-classes.ts"
+    },
+    {
+      "description": "Lists the contact attributes (email, user ID and custom ones) defined in Formbricks.",
+      "id": "list_contact_attribute_keys",
+      "inputs": [
+        {
+          "description": "Only keys of this workspace. Leave empty for all.",
+          "label": "Workspace ID",
+          "name": "workspaceId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Contact Attribute Keys",
+      "source_path": "formbricks/src/lib/actions/list-contact-attribute-keys.ts",
+      "source_sha256": "ed9320eebc31be10121ea24f72ba7df389984dead5ea46dc5d3ba01a0a074d2a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/formbricks/src/lib/actions/list-contact-attribute-keys.ts"
+    },
+    {
+      "description": "Lists survey responses, newest first, with optional survey and date filters.",
+      "id": "list_responses",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "formbricksProps.workspace({ required: false, description: 'Narrows the survey list. Optional.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Survey Id",
+          "name": "surveyId",
+          "required": null,
+          "source_expression": "formbricksProps.survey({ required: false, description: 'Only list responses to this survey. Leave empty for all surveys.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only responses created on or after this date.",
+          "label": "From",
+          "name": "startDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Only responses created on or before this date.",
+          "label": "To",
+          "name": "endDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Responses per page (1 to 250).",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of responses to skip, for paging.",
+          "label": "Skip",
+          "name": "skip",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Responses",
+      "source_path": "formbricks/src/lib/actions/list-responses.ts",
+      "source_sha256": "5d4353408f867a5f946659906ee047111abd8db7247e6a799f6119d7dc4d2d50",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/formbricks/src/lib/actions/list-responses.ts"
+    },
+    {
+      "description": "Lists the surveys in a workspace, optionally only those with a given status. Scans up to 1,000 surveys; \"More Available\" is true when the list may be incomplete.",
+      "id": "list_surveys",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Workspace Id",
+          "name": "workspaceId",
+          "required": null,
+          "source_expression": "formbricksProps.workspace({ required: false, description: 'Only list surveys from this workspace. Leave empty for every workspace the API key can access.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only list surveys with this status.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Maximum number of surveys to return (1 to 500).",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Surveys",
+      "source_path": "formbricks/src/lib/actions/list-surveys.ts",
+      "source_sha256": "0f6085200210cb9648c18282aca9e569ae96cef8c3e90124028d2f1f1881d970",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/formbricks/src/lib/actions/list-surveys.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "56e85904f7780700a66fbf074bc68938364e8946",
+    "index_path": "formbricks/src/index.ts",
+    "index_sha256": "2816af60f18f00831058aeabe733aeaa614cfb2eaf338b598026797c7c0e1afe",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

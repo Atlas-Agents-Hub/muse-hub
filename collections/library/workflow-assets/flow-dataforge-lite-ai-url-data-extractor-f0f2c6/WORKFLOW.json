@@ -1,0 +1,179 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-dataforge-lite-ai-url-data-extractor-f0f2c6",
+  "title": "DataForge Lite - AI URL Data Extractor",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Scrape URL",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dataforge-lite",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Validate",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "try {\n  const b = records[0].json.body || records[0].json;\n  if (!b.url) throw new Error('URL is required.');\n  return [{ json: { url: b.url, extractFields: b.extract_fields || 'price,features,description', name: b.name || '' } }];\n} catch (e) { throw new Error('Invalid input: ' + e.message); }",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Fetch Page",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "GET",
+        "url": {
+          "expression": "{{ record.url }}"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (compatible; DataForge/1.0)"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 20000
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Extract Text",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "try {\n  const url = steps[\"step-2\"].records[0];\n  const r = records[0].json;\n  const html = typeof r === 'string' ? r : (r.data || r.body || JSON.stringify(r));\n  const text = html.replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi,'').replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ').trim().substring(0,4000);\n  return [{ json: { ...url, pageText: text } }];\n} catch(e) { throw new Error('Extract failed: ' + e.message); }",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "AI: Extract Data",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-5-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": {
+                "expression": "Extract from the page: {{ record.extractFields }}. Also: title, description, stats, sentiment. JSON: { \"title\": \"\", \"description\": \"\", \"extractedData\": {}, \"statistics\": [], \"sentiment\": \"\" }"
+              }
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "URL: {{record.url}}\nExtract: {{record.extractFields}}\n\nContent:\n{{record.pageText}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2,
+          "maxTokens": 800,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Respond",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ records[0].json.message?.content || records[0].json.content || '{}' }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/DataForge Lite - AI URL Data Extractor.json",
+    "git_blob": "e324a86b1abc09c5954dd579bf3ad81c1295aec8",
+    "sha256": "edcb2b9c5006448bfffbf195736a06a09ebeb2ce40b6b543f7d2c1ebd44a0a2f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/DataForge%20Lite%20-%20AI%20URL%20Data%20Extractor.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

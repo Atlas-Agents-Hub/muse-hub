@@ -1,0 +1,45 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-building-rag-chatbot-for-movie-recommendations-with-qdrant-and-muse-8e670e",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-owner": null,
+    "step-2-repository": null,
+    "step-7-qdrantcollection": null,
+    "step-10-workflowid": null,
+    "step-19-url": null,
+    "step-19-parameters-0-value": null,
+    "step-20-url": null,
+    "step-20-parameters-0-value": null,
+    "step-23-url": null,
+    "step-24-url": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "github": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Enter the base URL",
+        "label": "Base URL",
+        "name": "base_url",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Enter the API token",
+        "label": "API Token",
+        "name": "access_token",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Support",
+  "id": "freshdesk",
+  "name": "Freshdesk",
+  "operations": [
+    {
+      "description": "Get All Tickets by selected status from Freshdesk.",
+      "id": "get_all_tickets_by_status",
+      "inputs": [
+        {
+          "description": "Select one or status values",
+          "label": "Choose Status(es)",
+          "name": "status_filter",
+          "required": true,
+          "type": "StaticMultiSelectDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Get All Tickets By Status",
+      "source_path": "freshdesk/src/lib/actions/get-all-tickets-by-status.ts",
+      "source_sha256": "0eca94b017de501276242e64d38e96822528b988abb41b9fef36b2e48fb0cec8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshdesk/src/lib/actions/get-all-tickets-by-status.ts"
+    },
+    {
+      "description": "Get contacts details from Freshdesk using ID number.",
+      "id": "get_contact_from_id",
+      "inputs": [
+        {
+          "description": "The ID number of the contact",
+          "label": "Contact ID number",
+          "name": "contactid",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Contact from ID",
+      "source_path": "freshdesk/src/lib/actions/get-contact-from-id.ts",
+      "source_sha256": "f5b994f8d736c4ae7fe3d3166913e447d0e805ea737c5db96140465d104365cd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshdesk/src/lib/actions/get-contact-from-id.ts"
+    },
+    {
+      "description": "Get contact details from Freshdesk for all (optional filtered) contacts.",
+      "id": "get_contacts",
+      "inputs": [
+        {
+          "description": "Select one and provide the value.",
+          "label": "Optional Filter",
+          "name": "filter_type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Provide value if previous option selected!",
+          "label": "Filter value",
+          "name": "filter_value",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Can filter by state: blocked, deleted, unverified or verified.",
+          "label": "Optional Filter Status",
+          "name": "filter_status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Freshdesk calls this per_page - set to 0 for all, if specified maximum is 100",
+          "label": "Results to return",
+          "name": "per_page",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Freshdesk Contacts",
+      "source_path": "freshdesk/src/lib/actions/get-contacts.ts",
+      "source_sha256": "993c4a6429db5bc2a928d22876ffdb73d1fff1c2c94dcb972540d13129ce1232",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshdesk/src/lib/actions/get-contacts.ts"
+    },
+    {
+      "description": "Get Ticket status from Freshdesk. Returns ticket_status, assigned_status, assigned_id",
+      "id": "get_ticket_status",
+      "inputs": [
+        {
+          "description": "The Ticket ID to return status",
+          "label": "Ticket ID",
+          "name": "ticketid",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Ticket Status",
+      "source_path": "freshdesk/src/lib/actions/get-ticket-status.ts",
+      "source_sha256": "f4208d9dedc962925ef595449ec9a0e94f2abb2142c4300d41d3285d3d8019ce",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshdesk/src/lib/actions/get-ticket-status.ts"
+    },
+    {
+      "description": "Get Ticket instances from Freshdesk.",
+      "id": "get_tickets",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Tickets",
+      "source_path": "freshdesk/src/lib/actions/get-tickets.ts",
+      "source_sha256": "6c1d4a518802279b643808202b97cbcdf5dfde88270c4d42e8617935a1ebd8e3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/freshdesk/src/lib/actions/get-tickets.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7a76dd95858aecbc1d2af465f08bfdc98fda34fa",
+    "index_path": "freshdesk/src/index.ts",
+    "index_sha256": "3bd4b516b69c6d7afddeb3099e8ac1ac411700e213138e0dbb64109bc8eda65e",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "allowed_hosts": [
+    "api.zeplin.dev",
+    "scene.zeplin.io"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Design",
+  "id": "zeplin",
+  "name": "Zeplin",
+  "operations": [
+    {
+      "description": "Create a note on a screen in Zeplin",
+      "id": "createNote",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "project_idProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Screen Id",
+          "name": "screenId",
+          "required": null,
+          "source_expression": "screen_idProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The content of the note",
+          "label": "Note content",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "The color of the note",
+          "label": "Color",
+          "name": "color",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The x coordinate position of the note on the screen",
+          "label": "X Coordinate",
+          "name": "x",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "The y coordinate position of the note on the screen",
+          "label": "Y Coordinate",
+          "name": "y",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "The starting x coordinate for range selection (optional)",
+          "label": "X Start Coordinate",
+          "name": "x_start",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The starting y coordinate for range selection (optional)",
+          "label": "Y Start Coordinate",
+          "name": "y_start",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Note",
+      "source_path": "zeplin/src/lib/actions/create-note.ts",
+      "source_sha256": "819bf0ea894e29da19f636b0c5f3d5eebe9c519de3fe136ccd49bcc2b0c17988",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zeplin/src/lib/actions/create-note.ts"
+    },
+    {
+      "description": "Find a project by name or retrieve all projects",
+      "id": "findProject",
+      "inputs": [
+        {
+          "description": "Optional project name to search for (partial match)",
+          "label": "Project Name",
+          "name": "projectName",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Project",
+      "source_path": "zeplin/src/lib/actions/find-project.ts",
+      "source_sha256": "6a95666a50fa81adcf9eed8dd718baed95b8187a7baab001727537122a288ee9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zeplin/src/lib/actions/find-project.ts"
+    },
+    {
+      "description": "Find a screen by name or retrieve all screens in a project",
+      "id": "findScreen",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "project_idProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Optional screen name to search for (partial match)",
+          "label": "Screen Name",
+          "name": "screenName",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Screen",
+      "source_path": "zeplin/src/lib/actions/find-screen.ts",
+      "source_sha256": "4a3275a90c3c0a559e226fa3922553ed99f6a1416427ebcd0b884f32bf0435a7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zeplin/src/lib/actions/find-screen.ts"
+    },
+    {
+      "description": "Update a project's name and description",
+      "id": "updateProject",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "project_idProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The new name for the project",
+          "label": "Project Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The new description for the project",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Project",
+      "source_path": "zeplin/src/lib/actions/update-project.ts",
+      "source_sha256": "e21aa09400ee92140cb2b759fb943d034a5c06688a15ffac6a6fccec801ffb01",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zeplin/src/lib/actions/update-project.ts"
+    },
+    {
+      "description": "Update a screen's description",
+      "id": "updateScreen",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "project_idProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Screen Id",
+          "name": "screenId",
+          "required": null,
+          "source_expression": "screen_idProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The new description for the screen",
+          "label": "Description",
+          "name": "description",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Screen",
+      "source_path": "zeplin/src/lib/actions/update-screen.ts",
+      "source_sha256": "da7ba7ebf35783d7734d38793abe0b270f92d9f3ee58c8fb87a90f94a4c4e048",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zeplin/src/lib/actions/update-screen.ts"
+    },
+    {
+      "description": "Triggered when a new note is created on a screen",
+      "id": "newNote",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Note",
+      "source_path": "zeplin/src/lib/triggers/new-note.ts",
+      "source_sha256": "4dad243d2ca3f96e3b8971343fd8f887915bd82c155783faf81da2ffa24b80b0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zeplin/src/lib/triggers/new-note.ts"
+    },
+    {
+      "description": "Triggered when a new screen is created in a project",
+      "id": "newScreen",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Screen",
+      "source_path": "zeplin/src/lib/triggers/new-screen.ts",
+      "source_sha256": "e58f3a6f938cb3a5bccb43bf96226044e8f81c377cbed1744ed52571d4f7a567",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zeplin/src/lib/triggers/new-screen.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7aefbc41addaf8ffc7e4a91eca2393e1496d8fe8",
+    "index_path": "zeplin/src/index.ts",
+    "index_sha256": "45c8549be9e910adc6317033a2b75c3d08a383e3fc774e0264ff0c9a69fa5603",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer"
+  ]
+}

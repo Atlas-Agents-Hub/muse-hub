@@ -1,0 +1,1209 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-spending-history-from-gmail-to-google-sheet-ee99b2",
+  "title": "Extract spending history from gmail to google sheet",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Get invoice",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_7885838942566773656"
+          ]
+        },
+        "options": {
+          "downloadAttachments": true
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get payment",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_371722915607774622"
+          ]
+        },
+        "options": {
+          "downloadAttachments": true
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Extract invoice",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "password": {
+            "configuration_input": "step-3-options-password"
+          }
+        },
+        "operation": "pdf",
+        "binaryPropertyName": "attachment_0"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Extract payment",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "password": {
+            "configuration_input": "step-4-options-password"
+          }
+        },
+        "operation": "pdf",
+        "binaryPropertyName": "attachment_0"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "HTML",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "dataPropertyName": {
+          "expression": "html"
+        },
+        "extractionValues": {
+          "values": [
+            {
+              "key": "spend",
+              "cssSelector": ".spend-table",
+              "returnArray": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "spend"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Structured Output Parser1",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "title": "Expense Record Schema",
+            "description": "Schema used to parse expense record emails, including date, service name, transaction details, amount, category, currency, and card.",
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "description": "Transaction date, can refer to the email date or the consumption date within the content. If there are multiple dates, use the earliest one. The format is 'YYYY-MM-DD hh:mm', e.g., '2024-09-02 10:12'.",
+                "examples": [
+                  "2024-09-02 10:12"
+                ]
+              },
+              "service": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the service or store, such as 'GOOGLE', 'Uber', etc.",
+                "examples": [
+                  "GOOGLE",
+                  "Uber Eats",
+                  "Uber",
+                  "CLAUDE.AI"
+                ]
+              },
+              "details": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Detailed transaction information, such as overseas card usage, online transactions, restaurant names, or consumption details. If none, can be left blank or null.",
+                "examples": [
+                  "Uber: from Fuxing North Road to Minquan East Road",
+                  "Restaurant name",
+                  null
+                ]
+              },
+              "amount": {
+                "type": "number",
+                "description": "Transaction amount. If in USD, keep two decimal places (e.g., 50.12); if in TWD, use integers (e.g., 550).",
+                "examples": [
+                  50.12,
+                  550
+                ]
+              },
+              "category": {
+                "type": "string",
+                "description": "Transaction category",
+                "enum": [
+                  "Food & Beverage",
+                  "Transportation",
+                  "Daily Necessities",
+                  "Housing",
+                  "Electronics",
+                  "Beauty & Hair",
+                  "Apparel & Accessories",
+                  "Medical & Healthcare",
+                  "Pets",
+                  "Education",
+                  "Entertainment",
+                  "Cloud Services",
+                  "Automobile",
+                  "Gifts",
+                  "Family Care",
+                  "Counseling",
+                  "Insurance",
+                  "Taxes",
+                  "Transfer Fees",
+                  "Music",
+                  "Fitness",
+                  "Travel",
+                  "Lending",
+                  "Donations",
+                  "Advertising",
+                  "Finance"
+                ],
+                "examples": [
+                  "Food & Beverage",
+                  "Transportation"
+                ]
+              },
+              "currency": {
+                "type": "string",
+                "description": "Currency code used in the transaction. If the amount starts with NT$, then currency is TWD.",
+                "enum": [
+                  "TWD",
+                  "USD",
+                  "JPY",
+                  "EUR",
+                  "SGD"
+                ],
+                "examples": [
+                  "USD",
+                  "TWD"
+                ]
+              },
+              "card": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Credit card used for the transaction.",
+                "enum": [
+                  "HSBC 3088",
+                  "HSBC 3854",
+                  "Fubon Card",
+                  "Crypto.com Card",
+                  "Cathay Card",
+                  null
+                ],
+                "examples": [
+                  "HSBC 3088",
+                  "HSBC 3854"
+                ]
+              }
+            },
+            "required": [
+              "date",
+              "amount",
+              "category",
+              "currency"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Google Gemini Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Send",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "date": {
+              "expression": "{{ record.output.date }}"
+            },
+            "amount": {
+              "expression": "{{ record.output.amount }}"
+            },
+            "source": "n8n",
+            "details": {
+              "expression": "{{ record.output.details }}"
+            },
+            "payment": {
+              "expression": "{{ record.output.card }}"
+            },
+            "service": {
+              "expression": "{{ record.output.service }}"
+            },
+            "category": {
+              "expression": "{{ record.output.category }}"
+            },
+            "currency": {
+              "expression": "{{ record.output.currency }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "service",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "details",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "amount",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "currency",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "payment",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "source",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-9-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-9-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Set data 0",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email_date",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-15\"].record.date }}"
+              }
+            },
+            {
+              "name": "email_subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-15\"].record.subject }}"
+              }
+            },
+            {
+              "name": "email_content",
+              "type": "string",
+              "value": {
+                "expression": "{{ $ifEmpty(record.spend, $ifEmpty( record.text, record.html)) }}"
+              }
+            },
+            {
+              "name": "email_type",
+              "type": "number",
+              "value": {
+                "expression": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Set data 1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email_date",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.date }}"
+              }
+            },
+            {
+              "name": "email_subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.subject }}"
+              }
+            },
+            {
+              "name": "email_content",
+              "type": "string",
+              "value": {
+                "expression": "{{ $ifEmpty( record.text, record.html) }}"
+              }
+            },
+            {
+              "name": "email_type",
+              "type": "number",
+              "value": {
+                "expression": "1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Set data 2",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email_date",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.date }}"
+              }
+            },
+            {
+              "name": "email_subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.subject }}"
+              }
+            },
+            {
+              "name": "email_content",
+              "type": "string",
+              "value": {
+                "expression": "{{ $ifEmpty( record.text, record.html) }}"
+              }
+            },
+            {
+              "name": "email_type",
+              "type": "number",
+              "value": {
+                "expression": "2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Invoice data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "html",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.html }}"
+              }
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.subject }}"
+              }
+            },
+            {
+              "name": "date",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.date }}"
+              }
+            },
+            {
+              "name": "text",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.text }} \\n {{ record.text }}"
+              }
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.labelIds }}"
+              }
+            },
+            {
+              "name": "from",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-1\"].record.from.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Payment data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "html",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.html }}"
+              }
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.subject }}"
+              }
+            },
+            {
+              "name": "date",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.date }}"
+              }
+            },
+            {
+              "name": "text",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.text }} \\n {{ record.text }}"
+              }
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.labelIds }}"
+              }
+            },
+            {
+              "name": "from",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.from.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Switch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Multiple payment info in one mail",
+              "conditions": {
+                "options": {
+                  "version": 1,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.from }}"
+                    },
+                    "rightValue": {
+                      "configuration_input": "step-15-conditions-0-rightvalue"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "One payment info in one mail",
+              "conditions": {
+                "options": {
+                  "version": 1,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.from }}"
+                    },
+                    "rightValue": "\\b(?:noreply@messaging\\.hsbc\\.com\\.tw|hello@crypto\\.com|taipeifubon\\.com\\.tw)\\b"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Invoices",
+              "conditions": {
+                "options": {
+                  "version": 1,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "notRegex"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.from }}"
+                    },
+                    "rightValue": "\\b(?:noreply@messaging\\.hsbc\\.com\\.tw|hello@crypto\\.com|taipeifubon\\.com\\.tw)\\b"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Groq Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "title": "Transaction Record Schema",
+            "description": "Schema for parsing transaction record emails, including date, service name, transaction details, amount, category, currency, and card.",
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "description": "Transaction date, can refer to email date or transaction date in content. If multiple dates exist, use the earliest date. Format is 'YYYY-MM-DD hh:mm', e.g., '2024-09-02 10:12'.",
+                "examples": [
+                  "2024-09-02 10:12"
+                ]
+              },
+              "service": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of service or store, e.g., 'GOOGLE', 'Uber', etc.",
+                "examples": [
+                  "GOOGLE",
+                  "Uber Eats",
+                  "Uber",
+                  "CLAUDE.AI"
+                ]
+              },
+              "details": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Detailed transaction information, such as overseas purchase, online purchase, restaurant name, or consumption details. Can be empty or null if not available.",
+                "examples": [
+                  "Uber: From Fuxing North Road to Minquan East Road",
+                  "Restaurant name",
+                  null
+                ]
+              },
+              "amount": {
+                "type": "number",
+                "description": "Transaction amount. For USD, keep two decimal places (e.g., 50.12); for TWD, use integers (e.g., 550).",
+                "examples": [
+                  50.12,
+                  550
+                ]
+              },
+              "category": {
+                "type": "string",
+                "description": "Transaction category",
+                "enum": [
+                  "Food & Beverage",
+                  "Transportation",
+                  "Daily Necessities",
+                  "Housing",
+                  "Electronics",
+                  "Beauty & Hair",
+                  "Clothing & Accessories",
+                  "Healthcare",
+                  "Pets",
+                  "Education",
+                  "Entertainment",
+                  "Cloud Services",
+                  "Automotive",
+                  "Gifts",
+                  "Family Support",
+                  "Counseling",
+                  "Insurance",
+                  "Taxes",
+                  "Transfer Fee",
+                  "Music",
+                  "Fitness",
+                  "Travel",
+                  "Lending",
+                  "Donations",
+                  "Advertising",
+                  "Finance"
+                ],
+                "examples": [
+                  "Food & Beverage",
+                  "Transportation"
+                ]
+              },
+              "currency": {
+                "type": "string",
+                "description": "Currency code used for the transaction, if amount starts with NT$, currency is TWD.",
+                "enum": [
+                  "TWD",
+                  "USD",
+                  "JPY",
+                  "EUR",
+                  "SGD"
+                ],
+                "examples": [
+                  "USD",
+                  "TWD"
+                ]
+              }
+            },
+            "required": [
+              "date",
+              "amount",
+              "category",
+              "currency"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Send1",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "columns": {
+          "value": {
+            "date": {
+              "expression": "{{ record.output.date }}"
+            },
+            "amount": {
+              "expression": "{{ record.output.amount }}"
+            },
+            "source": "n8n",
+            "details": {
+              "expression": "{{ record.output.details }}"
+            },
+            "payment": {
+              "expression": ""
+            },
+            "service": {
+              "expression": "{{ record.output.service }}"
+            },
+            "category": {
+              "expression": "{{ record.output.category }}"
+            },
+            "currency": {
+              "expression": "{{ record.output.currency }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "service",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "details",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "amount",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "currency",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "payment",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "source",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "append",
+        "sheetName": {
+          "configuration_input": "step-18-sheetname"
+        },
+        "documentId": {
+          "configuration_input": "step-18-documentid"
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Extract details1",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Email Date: {{ record.email_date }}\nEmail Subject: {{ record.email_subject }}\nEmail Content:\n{{ record.email_content }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "Please analyze the following email to extract transaction details for bookkeeping purposes.\n\nPlease extract relevant transaction details such as transaction date, amount, merchant name, and any other pertinent information, and provide them in a structured format suitable for accounting records."
+              }
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-21",
+      "label": "Extract details",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Email Date: {{ record.email_date }}\nEmail Subject: {{ record.email_subject }}\nEmail Content:\n{{ record.email_content }}\nEmail Source: {{ record.email_type }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "Please analyze the following email to extract transaction details for bookkeeping purposes. The \"Email Source\" field indicates the origin of the email, where 0 represents Cathay Bank card statements and 1 represents other credit card statements.\n\nPlease extract relevant transaction details such as transaction date, amount, merchant name, and any other pertinent information, and provide them in a structured format suitable for accounting records."
+              }
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-12",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-19",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-19",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-21",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-21",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-options-password",
+      "purpose": "Configure password in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-4-options-password",
+      "purpose": "Configure password in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-9-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-conditions-0-rightvalue",
+      "purpose": "Provide the contact, recipient, or message content for rightValue.",
+      "required": true
+    },
+    {
+      "id": "step-18-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Extract spending history from gmail to google sheet.json",
+    "git_blob": "5a19eb29e8fdd294eca66fb9dc89d7c48a988f67",
+    "sha256": "86ea7d2a273330b0e2cd6f2528c33637cdebb51f28cbfc8cd9f84f56b8c6ed57",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Extract%20spending%20history%20from%20gmail%20to%20google%20sheet.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

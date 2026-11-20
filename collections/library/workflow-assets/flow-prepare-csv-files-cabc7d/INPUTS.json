@@ -1,0 +1,18 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-prepare-csv-files-cabc7d",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-model": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    }
+  }
+}

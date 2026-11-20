@@ -1,0 +1,238 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-audit-a-public-page-and-build-an-automation-acceptance-pack-067dbd",
+  "title": "Audit a Public Page and Build an Automation Acceptance Pack",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Run Workflow",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Set Target and Objective",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "targetUrl",
+              "value": {
+                "configuration_input": "step-2-assignments-0-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "objective",
+              "value": "Verify this public page before implementing an automation or integration.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Validate Public Target",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const config = records[0].json;\nconst rawTarget = String(config.targetUrl || '').trim();\nconst objective = String(config.objective || '').trim();\n\nif (!rawTarget) throw new Error('targetUrl is required');\nif (!objective) throw new Error('objective is required');\nif (objective.length > 500) throw new Error('objective must be 500 characters or fewer');\n\nlet target;\ntry {\n  target = new URL(rawTarget);\n} catch {\n  throw new Error('targetUrl must be a valid public HTTP or HTTPS URL');\n}\nif (!['http:', 'https:'].includes(target.protocol)) {\n  throw new Error('targetUrl must use HTTP or HTTPS');\n}\nconst hostname = target.hostname.toLowerCase();\nconst privateHost = hostname === 'localhost'\n  || hostname.endsWith('.local')\n  || hostname === '0.0.0.0'\n  || hostname === '127.0.0.1'\n  || hostname === '::1'\n  || /^10\\./.test(hostname)\n  || /^192\\.168\\./.test(hostname)\n  || /^169\\.254\\./.test(hostname)\n  || /^172\\.(1[6-9]|2\\d|3[01])\\./.test(hostname);\nif (privateHost) throw new Error('targetUrl must resolve to a public host');\n\nreturn [{ json: { targetUrl: target.toString(), objective } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Build Acceptance Pack",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": {
+                "configuration_input": "step-4-parameters-0-value"
+              }
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify({ url: record.targetUrl, mode: 'acceptance-pack', objective: record.objective }) }}"
+        },
+        "options": {
+          "timeout": 45000
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Summarize Evidence",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const report = records[0].json;\nconst readiness = report.readiness && typeof report.readiness === 'object' ? report.readiness : {};\nconst pack = report.acceptance_pack && typeof report.acceptance_pack === 'object' ? report.acceptance_pack : {};\nconst gate = pack.launch_gate && typeof pack.launch_gate === 'object' ? pack.launch_gate : {};\nconst score = Number(readiness.score || 0);\nconst riskFlags = Array.isArray(readiness.risk_flags) ? readiness.risk_flags : [];\nconst acceptanceTests = Array.isArray(pack.acceptance_tests) ? pack.acceptance_tests : [];\nconst backlog = Array.isArray(pack.prioritized_backlog) ? pack.prioritized_backlog : [];\nconst requiresAttention = gate.decision !== 'ready' || score < 80 || riskFlags.length > 0;\n\nreturn [{ json: {\n  targetUrl: report.target?.final_url || report.target?.requested_url || null,\n  objective: pack.objective || null,\n  readinessScore: score,\n  readinessGrade: readiness.grade || null,\n  launchDecision: gate.decision || 'unknown',\n  riskFlags,\n  acceptanceTestCount: acceptanceTests.length,\n  backlogCount: backlog.length,\n  requiresAttention,\n  acceptancePack: pack,\n  evidence: {\n    target: report.target || null,\n    page: report.page || null,\n    security: report.security_headers || null,\n    readiness\n  }\n} }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Needs Attention?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.requiresAttention }}"
+              },
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Mark Needs Review",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return records.map((item) => ({ json: { ...item.json, workflowDecision: 'NEEDS_REVIEW', nextStep: 'Work through the P0 and P1 backlog items, then rerun the preflight.' } }));",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Mark Ready to Implement",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return records.map((item) => ({ json: { ...item.json, workflowDecision: 'READY_TO_IMPLEMENT', nextStep: 'Use the acceptance tests as the implementation and launch checklist.' } }));",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://example.com"
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://automation-integration-preflight.p.rapidapi.com/rapidapi/analyze"
+    },
+    {
+      "id": "step-4-parameters-0-value",
+      "purpose": "Choose the value resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "devops/Audit a Public Page and Build an Automation Acceptance Pack.json",
+    "git_blob": "cb8d39aad0a60f9d4ced3ef90a336902a2d84d23",
+    "sha256": "22385fec1533199e631dad2cbe2c502c1c68bada624d6ace1baa5b4a2e46df7f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/devops/Audit%20a%20Public%20Page%20and%20Build%20an%20Automation%20Acceptance%20Pack.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

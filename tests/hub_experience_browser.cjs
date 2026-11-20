@@ -35,13 +35,14 @@ const catalog = JSON.parse(fs.readFileSync(path.join(site, 'public/catalog.json'
 const routes = new Map(catalog.routes.map(route => [route.id, route]));
 assert.deepEqual([...routes.keys()].sort(), ['cli', 'companion', 'desktop', 'doors', 'family', 'watch']);
 const report = { schema: 'muse-hub/experience-browser/v1', started_at: new Date().toISOString(), site, chrome: chromePath, node: process.version, require_journeys: flags.includes('--require-journeys'), harness_sha256: sha256(fs.readFileSync(__filename)), source_files: {}, checks: [], screenshots: [], errors: [], blocked_external_requests: [], requests: [] };
-for (const name of ['index.html', 'site.js', 'site.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json']) {
+for (const name of ['index.html', 'site.js', 'site.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json', 'planner-desktop.png', 'planner-mobile.png']) {
   const bytes = fs.readFileSync(path.join(site, name));
   report.source_files[name] = { bytes: bytes.length, sha256: sha256(bytes) };
 }
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const q = JSON.stringify;
 let chrome, socket, server, base, sequence = 0, loaded = 0, width = 1440;
+let catalogFault = null;
 const pending = new Map();
 let chromeLog = '';
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png' };
@@ -76,12 +77,19 @@ async function navigate(relative, enhanced = true) {
   assert(loaded > previous, 'Page load was not observed');
   await wait('document.readyState === "complete"');
   if (enhanced && new URL(target).pathname.includes('/public/')) await wait('document.body.classList.contains("directory-ready")');
+  if (enhanced && new URL(target).pathname.endsWith('/downloads.html')) await wait('document.body.classList.contains("downloads-ready")');
 }
 async function click(selector) {
   const element = 'document.querySelector(' + q(selector) + ')';
-  await evaluate(element + '.scrollIntoView({block:"center",inline:"center",behavior:"instant"})');
-  const box = await evaluate('(()=>{const e=' + element + ',r=e.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,visible:!!e.getClientRects().length};})()');
-  assert(box.visible, 'Click target is hidden: ' + selector);
+  let box;
+  for (let attempt = 0; attempt < 12; attempt++) {
+    await evaluate(element + '.scrollIntoView({block:"center",inline:"center",behavior:"instant"})');
+    await pause(45);
+    box = await evaluate('(()=>{const e=' + element + ',r=e.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2,top=document.elementFromPoint(x,y);return {x,y,width:r.width,height:r.height,viewportWidth:innerWidth,viewportHeight:innerHeight,visible:!!e.getClientRects().length,hit:!!top && (top===e || e.contains(top)),obscurer:top?.outerHTML?.slice(0,160) || null};})()');
+    assert(box.visible, 'Click target is hidden: ' + selector);
+    if (box.hit) break;
+  }
+  assert(box.hit, 'Click target did not become pointer-reachable: '+selector+' '+JSON.stringify(box));
   for (const type of ['mousePressed', 'mouseReleased']) await call('Input.dispatchMouseEvent', { type, x: box.x, y: box.y, button: 'left', clickCount: 1 });
 }
 async function key(name, modifiers = 0) {
@@ -122,6 +130,7 @@ async function check(name, run) {
   catch (error) { row.status = 'FAIL'; row.error = error.stack || String(error); await screenshot('failure-' + report.checks.length + '.png').catch(() => {}); }
   report.checks.push(row);
   console.log(row.status + ' ' + name);
+  if (row.error) console.error(row.error);
 }
 async function layout() {
   const result = await evaluate('({width:innerWidth,documentWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,brokenAria:[...document.querySelectorAll("[aria-labelledby],[aria-describedby],[aria-controls]")].flatMap(e=>["aria-labelledby","aria-describedby","aria-controls"].flatMap(a=>(e.getAttribute(a)||"").split(/\\s+/).filter(Boolean).filter(id=>!document.getElementById(id)).map(id=>({element:e.id||e.tagName,attribute:a,id}))))})');
@@ -141,7 +150,13 @@ async function start() {
       if (fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
       file = fs.realpathSync(file);
       assert(contained(site, file) && fs.statSync(file).isFile());
-      const bytes = fs.readFileSync(file);
+      let bytes = fs.readFileSync(file);
+      if (pathname === '/downloads.json' && catalogFault) {
+        if (catalogFault === 'unavailable') { response.writeHead(503); response.end('Temporarily unavailable'); return; }
+        const changed = JSON.parse(bytes);
+        changed.items[0].url = 'https://example.invalid/redirected.zip';
+        bytes = Buffer.from(JSON.stringify(changed));
+      }
       report.requests.push({ path: path.relative(site, file).replaceAll(path.sep, '/'), sha256: sha256(bytes) });
       response.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Content-Length': bytes.length, 'Cache-Control': 'no-store' });
       response.end(request.method === 'HEAD' ? undefined : bytes);
@@ -190,10 +205,12 @@ async function start() {
       const { requestId, request } = message.params;
       const allowed = request.url.startsWith(base);
       if (!allowed) report.blocked_external_requests.push(request.url);
-      call(allowed ? 'Fetch.continueRequest' : 'Fetch.failRequest', allowed ? { requestId } : { requestId, errorReason: 'BlockedByClient' }).catch(error => report.errors.push({ kind: 'request', message: error.message }));
+      call(allowed ? 'Fetch.continueRequest' : 'Fetch.failRequest', allowed ? { requestId } : { requestId, errorReason: 'BlockedByClient' }).catch(error => report.errors.push({ kind: 'request', url: request.url, message: error.message }));
     }
   });
   await call('Page.enable'); await call('Runtime.enable');
+  // A headless window otherwise lacks OS focus even when its input is active.
+  await call('Emulation.setFocusEmulationEnabled', { enabled: true });
   await call('Fetch.enable', { patterns: [{ urlPattern: '*' }] });
   await call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   await resize(1440);
@@ -204,28 +221,74 @@ async function runChecks() {
   await check('download inventory, specialist filters and shareable search', async () => {
     await navigate('downloads.html');
     const links = await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
-    assert.equal(links.length, downloads.items.length);
-    assert.deepEqual(new Set(links), new Set(downloads.items.map(item => item.url)));
-    const sample = downloads.items.find(row => row.kind === 'skill' && row.roles.includes('software-engineer'));
+    assert.equal(links.length, Math.min(60, downloads.items.length));
+    assert.deepEqual(links, downloads.items.slice(0,60).map(item => item.url));
+    assert.equal(await evaluate('Number(document.querySelector("#download-results").dataset.catalogSize)'), downloads.items.length);
+    const sample = downloads.items.slice(60).findLast(row => row.kind === 'skill' && row.roles.includes('software-engineer'));
     assert(sample, 'Software engineering skill must be discoverable');
     await navigate('downloads.html?type=skill&role=software-engineer&q=' + encodeURIComponent(sample.id));
-    const visible = await evaluate('[...document.querySelectorAll(".download-card:not([hidden]) a[aria-label]")].map(a=>a.href)');
-    assert(visible.includes(sample.url));
-    assert(visible.every(url => downloads.items.find(row => row.url === url).roles.includes('software-engineer')));
+    const visible = await evaluate('[...document.querySelectorAll(".download-card:not([hidden])")].map(card=>({id:card.dataset.id,kind:card.dataset.kind,url:card.querySelector("a[aria-label]").href}))');
+    assert(visible.some(item => item.id === sample.id && item.url === sample.url));
+    assert(visible.every(item => downloads.items.find(row => row.id === item.id && row.kind === item.kind).roles.includes('software-engineer')));
     await type('#download-search', 'no-matching-download-39715');
     assert.equal(await evaluate('document.querySelector("#download-empty").hidden'), false);
     await click('#download-clear-empty');
-    assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), downloads.items.length);
+    assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(60, downloads.items.length));
     assert.equal(new URL(await evaluate('location.href')).searchParams.has('role'), false);
-    return {individual_downloads:links.length, specialist_search:true, empty_state_reset:true};
+    return {searchable_resources:downloads.items.length, rendered_cards:links.length, specialist_search:true, empty_state_reset:true};
   });
   await check('invalid download filters recover without reflected markup', async () => {
     for (const query of ['type=bad&role=bad', 'type=skill&type=workflow', 'role=%3Cimg%20src=x%3E', 'q='+'x'.repeat(3000)]) {
       await navigate('downloads.html?' + query);
-      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), downloads.items.length);
+      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(60, downloads.items.length));
       assert.equal(await evaluate('document.querySelectorAll("#download-role img").length'), 0);
     }
     return {invalid_queries:4};
+  });
+  await check('download pagination has distinct results and shareable history', async () => {
+    await navigate('downloads.html?type=skill');
+    const visibleIds=() => evaluate('[...document.querySelectorAll(".download-card:not([hidden])")].map(card=>card.dataset.id)');
+    const first=await visibleIds();
+    assert.equal(first.length,60);
+    await click('#download-next');
+    await wait('new URL(location.href).searchParams.get("page") === "2" && document.querySelector("#download-page-label").textContent.startsWith("Page 2")', 'second page URL and rendered state settled');
+    const second=await visibleIds();
+    assert.equal(second.length,60);
+    assert(second.every(id=>!first.includes(id)));
+    assert.equal(new URL(await evaluate('location.href')).searchParams.get('page'),'2');
+    await navigate(await evaluate('location.href'));
+    assert.deepEqual(await visibleIds(),second);
+    await click('#download-previous');
+    await wait('new URL(location.href).searchParams.has("page") === false && document.querySelector("#download-previous").disabled', 'previous-page URL and controls settled');
+    assert.deepEqual(await visibleIds(),first);
+    await type('#download-search','no-matching-page-92574');
+    assert.equal(await evaluate('document.querySelector("#download-pages").hidden'),true);
+    await click('#download-clear-empty');
+    assert.equal(await evaluate('document.querySelector("#download-previous").disabled'),true);
+    await navigate('downloads.html?entry=skills#skills');
+    assert.equal(await evaluate('document.querySelector("#download-kind").value'),'skill');
+    await click('#download-reset');
+    const cleared = await evaluate('location.href');
+    assert.equal(new URL(cleared).hash,'');
+    await navigate(cleared);
+    assert.equal(await evaluate('document.querySelector("#download-kind").value'),'all');
+    return {page_size:60, distinct_pages:true, shareable_page:true, filter_resets_page:true};
+  });
+  await check('unavailable or invalid catalog retains safe downloads and subject navigation', async () => {
+    try {
+      for (const fault of ['unavailable','redirected-entry']) {
+        catalogFault = fault;
+        await navigate('downloads.html',false);
+        await wait('document.body.classList.contains("downloads-fallback")');
+        assert.equal(await evaluate('document.querySelector("#download-results").hasAttribute("aria-busy")'),false);
+        assert.equal(await evaluate('document.querySelector("#download-search").disabled'),true);
+        assert.equal(await evaluate('document.querySelector(".catalog-subjects").open'),true);
+        const links=await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
+        assert.deepEqual(links,downloads.items.slice(0,60).map(row=>row.url));
+        await layout();
+      }
+    } finally { catalogFault = null; }
+    return {unavailable_fallback:true, redirected_entry_refused:true, initial_downloads_preserved:true};
   });
   await check('all resources without a route', async () => { await navigate('public/index.html'); return assertRoute(null); });
   for (const id of routes.keys()) await check('shareable route: ' + id, async () => {
@@ -293,25 +356,104 @@ async function runChecks() {
     await click('#clear-empty'); await assertRoute(null); assert.equal((await state()).search, ''); assert.equal((await state()).category, '');
     return { local_filters_survive_route_history: true, enter_did_not_navigate: true, empty_state_reset: true };
   });
-  await check('homepage journey links resolve to real routes', async () => {
+  await check('homepage task journeys reach real Spaces, downloads and all resource routes', async () => {
     await navigate('');
-    let journeys = null;
+    const journeys = await evaluate('({paths:[...document.querySelectorAll(".premium-path-grid > a.premium-path-card")].map(a=>({href:a.getAttribute("href"),visible:!!a.getClientRects().length})),spaces:[...document.querySelectorAll(".premium-space-card a[href]")].map(a=>a.href),directory:[...document.querySelectorAll("a[href]")].some(a=>a.getAttribute("href")==="public/index.html")})');
     if (report.require_journeys) {
-      journeys = await evaluate('({paths:[...document.querySelectorAll("nav[aria-label=\\"Explore Muse Hub\\"] a[href]")].map(a=>({hash:new URL(a.href).hash,exists:!!document.getElementById(new URL(a.href).hash.slice(1)),visible:!!a.getClientRects().length})),guides:[...document.querySelectorAll("#roadmap a[href]")].map(a=>new URL(a.href).pathname.split("/").pop())})');
-      assert.deepEqual(journeys.paths.map(item => item.hash), ['#explore-muse', '#specialists', '#connect-automate', '#companion-spaces', '#computer-devices', '#explore']);
-      assert(journeys.paths.every(item => item.exists && item.visible), 'All six discovery paths must have visible links and real sections');
-      for (const guide of ['ORGANIZE_YOUR_DAY.md', 'BUILD_AND_AUTOMATE.md', 'CREATE_SOMETHING.md']) assert(journeys.guides.includes(guide), 'Missing user journey guide: ' + guide);
+      assert.deepEqual(journeys.paths.map(link => link.href), ['#companion-spaces', '#specialists', 'downloads.html']);
+      assert(journeys.paths.every(link => link.visible), 'All three task paths must be visible');
+      for (const href of journeys.paths.map(link => link.href).filter(href => href.startsWith('#'))) {
+        assert(await evaluate('Boolean(document.getElementById(' + q(href.slice(1)) + '))'), 'Task path anchor is missing: ' + href);
+      }
+      for (const guide of ['MUSE_PLANNER.md', 'TASK_BOARD.md', 'DAILY_DESK.md']) {
+        assert(journeys.spaces.some(href => href.endsWith('/docs/spaces/' + guide)), 'Featured Space guide link missing: ' + guide);
+        assert(fs.statSync(path.join(repo, 'docs/spaces', guide)).isFile(), 'Featured Space guide source missing: ' + guide);
+      }
+      assert(journeys.directory, 'Homepage must provide a direct link to the searchable resource directory');
     }
-    const links = await evaluate('[...document.querySelectorAll("a[href]")].map(a=>({href:a.href,text:a.textContent.trim()})).filter(a=>{const u=new URL(a.href);return u.origin===location.origin && u.pathname.includes("/public/") && u.searchParams.has("route")})');
-    if (report.require_journeys) assert.deepEqual([...new Set(links.map(link => new URL(link.href).searchParams.get('route')))].sort(), [...routes.keys()].sort(), 'Homepage must expose all six resource routes');
-    for (const href of [...new Set(links.map(link => link.href))]) {
-      const url = new URL(href); const ids = url.searchParams.getAll('route');
-      assert(ids.length === 1 && routes.has(ids[0]), 'Homepage has an invalid route link');
-      await navigate(url.href); await assertRoute(ids[0]);
+    await navigate('downloads.html');
+    assert(await evaluate('Boolean(document.getElementById("download-search"))'), 'Downloads page must provide search');
+    await navigate('public/index.html');
+    await assertRoute(null);
+    for (const id of routes.keys()) {
+      await navigate('public/index.html?route=' + id + '#browse-results');
+      await assertRoute(id);
     }
-    return { route_links: links, journeys };
+    return { paths: journeys.paths, featured_space_guides: journeys.spaces.length, directory_link: journeys.directory, resource_routes: [...routes.keys()] };
   });
-  for (const viewport of [320, 375, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
+  await check('authentic Planner capture and direct specialist search on mobile', async () => {
+    await resize(375);
+    await navigate('index.html#specialists');
+    const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img");const field=document.getElementById("role-search");return {loaded:!!img&&img.complete&&img.naturalWidth>0,mobile:!!img&&new URL(img.currentSrc).pathname.endsWith("/planner-mobile.png"),searchVisible:!!field&&!!field.getClientRects().length,searchOutside:!!field&&!field.closest("details"),directory:document.querySelector(".specialist-directory").open}})()');
+    assert(proof.loaded && proof.mobile && proof.searchVisible && proof.searchOutside && proof.directory, JSON.stringify(proof));
+    const ring = await evaluate('(()=>{const field=document.getElementById("role-search");field.focus();const css=getComputedStyle(field);return {focused:document.activeElement === field,color:css.borderTopColor,style:css.borderTopStyle,width:parseFloat(css.borderTopWidth)}})()');
+    assert.equal(ring.color, 'rgb(22, 22, 22)', 'Search focus indicator must contrast against the cream panel');
+    assert(ring.focused && ring.style === 'solid' && ring.width >= 2, JSON.stringify(ring));
+    await type('#role-search', 'software engineer');
+    const narrowed = await evaluate('document.querySelectorAll(".role-card:not([hidden])").length');
+    assert(narrowed>=1 && narrowed<15,narrowed);
+    await type('#role-search', 'no-such-specialist-123456');
+    assert(await evaluate('!document.getElementById("role-empty").hidden && document.querySelectorAll(".role-card:not([hidden])").length===0'));
+    await click('#role-empty-clear');
+    assert(await evaluate('document.getElementById("role-search").value==="" && document.querySelectorAll(".role-card:not([hidden])").length===15'));
+    await navigate('index.html?role=software-engineer#setup');
+    assert(await evaluate('document.querySelector(".setup-disclosure").open && document.getElementById("setup-role-select").value==="software-engineer"'));
+    return {real_capture:true,mobile_preview:true,search_direct:true,filters:true,clear_empty:true,deep_link:true};
+  });
+  await check('authentic Planner captures remain inspectable on phone and desktop', async () => {
+    const observations = [];
+    for (const viewport of [320, 390, 768, 1024, 1440]) {
+      // Set the size away from the showcase before a fresh load so resizing
+      // the old page cannot cancel a pending responsive image request.
+      await navigate('public/index.html');
+      await resize(viewport); await navigate('index.html');
+      const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img"),peek=document.querySelector(".premium-mobile-peek"),links=[...document.querySelectorAll(".premium-capture-inspect a")];return {loaded:img.complete&&img.naturalWidth>0,source:new URL(img.currentSrc).pathname,rect:{width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height,top:img.getBoundingClientRect().top},height:innerHeight,peekVisible:getComputedStyle(peek).display!=="none",links:links.map(a=>a.getAttribute("href")),scrollWidth:document.documentElement.scrollWidth}})()');
+      assert(proof.loaded, 'Planner capture failed to load: ' + viewport);
+      assert(proof.source.endsWith(viewport <= 690 ? '/planner-mobile.png' : '/planner-desktop.png'), JSON.stringify(proof));
+      assert(proof.rect.width >= (viewport <= 690 ? viewport * .75 : Math.min(500,viewport * .55)) && proof.rect.height >= (viewport <= 690 ? 280 : 330), JSON.stringify(proof));
+      assert(proof.rect.top + 200 <= proof.height, 'Planner needs a useful first-screen preview: ' + viewport);
+      assert(Math.abs(proof.rect.width / proof.rect.height - (viewport <= 690 ? 390 / 490 : 980 / 745)) < .015,
+        'Planner capture must keep its original aspect ratio');
+      assert.equal(proof.peekVisible, viewport > 690, 'Dual-device evidence mode differs from viewport');
+      assert.deepEqual(proof.links, ['planner-desktop.png', 'planner-mobile.png']);
+      for (const name of proof.links) assert(fs.statSync(path.join(site, name)).isFile(), name);
+      assert(proof.scrollWidth <= viewport + 1, 'Showcase caused horizontal overflow');
+      observations.push({viewport, ...proof});
+    }
+    return observations;
+  });
+  await check('outcome shortcuts expose real specialist cards with keyboard focus', async () => {
+    await resize(390); await navigate('index.html');
+    await call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    assert(await evaluate('getComputedStyle(document.querySelector(".role-quickpick-button")).transitionDuration === "0s"'));
+    await evaluate('document.querySelector("[data-suggest-role=claims-adjudicator]").focus()');
+    await key('Enter');
+    const first = await evaluate('({open:document.querySelector(".specialist-directory").open,visible:[...document.querySelectorAll(".role-card:not([hidden])")].map(c=>c.dataset.role),search:document.getElementById("role-search").value,count:document.getElementById("role-count").textContent,pressed:document.querySelector("[data-suggest-role=claims-adjudicator]").getAttribute("aria-pressed"),label:document.getElementById("role-directory-label").textContent,focus:document.activeElement?.dataset?.role})');
+    assert(first.open && first.search === 'Claims Adjudicator' && first.count === 'Showing 1 of 15 specialists' && first.label === 'View 1 matching specialist' && first.pressed === 'true',JSON.stringify(first));
+    assert.deepEqual(first.visible,['claims-adjudicator']);
+    assert.equal(first.focus,'claims-adjudicator');
+    await screenshot('specialist-quickpick-390.png');
+    await click('[data-suggest-role="product-interface-designer"]');
+    const second = await evaluate('({visible:[...document.querySelectorAll(".role-card:not([hidden])")].map(c=>c.dataset.role),pressed:[...document.querySelectorAll("[data-suggest-role][aria-pressed=true]")].map(b=>b.dataset.suggestRole),focused:document.activeElement?.dataset?.role})');
+    assert.deepEqual(second.visible,['product-interface-designer']);
+    assert.deepEqual(second.pressed,['product-interface-designer']);
+    assert.equal(second.focused,'product-interface-designer');
+    await click('[data-suggest-role="product-interface-designer"]');
+    assert(await evaluate('document.querySelectorAll(".role-card:not([hidden])").length === 15'));
+    for (const id of ['software-engineer', 'coordinator']) {
+      await click('[data-suggest-role="' + id + '"]');
+      assert.deepEqual(await evaluate('[...document.querySelectorAll(".role-card:not([hidden])")].map(card => card.dataset.role)'), [id]);
+    }
+    await evaluate('document.getElementById("role-search").focus()');
+    await key('Escape');
+    assert(await evaluate('document.getElementById("role-search").value === "" && document.querySelectorAll(".role-card:not([hidden])").length === 15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
+    await click('[data-suggest-role="coordinator"]');
+    await click('#role-reset');
+    await call('Emulation.setEmulatedMedia', { features: [] });
+    assert(await evaluate('document.getElementById("role-search").value==="" && [...document.querySelectorAll(".role-card:not([hidden])")].length===15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
+    return {first,second,reset:true};
+  });
+  for (const viewport of [320, 375, 390, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
@@ -346,13 +488,36 @@ async function runChecks() {
       return { visible_project_links: links.length };
     } finally { await call('Emulation.setScriptExecutionDisabled', { value: false }); }
   });
+  await check('specialist kits remain reachable without JavaScript', async () => {
+    await resize(390);
+    await call('Emulation.setScriptExecutionDisabled', { value: true });
+    try {
+      await navigate('index.html#specialists', false);
+      assert(await evaluate('document.querySelector(".specialist-search-panel").hidden'));
+      await click('.specialist-directory summary');
+      const kits = await evaluate('[...document.querySelectorAll(".role-card-download")].filter(a => a.getClientRects().length).length');
+      assert.equal(kits, 15);
+      return { accessible_downloads: kits };
+    } finally { await call('Emulation.setScriptExecutionDisabled', { value: false }); }
+  });
   await check('downloads remain usable without JavaScript', async () => {
     await call('Emulation.setScriptExecutionDisabled', { value: true });
     try {
       await navigate('downloads.html?role=software-engineer', false);
-      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden]) a[aria-label]").length'), downloads.items.length);
+      const initial=await evaluate('document.querySelectorAll(".download-card:not([hidden]) a[aria-label]").length');
+      assert.equal(initial,Math.min(60,downloads.items.length));
+      await click('.catalog-subjects summary');
+      const subjects=await evaluate('[...document.querySelectorAll("nav[aria-label=\\"Subject library\\"] a")].map(a=>({href:a.href,visible:!!a.getClientRects().length}))');
+      const expectedSubjects=fs.readdirSync(path.join(site,'library')).filter(name=>name.endsWith('.html')).map(name=>new URL('library/'+name,base).href);
+      assert.deepEqual(new Set(subjects.map(row=>row.href)),new Set(expectedSubjects));
+      assert(subjects.every(row=>row.visible));
       await layout();
-      return {visible_downloads:downloads.items.length};
+      await navigate(subjects[0].href,false);
+      const subjectDownloads=await evaluate('[...document.querySelectorAll(".download-card a")].map(a=>a.href).filter(href=>href.includes("/releases/download/"))');
+      assert(subjectDownloads.length>0 && subjectDownloads.length<=200);
+      assert(subjectDownloads.every(href=>downloads.items.some(row=>row.url===href)));
+      await layout();
+      return {initial_downloads:initial, linked_subject_pages:subjects.length, subject_downloads:subjectDownloads.length};
     } finally { await call('Emulation.setScriptExecutionDisabled', { value:false }); }
   });
 }

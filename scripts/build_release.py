@@ -1,13 +1,16 @@
 """Build complete Muse specialist, skill, workflow and starter downloads."""
 from __future__ import annotations
 import argparse, hashlib, importlib.util, io, json, re, subprocess, sys, zipfile
+from collections import defaultdict
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from muse_presets.catalog import load_preset, load_registry
 from muse_presets.playbooks import load_playbook, render_playbook
+from muse_presets.product_copy import FIRST_TASKS
 from muse_presets.standalone_pack import standalone_files
 from muse_presets import portable_skill_export
+from muse_presets import planner_package
 
 def _module(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -17,8 +20,12 @@ def _module(name, path):
 
 collection = _module("release_collection", ROOT / "tools/muse_collection.py")
 legacy = _module("release_source_checks", ROOT / "scripts/build_v1_release.py")
-REPOSITORY = "https://github.com/atlas-origins/muse-ai-agent-presets"
-DEFAULT_VERSION = "v1.5.0"
+connector_catalog = _module("release_connectors", ROOT / "scripts/connector_catalog.py")
+REPOSITORY = "https://github.com/Atlas-Agents-Hub/muse-hub"
+DEFAULT_VERSION = json.loads((ROOT / 'presets/catalog.json').read_bytes())['release']
+SKILLS_PER_PACK = 40
+INDIVIDUAL_SKILL_LIMIT = 600
+MAX_RELEASE_ASSETS = 1000
 ALIASES = {"data-engineering-architect":"data-engineer",
            "infrastructure-reliability-engineer":"reliability-engineer"}
 ROLE_WORKFLOWS = {
@@ -47,7 +54,7 @@ root = Path(__file__).resolve().parent
 try:
     manifest = json.loads((root / 'MANIFEST.json').read_bytes())
     members = manifest['files']
-    if not isinstance(members,dict) or not 1 <= len(members) <= 12000:
+    if not isinstance(members,dict) or not 1 <= len(members) <= 60000:
         raise ValueError('INVALID_FILE_ROSTER')
     seen = set()
     for name, expected in members.items():
@@ -89,6 +96,9 @@ def specialist_asset(role,version):
     if role not in ROLE_WORKFLOWS: raise ValueError("UNKNOWN_SPECIALIST")
     return "muse-"+ALIASES.get(role,role)+"-"+_version(version)+".zip"
 
+def planner_asset(version=DEFAULT_VERSION):
+    return 'muse-space-planner-' + _version(version) + '.zip'
+
 def _seal(files,kind,identity,version,**details):
     result=dict(files)
     if "MANIFEST.json" in result: raise ValueError("OUTER_MANIFEST_COLLISION")
@@ -128,6 +138,11 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
         {gid for key in workflows for gid in flow_index[key].get('tool_guides',[])})
     files.update(tool_guides.package_files(guides,ids=guide_ids))
     files.update({"assistant/"+name:raw for name,raw in standalone_files(role).items()})
+    files.update(connector_catalog.specialist_package_files(role))
+    spaces = ['planner'] if role in planner_package.ROLES else []
+    if spaces:
+        files.update(planner_package.package_files(ROOT))
+    connectors=json.loads(files['connectors/catalog.json'])['connectors']
     selected=sorted(name.split("/")[1] for name in files
                     if name.startswith("skills/") and name.endswith("/SKILL.md"))
     title=preset["title"]
@@ -144,12 +159,27 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
     profile+="\n## First task\n\nRead [FIRST_TASK.md](FIRST_TASK.md), or start with your current request.\n"
     if guide_ids:
         profile+="\n## Recommended tools\n\nRead [the tool guides](TOOL_GUIDES.md) for setup, practical recipes and result checks.\n"
+    profile+="\n## Connect your services\n\nUse [the connector directory](CONNECTORS.md) for the "+str(len(connectors))+" services selected for this specialist.\n"
+    planner_note=("\n## Plan in your Muse Space\n\n"
+        "Open [Muse Planner](spaces/planner/README.md) to set up a saved workspace for "
+        "projects, next actions, routines, reference notes and your weekly review. "
+        "The complete app is in `spaces/planner/`; its guide covers Muse Space setup, "
+        "Bun, the host SDK, calendar settings and portable backups.\n") if spaces else ''
+    profile+=planner_note
+    if spaces:
+        files['AGENTS.md']+=planner_note.encode('utf-8')
     files["PROFILE.md"]=profile.encode()
     files["ROLE_PLAYBOOK.md"]=render_playbook(book,display_name=title,role_title=title).encode()
-    first=book["first_canary"]
-    files["FIRST_TASK.md"]=("# Try "+title+"\n\n"+first["task"]+"\n\n## Expected result\n\n"+
-        first["observable_result"]+"\n\n## Check an edge case\n\n"+first["negative_test"]+"\n").encode()
+    files["FIRST_TASK.md"]=("# Try "+title+"\n\n"+FIRST_TASKS[role]+
+        "\n\n## Choose a method\n\nOpen [PROFILE.md](PROFILE.md) and select the skill or workflow that fits your task. "
+        "Bring its requested inputs, follow the method, and check the result against its expected outputs.\n\n"
+        "## Keep the result\n\nSave the finished work with your project, including useful source links, "
+        "calculations or checks. Record the next action so you can resume easily.\n\n"
+        "[Working methods and examples](ROLE_PLAYBOOK.md) · [Service connectors](CONNECTORS.md)\n").encode()
+    if spaces:
+        files['FIRST_TASK.md']+=planner_note.encode('utf-8')
     start=_use_text("Start with "+title,"PROFILE.md",files=files)
+    start+="\n## Connect your tools\n\nOpen [CONNECTORS.md](CONNECTORS.md) for service guides, action inputs and the included request helper.\n"
     start+=("\n## Use the host-format components\n\n"
         "- Profile documents: assistant/system-profile/profile/.\n"
         "- Scoped task contexts: assistant/subchat-scopes/subchats/.\n"
@@ -158,10 +188,33 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
         "Keep the extracted package separate from the live assistant home. Review changes "
         "before importing; preserve existing identity, memory and preference files. "
         "For the current task, Muse can read AGENTS.md, PROFILE.md and the selected skills directly.\n")
-    files["START_HERE.md"]=start.encode()
+    files["START_HERE.md"]=(start+planner_note).encode()
     files["SPECIALIST.json"]=_json({"id":role,"collection_id":alias,"title":title,"skills":selected,
-        "workflows":workflows,"methods":[m["id"] for m in book["methods"]],"tool_guides":guide_ids})
-    return _seal(files,"specialist",role,version,skills=selected,workflows=workflows)
+        "workflows":workflows,"methods":[m["id"] for m in book["methods"]],"tool_guides":guide_ids,
+        "connectors":[row['id'] for row in connectors],"spaces":spaces})
+    return _seal(files,"specialist",role,version,skills=selected,workflows=workflows,spaces=spaces)
+
+def planner_files(version=DEFAULT_VERSION):
+    files = planner_package.package_files(ROOT)
+    files['START_HERE.md'] = ("# Muse Planner\n\n"
+        "Turn ideas into projects, choose the next action, and keep your routines and notes "
+        "together in a persistent Muse Space.\n\n"
+        "1. Extract this ZIP into its own folder.\n"
+        "2. Open [the Planner setup guide](spaces/planner/README.md) and give Muse the "
+        "complete `spaces/planner/` folder.\n"
+        "3. Create a TypeScript Space, prepare its host SDK, install the locked dependencies "
+        "with Bun, and build it using the guide.\n"
+        "4. Capture an inbox item, create a project and next action, then reopen the Space "
+        "and export your first backup.\n\n"
+        "The same app is included with Coordinator and Personal Companion. "
+        "Use it with your existing Muse assistant to plan a project or review the week.\n\n"
+        "## Check the downloaded files\n\n"
+        "With Python 3.10 or newer, run from the extracted folder:\n\n"
+        "    python -B VERIFY.py\n").encode('utf-8')
+    return _seal(files, 'space', 'planner', version,
+        entry=planner_package.PACKAGE_PATH+'/README.md',
+        source_files=planner_package.SOURCE_FILE_COUNT,
+        specialists=list(planner_package.ROLES))
 
 def skill_files(data,identity,version=DEFAULT_VERSION):
     entry=next((s for s in data["skills"] if s["id"]==identity),None)
@@ -173,6 +226,65 @@ def skill_files(data,identity,version=DEFAULT_VERSION):
         "/SKILL.md) for this task"+detail+". "
         "Keep the existing assistant preferences, memory and tool permissions.\n").encode()
     return _seal(files,"developed-skill",identity,version,skills=[identity])
+
+
+def skill_download_layout(data, version=DEFAULT_VERSION):
+    """Give each skill a stable entry point while keeping large releases bounded.
+
+    Small catalogs retain their individual ZIPs. Larger catalogs retain the
+    original authored-skill ZIPs and group portable skills by subject and ID.
+    Both the website and the release builder consume this exact mapping.
+    """
+    _version(version)
+    rows = data['skills']
+    if not isinstance(rows, list) or not rows:
+        raise ValueError('SKILL_INVENTORY_REQUIRED')
+    by_id = {}
+    subjects = defaultdict(list)
+    layout = {}
+    grouped = len(rows) > INDIVIDUAL_SKILL_LIMIT
+    for row in rows:
+        identity, category = row['id'], row['category']
+        if (not isinstance(identity, str) or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', identity)
+                or not isinstance(category, str) or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', category)
+                or identity in by_id):
+            raise ValueError('INVALID_SKILL_DOWNLOAD_IDENTITY')
+        by_id[identity] = row
+        if grouped and row.get('format') == 'portable-skill':
+            subjects[category].append(identity)
+        else:
+            layout[identity] = {'asset': f'muse-skill-{identity}-{version}.zip',
+                'entry': f'skills/{identity}/SKILL.md', 'pack_id': identity,
+                'pack_title': row['title'], 'pack_size': 1, 'pack_kind': 'skill'}
+    for category, identities in sorted(subjects.items()):
+        identities.sort()
+        for start in range(0, len(identities), SKILLS_PER_PACK):
+            selected = identities[start:start + SKILLS_PER_PACK]
+            number = start // SKILLS_PER_PACK + 1
+            pack_id = f'{category}-{number:03d}'
+            title = category.replace('-', ' ').capitalize() + f' · Pack {number}'
+            for identity in selected:
+                layout[identity] = {'asset': f'muse-skills-{pack_id}-{version}.zip',
+                    'entry': f'skills/{identity}/SKILL.md', 'pack_id': pack_id,
+                    'pack_title': title, 'pack_size': len(selected), 'pack_kind': 'skill-pack'}
+    return dict(sorted(layout.items()))
+
+
+def skill_pack_files(data, identities, pack, version=DEFAULT_VERSION):
+    """Compose a subject pack with each skill's complete supporting files."""
+    by_id = {row['id']: row for row in data['skills']}
+    selected = sorted(identities)
+    if not selected or len(selected) > SKILLS_PER_PACK or len(set(selected)) != len(selected):
+        raise ValueError('INVALID_SKILL_PACK_SELECTION')
+    files = collection.instruction_files(data, selected, [])
+    links = '\n'.join('- [' + by_id[key]['title'] + '](skills/' + key + '/SKILL.md) — '
+                      + by_id[key]['trigger'] for key in selected)
+    index = '# ' + pack['pack_title'] + '\n\nChoose the method that fits your task.\n\n' + links + '\n'
+    files['SKILLS.md'] = index.encode('utf-8')
+    files['AGENTS.md'] = (index + '\nLoad only the selected skill and its supporting files for the current task. '
+                         'Keep the assistant\'s existing preferences and memory.\n').encode('utf-8')
+    files['START_HERE.md'] = _use_text(pack['pack_title'], 'SKILLS.md', files=files).encode('utf-8')
+    return _seal(files, 'skill-pack', pack['pack_id'], version, skills=selected)
 
 def workflow_files(data,identity,version=DEFAULT_VERSION):
     entry=next((w for w in data["workflows"] if w["id"]==identity),None)
@@ -195,7 +307,10 @@ def verify_archive(raw):
         return manifest
 
 def _zip(files):
-    raw=collection.build_file_map_bytes(files);verify_archive(raw);return raw
+    raw=collection.build_file_map_bytes(files,max_files=60000,
+        max_member_bytes=512_000_000,max_total_bytes=1_000_000_000)
+    verify_archive(raw)
+    return raw
 
 def _bundle(title,identity,members,version):
     files={"packages/"+name:raw for name,raw in members.items()}
@@ -208,8 +323,8 @@ def _bundle(title,identity,members,version):
 
 def compose_downloads(data,version=DEFAULT_VERSION):
     _version(version)
-    collection.validate(data)
-    if len(data['specialists'])!=15 or len(data['starters'])!=100:
+    data=collection.prepare_collection(data)
+    if len(data['specialists'])!=15 or len(data['starters'])<100:
         raise ValueError("COLLECTION_INVENTORY_MISMATCH")
     archives={};records={"specialists":[],"skills":[],"workflows":[],"tool-guides":[],"bundles":[]}
     groups={"specialists":{},"skills":{},"workflows":{},"starters":{},"tool-guides":{}}
@@ -220,7 +335,23 @@ def compose_downloads(data,version=DEFAULT_VERSION):
             "title":load_preset(role)["title"],"asset":name,"url":asset_url(name,version),
             "bytes":len(raw),"sha256":_sha(raw),"skills":len(manifest["skills"]),
             "workflows":len(manifest["workflows"])})
-    for category,rows,build in (("skills",data["skills"],skill_files),("workflows",data["workflows"],workflow_files)):
+    layout = skill_download_layout(data, version)
+    skill_by_id = {row['id']: row for row in data['skills']}
+    pack_members = defaultdict(list)
+    for identity, entry in layout.items():
+        pack_members[entry['asset']].append(identity)
+    for name, identities in sorted(pack_members.items()):
+        entry = layout[identities[0]]
+        files = (skill_files(data, identities[0], version) if entry['pack_kind'] == 'skill'
+                 else skill_pack_files(data, identities, entry, version))
+        raw = _zip(files)
+        archives[name] = groups['skills'][name] = raw
+        for identity in identities:
+            row = skill_by_id[identity]
+            records['skills'].append({'id': identity, 'title': row['title'], 'summary': row['trigger'],
+                **layout[identity], 'url': asset_url(name, version), 'bytes': len(raw), 'sha256': _sha(raw)})
+    records['skills'].sort(key=lambda row: row['id'])
+    for category,rows,build in (("workflows",data["workflows"],workflow_files),):
         kind="skill" if category=="skills" else "workflow"
         for row in rows:
             name="muse-"+kind+"-"+row["id"]+"-"+version+".zip";raw=_zip(build(data,row["id"],version))
@@ -255,6 +386,15 @@ def compose_downloads(data,version=DEFAULT_VERSION):
     archives[name]=raw
     records["bundles"].append({"id":"role-procedures-50","asset":name,"url":asset_url(name,version),
         "procedures":50,"bytes":len(raw),"sha256":_sha(raw)})
+    name=planner_asset(version);raw=_zip(planner_files(version))
+    archives[name]=raw
+    records['bundles'].append({'id':'space-planner','title':'Muse Planner',
+        'asset':name,'url':asset_url(name,version),'bytes':len(raw),'sha256':_sha(raw),
+        'entry':planner_package.PACKAGE_PATH+'/README.md',
+        'source_files':planner_package.SOURCE_FILE_COUNT,'specialists':list(planner_package.ROLES)})
+    # The source ZIP and six index/checksum files are added by build_release.
+    if len(archives) + 7 > MAX_RELEASE_ASSETS:
+        raise ValueError('RELEASE_ASSET_LIMIT_EXCEEDED')
     return archives,records
 
 def _source_archive(version,manifest):
@@ -271,13 +411,17 @@ def _source_archive(version,manifest):
     return proc.stdout
 
 def build_release(destination,expected_head,version=DEFAULT_VERSION):
-    _version(version);target=collection._safe_path(Path(destination))
+    _version(version)
+    if version != DEFAULT_VERSION:
+        raise ValueError("RELEASE_VERSION_MISMATCH")
+    target = collection._safe_path(Path(destination))
     if not target.is_absolute() or target.exists() or not target.parent.is_dir():
         raise ValueError("NEW_ABSOLUTE_OUTPUT_DIRECTORY_REQUIRED")
     if target.is_relative_to(ROOT): raise ValueError("RELEASE_OUTPUT_MUST_BE_OUTSIDE_SOURCE")
     state=legacy.verify_checkout(ROOT,expected_head)
     legacy._run(ROOT,[sys.executable,"-B","scripts/check_public.py"])
-    archives,records=compose_downloads(collection.load_collection(),version)
+    data=collection.load_collection()
+    archives,records=compose_downloads(data,version)
     toolkit="muse-specialist-toolkit-"+version+".zip"
     archives[toolkit]=_source_archive(version,json.loads((ROOT/"PUBLIC_SOURCE_MANIFEST.json").read_bytes()))
     records["bundles"].append({"id":"toolkit","asset":toolkit,"url":asset_url(toolkit,version),
@@ -308,7 +452,7 @@ def build_release(destination,expected_head,version=DEFAULT_VERSION):
     (target/"SHA256SUMS").write_text(sums,encoding="ascii",newline="\n")
     result={"status":"COMPLETE","version":version,"source":state,"zip_count":len(archives),
         "specialists":15,"developed_skills":len(records['skills']),"workflows":len(records['workflows']),
-        "tool_guides":len(records['tool-guides']),"starters_in_bundle":100,
+        "tool_guides":len(records['tool-guides']),"starters_in_bundle":len(data['starters']),
         "separate_role_procedures":50,"published":False,
         "artifacts":{n:{"bytes":len(b),"sha256":_sha(b)} for n,b in sorted(all_files.items())}}
     (target/"BUILD_RECEIPT.json").write_bytes(_json(result));marker.unlink()

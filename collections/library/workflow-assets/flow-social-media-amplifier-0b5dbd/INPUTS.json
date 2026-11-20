@@ -1,0 +1,46 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-social-media-amplifier-0b5dbd",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-url": null,
+    "step-8-base": null,
+    "step-8-table": null,
+    "step-10-base": null,
+    "step-10-table": null,
+    "step-11-base": null,
+    "step-11-table": null,
+    "step-12-base": null,
+    "step-12-table": null,
+    "step-17-modelid": null,
+    "step-18-chatid": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "linkedin": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    },
+    "twitter": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,597 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-qualifying-appointment-requests-with-ai-muse-forms-8634d0",
+  "title": "Qualifying Appointment Requests with AI & n8n Forms",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "n8n Form Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "schedule_appointment",
+        "options": {
+          "ignoreBots": true,
+          "appendAttribution": true,
+          "useWorkflowTimezone": true
+        },
+        "formTitle": "Schedule an Appointment",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Your Name",
+              "placeholder": "eg. Sam Smith",
+              "requiredField": true
+            },
+            {
+              "fieldType": "email",
+              "fieldLabel": "Email",
+              "placeholder": {
+                "configuration_input": "step-1-values-1-placeholder"
+              },
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Enquiry",
+              "placeholder": "eg. I'm looking for...",
+              "requiredField": true
+            }
+          ]
+        },
+        "formDescription": "Welcome to Jim's Appointment Form.\nBefore we set a date, please tell me a little about yourself and how I can help."
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Form End",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "formTitle": "Appointment Request Sent!"
+        },
+        "operation": "completion",
+        "completionTitle": "Appointment Request Sent!",
+        "completionMessage": {
+          "expression": "Thank you for submitting an appointment request. A confirmation of this request will be sent to your inbox. I'll get back to you shortly with a confirmation of the appointment.\n\nHere is the summary of the appointment request.\n\nName: {{ steps[\"step-4\"].record.name }}\nDate & Time: {{ DateTime.fromISO(steps[\"step-4\"].record.dateTime).format('EEE, dd MMM @ t') }}\nEnquiry: {{ steps[\"step-4\"].record.enquiry.trim() }}"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Enter Date & Time",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "formTitle": "Enter a Date & Time",
+          "formDescription": {
+            "expression": "Please select a date and time"
+          }
+        },
+        "defineForm": "json",
+        "jsonOutput": {
+          "expression": "{{\n[\n {\n \"fieldLabel\":\"Date\",\n \"requiredField\":true,\n \"fieldType\": \"dropdown\",\n \"fieldOptions\":\n Array(5).fill(0)\n .map((_,idx) => current_time.plus(idx+1, 'day'))\n .filter(d => !d.isWeekend)\n .map(d => ({ option: d.format('EEE, d MMM') }))\n },\n {\n \"fieldLabel\": \"Time\",\n \"requiredField\": true,\n \"fieldType\": \"dropdown\",\n \"fieldOptions\": [\n { \"option\": \"9:00 am\" },\n { \"option\": \"10:00 am\" },\n { \"option\": \"11:00 am\" },\n { \"option\": \"12:00 pm\" },\n { \"option\": \"1:00 pm\" },\n { \"option\": \"2:00 pm\" },\n { \"option\": \"3:00 pm\" },\n { \"option\": \"4:00 pm\" },\n { \"option\": \"5:00 pm\" },\n { \"option\": \"6:00 pm\" }\n ]\n }\n]\n}}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get Form Values",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{{\n{\n name: steps[\"step-1\"].records[0]['Your Name'],\n email: steps[\"step-1\"].records[0].Email,\n enquiry: steps[\"step-1\"].records[0].Enquiry,\n dateTime: DateTime.fromFormat(`${record.Date} ${record.Time}`, \"EEE, dd MMM t\"),\n submittedAt: steps[\"step-1\"].records[0].submittedAt,\n}\n}}"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Terms & Conditions",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "formTitle": "Before we continue...",
+          "formDescription": {
+            "expression": "Terms and Conditions for Booking an Appointment\n\nNon-Binding Nature of Discussions:\nAny information shared, discussed, or agreed upon during the call is non-binding and provisional. No agreement, service, or commitment shall be considered confirmed unless explicitly documented and agreed to in writing.\n\nProhibition of Recording and Note-Taking Tools:\nBy proceeding with the appointment, the user agrees not to use AI assistants, note-taking applications, recording devices, or any other technology to record or transcribe the conversation, whether manually or automatically. This is to ensure confidentiality and respect for the integrity of the discussion.\n\nConfirmation of Understanding:\nBy booking this appointment, you acknowledge and accept these terms and conditions in full."
+          }
+        },
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Please select",
+              "multiselect": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "I accept the terms and conditions"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Has Accepted?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              },
+              "leftValue": {
+                "expression": "{{ record[\"Please select\"] }}"
+              },
+              "rightValue": "I accept"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Send Receipt",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ steps[\"step-4\"].records[0].email }}"
+        },
+        "message": {
+          "expression": "<p>Dear {{ steps[\"step-4\"].records[0].name }},</p>\n<p>Thanks for requesting an appointment. We will review and get back to you shortly.</p>\n<p>Here is the summary of the request that was sent:</p>\n<p>\nName: {{ steps[\"step-4\"].records[0].name }}<br/>\nEmail: {{ steps[\"step-4\"].records[0].email }}<br/>\nEnquiry: {{ steps[\"step-4\"].records[0].enquiry }}<br/>\nSubmitted at: {{ steps[\"step-4\"].records[0].submittedAt }}\n</p>"
+        },
+        "options": {},
+        "subject": {
+          "expression": "Appointment Request Received for {{ DateTime.fromISO(steps[\"step-4\"].records[0].dateTime).format('EEE, dd MMM @ t') }}"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Wait for Approval",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "[configured contact]"
+        },
+        "message": {
+          "expression": "<h2>A new appointment request was submitted!</h2>\n<p>\nRequesting appointment date is <strong>{{ DateTime.fromISO(steps[\"step-17\"].record.dateTime).format('EEE, dd MMM @ t') }}</strong>.\n</p>\n<p>\nName: {{ steps[\"step-17\"].records[0].name }}<br/>\nEmail: {{ steps[\"step-17\"].records[0].email }}<br/>\nEnquiry Summary: {{ record.text }}<br/>\nSubmitted at: {{ steps[\"step-17\"].records[0].submittedAt }}\n</p>"
+        },
+        "subject": "New Appointment Request!",
+        "operation": "sendAndWait",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Confirm"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Has Approval?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.data.approved }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Create Appointment",
+      "operation": "service-read",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "end": {
+          "expression": "{{ DateTime.fromISO(steps[\"step-17\"].records[0].dateTime).plus(30, 'minute').toISO() }}"
+        },
+        "start": {
+          "expression": "{{ steps[\"step-17\"].records[0].dateTime }}"
+        },
+        "calendar": {
+          "configuration_input": "step-12-calendar"
+        },
+        "additionalFields": {
+          "summary": {
+            "expression": "Appointment Scheduled - {{ steps[\"step-17\"].record.name }} & Jim"
+          },
+          "attendees": [
+            {
+              "expression": "{{ steps[\"step-17\"].record.email }}"
+            }
+          ],
+          "description": {
+            "expression": "{{ steps[\"step-18\"].records[0].text }}\n\nOriginal message:\n> {{ steps[\"step-17\"].record.enquiry }}"
+          },
+          "conferenceDataUi": {
+            "conferenceDataValues": {
+              "conferenceSolution": "hangoutsMeet"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Send Rejection",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ steps[\"step-17\"].records[0].email }}"
+        },
+        "message": {
+          "expression": "<p>Dear {{ steps[\"step-17\"].records[0].name }},</p>\n<p>Unfortunately, we cannot schedule the requested appointment at the requested time.</p>\n<p>Kind regards</p>"
+        },
+        "options": {},
+        "subject": {
+          "expression": "Appointment Request Rejected for {{ DateTime.fromISO(steps[\"step-17\"].records[0].dateTime).format('EEE, dd MMM @ t') }}"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Decline",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "operation": "completion",
+        "completionTitle": "Send me a DM Instead!",
+        "completionMessage": {
+          "configuration_input": "step-14-completionmessage"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Decline1",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "operation": "completion",
+        "completionTitle": "Send me a DM Instead!",
+        "completionMessage": {
+          "configuration_input": "step-15-completionmessage"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Trigger Approval Process",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": false
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-18",
+      "label": "Summarise Enquiry",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "The enquiry is as follows:\n{{ steps[\"step-17\"].records[0].enquiry.substring(0, 500) }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Summarise the given enquiry"
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Enquiry Classifier",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "fallback": "other"
+        },
+        "inputText": {
+          "expression": "{{ record.Enquiry }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "relevant enquiry",
+              "description": "Enquire about AI, automation, digital products and product engineering."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-8",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-19",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-18",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-17"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-values-1-placeholder",
+      "purpose": "Provide the contact, recipient, or message content for placeholder.",
+      "required": true
+    },
+    {
+      "id": "step-12-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-completionmessage",
+      "purpose": "Provide the contact, recipient, or message content for completionMessage.",
+      "required": true
+    },
+    {
+      "id": "step-15-completionmessage",
+      "purpose": "Provide the contact, recipient, or message content for completionMessage.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Forms_and_Surveys/Qualifying Appointment Requests with AI & n8n Forms.json",
+    "git_blob": "32c252707c79851710250792b45219abe182b461",
+    "sha256": "8a629f139b29655a741749e6cd0a460964b35655f347a52d5e556d4db0115bce",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Forms_and_Surveys/Qualifying%20Appointment%20Requests%20with%20AI%20%26%20n8n%20Forms.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

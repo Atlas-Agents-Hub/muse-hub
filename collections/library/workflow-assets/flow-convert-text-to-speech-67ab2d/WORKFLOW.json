@@ -1,0 +1,119 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-convert-text-to-speech-67ab2d",
+  "title": "Convert text to speech with OpenAI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Test workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Set input text and TTS voice",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "json": {
+            "input_text": "The quick brown fox jumped over the lazy dog.",
+            "voice": "alloy"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Send HTTP Request to OpenAI's TTS Endpoint",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "tts-1"
+            },
+            {
+              "name": "input",
+              "value": {
+                "expression": "{{ record.input_text }}"
+              }
+            },
+            {
+              "name": "voice",
+              "value": {
+                "expression": "{{ record.voice }}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": {
+                "configuration_input": "step-3-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/audio/speech"
+    },
+    {
+      "id": "step-3-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Convert text to speech with OpenAI.json",
+    "git_blob": "3324d9dce34e8ecbda6da0b8690a855fa37c450f",
+    "sha256": "0e50d1ed0eb6b94558c4aceae2f3878c59c05fab8b7bc70648e31cbf4b263a2b",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Convert%20text%20to%20speech%20with%20OpenAI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

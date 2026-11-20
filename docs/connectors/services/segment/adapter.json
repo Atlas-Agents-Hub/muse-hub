@@ -1,0 +1,55 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Marketing",
+  "id": "segment",
+  "name": "Segment",
+  "operations": [
+    {
+      "description": "",
+      "id": "identifyUser",
+      "inputs": [
+        {
+          "description": "",
+          "label": "User ID",
+          "name": "userId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The traits to associate with the user",
+          "label": "Traits",
+          "name": "traits",
+          "required": true,
+          "type": "Object"
+        }
+      ],
+      "kind": "action",
+      "name": "Identify User",
+      "source_path": "segment/src/lib/actions/identify-user.ts",
+      "source_sha256": "7c4d4d8cec655fe764bfb6c45aacccf6b9306a111b54d5a3bd336c865bc5aea3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/segment/src/lib/actions/identify-user.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "b511203f7152b4ba5d25c6f8d2fde4b7984bd347",
+    "index_path": "segment/src/index.ts",
+    "index_sha256": "f775813c4d7e6e222c4e7db2110bbecfabfe4bd8bde2509610faeafdb7d9f0dd",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

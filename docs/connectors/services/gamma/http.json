@@ -1,0 +1,46 @@
+{
+  "id": "gamma",
+  "requests": [
+    {
+      "credential": {
+        "name": "X-API-KEY",
+        "placement": "header",
+        "prefix": ""
+      },
+      "credential_source_path": "gamma/src/lib/actions/generate-gamma.ts",
+      "credential_source_sha256": "5a4d0670250599ae5573ff664fc620a40ef41dd1d4a6bc25c196090b0b63aa85",
+      "headers": {},
+      "host": "public-api.gamma.app",
+      "id": "read-v1-0-folders",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "gamma/src/lib/actions/generate-gamma.ts",
+      "source_sha256": "5a4d0670250599ae5573ff664fc620a40ef41dd1d4a6bc25c196090b0b63aa85",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gamma/src/lib/actions/generate-gamma.ts",
+      "url_template": "https://public-api.gamma.app/v1.0/folders"
+    },
+    {
+      "credential": {
+        "name": "X-API-KEY",
+        "placement": "header",
+        "prefix": ""
+      },
+      "credential_source_path": "gamma/src/lib/actions/get-generation.ts",
+      "credential_source_sha256": "1d6fc6fd02343c8cbd7cc2e6382948b76eaf2b47ff0080cbc3c8903404da463f",
+      "headers": {
+        "accept": "application/json"
+      },
+      "host": "public-api.gamma.app",
+      "id": "read-v1-0-generations-generationid",
+      "method": "GET",
+      "parameters": [
+        "generationId"
+      ],
+      "source_path": "gamma/src/lib/actions/get-generation.ts",
+      "source_sha256": "1d6fc6fd02343c8cbd7cc2e6382948b76eaf2b47ff0080cbc3c8903404da463f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gamma/src/lib/actions/get-generation.ts",
+      "url_template": "https://public-api.gamma.app/v1.0/generations/{generationId}"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

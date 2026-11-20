@@ -1,0 +1,547 @@
+{
+  "allowed_hosts": [
+    "api.folk.app",
+    "app.folk.app"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Sales & CRM",
+  "id": "folk",
+  "name": "Folk",
+  "operations": [
+    {
+      "description": "Create a new company in your Folk workspace. You can add emails, links, phone numbers, and assign it to a group.",
+      "id": "createCompany",
+      "inputs": [
+        {
+          "description": "The name of the company",
+          "label": "Company Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "A short description of the company",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The industry the company operates in",
+          "label": "Industry",
+          "name": "industry",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Physical addresses for the company. The first address is primary.",
+          "label": "Addresses",
+          "name": "addresses",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Email addresses for the company. The first email is primary.",
+          "label": "Emails",
+          "name": "emails",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Phone numbers for the company. The first phone is primary.",
+          "label": "Phone Numbers",
+          "name": "phones",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Website URLs for the company. The first URL is primary.",
+          "label": "URLs",
+          "name": "urls",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Group Id",
+          "name": "groupId",
+          "required": null,
+          "source_expression": "folkProps.group_id(false, 'Group ID')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Company",
+      "source_path": "folk/src/lib/actions/create-company.ts",
+      "source_sha256": "cc8dcbdeb1f7be7937370dcb25af22f85619df123a3327afef57e47cac117a81",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/actions/create-company.ts"
+    },
+    {
+      "description": "Create a new person in your Folk workspace. You can link them to a company, add contact details, and assign to a group.",
+      "id": "createPerson",
+      "inputs": [
+        {
+          "description": "The first name of the person",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The last name of the person",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The full name of the person (alternative to first/last)",
+          "label": "Full Name",
+          "name": "fullName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "A short description of the person",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The birthday in YYYY-MM-DD format",
+          "label": "Birthday",
+          "name": "birthday",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The job title of the person",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The names of companies to associate with the person. The first company will be primary.",
+          "label": "Company Names",
+          "name": "companyNames",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Company Ids",
+          "name": "companyIds",
+          "required": null,
+          "source_expression": "folkProps.companyIds(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Physical addresses for the person. The first address is primary.",
+          "label": "Addresses",
+          "name": "addresses",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Email addresses for the person. The first email is primary.",
+          "label": "Emails",
+          "name": "emails",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Phone numbers for the person. The first phone is primary.",
+          "label": "Phone Numbers",
+          "name": "phones",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Website URLs for the person. The first URL is primary.",
+          "label": "URLs",
+          "name": "urls",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Group Id",
+          "name": "groupId",
+          "required": null,
+          "source_expression": "folkProps.group_id(false, 'Group ID')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Person",
+      "source_path": "folk/src/lib/actions/create-person.ts",
+      "source_sha256": "ba8b96fb966829051ee0abb76c751c42724a0fc94642e4ff6c45940adab58084",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/actions/create-person.ts"
+    },
+    {
+      "description": "Search for companies in your Folk workspace whose name contains the search text.",
+      "id": "findCompany",
+      "inputs": [
+        {
+          "description": "Text the company name contains.",
+          "label": "Search Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Next Cursor from the previous result. Empty for the first page.",
+          "label": "Cursor",
+          "name": "cursor",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Company",
+      "source_path": "folk/src/lib/actions/find-company.ts",
+      "source_sha256": "c23d4561534a910e99c2180e92f2deca13c5bd0b74de3457f44863d709b7ebe6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/actions/find-company.ts"
+    },
+    {
+      "description": "Retrieve detailed information about a company from your Folk workspace.",
+      "id": "getCompany",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Company Id",
+          "name": "companyId",
+          "required": null,
+          "source_expression": "folkProps.company_id(true)",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Company",
+      "source_path": "folk/src/lib/actions/get-company.ts",
+      "source_sha256": "f45d7dc210e0f19f37561857b042dfced1d7cb3a69975a7083447f5561f22556",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/actions/get-company.ts"
+    },
+    {
+      "description": "Retrieve detailed information about a person from your Folk workspace.",
+      "id": "getPerson",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Person Id",
+          "name": "personId",
+          "required": null,
+          "source_expression": "folkProps.person_id(true)",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Person",
+      "source_path": "folk/src/lib/actions/get-person.ts",
+      "source_sha256": "b357af66646f58fa8b2a28d57c03bb7538bb3a539ec09c20724d3b7bfbc16f72",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/actions/get-person.ts"
+    },
+    {
+      "description": "Retrieve a page of people in your Folk workspace, optionally filtered by name or email.",
+      "id": "findPerson",
+      "inputs": [
+        {
+          "description": "The number of people to return (1-100).",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Next Cursor from the previous result. Empty for the first page.",
+          "label": "Cursor",
+          "name": "cursor",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "How to combine the name and email filters when both are set.",
+          "label": "Filter Combinator",
+          "name": "combinator",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Filter by person name (contains)",
+          "label": "Name Filter",
+          "name": "nameFilter",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter by email address (contains)",
+          "label": "Email Filter",
+          "name": "emailFilter",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List People",
+      "source_path": "folk/src/lib/actions/find-person.ts",
+      "source_sha256": "90d073c06e0bf549c090f250680960278c73ad760c7322094ed523efd0dbfa8e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/actions/find-person.ts"
+    },
+    {
+      "description": "Update an existing company in your Folk workspace. Select the company from the dropdown to update its details.",
+      "id": "updateCompany",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Company Id",
+          "name": "companyId",
+          "required": null,
+          "source_expression": "folkProps.company_id(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The name of the company",
+          "label": "Company Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "A short description of the company",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The industry the company operates in",
+          "label": "Industry",
+          "name": "industry",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Physical addresses for the company. The first address is primary.",
+          "label": "Addresses",
+          "name": "addresses",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Email addresses for the company. The first email is primary.",
+          "label": "Emails",
+          "name": "emails",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Phone numbers for the company. The first phone is primary.",
+          "label": "Phone Numbers",
+          "name": "phones",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Website URLs for the company. The first URL is primary.",
+          "label": "URLs",
+          "name": "urls",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Group Id",
+          "name": "groupId",
+          "required": null,
+          "source_expression": "folkProps.group_id(false, 'Group ID')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Company",
+      "source_path": "folk/src/lib/actions/update-company.ts",
+      "source_sha256": "8a51517792e1b7c7719e924605db538054866b69e95b461e3937d75facfae8e6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/actions/update-company.ts"
+    },
+    {
+      "description": "Update an existing person in your Folk workspace with new information.",
+      "id": "updatePerson",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Person Id",
+          "name": "personId",
+          "required": null,
+          "source_expression": "folkProps.person_id(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The first name of the person",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The last name of the person",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The full name of the person (alternative to first/last)",
+          "label": "Full Name",
+          "name": "fullName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "A short description of the person",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The birthday in YYYY-MM-DD format",
+          "label": "Birthday",
+          "name": "birthday",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The job title of the person",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company Ids",
+          "name": "companyIds",
+          "required": null,
+          "source_expression": "folkProps.companyIds(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Company names to create or associate with. Companies will be created if they don't exist.",
+          "label": "Company Names",
+          "name": "companyNames",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Physical addresses for the person. The first address is primary.",
+          "label": "Addresses",
+          "name": "addresses",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Email addresses for the person. The first email is primary.",
+          "label": "Emails",
+          "name": "emails",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Phone numbers for the person. The first phone is primary.",
+          "label": "Phone Numbers",
+          "name": "phones",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Website URLs for the person. The first URL is primary.",
+          "label": "URLs",
+          "name": "urls",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Group Id",
+          "name": "groupId",
+          "required": null,
+          "source_expression": "folkProps.group_id(false, 'Group ID')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Person",
+      "source_path": "folk/src/lib/actions/update-person.ts",
+      "source_sha256": "e48126fac2e45251166e6feb1654b8f0f94d870ad4e9aca6e06eb6f4e124293d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/actions/update-person.ts"
+    },
+    {
+      "description": "Fires when a new company is added to your Folk workspace.",
+      "id": "company_added",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Group Id",
+          "name": "groupId",
+          "required": null,
+          "source_expression": "folkProps.group_id(false, 'Group ID')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Company Added",
+      "source_path": "folk/src/lib/triggers/company-added.ts",
+      "source_sha256": "cd7aeaa96905693cf0012cf3241fa51983bdc2a7348815171083d96109e9893c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/triggers/company-added.ts"
+    },
+    {
+      "description": "Fires when a company's group assignments are updated in your Folk workspace.",
+      "id": "company_custom_field_updated",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Company Groups Updated",
+      "source_path": "folk/src/lib/triggers/company-custom-field-updated.ts",
+      "source_sha256": "3ff1b72d95438fd247b91a5879c4a56d4557f0c894352ff61c7faaa9a2da280b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/triggers/company-custom-field-updated.ts"
+    },
+    {
+      "description": "Fires when a company is removed from your Folk workspace.",
+      "id": "company_removed",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Group Id",
+          "name": "groupId",
+          "required": null,
+          "source_expression": "folkProps.group_id(false, 'Group ID')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Company Removed",
+      "source_path": "folk/src/lib/triggers/company-removed.ts",
+      "source_sha256": "3bfc7ff95145e98fcf052879b846dae6896028c16ad2595e0ef82a9498739225",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/folk/src/lib/triggers/company-removed.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "a7355f8a3b837ed88f6a299c019746cfb04d54ce",
+    "index_path": "folk/src/index.ts",
+    "index_sha256": "1bbea3dae6957c55d940cf6c43dad2b1fb2ffe63b6ed12fe8c086c36c5ab27c6",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer"
+  ]
+}

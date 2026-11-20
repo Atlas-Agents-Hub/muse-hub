@@ -1,0 +1,255 @@
+{
+  "allowed_hosts": [
+    "oauth.reddit.com",
+    "www.reddit.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://www.reddit.com/api/v1/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "edit",
+      "flair",
+      "history",
+      "identity",
+      "mysubreddits",
+      "privatemessages",
+      "read",
+      "report",
+      "save",
+      "submit",
+      "subscribe",
+      "wikiread"
+    ],
+    "token_urls": [
+      "https://www.reddit.com/api/v1/access_token"
+    ]
+  },
+  "category": "Social",
+  "id": "reddit",
+  "name": "Reddit",
+  "operations": [
+    {
+      "description": "Comment on a Reddit post or reply to a comment.",
+      "id": "createRedditComment",
+      "inputs": [
+        {
+          "description": "ID of the post (t3_*) or comment (t1_*) to reply to.",
+          "label": "Parent ID",
+          "name": "parent_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Text of the comment.",
+          "label": "Comment Text",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Comment",
+      "source_path": "reddit/src/lib/actions/create-reddit-comment.ts",
+      "source_sha256": "2737a56eaba7c6c6b48f602ca56eec1681015d40e85cb479794311c7c2349262",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/reddit/src/lib/actions/create-reddit-comment.ts"
+    },
+    {
+      "description": "Submit a new self (text) post to a subreddit.",
+      "id": "createRedditPost",
+      "inputs": [
+        {
+          "description": "The subreddit to post in (without r/).",
+          "label": "Subreddit",
+          "name": "subreddit",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Title of the Reddit post.",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Text content of the post.",
+          "label": "Content",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Post",
+      "source_path": "reddit/src/lib/actions/create-reddit-post.ts",
+      "source_sha256": "e8857533784201b4a9d6b36e122d005f47f4b8c048d09dd4e48cb2842e889707",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/reddit/src/lib/actions/create-reddit-post.ts"
+    },
+    {
+      "description": "Delete a specific Reddit post by ID.",
+      "id": "deleteRedditPost",
+      "inputs": [
+        {
+          "description": "ID of the Reddit post to delete (e.g., \"abc123\" or \"t3_abc123\").",
+          "label": "Post ID",
+          "name": "post_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Post",
+      "source_path": "reddit/src/lib/actions/delete-reddit-post.ts",
+      "source_sha256": "8906498f1695afa7514d92d81be6b42a68fe1c4bf4fa09100305188362d8e337",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/reddit/src/lib/actions/delete-reddit-post.ts"
+    },
+    {
+      "description": "Edits the content of an existing Reddit comment.",
+      "id": "editRedditComment",
+      "inputs": [
+        {
+          "description": "ID of the Reddit comment to edit (e.g., \"def456\" or \"t1_def456\").",
+          "label": "Comment ID",
+          "name": "comment_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Updated text content for the comment.",
+          "label": "New Comment Content",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Edit Comment",
+      "source_path": "reddit/src/lib/actions/edit-reddit-comment.ts",
+      "source_sha256": "9ea196dba1b8272201b342d7613f0a9aa4c71a25106a3f75c31b897ef80baaa8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/reddit/src/lib/actions/edit-reddit-comment.ts"
+    },
+    {
+      "description": "Edits the content of an existing Reddit post.",
+      "id": "editRedditPost",
+      "inputs": [
+        {
+          "description": "ID of the Reddit post to edit (e.g., \"abc123\" or \"t3_abc123\").",
+          "label": "Post ID",
+          "name": "post_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Updated text content for the post.",
+          "label": "New Post Content",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Edit Post",
+      "source_path": "reddit/src/lib/actions/edit-reddit-post.ts",
+      "source_sha256": "0b1941357b77e084a22342fd2a15d101ad494980f15ee66c9dffdb42adfbc84b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/reddit/src/lib/actions/edit-reddit-post.ts"
+    },
+    {
+      "description": "Fetch comments from a specific Reddit post.",
+      "id": "fetchPostComments",
+      "inputs": [
+        {
+          "description": "The ID of the Reddit post (e.g. \"abc123\" or \"t3_abc123\").",
+          "label": "Post ID",
+          "name": "post_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Sorting method for comments",
+          "label": "Sort By",
+          "name": "sort",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Maximum number of top-level comments to fetch",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Fetch Post Comments",
+      "source_path": "reddit/src/lib/actions/fetch-post-comments.ts",
+      "source_sha256": "32f386e702b693cb44e751f78cd96077ccf39df8cddc233bbfe60a98a649b593",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/reddit/src/lib/actions/fetch-post-comments.ts"
+    },
+    {
+      "description": "Fetch detailed information about a specific Reddit post using its ID.",
+      "id": "getRedditPostDetails",
+      "inputs": [
+        {
+          "description": "The ID of the Reddit post (e.g. \"t3_abc123\" or \"abc123\")",
+          "label": "Post ID",
+          "name": "post_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Post Details",
+      "source_path": "reddit/src/lib/actions/get-reddit-post-details.ts",
+      "source_sha256": "fff968a17500c92046b67f968965457de15dd30b7fb99aaade479fd8ee988689",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/reddit/src/lib/actions/get-reddit-post-details.ts"
+    },
+    {
+      "description": "Fetch top posts in a subreddit with optional size limit.",
+      "id": "retrieveRedditPost",
+      "inputs": [
+        {
+          "description": "Select the category of posts to retrieve",
+          "label": "Post Category",
+          "name": "post_category",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The subreddit to fetch posts from",
+          "label": "Subreddit",
+          "name": "subreddit",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Number of posts to fetch (max 100)",
+          "label": "Number of Posts",
+          "name": "size",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Retrieve Post",
+      "source_path": "reddit/src/lib/actions/retrieve-reddit-post.ts",
+      "source_sha256": "88296f232670a7c5d6b15e9f0d5a3fd4e5d79634c721449098e9761f46bd173b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/reddit/src/lib/actions/retrieve-reddit-post.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "253956735d001273fbe697de7396268954a51088",
+    "index_path": "reddit/src/index.ts",
+    "index_sha256": "e46779865fe1c291c7fc2abfb1e2a2721e4c0efb919451e5573dff71efc6e033",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "personal-companion",
+    "coordinator"
+  ]
+}

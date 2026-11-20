@@ -1,0 +1,475 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-chat-with-a-google-sheet-using-ai-d80dd3",
+  "title": "Chat with a Google Sheet using AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Get Google sheet contents",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "options": {},
+        "sheetName": {
+          "expression": "{{ record.sheetUrl }}"
+        },
+        "documentId": {
+          "expression": "{{ record.sheetUrl }}"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Set Google Sheet URL",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "sheetUrl",
+              "stringValue": {
+                "configuration_input": "step-3-values-0-stringvalue"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get column names",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "response",
+              "stringValue": {
+                "expression": "{{ Object.keys(record) }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Prepare output",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return {\n 'response': JSON.stringify(records.map(x => x.json))\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "List columns tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "list_columns",
+        "fields": {
+          "values": [
+            {
+              "name": "operation",
+              "stringValue": "column_names"
+            }
+          ]
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": {
+          "expression": "List all column names in customer data\n\nCall this tool to find out what data is available for each customer. It should be called first at the beginning to understand which columns are available for querying."
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get customer tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "get_customer",
+        "fields": {
+          "values": [
+            {
+              "name": "operation",
+              "stringValue": "row"
+            }
+          ]
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": {
+          "expression": "Get all columns for a given customer\n\nThe input should be a stringified row number of the customer to fetch; only single string inputs are allowed. Returns a JSON object with all the column names and their values."
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Get column values tool",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "column_values",
+        "fields": {
+          "values": [
+            {
+              "name": "operation",
+              "stringValue": "column_values"
+            }
+          ]
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": {
+          "expression": "Get the specified column value for all customers\n\nUse this tool to find out which customers have a certain value for a given column. Returns an array of JSON objects, one per customer. Each JSON object includes the column being requested plus the row_number column. Input should be a single string representing the name of the column to fetch."
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Prepare column data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": {
+                "expression": "{{ steps[\"step-1\"].record.query }}"
+              },
+              "stringValue": {
+                "expression": "{{ record[steps[\"step-1\"].record.query] }}"
+              }
+            },
+            {
+              "name": "row_number",
+              "stringValue": {
+                "expression": "{{ record.row_number }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Filter",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "looseTypeValidation": true
+        },
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              },
+              "leftValue": {
+                "expression": "{{ record.row_number }}"
+              },
+              "rightValue": {
+                "expression": "{{ steps[\"step-1\"].record.query }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Check operation",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "col names",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-1\"].record.operation }}"
+                    },
+                    "rightValue": "column_names"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "col values",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-1\"].record.operation }}"
+                    },
+                    "rightValue": "column_values"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "rows",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-1\"].record.operation }}"
+                    },
+                    "rightValue": "row"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Chat Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-14",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "agent": "reActAgent",
+        "options": {
+          "suffix": "Begin! Use `list_columns` tool first to determine which columns are available.\n\n\tQuestion: {input}\n\tThought:{agent_scratchpad}",
+          "returnIntermediateSteps": false
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-10",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-14",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-14",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-14",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-13"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-values-0-stringvalue",
+      "purpose": "Set the stringValue endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://docs.google.com/spreadsheets/d/{resource}/edit"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Chat with a Google Sheet using AI.json",
+    "git_blob": "c09bd376f3a5d5a98355e035e19a9693c37c1d7e",
+    "sha256": "32804711e88ca42cf4b570b01114e219f8e68b1c394423a1878d73912843de45",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Chat%20with%20a%20Google%20Sheet%20using%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

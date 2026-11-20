@@ -1,0 +1,858 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-handling-job-application-submissions-with-ai-and-muse-forms-d4a504",
+  "title": "Handling Job Application Submissions with AI and n8n Forms",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Extract from File",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf",
+        "binaryPropertyName": "File_Upload"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "Name": {
+                "type": "string"
+              },
+              "Address": {
+                "type": "string"
+              },
+              "Email": {
+                "type": "string"
+              },
+              "Telephone": {
+                "type": "string"
+              },
+              "Education": {
+                "type": "string"
+              },
+              "Skills & Technologies": {
+                "type": "string"
+              },
+              "Years of Experience": {
+                "type": "string"
+              },
+              "Cover Letter": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI Chat Model2",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Step 1 of 2 - Upload CV",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "path": "job-application-step1of2",
+          "ignoreBots": true,
+          "buttonLabel": "Submit",
+          "useWorkflowTimezone": true
+        },
+        "formTitle": "Step 1 of 2: Submit Your CV",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Eg. Sam Smith",
+              "requiredField": true
+            },
+            {
+              "fieldType": "file",
+              "fieldLabel": "File Upload",
+              "multipleFiles": false,
+              "requiredField": true,
+              "acceptFileTypes": "pdf"
+            },
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Acknowledgement of Terms",
+              "multiselect": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "I agree to the terms & conditions"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "formDescription": "Thank you for your interest in applying for Acme Inc. To ensure a speedy process, please ensure you following all instructions and fill out all required inputs.\n\nThis step requires you upload your CV in a password-free PDF document. Any document that is not a CV will be rejected."
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Save to Airtable",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-6-base"
+        },
+        "table": {
+          "configuration_input": "step-6-table"
+        },
+        "columns": {
+          "value": {
+            "Name": {
+              "expression": "{{ record.output.Name }}"
+            },
+            "Email": {
+              "expression": "{{ record.output.Email }}"
+            },
+            "Address": {
+              "expression": "{{ record.output.Address }}"
+            },
+            "Education": {
+              "expression": "{{ record.output.Education }}"
+            },
+            "Telephone": {
+              "expression": "{{ record.output.Telephone }}"
+            },
+            "Cover Letter": {
+              "expression": "{{ record.output['Cover Letter'] }}"
+            },
+            "Submitted By": {
+              "expression": "{{ steps[\"step-5\"].records[0].Name }}"
+            },
+            "Years of Experience": {
+              "expression": "{{ record.output['Years of Experience'] }}"
+            },
+            "Skills & Technologies": {
+              "expression": "{{ record.output['Skills & Technologies'] }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "File",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Cover Letter",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Telephone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Education",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Skills & Technologies",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Years of Experience",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Submitted By",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "create"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Classify Document",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "fallback": "other"
+        },
+        "inputText": {
+          "expression": "{{ record.text }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "CV or Resume",
+              "description": "This document is a CV or Resume"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Upload File to Record",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://content.airtable.com/v0/{{ steps[\"step-6\"].params.base.value }}/{{ record.id }}/File/uploadAttachment"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contentType",
+              "value": "application/pdf"
+            },
+            {
+              "name": "filename",
+              "value": {
+                "expression": "{{ workflow_id }}-{{ run_id }}.pdf"
+              }
+            },
+            {
+              "name": "file",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].first().binary.File_Upload.data }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Form Success",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "operation": "completion",
+        "completionTitle": "Application Success",
+        "completionMessage": "Thank you for completing the application process.\nYour informaion is filed securely and will be reviewed by our team.\n\nWe will be in touch shortly."
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Save to Airtable1",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-10-base"
+        },
+        "table": {
+          "configuration_input": "step-10-table"
+        },
+        "columns": {
+          "value": {
+            "Name": {
+              "expression": "{{ record.Name }}"
+            },
+            "Email": {
+              "expression": "{{ record.Email }}"
+            },
+            "Address": {
+              "expression": "{{ record.Address }}"
+            },
+            "Education": {
+              "expression": "{{ record.Education }}"
+            },
+            "Telephone": {
+              "expression": "{{ record.Telephone }}"
+            },
+            "Cover Letter": {
+              "expression": "{{ record.output['Cover Letter'] }}"
+            },
+            "Years of Experience": {
+              "expression": "{{ record['Years of Experience'] }}"
+            },
+            "Skills & Technologies": {
+              "expression": "{{ record['Skills & Technologies'] }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "File",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Cover Letter",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Telephone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Education",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Skills & Technologies",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Years of Experience",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Submitted By",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Email",
+            "Name"
+          ]
+        },
+        "options": {},
+        "operation": "update"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Step 2 of 2 - Application Form",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "path": "job-application-step2of2",
+          "ignoreBots": true,
+          "useWorkflowTimezone": true
+        },
+        "formTitle": "Step 2 of 2: Application Form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Eg. Sam Smith",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Address",
+              "requiredField": true
+            },
+            {
+              "fieldType": "email",
+              "fieldLabel": "Email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Telephone",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Education",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Skills & Technologies",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Years of Experience",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Cover Letter",
+              "requiredField": true
+            },
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Acknowledgement of Terms",
+              "multiselect": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "I agree to consent to the terms and conditions"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "formDescription": "This application form prefills using the CV you submitted. Please make any amendments as required and once satisfied, please submit the form to complete the application process."
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Application Suitability Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Here is the candidate's CV:\n{{ record.text }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": {
+                "expression": "Extract information from the applicant's CV which is relevant to the job post.\nWhen writing the cover letter, use no more than a few paragraphs. No need to address the hiring company or personnel as this text will be input into an online form.\nUse a formal and professional tone.\nThis is the job post which the cover letter should address:\n\n```\nJob Post: General Operations Manager – Manufacturing Industry\nJob Type: Full-time\nExperience Level: Mid to Senior\n\nAbout Us:\nWe are a forward-thinking manufacturing company committed to innovation, quality, and sustainability. We strive to improve operations, enhance product quality, and implement eco-friendly practices, fostering a productive and collaborative work environment.\n\nJob Description:\nWe are seeking an experienced and dynamic General Operations Manager to lead and optimize our manufacturing processes. The successful candidate will oversee production, enhance efficiency, and implement effective strategies to support our mission. This role is ideal for a seasoned professional with a strong background in operational management and a knack for process improvement.\n\nKey Responsibilities:\n\nOversee and manage production and sales teams across multiple shifts, ensuring seamless 24/6 operations.\nDevelop and implement cost-effective quality control and accountability measures to maintain high manufacturing standards.\nManage inventory and procurement, strategically timing raw material purchases to maximize cost efficiency.\nLead ERP system upgrades or similar digital transformation projects, ensuring timely and budget-friendly execution.\nOptimize credit control and payment terms to improve cash flow while maintaining client relationships.\nAdvocate for sustainable practices, including integrating recycled materials into production processes.\nQualifications:\n\nBachelor's degree in Business Administration or a related field; a Master's in Financial Economics is a plus.\nProven experience in a leadership role within the manufacturing industry.\nExpertise in managing teams, production cycles, and quality assurance.\nProficiency in ERP systems and software such as Stata, Bloomberg Professional, and Thomson Reuters DataStream.\nStrong analytical, decision-making, and organizational skills.\nFamiliarity with capital markets, private equity, or strategic management consulting is a plus.\nPreferred Skills:\n\nAdvanced knowledge of plastics manufacturing, including polyethylene and polypropylene applications.\nExperience in implementing sustainability initiatives and green business practices.\nExcellent communication skills, with a history of collaboration and team-building.\nWhat We Offer:\n\nCompetitive salary and benefits package.\nOpportunities for professional growth and development.\nA collaborative and innovative work environment.\nHow to Apply:\nPlease send your resume and a cover letter highlighting your experience and achievements to [HR Email]. Applications will be reviewed on a rolling basis.\n\nJoin us and drive operational excellence in manufacturing!\n```"
+              }
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "File Upload Retry",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "formTitle": "Please upload a CV",
+          "formDescription": "Unfortunately, we were unable to process your previous file upload.\n\nTo continue, you must upload a valid CV in PDF format. "
+        },
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "file",
+              "fieldLabel": "File Upload",
+              "multipleFiles": false,
+              "requiredField": true,
+              "acceptFileTypes": "pdf"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Redirect To Step 2 of 2",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "operation": "completion",
+        "redirectUrl": {
+          "expression": "https://<HOST>/form/job-application-step2of2?{{ steps[\"step-12\"].records[0].output.urlEncode() }}"
+        },
+        "respondWith": "redirect"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Submission Success",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "formTitle": "CV Submission Successful!",
+          "buttonLabel": "Continue",
+          "formDescription": "We'll now redirect you to step 2 of 2 - our Application form. Please note, some fields will be prefilled with information from your CV. Feel free to amend this information as needed."
+        },
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Acknowledgement",
+              "multiselect": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "I understand my CV will be held soley for purpose of application and for no more than 90 days."
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-12",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-12",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5",
+    "step-11"
+  ],
+  "configuration": [
+    {
+      "id": "step-6-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Airtable/Handling Job Application Submissions with AI and n8n Forms.json",
+    "git_blob": "42b3a84be958f8acf2132a7e5a073965c4da9804",
+    "sha256": "06cfd8f0ace1da1f358bb83ac1f253e782fd8a2264c45ee72e2bfaadbe794d4b",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Airtable/Handling%20Job%20Application%20Submissions%20with%20AI%20and%20n8n%20Forms.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

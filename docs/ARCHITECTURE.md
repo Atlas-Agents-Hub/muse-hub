@@ -4,7 +4,7 @@ Muse Hub combines assistant profiles, a skill and workflow library, Python tools
 
 ## Collection and engine layers
 
-The current source includes **461 task skills**, **58 workflows** and **100 task starters** alongside the original **50 unique procedures** (45 role-specific methods plus five shared). The catalogs map the original procedure layer to the larger collection so related methods stay easy to find.
+The collection includes **5242 skills**, **396 workflows** and **558 task starters** alongside the original **50 unique procedures** (45 role-specific methods plus five shared). The catalogs connect these procedures with the wider skill library so related methods stay easy to find.
 
 Different specialists include different executable engines. [Specialist methods and tools](collection/SPECIALIST_SCOPE_AND_ENGINES.md) describes what each role handles and which local operations are available. Browse [specialists by task](handbook/specialists-by-task.md) to choose the right role and tools.
 

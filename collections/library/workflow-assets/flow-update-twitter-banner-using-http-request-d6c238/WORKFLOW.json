@@ -1,0 +1,91 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-update-twitter-banner-using-http-request-d6c238",
+  "title": "Update Twitter banner using HTTP request",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On clicking 'execute'",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-3",
+      "label": "HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "options": {},
+        "responseFormat": "file",
+        "headerParametersUi": {
+          "parameter": []
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "HTTP Request1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "options": {},
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "sendBinaryData": true,
+        "binaryPropertyName": "banner:data"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://unsplash.com/photos/lUDMZUWFUXE/download?ixid={value}&force={value}"
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.twitter.com/1.1/account/{resource}.json"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/Update Twitter banner using HTTP request.json",
+    "git_blob": "0fcaaac05c0b6d46b9eff67c5fc71dfe6b3e0718",
+    "sha256": "7e935156d6224d400bb57ebfc47a6e404e9618a61bfb86122609a4990fe295d2",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/Update%20Twitter%20banner%20using%20HTTP%20request.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

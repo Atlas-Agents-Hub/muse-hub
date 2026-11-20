@@ -1,0 +1,173 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-dynamically-generate-a-webpage-from-user-request-using-muse-structured-output-a82b9a",
+  "title": "Dynamically generate a webpage from user request using OpenAI Structured Output",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Respond to Webhook",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=UTF-8"
+              }
+            ]
+          }
+        },
+        "respondWith": "text",
+        "responseBody": {
+          "expression": "{{ record.html }}"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Open AI - Using Structured Output",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"model\": \"gpt-4o-2024-08-06\",\n \"messages\": [\n {\n \"role\": \"system\",\n \"content\": \"You are a user interface designer and copy writter. Your job is to help users visualize their website ideas. You design elegant and simple webs, with professional text. You use Tailwind framework\"\n },\n {\n \"role\": \"user\",\n \"content\": \"{{ record.query.query }}\"\n }\n ],\n \"response_format\":\n{\n \"type\": \"json_schema\",\n \"json_schema\": {\n \"name\": \"ui\",\n \"description\": \"Dynamically generated UI\",\n \"strict\": true,\n \"schema\": {\n \"type\": \"object\",\n \"properties\": {\n \"type\": {\n \"type\": \"string\",\n \"description\": \"The type of the UI component\",\n \"enum\": [\n \"div\",\n \"span\",\n \"a\",\n \"p\",\n \"h1\",\n \"h2\",\n \"h3\",\n \"h4\",\n \"h5\",\n \"h6\",\n \"ul\",\n \"ol\",\n \"li\",\n \"img\",\n \"button\",\n \"input\",\n \"textarea\",\n \"select\",\n \"option\",\n \"label\",\n \"form\",\n \"table\",\n \"thead\",\n \"tbody\",\n \"tr\",\n \"th\",\n \"td\",\n \"nav\",\n \"header\",\n \"footer\",\n \"section\",\n \"article\",\n \"aside\",\n \"main\",\n \"figure\",\n \"figcaption\",\n \"blockquote\",\n \"q\",\n \"hr\",\n \"code\",\n \"pre\",\n \"iframe\",\n \"video\",\n \"audio\",\n \"canvas\",\n \"svg\",\n \"path\",\n \"circle\",\n \"rect\",\n \"line\",\n \"polyline\",\n \"polygon\",\n \"g\",\n \"use\",\n \"symbol\"\n]\n },\n \"label\": {\n \"type\": \"string\",\n \"description\": \"The label of the UI component, used for buttons or form fields\"\n },\n \"children\": {\n \"type\": \"array\",\n \"description\": \"Nested UI components\",\n \"items\": {\n \"$ref\": \"#\"\n }\n },\n \"attributes\": {\n \"type\": \"array\",\n \"description\": \"Arbitrary attributes for the UI component, suitable for any element using Tailwind framework\",\n \"items\": {\n \"type\": \"object\",\n \"properties\": {\n \"name\": {\n \"type\": \"string\",\n \"description\": \"The name of the attribute, for example onClick or className\"\n },\n \"value\": {\n \"type\": \"string\",\n \"description\": \"The value of the attribute using the Tailwind framework classes\"\n }\n },\n \"additionalProperties\": false,\n \"required\": [\"name\", \"value\"]\n }\n }\n },\n \"required\": [\"type\", \"label\", \"children\", \"attributes\"],\n \"additionalProperties\": false\n }\n }\n}\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "OpenAI - JSON to HTML",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-3-modelid"
+        },
+        "options": {
+          "temperature": 0.2
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You convert a JSON to HTML. \nThe JSON output has the following fields:\n- html: the page HTML\n- title: the page title"
+            },
+            {
+              "content": {
+                "expression": "{{ record.choices[0].message.content }}"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Format the HTML result",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "<!DOCTYPE html>\n\n<html>\n<head>\n <meta charset=\"UTF-8\" />\n <script src=\"https://cdn.tailwindcss.com\"></script>\n <title>{{ record.message.content.title }}</title>\n</head>\n<body>\n{{ record.message.content.html }}\n</body>\n</html>"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-5-path"
+        },
+        "options": {
+          "allowedOrigins": "*"
+        },
+        "responseMode": "responseNode"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/chat/completions"
+    },
+    {
+      "id": "step-3-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Dynamically generate a webpage from user request using OpenAI Structured Output.json",
+    "git_blob": "0d516e78cd2a0685d6b9e5021c0439e3f5750c08",
+    "sha256": "c644b2e953c60fd791669dd153fadbd0e9d93902219cb20578bea5ad9fc1fd1a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Dynamically%20generate%20a%20webpage%20from%20user%20request%20using%20OpenAI%20Structured%20Output.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

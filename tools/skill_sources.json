@@ -1,0 +1,141 @@
+{
+  "schema": "muse-skill-sources/v1",
+  "sources": [
+    {
+      "id": "terminal-skills",
+      "repository": "TerminalSkills/skills",
+      "commit": "42289059901710441bfa8081c08c3a9f36b93f9c",
+      "patterns": [
+        "skills/**/SKILL.md"
+      ]
+    },
+    {
+      "id": "awesome-muse",
+      "repository": "aicodedecode/awesome-muse-skills",
+      "commit": "faf37c0859ebf627bfcb5225e8057d088691e0ae",
+      "patterns": [
+        "skills/*/SKILL.md"
+      ]
+    },
+    {
+      "id": "jeffallan",
+      "repository": "Jeffallan/claude-skills",
+      "commit": "67c1961b180dc92cf08983344627109e983e8f51",
+      "patterns": [
+        "skills/*/SKILL.md"
+      ]
+    },
+    {
+      "id": "alireza",
+      "repository": "alirezarezvani/claude-skills",
+      "commit": "f8593c4941210a621a6629ce1da9e07897976d5f",
+      "patterns": [
+        "**/SKILL.md"
+      ]
+    },
+    {
+      "id": "secondsky",
+      "repository": "secondsky/claude-skills",
+      "commit": "88378361314f558fb719aec0af9fd898ab36f0b2",
+      "patterns": [
+        "skills/**/SKILL.md"
+      ]
+    },
+    {
+      "id": "hermes",
+      "repository": "NousResearch/hermes-agent",
+      "commit": "31ce88f86e6cf4a66ef6aa315e4657a31bcf9915",
+      "patterns": [
+        "skills/**/SKILL.md",
+        "optional-skills/**/SKILL.md"
+      ],
+      "exclude_entries": {
+        "optional-skills/creative/archify/SKILL.md": "Catalog stub omits the diagram renderer, schemas and complete skill.",
+        "optional-skills/creative/brag-slim/SKILL.md": "Catalog stub points to a separate skill instead of including its production procedure.",
+        "optional-skills/creative/brag/SKILL.md": "Catalog stub omits the video production methods, audio assets and cue-analysis script."
+      }
+    },
+    {
+      "id": "tooluniverse",
+      "repository": "mims-harvard/ToolUniverse",
+      "commit": "8cf4fc9e621e52e8fce7d435f8de57e5591afe84",
+      "patterns": [
+        "skills/**/SKILL.md"
+      ]
+    },
+    {
+      "id": "agentic-awesome",
+      "repository": "sickn33/agentic-awesome-skills",
+      "commit": "64d4b7263f2ae74790437fbe378655e606eb2b65",
+      "patterns": [
+        "skills/**/SKILL.md"
+      ],
+      "exclude_entries": {
+        "skills/aas-compose-stack/SKILL.md": "Required bundled runtime/aas-core.cjs and AAS catalog are absent.",
+        "skills/aas-discover/SKILL.md": "Required bundled AAS MCP implementation and catalog are absent.",
+        "skills/aas-review-stack/SKILL.md": "Required bundled ui/workbench.html and AAS MCP implementation are absent.",
+        "skills/agy-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/ai-analyzer/SKILL.md": "Required scripts/generate_ai_report.py and data schemas are absent.",
+        "skills/ai-audiobook-narration/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/ai-headshot-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/ai-image-generation-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/ai-image-realism/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/ai-logo-maker/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/ai-multilingual-dubbing/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/ai-photo-restyler/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/ai-podcast-voiceover/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/ai-storyboard-generator/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/aider-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/apk-reverse/SKILL.md": "Required scripts/decode.ps1, frida-run.ps1 and rebuild-sign-install.ps1 are absent.",
+        "skills/beatra-ai-video-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/beatra/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/case-review/SKILL.md": "Required scripts/review_case.py and routed analysis modules are absent.",
+        "skills/claude-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/cline-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/codex-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/commandcode-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/copilot-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/cowork-to-code-bridge/SKILL.md": "Required bridge runtime and scripts/run_claude.sh are absent.",
+        "skills/cursor-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/debate-review/SKILL.md": "Required scripts/review-pr.mjs and relay implementation are absent.",
+        "skills/ecommerce-listing-image-set/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/gmail-automation/SKILL.md": "Required scripts/gmail.py and scripts/auth.py are absent.",
+        "skills/google-drive-automation/SKILL.md": "Required scripts/drive.py and scripts/auth.py are absent.",
+        "skills/grok-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/ida-reverse/SKILL.md": "Required scripts/start.ps1 and scripts/install-autostart.ps1 are absent.",
+        "skills/iterate-pr/SKILL.md": "Required scripts/fetch_pr_checks.py and scripts/fetch_pr_feedback.py are absent.",
+        "skills/js-reverse/SKILL.md": "Required scripts/bootstrap-reverse.ps1 and routing/tool index are absent.",
+        "skills/kimi-delegate/SKILL.md": "Required dispatch implementation scripts/relay.mjs is absent.",
+        "skills/minicut-film-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/music-generation-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/nsfw-ai-spicyapi/SKILL.md": "Required scripts/spicy.py implementation is absent.",
+        "skills/poster-design-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/product-photo-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/seo-image-gen/SKILL.md": "Required prompt-engineering references and scripts/presets.py are absent.",
+        "skills/speckit-updater/SKILL.md": "Required update-wrapper.ps1 and update-orchestrator.ps1 are absent.",
+        "skills/suno-lyrics-to-song/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/talking-avatar-video/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/task-intelligence/SKILL.md": "Required pre_task_check.py and orchestration modules are absent.",
+        "skills/video-content-extractor/SKILL.md": "Required scripts/extract_video.py is absent.",
+        "skills/viral-video-teardown-remake/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/voice-cloning-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/voiceover-narration-studio/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/webly/SKILL.md": "Required scripts/webly.mjs implementation is absent.",
+        "skills/wechat-cover-maker/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/yao-meta-skill/SKILL.md": "Required scripts/yao.py, validators and target compiler are absent.",
+        "skills/zeroize-audit/SKILL.md": "Required tools, schemas, configs, prompts and detection strategy are absent.",
+        "skills/zhongcao-cover-maker/SKILL.md": "Package is a catalog pointer; the required client implementation is not included.",
+        "skills/zhongcao-note-copywriter/SKILL.md": "Package is a catalog pointer; the required client implementation is not included."
+      }
+    },
+    {
+      "id": "tons-of-skills",
+      "repository": "jeremylongshore/tons-of-skills-marketplace",
+      "commit": "8af744bbe1018c346429cedceccb51f8e144c9d3",
+      "patterns": [
+        "plugins/**/SKILL.md",
+        "skills/**/SKILL.md"
+      ]
+    }
+  ]
+}

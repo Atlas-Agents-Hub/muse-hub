@@ -1,0 +1,179 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-resilient-rest-api-sync-with-retries-validation-and-sanitized-errors-409974",
+  "title": "Resilient REST API Sync with Retries, Validation, and Sanitized Errors",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Run Demo",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Set Demo Configuration",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "request_url",
+              "value": {
+                "configuration_input": "step-2-assignments-0-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "required_fields",
+              "value": "id,name,email",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Fetch API Records",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.request_url }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Normalize and Validate Records",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const incoming = records;\nconst flattened = incoming.length === 1 && Array.isArray(incoming[0].json)\n  ? incoming[0].json\n  : incoming.map((item) => item.json);\nconst requiredFields = String(\n  steps[\"step-2\"].records[0].required_fields || 'id,name,email'\n)\n  .split(',')\n  .map((field) => field.trim())\n  .filter(Boolean);\n\nif (flattened.length === 0) {\n  throw new Error('EMPTY_RESPONSE: The upstream API returned no records.');\n}\n\nreturn flattened.map((record, index) => {\n  const missing = requiredFields.filter((field) => {\n    const value = record?.[field];\n    return value === undefined || value === null || String(value).trim() === '';\n  });\n\n  return {\n    json: {\n      source_index: index,\n      record_id: record?.id ?? null,\n      name: String(record?.name ?? '').trim(),\n      email: String(record?.email ?? '').trim().toLowerCase(),\n      validation_status: missing.length === 0 ? 'valid' : 'invalid',\n      missing_fields: missing,\n      source_domain: record?.website ?? null\n    }\n  };\n});",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Validated Records",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "Sanitize Failure",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const failure = records[0].json;\nconst raw = String(\n  failure?.error?.message ||\n  failure?.error?.description ||\n  failure?.message ||\n  'The upstream request failed.'\n);\n\nconst sanitized = raw\n  .replace(/(?:bearer|token|api[_-]?key|password|authorization)\\s*[:=]\\s*[^\\s,;]+/gi, '[credential redacted]')\n  .replace(/[?&](?:key|token|api_key|access_token)=[^&\\s]+/gi, '?credential=[redacted]')\n  .slice(0, 240);\n\nreturn [{\n  json: {\n    status: 'failed',\n    error: 'upstream_request_failed',\n    message: sanitized,\n    retryable: true,\n    failed_at: new Date().toISOString(),\n    next_step: 'Verify the URL and authentication, then run the workflow again.'\n  }\n}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Failure Record",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://jsonplaceholder.typicode.com/users"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Resilient REST API Sync with Retries, Validation, and Sanitized Errors.json",
+    "git_blob": "0f34a78b7bc80ffd91f0f84eb5bf518d0bf05cef",
+    "sha256": "75db1ed16c8dd14bb22a22719ce5a06c9c5df287411a951865612556c364d505",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Resilient%20REST%20API%20Sync%20with%20Retries%2C%20Validation%2C%20and%20Sanitized%20Errors.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

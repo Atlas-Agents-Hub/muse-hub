@@ -1,0 +1,137 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-creating-a-ai-slack-bot-6dd6ee",
+  "title": "Creating a AI Slack Bot with Google Gemini",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Google Gemini Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ steps[\"step-4\"].record.body.token }}"
+        },
+        "sessionIdType": "customKey",
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Send response back to slack channel",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-4\"].record.body.user_name }}: {{ steps[\"step-4\"].record.body.text }}\n\nEffibotics Bot: {{ record.output.removeMarkdown() }}"
+        },
+        "select": "channel",
+        "channelId": {
+          "expression": "{{ steps[\"step-4\"].record.body.channel_id }}"
+        },
+        "otherOptions": {
+          "mrkdwn": true,
+          "sendAsUser": "Effibotics Bot",
+          "includeLinkToWorkflow": false
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Webhook to receive message",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "slack-bot",
+        "options": {
+          "responseData": ""
+        },
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.body.text }}"
+        },
+        "options": {
+          "systemMessage": "You are Effibotics AI personal assistant. Your task will be to provide helpful assistance and advice related to automation and such tasks. "
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Slack/Creating a AI Slack Bot with Google Gemini.json",
+    "git_blob": "c86257305dc806b08f20a27f70a7056d9ef1122c",
+    "sha256": "6e6a381465b4df8ad24df66d044be21f3c1babd5afffb121750008abdd45e048",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Slack/Creating%20a%20AI%20Slack%20Bot%20with%20Google%20Gemini.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

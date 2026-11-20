@@ -18,7 +18,7 @@ SOURCE_SHA = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "src/muse_presets/reverse.py": "3d5b4ff667ec996397f85a5a5746913d8aaff03801a864f1bbde5ffbe7dcc800",
     "tests/test_reverse_fixture.py": "d3229a34a348ea35ee18d9a0fcfe7a3b03ccb751e8eeac2bc946eaeb3b432aeb",
-    "presets/reverse-engineering-researcher/preset.json": 'f4b34287ed03dcfd1a59cdb1caa7ebb98e8ac096efade5d6ef15cca641c0e3ab',
+    "presets/reverse-engineering-researcher/preset.json": '88d21bec06900d4f3d8fbdbc0ae10b48f9e2418eb944aa52da830a764fc1005f',
     "presets/reverse-engineering-researcher/playbook.json": '6b17bc20e32fa6d03390d3b18520af53cb159e40ee6b2591fef18e1ef3846482',
 }
 SOURCE_MAP = {

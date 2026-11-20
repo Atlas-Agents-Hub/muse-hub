@@ -1,0 +1,186 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-daily-ai-digest-of-unread-emails-to-telegram-italian-fbd8af",
+  "title": "Daily AI digest of unread emails to Telegram (Italian)",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Ogni mattina alle 8 (lun-ven)",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1-5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Prendi email non lette",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 25,
+        "filters": {
+          "q": "is:unread newer_than:1d -category:promotions -category:social"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Prepara testo per AI",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Compatta le email in un unico testo per l'AI\nconst righe = [];\n\nfor (const item of records) {\n  const e = item.json;\n  const da = e.from?.value?.[0]?.name || e.from?.value?.[0]?.address || e.From || 'Sconosciuto';\n  const oggetto = e.subject || e.Subject || '(senza oggetto)';\n  const anteprima = String(e.snippet || e.text || '').slice(0, 200).replace(/\\s+/g, ' ');\n  righe.push(`DA: ${da}\\nOGGETTO: ${oggetto}\\nANTEPRIMA: ${anteprima}\\n---`);\n}\n\nif (righe.length === 0) {\n  return [{ json: { vuoto: true, testoEmail: '' } }];\n}\n\nreturn [{ json: { vuoto: false, totale: righe.length, testoEmail: righe.join('\\n') } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Ci sono email?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.vuoto }}"
+              },
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Riassumi con AI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-5-modelid"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Sei l'assistente di un imprenditore italiano. Ricevi l'elenco delle email non lette e produci una rassegna mattutina in italiano, breve e pratica, in questo formato:\n\n🔴 URGENTI (rispondere oggi):\n- [mittente]: [cosa vuole in max 10 parole]\n\n🟡 IMPORTANTI (questa settimana):\n- ...\n\n⚪ IL RESTO:\n- una riga sola che raggruppa il resto\n\nSii sintetico. Se qualcosa sembra un cliente arrabbiato o un'opportunità di vendita, segnalalo per primo."
+            },
+            {
+              "content": {
+                "expression": "Ecco le {{ record.totale }} email non lette:\n\n{{ record.testoEmail }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Invia rassegna su Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "configuration_input": "step-6-chatid"
+        },
+        "text": {
+          "expression": "☕ *Rassegna email del {{ current_time.format('dd/MM') }}*\n\n{{ record.message?.content || record.output || record.text }}"
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-chatid",
+      "purpose": "Select the chatId for step-6.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Daily AI digest of unread emails to Telegram (Italian).json",
+    "git_blob": "dc75efd01c182ec667ca84a067d302d2eda37c74",
+    "sha256": "6e16dcbd2674db9f09bc7b0f03b662da499ccd6f97f2f85fee04cde9395eb20f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Daily%20AI%20digest%20of%20unread%20emails%20to%20Telegram%20%28Italian%29.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

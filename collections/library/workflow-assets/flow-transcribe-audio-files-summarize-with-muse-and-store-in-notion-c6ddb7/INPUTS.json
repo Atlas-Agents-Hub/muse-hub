@@ -1,0 +1,26 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-transcribe-audio-files-summarize-with-muse-and-store-in-notion-c6ddb7",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-foldertowatch": null,
+    "step-3-pageid": null,
+    "step-5-modelid": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "notion": {
+      "connection": null
+    }
+  }
+}

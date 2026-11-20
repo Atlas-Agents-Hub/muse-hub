@@ -1,0 +1,606 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-advanced-ai-demo-presented-at-ai-developers-14-meetup-4ce287",
+  "title": "Advanced AI Demo (Presented at AI Developers #14 meetup)",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Send message",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": "Data from webhook: {{ record.query.email }}"
+        },
+        "select": "channel",
+        "channelId": {
+          "configuration_input": "step-1-channelid"
+        },
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Execute JavaScript",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of records) {\n item.json.myNewField = 1;\n}\n\nreturn records;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "chunkSize": 3000,
+        "chunkOverlap": 200
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Embeddings OpenAI",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "loader": "pdfLoader",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "document-title",
+                "value": {
+                  "expression": "{{ steps[\"step-10\"].record.whitepaper_title }}"
+                }
+              },
+              {
+                "name": "document-publish-year",
+                "value": {
+                  "expression": "{{ steps[\"step-10\"].record.publish_year }}"
+                }
+              },
+              {
+                "name": "document-author",
+                "value": {
+                  "expression": "{{ steps[\"step-10\"].record.author }}"
+                }
+              }
+            ]
+          }
+        },
+        "dataType": "binary"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.3
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Embeddings OpenAI2",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Vector Store Retriever",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-9",
+      "label": "Download PDF",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.file_url }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "PDFs to download",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-11",
+      "label": "Read Pinecone Vector Store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {
+          "pineconeNamespace": "whitepaper"
+        },
+        "pineconeIndex": {
+          "configuration_input": "step-11-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Question and Answer Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.chatInput }}. \nOnly use vector store knowledge to answer the question. Don't make anything up. If you don't know the answer, tell the user that you don't know."
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Anthropic Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.4
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Get calendar availability",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-14-url"
+        },
+        "method": "POST",
+        "jsonBody": {
+          "expression": "{\n \"timeMin\": \"{timeMin}\",\n \"timeMax\": \"{timeMax}\",\n \"timeZone\": \"Europe/Berlin\",\n \"groupExpansionMax\": 20,\n \"calendarExpansionMax\": 10,\n \"items\": [\n {\n \"id\": \"[configured contact]\"\n }\n ]\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "toolDescription": "Call this tool to get the appointment availability for a particular period on the calendar. The tool may refer to availability as \"Free\" or \"Busy\". \n\nUse {timeMin} and {timeMax} to specify the window for the availability query. For example, to get availability for 25 July, 2024 the {timeMin} would be 2024-07-25T09:00:00+02:00 and {timeMax} would be 2024-07-25T17:00:00+02:00.\n\nIf the tool returns an empty response, it means that something went wrong. It does not mean that there is no availability."
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Appointment booking agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": {
+            "expression": "You are an efficient and courteous assistant tasked with scheduling appointments with Max Tkacz.\n\nWhen users mention an appointment or meeting, they are referring to a meeting with Max.\nWhen users refer to the calendar or \"your schedule,\" they are referring to Max's calendar. \n\nYou can use various tools to access and manage Max's calendar. Your primary goal is to assist users in successfully booking an appointment with Max, ensuring no scheduling conflicts. Only book an appointment if the requested time slot is available (the tool may refer to this as \"Free\")\n\nToday's date is {{ current_date.format('dd LLL yyyy') }}.\nAppointments are always 30 minutes in length. \n\n\nProvide accurate information at all times. If the tools are not functioning correctly, inform the user that you are unable to assist them at the moment."
+          }
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Insert into Pinecone vector store",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {
+          "clearNamespace": true,
+          "pineconeNamespace": "whitepaper"
+        },
+        "pineconeIndex": {
+          "configuration_input": "step-17-pineconeindex"
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Book appointment",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-18-url"
+        },
+        "method": "POST",
+        "jsonBody": {
+          "expression": "{\n \"summary\": \"Appointment with {userName}\",\n \"start\": {\n \"dateTime\": \"{startTime}\",\n \"timeZone\": \"Europe/Berlin\"\n },\n \"end\": {\n \"dateTime\": \"{endTime}\",\n \"timeZone\": \"Europe/Berlin\"\n },\n \"attendees\": [\n {\"email\": \"[configured contact]\"},\n {\"email\": \"{userEmail}\"}\n ]\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "toolDescription": "Call this tool to book an appointment in the calendar. ",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "userName",
+              "description": "The full name of the user making the appointment. Like John Doe"
+            },
+            {
+              "name": "startTime",
+              "description": "The start time of the event in Europe/Berlin timezone. For example, 2024-07-24T10:00:00+02:00"
+            },
+            {
+              "name": "endTime",
+              "description": "The end time of the event in Europe/Berlin timezone. It should always be 30 minutes after the startTime. "
+            },
+            {
+              "name": "userEmail",
+              "description": "The email address of the user making the appointment"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {
+          "title": "Book an appointment with Max"
+        },
+        "initialMessages": "Hi there! 👋\nI can help you schedule an appointment with Max Tkacz. On which day would you like to meet?"
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.5
+        }
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Add automation label",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "labelIds": [
+          "Label_4763053241338138112"
+        ],
+        "messageId": {
+          "expression": "{{ record.id }}"
+        },
+        "operation": "addLabels"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "On new email to nathan's inbox",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Add music label",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "labelIds": [
+          "Label_6822395192337188416"
+        ],
+        "messageId": {
+          "expression": "{{ record.id }}"
+        },
+        "operation": "addLabels"
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Assign label with AI",
+      "operation": "classify",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "inputText": {
+          "expression": "{{ record.text }}"
+        },
+        "categories": {
+          "categories": [
+            {
+              "category": "automation",
+              "description": "email on the topic of automation or workflows and automated processes, includes newsletters on this topic"
+            },
+            {
+              "category": "music",
+              "description": "email on the topic of music, for example from an artist "
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-25",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-25-path"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Whether email contains n8n",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              },
+              "leftValue": {
+                "expression": "{{ record.query.email }}"
+              },
+              "rightValue": "@n8n"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-25",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-15",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-17",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-12",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-11",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-24",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-17",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-15",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-15",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-12",
+      "channel": "retriever",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-8",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-19",
+    "step-25"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://www.googleapis.com/calendar/v3/freeBusy"
+    },
+    {
+      "id": "step-17-pineconeindex",
+      "purpose": "Select the pineconeIndex for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-url",
+      "purpose": "Provide the contact, recipient, or message content for url.",
+      "required": true
+    },
+    {
+      "id": "step-25-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Advanced AI Demo (Presented at AI Developers #14 meetup).json",
+    "git_blob": "2ded4dbb83da7f19e635dce61da0366943e66b03",
+    "sha256": "27dfd3814c3cb1ba037883052a23f35549c99bae3e9bace838a97181ede5a4a3",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Advanced%20AI%20Demo%20%28Presented%20at%20AI%20Developers%20%2314%20meetup%29.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

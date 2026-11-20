@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-scrape-and-summarize-posts-of-a-news-site-without-rss-feed-using-ai-and-save-t-105d3c",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-model": null,
+    "step-3-model": null,
+    "step-14-url": null,
+    "step-16-projectid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "nocodb": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

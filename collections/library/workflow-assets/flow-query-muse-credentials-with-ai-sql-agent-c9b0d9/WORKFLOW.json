@@ -1,0 +1,214 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-query-muse-credentials-with-ai-sql-agent-c9b0d9",
+  "title": "Query n8n Credentials with AI SQL Agent",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Test workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Map Workflows & Credentials",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "workflow_id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            },
+            {
+              "name": "workflow_name",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.name }}"
+              }
+            },
+            {
+              "id": {
+                "configuration_input": "step-2-assignments-2-id"
+              },
+              "name": "credentials",
+              "type": "array",
+              "value": {
+                "configuration_input": "step-2-assignments-2-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Save to Database",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "import json\nimport sqlite3\ncon = sqlite3.connect(\"n8n_workflow_credentials.db\")\n\ncur = con.cursor()\ncur.execute(\"CREATE TABLE IF NOT EXISTS n8n_workflow_credentials (workflow_id TEXT PRIMARY KEY, workflow_name TEXT, credentials TEXT);\")\n\nfor item in _input.all():\n cur.execute('INSERT OR REPLACE INTO n8n_workflow_credentials VALUES(?,?,?)', (\n item.json.workflow_id,\n item.json.workflow_name,\n json.dumps(item.json.credentials.to_py())\n ))\n\ncon.commit()\ncon.close()\n\nreturn [{ \"affected_rows\": len(_input.all()) }]",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Chat Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-5",
+      "label": "Query Workflow Credentials Database",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "name": {
+          "configuration_input": "step-5-name"
+        },
+        "language": "python",
+        "pythonCode": {
+          "language": "python",
+          "reference": "import json\nimport sqlite3\ncon = sqlite3.connect(\"n8n_workflow_credentials.db\")\n\ncur = con.cursor()\nres = cur.execute(query);\n\noutput = json.dumps(res.fetchall())\n\ncon.close()\nreturn output;",
+          "inputs": "records, record, and named steps"
+        },
+        "description": "Call this tool to query the workflow credentials database. The database is already set. The available tables are as follows:\n* n8n_workflow_credentials (workflow_id TEXT PRIMARY KEY, workflow_name TEXT, credentials TEXT);\n * n8n_workflow_credentials.credentials are stored as json string and the app name may be obscured. Prefer querying using the %LIKE% operation for best results.\n\nPass a SQL SELECT query to this tool for the available tables."
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-8",
+      "label": "Workflow Credentials Helper Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "systemMessage": {
+            "expression": "You help find information on n8n workflow credentials. When user mentions an app, assume they mean the workflow credential for the app.\n* Only if the user requests to provide a link to the workflow, replace $workflow_id with the workflow id in the following url schema: {{ window.location.protocol + '//' + window.location.host }}/workflow/$workflow_id"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "n8n",
+      "operation": "service-read",
+      "adapter": "n8n",
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-8",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-4"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-2-id",
+      "purpose": "Select the id for step-2.",
+      "required": true
+    },
+    {
+      "id": "step-2-assignments-2-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-5-name",
+      "purpose": "Choose the name resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Query n8n Credentials with AI SQL Agent.json",
+    "git_blob": "c37c42e9506742d1797ae21cc0d9bbcf70d8c776",
+    "sha256": "34f1fc2bc44e8ce54aa477ded638645fe496124b59200b9234cc170e7426cd27",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Query%20n8n%20Credentials%20with%20AI%20SQL%20Agent.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

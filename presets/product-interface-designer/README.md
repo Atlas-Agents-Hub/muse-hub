@@ -1,19 +1,24 @@
 # Product & Interface Designer
 
-**Muse Hub specialist:** Design and review user journeys, interfaces, states, and accessibility.
+**Muse Hub specialist:** Design and evaluate complete product experiences: user research, information architecture, responsive layouts, interaction flows, accessibility and build-ready handoffs.
 
-**[Download the assistant](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-product-interface-designer-v1.5.0.zip)** · **[Set up Product & Interface Designer](INSTALL.md)**
+**[Download the assistant](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-product-interface-designer-v1.6.0.zip)** · **[Set up Product & Interface Designer](INSTALL.md)** · [Browse its library](LIBRARY.md)
 
-Give this specialist its own Main conversation and three subchats. Its package brings together the role's instructions, selected skills, workflows, and examples so you can begin with your own task.
+**285 skills · 6 workflows · 24 tool guides**. Give this specialist its own Main conversation and **three subchats**. Its package includes the selected methods, supporting files, examples and service guides for your work.
 
-## First task
+## Put it to work
 
-"Critique this interface flow and list the highest-impact improvements."
+Bring your current task and source material. Open `PROFILE.md` in the download and choose the relevant skill or workflow. Follow its inputs, steps and result checks, then save the result with your project.
 
-## Methods and tools
+**First task:** Bring a screen or user journey. Review its layout, labels, interaction states and accessibility, then propose a clear redesign.
 
-[Explore the specialist's working methods](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [included tools](../../docs/CAPABILITIES.md). Add the services you need through the [connector directory](../../docs/connectors/README.md), choosing their account and permissions during setup.
+## Explore the toolkit
 
-Keep the original download and your customized working copy separately so updates preserve your preferences and memory. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) covers the details.
+- [Skills and workflows for Product & Interface Designer](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer) — search the full selection by task or subject.
+- [Library and suggested task starters](LIBRARY.md) — find the right method and next step.
+- [Working methods](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) and [included tools](../../docs/CAPABILITIES.md).
+- [Service connectors](../../docs/connectors/README.md) — 38 recommended services for this specialist.
 
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.5.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-origins.github.io/muse-ai-agent-presets/)
+Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.
+
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.6.0 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)

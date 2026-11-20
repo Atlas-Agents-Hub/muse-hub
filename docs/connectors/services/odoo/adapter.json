@@ -1,0 +1,573 @@
+{
+  "allowed_hosts": [
+    "mycompany.odoo.com",
+    "mycompany.odoo.com.",
+    "www.odoo.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The address of your Odoo without a port, for example https://mycompany.odoo.com. Put a port in the Port field.",
+        "label": "Odoo URL",
+        "name": "base_url",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The database name, for example mycompany",
+        "label": "Odoo Database",
+        "name": "database",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The login of the Odoo user, usually an email address",
+        "label": "Odoo Username",
+        "name": "username",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api_Key",
+        "name": "api_key",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Odoo API Key', description: 'The API key created under My Profile → Account Security → New API Key', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Leave empty to use port 443 (the default, right for Odoo Online and most HTTPS setups). Set it only when Odoo listens on another port, for example 8069 for a self-hosted Odoo reached directly.",
+        "label": "Port (optional)",
+        "name": "port",
+        "required": false,
+        "type": "Number"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Finance & Commerce",
+  "id": "odoo",
+  "name": "Odoo",
+  "operations": [
+    {
+      "description": "Records can be listed and filtered",
+      "id": "get_records",
+      "inputs": [
+        {
+          "description": "Model name. e.g.: res.partner",
+          "label": "Model",
+          "name": "model",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "A domain is a list of criteria, each criterion being a triple of (field_name, operator, value). See https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#reference-orm-domains for details.",
+          "label": "Search domains",
+          "name": "domain",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "Returns the requested fields of the records. When undefined, returns all fields.",
+          "label": "Fields",
+          "name": "fields",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Offset",
+          "name": "offset",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Optional. Field names with asc or desc, separated by commas, for example \"create_date desc, id desc\". Leave empty for Odoo's default order.",
+          "label": "Sort Order",
+          "name": "order",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Custom Search and read records",
+      "source_path": "odoo/src/lib/actions/get-records.ts",
+      "source_sha256": "3d7ff0659398208f62c7843e309f95755e2b73dc12b67f99184da4c6cde61947",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/actions/get-records.ts"
+    },
+    {
+      "description": "List invoices, bills and credit notes, filtered by type, status, customer and dates.",
+      "id": "find_invoices",
+      "inputs": [
+        {
+          "description": "Leave empty for all four types.",
+          "label": "Type",
+          "name": "move_types",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "state",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Payment Status",
+          "name": "payment_states",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "",
+          "label": "Partner_Id",
+          "name": "partner_id",
+          "required": null,
+          "source_expression": "odooProps.fixedModelDropdown({ model: 'res.partner', displayName: 'Customer / Vendor', description: 'Optional. Includes invoices of its contacts.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Number or Reference Contains",
+          "name": "number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Invoice Date From",
+          "name": "invoice_date_from",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Invoice Date To",
+          "name": "invoice_date_to",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Due Date From",
+          "name": "due_date_from",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Due Date To",
+          "name": "due_date_to",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Default 50, maximum 500.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Skip this many invoices (for paging).",
+          "label": "Offset",
+          "name": "offset",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Invoices",
+      "source_path": "odoo/src/lib/actions/find-invoices.ts",
+      "source_sha256": "6672f806301bad00493d4d91d10a3e9d6765f3b124e0bfa0b4204dc5700a2ad6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/actions/find-invoices.ts"
+    },
+    {
+      "description": "Search Odoo CRM leads and opportunities.",
+      "id": "odoo_find_leads",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Query",
+          "name": "query",
+          "required": null,
+          "source_expression": "atomicProps.textProp({ displayName: 'Search Text', description: 'Matches title, contact name, company name or email.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Omit for both.",
+          "label": "Type",
+          "name": "type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Stage_Id",
+          "name": "stage_id",
+          "required": null,
+          "source_expression": "atomicProps.optionalIdProp({ displayName: 'Stage ID', description: 'crm.stage ID.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "User_Id",
+          "name": "user_id",
+          "required": null,
+          "source_expression": "atomicProps.optionalIdProp({ displayName: 'Salesperson User ID', description: 'res.users ID.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Team_Id",
+          "name": "team_id",
+          "required": null,
+          "source_expression": "atomicProps.optionalIdProp({ displayName: 'Sales Team ID', description: 'crm.team ID.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Partner_Id",
+          "name": "partner_id",
+          "required": null,
+          "source_expression": "atomicProps.optionalIdProp({ displayName: 'Customer ID', description: 'res.partner ID.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Created_After",
+          "name": "created_after",
+          "required": null,
+          "source_expression": "atomicProps.textProp({ displayName: 'Created After', description: 'ISO date or datetime, for example 2026-09-01 or 2026-09-01T08:00:00Z (UTC when no zone).' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Also return lost (archived) leads.",
+          "label": "Include Lost",
+          "name": "include_lost",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Limit",
+          "name": "limit",
+          "required": null,
+          "source_expression": "atomicProps.limitProp({ fallback: 50, max: 500 })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Offset",
+          "name": "offset",
+          "required": null,
+          "source_expression": "atomicProps.offsetProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Leads",
+      "source_path": "odoo/src/lib/actions/atomics/find-leads.ts",
+      "source_sha256": "bec816d4ad4a2c1b29a1e8096a880fbe98fe61f56fbe712f4b28a1fa43aae747",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/actions/atomics/find-leads.ts"
+    },
+    {
+      "description": "Search Odoo project tasks.",
+      "id": "odoo_find_tasks",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project_Id",
+          "name": "project_id",
+          "required": null,
+          "source_expression": "atomicProps.optionalIdProp({ displayName: 'Project ID', description: 'project.project ID.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "User_Id",
+          "name": "user_id",
+          "required": null,
+          "source_expression": "atomicProps.optionalIdProp({ displayName: 'Assignee User ID', description: 'Tasks assigned to this res.users ID.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Stage_Id",
+          "name": "stage_id",
+          "required": null,
+          "source_expression": "atomicProps.optionalIdProp({ displayName: 'Stage ID', description: 'project.task.type ID.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Partner_Id",
+          "name": "partner_id",
+          "required": null,
+          "source_expression": "atomicProps.optionalIdProp({ displayName: 'Customer ID', description: 'res.partner ID.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Query",
+          "name": "query",
+          "required": null,
+          "source_expression": "atomicProps.textProp({ displayName: 'Title Contains', description: 'Part of the task title.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Limit",
+          "name": "limit",
+          "required": null,
+          "source_expression": "atomicProps.limitProp({ fallback: 50, max: 500 })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Offset",
+          "name": "offset",
+          "required": null,
+          "source_expression": "atomicProps.offsetProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Tasks",
+      "source_path": "odoo/src/lib/actions/atomics/find-tasks.ts",
+      "source_sha256": "2b3c5e4136491065ec0009d3bd1d8d6be209ab2c8f1570115f9176df93a0e297",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/actions/atomics/find-tasks.ts"
+    },
+    {
+      "description": "Get contacts on Odoo",
+      "id": "get_contacts",
+      "inputs": [
+        {
+          "description": "Select which contact type to get",
+          "label": "Type",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Would you like to search any specific name?",
+          "label": "Contact Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get contacts",
+      "source_path": "odoo/src/lib/actions/get-contacts.ts",
+      "source_sha256": "c3aab3fe4d84e0df69a0879c8582e111127401768bb9bb3bf5c38ea4c2de9e50",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/actions/get-contacts.ts"
+    },
+    {
+      "description": "Get one record of any Odoo model by picking it from a list.",
+      "id": "get_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "odooProps.modelDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "odooProps.recordDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Optional. Field names to return, for example name, email. Leave empty for all fields except files and images.",
+          "label": "Fields",
+          "name": "fields",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Record",
+      "source_path": "odoo/src/lib/actions/get-record.ts",
+      "source_sha256": "5239b3cf17a88876861c7e584e7c6b15a274e8595a16c529c5fe121e36b3e55f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/actions/get-record.ts"
+    },
+    {
+      "description": "Read one or more records of any Odoo model by ID.",
+      "id": "odoo_get_records",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "atomicProps.modelProp()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Ids",
+          "name": "ids",
+          "required": null,
+          "source_expression": "atomicProps.idsProp({ description: 'Record IDs, for example [12, 15]. At most 500.' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Fields",
+          "name": "fields",
+          "required": null,
+          "source_expression": "atomicProps.fieldsProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Records by ID",
+      "source_path": "odoo/src/lib/actions/atomics/get-records.ts",
+      "source_sha256": "4995018a655b7b2fef0a60f3b479bcb90f2e2d149a7089c67d1c1a76a1da84ae",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/actions/atomics/get-records.ts"
+    },
+    {
+      "description": "List internal Odoo users (salespeople, assignees).",
+      "id": "odoo_list_users",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Query",
+          "name": "query",
+          "required": null,
+          "source_expression": "atomicProps.textProp({ displayName: 'Search Text', description: 'Matches name, login or email (contains).' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Limit",
+          "name": "limit",
+          "required": null,
+          "source_expression": "atomicProps.limitProp({ fallback: 50, max: 500 })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Offset",
+          "name": "offset",
+          "required": null,
+          "source_expression": "atomicProps.offsetProp()",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Users",
+      "source_path": "odoo/src/lib/actions/atomics/list-users.ts",
+      "source_sha256": "a9019d55cd5d6a87d0726670e48e4535fa03de4833edfc9b1a3c28ddc47f7aae",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/actions/atomics/list-users.ts"
+    },
+    {
+      "description": "Triggers when a new contact (person or company) is created in Odoo.",
+      "id": "new_contact",
+      "inputs": [
+        {
+          "description": "Which new contacts should start the flow.",
+          "label": "Contact Type",
+          "name": "contact_type",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Contact",
+      "source_path": "odoo/src/lib/triggers/new-contact.ts",
+      "source_sha256": "04e63d8415194784702814199e55ffbb5b7e52ef2a8983f1f471411b2d1f4c53",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/triggers/new-contact.ts"
+    },
+    {
+      "description": "Triggers when a new lead or opportunity is created in Odoo CRM.",
+      "id": "new_lead",
+      "inputs": [
+        {
+          "description": "Leads only exist when \"Leads\" is turned on in CRM settings; otherwise every record is an opportunity. For leads, the type and team are checked while the record is new (until a record created more than 5 minutes later exists), so later changes do not fire. \"Opportunities only\" also fires when a lead is converted to an opportunity after the trigger was turned on, and checks the team on every poll, so an opportunity moved into the chosen team later fires then (once; the last 2,000 fired opportunities are remembered).",
+          "label": "Type",
+          "name": "lead_type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Team_Id",
+          "name": "team_id",
+          "required": null,
+          "source_expression": "odooProps.fixedModelDropdown({ model: 'crm.team', displayName: 'Sales Team', description: 'Optional. Only fire for this sales team.', required: false, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Lead or Opportunity",
+      "source_path": "odoo/src/lib/triggers/new-lead.ts",
+      "source_sha256": "915c61ed418f5344aa03156f85e9525b954a1abdaf9a05af08a1b57a5d52ebbb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/triggers/new-lead.ts"
+    },
+    {
+      "description": "Triggers when a record is created or changed in any Odoo model. Odoo also counts automatic updates (computed fields, scheduled actions) as changes.",
+      "id": "new_or_updated_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Model",
+          "name": "model",
+          "required": null,
+          "source_expression": "odooProps.modelDropdown()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Optional. Only fire for created or updated records that match this Odoo domain, for example [[\"is_company\", \"=\", true]]. Leave empty for every change. Archived records are included (so archiving a record fires it) unless the domain mentions active.",
+          "label": "Filter domain",
+          "name": "domain",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "Optional. Field names to return, for example name, email. Leave empty for all fields except files and images.",
+          "label": "Fields",
+          "name": "fields",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New or Updated Record",
+      "source_path": "odoo/src/lib/triggers/new-or-updated-record.ts",
+      "source_sha256": "f3666eb158d5a8f90edddd530e632144cb2fdafabdc9cb949847f5f5cd1dd210",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/odoo/src/lib/triggers/new-or-updated-record.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "ac56c29b612fc73986407dffb453fb4071b69d16",
+    "index_path": "odoo/src/index.ts",
+    "index_sha256": "e0398982013cf8ba69eae49328928259500175d48ce366e0cbacf414802a35ce",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "claims-adjudicator"
+  ]
+}

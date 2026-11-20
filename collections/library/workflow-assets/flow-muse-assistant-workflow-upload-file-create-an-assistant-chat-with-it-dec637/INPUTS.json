@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-muse-assistant-workflow-upload-file-create-an-assistant-chat-with-it-dec637",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-fileid": null,
+    "step-4-assistantid": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

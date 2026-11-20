@@ -1,0 +1,295 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-children-s-arabic-storytelling-on-telegram-b21d86",
+  "title": "Children s Arabic Storytelling on Telegram",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Recursive Character Text Splitter",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "chunkSize": 500,
+        "chunkOverlap": 300
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "OpenAI Chat Model2",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Create a Prompt for DALL-E",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "prompt": "Summarize the characters in this story based on their appearance and describe them if they are humans or animals and how they look like and what kind of are they, the prompt should be no-text in the picture.\n\n\n\n\n\"{text}\"\n\n\nCONCISE SUMMARY:",
+              "summarizationMethod": "stuff"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Generate an Image for the Story",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "Produce an image ensuring that no text is generated within the visual content. {{ record.response.text }}"
+        },
+        "options": {},
+        "resource": "image"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Generate Audio for the Story",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "input": {
+          "expression": "{{ record.response.text }}"
+        },
+        "options": {},
+        "resource": "audio"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Send the Story To Channel",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.response.text }}"
+        },
+        "chatId": {
+          "expression": "-4170994782"
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Send Image to the Channel",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "-4170994782"
+        },
+        "operation": "sendPhoto",
+        "binaryData": true,
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Translate the Story to Arabic",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "prompt": "Translate this story texts to \"Arabic\" and make it easy to understands for kids with easy words and moral lesson :\n\n\n\"{text}\"\n\n\n",
+              "summarizationMethod": "stuff"
+            }
+          }
+        },
+        "chunkingMode": "advanced"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Send Audio to the Channel",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "configuration_input": "step-12-chatid"
+        },
+        "operation": "sendAudio",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "نهاية القصة ... "
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Create a Story for Kids",
+      "operation": "summarize",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "prompt": "Create a captivating short tale for kids, whisking them away to magical lands brimming with wisdom. Explore diverse themes in a fun and simple way, weaving in valuable messages. Dive into cultural adventures with lively language that sparks curiosity. Let your story inspire young minds through enchanting narratives that linger long after the last word. Begin crafting your imaginative tale now! (Approximately 900 characters)\n\n\n\"{text}\"\n\nCONCISE SUMMARY:",
+              "summarizationMethod": "stuff"
+            }
+          }
+        },
+        "chunkingMode": "advanced"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-13",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-12-chatid",
+      "purpose": "Select the chatId for step-12.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/AI-Powered Children_s Arabic Storytelling on Telegram.json",
+    "git_blob": "f06cb988347a722f159794853d084310d9d454b9",
+    "sha256": "6356d9e6ed794178812a1e802a4fd0c9be710a5c61becd1015b4ce9bc363bb54",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/AI-Powered%20Children_s%20Arabic%20Storytelling%20on%20Telegram.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

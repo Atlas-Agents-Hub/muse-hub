@@ -1,0 +1,127 @@
+{
+  "allowed_hosts": [
+    "api.datadoghq.com",
+    "docs.datadoghq.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Datadog API key', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "App Key",
+        "name": "appKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Datadog App key (required for some endpoints)', required: false, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Site",
+        "name": "site",
+        "required": true,
+        "type": "StaticDropdown"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Monitoring",
+  "id": "datadog",
+  "name": "Datadog",
+  "operations": [
+    {
+      "description": "Send your logs to your Datadog platform over HTTP.",
+      "id": "sendMultipleLogs",
+      "inputs": [
+        {
+          "description": "Logs to send to Datadog, must contain a \\`logs\\` key with an array of objects. Documentation: https://docs.datadoghq.com/api/latest/logs/#send-logs",
+          "label": "Logs",
+          "name": "body",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Multiple logs",
+      "source_path": "datadog/src/lib/actions/send-multiple-logs.ts",
+      "source_sha256": "1531b9ece77211f1e87bb457779483eb8400dfd6613869aafe26f0f68c43d983",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/datadog/src/lib/actions/send-multiple-logs.ts"
+    },
+    {
+      "description": "Send one log to your Datadog platform over HTTP.",
+      "id": "sendOneLog",
+      "inputs": [
+        {
+          "description": "The message to send to Datadog",
+          "label": "Message",
+          "name": "message",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The DD source to send to Datadog",
+          "label": "DD Source",
+          "name": "ddsource",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The DD tags to send to Datadog, comma separated",
+          "label": "DD Tags",
+          "name": "ddtags",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The hostname to send to Datadog",
+          "label": "Hostname",
+          "name": "hostname",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The service to send to Datadog",
+          "label": "Service",
+          "name": "service",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Additional properties to send to Datadog, in key-value pairs like status, level, etc.",
+          "label": "Additional Properties",
+          "name": "additionalProperties",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Send One log",
+      "source_path": "datadog/src/lib/actions/send-one-log.ts",
+      "source_sha256": "68dc83854a5136ec2bbfc701f7bbc9bf62293dc07694ebf279b3fc977d450c90",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/datadog/src/lib/actions/send-one-log.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "95e5c2eb5960bd67481300c4084336f261a0398d",
+    "index_path": "datadog/src/index.ts",
+    "index_sha256": "5fc0a4b34b3e72a50ee7ecd2410fe1f885e63f1c6035ecc202a1da99f57fc9f3",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "infrastructure-reliability-engineer",
+    "software-engineer",
+    "adversarial-verifier",
+    "reverse-engineering-researcher"
+  ]
+}

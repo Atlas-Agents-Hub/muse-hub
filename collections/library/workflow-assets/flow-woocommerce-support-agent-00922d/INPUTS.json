@@ -1,0 +1,36 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-woocommerce-support-agent-00922d",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-16-url": null,
+    "step-24-responsebody": null,
+    "step-28-assignments-0-value": null,
+    "step-31-assignments-0-value": null
+  },
+  "adapters": {
+    "dhl": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "woocommerce": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

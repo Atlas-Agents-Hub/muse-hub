@@ -26,12 +26,15 @@ class EditorialClarity(unittest.TestCase):
 
     def test_actions_identify_real_operation_and_expected_result(self):
         body=README.read_text(encoding="utf-8")
-        inventory=json.loads((ROOT/"hub/site/downloads.json").read_text())["counts"]
+        inventory=json.loads((ROOT/"hub/site/downloads.json").read_text(encoding="utf-8"))["counts"]
+        starters=json.loads((ROOT/"collections/muse-starters-v1/starters.json").read_bytes())
+        connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
+        release=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
         for expected in ("Muse Hub","15 independent assistants",str(inventory["skill"])+" skills",str(inventory["workflow"])+" workflows",
-                         "100 task starters","151 connectors","START_HERE.md",
+                         f"{len(starters)} task starters",f"{len(connectors)} connectors","START_HERE.md",
                          "tools/muse_collection.py demo data-engineer",
                          "docs/connectors/README.md","docs/GETTING_STARTED.md", "docs/TERMINAL.md",
-                         "releases/tag/v1.5.0", "https://atlas-origins.github.io/muse-ai-agent-presets/downloads.html"):
+                         f"releases/tag/{release}", "https://atlas-agents-hub.github.io/muse-hub/downloads.html"):
             with self.subTest(expected=expected):
                 self.assertIn(expected.lower(),body.lower())
         self.assertLess(len(body.encode("utf-8")),8000)

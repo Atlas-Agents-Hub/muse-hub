@@ -1,0 +1,193 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-summarize-serpbear-data-with-ai-via-openrouter-and-save-it-to-baserow-bdc33f",
+  "title": "Summarize SERPBear data with AI (via Openrouter) and save it to Baserow",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get data from SerpBear",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "domain",
+              "value": "rumjahn.com"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Parse data from SerpBear",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const keywords = items[0].json.keywords;\nconst today = new Date().toISOString().split('T')[0];\n\n// Create summary for each keyword\nconst keywordSummaries = keywords.map(kw => {\n const position = kw.position || 0;\n const lastWeekPositions = Object.values(kw.history || {}).slice(-7);\n const avgPosition = lastWeekPositions.reduce((a, b) => a + b, 0) / lastWeekPositions.length;\n \n return {\n keyword: kw.keyword,\n currentPosition: position,\n averagePosition: Math.round(avgPosition * 10) / 10,\n trend: position < avgPosition ? 'improving' : position > avgPosition ? 'declining' : 'stable',\n url: kw.url || 'not ranking'\n };\n});\n\n// Create the prompt\nconst prompt = `Here's the SEO ranking data for rumjahn.com as of ${today}:\n\n${keywordSummaries.map(kw => `\nKeyword: \"${kw.keyword}\"\nCurrent Position: ${kw.currentPosition}\n7-Day Average: ${kw.averagePosition}\nTrend: ${kw.trend}\nRanking URL: ${kw.url}\n`).join('\\n')}\n\nPlease analyze this data and provide:\n1. Key observations about ranking performance\n2. Keywords showing the most improvement\n3. Keywords needing attention\n4. Suggested actions for improvement`;\n\nreturn {\n prompt\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Send data to A.I. for analysis",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"model\": \"meta-llama/llama-3.1-70b-instruct:free\",\n \"messages\": [\n {\n \"role\": \"user\",\n \"content\": \"You are an SEO expert. This is keyword data for my site. Can you summarize the data into a table and then give me some suggestions:{{ encodeURIComponent(record.prompt)}}\" \n }\n ]\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Save data to Baserow",
+      "operation": "service-write",
+      "adapter": "baserow",
+      "parameters": {
+        "tableId": {
+          "configuration_input": "step-6-tableid"
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 6264,
+              "fieldValue": {
+                "expression": "{{ DateTime.now().toFormat('yyyy-MM-dd') }}"
+              }
+            },
+            {
+              "fieldId": 6265,
+              "fieldValue": {
+                "expression": "{{ record.choices[0].message.content }}"
+              }
+            },
+            {
+              "fieldId": 6266,
+              "fieldValue": "Rumjahn"
+            }
+          ]
+        },
+        "operation": "create",
+        "databaseId": {
+          "configuration_input": "step-6-databaseid"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://myserpbearinstance.com/api/keyword?id={value}"
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://openrouter.ai/api/v1/chat/completions"
+    },
+    {
+      "id": "step-6-tableid",
+      "purpose": "Select the tableId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-databaseid",
+      "purpose": "Select the databaseId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Summarize SERPBear data with AI (via Openrouter) and save it to Baserow.json",
+    "git_blob": "5aba4920ad5161bd13cad53528de28e48f5b6068",
+    "sha256": "46d7e93d29f96d64e4d9e20959eb8c3cfa4b169cad5234817945dc425ab44c3a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Summarize%20SERPBear%20data%20with%20AI%20%28via%20Openrouter%29%20and%20save%20it%20to%20Baserow.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -59,8 +59,8 @@ These commands and requirements follow the [upstream README](https://github.com/
 Use Python 3.12+ for the repository tools. Git is needed to clone the project and for workflows that work on repositories. Commands below work in PowerShell, macOS Terminal, and Linux shells; use `python3` if that is your Python command.
 
 ```sh
-git clone https://github.com/atlas-origins/muse-ai-agent-presets.git
-cd muse-ai-agent-presets
+git clone https://github.com/Atlas-Agents-Hub/muse-hub.git
+cd muse-hub
 python -B quickstart.py --all
 ```
 
@@ -71,6 +71,16 @@ python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
 ```
 
 ### Choose a starter or run a tool
+
+Search across skills, workflows, starters, specialists, connectors and tool guides, then create a pack for your project:
+
+```sh
+python -B tools/discover.py search "sql query" --role data-engineering-architect
+python -B tools/discover.py plan --skill query-plan-review --workflow pipeline-validation
+python -B tools/discover.py build --skill query-plan-review --workflow pipeline-validation --to "$HOME/my-data-toolkit.zip"
+```
+
+The [finder and custom toolkit guide](collection/FIND_AND_BUILD.md) covers filters, specialist selection, supporting files and reusable exports.
 
 ```sh
 python -B tools/muse_collection.py show daily-planner

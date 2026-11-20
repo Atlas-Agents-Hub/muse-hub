@@ -1,0 +1,41 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-microsoft-outlook-ai-email-assistant-with-contact-support-from-monday-and-airt-f6ff48",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-filters-folderstoinclude-0": null,
+    "step-11-boardid": null,
+    "step-12-base": null,
+    "step-12-table": null,
+    "step-15-base": null,
+    "step-15-table": null,
+    "step-16-base": null,
+    "step-16-table": null,
+    "step-17-base": null,
+    "step-17-table": null,
+    "step-18-base": null,
+    "step-18-table": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "microsoftoutlook": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "mondaycom": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

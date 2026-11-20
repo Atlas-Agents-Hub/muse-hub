@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-telegram-ai-chatbot-068763",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-model": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

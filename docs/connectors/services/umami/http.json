@@ -1,0 +1,24 @@
+{
+  "id": "umami",
+  "requests": [
+    {
+      "credential": {
+        "name": "x-umami-api-key",
+        "placement": "header",
+        "prefix": ""
+      },
+      "credential_source_path": "umami/src/lib/auth.ts",
+      "credential_source_sha256": "6c2de734f1a1b64e7a5b5b7eb788edd3fe38659566de646ba7cb92b668a7b924",
+      "headers": {},
+      "host": "api.umami.is",
+      "id": "read-v1-websites",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "umami/src/lib/auth.ts",
+      "source_sha256": "6c2de734f1a1b64e7a5b5b7eb788edd3fe38659566de646ba7cb92b668a7b924",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/auth.ts",
+      "url_template": "https://api.umami.is/v1/websites?pageSize=1"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

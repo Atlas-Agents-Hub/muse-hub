@@ -42,7 +42,7 @@ muse-cli chat
 
 `status` shows the connected account, `threads` lists Main and side chats, and `chat` starts an interactive conversation. Use the personal Muse command, `muse-cli`, for this route.
 
-Explore [desktop and computer tools](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html?route=desktop) or [terminal projects](https://atlas-origins.github.io/muse-ai-agent-presets/public/index.html?route=cli) when you need another connection method. Each project links to its publisher's setup instructions.
+Explore [desktop and computer tools](https://atlas-agents-hub.github.io/muse-hub/public/index.html?route=desktop) or [terminal projects](https://atlas-agents-hub.github.io/muse-hub/public/index.html?route=cli) when you need another connection method. Open the selected tool's setup instructions and connect it to your project.
 
 ## 3. Try a reproducible repair
 
@@ -75,7 +75,7 @@ This reviews the workflow's dependencies, declared approvals and expected result
 
 ### Check a web app in the browser
 
-Start with the [HTML source checker](../../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) included in the [Accessible UI download](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-skill-accessible-ui-v1.5.0.zip). Extract the ZIP and run its included example from that folder with Python 3.10 or newer:
+Start with the [HTML source checker](../../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) included in the [Accessible UI download](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-skill-accessible-ui-v1.6.0.zip). Extract the ZIP and run its included example from that folder with Python 3.10 or newer:
 
 ```sh
 python -B tools/accessibility_check.py --input skills/accessible-ui/examples/clean.html
@@ -83,7 +83,7 @@ python -B tools/accessibility_check.py --input skills/accessible-ui/examples/cle
 
 Replace the input path with your own HTML page to check its source. Add `--format text` for a readable report. Follow the source check with keyboard, focus, zoom and rendered-state review of the task.
 
-For reusable browser testing examples, explore Anthropic's [Web Application Testing guide](https://github.com/anthropics/skills/tree/e4bb5d960d87126ff3b3a8af1a104b7db67560ba/skills/webapp-testing). It uses Python, Playwright and an installed browser to inspect pages, exercise interactions and capture screenshots. The linked revision includes its [Apache 2.0 license](https://github.com/anthropics/skills/blob/e4bb5d960d87126ff3b3a8af1a104b7db67560ba/skills/webapp-testing/LICENSE.txt).
+Use the included [Web Application Testing skill](../../collections/library/skills/webapp-testing/SKILL.md) for Python and Playwright examples that inspect pages, exercise interactions and capture screenshots. It includes examples for discovering elements, testing static HTML and collecting browser console messages. [Find its download](https://atlas-agents-hub.github.io/muse-hub/downloads.html?type=skill&q=webapp-testing), install Playwright and its browser, then run the examples against your application.
 
 Start your application with its own documented command. Check the page title or a distinctive element to confirm you reached the intended app, then wait for the specific state the task needs. Give each check a bounded timeout. Exercise the changed flow and one unaffected flow, and save the results with the change you reviewed.
 

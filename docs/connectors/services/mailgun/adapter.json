@@ -1,0 +1,406 @@
+{
+  "allowed_hosts": [
+    "api.eu.mailgun.net",
+    "api.mailgun.net"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Api_Key",
+        "name": "api_key",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', description: 'Your Mailgun private API key (starts with `key-`)', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "Select the region your Mailgun account is in. Most accounts use US.",
+        "label": "Region",
+        "name": "region",
+        "required": true,
+        "type": "StaticDropdown"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Email",
+  "id": "mailgun",
+  "name": "Mailgun",
+  "operations": [
+    {
+      "description": "Add a new member to a Mailgun mailing list",
+      "id": "add_mailing_list_member",
+      "inputs": [
+        {
+          "description": "",
+          "label": "List",
+          "name": "list",
+          "required": null,
+          "source_expression": "mailgunCommon.mailingListDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The email address to add to the mailing list.",
+          "label": "Member Email Address",
+          "name": "address",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The name of the member.",
+          "label": "Member Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "If enabled, updates the member if they already exist. Otherwise, an error is returned for duplicates.",
+          "label": "Update If Exists",
+          "name": "upsert",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Set the subscription status of the member.",
+          "label": "Subscribed",
+          "name": "subscribed",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "JSON object with custom variables to store with this member, e.g. {\"age\": 30, \"city\": \"Paris\"}.",
+          "label": "Custom Variables",
+          "name": "vars",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Mailing List Member",
+      "source_path": "mailgun/src/lib/actions/add-mailing-list-member.ts",
+      "source_sha256": "2fd752cb901a8ba45846d989f2a3624a07b6e651b15b4230cd8b24eb2a3ab4e4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/actions/add-mailing-list-member.ts"
+    },
+    {
+      "description": "Remove bounced addresses from the Mailgun suppression list, either all at once for a domain or a single address.",
+      "id": "delete_bounces_bulk",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Domain",
+          "name": "domain",
+          "required": null,
+          "source_expression": "mailgunCommon.domainDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Delete all bounces for the domain, or a single address.",
+          "label": "Scope",
+          "name": "scope",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Email address to remove from the bounce list. Required when Scope is \"Single address\".",
+          "label": "Address",
+          "name": "address",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Bounces (Bulk)",
+      "source_path": "mailgun/src/lib/actions/delete-bounces-bulk.ts",
+      "source_sha256": "b0885c6f0a7769ef1262bcf95c57d5cfb0e5984a524427f2440d65da67453467",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/actions/delete-bounces-bulk.ts"
+    },
+    {
+      "description": "Fetch the health of a Mailgun domain: current state, whether it has been disabled, and DNS verification status for sending and receiving records.",
+      "id": "get_domain_health",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Domain",
+          "name": "domain",
+          "required": null,
+          "source_expression": "mailgunCommon.domainDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Domain Health",
+      "source_path": "mailgun/src/lib/actions/get-domain-health.ts",
+      "source_sha256": "c138f5bc8ce5c6b66a3af87e0ca907b8caf61b383c21f5ff0cf114be61eb057e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/actions/get-domain-health.ts"
+    },
+    {
+      "description": "Retrieve aggregated email statistics for a Mailgun domain (delivered, failed, opened, etc.). Useful for monitoring delivery health and detecting anomalies.",
+      "id": "get_domain_stats",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Domain",
+          "name": "domain",
+          "required": null,
+          "source_expression": "mailgunCommon.domainDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Select which event types to include in the statistics.",
+          "label": "Event Types",
+          "name": "event",
+          "required": true,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Time period to aggregate stats over.",
+          "label": "Duration",
+          "name": "duration",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Domain Stats",
+      "source_path": "mailgun/src/lib/actions/get-domain-stats.ts",
+      "source_sha256": "e3230152658b885e8918f34050e50a61860c93ccea96509a31ad8771f198befe",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/actions/get-domain-stats.ts"
+    },
+    {
+      "description": "Retrieve email events from your Mailgun domain (deliveries, failures, opens, clicks, etc.). Useful for monitoring and alerting.",
+      "id": "get_events",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Domain",
+          "name": "domain",
+          "required": null,
+          "source_expression": "mailgunCommon.domainDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Filter events by type.",
+          "label": "Event Type",
+          "name": "event",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Only applies to \"failed\" events. Filter by permanent (hard bounce) or temporary (soft bounce).",
+          "label": "Severity",
+          "name": "severity",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Start of the time range. RFC 2822 date (e.g. \"Fri, 28 Mar 2026 10:00:00 -0000\") or Unix timestamp (e.g. \"1711620000\"). Leave empty for Mailgun default (about 30 days ago).",
+          "label": "Begin Date",
+          "name": "begin",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "End of the time range. Same format as Begin Date. Leave empty for now.",
+          "label": "End Date",
+          "name": "end",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of events to return. Default is 100, max is 1000. Mailgun returns up to 300 per page — pagination is handled automatically.",
+          "label": "Max Results",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Events",
+      "source_path": "mailgun/src/lib/actions/get-events.ts",
+      "source_sha256": "42e1549b278b2959111b1d62ec31b80522af14c9a802ed4d8214d209092422d7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/actions/get-events.ts"
+    },
+    {
+      "description": "Retrieve the list of bounced email addresses for a Mailgun domain. Useful for cleanup after delivery issues or spam attacks.",
+      "id": "list_bounces",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Domain",
+          "name": "domain",
+          "required": null,
+          "source_expression": "mailgunCommon.domainDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Maximum number of bounces to return (1-1000). Default is 100.",
+          "label": "Max Results",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Bounces",
+      "source_path": "mailgun/src/lib/actions/list-bounces.ts",
+      "source_sha256": "6d46a941887aea0f375881f6d522f188a3e8af3eaaf4b2b5f18c90e6fea32bf8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/actions/list-bounces.ts"
+    },
+    {
+      "description": "Send an email using your Mailgun domain",
+      "id": "send_email",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Domain",
+          "name": "domain",
+          "required": null,
+          "source_expression": "mailgunCommon.domainDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Sender email address, e.g. \"Your Name <you@example.com>\"",
+          "label": "From",
+          "name": "from",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Recipient email address. For multiple recipients, separate with commas.",
+          "label": "To Email Address",
+          "name": "to",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Carbon copy recipients, separated by commas.",
+          "label": "CC Email Address",
+          "name": "cc",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Blind carbon copy recipients, separated by commas.",
+          "label": "BCC Email Address",
+          "name": "bcc",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Email address for replies.",
+          "label": "Reply-To Email Address",
+          "name": "replyTo",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Email Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Plain text version of the email body.",
+          "label": "Email Body (Plain Text)",
+          "name": "text",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "HTML version of the email body.",
+          "label": "Email Body (HTML)",
+          "name": "html",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Email",
+      "source_path": "mailgun/src/lib/actions/send-email.ts",
+      "source_sha256": "adeb6c94ab5bfad4daed02a4e5a3d72bee0d46784eb60d1f9b4025691df91513",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/actions/send-email.ts"
+    },
+    {
+      "description": "Validate an email address using Mailgun validation service. Requires a Mailgun account with email validation enabled.",
+      "id": "validate_email",
+      "inputs": [
+        {
+          "description": "The email address to validate.",
+          "label": "Email Address",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Enable additional mailbox provider checks for more accurate results.",
+          "label": "Provider Lookup",
+          "name": "providerLookup",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Validate Email",
+      "source_path": "mailgun/src/lib/actions/validate-email.ts",
+      "source_sha256": "f292bdabf05e97d24146214c96e65643f7ed5d2cad0a9f697018a5d822b8fb9c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/actions/validate-email.ts"
+    },
+    {
+      "description": "Triggers once when too many emails bounce within a set time period. Useful for catching spam attacks or deliverability problems early.",
+      "id": "bulk_bounce_threshold_exceeded",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Domain",
+          "name": "domain",
+          "required": null,
+          "source_expression": "mailgunCommon.domainDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "How many bounced emails within the time window will trigger this.",
+          "label": "Threshold",
+          "name": "threshold",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "How far back to look for bounces.",
+          "label": "Window (minutes)",
+          "name": "window_minutes",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Which type of bounces to count.",
+          "label": "Bounce Type",
+          "name": "severity",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Bulk Bounce Threshold Exceeded",
+      "source_path": "mailgun/src/lib/triggers/bulk-bounce-threshold-exceeded.ts",
+      "source_sha256": "a55a5b7af25cba52e33df3357d724bba4fabf2d10aa346399fc62ba0df8e1fc5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailgun/src/lib/triggers/bulk-bounce-threshold-exceeded.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "17594298b8bccdca460bcd0721f91a0df1bba44c",
+    "index_path": "mailgun/src/index.ts",
+    "index_sha256": "b1505ca5f08bdfc697f80c31d71c717df857c9f2277bf419df286ed3a2b0327c",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

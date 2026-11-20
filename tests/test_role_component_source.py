@@ -17,6 +17,7 @@ class ComponentSourceTests(unittest.TestCase):
     def test_exact_six_source_capabilities_without_seventh_agent(self):
         catalog=list_components(ROOT)
         self.assertEqual(catalog["schema"],"muse-presets/component-catalog-v1")
+        self.assertIn("src/muse_presets/site_social.py",inspect_component(ROOT,"evaluation")["files_sha256"])
         self.assertEqual(set(catalog["capabilities"]),CAPS)
         self.assertFalse(catalog["external_effect_authorized"])
         for role in catalog["capabilities"].values():

@@ -1,0 +1,1350 @@
+{
+  "allowed_hosts": [
+    "developer.salesforce.com",
+    "yourinstance.salesforce.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://{environment}/services/oauth2/authorize"
+    ],
+    "fields": [
+      {
+        "description": "login.salesforce.com for production, test.salesforce.com for a sandbox, or your My Domain.",
+        "label": "Salesforce Domain",
+        "name": "environment",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "api",
+      "full",
+      "refresh_token"
+    ],
+    "token_urls": [
+      "https://{environment}/services/oauth2/token"
+    ]
+  },
+  "category": "Sales & CRM",
+  "id": "salesforce",
+  "name": "Salesforce",
+  "operations": [
+    {
+      "description": "Adds a contact to a campaign with a member status.",
+      "id": "add_contact_to_campaign",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign_Id",
+          "name": "campaign_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.campaign",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Contact_Id",
+          "name": "contact_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.contact",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "salesforcesCommon.status",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Contact to Campaign",
+      "source_path": "salesforce/src/lib/action/add-contact-to-campaign.ts",
+      "source_sha256": "1a0cd02ce48f8f869d6849e0c53312cea1aa76b45ab27b9fb8cd494888f65676",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/add-contact-to-campaign.ts"
+    },
+    {
+      "description": "Uploads a file and attaches it to an existing record.",
+      "id": "add_file_to_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.record",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "Include the extension.",
+          "label": "File Name",
+          "name": "file_name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add File to Record",
+      "source_path": "salesforce/src/lib/action/add-file-to-record.ts",
+      "source_sha256": "c7f479cf5212143b6dcf92c1310b4df9488a8943eea35aeb63f3e5881a603c6f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/add-file-to-record.ts"
+    },
+    {
+      "description": "Adds a lead to a campaign with a member status.",
+      "id": "add_lead_to_campaign",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Campaign_Id",
+          "name": "campaign_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.campaign",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Lead_Id",
+          "name": "lead_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.lead",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "salesforcesCommon.status",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Lead to Campaign",
+      "source_path": "salesforce/src/lib/action/add-lead-to-campaign.ts",
+      "source_sha256": "be6eb33c67649dea810baa2880444228434ef7eb10b46fc1599be26b1493488f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/add-lead-to-campaign.ts"
+    },
+    {
+      "description": "Creates or updates up to 200 records, matched on an external ID.",
+      "id": "upsert_by_external_id",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "API name of the external ID field to match records on.",
+          "label": "External ID Field",
+          "name": "external_field",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "JSON with a records array. Each record needs attributes with its type.",
+          "label": "Records",
+          "name": "records",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Batch Upsert",
+      "source_path": "salesforce/src/lib/action/upsert-by-external-id.ts",
+      "source_sha256": "756fc0ab065ebc8d193310d2aacb7e2a8844080a4e40f85b305f3a0cbbe6828e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/upsert-by-external-id.ts"
+    },
+    {
+      "description": "Creates or updates records from a CSV with a Bulk API job.",
+      "id": "upsert_by_external_id_bulk",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Job_Info",
+          "name": "job_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "API name of the external ID field to match records on.",
+          "label": "External ID Field",
+          "name": "external_field",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "CSV with a header row of field API names.",
+          "label": "Records",
+          "name": "records",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Bulk Upsert",
+      "source_path": "salesforce/src/lib/action/upsert-by-external-id-bulk.ts",
+      "source_sha256": "ec797fa553ff0eed18fbe8d67dcd777151e4635be2e49e95c3481a78006d8de4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/upsert-by-external-id-bulk.ts"
+    },
+    {
+      "description": "Creates a case for a customer issue.",
+      "id": "create_case",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "Subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Description",
+          "name": "Description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "Status",
+          "required": null,
+          "source_expression": "salesforcesCommon.caseStatus",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "Priority",
+          "required": null,
+          "source_expression": "salesforcesCommon.casePriority",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Origin",
+          "name": "Origin",
+          "required": null,
+          "source_expression": "salesforcesCommon.caseOrigin",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Account Id",
+          "name": "AccountId",
+          "required": null,
+          "source_expression": "salesforcesCommon.account",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Contact Id",
+          "name": "ContactId",
+          "required": null,
+          "source_expression": "salesforcesCommon.optionalContact",
+          "type": "ProviderField"
+        },
+        {
+          "description": "More fields as JSON, with Salesforce field API names as keys.",
+          "label": "Other Fields",
+          "name": "other_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Case",
+      "source_path": "salesforce/src/lib/action/create-case.ts",
+      "source_sha256": "8122095648340d7f334951fbc6284bc6fe2fc89d31f73cdafd220ce0af4092c8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-case.ts"
+    },
+    {
+      "description": "Creates a contact.",
+      "id": "create_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "LastName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "FirstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Account Id",
+          "name": "AccountId",
+          "required": null,
+          "source_expression": "salesforcesCommon.account",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "Email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "Phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "Title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "More fields as JSON, with Salesforce field API names as keys.",
+          "label": "Other Fields",
+          "name": "other_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Contact",
+      "source_path": "salesforce/src/lib/action/create-contact.ts",
+      "source_sha256": "1177715b8a6c93e7b79b67750035a6b4d6338f40643e4d1df141f56ce5b76d7d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-contact.ts"
+    },
+    {
+      "description": "Creates a lead.",
+      "id": "create_lead",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "LastName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company",
+          "name": "Company",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "FirstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "Email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "Phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Lead Source",
+          "name": "LeadSource",
+          "required": null,
+          "source_expression": "salesforcesCommon.leadSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "More fields as JSON, with Salesforce field API names as keys.",
+          "label": "Other Fields",
+          "name": "other_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Lead",
+      "source_path": "salesforce/src/lib/action/create-lead.ts",
+      "source_sha256": "0b88250048db8aea35c987eb7c2184c9902944b76e5b63158432b040f90ddd4b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-lead.ts"
+    },
+    {
+      "description": "Creates a classic attachment. For new work, use Add File to Record.",
+      "id": "create_attachment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Parent_Id",
+          "name": "parent_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.record",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "Include the extension.",
+          "label": "File Name",
+          "name": "file_name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Legacy Attachment",
+      "source_path": "salesforce/src/lib/action/create-attachment.ts",
+      "source_sha256": "d5b7d21628ab93a1fbf909bfdfa660a17958db3225e0adc83cb82269db8319a9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-attachment.ts"
+    },
+    {
+      "description": "Creates a note on a record.",
+      "id": "create_note",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Parent_Id",
+          "name": "parent_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.record",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "Title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Body",
+          "name": "Body",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Note",
+      "source_path": "salesforce/src/lib/action/create-note.ts",
+      "source_sha256": "9c49cf0e3694cb78d50299617acba2fe2642031264a9f7f3d951f5da027ebe90",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-note.ts"
+    },
+    {
+      "description": "Create new object",
+      "id": "create_new_object",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Select mapped object",
+          "label": "Data",
+          "name": "data",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Object (Advanced)",
+      "source_path": "salesforce/src/lib/action/create-new-object.ts",
+      "source_sha256": "3ca297d17a95d0c12df8698051e58fa69492059acf96735e755ba98baf47be8a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-new-object.ts"
+    },
+    {
+      "description": "Creates an opportunity.",
+      "id": "create_opportunity",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Name",
+          "name": "Name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The date the deal should close, as YYYY-MM-DD.",
+          "label": "Close Date",
+          "name": "CloseDate",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Stage Name",
+          "name": "StageName",
+          "required": null,
+          "source_expression": "salesforcesCommon.opportunityStage",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Account Id",
+          "name": "AccountId",
+          "required": null,
+          "source_expression": "salesforcesCommon.account",
+          "type": "ProviderField"
+        },
+        {
+          "description": "In your org's currency.",
+          "label": "Amount",
+          "name": "Amount",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "More fields as JSON, with Salesforce field API names as keys.",
+          "label": "Other Fields",
+          "name": "other_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Opportunity",
+      "source_path": "salesforce/src/lib/action/create-opportunity.ts",
+      "source_sha256": "421dc78eaff12a44c485cc76e30d37ff5e38ea0fc786801504cccd70e6be0363",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-opportunity.ts"
+    },
+    {
+      "description": "Creates a record of any object.",
+      "id": "create_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Field API names as keys, with the values to set.",
+          "label": "Fields",
+          "name": "data",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Record",
+      "source_path": "salesforce/src/lib/action/create-record.ts",
+      "source_sha256": "a4f6f8c189256dc17552f6ce81ca9d502c48b2810132ca7cff6956130586b65f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-record.ts"
+    },
+    {
+      "description": "Creates a task.",
+      "id": "create_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "Subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Owner Id",
+          "name": "OwnerId",
+          "required": null,
+          "source_expression": "salesforcesCommon.owner",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "Status",
+          "required": null,
+          "source_expression": "salesforcesCommon.taskStatus",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "Priority",
+          "required": null,
+          "source_expression": "salesforcesCommon.taskPriority",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Description",
+          "name": "Description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "ID of the contact or lead, from its record URL or an earlier step.",
+          "label": "Contact or Lead ID",
+          "name": "WhoId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Account, case or other record ID, from its URL or an earlier step.",
+          "label": "Related Record ID",
+          "name": "WhatId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "salesforce/src/lib/action/create-task.ts",
+      "source_sha256": "1395742a88edfa67a6f983577610e155defda646116bd20c4c13dd1e92162515",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/create-task.ts"
+    },
+    {
+      "description": "Deletes an opportunity. It goes to the Recycle Bin.",
+      "id": "delete_opportunity",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Recycle_Info",
+          "name": "recycle_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Opportunity_Id",
+          "name": "opportunity_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.opportunity",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Opportunity",
+      "source_path": "salesforce/src/lib/action/delete-opportunity.ts",
+      "source_sha256": "33c141a67213cb8b23abd3cb78e9b5496a10530ca2fff91b2d17507557c6c2ad",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/delete-opportunity.ts"
+    },
+    {
+      "description": "Deletes a record. It goes to the Recycle Bin.",
+      "id": "delete_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Recycle_Info",
+          "name": "recycle_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.record",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Record",
+      "source_path": "salesforce/src/lib/action/delete-record.ts",
+      "source_sha256": "c0473ee6e40a3547d2788db6ac470f64293575341ae12d4bb269ea0cb26eb2d9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/delete-record.ts"
+    },
+    {
+      "description": "Exports a report as an Excel file.",
+      "id": "export_report",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Report_Id",
+          "name": "report_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.report",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Export Report",
+      "source_path": "salesforce/src/lib/action/export-report.ts",
+      "source_sha256": "7dd7eeedd19d66876c23e3266fbca26baf5e9c3f3686c1ca44492ad25dc239e4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/export-report.ts"
+    },
+    {
+      "description": "Finds child records related to a parent record.",
+      "id": "find_child_records",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Parent_Object",
+          "name": "parent_object",
+          "required": null,
+          "source_expression": "{ ...salesforcesCommon.object, displayName: 'Parent Object' }",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Parent_Id",
+          "name": "parent_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.parentRecord",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Child_Relationship",
+          "name": "child_relationship",
+          "required": null,
+          "source_expression": "salesforcesCommon.childRelationship",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Child Records",
+      "source_path": "salesforce/src/lib/action/find-child-records.ts",
+      "source_sha256": "33cfe01e85c7e8e59590d098ad33108ff3289425d04d11bc67675833c49cdc68",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/find-child-records.ts"
+    },
+    {
+      "description": "Finds records where a field equals a value, up to 200.",
+      "id": "find_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Field",
+          "name": "field",
+          "required": null,
+          "source_expression": "salesforcesCommon.field",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Matched exactly against the field.",
+          "label": "Search Value",
+          "name": "search_value",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Record",
+      "source_path": "salesforce/src/lib/action/find-record.ts",
+      "source_sha256": "0782c28149617de1bdc9c3d0c1f31fe7ea6cba01763424f1d78a19d1d977adbf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/find-record.ts"
+    },
+    {
+      "description": "Finds up to 200 records of an object that match SOQL conditions.",
+      "id": "find_records_by_query",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "SOQL conditions to filter by, without the WHERE keyword.",
+          "label": "Conditions",
+          "name": "where_clause",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Records by Query",
+      "source_path": "salesforce/src/lib/action/find-records-by-query.ts",
+      "source_sha256": "f0cc082d1b43f17bc385bdf9587733116b555c3dba1385894b88bb53618b44a7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/find-records-by-query.ts"
+    },
+    {
+      "description": "Lists the files and classic attachments on a record.",
+      "id": "get_record_attachments",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.record",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Record Attachments",
+      "source_path": "salesforce/src/lib/action/get-record-attachments.ts",
+      "source_sha256": "2c80e7ef45f2d4d129f20950676b6494f5c0393ba7b72dabe5e5d0cba465ac19",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/get-record-attachments.ts"
+    },
+    {
+      "description": "Records an email on a contact or lead. Salesforce does not send it.",
+      "id": "send_email",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Delivery_Warning",
+          "name": "delivery_warning",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Recipient Id",
+          "name": "recipientId",
+          "required": null,
+          "source_expression": "salesforcesCommon.recipient",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Plain text or HTML.",
+          "label": "Body",
+          "name": "body",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "Account, case or other record ID, from its URL or an earlier step.",
+          "label": "Related Record ID",
+          "name": "relatedToId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Log Email",
+      "source_path": "salesforce/src/lib/action/send-email.ts",
+      "source_sha256": "896a5e5743e706eb8b393295643d180e53066534ac61203b8742a58ef1262a4d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/send-email.ts"
+    },
+    {
+      "description": "Runs a SOQL query in Salesforce.",
+      "id": "run_query",
+      "inputs": [
+        {
+          "description": "A SOQL query. Returns up to 2,000 records.",
+          "label": "Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Run Query",
+      "source_path": "salesforce/src/lib/action/run-sf-query.ts",
+      "source_sha256": "284b632e15a2fef6ce951112ba84f11c4dd15632921edf0e4a0a26308b267184",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/run-sf-query.ts"
+    },
+    {
+      "description": "Runs a report and returns its rows.",
+      "id": "run_report",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Report_Id",
+          "name": "report_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.report",
+          "type": "ProviderField"
+        },
+        {
+          "description": "JSON list of column, operator and value. Empty: the saved filters.",
+          "label": "Filters",
+          "name": "filters",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Run Report",
+      "source_path": "salesforce/src/lib/action/run-report.ts",
+      "source_sha256": "7a964d389389160ad7b2b7518aa154052e133dcbd4674c556f725166ff36a6a9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/run-report.ts"
+    },
+    {
+      "description": "Updates a contact.",
+      "id": "update_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Contact_Id",
+          "name": "contact_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.contact",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Changes_Info",
+          "name": "changes_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "FirstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "LastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Account Id",
+          "name": "AccountId",
+          "required": null,
+          "source_expression": "salesforcesCommon.account",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "Email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "Phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "Title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "More fields as JSON, with Salesforce field API names as keys.",
+          "label": "Other Fields",
+          "name": "other_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Contact",
+      "source_path": "salesforce/src/lib/action/update-contact.ts",
+      "source_sha256": "d920bf68df45fe95eca021cccb00237359d64e83dfac70faea58fcd7d64b7fb9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/update-contact.ts"
+    },
+    {
+      "description": "Updates a lead.",
+      "id": "update_lead",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Lead_Id",
+          "name": "lead_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.lead",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Changes_Info",
+          "name": "changes_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "FirstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "LastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company",
+          "name": "Company",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "Email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "Phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Lead Source",
+          "name": "LeadSource",
+          "required": null,
+          "source_expression": "salesforcesCommon.leadSource",
+          "type": "ProviderField"
+        },
+        {
+          "description": "More fields as JSON, with Salesforce field API names as keys.",
+          "label": "Other Fields",
+          "name": "other_fields",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Lead",
+      "source_path": "salesforce/src/lib/action/update-lead.ts",
+      "source_sha256": "9caa738d806f9180668e3155f5694f892c83f4f7029d2de6fe425143c625f3e6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/update-lead.ts"
+    },
+    {
+      "description": "Update object by Id",
+      "id": "update_object_by_id",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Select the Id",
+          "label": "Id",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Select mapped object",
+          "label": "Data",
+          "name": "data",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Object (Advanced)",
+      "source_path": "salesforce/src/lib/action/update-object-by-id.ts",
+      "source_sha256": "980212bea3553ac1e75b4acaf7e0a23d079703e91a6d6a514e8498d81d08a2ac",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/update-object-by-id.ts"
+    },
+    {
+      "description": "Updates fields on a record of any object.",
+      "id": "update_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Record_Id",
+          "name": "record_id",
+          "required": null,
+          "source_expression": "salesforcesCommon.record",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Changes_Info",
+          "name": "changes_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "Field API names as keys, with the new values.",
+          "label": "Fields",
+          "name": "data",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Record",
+      "source_path": "salesforce/src/lib/action/update-record.ts",
+      "source_sha256": "ed977c605e20ea3040e44c2372e2e9557f57ed01d3b67079caf55d43d9754c30",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/action/update-record.ts"
+    },
+    {
+      "description": "Fires when a new Attachment or File is added to any Case record.",
+      "id": "new_case_attachment",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Case Attachment",
+      "source_path": "salesforce/src/lib/trigger/new-case-attachment.ts",
+      "source_sha256": "228416cfa1cecb2236eec7942ba4f813c32d9ea1043f3c8b70609001a690e430",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-case-attachment.ts"
+    },
+    {
+      "description": "Fires when a case is assigned to the chosen queue.",
+      "id": "new_case",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Case Queue Id",
+          "name": "caseQueueId",
+          "required": null,
+          "source_expression": "salesforcesCommon.caseQueueId",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Case in Queue",
+      "source_path": "salesforce/src/lib/trigger/new-case-in-queue.ts",
+      "source_sha256": "c33a5336bf97b2cf240cc9232b1387b66a85d9805521d958f630e16774e8e458",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-case-in-queue.ts"
+    },
+    {
+      "description": "Fires when a new Contact record is created in Salesforce.",
+      "id": "new_contact",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Contact",
+      "source_path": "salesforce/src/lib/trigger/new-contact.ts",
+      "source_sha256": "84ab9e988742384cf3653637080a528acce67eb74d670d03384266f7cfd0e87b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-contact.ts"
+    },
+    {
+      "description": "Fires when a tracked field is updated on a specified object.",
+      "id": "new_field_history_event",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "{ ...salesforcesCommon.object, description: 'Only objects with field history tracking turned on.', }",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Field History Event",
+      "source_path": "salesforce/src/lib/trigger/new-field-history-event.ts",
+      "source_sha256": "a0b3073f6c4390aefc333b0120e471dc7c1c327dc98ce16b83a411bbe89a0ad6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-field-history-event.ts"
+    },
+    {
+      "description": "Fires when a new Lead record is created in Salesforce.",
+      "id": "new_lead",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Lead",
+      "source_path": "salesforce/src/lib/trigger/new-lead.ts",
+      "source_sha256": "d29fd935b0d91de7c3ec694f75436b6217fcc5977881eed1dd60676596dea42b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-lead.ts"
+    },
+    {
+      "description": "Fires when a file is added or changed. Classic attachments are not included.",
+      "id": "new_updated_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Scope_Info",
+          "name": "scope_info",
+          "required": false,
+          "type": "MarkDown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New or Updated File",
+      "source_path": "salesforce/src/lib/trigger/new-updated-file.ts",
+      "source_sha256": "4becbe98d3b79be164332a6d43b04a73660b08ce2bc5e00c36a4e1fd2fce368e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-updated-file.ts"
+    },
+    {
+      "description": "Fires when a record of the chosen object is created or changed.",
+      "id": "new_or_updated_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "SOQL conditions to filter by, without the WHERE keyword.",
+          "label": "Conditions",
+          "name": "conditions",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New or Updated Record",
+      "source_path": "salesforce/src/lib/trigger/new-updated-record.ts",
+      "source_sha256": "efecd84dd95a94a4d3c66e615c7805d17d4b95a4127d7b8e011229118a8379ea",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-updated-record.ts"
+    },
+    {
+      "description": "Fires when Salesforce sends an outbound message to this flow.",
+      "id": "new_outbound_message",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Setup",
+          "name": "setup",
+          "required": false,
+          "type": "MarkDown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Outbound Message",
+      "source_path": "salesforce/src/lib/trigger/new-outbound-message.ts",
+      "source_sha256": "6523e9aa6f76a52c2473d8bf61baa6ff7a5bab8de74c675df7d1eba4d7beabae",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-outbound-message.ts"
+    },
+    {
+      "description": "Fires when a record of the chosen object is created.",
+      "id": "new_record",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Object",
+          "name": "object",
+          "required": null,
+          "source_expression": "salesforcesCommon.object",
+          "type": "ProviderField"
+        },
+        {
+          "description": "SOQL conditions to filter by, without the WHERE keyword.",
+          "label": "Conditions",
+          "name": "conditions",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Record",
+      "source_path": "salesforce/src/lib/trigger/new-record.ts",
+      "source_sha256": "5fa6e7ea5c8a93a03bfaad4b09830964974e783214d13ea3bfc9f963c2836323",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/salesforce/src/lib/trigger/new-record.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "df13c01278d78e84d1cb9869290dc4c3f2c3c930",
+    "index_path": "salesforce/src/index.ts",
+    "index_sha256": "f7b0db046a234d56be7f4ceee6b2f8abb8f5aa792ed16743903d29d9ecb0e9ee",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer"
+  ]
+}

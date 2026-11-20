@@ -1,0 +1,67 @@
+{
+  "allowed_hosts": [
+    "api.jotform.com",
+    "eu-api.jotform.com",
+    "hipaa-api.jotform.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Region",
+        "name": "region",
+        "required": true,
+        "type": "StaticDropdown"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Productivity",
+  "id": "jotform",
+  "name": "Jotform",
+  "operations": [
+    {
+      "description": "Triggers when someone submits a response to your form. Each form field is returned as a separate field using the question label as the key.",
+      "id": "new_submission",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Form Id",
+          "name": "formId",
+          "required": null,
+          "source_expression": "jotformCommon.form",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Submission",
+      "source_path": "jotform/src/lib/triggers/new-submission.ts",
+      "source_sha256": "2df8f69c23fb77c441ebf7f36cc262d06cadc764c0070f8375964a0b780fa4af",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/jotform/src/lib/triggers/new-submission.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "3c81cb93756b2a6c57325867d4875ab5099421ab",
+    "index_path": "jotform/src/index.ts",
+    "index_sha256": "25d2ceccde2c6b696944e284a341616287077b6dff6a64d0e7e522e0b9785d64",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

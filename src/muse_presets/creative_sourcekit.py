@@ -16,7 +16,7 @@ SOURCE_SHA={
     'src/muse_presets/creative_production.py':'301366c81d13c68eba892b1c72f9e64e44588918e81f9c18ef5a98f5d0b87876',
     'src/muse_presets/creative_cli.py':'91a5fc7f4a359c70dc9c9fb601182ae886965e6f044d64cde562fe1e42f66584',
     'tests/test_creative_production.py':'cabb9b017d8a47cf6c0f1b0c7739693db509839a424b2ff6893bc423c860d488',
-    'presets/creative-studio/preset.json':'c88aebc47eb4cdd88622a7335bcefa836a279d4f6928a96e91fc289c65ca16f6',
+    'presets/creative-studio/preset.json':'9d40e6e1d997f5d4fafd2fa1ad3924546da9ac2a8fdbdaab74cdb33120bffd04',
     'presets/creative-studio/playbook.json':'0d6e7c12f1c5b2505821b98ea2f8add0d607aa308af48f0abd1a1201d375dbc7',
     'examples/creative_brief.json':'ac766aa9e21313d6845051e485978e15e0dd058344f4e00bca6cb787e931a8ee',
     'docs/kits/CREATIVE_SOURCEKIT.md':'a9b34d6e6ad1dc79c7347fd034fab1c8960232ca8de60376933630d745f6f3ef',

@@ -1,0 +1,41 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-advanced-ai-demo-presented-at-ai-developers-14-meetup-4ce287",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-channelid": null,
+    "step-11-pineconeindex": null,
+    "step-14-url": null,
+    "step-17-pineconeindex": null,
+    "step-18-url": null,
+    "step-25-path": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "gmail": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

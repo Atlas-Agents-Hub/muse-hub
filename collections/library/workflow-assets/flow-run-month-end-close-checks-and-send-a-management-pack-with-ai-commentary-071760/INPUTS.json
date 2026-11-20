@@ -1,0 +1,23 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-run-month-end-close-checks-and-send-a-management-pack-with-ai-commentary-071760",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-assignments-0-value": null,
+    "step-3-assignments-3-value": null,
+    "step-19-assignments-0-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

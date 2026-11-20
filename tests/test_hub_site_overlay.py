@@ -9,6 +9,7 @@ from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / 'hub' / 'site'
+RELEASE = json.loads((ROOT/'presets/catalog.json').read_bytes())['release']
 
 
 class MuseHubOverlay(unittest.TestCase):
@@ -48,7 +49,7 @@ class MuseHubOverlay(unittest.TestCase):
         for slug, asset, body in cards:
             with self.subTest(role=slug):
                 self.assertEqual(asset, aliases.get(slug, slug))
-                expected = "https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-" + asset + "-v1.5.0.zip"
+                expected = f"https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/{RELEASE}/muse-{asset}-{RELEASE}.zip"
                 self.assertIn('class="role-card-download" href="' + expected + '"', body)
         self.assertIn('aria-live="polite"', self.html)
 
@@ -63,15 +64,24 @@ class MuseHubOverlay(unittest.TestCase):
         self.assertEqual(len({row['id'] for row in self.catalog['items']}), 63)
         self.assertTrue(all(row['url'].startswith('https://') for row in self.catalog['items']))
 
-    def test_no_dead_local_code_assets_and_no_network_scripts(self):
+    def test_no_dead_local_code_assets_and_scoped_catalog_loading(self):
         for file in ('index.html','site.css','site.js','roles.json','downloads.html','downloads.js','downloads.json','public/index.html','public/styles.css','public/app.js','public/catalog.json','README.md'):
             self.assertTrue((SITE/file).is_file(), file)
         for script in ('site.js','downloads.js','public/app.js'):
             text = (SITE/script).read_text('utf8')
-            for blocked in ('fetch(', 'XMLHttpRequest', 'localStorage', 'innerHTML'):
+            for blocked in ('XMLHttpRequest', 'localStorage', 'innerHTML', 'WebSocket(', 'EventSource('):
                 self.assertNotIn(blocked, text)
+            if script == 'downloads.js':
+                # The large library loads one same-origin JSON catalog. Keep
+                # credentials, redirects and arbitrary endpoints out of this path.
+                self.assertEqual(text.count('fetch('), 1)
+                self.assertIn("fetch('downloads.json', { credentials: 'omit', redirect: 'error' })", text)
+                self.assertIn('.then(verifyCatalog)', text)
+                self.assertIn("document.body.classList.add('downloads-fallback')", text)
+            else:
+                self.assertNotIn('fetch(', text)
         downloads = (SITE/'downloads.html').read_text('utf8')
-        self.assertIn("connect-src 'none'", downloads)
+        self.assertIn("connect-src 'self';", downloads)
         for page, dirname in ((self.html,SITE), (self.explore,SITE/'public'), (downloads,SITE)):
             for ref in re.findall(r'(?:src|href)="([^"]+)"', page):
                 if ref.startswith(('https://', '#')): continue

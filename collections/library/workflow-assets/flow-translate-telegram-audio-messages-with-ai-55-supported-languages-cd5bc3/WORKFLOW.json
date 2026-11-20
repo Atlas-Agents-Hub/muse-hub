@@ -1,0 +1,259 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-translate-telegram-audio-messages-with-ai-55-supported-languages-cd5bc3",
+  "title": "Translate Telegram audio messages with AI (55 supported languages)",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Telegram Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Text reply",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Telegram1",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ steps[\"step-1\"].record.message.voice.file_id }}"
+        },
+        "resource": "file"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Input Error Handling",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "message.text",
+              "stringValue": {
+                "expression": "{{ record?.message?.text || \"\" }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Settings",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "language_native",
+              "type": "string",
+              "value": "english"
+            },
+            {
+              "name": "language_translate",
+              "type": "string",
+              "value": "french"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Auto-detect and translate",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Detect the language of the text that follows. \n- If it is {{ steps[\"step-6\"].record.language_native }} translate to {{ steps[\"step-6\"].record.language_translate }}. \n- If it is in {{ steps[\"step-6\"].record.language_translate }} translate to {{ steps[\"step-6\"].record.language_native }} . \n- In the output just provide the translation and do not explain it. Just provide the translation without anything else.\n\nText:\n {{ record.text }}"
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Audio reply",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "operation": "sendAudio",
+        "binaryData": true,
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "OpenAI2",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "resource": "audio",
+        "operation": "transcribe"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "OpenAI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "input": {
+          "expression": "{{ record.text }}"
+        },
+        "options": {},
+        "resource": "audio"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-10",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Translate Telegram audio messages with AI (55 supported languages).json",
+    "git_blob": "9ef15200281a42ea14936d2d70436a30e559708f",
+    "sha256": "7d6ea3e1ed53441ec6f4a4a1d7a8d4d3ca5a102368f3a504a0fc91cb246613f4",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Translate%20Telegram%20audio%20messages%20with%20AI%20%2855%20supported%20languages%29.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

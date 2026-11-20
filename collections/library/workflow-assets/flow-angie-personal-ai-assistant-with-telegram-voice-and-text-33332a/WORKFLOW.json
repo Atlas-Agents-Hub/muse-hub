@@ -1,0 +1,376 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-angie-personal-ai-assistant-with-telegram-voice-and-text-33332a",
+  "title": "Angie, Personal AI Assistant with Telegram Voice and Text",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Google Calendar",
+      "operation": "service-read",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "options": {
+          "fields": {
+            "expression": "items(summary, start(dateTime))"
+          },
+          "timeMin": {
+            "expression": "{{$fromAI(\"date\",\"the date after which to fetch the messages in format YYYY-MM-DDTHH:MM:SS\")}}"
+          }
+        },
+        "calendar": {
+          "configuration_input": "step-1-calendar"
+        },
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ steps[\"step-5\"].records[0].message.from.id }}"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get Email",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "filters": {
+          "labelIds": [
+            "INBOX",
+            "UNREAD"
+          ],
+          "readStatus": "unread",
+          "receivedAfter": {
+            "expression": "{{$fromAI(\"date\",\"the date after which to fetch the messages in format YYYY-MM-DDTHH:MM:SS\")}}"
+          }
+        },
+        "operation": "getAll"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Listen for incoming events",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.output }}"
+        },
+        "chatId": {
+          "expression": "{{ steps[\"step-5\"].records[0].message.from.id }}"
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.message.text }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Speech to Text",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "resource": "audio",
+        "operation": "transcribe"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Voice or Text",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "text",
+              "stringValue": {
+                "expression": "{{ record?.message?.text || \"\" }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Get Voice File",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ steps[\"step-5\"].record.message.voice.file_id }}"
+        },
+        "resource": "file"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Angie, AI Assistant 👩🏻‍🏫",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.text }}"
+        },
+        "options": {
+          "systemMessage": {
+            "expression": "You are a helpful assistant.\n\nToday's date is {{ current_time }}.\n\nGuidelines:\n- When fetching emails, filter out any promotional emails. \n- When summarizing emails, include Sender, Message date, subject, and brief summary of email.\n- if the user did not specify a date in the request assume they are asking for today\n- Use baserow tool to answer questions about tasks\n- When answering questions about calendar events, filter out events that don't apply to the question. For example, the question is about events for today, only reply with events for today. Don't mention future events if it's more than 1 week away"
+          }
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Tasks",
+      "operation": "service-read",
+      "adapter": "baserow",
+      "parameters": {
+        "tableId": {
+          "configuration_input": "step-12-tableid"
+        },
+        "databaseId": {
+          "configuration_input": "step-12-databaseid"
+        },
+        "additionalOptions": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Contacts",
+      "operation": "service-read",
+      "adapter": "baserow",
+      "parameters": {
+        "tableId": {
+          "configuration_input": "step-13-tableid"
+        },
+        "databaseId": {
+          "configuration_input": "step-13-databaseid"
+        },
+        "descriptionType": "manual",
+        "toolDescription": "Useful for getting contact information. For example emails or phone numbers.",
+        "additionalOptions": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-11",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-tableid",
+      "purpose": "Select the tableId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-12-databaseid",
+      "purpose": "Select the databaseId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-tableid",
+      "purpose": "Select the tableId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-databaseid",
+      "purpose": "Select the databaseId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Angie, Personal AI Assistant with Telegram Voice and Text.json",
+    "git_blob": "f7af6d8aebab0e194e22755cd30559470e28e6c2",
+    "sha256": "07894f1d19c47eb1eddce610bd498cfabc2084e282ca1034d3ecdd3749d334d3",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Angie%2C%20Personal%20AI%20Assistant%20with%20Telegram%20Voice%20and%20Text.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

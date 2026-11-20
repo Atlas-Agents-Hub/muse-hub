@@ -1,0 +1,287 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "console.cloud.google.com",
+    "oauth2.googleapis.com",
+    "searchconsole.googleapis.com",
+    "www.example.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "email",
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Marketing",
+  "id": "google-search-console",
+  "name": "Google Search Console",
+  "operations": [
+    {
+      "description": "Adds a site to the set of the user's sites in Search Console.",
+      "id": "add_site",
+      "inputs": [
+        {
+          "description": "A URL-prefix property such as \"https://www.example.com/\" (a missing trailing slash is added) or a domain property such as \"sc-domain:example.com\".",
+          "label": "Site URL",
+          "name": "siteUrl",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add a Site",
+      "source_path": "google-search-console/src/lib/actions/add-a-site.ts",
+      "source_sha256": "9cdd1bfb916f6f6873a2bd703bbd2956f124484ba4d7f08843aca469d0f7fcb3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-search-console/src/lib/actions/add-a-site.ts"
+    },
+    {
+      "description": "Removes a site from the set of the user's Search Console sites.",
+      "id": "delete_site",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Url",
+          "name": "siteUrl",
+          "required": null,
+          "source_expression": "commonProps.siteUrlIncludingUnverified",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete a Site",
+      "source_path": "google-search-console/src/lib/actions/delete-a-site.ts",
+      "source_sha256": "b4648ab5c6f5772756dd21cb7b5052eab02448cfb19629bc58426fbaf4802562",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-search-console/src/lib/actions/delete-a-site.ts"
+    },
+    {
+      "description": "Removes a sitemap from the Sitemaps report of a site.",
+      "id": "delete_sitemap",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Url",
+          "name": "siteUrl",
+          "required": null,
+          "source_expression": "commonProps.siteUrl",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Feedpath",
+          "name": "feedpath",
+          "required": null,
+          "source_expression": "commonProps.sitemap",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete a Sitemap",
+      "source_path": "google-search-console/src/lib/actions/delete-a-sitemap.ts",
+      "source_sha256": "0a494ff88e50ab8706c9dee3c7136657ffa56f0d0513e92890ae3080acb4a2d5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-search-console/src/lib/actions/delete-a-sitemap.ts"
+    },
+    {
+      "description": "List all your sitemaps for a given site",
+      "id": "list_sitemaps",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Url",
+          "name": "siteUrl",
+          "required": null,
+          "source_expression": "commonProps.siteUrl",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Optional. The full URL of a sitemap index to list only the sitemaps inside it.",
+          "label": "Sitemap Index URL",
+          "name": "sitemapIndex",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Sitemaps",
+      "source_path": "google-search-console/src/lib/actions/list-sitemaps.ts",
+      "source_sha256": "f27ae85b94bcb727c9de3dfd7bb3cae48a5038c50e5bb04312a7eccc4f1498fa",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-search-console/src/lib/actions/list-sitemaps.ts"
+    },
+    {
+      "description": "Lists the user's Search Console sites.",
+      "id": "list_sites",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Sites",
+      "source_path": "google-search-console/src/lib/actions/list-sites.ts",
+      "source_sha256": "21ddeab9733c280630bce82b9bb6bc432f2345861e42479294cd4ac981c287fe",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-search-console/src/lib/actions/list-sites.ts"
+    },
+    {
+      "description": "Query traffic data for your site using the Google Search Console API.",
+      "id": "search_analytics",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Url",
+          "name": "siteUrl",
+          "required": null,
+          "source_expression": "commonProps.siteUrl",
+          "type": "ProviderField"
+        },
+        {
+          "description": "First day of the range (YYYY-MM-DD), in Pacific Time. Search Console data lags 2-3 days and is kept for about 16 months.",
+          "label": "Start Date",
+          "name": "startDate",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "Last day of the range (YYYY-MM-DD, inclusive), in Pacific Time. A range that covers only today or yesterday usually has no data yet.",
+          "label": "End Date",
+          "name": "endDate",
+          "required": true,
+          "type": "DateTime"
+        },
+        {
+          "description": "The dimensions to group results by, in order. Valid values: \"query\", \"page\", \"country\", \"device\", \"searchAppearance\", \"date\", \"hour\". Each row of the output gets one column per dimension.",
+          "label": "Dimensions",
+          "name": "dimensions",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Search Type",
+          "name": "searchType",
+          "required": null,
+          "source_expression": "commonProps.searchType()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Filters",
+          "name": "filters",
+          "required": null,
+          "source_expression": "commonProps.filters()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Aggregation Type",
+          "name": "aggregationType",
+          "required": null,
+          "source_expression": "commonProps.aggregationType()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Data State",
+          "name": "dataState",
+          "required": null,
+          "source_expression": "commonProps.dataState()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The maximum number of rows to return, from 1 to 25,000. Defaults to 1,000.",
+          "label": "Row Limit",
+          "name": "rowLimit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Zero-based index of the first row to return. Use with Row Limit to page through results. Defaults to 0.",
+          "label": "Start Row",
+          "name": "startRow",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Analytics",
+      "source_path": "google-search-console/src/lib/actions/search-analytics.ts",
+      "source_sha256": "2c3eeb3136c0cd619659473699f4faf501ae7268cc7939bb1afa534f88186c69",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-search-console/src/lib/actions/search-analytics.ts"
+    },
+    {
+      "description": "Submits a sitemap for a site.",
+      "id": "submit_sitemap",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Url",
+          "name": "siteUrl",
+          "required": null,
+          "source_expression": "commonProps.siteUrl",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The full URL of the sitemap, e.g. \"https://www.example.com/sitemap.xml\".",
+          "label": "Sitemap Path",
+          "name": "feedpath",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Submit a Sitemap",
+      "source_path": "google-search-console/src/lib/actions/submit-a-sitemap.ts",
+      "source_sha256": "84124689ccf085bebf8c0d1afe8922c814503b7696df197ef099927dde193b78",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-search-console/src/lib/actions/submit-a-sitemap.ts"
+    },
+    {
+      "description": "Use the URL Inspection action to check the status and presence of a specific page within Google's index.",
+      "id": "urlInspection",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Site Url",
+          "name": "siteUrl",
+          "required": null,
+          "source_expression": "commonProps.siteUrl",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The full URL of the page. It must belong to the selected property.",
+          "label": "URL to Inspect",
+          "name": "url",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional language for the issue messages, as a BCP-47 code such as \"en-US\" or \"de\". Defaults to English.",
+          "label": "Language Code",
+          "name": "languageCode",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "URL Inspection",
+      "source_path": "google-search-console/src/lib/actions/url-inspection.ts",
+      "source_sha256": "e033e319caf105e5cce6fddf5e022f8855bc9e58aaffbf825783ba59f73ddbfe",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-search-console/src/lib/actions/url-inspection.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "5e4c1d7371859d4803f2d944475e8b791066a4a3",
+    "index_path": "google-search-console/src/index.ts",
+    "index_sha256": "fe31e3de74fbc13123bc0180b3635c743a35c291daa4f7169b81aff71ed11a40",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

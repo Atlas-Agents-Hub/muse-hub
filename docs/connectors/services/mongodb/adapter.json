@@ -1,0 +1,396 @@
+{
+  "allowed_hosts": [
+    "account-configured-service-host"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The hostname or address of the MongoDB server (e.g., localhost:27017 or cluster.example.mongodb.net)",
+        "label": "Host",
+        "name": "host",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Enable this if connecting to MongoDB Atlas (uses mongodb+srv:// protocol)",
+        "label": "Use MongoDB Atlas URL Format",
+        "name": "useAtlasUrl",
+        "required": true,
+        "type": "Checkbox"
+      },
+      {
+        "description": "The MongoDB database to connect to (can be specified per action if left empty)",
+        "label": "Database",
+        "name": "database",
+        "required": false,
+        "type": "ShortText"
+      },
+      {
+        "description": "The username to use for connecting to the MongoDB server",
+        "label": "Username",
+        "name": "username",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', description: 'The password to use to identify at the MongoDB server', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "The database to authenticate against (default: admin)",
+        "label": "Auth Source",
+        "name": "authSource",
+        "required": false,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "mongodb",
+  "name": "MongoDB",
+  "operations": [
+    {
+      "description": "Perform aggregation operations on documents in a collection",
+      "id": "aggregate_documents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "mongodbProps.database({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Collection",
+          "name": "collection",
+          "required": null,
+          "source_expression": "mongodbProps.collection({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Array of aggregation stages (e.g., [{\"$match\": {\"status\": \"active\"}}, {\"$group\": {\"_id\": \"$category\", \"count\": {\"$sum\": 1}}}])",
+          "label": "Aggregation Pipeline",
+          "name": "pipeline",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Aggregate Documents",
+      "source_path": "mongodb/src/lib/actions/aggregate-documents.ts",
+      "source_sha256": "cd58ff19ba6e9170d8e3588b7bfe47300824355da2b306ce17b2fc09837ebf89",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mongodb/src/lib/actions/aggregate-documents.ts"
+    },
+    {
+      "description": "Delete documents from a collection",
+      "id": "delete_documents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "mongodbProps.database({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Collection",
+          "name": "collection",
+          "required": null,
+          "source_expression": "mongodbProps.collection({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "MongoDB query to select documents to delete (e.g., {\"status\": \"archived\"})",
+          "label": "Filter",
+          "name": "filter",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Documents",
+      "source_path": "mongodb/src/lib/actions/delete-documents.ts",
+      "source_sha256": "3fd62a118e9f589921ee048a063edaff1ff397073bd3b2e8b89d2cd3ab192bb9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mongodb/src/lib/actions/delete-documents.ts"
+    },
+    {
+      "description": "Replace documents that match a filter with a new document",
+      "id": "find_and_replace_documents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "mongodbProps.database({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Collection",
+          "name": "collection",
+          "required": null,
+          "source_expression": "mongodbProps.collection({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "MongoDB query to select documents to replace (e.g., {\"_id\": \"123\"})",
+          "label": "Filter",
+          "name": "filter",
+          "required": true,
+          "type": "Json"
+        },
+        {
+          "description": "New document that will replace the matched documents",
+          "label": "Replacement Document",
+          "name": "replacement",
+          "required": true,
+          "type": "Json"
+        },
+        {
+          "description": "Insert the document if no documents match the filter",
+          "label": "Upsert",
+          "name": "upsert",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Which version of the document to return",
+          "label": "Return Document",
+          "name": "returnDocument",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find and Replace Documents",
+      "source_path": "mongodb/src/lib/actions/find-and-replace-documents.ts",
+      "source_sha256": "a78d4c035881cdb69f6ea9d706e0d660a39f01b1c43fa8902685a32ef544e67f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mongodb/src/lib/actions/find-and-replace-documents.ts"
+    },
+    {
+      "description": "Find documents and update them, returning the updated documents",
+      "id": "find_and_update_documents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "mongodbProps.database({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Collection",
+          "name": "collection",
+          "required": null,
+          "source_expression": "mongodbProps.collection({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "MongoDB query to select documents to update (e.g., {\"status\": \"pending\"})",
+          "label": "Filter",
+          "name": "filter",
+          "required": true,
+          "type": "Json"
+        },
+        {
+          "description": "MongoDB update operations (e.g., {\"$set\": {\"status\": \"completed\"}})",
+          "label": "Update",
+          "name": "update",
+          "required": true,
+          "type": "Json"
+        },
+        {
+          "description": "Insert a document if no documents match the filter",
+          "label": "Upsert",
+          "name": "upsert",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Return the documents after updates are applied",
+          "label": "Return Updated Documents",
+          "name": "returnUpdated",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Find and Update Documents",
+      "source_path": "mongodb/src/lib/actions/find-and-update-documents.ts",
+      "source_sha256": "b44db8e5f27d3c2774a514dc95034e58f4daca7513f5a7958e2ce2c727e11f35",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mongodb/src/lib/actions/find-and-update-documents.ts"
+    },
+    {
+      "description": "Find documents in a collection",
+      "id": "find_documents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "mongodbProps.database({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Collection",
+          "name": "collection",
+          "required": null,
+          "source_expression": "mongodbProps.collection({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "MongoDB query to filter documents (e.g., {\"status\": \"active\"})",
+          "label": "Query",
+          "name": "query",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "Fields to include or exclude (e.g., {\"name\": 1, \"_id\": 0})",
+          "label": "Projection",
+          "name": "projection",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "Sort criteria (e.g., {\"createdAt\": -1})",
+          "label": "Sort",
+          "name": "sort",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "Maximum number of documents to return",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of documents to skip",
+          "label": "Skip",
+          "name": "skip",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Documents",
+      "source_path": "mongodb/src/lib/actions/find-documents.ts",
+      "source_sha256": "4299a6698906d0e4094f30729acd05c498d697a8ccfe702158eeb8ace6c73844",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mongodb/src/lib/actions/find-documents.ts"
+    },
+    {
+      "description": "Insert one or more documents into a collection",
+      "id": "insert_documents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "mongodbProps.database({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Collection",
+          "name": "collection",
+          "required": null,
+          "source_expression": "mongodbProps.collection({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Document(s) to insert. Can be a single document object or an array of documents.",
+          "label": "Documents",
+          "name": "documents",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Insert Documents",
+      "source_path": "mongodb/src/lib/actions/insert-documents.ts",
+      "source_sha256": "1f89e64ee4eda99c1930febbb4340ce173c66a15fa097e3c7385d3639540a47f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mongodb/src/lib/actions/insert-documents.ts"
+    },
+    {
+      "description": "Update multiple documents in a collection",
+      "id": "update_documents",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Database",
+          "name": "database",
+          "required": null,
+          "source_expression": "mongodbProps.database({ required: false })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Collection",
+          "name": "collection",
+          "required": null,
+          "source_expression": "mongodbProps.collection({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "MongoDB query to select documents to update (e.g., {\"status\": \"pending\"})",
+          "label": "Filter",
+          "name": "filter",
+          "required": true,
+          "type": "Json"
+        },
+        {
+          "description": "MongoDB update operations (e.g., {\"$set\": {\"status\": \"completed\"}})",
+          "label": "Update",
+          "name": "update",
+          "required": true,
+          "type": "Json"
+        },
+        {
+          "description": "Insert a document if no documents match the filter",
+          "label": "Upsert",
+          "name": "upsert",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Documents",
+      "source_path": "mongodb/src/lib/actions/update-documents.ts",
+      "source_sha256": "5d2e95923a1ee85ad7cf16d5849e49dcb4d3a0cc83468093e8aaa13929610d77",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mongodb/src/lib/actions/update-documents.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "57337169cfd6576a063096a6632a7b12877dc6ab",
+    "index_path": "mongodb/src/index.ts",
+    "index_sha256": "0e9c18334a7d4ce3fd47956f58219f04a99156f210003c9d0acdd7da83e641f2",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

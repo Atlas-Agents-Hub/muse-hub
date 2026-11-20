@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-candidate-shortlisting-automation-for-erpnext-6bc4f0",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-15-path": null
+  },
+  "adapters": {
+    "erpnext": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "microsoftoutlook": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "whatsapp": {
+      "connection": null
+    }
+  }
+}

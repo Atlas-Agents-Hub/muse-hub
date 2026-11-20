@@ -10,7 +10,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY = 'https://github.com/atlas-origins/muse-ai-agent-presets'
+REPOSITORY = 'https://github.com/Atlas-Agents-Hub/muse-hub'
 METADATA = frozenset({'SHA256SUMS', 'SPECIALIST_DOWNLOADS.json', 'SKILL_DOWNLOADS.json',
                       'WORKFLOW_DOWNLOADS.json', 'RELEASE_MANIFEST.json', 'DOWNLOADS.md'})
 VERSION = re.compile(r'v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\Z')
@@ -40,13 +40,29 @@ def check(release: dict, directory: dict) -> dict:
     base = REPOSITORY + '/releases/download/' + version + '/'
     advertised = directory['items'] + directory['bundles']
     expected = {row['asset'] for row in advertised}
-    if len(expected) != len(advertised):
-        raise ValueError('Duplicate download directory asset names.')
+    identities=set()
+    groups={}
+    for row in advertised:
+        identity=(row.get('kind','bundle'),row['id'])
+        if identity in identities:
+            raise ValueError('Duplicate download directory identity.')
+        identities.add(identity)
+        groups.setdefault(row['asset'],[]).append(row)
+    for shared in groups.values():
+        if len(shared)>1:
+            first=shared[0]
+            if (any(row.get('kind')!='skill' or row.get('pack_kind')!='skill-pack'
+                    or row.get('pack_id')!=first.get('pack_id')
+                    or row.get('pack_size')!=len(shared)
+                    or row.get('entry')!='skills/'+row['id']+'/SKILL.md' for row in shared)):
+                raise ValueError('Invalid shared skill download pack.')
     expected |= METADATA | {'muse-role-procedures-50-' + version + '.zip'}
     rows = release.get('assets', [])
     assets = {row['name']: row for row in rows}
     if len(assets) != len(rows):
         raise ValueError('Duplicate release asset names.')
+    if len(assets)>1000:
+        raise ValueError('Release exceeds the provider asset limit.')
     if set(assets) != expected:
         raise ValueError('Release roster mismatch: missing=' + ','.join(sorted(expected - set(assets)))
                          + '; unexpected=' + ','.join(sorted(set(assets) - expected)))
@@ -104,13 +120,19 @@ def check_proof(release: dict, directory: dict, manifest_raw: bytes, checksums_r
             raise ValueError('Package index differs from the website: ' + kind)
         all_records.extend(rows)
     all_records.extend(records['bundles'])
-    if len(all_records) != len(packages) or {row['asset'] for row in all_records} != set(packages):
+    if {row['asset'] for row in all_records} != set(packages):
         raise ValueError('Package index roster mismatch.')
     for row in all_records:
         name = row['asset']
         if (row['sha256'] != checksums[name] or row['bytes'] != assets[name]['size']
                 or row['url'] != assets[name]['browser_download_url']):
             raise ValueError('Package index hash, size or URL mismatch: ' + name)
+    website_skills={item['id']:item for item in directory['items'] if item['kind']=='skill'}
+    for row in records['skills']:
+        website=website_skills[row['id']]
+        for key in ('entry','pack_id','pack_size','pack_kind'):
+            if row.get(key)!=website.get(key):
+                raise ValueError('Skill package entry differs from the website: '+row['id'])
 
 
 def main() -> int:

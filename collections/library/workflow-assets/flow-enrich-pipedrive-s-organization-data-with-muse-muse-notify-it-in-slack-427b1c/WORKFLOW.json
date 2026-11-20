@@ -1,0 +1,229 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-enrich-pipedrive-s-organization-data-with-muse-muse-notify-it-in-slack-427b1c",
+  "title": "Enrich Pipedrive s Organization Data with OpenAI GPT-4o & Notify it in Slack",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Pipedrive Trigger - An Organization is created",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "action": "added",
+        "object": "organization"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Pipedrive - Create a Note with OpenAI output",
+      "operation": "service-read",
+      "adapter": "pipedrive",
+      "parameters": {
+        "content": {
+          "expression": "{{ record.message.content }}"
+        },
+        "resource": "note",
+        "additionalFields": {
+          "org_id": {
+            "expression": "{{ steps[\"step-1\"].record.meta.id }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Code - Markdown to Slack Markdown",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const inputMarkdown = items[0].json.data;\n\nfunction convertMarkdownToSlackFormat(markdown) {\n let slackFormatted = markdown;\n \n // Convert headers\n slackFormatted = slackFormatted.replace(/^# (.*$)/gim, '*$1*');\n slackFormatted = slackFormatted.replace(/^## (.*$)/gim, '*$1*');\n \n // Convert unordered lists\n slackFormatted = slackFormatted.replace(/^\\* (.*$)/gim, '➡️ $1');\n \n // Convert tables\n const tableRegex = /\\n\\|.*\\|\\n\\|.*\\|\\n((\\|.*\\|\\n)+)/;\n const tableMatch = slackFormatted.match(tableRegex);\n if (tableMatch) {\n const table = tableMatch[0];\n const rows = table.split('\\n').slice(3, -1);\n const formattedRows = rows.map(row => {\n const columns = row.split('|').slice(1, -1).map(col => col.trim());\n return `*${columns[0]}*: ${columns[1]}`;\n }).join('\\n');\n slackFormatted = slackFormatted.replace(table, formattedRows);\n }\n \n return slackFormatted;\n}\n\nconst slackMarkdown = convertMarkdownToSlackFormat(inputMarkdown);\nconsole.log(slackMarkdown);\n\n// Return data\nreturn [{ slackFormattedMarkdown: slackMarkdown }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Scrapingbee - Get Organization's URL content",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": {
+                "configuration_input": "step-4-parameters-0-value"
+              }
+            },
+            {
+              "name": "url",
+              "value": {
+                "expression": "{{ record.current.<random_api_id_custom_website_field> }}"
+              }
+            },
+            {
+              "name": "render_js",
+              "value": "false"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "HTML To Markdown",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.content }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Slack - Notify",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": {
+          "expression": "*New Organizaton {{ steps[\"step-1\"].record.current.name }} created on Pipedrive* :\n\n\n {{ record.slackFormattedMarkdown }}"
+        },
+        "select": "channel",
+        "channelId": {
+          "configuration_input": "step-6-channelid"
+        },
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "OpenAI - Message GPT-4o with Scraped Data",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-7-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "{{ record.data }}"
+              }
+            },
+            {
+              "role": "system",
+              "content": "You're an assistant that summarizes website content for CRM entries. The user will provide HTML content from a company's website. Your task is to analyze the HTML content and create a concise summary that includes:\n\n1. A brief description of the company's services or products.\n2. Any information about the company's target market or customer base.\n3. Key points about the company's unique selling propositions or competitive advantages.\n4. Based on the provided information, suggest potential competitors if you know any.\n\nFormat your response as HTML.\n\nExample response :\n\n <h1>Company Description</h1>\n <p>Company1 specializes in services related to electric vehicles. The company focuses on providing resources and information about electric car chargers, battery life, different car brands, and the environmental impact of electric vehicles.</p>\n\n <h2>Target Market</h2>\n <p>The target market for Company1 includes electric vehicle owners and potential buyers who are interested in making the shift from traditional fossil fuel vehicles to electric cars. The company also targets environmentally conscious consumers who are looking for sustainable mobility solutions.</p>\n\n <h2>Unique Selling Propositions</h2>\n <ul>\n <li>Comprehensive information about electric vehicle charging solutions, including how to install home charging stations.</li>\n <li>Detailed articles on the advantages of electric vehicles such as ecology and reliability.</li>\n <li>Educational resources on the autonomy and battery life of different electric car models.</li>\n <li>Insights into premier electric vehicle brands.</li>\n </ul>\n\n <h2>Potential Competitors</h2>\n <table border=\"1\">\n <tr>\n <th>Competitor Name</th>\n <th>Website</th>\n </tr>\n <tr>\n <td>Competitor1</td>\n <td><a href=\"https://www.example1.com\">https://www.example1.com</a></td>\n </tr>\n <tr>\n <td>Competitor2</td>\n <td><a href=\"https://www.example2.com\">https://www.example2.com</a></td>\n </tr>\n <tr>\n <td>Competitor3</td>\n <td><a href=\"https://www.example3.com\">https://www.example3.com</a></td>\n </tr>\n <tr>\n <td>Competitor4</td>\n <td><a href=\"https://www.example4.com\">https://www.example4.com</a></td>\n </tr>\n </table>\n"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://app.scrapingbee.com/api/v1"
+    },
+    {
+      "id": "step-4-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-6-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Slack/Enrich Pipedrive_s Organization Data with OpenAI GPT-4o & Notify it in Slack.json",
+    "git_blob": "287fce7cbc4bc6dc31ec8f0b084ca7ba2c0d1ec0",
+    "sha256": "90d34b9aa1f078899aac2dee403d03d61f035f5ff892d974017dabf7f5d907fc",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Slack/Enrich%20Pipedrive_s%20Organization%20Data%20with%20OpenAI%20GPT-4o%20%26%20Notify%20it%20in%20Slack.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

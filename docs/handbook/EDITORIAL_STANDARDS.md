@@ -24,7 +24,7 @@ Describe the task, included files, and next action. Keep internal acceptance IDs
 - **Connectors:** A directory entry is a service guide; the user completes setup through the supported host flow.
 - **Tests:** State which suite ran, on which revision, and whether skips or limitations apply.
 
-Use current counts consistently: 15 specialists; 100 task starters; 461 skills; 58 workflows; 151 connectors. The 50 original role/shared procedures overlap the developed skills. Update claims only with source and test evidence.
+Use the current totals in the [collection inventory](../../collections/muse-starters-v1/COUNTS.json) and [connector catalog](../connectors/catalog.json). The product renderer keeps these totals and all 15 specialist libraries aligned. The 50 original role/shared procedures overlap the developed skills. Update claims only with source and test evidence.
 
 ## Write for people and retrieval tools
 
@@ -38,7 +38,7 @@ Do not use promotional filler such as "unlock the power," "seamless experience,"
 
 A specialist description covers the **field of work**, not only the first CLI demonstration. Name its scope, representative tasks, and major working methods. Then separately identify the included Python engines or workbenches and the operations they actually run. Describe the included tools clearly and place setup requirements for optional renderers, browsers, and services beside the step that uses them.
 
-For source and engine links, use the organization-owned canonical repository: `atlas-origins/muse-ai-agent-presets`. Historical files pinned by the 198-file compatibility baseline must remain byte-identical; their older GitHub links are preserved as historical evidence and currently redirect. Do not rewrite those original files merely to clear a link audit. Current README, discovery and setup guides should use the new organization links.
+For source and engine links, use the organization-owned canonical repository: `Atlas-Agents-Hub/muse-hub`. Historical files pinned by the 198-file compatibility baseline must remain byte-identical; their older GitHub links are preserved as historical evidence and currently redirect. Do not rewrite those original files merely to clear a link audit. Current README, discovery and setup guides should use the new organization links.
 
 ## Make navigation work on a phone
 

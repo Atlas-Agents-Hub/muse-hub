@@ -1,0 +1,41 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-information-monitoring-with-muse-google-sheets-jina-ai-and-slack-2106de",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-6-sheetname": null,
+    "step-6-documentid": null,
+    "step-7-channelid": null,
+    "step-8-sheetname": null,
+    "step-8-documentid": null,
+    "step-16-sheetname": null,
+    "step-16-documentid": null,
+    "step-17-sheetname": null,
+    "step-17-documentid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "rssfeedread": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

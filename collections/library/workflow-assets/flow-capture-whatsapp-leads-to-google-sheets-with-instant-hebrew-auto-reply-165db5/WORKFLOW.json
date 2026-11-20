@@ -1,0 +1,210 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-capture-whatsapp-leads-to-google-sheets-with-instant-hebrew-auto-reply-165db5",
+  "title": "Capture WhatsApp Leads to Google Sheets with Instant Hebrew Auto-Reply",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "WhatsApp Incoming Message",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-lead-intake"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Normalize Lead Data",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Accepts WAHA (waha.devlike.pro) and Meta WhatsApp Cloud API webhooks.\n// Extracts sender name, message text and a normalized Israeli phone number.\nconst req = records[0].json;\nconst body = req.body ?? req;\n\nlet raw = '';\nlet text = '';\nlet name = '';\n\nif (body.payload) {\n  // WAHA payload: { event: 'message', payload: { from, body, fromMe, _data } }\n  const p = body.payload;\n  if (p.fromMe) return []; // ignore messages sent by us\n  raw = p.from ?? '';\n  if (String(raw).endsWith('@g.us')) return []; // ignore group chats\n  text = p.body ?? '';\n  name = p._data?.notifyName ?? p.notifyName ?? '';\n} else if (body.entry) {\n  // WhatsApp Cloud API payload: entry[0].changes[0].value\n  const value = body.entry?.[0]?.changes?.[0]?.value ?? {};\n  const msg = value.messages?.[0];\n  if (!msg) return []; // ignore delivery/status callbacks\n  raw = msg.from ?? '';\n  text = msg.text?.body ?? '';\n  name = value.contacts?.[0]?.profile?.name ?? '';\n} else {\n  return []; // unknown payload shape\n}\n\nif (!raw) return [];\n\n// Normalize to Israeli E.164 (+972...). Adjust the prefix for other countries.\nlet digits = String(raw).replace(/@.*$/, '').replace(/\\D/g, '');\nif (digits.startsWith('0')) digits = '972' + digits.slice(1);\nif (!digits.startsWith('972')) digits = '972' + digits;\n\nreturn [{\n  json: {\n    name: name || 'New WhatsApp lead',\n    phone: '+' + digits,\n    chatId: digits + '@c.us',\n    message: text,\n    receivedAt: current_time.toISO(),\n    source: 'WhatsApp',\n  },\n}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Add Lead to Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "configuration_input": "step-3-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-3-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": {
+              "expression": "{{ record.receivedAt }}"
+            },
+            "Name": {
+              "expression": "{{ record.name }}"
+            },
+            "Phone": {
+              "expression": "{{ record.phone }}"
+            },
+            "Message": {
+              "expression": "{{ record.message }}"
+            },
+            "Source": {
+              "expression": "{{ record.source }}"
+            }
+          },
+          "schema": [
+            {
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Send WhatsApp Auto-Reply (WAHA)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "session",
+              "value": "default"
+            },
+            {
+              "name": "chatId",
+              "value": {
+                "expression": "{{ steps[\"step-2\"].record.chatId }}"
+              }
+            },
+            {
+              "name": "text",
+              "value": {
+                "expression": "תודה {{ steps[\"step-2\"].record.name }}! קיבלנו את הפנייה שלך ונחזור אליך בהקדם 🙏"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://your-waha-server/api/sendText"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "WhatsApp/Capture WhatsApp Leads to Google Sheets with Instant Hebrew Auto-Reply.json",
+    "git_blob": "f55f74f13bb539588239edf843f5fac8467acc60",
+    "sha256": "a90a6294cf7fb0a48367fb945a95e570ec83e4431c56e4ef0b93452736cbb433",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/WhatsApp/Capture%20WhatsApp%20Leads%20to%20Google%20Sheets%20with%20Instant%20Hebrew%20Auto-Reply.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

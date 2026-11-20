@@ -1,0 +1,356 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-chat-assistant-muse-assistant-with-postgres-memory-and-api-calling-capabalitie-940080",
+  "title": "Chat Assistant (OpenAI assistant) with Postgres Memory And API Calling Capabalities",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Choose the next branch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 1,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.leadData }}"
+              },
+              "rightValue": ""
+            },
+            {
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "",
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Edit Fields1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "chatInput",
+              "type": "string",
+              "value": {
+                "expression": "\"Hello, just so you can get to know me, with no intention of a response, please save this information in your memory. My name is {{ record.leadData.name }}. I am {{ record.leadData.age }} years old and currently live in {{ record.leadData.city }}, {{ record.leadData.state }}. My profession is {{ record.leadData.profession }}, and my education level is {{ record.leadData.educationLevel }}.\nIf I’m part of an adhesion group and have an entity, it would be {{ record.leadData.entity }}.\n\nI am using a {{ record.leadData.deviceType }} device to access this through the {{ record.leadData.channel }} channel. At the moment, I am looking for a health insurance plan of type {{ record.leadData.quotationType }}.\""
+              }
+            },
+            {
+              "name": "session_id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.session_id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Edit Fields2",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "chatInput",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.chatInput}}"
+              }
+            },
+            {
+              "name": "session_id",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-5\"].record.session_id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "resource": "assistant",
+        "assistantId": {
+          "configuration_input": "step-4-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Chat Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {},
+        "initialMessages": "Olá 👋\nSou Jovelino, o serviço de IA do Joov, me mande sua pergunta e responderei em seguida! :)"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Postgres Chat Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "tableName": "aimessages",
+        "sessionKey": {
+          "expression": "{{ steps[\"step-5\"].record.session_id }}{{ record.sessionId }}"
+        },
+        "sessionIdType": "customKey",
+        "contextWindowLength": 30
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Postgres Chat Memory1",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "tableName": "aimessages",
+        "sessionKey": {
+          "expression": "{{ steps[\"step-5\"].record.session_id }}{{ record.sessionId }}"
+        },
+        "sessionIdType": "customKey",
+        "contextWindowLength": 1
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Products in Daatabase",
+      "operation": "service-read",
+      "adapter": "mysql",
+      "parameters": {
+        "query": {
+          "expression": "SELECT * \nFROM Products p \nWHERE \n cityQuery = '{{ $fromAI(\"cityQuery\") }}' AND \n state = '{{ $fromAI(\"state\") }}' AND \n modality = 'PME' AND \n removed = 0 AND \n ({{ $fromAI(\"holderCount\") || 1 }} + {{ $fromAI(\"dependentsCount\") || 0 }}) BETWEEN p.minLifeAmount AND p.maxLifeAmount AND\n (CASE\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 0 AND 18 THEN priceAtAge0To18\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 19 AND 23 THEN priceAtAge19To23\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 24 AND 28 THEN priceAtAge24To28\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 29 AND 33 THEN priceAtAge29To33\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 34 AND 38 THEN priceAtAge34To38\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 39 AND 43 THEN priceAtAge39To43\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 44 AND 48 THEN priceAtAge44To48\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 49 AND 53 THEN priceAtAge49To53\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 54 AND 58 THEN priceAtAge54To58\n ELSE priceAtAge59To199\n END) IS NOT NULL\nORDER BY \n (CASE\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 0 AND 18 THEN priceAtAge0To18\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 19 AND 23 THEN priceAtAge19To23\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 24 AND 28 THEN priceAtAge24To28\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 29 AND 33 THEN priceAtAge29To33\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 34 AND 38 THEN priceAtAge34To38\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 39 AND 43 THEN priceAtAge39To43\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 44 AND 48 THEN priceAtAge44To48\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 49 AND 53 THEN priceAtAge49To53\n WHEN {{ $fromAI(\"holderAge\") }} BETWEEN 54 AND 58 THEN priceAtAge54To58\n ELSE priceAtAge59To199\n END) ASC, \n createdAt DESC\nLIMIT 3;"
+        },
+        "options": {
+          "detailedOutput": true
+        },
+        "operation": "executeQuery",
+        "descriptionType": "manual",
+        "toolDescription": "// Search for the X product bla bla bla"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Knowledge Base",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-9-url"
+        },
+        "toolDescription": "Here you will find the knowlegde base of my shop and bla bla bla Use this when they ask for price, whatever i want."
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "External API",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-10-url"
+        },
+        "method": "POST",
+        "jsonBody": {
+          "expression": "{\n \"name\": \"{{json.name}}\",\n \"birthdate\": \"{{json.birthdate }}\"\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "toolDescription": "Pegue o nome completo em camel case, exemplo: Fernanda Melo, e a data de nacimento nesse formato: 1990-03-28"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "OpenAI2",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.chatInput }}"
+        },
+        "prompt": "define",
+        "options": {},
+        "resource": "assistant",
+        "assistantId": {
+          "configuration_input": "step-11-assistantid"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-11",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-4",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-assistantid",
+      "purpose": "Select the assistantId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://quotation.joov.com.br/widget/info?modalidade={value}&estado={value}&cidade={value}&operadora={value}"
+    },
+    {
+      "id": "step-10-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://integracao-sed-alb-323570099.us-east-1.elb.amazonaws.com/{resource}"
+    },
+    {
+      "id": "step-11-assistantid",
+      "purpose": "Select the assistantId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Chat Assistant (OpenAI assistant) with Postgres Memory And API Calling Capabalities.json",
+    "git_blob": "083a1d9b1593b510c276f3716ce6e26bf0d0dae8",
+    "sha256": "1bbb93bf28ddba6a74095faf70d0b22f514c5fb4b3290c908226ea514a8e33f3",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Chat%20Assistant%20%28OpenAI%20assistant%29%20with%20Postgres%20Memory%20And%20API%20Calling%20Capabalities.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

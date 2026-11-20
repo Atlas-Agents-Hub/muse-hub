@@ -1,0 +1,34 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-assistant-to-chat-with-files-in-supabase-storage-506589",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-6-tableid": null,
+    "step-8-tableid": null,
+    "step-19-tablename": null,
+    "step-22-metadatavalues-0-value": null,
+    "step-22-tablename": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "supabase": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

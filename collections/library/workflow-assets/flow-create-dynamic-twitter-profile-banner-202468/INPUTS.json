@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-create-dynamic-twitter-profile-banner-202468",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-12-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

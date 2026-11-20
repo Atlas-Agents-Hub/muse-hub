@@ -1,0 +1,36 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-upsert-huge-documents-in-a-vector-store-with-supabase-and-notion-7fbd53",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-11-tableid": null,
+    "step-16-databaseid": null,
+    "step-17-tablename": null,
+    "step-18-tablename": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "notion": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "supabase": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

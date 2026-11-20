@@ -1,0 +1,431 @@
+{
+  "allowed_hosts": [
+    "api.trello.com",
+    "trello.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Trello API Key",
+        "label": "API Key",
+        "name": "username",
+        "required": true,
+        "type": "AccountField"
+      },
+      {
+        "description": "Trello Token",
+        "label": "Token",
+        "name": "password",
+        "required": true,
+        "type": "AccountField"
+      }
+    ],
+    "method": "Service username and password or token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Project management",
+  "id": "trello",
+  "name": "Trello",
+  "operations": [
+    {
+      "description": "Adds an attachment to a card.",
+      "id": "add_card_attachment",
+      "inputs": [
+        {
+          "description": "From an earlier step, or the code after /c/ in the card's URL.",
+          "label": "Card ID",
+          "name": "card_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "A file from an earlier step, or a public URL.",
+          "label": "File",
+          "name": "attachment",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "Shown on the card. Empty uses the file's own name.",
+          "label": "File Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The MIME type. Empty lets Trello detect it.",
+          "label": "File Type",
+          "name": "mime_type",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only images can be card covers.",
+          "label": "Set as Cover",
+          "name": "set_cover",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Card Attachment",
+      "source_path": "trello/src/lib/actions/card-attachment/add-card-attachment.ts",
+      "source_sha256": "fda8c9c82c6bcf25963520877b94eb39ed4d44e5030d1dddc719470b483a6d7d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/actions/card-attachment/add-card-attachment.ts"
+    },
+    {
+      "description": "Create a new card in Trello",
+      "id": "create_card",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Board_Id",
+          "name": "board_id",
+          "required": null,
+          "source_expression": "trelloCommon.board_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "trelloCommon.list_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Card Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Markdown formatting is supported.",
+          "label": "Card Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Empty adds the card at the bottom of the list.",
+          "label": "Position",
+          "name": "position",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Labels",
+          "name": "labels",
+          "required": null,
+          "source_expression": "trelloCommon.board_labels",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Card",
+      "source_path": "trello/src/lib/actions/card/create-card.ts",
+      "source_sha256": "0d900e53fcfdc073655ddd43c87e7ca6a84a42b41049b69eb7b7ab51ebdc4d50",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/actions/card/create-card.ts"
+    },
+    {
+      "description": "Deletes an existing card.",
+      "id": "delete_card",
+      "inputs": [
+        {
+          "description": "From an earlier step, or the code after /c/ in the card's URL.",
+          "label": "Card ID",
+          "name": "card_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Card",
+      "source_path": "trello/src/lib/actions/card/delete-card.ts",
+      "source_sha256": "66949b6df992187fb7c0acb463d0f499d6b727281425a2e6b20951ff945d6c46",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/actions/card/delete-card.ts"
+    },
+    {
+      "description": "Deletes an attachment from a card.",
+      "id": "delete_card_attachment",
+      "inputs": [
+        {
+          "description": "From an earlier step, or the code after /c/ in the card's URL.",
+          "label": "Card ID",
+          "name": "card_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "From Get All Card Attachments or an earlier step.",
+          "label": "Attachment ID",
+          "name": "attachment_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Card Attachment",
+      "source_path": "trello/src/lib/actions/card-attachment/delete-card-attachment.ts",
+      "source_sha256": "b61b1193af15e9275e0494438b28a5b487fd59521b1722d9976a38c28c0af846",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/actions/card-attachment/delete-card-attachment.ts"
+    },
+    {
+      "description": "Gets all attachments on a card.",
+      "id": "get_card_attachments",
+      "inputs": [
+        {
+          "description": "From an earlier step, or the code after /c/ in the card's URL.",
+          "label": "Card ID",
+          "name": "card_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get All Card Attachments",
+      "source_path": "trello/src/lib/actions/card-attachment/get-card-attachments.ts",
+      "source_sha256": "ede3bc74108056f257445a7b0bb289fcf610bc5af3ce841fa1e2ae6d912eb1c7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/actions/card-attachment/get-card-attachments.ts"
+    },
+    {
+      "description": "Gets a card by ID.",
+      "id": "get_card",
+      "inputs": [
+        {
+          "description": "From an earlier step, or the code after /c/ in the card's URL.",
+          "label": "Card ID",
+          "name": "cardId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Card",
+      "source_path": "trello/src/lib/actions/card/get-card.ts",
+      "source_sha256": "4b123b6fa4f635ef0a352e092f1812adad6945019ee761506c825217b181f5e3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/actions/card/get-card.ts"
+    },
+    {
+      "description": "Gets a specific attachment on a card.",
+      "id": "get_card_attachment",
+      "inputs": [
+        {
+          "description": "From an earlier step, or the code after /c/ in the card's URL.",
+          "label": "Card ID",
+          "name": "card_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "From Get All Card Attachments or an earlier step.",
+          "label": "Attachment ID",
+          "name": "attachment_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Card Attachment",
+      "source_path": "trello/src/lib/actions/card-attachment/get-card-attachment.ts",
+      "source_sha256": "e3499b633dea31c0b5f526c01747ece2d75a8a957a22421f5c7da8f7742113bb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/actions/card-attachment/get-card-attachment.ts"
+    },
+    {
+      "description": "Updates an existing card.",
+      "id": "update_card",
+      "inputs": [
+        {
+          "description": "From an earlier step, or the code after /c/ in the card's URL.",
+          "label": "Card ID",
+          "name": "card_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Board_Id",
+          "name": "board_id",
+          "required": null,
+          "source_expression": "trelloCommon.board_id_opt",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Changes_Info",
+          "name": "changes_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Card Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Markdown formatting is supported.",
+          "label": "Card Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Due Date",
+          "name": "due",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "On archives the card. Off keeps it open or restores it.",
+          "label": "Archived",
+          "name": "closed",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Empty keeps the card where it is in its list.",
+          "label": "Position",
+          "name": "position",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Labels",
+          "name": "labels",
+          "required": null,
+          "source_expression": "trelloCommon.board_labels_replace",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "trelloCommon.move_to_list",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Card",
+      "source_path": "trello/src/lib/actions/card/update-card.ts",
+      "source_sha256": "ba1c749049cfafbc79b3ff12c48c1033228e49ad294e24b6cf09436efa8be726",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/actions/card/update-card.ts"
+    },
+    {
+      "description": "Fires a set time before each card's due date.",
+      "id": "deadline",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Board_Id",
+          "name": "board_id",
+          "required": null,
+          "source_expression": "trelloCommon.board_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List_Id_Opt",
+          "name": "list_id_opt",
+          "required": null,
+          "source_expression": "trelloCommon.list_id_opt",
+          "type": "ProviderField"
+        },
+        {
+          "description": "How long before the due date to fire.",
+          "label": "Time Before Due",
+          "name": "time_before_due",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Time Unit",
+          "name": "time_unit",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Card Deadline",
+      "source_path": "trello/src/lib/triggers/deadline.ts",
+      "source_sha256": "f081301ee874db96cf68cc380df8d219255d308e5b5d5f905b844fd7d70975e1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/triggers/deadline.ts"
+    },
+    {
+      "description": "Fires when a card is moved into the chosen list.",
+      "id": "card_moved_to_list",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Board_Id",
+          "name": "board_id",
+          "required": null,
+          "source_expression": "trelloCommon.board_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List_Id",
+          "name": "list_id",
+          "required": null,
+          "source_expression": "trelloCommon.list_id",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Card Moved to List",
+      "source_path": "trello/src/lib/triggers/cardMoved.ts",
+      "source_sha256": "0cd9827bee6cf6866317d6222e4e73a5c007d3318d7f3e3f7c39c4f16d074c2e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/triggers/cardMoved.ts"
+    },
+    {
+      "description": "Fires when a card is created on the board or in the list.",
+      "id": "new_card",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Board_Id",
+          "name": "board_id",
+          "required": null,
+          "source_expression": "trelloCommon.board_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "List_Id_Opt",
+          "name": "list_id_opt",
+          "required": null,
+          "source_expression": "trelloCommon.list_id_opt",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Card",
+      "source_path": "trello/src/lib/triggers/newCard.ts",
+      "source_sha256": "7a6a951dfbdda8f3f8f5f92f05e186961ab2993d6490bfd6f24e60030f50347f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/trello/src/lib/triggers/newCard.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "d66d2420d2bab5505653271824b46db0e3ea88b3",
+    "index_path": "trello/src/index.ts",
+    "index_sha256": "5a6bc20af57412dc484f3226607bf0ae0879207ce7ee54b7e65f358a1adbec3f",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-b2b-demo-lead-rescue-desk-enrich-score-route-and-escalate-8b9a67",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-documentid": null,
+    "step-9-sheetname": null,
+    "step-12-sendto": null,
+    "step-14-sendto": null,
+    "step-16-sendto": null,
+    "step-18-sendto": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-use-ai-to-organize-your-todoist-inbox-41842c",
+  "title": "Use AI to organize your Todoist Inbox",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Update priority in todoist",
+      "operation": "service-write",
+      "adapter": "todoist",
+      "parameters": {
+        "taskId": {
+          "expression": "{{ steps[\"step-3\"].record.id }}"
+        },
+        "operation": "update",
+        "updateFields": {
+          "priority": {
+            "expression": "{{ steps[\"step-4\"].records[0].projects[record.message.content] }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get inbox tasks",
+      "operation": "service-read",
+      "adapter": "todoist",
+      "parameters": {
+        "filters": {
+          "projectId": {
+            "configuration_input": "step-3-filters-projectid"
+          }
+        },
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Your Projects",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "projects",
+              "type": "object",
+              "value": {
+                "expression": "{{ {\n apartment: 1,\n health: 2,\n german: 3\n} }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Categorize",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-5-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": {
+                "expression": "Categorize the user's todo item to a project. Return the project name or just \"other\" if it does not belong to a project."
+              }
+            },
+            {
+              "content": {
+                "expression": "Projects:\n{{ steps[\"step-4\"].records[0].projects.keys().join('\\n') }}\n\nTodo item:\n{{ steps[\"step-3\"].record.content }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "If task is not a subtask",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.parent_id }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "If other or ai hallucinates",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              },
+              "leftValue": {
+                "expression": "{{ steps[\"step-4\"].records[0].projects.keys() }}"
+              },
+              "rightValue": {
+                "expression": "{{ record.message.content }}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-filters-projectid",
+      "purpose": "Select the projectId for step-3.",
+      "required": true
+    },
+    {
+      "id": "step-5-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Use AI to organize your Todoist Inbox.json",
+    "git_blob": "f2622c1c2c71b764d1b5f35b005c4a0477031ea1",
+    "sha256": "2798961cdd3a0d6b56503a201667ee2295c2263a02c2fba6235a3c880f209995",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Use%20AI%20to%20organize%20your%20Todoist%20Inbox.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

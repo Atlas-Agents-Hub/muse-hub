@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-animate-a-product-photo-with-magic-hour-00d1db",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-imagefilepath": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "magichour": {
+      "connection": null
+    }
+  }
+}

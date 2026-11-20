@@ -1,0 +1,112 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-uptime-ping-alert-578663",
+  "title": "uptime-ping-alert",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Ogni 5 minuti",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Chiama il sito",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {
+          "timeout": 10000,
+          "ignoreHttpStatusErrors": true
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Solo se cambia stato",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Passa in avanti SOLO se lo stato è cambiato rispetto all'ultimo controllo (evita di\n// avvisarti ogni 5 minuti finché il sito resta giù, o su ogni ping quando è su).\nconst state = $getWorkflowStaticData('global');\nconst code = records[0].json.statusCode || 0;\nconst giu = code === 0 || code >= 500;\nconst eraGiu = state.giu === true;\nif (giu === eraGiu) return [];\nstate.giu = giu;\nreturn [{ json: { giu, code, quando: new Date().toISOString() } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Manda su Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ $env.TELEGRAM_CHAT_ID || 'INSERISCI_CHAT_ID' }}"
+        },
+        "text": {
+          "expression": "{{ record.giu ? '🔴 Il sito è DOWN (status ' + record.code + ') — ' + record.quando : '🟢 Il sito è tornato SU — ' + record.quando }}"
+        },
+        "additionalFields": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://esempio.com"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "devops/uptime-ping-alert.json",
+    "git_blob": "03d41ee1303c45706f6916a2571a7b49c0cbb727",
+    "sha256": "508b66b8122b93949bcd6d63dd362b01db4858c22ddd6052408a4d3dd9d3c01f",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/devops/uptime-ping-alert.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

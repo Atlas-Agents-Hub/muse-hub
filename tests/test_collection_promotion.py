@@ -65,7 +65,7 @@ class CollectionPromotion(unittest.TestCase):
    else:x['skills'][1]['steps']=x['skills'][0]['steps']
    with self.subTest(change=change),self.assertRaises(tool.CollectionError):tool.validate(x)
  def test_all_starters_build_and_reopen_with_hashes(self):
-  tool=load_tool();d=tool.load_collection()
+  tool=load_tool();d=tool.prepare_collection(tool.load_collection())
   for starter in d['starters']:
    with self.subTest(starter=starter['id']):
     raw=tool.build_bytes(d,starter['id'])

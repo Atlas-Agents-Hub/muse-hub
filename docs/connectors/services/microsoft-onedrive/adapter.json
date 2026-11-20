@@ -1,0 +1,336 @@
+{
+  "allowed_hosts": [
+    "graph.microsoft.com",
+    "graph.microsoft.us",
+    "learn.microsoft.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://{cloud}/common/oauth2/v2.0/authorize"
+    ],
+    "fields": [
+      {
+        "description": "",
+        "label": "Cloud",
+        "name": "cloud",
+        "required": null,
+        "source_expression": "microsoftCloudProperty",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "Files.ReadWrite",
+      "email",
+      "offline_access",
+      "openid",
+      "profile"
+    ],
+    "token_urls": [
+      "https://{cloud}/common/oauth2/v2.0/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "microsoft-onedrive",
+  "name": "Microsoft OneDrive",
+  "operations": [
+    {
+      "description": "Create a copy of a file in your OneDrive, optionally in a different folder or with a new name.",
+      "id": "copy_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolderInfo",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Source Folder Id",
+          "name": "sourceFolderId",
+          "required": null,
+          "source_expression": "oneDriveCommon.folderDropdown({ displayName: 'Source Folder', description: 'The folder containing the file to copy. Leave empty to browse files in the root folder.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The file to copy. If the file is not listed (up to 1000 files are fetched), toggle the dynamic input (F) and enter the file ID directly.",
+          "label": "File",
+          "name": "fileId",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "",
+          "label": "Destination Folder Id",
+          "name": "destinationFolderId",
+          "required": null,
+          "source_expression": "oneDriveCommon.folderDropdown({ displayName: 'Destination Folder', description: 'The folder to copy the file into. Leave empty to copy it into the same folder as the source file.', })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "A new name for the copied file (e.g. report-copy.xlsx). If left empty, the original name is used.",
+          "label": "New Name",
+          "name": "newName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "What to do if a file with the same name already exists in the destination folder. Note: personal OneDrive (consumer) accounts do not support this option and may fail on name conflicts regardless of the selection.",
+          "label": "Conflict Behavior",
+          "name": "conflictBehavior",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Copy File",
+      "source_path": "microsoft-onedrive/src/lib/actions/copy-file.ts",
+      "source_sha256": "42515b891ee35c1b0da3f9910d1e44ce17f6c43160b83d622081d1dccfe5e169",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/actions/copy-file.ts"
+    },
+    {
+      "description": "Start copying a OneDrive file or folder. The copy runs in the background; check it with Get Copy Status.",
+      "id": "onedrive_copy_item",
+      "inputs": [
+        {
+          "description": "ID of the item to copy, from Search or List Folder Contents.",
+          "label": "Item ID",
+          "name": "itemId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Path from the drive root. Use this or Item ID.",
+          "label": "Path",
+          "name": "path",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Folder to copy into. Leave empty for the drive root.",
+          "label": "Destination Folder ID",
+          "name": "destinationFolderId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional name for the copy. Leave empty to keep the original name.",
+          "label": "New Name",
+          "name": "newName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "What to do on a name clash. Not supported on personal OneDrive.",
+          "label": "If the Name Exists",
+          "name": "conflictBehavior",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Copy File or Folder",
+      "source_path": "microsoft-onedrive/src/lib/actions/onedrive-copy-item.ts",
+      "source_sha256": "02bd6d71ded86916097456705325c067d2b20f7924e41b77b506aefd56385269",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/actions/onedrive-copy-item.ts"
+    },
+    {
+      "description": "Get the connected OneDrive drive, including its type and storage quota.",
+      "id": "onedrive_get_drive",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Drive",
+      "source_path": "microsoft-onedrive/src/lib/actions/onedrive-get-drive.ts",
+      "source_sha256": "4d0c6c8d2826425d6cb4e3323cd68d9e5b35d163bd9f5e27c1233b4acbd317ee",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/actions/onedrive-get-drive.ts"
+    },
+    {
+      "description": "Get and download a file using a File ID or filename.",
+      "id": "download_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Look Up By",
+          "name": "lookupBy",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Enter the File ID or the exact filename depending on the \"Look Up By\" selection",
+          "label": "File ID / File Name",
+          "name": "fileIdentifier",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get File",
+      "source_path": "microsoft-onedrive/src/lib/actions/download-file.ts",
+      "source_sha256": "09236fed25849960667ce660b841761245b567087ffba9b6b842672626279dc0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/actions/download-file.ts"
+    },
+    {
+      "description": "Get the metadata of a file or folder by its ID or path.",
+      "id": "onedrive_get_item",
+      "inputs": [
+        {
+          "description": "Item ID from Search or List Folder Contents, or \"root\". Or use Path.",
+          "label": "Item ID",
+          "name": "itemId",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Path from the drive root. Used when Item ID is empty.",
+          "label": "Path",
+          "name": "path",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get File or Folder",
+      "source_path": "microsoft-onedrive/src/lib/actions/onedrive-get-item.ts",
+      "source_sha256": "e717e49c89cf928661fd4e0487ef48c40e8b061455a67668f07b0c2d1cc8493c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/actions/onedrive-get-item.ts"
+    },
+    {
+      "description": "List files in a OneDrive folder",
+      "id": "list_files",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolderInfo",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Parent Folder",
+          "name": "parentFolder",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolder",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Files",
+      "source_path": "microsoft-onedrive/src/lib/actions/list-files.ts",
+      "source_sha256": "7585844d4f8cc0e55381b18d5236816905f83e00bb62236fa4dc2b51d9200983",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/actions/list-files.ts"
+    },
+    {
+      "description": "List folders in a OneDrive folder",
+      "id": "list_folders",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolderInfo",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Parent Folder",
+          "name": "parentFolder",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolder",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "List Folders",
+      "source_path": "microsoft-onedrive/src/lib/actions/list-folders.ts",
+      "source_sha256": "128232426e9e5025217c3dfc6dce43f209c9d7ff5aca7a1a68863313252a9bef",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/actions/list-folders.ts"
+    },
+    {
+      "description": "Upload a file to your Microsoft OneDrive with chunked upload if the file is larger than 4MiB",
+      "id": "upload_onedrive_file",
+      "inputs": [
+        {
+          "description": "The name the file should be saved as (e.g. file.txt)",
+          "label": "File name",
+          "name": "fileName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The file URL or base64 to upload",
+          "label": "File",
+          "name": "file",
+          "required": true,
+          "type": "File"
+        },
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolderInfo",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Parent Id",
+          "name": "parentId",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolder",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Upload file",
+      "source_path": "microsoft-onedrive/src/lib/actions/upload-file.ts",
+      "source_sha256": "016c765d38dc2f016189b86227fd06eefd5564f4190f4acbd6dbdc3657c8f0a1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/actions/upload-file.ts"
+    },
+    {
+      "description": "Trigger when a new file is uploaded.",
+      "id": "new_file",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Markdown",
+          "name": "markdown",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolderInfo",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Parent Folder",
+          "name": "parentFolder",
+          "required": null,
+          "source_expression": "oneDriveCommon.parentFolder",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New File",
+      "source_path": "microsoft-onedrive/src/lib/triggers/new-file.ts",
+      "source_sha256": "94b4ea193f823dd4680565d0e4ccac93be196583561c7753a4d34dae5a219d72",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/microsoft-onedrive/src/lib/triggers/new-file.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "8200f53f14a778891486629f6ff6d0784f639236",
+    "index_path": "microsoft-onedrive/src/index.ts",
+    "index_sha256": "ae0b47cd17a13c767869ba23039e59ba757d7e3bce2c3de0fc77e94abedaf2e4",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach"
+  ]
+}

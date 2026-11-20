@@ -1,0 +1,23 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-get-airtable-data-via-ai-and-obsidian-notes-ad4aa2",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-base": null,
+    "step-1-table": null,
+    "step-5-path": null
+  },
+  "adapters": {
+    "airtable": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

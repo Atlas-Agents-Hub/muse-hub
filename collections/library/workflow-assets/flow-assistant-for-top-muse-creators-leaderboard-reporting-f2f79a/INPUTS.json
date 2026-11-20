@@ -1,0 +1,41 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-assistant-for-top-muse-creators-leaderboard-reporting-f2f79a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-assignments-0-value": null,
+    "step-13-assignments-4-name": null,
+    "step-23-driveid": null,
+    "step-23-folderid": null,
+    "step-29-sendto": null,
+    "step-31-sendto": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

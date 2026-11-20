@@ -1,0 +1,237 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-watch-competitor-hiring-across-four-ats-job-boards-641d63",
+  "title": "Watch competitor hiring across four ATS job boards",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Every morning at eight",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Companies to watch",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "companies",
+              "value": {
+                "expression": "{{ [\"https://boards.greenhouse.io/stripe\", \"lever:leverdemo\", \"ramp\"] }}"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Read every board",
+      "operation": "service-read",
+      "adapter": "apify",
+      "parameters": {
+        "resource": "Actors",
+        "operation": "Run actor and get dataset",
+        "actorSource": "store",
+        "actorId": "gubidonius~company-jobs-scraper",
+        "customBody": {
+          "expression": "{{ JSON.stringify({ companies: record.companies, includeDescription: false, onlyRemote: false, maxJobsPerCompany: 1000 }) }}"
+        },
+        "timeout": 900,
+        "memory": 1024,
+        "build": ""
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Only the ones I have not seen",
+      "operation": "deduplicate",
+      "adapter": "local",
+      "parameters": {
+        "operation": {
+          "configuration_input": "step-4-operation"
+        },
+        "logic": {
+          "configuration_input": "step-4-logic"
+        },
+        "dedupeValue": {
+          "expression": "{{ record.platform }}:{{ record.companySlug }}:{{ record.jobId }}"
+        },
+        "options": {
+          "scope": "node",
+          "historySize": 20000
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Keep what is worth reading",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "company",
+              "value": {
+                "expression": "{{ record.company || record.companySlug }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "title",
+              "value": {
+                "expression": "{{ record.title }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "location",
+              "value": {
+                "expression": "{{ record.location }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "department",
+              "value": {
+                "expression": "{{ record.department }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "remote",
+              "value": {
+                "expression": "{{ record.isRemote }}"
+              },
+              "type": "boolean"
+            },
+            {
+              "name": "postedAt",
+              "value": {
+                "expression": "{{ record.postedAt }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "applyUrl",
+              "value": {
+                "expression": "{{ record.applyUrl }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "board",
+              "value": {
+                "expression": "{{ record.platform }}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Tell the channel",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "configuration_input": "step-6-channelid"
+        },
+        "text": {
+          "expression": "{{ record.company }} is hiring: {{ record.title }} ({{ record.location }}) {{ record.applyUrl }}"
+        },
+        "otherOptions": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-operation",
+      "purpose": "Choose the operation resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-logic",
+      "purpose": "Choose the logic resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Watch competitor hiring across four ATS job boards.json",
+    "git_blob": "0f393c75a0108b6088a90e8f9770080652f0f3ff",
+    "sha256": "dcd16f258f28fe7900bc72e06e3bca2cfeb06769b7da9ecca0ed9e03e139304d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Watch%20competitor%20hiring%20across%20four%20ATS%20job%20boards.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

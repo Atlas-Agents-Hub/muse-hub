@@ -1,24 +1,39 @@
 # Personal Companion | Muse Hub
 
-Organize tasks, notes, preferences, and routines privately.
+Support daily life with personal planning, routines, accessible interactions and privacy-aware assistance shaped to the owner's preferences.
 
-**[Download Personal Companion](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-personal-companion-v1.5.0.zip)** · [v1.5.0 release](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v1.5.0) · [Checksums](https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/SHA256SUMS)
+**[Download Personal Companion](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
+
+**115 skills · 15 workflows · 9 tool guides**. [Explore the full selection](LIBRARY.md).
 
 ## Set up this assistant
 
 1. Extract the ZIP into its own folder and open `START_HERE.md`. You can also give Muse the ZIP with your current task.
 2. Choose a **separate Muse assistant** for Personal Companion and add the supplied Main instructions.
-3. Set up its **three subchats** using their included instructions, context, tools, and memory documents.
-4. Personalize the role's preferences and working context, then try the task below.
+3. Set up its **three subchats** using their included instructions, context, tools and memory documents.
+4. Personalize the assistant's working preferences. Open `PROFILE.md` to choose the methods for your task.
+5. Try the first task below, check the result against the method's expected outputs, and save your work.
 
-**First task to try:** "Help me plan today and identify what needs follow-up."
+**First task to try:** Bring today's commitments and unfinished tasks. Make a workable plan, capture your notes and choose the next three actions.
 
-No Python is needed for the assistant instructions. The package's `START_HERE.md` explains any optional local tools and their requirements. Choose the account and permissions when adding a connector, and keep credentials and personal memory in your private workspace.
+No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account and permissions for each connection you add.
 
-## Make it your own
+## Use a skill or workflow
 
-Use the supplied skills and workflows that fit your task. [Explore this specialist's methods and tools](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md), or use the [terminal guide](../../docs/TERMINAL.md) for command-line work.
+Start with [this specialist's library](LIBRARY.md). A skill describes a focused method and includes its reference files. A workflow connects several methods with named inputs, expected results and checks. Load the method that fits the current task; the complete selection remains available in the download.
 
-Role ID: `personal-companion`. Package: `muse-personal-companion-v1.5.0.zip`.
+[Find and build your own pack](../../docs/collection/FIND_AND_BUILD.md) to search this specialist's methods, preview the included files and create a ZIP for your task. Add `--role personal-companion` to the toolkit's search command to focus on this specialist.
+
+Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
+
+## Review email with saved preferences
+
+Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage/INBOX_WORKSPACE.md) to prepare reply preferences, resume from the last completed review and check the action log. The download includes three Python helpers, an example workspace and Inbox Setup for personalizing it.
+
+## Plan in a Muse Space
+
+Your download includes [Muse Planner](../../docs/spaces/MUSE_PLANNER.md), a complete Space for projects, next actions, daily routines, weekly reviews, notes and calendars. Open `spaces/planner/README.md` in the ZIP to create your Space and save your first project.
+
+Role ID: `personal-companion`. Package: `muse-personal-companion-v1.6.0.zip`.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)

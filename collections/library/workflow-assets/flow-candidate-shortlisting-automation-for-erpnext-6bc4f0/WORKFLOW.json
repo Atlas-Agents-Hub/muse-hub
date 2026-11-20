@@ -1,0 +1,711 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-candidate-shortlisting-automation-for-erpnext-6bc4f0",
+  "title": "Candidate Shortlisting Automation for ERPNext",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Code",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of records) {\n item.json.myNewField = 1;\n}\n\nreturn records;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "ApplicantData",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "body",
+              "type": "object",
+              "value": {
+                "expression": "{{ record.body }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "ERPNext - Reject if Resume not Attached",
+      "operation": "service-write",
+      "adapter": "erpnext",
+      "parameters": {
+        "docType": "Job%20Applicant",
+        "operation": "update",
+        "properties": {
+          "customProperty": [
+            {
+              "field": "status",
+              "value": "Rejected"
+            }
+          ]
+        },
+        "documentName": {
+          "expression": "{{ steps[\"step-2\"].record.body.name }}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Applied Against Job",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "ignoreCase": true
+        },
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": false,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": {
+                "expression": "{{ record.body.Job_opening }}"
+              },
+              "rightValue": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "ERPNext - Hold Applicant",
+      "operation": "service-write",
+      "adapter": "erpnext",
+      "parameters": {
+        "docType": "Job%20Applicant",
+        "operation": "update",
+        "properties": {
+          "customProperty": [
+            {
+              "field": "status",
+              "value": "Hold"
+            }
+          ]
+        },
+        "documentName": {
+          "expression": "{{ steps[\"step-2\"].record.body.name }}"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Get Job Opening",
+      "operation": "service-read",
+      "adapter": "erpnext",
+      "parameters": {
+        "docType": "Job%20Opening",
+        "operation": "get",
+        "documentName": {
+          "expression": "{{ steps[\"step-2\"].record.body.Job_opening }}"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Google Gemini Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Convert to Fields",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Input text from the `output` field\nconst textOutput = record.output || '';\n\n// Function to extract values from the text\nfunction extractFields(text) {\n const fields = {};\n\n // Regular expressions to extract each field\n const fitLevelMatch = text.match(/FitLevel:\\s*(.+)\\n/);\n const scoreMatch = text.match(/Score:\\s*(\\d+)\\n/);\n const ratingMatch = text.match(/Rating:\\s*(\\d+)\\n/);\n const justificationMatch = text.match(/Justification:\\s*([\\s\\S]+)/);\n\n // Assign extracted values to the fields\n fields.fit_level = fitLevelMatch ? fitLevelMatch[1].trim() : null;\n fields.score = scoreMatch ? scoreMatch[1].trim() : null;\n fields.applicant_rating = ratingMatch ? ratingMatch[1].trim() : null;\n fields.justification_by_ai = justificationMatch ? justificationMatch[1].trim() : null;\n\n return fields;\n}\n\n// Extract fields from the output\nconst extractedFields = extractFields(textOutput);\n\n// Return the fields as JSON\nreturn {\n json: extractedFields\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "If score less than 80",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              },
+              "leftValue": {
+                "expression": "{{ steps[\"step-8\"].record.score }}"
+              },
+              "rightValue": 80
+            }
+          ]
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Reject Applicant",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://erpnext.syncbricks.com/api/resource/Job Applicant/{{ steps[\"step-2\"].record.body.name }}"
+        },
+        "method": "PUT",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"status\": \"Rejected\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Update Applicant Data",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://erpnext.syncbricks.com/api/resource/Job Applicant/{{ steps[\"step-2\"].record.body.name }}"
+        },
+        "method": "PUT",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"applicant_rating\": \"{{ record.applicant_rating }}\",\n \"custom_justification_by_ai\": \"{{ record.justification_by_ai }}\",\n \"custom_fit_level\": \"{{ record.fit_level }}\",\n \"custom_score\":\"{{ record.score }}\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Reume Attachment Link",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "body.resume_attachment",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.body.resume_link }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Resume Link Provided",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              },
+              "leftValue": {
+                "expression": "{{ record.body.resume_link }}"
+              },
+              "rightValue": "http"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Accept Applicant",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://erpnext.syncbricks.com/api/resource/Job Applicant/{{ steps[\"step-2\"].record.body.name }}"
+        },
+        "method": "PUT",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"status\": \"Accepted\"\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": {
+          "configuration_input": "step-15-path"
+        },
+        "options": {},
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "File Type",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "pdf",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "endsWith"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.resume_attachment }}"
+                    },
+                    "rightValue": ".pdf"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "doc",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.resume_attachment }}"
+                    },
+                    "rightValue": ".doc"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": ".jpg",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "endsWith"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.body.resume_attachment }}"
+                    },
+                    "rightValue": ".jpg"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Download PDF Resume",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{ record.body.resume_attachment }}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "PDF to Text",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Txt File to Text (Example)",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "text"
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Merge1",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-21",
+      "label": "Recruitment AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "System Prompt : \nYou are a highly skilled AI agent trained to compare and analyze text from resumes against job descriptions. Your primary goal is to assess whether the candidate is a good fit for the role based on the given inputs. You will receive two inputs:\n\n1. **Job Description**: A detailed description of the responsibilities, qualifications, and skills required for a specific job role.\n2. **Resume Text**: A summary of a candidate's qualifications, skills, experience, and education.\n\nYour task is to:\n1. **Analyze Match**: Compare the candidate's resume text against the job description and assess the alignment of:\n - Required skills\n - Relevant experience\n - Educational background\n - Certifications\n - Keywords mentioned in both texts (e.g., specific tools, methodologies, or terminologies).\n\n2. **Assess Fit**: Determine if the candidate is a strong, moderate, or weak fit for the role. Assign a score from 0 to 100 based on relevance:\n - **Strong Fit**: 80–100 (Candidate meets or exceeds the majority of the job requirements).\n - **Moderate Fit**: 50–79 (Candidate meets some key requirements but lacks in others).\n - **Weak Fit**: Below 50 (Candidate does not align with the role requirements).\n\n3. **Provide Justification**: Include a brief explanation of why the candidate is or isn’t a good fit, highlighting strengths, gaps, or missing criteria.\n\nOutput Format:\n- **Fit Level**: [Strong Fit / Moderate Fit / Weak Fit]\n- **Score**: [0–100]\n- **Rating**: [0–5]\n- **Justification**: A concise summary of the reasoning behind the fit level.\n\nRemember to maintain a neutral and objective tone in your analysis and ensure that your assessment is solely based on the information provided in the inputs.\"\n\n\nProvide me the output in the following format:\n\nFitLevel\n<fitLevel>\n\nScore:\n<score>\n\nRating:\n<rating>\n\nJustification:\n<justification>\n\nBelow are the inputs \n\nJob Title : {{ record.job_title }}\nJob Desription : {{ record.description }}\n\n\nHere here Job Applican't text from Resume : \n{{ steps[\"step-18\"].record.text }}"
+        },
+        "agent": "reActAgent",
+        "options": {},
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Microsoft Outlook",
+      "operation": "service-read",
+      "adapter": "microsoftoutlook",
+      "parameters": {
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "WhatsApp Business Cloud",
+      "operation": "service-write",
+      "adapter": "whatsapp",
+      "parameters": {
+        "operation": "send",
+        "requestOptions": {},
+        "additionalFields": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-21",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-21",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-15"
+  ],
+  "configuration": [
+    {
+      "id": "step-15-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI-Powered Candidate Shortlisting Automation for ERPNext.json",
+    "git_blob": "4d9db4455133da445396c703a815b8a912b1e58e",
+    "sha256": "3a8803312f92e3397ecac795aa82cfbf1323a88e124065fed57b8a47b6ee885a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI-Powered%20Candidate%20Shortlisting%20Automation%20for%20ERPNext.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

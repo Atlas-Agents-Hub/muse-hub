@@ -1,0 +1,282 @@
+{
+  "allowed_hosts": [
+    ".",
+    "mystore.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your store's address. It must start with https://.",
+        "label": "Base URL",
+        "name": "baseUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Starts with ck_. Created under Settings > Advanced > REST API.",
+        "label": "Consumer Key",
+        "name": "consumerKey",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Consumer Secret",
+        "name": "consumerSecret",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Consumer Secret', description: 'Starts with cs_. WooCommerce shows it only once.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "E-commerce",
+  "id": "woocommerce",
+  "name": "WooCommerce",
+  "operations": [
+    {
+      "description": "Create an order with one or more line items",
+      "id": "Create Order",
+      "inputs": [
+        {
+          "description": "Products to include in the order",
+          "label": "Line Items",
+          "name": "line_items",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Leave empty for a guest order",
+          "label": "Customer ID",
+          "name": "customer_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Status the order starts with.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Where WooCommerce sends the order emails.",
+          "label": "Billing Email",
+          "name": "billing_email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Gateway ID, e.g. bacs, cheque or cod.",
+          "label": "Payment Method ID",
+          "name": "payment_method",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Name the customer sees, e.g. Direct bank transfer.",
+          "label": "Payment Method Title",
+          "name": "payment_method_title",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Order",
+      "source_path": "woocommerce/src/lib/actions/create-order.ts",
+      "source_sha256": "6f4dcdbf379178191070ad7dfde4afaf07b2ed1150b807cf1de8f478799ce87c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/woocommerce/src/lib/actions/create-order.ts"
+    },
+    {
+      "description": "Get a coupon by its ID",
+      "id": "Find Coupon",
+      "inputs": [
+        {
+          "description": "Find it in WooCommerce under Marketing > Coupons.",
+          "label": "Coupon ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Coupon",
+      "source_path": "woocommerce/src/lib/actions/find-coupon.ts",
+      "source_sha256": "553d07cb6dc39a7f9251572feea82adb7a0bf05f162a4f622e0fe9dd3b153a48",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/woocommerce/src/lib/actions/find-coupon.ts"
+    },
+    {
+      "description": "Find a customer by their email address",
+      "id": "Find Customer",
+      "inputs": [
+        {
+          "description": "The exact email address the customer signed up with.",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Customer",
+      "source_path": "woocommerce/src/lib/actions/find-customer.ts",
+      "source_sha256": "10760a568b8d7a4fc80c06d3377ad8af4640c0bf0c690153f2c93f2e3a96d6c0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/woocommerce/src/lib/actions/find-customer.ts"
+    },
+    {
+      "description": "Search orders by status, customer or creation date",
+      "id": "Find Orders",
+      "inputs": [
+        {
+          "description": "Only return orders with this status",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Only orders from this customer.",
+          "label": "Customer ID",
+          "name": "customer",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return orders created after this date",
+          "label": "Created After",
+          "name": "after",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "How many orders to return, from 1 to 100.",
+          "label": "Max Results",
+          "name": "per_page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Orders",
+      "source_path": "woocommerce/src/lib/actions/find-orders.ts",
+      "source_sha256": "8b50e5d52442f45603cba9842ff47804cc48bdb02cdbca055f1d7ac5deae47ad",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/woocommerce/src/lib/actions/find-orders.ts"
+    },
+    {
+      "description": "Get a product by its ID",
+      "id": "Find Product",
+      "inputs": [
+        {
+          "description": "Find it in WooCommerce under Products, next to each product.",
+          "label": "Product ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Product",
+      "source_path": "woocommerce/src/lib/actions/find-product.ts",
+      "source_sha256": "258aa637cb9330dc02f6a0fbcf42c5f54402e0ccf219d00fd15274b09d09d911",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/woocommerce/src/lib/actions/find-product.ts"
+    },
+    {
+      "description": "Retrieve a single customer by their ID",
+      "id": "Get Customer",
+      "inputs": [
+        {
+          "description": "Find it in WooCommerce under Customers, or from Find Customer.",
+          "label": "Customer ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Customer",
+      "source_path": "woocommerce/src/lib/actions/get-customer.ts",
+      "source_sha256": "a5a4928fc10942c0b8cdacd79a300f9c6908e217cf0d6beb3ae0e3128a16acb5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/woocommerce/src/lib/actions/get-customer.ts"
+    },
+    {
+      "description": "Retrieve a single order by its ID",
+      "id": "Get Order",
+      "inputs": [
+        {
+          "description": "The number after # in WooCommerce > Orders.",
+          "label": "Order ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Order",
+      "source_path": "woocommerce/src/lib/actions/get-order.ts",
+      "source_sha256": "e1c49a9f7d3b0b4e6b19586e4ba015fcce0aefcb5fc29e85ce109b789b7c81d2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/woocommerce/src/lib/actions/get-order.ts"
+    },
+    {
+      "description": "Update an order, most commonly its status",
+      "id": "Update Order",
+      "inputs": [
+        {
+          "description": "The number after # in WooCommerce > Orders.",
+          "label": "Order ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Changes_Info",
+          "name": "changes_info",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "New status for the order.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The note the customer left at checkout.",
+          "label": "Customer Note",
+          "name": "customer_note",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Payment reference from your payment gateway.",
+          "label": "Transaction ID",
+          "name": "transaction_id",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Order",
+      "source_path": "woocommerce/src/lib/actions/update-order.ts",
+      "source_sha256": "9e425e4c9c959c73814251dea893a92e2766c60a3fdb00b4865c5fbb45bd0f8f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/woocommerce/src/lib/actions/update-order.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "c349fce98605230a192ed924b8c69c6084cd6146",
+    "index_path": "woocommerce/src/index.ts",
+    "index_sha256": "de1814119a1e1151ce4c8f31adc2a3e76ecf8c189df68aea72937d0aa96c16d5",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "product-interface-designer"
+  ]
+}

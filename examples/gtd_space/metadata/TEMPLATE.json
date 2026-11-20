@@ -1,0 +1,14 @@
+{
+  "id": "muse-planner",
+  "name": "Muse Planner",
+  "version": "1.0.0",
+  "category": "productivity",
+  "entry": "client/dist/index.html",
+  "server_actions": "server/dist/actions.js",
+  "storage": "SQLite / Drizzle",
+  "runtime": "Bun 1.3.10",
+  "sdk": { "name": "@hatch/space-sdk", "version": "0.15.1", "archive_sha256": "5138cd3af4478ed361d29635a6df87373a5a59558019676f48afa7137c7ebac2", "supplied_by": "Muse host" },
+  "optional_integrations": ["Google Calendar"],
+  "verify": "bun run verify",
+  "preview": "bun run serve:standalone"
+}

@@ -1,0 +1,920 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-venafi-cloud-slack-cert-bot-df7005",
+  "title": "Venafi Cloud Slack Cert Bot",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Venafi TLS Protect Cloud",
+      "operation": "service-read",
+      "adapter": "venafitlsprotectcloud",
+      "parameters": {
+        "options": {},
+        "commonName": {
+          "expression": "{{ steps[\"step-2\"].record.response.view.state.values.domain_name_block.domain_name_input.value.match(/^(\\*\\.)?([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$/g).toString() }}"
+        },
+        "generateCsr": true,
+        "applicationId": {
+          "configuration_input": "step-1-applicationid"
+        },
+        "additionalFields": {
+          "organizationalUnits": [
+            {
+              "expression": "{{ record.name }}"
+            }
+          ]
+        },
+        "certificateIssuingTemplateId": {
+          "configuration_input": "step-1-certificateissuingtemplateid"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Parse Webhook",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "object",
+              "value": {
+                "expression": "{{ record.body.payload }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Close Modal Popup",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "noData"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Respond to Slack Webhook - Vulnerability",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "noData"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Venafi Request Certificate",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"trigger_id\": \"{{ steps[\"step-2\"].record['response']['trigger_id'] }}\",\n \"external_id\": \"Idea Selector\",\n \"view\": {\n\t\"type\": \"modal\",\n\t\"callback_id\": \"certificate_request_modal\",\n\t\"title\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Request New Certificate\"\n\t},\n\t\"submit\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Request\"\n\t},\n\t\"close\": {\n\t\t\"type\": \"plain_text\",\n\t\t\"text\": \"Cancel\"\n\t},\n\t\"blocks\": [\n\t\t{\n\t\t\t\"type\": \"image\",\n\t\t\t\"image_url\": \"https://img.securityinfowatch.com/files/base/cygnus/siw/image/2022/10/Venafi_logo.63459e2b03b7b.png?auto=format%2Ccompress&w=640&width=640\",\n\t\t\t\"alt_text\": \"delicious tacos\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"domain_name_block\",\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Domain Name\"\n\t\t\t},\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"plain_text_input\",\n\t\t\t\t\"action_id\": \"domain_name_input\",\n\t\t\t\t\"placeholder\": {\n\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\"text\": \"Enter the domain name\"\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"validity_period_block\",\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Validity Period\"\n\t\t\t},\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"static_select\",\n\t\t\t\t\"action_id\": \"validity_period_select\",\n\t\t\t\t\"placeholder\": {\n\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\"text\": \"Select a validity period\"\n\t\t\t\t},\n\t\t\t\t\"options\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\t\"text\": \"1 Year\"\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"value\": \"P1Y\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\t\"text\": \"2 Years\"\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"value\": \"P2Y\"\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"input\",\n\t\t\t\"block_id\": \"optional_note_block\",\n\t\t\t\"optional\": true,\n\t\t\t\"label\": {\n\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\"text\": \"Optional Note\"\n\t\t\t},\n\t\t\t\"element\": {\n\t\t\t\t\"type\": \"plain_text_input\",\n\t\t\t\t\"action_id\": \"optional_note_input\",\n\t\t\t\t\"multiline\": true,\n\t\t\t\t\"placeholder\": {\n\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\"text\": \"Add any extra information (e.g., usage context, urgency)\"\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t]\n}\n}"
+        },
+        "sendBody": true,
+        "jsonQuery": {
+          "json": {
+            "Content-type": "application/json"
+          }
+        },
+        "sendQuery": true,
+        "specifyBody": "json",
+        "specifyQuery": "json"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Extract Fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "domain",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.domain_name_block.domain_name_input.value }}"
+              }
+            },
+            {
+              "name": "validity",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.validity_period_block.validity_period_select.selected_option.value }}"
+              }
+            },
+            {
+              "name": "note",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.view.state.values.optional_note_block.optional_note_input.value }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get Slack User ID",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.user.id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Translate Slack User ID to Email",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "options": {
+          "waitForSubWorkflow": true
+        },
+        "workflowId": {
+          "configuration_input": "step-8-workflowid"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "VirusTotal HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "": "",
+        "url": {
+          "expression": "https://www.virustotal.com/api/v3/domains/{{ record.domain }}"
+        },
+        "method": "GET",
+        "options": {},
+        "sendBody": false,
+        "sendQuery": false,
+        "curlImport": "",
+        "infoMessage": "",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Apikey",
+              "value": {
+                "configuration_input": "step-9-parameters-1-value"
+              }
+            }
+          ]
+        },
+        "httpVariantWarning": "",
+        "provideSslCertificates": false
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Summarize output to save on tokens",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data.attributes.last_analysis_stats.malicious",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.data.attributes.last_analysis_stats.malicious }}"
+              }
+            },
+            {
+              "name": "data.attributes.last_analysis_stats.suspicious",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.data.attributes.last_analysis_stats.suspicious }}"
+              }
+            },
+            {
+              "name": "data.attributes.last_analysis_stats.undetected",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.data.attributes.last_analysis_stats.undetected }}"
+              }
+            },
+            {
+              "name": "data.attributes.last_analysis_stats.harmless",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.data.attributes.last_analysis_stats.harmless }}"
+              }
+            },
+            {
+              "name": "data.attributes.last_analysis_stats.timeout",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.data.attributes.last_analysis_stats.timeout }}"
+              }
+            },
+            {
+              "name": "data.attributes.reputation",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.data.attributes.reputation }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Auto Issue Certificate Based on 0 Malicious Reports",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              },
+              "leftValue": {
+                "expression": "{{ record.data.attributes.last_analysis_stats.malicious }}"
+              },
+              "rightValue": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Auto Issue Certificate",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-13",
+      "label": "Generate Report For Manual Approval",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-14",
+      "label": "Get Slack Team ID",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.team.id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Execute Workflow",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "options": {},
+        "workflowId": {
+          "configuration_input": "step-15-workflowid"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Merge User and Team Data",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "OpenAI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-17-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Analyze the following VirusTotal scan results and summarize the overall risk as Low, Medium, or High based on the number of engines flagging the domain (excluding \"clean\" or \"unrated\" results). Use the following criteria for risk rating:\n\nLow: No significant threats detected; domain is clean.\nMedium: Minor issues detected; may require further review.\nHigh: Significant threats like phishing or malware; manual review recommended.\n\nHere are the scan results for the domain {{ steps[\"step-2\"].record.response.view.state.values.domain_name_block.domain_name_input.value }}:\n\nMalicious: {{ record.data.attributes.last_analysis_stats.malicious }}\nSuspicious: {{ record.data.attributes.last_analysis_stats.suspicious }}\nUndetected: {{ record.data.attributes.last_analysis_stats.undetected }}\nHarmless: {{ record.data.attributes.last_analysis_stats.harmless }}\nTimeout: {{ record.data.attributes.last_analysis_stats.timeout }}\nReputation: {{ record.data.attributes.reputation }}\n\nProvide an overall risk rating and suggest next steps based on your analysis. Please keep it concise."
+              }
+            },
+            {
+              "role": "system",
+              "content": "Analyze the VirusTotal scan results and categorize the domain’s risk as Low, Medium, or High:\n\nIdentify Risks: Focus on results flagged as anything other than \"clean\" or \"unrated.\"\nAssess Risk:\nLow: No major threats flagged, domain is safe.\nMedium: Minor issues flagged, review recommended.\nHigh: Significant threats flagged (e.g., phishing, malware), manual review needed.\nRecommendation:\nLow: Auto-issue the certificate.\nMedium/High: Recommend manual review."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Merge Requestor and VT Data",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Send Auto Generated Confirmation",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": "test",
+        "select": "channel",
+        "blocksUi": {
+          "expression": "{\n\t\"blocks\": [\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"*:lock: CSR Auto-Issued Successfully!*\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"divider\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"*Team:* {{ steps[\"step-18\"].record.name }}\\n*Requested by:* <@{{ steps[\"step-2\"].record.response.user.id }}>\\n*Email:* {{ steps[\"step-16\"].record.email }}\\n*Date Issued:* {{ record.creationDate }}\"\n\t\t\t},\n\t\t\t\"accessory\": {\n\t\t\t\t\"type\": \"image\",\n\t\t\t\t\"image_url\": \"{{ steps[\"step-16\"].record.team.icon.image_132 }}\",\n\t\t\t\t\"alt_text\": \"Team Avatar\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"context\",\n\t\t\t\"elements\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*CSR Details:*\"\n\t\t\t\t}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"fields\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*Common Name:* {{ steps[\"step-2\"].record.response.view.state.values.domain_name_block.domain_name_input.value }}\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*Organization:* n8n.io\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*Issued By:* Venafi CA\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*Validity Period:* {{ DateTime.fromISO(record.creationDate).toFormat('MMMM dd, yyyy') }} to {{ DateTime.fromISO(record.creationDate).plus({ years: 1 }).toFormat('MMMM dd, yyyy') }}\"\n\t\t\t\t}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"type\": \"divider\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"actions\",\n\t\t\t\"elements\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"button\",\n\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\"text\": \"View CSR Details\"\n\t\t\t\t\t},\n\t\t\t\t\t\"url\": \"https://eval-32690260.venafi.cloud/issuance/certificate-requests?id={{ record.id }}\",\n\t\t\t\t\t\"style\": \"primary\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"button\",\n\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\"text\": \"Revoke CSR\"\n\t\t\t\t\t},\n\t\t\t\t\t\"style\": \"danger\",\n\t\t\t\t\t\"value\": \"revoke_csr\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}"
+        },
+        "channelId": {
+          "configuration_input": "step-19-channelid"
+        },
+        "messageType": "block",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Send Message Request for Manual Approval",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": "test",
+        "select": "channel",
+        "blocksUi": {
+          "expression": "{\n\t\"blocks\": [\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \":warning: *CSR Pending Approval*\\n\\nThe Certificate Signing Request for the following domain was not auto-approved. Please review the details and press the button below to submit the request for manual approval.\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"divider\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"*Team:* {{ steps[\"step-18\"].record.name }}\\n*Submitted by:* <@{{ steps[\"step-2\"].record.response.user.id }}>\\n*Requestor Email:* {{ steps[\"step-18\"].record.email }}\\n*Date Submitted:* {{ DateTime.fromISO(record.creationDate).toFormat('MMMM dd, yyyy') }}\\n*Domain:* {{ steps[\"step-2\"].record.response.view.state.values.domain_name_block.domain_name_input.value }}\\n\\n:mag: *AI Analysis*\\n> The AI detected the following potential issues with the CSR:\\n> - *VT Malicious Reports:* {{ steps[\"step-13\"].record.data.attributes.last_analysis_stats.malicious }}\\n> - *Reputation Score:* {{ steps[\"step-13\"].record.data.attributes.reputation }}/100\\n> - *Additional Notes:* {{ record.message.content.replace(/\\n/g, '\\\\n').replace(/###/g, ' ').replace(/-\\s+\\*\\*(.*?)\\*\\*/g, '• *$1*').replace(/\"/g, '\\\\\"').replace(/\\*\\*/g, '*') }}\\n\\nPlease ensure these risks are mitigated before proceeding.\"\n\t\t\t},\n\t\t\t\"accessory\": {\n\t\t\t\t\"type\": \"image\",\n\t\t\t\t\"image_url\": \"https://avatars.slack-edge.com/2024-08-29/7652078599283_52acb3a88da26e76bab6_132.png\",\n\t\t\t\t\"alt_text\": \"Team Avatar\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"divider\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"actions\",\n\t\t\t\"elements\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"button\",\n\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\"text\": \":arrow_forward: Submit for Approval\"\n\t\t\t\t\t},\n\t\t\t\t\t\"value\": \"submit_for_approval\",\n\t\t\t\t\t\"style\": \"primary\",\n\t\t\t\t\t\"action_id\": \"submit_for_approval\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"button\",\n\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\"text\": \"View CSR Details\"\n\t\t\t\t\t},\n\t\t\t\t\t\"value\": \"view_csr_details\",\n\t\t\t\t\t\"url\": \"https://google.com\",\n\t\t\t\t\t\"action_id\": \"view_csr_details\"\n\t\t\t\t}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"type\": \"context\",\n\t\t\t\"elements\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"Submitted on {{ current_time.toFormat('MMMM dd, yyyy') }}. The request requires manual approval. If you have any questions, contact the security team.\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}"
+        },
+        "channelId": {
+          "configuration_input": "step-20-channelid"
+        },
+        "messageType": "block",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Route Message",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Request Modal",
+              "conditions": {
+                "options": {
+                  "version": 1,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.response.callback_id }}"
+                    },
+                    "rightValue": "request-certificate"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Submit Data",
+              "conditions": {
+                "options": {
+                  "version": 1,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.response.type }}"
+                    },
+                    "rightValue": "view_submission"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Block Actions",
+              "conditions": {
+                "options": {
+                  "version": 1,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.response.type }}"
+                    },
+                    "rightValue": "block_actions"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Venafi TLS Protect Cloud1",
+      "operation": "service-read",
+      "adapter": "venafitlsprotectcloud",
+      "parameters": {
+        "options": {},
+        "commonName": {
+          "expression": "{{ record.response.message.blocks[2].text.text.match(/\\*Domain:\\*\\s*<http[^|]+\\|([^\\n]+)>/)[1] }}"
+        },
+        "generateCsr": true,
+        "applicationId": {
+          "configuration_input": "step-22-applicationid"
+        },
+        "additionalFields": {
+          "organizationalUnits": [
+            {
+              "expression": "{{ record.response.message.blocks[2].text.text.match(/\\*Team:\\*\\s*([^\\n]*)/)[1] }}"
+            }
+          ]
+        },
+        "certificateIssuingTemplateId": {
+          "configuration_input": "step-22-certificateissuingtemplateid"
+        }
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Send Auto Generated Confirmation1",
+      "operation": "service-write",
+      "adapter": "slack",
+      "parameters": {
+        "text": "test",
+        "select": "channel",
+        "blocksUi": {
+          "expression": "{\n\t\"blocks\": [\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"*:lock: CSR Auto-Issued Successfully!*\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"divider\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"text\": {\n\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\"text\": \"*Team:* {{ steps[\"step-2\"].record.response.message.blocks[2].text.text.match(/\\*Team:\\*\\s*([^\\n]*)/)[1] }}\\n*Requested by:* \\n*Email:* {{ steps[\"step-2\"].record.response.message.blocks[2].text.text.match(/\\*Requestor\\sEmail:\\*\\s*<mailto:([^|]+)\\|/)[1] }}\\n*Date Issued:* {{ record.creationDate }}\"\n\t\t\t},\n\t\t\t\"accessory\": {\n\t\t\t\t\"type\": \"image\",\n\t\t\t\t\"image_url\": \"{{ steps[\"step-2\"].record.response.message.blocks[2].accessory.image_url }}\",\n\t\t\t\t\"alt_text\": \"Team Avatar\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"type\": \"context\",\n\t\t\t\"elements\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*CSR Details:*\"\n\t\t\t\t}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"type\": \"section\",\n\t\t\t\"fields\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*Common Name:* {{ steps[\"step-2\"].record.response.message.blocks[2].text.text.match(/\\*Domain:\\*\\s*<http[^|]+\\|([^\\n]+)>/)[1] }}\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*Organization:* n8n.io\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*Issued By:* Venafi CA\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\t\t\"text\": \"*Validity Period:* {{ DateTime.fromISO(record.creationDate).toFormat('MMMM dd, yyyy') }} to {{ DateTime.fromISO(record.creationDate).plus({ years: 1 }).toFormat('MMMM dd, yyyy') }}\"\n\t\t\t\t}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"type\": \"divider\"\n\t\t},\n\t\t{\n\t\t\t\"type\": \"actions\",\n\t\t\t\"elements\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"button\",\n\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\"text\": \"View CSR Details\"\n\t\t\t\t\t},\n\t\t\t\t\t\"url\": \"https://eval-32690260.venafi.cloud/issuance/certificate-requests?id={{ record.id }}\",\n\t\t\t\t\t\"style\": \"primary\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"button\",\n\t\t\t\t\t\"text\": {\n\t\t\t\t\t\t\"type\": \"plain_text\",\n\t\t\t\t\t\t\"text\": \"Revoke CSR\"\n\t\t\t\t\t},\n\t\t\t\t\t\"style\": \"danger\",\n\t\t\t\t\t\"value\": \"revoke_csr\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}"
+        },
+        "channelId": {
+          "configuration_input": "step-23-channelid"
+        },
+        "messageType": "block",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Manual Issue Certificate",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-25",
+      "label": "Webhook",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "venafiendpoint",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Respond to webhook success",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "noData"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-17",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-1",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-1",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-20",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-20",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-20",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-25"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-applicationid",
+      "purpose": "Choose the applicationId resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-1-certificateissuingtemplateid",
+      "purpose": "Choose the certificateIssuingTemplateId resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://slack.com/api/views.open"
+    },
+    {
+      "id": "step-8-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-parameters-1-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-15-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-19-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-20-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-applicationid",
+      "purpose": "Choose the applicationId resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-certificateissuingtemplateid",
+      "purpose": "Choose the certificateIssuingTemplateId resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-23-channelid",
+      "purpose": "Select the channelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Slack/Venafi Cloud Slack Cert Bot.json",
+    "git_blob": "ad0f3d4822bfa4cc2e291f6f02e1546e9b955b13",
+    "sha256": "f484a8767bd9ba71d6ede5fe81544a122e7b427779a33168d2ab0cf12ef00462",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Slack/Venafi%20Cloud%20Slack%20Cert%20Bot.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

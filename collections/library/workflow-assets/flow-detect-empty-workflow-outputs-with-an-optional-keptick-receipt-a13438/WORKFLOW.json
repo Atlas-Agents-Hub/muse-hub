@@ -1,0 +1,263 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-detect-empty-workflow-outputs-with-an-optional-keptick-receipt-a13438",
+  "title": "Detect Empty Workflow Outputs with an Optional Keptick Receipt",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Run the demo",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Configure check",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "demoCase",
+              "value": "healthy",
+              "type": "string"
+            },
+            {
+              "name": "minimumItems",
+              "value": 1,
+              "type": "number"
+            },
+            {
+              "name": "recordIdField",
+              "value": "recordId",
+              "type": "string"
+            },
+            {
+              "name": "sendReceipt",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "name": "testReceipt",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "name": "receiptUrl",
+              "value": {
+                "configuration_input": "step-2-assignments-5-value"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Fictional completed outputs",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const demo = steps[\"step-2\"].records[0].demoCase;\nif (demo === 'empty') return [];\nif (demo === 'invalid') return [{json:{unexpectedField:'fictional'}}];\nif (demo === 'duplicates') return [\n  {json:{recordId:'DEMO-001'}}, {json:{recordId:'DEMO-001'}}, {json:{recordId:'DEMO-002'}}\n];\nif (demo !== 'healthy') throw new Error('Use healthy, empty, invalid, or duplicates for demoCase.');\nreturn [1,2,3].map(i => ({json:{recordId:`DEMO-00${i}`}}));",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Check completed outputs",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const config = steps[\"step-2\"].records[0];\nconst minimum = Number(config.minimumItems);\nif (!Number.isSafeInteger(minimum) || minimum < 0 || minimum > 1000000000)\n  throw new Error('minimumItems must be a non-negative integer, at most 1000000000.');\nconst field = String(config.recordIdField || '').trim();\nif (!field) throw new Error('Set recordIdField to the field identifying a completed output.');\nconst rows = records.filter(item => Object.keys(item.json || {}).length > 0);\nconst keys = new Set();\nlet invalidItems = 0;\nfor (const item of rows) {\n  const value = item.json[field];\n  const valid = (typeof value === 'string' && value.trim().length > 0)\n    || (typeof value === 'number' && Number.isFinite(value));\n  if (!valid) { invalidItems++; continue; }\n  keys.add(String(value).trim());\n}\nconst items = keys.size;\nconst duplicateItems = rows.length - invalidItems - items;\nconst checkPassed = items >= minimum && invalidItems === 0;\nconst checkStatus = invalidItems ? 'invalid_output' : items < minimum ? 'below_minimum' : 'healthy';\nreturn [{json:{\n  checkPassed, checkStatus, minimumItems:minimum, items, invalidItems, duplicateItems,\n  receipt:{eventId:`n8n:${workflow_id}:${run_id}:${batch_index}`, success:checkPassed,\n    items, test:config.testReceipt === true,\n    message:`Output check: ${items} distinct IDs; minimum ${minimum}; ${invalidItems} invalid; ${duplicateItems} duplicates.`}\n}}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Send receipt enabled?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ steps[\"step-2\"].records[0].sendReceipt }}"
+              },
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Inspect local result",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "Send count-only receipt",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{ steps[\"step-2\"].records[0].receiptUrl }}"
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "expression": "{{ JSON.stringify(record.receipt) }}"
+        },
+        "options": {
+          "timeout": 15000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Verify receipt accepted",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "if (record.received !== true) throw new Error('The receiver did not confirm this receipt.');\nreturn [{json:{...steps[\"step-4\"].records[0],\n  receiptAccepted:true, duplicateReceipt:record.duplicate === true,\n  monitorStatus:record.status || null}}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-5-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://keptick.aifirm.app/api/v1/ingest/{resource}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "devops/Detect Empty Workflow Outputs with an Optional Keptick Receipt.json",
+    "git_blob": "9b1dc13a0b3365fd5d3516ad83bec7b88629fa8e",
+    "sha256": "b4ab57c2c048303f783f6ba86fa0550e793424ccc07e0cb3d8b373d3531d51be",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/devops/Detect%20Empty%20Workflow%20Outputs%20with%20an%20Optional%20Keptick%20Receipt.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

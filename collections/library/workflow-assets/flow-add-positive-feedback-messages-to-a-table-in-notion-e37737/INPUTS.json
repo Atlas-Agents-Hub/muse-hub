@@ -1,0 +1,28 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-add-positive-feedback-messages-to-a-table-in-notion-e37737",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-4-databaseid": null,
+    "step-6-listid": null
+  },
+  "adapters": {
+    "googlecloudnaturallanguage": {
+      "connection": null
+    },
+    "notion": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    },
+    "trello": {
+      "connection": null
+    }
+  }
+}

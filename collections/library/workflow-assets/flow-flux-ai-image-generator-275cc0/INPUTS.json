@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-flux-ai-image-generator-275cc0",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-8-bucketname": null,
+    "step-11-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "s3": {
+      "connection": null
+    }
+  }
+}

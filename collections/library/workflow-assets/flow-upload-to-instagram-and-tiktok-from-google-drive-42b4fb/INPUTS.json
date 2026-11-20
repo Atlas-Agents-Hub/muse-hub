@@ -1,0 +1,31 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-upload-to-instagram-and-tiktok-from-google-drive-42b4fb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-foldertowatch": null,
+    "step-4-chatid": null,
+    "step-8-modelid": null,
+    "step-11-url": null,
+    "step-12-url": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "telegram": {
+      "connection": null
+    }
+  }
+}

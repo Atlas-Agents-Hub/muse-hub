@@ -1,0 +1,321 @@
+{
+  "allowed_hosts": [
+    "api.crisp.chat",
+    "marketplace.crisp.chat"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Identifier",
+        "name": "identifier",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Identifier', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Token",
+        "name": "token",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Key', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Support",
+  "id": "crisp",
+  "name": "Crisp",
+  "operations": [
+    {
+      "description": "Adds an internal note to a conversation.",
+      "id": "add_note",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "websiteIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Session Id",
+          "name": "sessionId",
+          "required": null,
+          "source_expression": "sessionIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Note Content",
+          "name": "content",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Note to Conversation",
+      "source_path": "crisp/src/lib/actions/add-note-to-conversation.ts",
+      "source_sha256": "c2b16bfa210962b696a5dd62d0586447262c9f183f91cc5950ea2cee63ed52e5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/crisp/src/lib/actions/add-note-to-conversation.ts"
+    },
+    {
+      "description": "Updates the state of a conversation.",
+      "id": "change_state",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "websiteIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Session Id",
+          "name": "sessionId",
+          "required": null,
+          "source_expression": "sessionIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "State",
+          "name": "state",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Change Conversation State",
+      "source_path": "crisp/src/lib/actions/update-conversation-state.ts",
+      "source_sha256": "42eb09b07827493c776d2e00f3fd121fd7d3b4f14c665e802787a5606c06d947",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/crisp/src/lib/actions/update-conversation-state.ts"
+    },
+    {
+      "description": "Creates a new conversation.",
+      "id": "create_conversation",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "websiteIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Customer Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Customer Username",
+          "name": "username",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Message From",
+          "name": "messageFrom",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Message",
+          "name": "message",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Conversation",
+      "source_path": "crisp/src/lib/actions/create-conversation.ts",
+      "source_sha256": "1abde1d33074706d3ba4187e7f6abe2b5f1f3a005f94ead66967ef589daea3a2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/crisp/src/lib/actions/create-conversation.ts"
+    },
+    {
+      "description": "Creates a new contact or updates an existing contact.",
+      "id": "create_update_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "websiteIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone Number",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Address",
+          "name": "address",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Company",
+          "name": "company",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Contact Website",
+          "name": "website",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Notepad",
+          "name": "notepad",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create/Update Contact",
+      "source_path": "crisp/src/lib/actions/create-or-update-contact.ts",
+      "source_sha256": "866344542bd7c896551e75326e141bd6435db699a1666cb58ccfdfb2a95b995e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/crisp/src/lib/actions/create-or-update-contact.ts"
+    },
+    {
+      "description": "Searches for conversations matching the specified criteria.",
+      "id": "find_conversation",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "websiteIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Search Query",
+          "name": "searchQuery",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Conversation",
+      "source_path": "crisp/src/lib/actions/find-conversation.ts",
+      "source_sha256": "ae43a67b8ff78c71472d249bde4bc36b60984c921a3bc6514d0372988e20cd1d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/crisp/src/lib/actions/find-conversation.ts"
+    },
+    {
+      "description": "Finds a user profile by email address.",
+      "id": "find_user_profile",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "websiteIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The email address of the user to find.",
+          "label": "Email Address",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find User Profile",
+      "source_path": "crisp/src/lib/actions/find-user-profile.ts",
+      "source_sha256": "9a8d58fa00af54d153d244ade6e323865bd12dfc146d476069307cec29ac52e7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/crisp/src/lib/actions/find-user-profile.ts"
+    },
+    {
+      "description": "Triggers when a new contact is added.",
+      "id": "new_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "websiteIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Contact Created",
+      "source_path": "crisp/src/lib/triggers/new-contact.ts",
+      "source_sha256": "8b2c3eefc3aec1bbd97306a2cd98128d9157330ff812f58dd4ab7d161884c857",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/crisp/src/lib/triggers/new-contact.ts"
+    },
+    {
+      "description": "Triggers when a new conversation is started.",
+      "id": "new_conversation",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "websiteIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Conversation Created",
+      "source_path": "crisp/src/lib/triggers/new-conversation.ts",
+      "source_sha256": "ecc50dd6befb93ea1977bb56ff27c40b871fafc2228daa547c57ad6e537b8ea0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/crisp/src/lib/triggers/new-conversation.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "410189091a37c332238dcd678f75b957ab1eed76",
+    "index_path": "crisp/src/index.ts",
+    "index_sha256": "bb0c5c88a1f3e8dbb535eb2ff5b10c86aa5f6d90ef0237d560b4892741ae93ec",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

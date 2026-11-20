@@ -1,0 +1,146 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-license-plate-number-from-image-uploaded-via-an-muse-form-4cc4fd",
+  "title": "Extract license plate number from image uploaded via an n8n form",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Basic LLM Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.prompt }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "Image"
+            }
+          ]
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "FormResultPage",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "formTitle": ""
+        },
+        "operation": "completion",
+        "completionTitle": "Extracted information:",
+        "completionMessage": {
+          "expression": "{{ record.text }}"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "OpenRouter LLM",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Settings",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "model",
+              "type": "string",
+              "value": "openai/gpt-4o"
+            },
+            {
+              "name": "prompt",
+              "type": "string",
+              "value": "Extract the number of the license plate on the front-most car depicted in the attached image and return only the extracted characters without any other text or structure."
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "FromTrigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "formTitle": "Analyse image",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "file",
+              "fieldLabel": "Image",
+              "requiredField": true,
+              "acceptFileTypes": ".jpg, .png"
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "formDescription": "To analyse an image, upload it here."
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-1",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Extract license plate number from image uploaded via an n8n form.json",
+    "git_blob": "b8b068a20ad97946ac79c99726b6ff89e3279d70",
+    "sha256": "fdb936eeb02aca5dff38c94eb658ac80ca1dbb687ad95e43015eb461a703e443",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Extract%20license%20plate%20number%20from%20image%20uploaded%20via%20an%20n8n%20form.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

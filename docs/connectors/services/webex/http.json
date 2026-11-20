@@ -1,0 +1,24 @@
+{
+  "id": "webex",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "webex/src/lib/common/auth.ts",
+      "credential_source_sha256": "828582feedf90720ba2a10d431a41725bb37b134057563360b39d0df1226aa0a",
+      "headers": {},
+      "host": "webexapis.com",
+      "id": "read-v1-people-me",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "webex/src/lib/common/auth.ts",
+      "source_sha256": "828582feedf90720ba2a10d431a41725bb37b134057563360b39d0df1226aa0a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/webex/src/lib/common/auth.ts",
+      "url_template": "https://webexapis.com/v1/people/me"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

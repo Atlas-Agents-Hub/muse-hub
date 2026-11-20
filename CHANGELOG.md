@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.6.0
+
+- Expand the collection to 5242 skills, 396 workflows, 558 task starters and 273 connectors.
+- Include dependency-complete skill subject packs, concrete automation graphs and named connector action inputs.
+- Add service selections and updated library documentation to all 15 specialist packages.
+- Add paginated download search, direct guide links and static subject indexes for easier discovery.
+- Search six resource types from one command and build a custom toolkit with its supporting scripts, references and workflow inputs.
+- Organize projects in the persistent Task Board with editing, removal, undo, portable exports and assistant plan requests.
+- Plan projects, next actions and routines in Muse Planner, with persistent storage, calendar settings and portable backup and restore.
+- Review email with saved preferences, resumable search windows and draft-operation checks, included with Coordinator and Personal Companion.
+- Refresh all specialist installation guides and resource descriptions with practical next steps.
+
 ## v1.5.0 — a larger skill library, organized around your work
 
 - Choose from 461 skills covering engineering, research, data, design, creative work and everyday projects.
@@ -97,7 +109,7 @@ These features ship in the complete toolkit source. Starter profiles and three e
 - A quickstart for Windows, macOS and Linux.
 - Disabled-by-default optional connectors and local scope validation.
 
-[Download the eleven kits](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.2.0-alpha).
+[Download the eleven kits](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v0.2.0-alpha).
 
 ## Extended Software Engineer kit — alpha
 
@@ -105,12 +117,12 @@ These features ship in the complete toolkit source. Starter profiles and three e
 - Local Claim Gate, evidence and recovery utilities plus reproducible disposable Git tests.
 - Package verification and platform setup notes.
 
-[Download the extended kit](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/software-engineer-sourcekit-r56-alpha).
+[Download the extended kit](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/software-engineer-sourcekit-r56-alpha).
 
 ## Initial alpha — v0.1.0-alpha
 
 - Starter role profiles, source templates and initial configuration tooling.
 
-[View the archive](https://github.com/atlas-origins/muse-ai-agent-presets/releases/tag/v0.1.0-alpha).
+[View the archive](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v0.1.0-alpha).
 
-Explore [Capabilities](docs/CAPABILITIES.md) for current tools and examples. Previous downloads remain available under [GitHub Releases](https://github.com/atlas-origins/muse-ai-agent-presets/releases).
+Explore [Capabilities](docs/CAPABILITIES.md) for current tools and examples. Previous downloads remain available under [GitHub Releases](https://github.com/Atlas-Agents-Hub/muse-hub/releases).

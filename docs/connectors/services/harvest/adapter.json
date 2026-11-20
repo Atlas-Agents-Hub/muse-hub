@@ -1,0 +1,426 @@
+{
+  "allowed_hosts": [
+    "api.harvestapp.com",
+    "id.getharvest.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://id.getharvest.com/oauth2/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "harvest:all"
+    ],
+    "token_urls": [
+      "https://id.getharvest.com/api/v2/oauth2/token"
+    ]
+  },
+  "category": "Productivity",
+  "id": "harvest",
+  "name": "Harvest",
+  "operations": [
+    {
+      "description": "Fetches Clients",
+      "id": "get_clients",
+      "inputs": [
+        {
+          "description": "Pass `true` to only return active clients and `false` to return inactive clients.",
+          "label": "Is Active",
+          "name": "is_active",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return clients that have been updated since the given date and time.",
+          "label": "Updated since",
+          "name": "updated_since",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "DEPRECATED: The page number to use in pagination.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of records to return per page. (1-2000)",
+          "label": "Records per page",
+          "name": "per_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Clients",
+      "source_path": "harvest/src/lib/actions/get-clients.ts",
+      "source_sha256": "23298da3bbb40084a1c19d7a8a11c77a8daf4ebdec7717b0e7213cf5d3823bc8",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/harvest/src/lib/actions/get-clients.ts"
+    },
+    {
+      "description": "Fetches Estimates",
+      "id": "get_estimates",
+      "inputs": [
+        {
+          "description": "Only return estimates with an issue_date on or after the given date. (YYYY-MM-DD)",
+          "label": "From",
+          "name": "from",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return estimates with an issue_date on or before the given date. (YYYY-MM-DD)",
+          "label": "To",
+          "name": "to",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return estimates with a state matching the value provided. Options: draft, open, accepted, or declined.",
+          "label": "State",
+          "name": "state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return estimates that have been updated since the given date and time.",
+          "label": "Updated since",
+          "name": "updated_since",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return estimates belonging to the client with the given ID.",
+          "label": "Client Id",
+          "name": "client_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The page number to use in pagination.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of records to return per page. (1-2000)",
+          "label": "Records per page",
+          "name": "per_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Estimates",
+      "source_path": "harvest/src/lib/actions/get-estimates.ts",
+      "source_sha256": "1a848068867e539cfd52da9ca674bb94077ab3109ac25c0969be9122fd0fd8f6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/harvest/src/lib/actions/get-estimates.ts"
+    },
+    {
+      "description": "Fetches expenses",
+      "id": "get_expenses",
+      "inputs": [
+        {
+          "description": "Only return expenses with an spent_date on or after the given date. (YYYY-MM-DD)",
+          "label": "From",
+          "name": "from",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return expenses with an spent_date on or before the given date. (YYYY-MM-DD)",
+          "label": "To",
+          "name": "to",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return expenses belonging to the user with the given ID.",
+          "label": "User Id",
+          "name": "user_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return expenses belonging to the client with the given ID.",
+          "label": "Client Id",
+          "name": "client_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return expenses belonging to the project with the given ID.",
+          "label": "Project Id",
+          "name": "project_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Pass `true` to only return expenses that have been invoiced and `false` to return expenses that have not been invoiced.",
+          "label": "Is Billed",
+          "name": "is_billed",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return expenses that have been updated since the given date and time.",
+          "label": "Updated since",
+          "name": "updated_since",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The page number to use in pagination.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of records to return per page. (1-2000)",
+          "label": "Records per page",
+          "name": "per_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Expenses",
+      "source_path": "harvest/src/lib/actions/get-expenses.ts",
+      "source_sha256": "bc2df3af9fdeb753a896d51e05e32c3914990112f537ad18a496a4aaf4fd7395",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/harvest/src/lib/actions/get-expenses.ts"
+    },
+    {
+      "description": "Fetches invoices",
+      "id": "get_invoices",
+      "inputs": [
+        {
+          "description": "Only return invoices with an issue_date on or after the given date. (YYYY-MM-DD)",
+          "label": "From",
+          "name": "from",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return invoices with an issue_date on or before the given date. (YYYY-MM-DD)",
+          "label": "To",
+          "name": "to",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return invoices with a state matching the value provided. Options: draft, open, paid, or closed.",
+          "label": "State",
+          "name": "state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return invoices that have been updated since the given date and time.",
+          "label": "Updated since",
+          "name": "updated_since",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return invoices belonging to the client with the given ID.",
+          "label": "Client Id",
+          "name": "client_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return invoices belonging to the project with the given ID.",
+          "label": "Project Id",
+          "name": "project_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The page number to use in pagination.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of records to return per page. (1-2000)",
+          "label": "Records per page",
+          "name": "per_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Invoices",
+      "source_path": "harvest/src/lib/actions/get-invoices.ts",
+      "source_sha256": "bd50199e205c603c613588319bc14aa1e9923d3b9cf820421db9390eefd35d0f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/harvest/src/lib/actions/get-invoices.ts"
+    },
+    {
+      "description": "Fetches projects",
+      "id": "get_projects",
+      "inputs": [
+        {
+          "description": "Pass `true` to only return active projects and `false` to return inactive projects.",
+          "label": "Is Active",
+          "name": "is_active",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return projects that have been updated since the given date and time.",
+          "label": "Updated since",
+          "name": "updated_since",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return invoices belonging to the client with the given ID.",
+          "label": "Client Id",
+          "name": "client_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "DEPRECATED: The page number to use in pagination.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of records to return per page. (1-2000)",
+          "label": "Records per page",
+          "name": "per_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Projects",
+      "source_path": "harvest/src/lib/actions/get-projects.ts",
+      "source_sha256": "e8597bc98371c0496be19bcbd3e3897cce26dfabb35460eb999bd44ce846bcf5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/harvest/src/lib/actions/get-projects.ts"
+    },
+    {
+      "description": "Fetches Roles",
+      "id": "get_roles",
+      "inputs": [
+        {
+          "description": "DEPRECATED: The page number to use in pagination.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of records to return per page. (1-2000)",
+          "label": "Records per page",
+          "name": "per_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Roles",
+      "source_path": "harvest/src/lib/actions/get-roles.ts",
+      "source_sha256": "aca3db00ca68e9dc35e2f3bffe040aac63e98756990e601d0fe4ece9569841d9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/harvest/src/lib/actions/get-roles.ts"
+    },
+    {
+      "description": "Fetches Tasks",
+      "id": "get_tasks",
+      "inputs": [
+        {
+          "description": "Pass `true` to only return active tasks and `false` to return inactive tasks.",
+          "label": "Is Active",
+          "name": "is_active",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return tasks that have been updated since the given date and time.",
+          "label": "Updated since",
+          "name": "updated_since",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "DEPRECATED: The page number to use in pagination.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of records to return per page. (1-2000)",
+          "label": "Records per page",
+          "name": "per_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Tasks",
+      "source_path": "harvest/src/lib/actions/get-tasks.ts",
+      "source_sha256": "644890ac5c14ce2c6ef74c09fdcd7ce96f8626a4aaa33fd16c5603b41e7c2c96",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/harvest/src/lib/actions/get-tasks.ts"
+    },
+    {
+      "description": "Fetches Users",
+      "id": "get_users",
+      "inputs": [
+        {
+          "description": "Pass `true` to only return active users and `false` to return inactive users.",
+          "label": "Is Active",
+          "name": "is_active",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only return users that have been updated since the given date and time.",
+          "label": "Updated since",
+          "name": "updated_since",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "DEPRECATED: The page number to use in pagination.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of records to return per page. (1-2000)",
+          "label": "Records per page",
+          "name": "per_page",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Users",
+      "source_path": "harvest/src/lib/actions/get-users.ts",
+      "source_sha256": "f624255c3035bd633e48ef25fadf67e0a55bd3f6da56dd5309609ab64482dc9c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/harvest/src/lib/actions/get-users.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "ea32c85831ee8e5e9b6a7a82a1d9c72818b3f27f",
+    "index_path": "harvest/src/index.ts",
+    "index_sha256": "94c0a410aabd527da23dd3aceb72024014ec9c6010636f70d6502175094f2647",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

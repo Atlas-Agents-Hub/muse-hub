@@ -7,8 +7,13 @@ from __future__ import annotations
 
 import os
 import hashlib
+import json
 import re
 from pathlib import Path
+from .source_limits import LIBRARY_ASSET_CATALOG, reviewed_library_assets, source_file_limit
+from .planner_package import INVENTORY_PATH as PLANNER_ASSET_INVENTORY, reviewed_planner_assets
+from .site_social import SOCIAL_CARD_PATH, reviewed_social_digest, valid_social_card
+from .site_product import PRODUCT_CAPTURE_SPECS, reviewed_product_capture_digests, valid_product_capture
 
 # Only VCS internals and local tooling caches are outside the distribution.
 _EXCLUDED_DIRS = frozenset((
@@ -26,25 +31,6 @@ _TEXT_NAMES = frozenset((
 ))
 REVIEWED_TEXT_FILES = frozenset({
     "collections/muse-starters-v1/skills/project-prioritization/backlog.csv",
-    "collections/library/skills/cloud-finops/assets/focus_export.example.csv",
-    "collections/library/skills/commit-craft/assets/commit-craft-allow.example",
-    "collections/library/skills/commit-craft/assets/hooks/commit-msg",
-    "collections/library/skills/commit-craft/assets/hooks/pre-commit",
-    "collections/library/skills/commit-craft/assets/hooks/pre-push",
-    "collections/library/skills/database-designer/assets/sample_schema.sql",
-    "collections/library/skills/dependency-auditor/assets/sample_go.mod",
-    "collections/library/skills/design-qa/assets/states.example.csv",
-    "collections/library/skills/design-qa/assets/waivers.example.csv",
-    "collections/library/skills/i18n-localization/assets/i18n-allow.example",
-    "collections/library/skills/kubernetes-operator/assets/reconcile_skeleton.go",
-    "collections/library/skills/linkedin-analytics/assets/example_post_export.csv",
-    "collections/library/skills/mobile-release/assets/rollout.example.csv",
-    "collections/library/skills/month-end-close/assets/bank_statement.example.csv",
-    "collections/library/skills/month-end-close/assets/flux_input.example.csv",
-    "collections/library/skills/month-end-close/assets/gl_cash.example.csv",
-    "collections/library/skills/support-ops/assets/intervals.example.csv",
-    "collections/library/skills/support-ops/assets/tickets.example.csv",
-    "collections/library/skills/tdd-guide/assets/sample_coverage_report.lcov",
 })
 _SENSITIVE_NAMES = frozenset((
     ".env", ".env.local", ".env.production", ".env.development",
@@ -59,7 +45,7 @@ _SENSITIVE_SUFFIXES = frozenset((
     ".dylib", ".bin", ".wasm",
 ))
 _PRIVATE_HOST_PATH = re.compile(
-    r"(?i)(?:[a-z]:[\\/]Users[\\/][^\\/\s]+[\\/]|"
+    r"(?<![A-Za-z0-9/_.-])(?:(?i:file://))?(?:(?i:[a-z]:[\\/]Users[\\/][^\\/\s]+[\\/])|"
     r"/" + r"home/[^/\s]+/|/" + r"Users/[^/\s]+/)"
 )
 _POSSIBLE_SECRET = re.compile(
@@ -79,6 +65,48 @@ _PERSONAL_EMAIL = re.compile(
     r"[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b", re.I
 )
 _MAX_BYTES = 2_000_000
+
+SOURCE_EXAMPLE_MANIFEST = 'collections/library/SOURCE_EXAMPLES.json'
+SOURCE_EXAMPLE_MANIFEST_SHA256 = '4838b4d4a4c8f61565bcd563d017f944efe4be11b85146d6efdd7ebd4ec75f85'
+SOURCE_EXAMPLE_REASONS = frozenset({
+    'PERSONAL_EMAIL_REVIEW_REQUIRED', 'PRIVATE_HOST_PATH', 'POSSIBLE_SECRET',
+})
+
+
+def _source_examples(root: Path) -> dict:
+    """Load the reviewed public examples only from their exact approved bytes."""
+    path = root / SOURCE_EXAMPLE_MANIFEST
+    for member in (path, *path.parents):
+        if member == root:
+            break
+        if member.is_symlink() or (member.exists() and
+                getattr(member.lstat(), 'st_file_attributes', 0) & 0x400):
+            raise ValueError('INVALID_SOURCE_EXAMPLE_MANIFEST')
+    if not path.exists():
+        return {}
+    if not path.is_file() or path.stat().st_size > _MAX_BYTES:
+        raise ValueError('INVALID_SOURCE_EXAMPLE_MANIFEST')
+    raw = path.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != SOURCE_EXAMPLE_MANIFEST_SHA256:
+        raise ValueError('INVALID_SOURCE_EXAMPLE_MANIFEST')
+    document = json.loads(raw)
+    if (set(document) != {'schema', 'files'} or
+            document['schema'] != 'muse-public-source-examples/v1' or
+            not isinstance(document['files'], dict)):
+        raise ValueError('INVALID_SOURCE_EXAMPLE_MANIFEST')
+    for name, row in document['files'].items():
+        if (not isinstance(name, str) or not name.startswith('collections/library/') or
+                any(part in {'', '.', '..'} for part in name.split('/')) or
+                '\\' in name or ':' in name or not isinstance(row, dict) or
+                set(row) != {'sha256', 'reasons', 'examples'} or
+                not isinstance(row['sha256'], str) or
+                re.fullmatch('[0-9a-f]{64}', row['sha256']) is None or
+                not isinstance(row['reasons'], list) or not row['reasons'] or
+                any(reason not in SOURCE_EXAMPLE_REASONS for reason in row['reasons']) or
+                not isinstance(row['examples'], list) or not row['examples'] or
+                any(not isinstance(example, str) or not example.strip() for example in row['examples'])):
+            raise ValueError('INVALID_SOURCE_EXAMPLE_MANIFEST')
+    return document['files']
 
 # Reviewed API routes, cloud resource paths and credential-detector expressions.
 # Exact hashes keep new private content subject to the normal scanner.
@@ -143,6 +171,27 @@ def audit_public_tree(root: Path, *,
         findings.append({"path":path.relative_to(root).as_posix(),
                          "reason":reason})
 
+    try:
+        source_examples = _source_examples(root)
+    except (OSError, ValueError, TypeError, KeyError):
+        source_examples = {}
+        add(root / SOURCE_EXAMPLE_MANIFEST, 'INVALID_SOURCE_EXAMPLE_MANIFEST')
+
+    try:
+        reviewed_assets = reviewed_library_assets(root)
+    except (OSError, ValueError, TypeError, KeyError):
+        reviewed_assets = {}
+        add(root / LIBRARY_ASSET_CATALOG, 'INVALID_LIBRARY_ASSET_CATALOG')
+
+    try:
+        reviewed_assets.update(reviewed_planner_assets(root))
+        social_digest = reviewed_social_digest(root)
+        if social_digest is not None:
+            reviewed_assets[SOCIAL_CARD_PATH] = social_digest
+        reviewed_assets.update(reviewed_product_capture_digests(root))
+    except (OSError, ValueError, TypeError, KeyError):
+        add(root / PLANNER_ASSET_INVENTORY, 'INVALID_PLANNER_ASSET_INVENTORY')
+
     for dirname, dirs, files in os.walk(root, topdown=True, followlinks=False):
         parent = Path(dirname)
         # Never inspect .git internals, or follow a directory symlink.
@@ -164,7 +213,26 @@ def audit_public_tree(root: Path, *,
                 add(path, "SYMLINK_REFUSED")
                 continue
             lowered = name.lower()
-            if (lowered in _SENSITIVE_NAMES or lowered.startswith(".env.")
+            relative = path.relative_to(root).as_posix()
+            expected = reviewed_assets.get(relative)
+            if relative == SOCIAL_CARD_PATH:
+                try:
+                    approved = valid_social_card(path.read_bytes(), expected)
+                except OSError:
+                    approved = False
+                if not approved:
+                    add(path, "UNREVIEWED_SOCIAL_PREVIEW")
+                continue
+            if relative in PRODUCT_CAPTURE_SPECS:
+                try:
+                    approved = valid_product_capture(relative, path.read_bytes(), expected)
+                except OSError:
+                    approved = False
+                if not approved:
+                    add(path, "UNREVIEWED_PRODUCT_CAPTURE")
+                continue
+            template=(expected is not None and lowered in {'.env.example','.env.template'})
+            if (lowered in _SENSITIVE_NAMES or (lowered.startswith(".env.") and not template)
                 or path.suffix.lower() in _SENSITIVE_SUFFIXES
                 and path.suffix.lower() not in _TEXT_SUFFIXES):
                 add(path, "SENSITIVE_FILE" if path.suffix.lower() in
@@ -173,14 +241,15 @@ def audit_public_tree(root: Path, *,
                     lowered in _SENSITIVE_NAMES or lowered.startswith(".env.")
                     else "UNREVIEWED_BINARY_ASSET")
                 continue
-            if (path.suffix.lower() not in _TEXT_SUFFIXES and
-                lowered not in _TEXT_NAMES and
-                path.relative_to(root).as_posix() not in REVIEWED_TEXT_FILES):
+            needs_review = (path.suffix.lower() not in _TEXT_SUFFIXES and
+                            lowered not in _TEXT_NAMES and
+                            relative not in REVIEWED_TEXT_FILES)
+            if needs_review and expected is None:
                 add(path, "UNREVIEWED_BINARY_ASSET")
                 continue
             try:
                 size = path.stat().st_size
-                if size > _MAX_BYTES:
+                if size > source_file_limit(path.relative_to(root).as_posix(),_MAX_BYTES):
                     add(path, "OVERSIZED_ASSET")
                     continue
                 raw = path.read_bytes()
@@ -191,13 +260,20 @@ def audit_public_tree(root: Path, *,
             except (OSError, UnicodeError):
                 add(path, "UNREADABLE_OR_NON_UTF8")
                 continue
-            reviewed=REVIEWED_EXAMPLE_TEXT.get(path.relative_to(root).as_posix(),{})
-            accepted_reason=reviewed.get("reason") if reviewed.get("sha256")==hashlib.sha256(raw).hexdigest() else None
-            if _PRIVATE_HOST_PATH.search(content) and accepted_reason!="PRIVATE_HOST_PATH":
+            digest = hashlib.sha256(raw).hexdigest()
+            if needs_review and digest != expected:
+                add(path, 'UNREVIEWED_BINARY_ASSET')
+                continue
+            reviewed = REVIEWED_EXAMPLE_TEXT.get(relative, {})
+            accepted = ({reviewed['reason']} if reviewed.get('sha256') == digest else set())
+            source_example = source_examples.get(relative, {})
+            if source_example.get('sha256') == digest:
+                accepted.update(source_example['reasons'])
+            if _PRIVATE_HOST_PATH.search(content) and 'PRIVATE_HOST_PATH' not in accepted:
                 add(path, "PRIVATE_HOST_PATH")
-            if (_POSSIBLE_SECRET.search(content) or _POSSIBLE_PASSWORD.search(content)) and accepted_reason!="POSSIBLE_SECRET":
+            if (_POSSIBLE_SECRET.search(content) or _POSSIBLE_PASSWORD.search(content)) and 'POSSIBLE_SECRET' not in accepted:
                 add(path, "POSSIBLE_SECRET")
-            if _PERSONAL_EMAIL.search(content):
+            if _PERSONAL_EMAIL.search(content) and 'PERSONAL_EMAIL_REVIEW_REQUIRED' not in accepted:
                 add(path, "PERSONAL_EMAIL_REVIEW_REQUIRED")
             if any(pattern.search(content) for pattern in denied):
                 add(path, "FORBIDDEN_IDENTITY_LABEL")

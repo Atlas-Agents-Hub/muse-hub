@@ -1,0 +1,576 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-generate-seedance-videos-with-vancine-api-and-bounded-polling-dfc65f",
+  "title": "Generate Seedance videos with Vancine API and bounded polling",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "manualTrigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "setFields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "model",
+              "value": "Doubao-Seedance-1.5-pro",
+              "type": "string"
+            },
+            {
+              "name": "prompt",
+              "value": "A timelapse of a flower blooming at sunrise",
+              "type": "string"
+            },
+            {
+              "name": "size",
+              "value": "1280x720",
+              "type": "string"
+            },
+            {
+              "name": "base_url",
+              "value": {
+                "configuration_input": "step-2-assignments-3-value"
+              },
+              "type": "string"
+            },
+            {
+              "name": "intervalSeconds",
+              "value": 5,
+              "type": "number"
+            },
+            {
+              "name": "maxPolls",
+              "value": 120,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "submitTask",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "expression": "{{record.base_url}}/v1/video/generations"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": {
+                "expression": "{{record.model}}"
+              }
+            },
+            {
+              "name": "prompt",
+              "value": {
+                "expression": "{{record.prompt}}"
+              }
+            },
+            {
+              "name": "size",
+              "value": {
+                "expression": "{{record.size}}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "saveTaskId",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "task_id",
+              "value": {
+                "expression": "{{record.task_id || record.id || (record.data && record.data.task_id) || (record.data && record.data.id)}}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "base_url",
+              "value": {
+                "expression": "{{steps[\"step-2\"].records[0].base_url || 'https://vancine.com'}}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "intervalSeconds",
+              "value": {
+                "expression": "{{steps[\"step-2\"].records[0].intervalSeconds || 5}}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "maxPolls",
+              "value": {
+                "expression": "{{steps[\"step-2\"].records[0].maxPolls || 120}}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "poll_index",
+              "value": 0,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "waitInterval",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": {
+          "expression": "{{record.intervalSeconds || 5}}"
+        },
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "pollTask",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "GET",
+        "url": {
+          "expression": "{{record.base_url}}/v1/video/generations/{{record.task_id}}"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "carryState",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "task_id",
+              "value": {
+                "expression": "{{record.task_id}}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "poll_index",
+              "value": {
+                "expression": "{{record.poll_index || 0}}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "maxPolls",
+              "value": {
+                "expression": "{{record.maxPolls || 120}}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "intervalSeconds",
+              "value": {
+                "expression": "{{record.intervalSeconds || 5}}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "base_url",
+              "value": {
+                "expression": "{{record.base_url || 'https://vancine.com'}}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "mergeResults",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "append",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "mergeState",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "language": "javaScript",
+        "mode": "runOnceForAllItems",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// Merge the HTTP poll response with the carried loop state. NO network calls.\n// Items arrive via Merge(append): one from pollTask (response), one from carryState.\nconst items = records;\nconst response = items.find(i => i.json.status !== undefined && i.json.object !== undefined) || items[0];\nconst carried = items.find(i => i.json.poll_index !== undefined) || items[items.length > 1 ? 1 : 0] || items[0];\nconst pollIndex = (carried.json.poll_index || 0) + 1;\nconst taskId = response.json.task_id || response.json.id || (response.json.data && response.json.data.task_id) || (response.json.data && response.json.data.id) || carried.json.task_id;\nconst status = response.json.status || (response.json.data && response.json.data.status);\nconst metadata = response.json.metadata || (response.json.data && response.json.data.metadata);\nconst data = response.json.data;\nconst error = response.json.error || (response.json.data && response.json.data.error);\nconst resultUrl = (metadata && metadata.url)\n  || (data && data.result_url)\n  || (data && data.data && data.data.content && data.data.content.video_url)\n  || '';\nreturn [{ json: {\n  task_id: taskId,\n  status: status,\n  metadata: metadata,\n  data: data,\n  error: error,\n  poll_index: pollIndex,\n  maxPolls: carried.json.maxPolls || 120,\n  intervalSeconds: carried.json.intervalSeconds || 5,\n  base_url: carried.json.base_url || 'https://vancine.com',\n  result_url: resultUrl\n}}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "ifCompleted",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "type": "expression"
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{record.status === 'completed' || record.status === 'SUCCESS' || (record.data && (record.data.status === 'completed' || record.data.status === 'SUCCESS'))}}"
+              },
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "outputResult",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "result_url",
+              "value": {
+                "expression": "{{record.result_url}}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "ifFailed",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "type": "expression"
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{record.status === 'failed' || record.status === 'FAILURE' || (record.data && (record.data.status === 'failed' || record.data.status === 'FAILURE'))}}"
+              },
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "failNode",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "errorMessage": {
+          "expression": "{{'Seedance task ' + record.task_id + ' failed: ' + ((record.error && record.error.message) || (record.data && record.data.fail_reason) || 'unknown')}}"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "ifTimeout",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "type": "expression"
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{(record.poll_index || 0) >= (record.maxPolls || 120)}}"
+              },
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "timeoutFail",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "errorMessage": {
+          "expression": "{{'Polling exceeded ' + (record.maxPolls || 120) + ' attempts for task ' + record.task_id}}"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "continuePolling",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "task_id",
+              "value": {
+                "expression": "{{record.task_id}}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "poll_index",
+              "value": {
+                "expression": "{{record.poll_index}}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "maxPolls",
+              "value": {
+                "expression": "{{record.maxPolls || 120}}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "intervalSeconds",
+              "value": {
+                "expression": "{{record.intervalSeconds || 5}}"
+              },
+              "type": "number"
+            },
+            {
+              "name": "base_url",
+              "value": {
+                "expression": "{{record.base_url || 'https://vancine.com'}}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-3-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://vancine.com"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Generate Seedance videos with Vancine API and bounded polling.json",
+    "git_blob": "e64a20a3e0649ac4e9aa72a00362bb9db0284f67",
+    "sha256": "b6b00ef5609147fb9c6a06c25b324eb231a421dfde7e78cc6332d729ff2b8d82",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Generate%20Seedance%20videos%20with%20Vancine%20API%20and%20bounded%20polling.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

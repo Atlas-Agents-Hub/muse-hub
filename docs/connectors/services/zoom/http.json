@@ -1,0 +1,24 @@
+{
+  "id": "zoom",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "Bearer "
+      },
+      "credential_source_path": "zoom/src/index.ts",
+      "credential_source_sha256": "b1f0fec56f2973674ac2700e640766f8cae5bd2ab11453548be943e80855defc",
+      "headers": {},
+      "host": "api.zoom.us",
+      "id": "read-v2-users-me",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "zoom/src/index.ts",
+      "source_sha256": "b1f0fec56f2973674ac2700e640766f8cae5bd2ab11453548be943e80855defc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/zoom/src/index.ts",
+      "url_template": "https://api.zoom.us/v2/users/me"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}

@@ -1,0 +1,589 @@
+{
+  "allowed_hosts": [
+    "api.xero.com",
+    "developer.xero.com",
+    "identity.xero.com",
+    "login.xero.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://login.xero.com/identity/connect/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [],
+    "token_urls": [
+      "https://identity.xero.com/connect/token"
+    ]
+  },
+  "category": "Finance & Commerce",
+  "id": "xero",
+  "name": "Xero",
+  "operations": [
+    {
+      "description": "Finds a contact by name or account number (or SearchTerm).",
+      "id": "xero_find_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Search By",
+          "name": "search_by",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Name, Account Number, or Search Term depending on Search By.",
+          "label": "Value",
+          "name": "value",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Include Archived",
+          "name": "include_archived",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Recommended for broad searches (Search Term). Excludes heavy fields.",
+          "label": "Summary Only (faster, lighter)",
+          "name": "summary_only",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Pagination page (optional).",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Contact",
+      "source_path": "xero/src/lib/actions/find-contact.ts",
+      "source_sha256": "9d65907476de78caaacfe1fe947c8d354a22b23ac9323fe7f66697568a3282ab",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/actions/find-contact.ts"
+    },
+    {
+      "description": "Finds an invoice by number or reference.",
+      "id": "xero_find_invoice",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Search By",
+          "name": "search_by",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Invoice Number, Reference, or Search Term.",
+          "label": "Value",
+          "name": "value",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Type Filter",
+          "name": "type_filter",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Summary Only (faster, lighter)",
+          "name": "summary_only",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Invoice",
+      "source_path": "xero/src/lib/actions/find-invoice.ts",
+      "source_sha256": "2701e6d7005113a05227d66376a53512b2d6a2392fa01c873e836ad8da9d5b65",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/actions/find-invoice.ts"
+    },
+    {
+      "description": "Finds an item by name or code.",
+      "id": "xero_find_item",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Search By",
+          "name": "search_by",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Item Code or Name (exact match).",
+          "label": "Value",
+          "name": "value",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "e.g. Name or Name DESC",
+          "label": "Order (optional)",
+          "name": "order",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Item",
+      "source_path": "xero/src/lib/actions/find-item.ts",
+      "source_sha256": "aae9c3e1218f5fb479aab4502c9d22b905fff28687e8a66447d320b79b39f68e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/actions/find-item.ts"
+    },
+    {
+      "description": "Gets one contact by ID, with addresses and phone numbers.",
+      "id": "xero_get_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The Xero ContactID (a GUID). Use Find Contact to get it.",
+          "label": "Contact ID",
+          "name": "contact_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Contact",
+      "source_path": "xero/src/lib/actions/get-contact.ts",
+      "source_sha256": "6fbc4598e1d446a48e2e461b9f1334cec3737e0fde7eae6fd69fd4b98864d325",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/actions/get-contact.ts"
+    },
+    {
+      "description": "Gets one invoice or bill by its ID or invoice number, including line items.",
+      "id": "xero_get_invoice",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The Xero InvoiceID (a GUID) or the invoice number, for example INV-0042.",
+          "label": "Invoice ID or Number",
+          "name": "invoice_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Invoice",
+      "source_path": "xero/src/lib/actions/get-invoice.ts",
+      "source_sha256": "53a1d358f8f847b07122ce654925abedbf25e301af947128812cbe5b165365b9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/actions/get-invoice.ts"
+    },
+    {
+      "description": "Lists the chart of accounts, optionally filtered by type, class or status.",
+      "id": "xero_list_accounts",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Type",
+          "name": "type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Class",
+          "name": "account_class",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Keep only bank accounts and accounts with \"Enable payments to this account\" on.",
+          "label": "Only Accounts That Accept Payments",
+          "name": "payments_enabled_only",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "List Accounts",
+      "source_path": "xero/src/lib/actions/list-accounts.ts",
+      "source_sha256": "7e75bda6d9d84b8e2452615bcf224f2a14c52213cc3cf3411eb5090fc2d66ff7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/actions/list-accounts.ts"
+    },
+    {
+      "description": "Lists the tax rates of the organisation and the TaxType codes to use on line items.",
+      "id": "xero_list_tax_rates",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Only the rate with this TaxType code, e.g. OUTPUT.",
+          "label": "Tax Type",
+          "name": "tax_type",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Active Only",
+          "name": "active_only",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "List Tax Rates",
+      "source_path": "xero/src/lib/actions/list-tax-rates.ts",
+      "source_sha256": "0d12950e00dcb6d2aad38f1a54345cf19f3eb799e716baf43310d3e6e2ac90a7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/actions/list-tax-rates.ts"
+    },
+    {
+      "description": "Searches sales invoices and bills by type, status, contact, date range or text, one page at a time.",
+      "id": "xero_search_invoices",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Leave empty to include both sales invoices and bills.",
+          "label": "Type",
+          "name": "type",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Statuses",
+          "name": "statuses",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Only invoices for this Xero ContactID. Use Find Contact to get it.",
+          "label": "Contact ID",
+          "name": "contact_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Invoice Date From (YYYY-MM-DD)",
+          "name": "date_from",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Invoice Date To (YYYY-MM-DD)",
+          "name": "date_to",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Matches invoice number and reference (case-insensitive, partial).",
+          "label": "Search Term",
+          "name": "search_term",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Leave on for faster results without line items; use Get Invoice for the full invoice.",
+          "label": "Summary Only",
+          "name": "summary_only",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Page number, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Invoices per page, 1 to 100.",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Invoices",
+      "source_path": "xero/src/lib/actions/search-invoices.ts",
+      "source_sha256": "bc204c022705ee5cfe330016c5e519077212e24c2921917cd0d82865a35af5bf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/actions/search-invoices.ts"
+    },
+    {
+      "description": "Fires the first time a bank transaction is created or changed after the trigger is turned on.",
+      "id": "xero_new_bank_transaction",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "triggerProps.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Types",
+          "name": "types",
+          "required": null,
+          "source_expression": "triggerProps.types",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Statuses",
+          "name": "statuses",
+          "required": null,
+          "source_expression": "triggerProps.statuses",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Contact_Id",
+          "name": "contact_id",
+          "required": null,
+          "source_expression": "triggerProps.contact_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Bank_Account_Id",
+          "name": "bank_account_id",
+          "required": null,
+          "source_expression": "triggerProps.bank_account_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Bank_Account_Code",
+          "name": "bank_account_code",
+          "required": null,
+          "source_expression": "triggerProps.bank_account_code",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Date_From",
+          "name": "date_from",
+          "required": null,
+          "source_expression": "triggerProps.date_from",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Date_To",
+          "name": "date_to",
+          "required": null,
+          "source_expression": "triggerProps.date_to",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Page_Size",
+          "name": "page_size",
+          "required": null,
+          "source_expression": "triggerProps.page_size",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Bank Transaction",
+      "source_path": "xero/src/lib/triggers/new-bank-transaction.ts",
+      "source_sha256": "f8c19c5af479e193d9fab2993b98ff5e5a3d173bf5c587dc239e9cfbf976a49e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/triggers/new-bank-transaction.ts"
+    },
+    {
+      "description": "Fires the first time a bill (Accounts Payable) is created or changed after the trigger is turned on.",
+      "id": "xero_new_bill",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "triggerProps.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Statuses",
+          "name": "statuses",
+          "required": null,
+          "source_expression": "triggerProps.statuses",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Contact_Id",
+          "name": "contact_id",
+          "required": null,
+          "source_expression": "triggerProps.contact_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Date_From",
+          "name": "date_from",
+          "required": null,
+          "source_expression": "triggerProps.date_from",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Date_To",
+          "name": "date_to",
+          "required": null,
+          "source_expression": "triggerProps.date_to",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Summary_Only",
+          "name": "summary_only",
+          "required": null,
+          "source_expression": "triggerProps.summary_only",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Page_Size",
+          "name": "page_size",
+          "required": null,
+          "source_expression": "triggerProps.page_size",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Bill",
+      "source_path": "xero/src/lib/triggers/new-bill.ts",
+      "source_sha256": "ca78c484f5e07961bf677363e07a52a57fc90e18ad5cc1dadde6e0147b649e11",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/triggers/new-bill.ts"
+    },
+    {
+      "description": "Fires when a new contact is added to Xero (via Xero webhooks). Configure the webhook in Xero Developer portal to point to this URL.",
+      "id": "xero_new_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Webhook Instructions",
+          "name": "webhookInstructions",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "Tenant_Id",
+          "name": "tenant_id",
+          "required": null,
+          "source_expression": "props.tenant_id",
+          "type": "ProviderField"
+        },
+        {
+          "description": "From Xero Developer portal > Your App > Webhooks. Used to verify x-xero-signature.",
+          "label": "Webhook Key",
+          "name": "webhook_key",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "If enabled, fetches the full contact from Xero. If disabled, the output is the raw webhook event (resourceId, eventType, eventDateUtc).",
+          "label": "Fetch Full Contact",
+          "name": "fetch_full_contact",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Contact",
+      "source_path": "xero/src/lib/triggers/new-contact.ts",
+      "source_sha256": "09653b33a0a818aa3838f42e9e157673b5b37866a27af1fd3d9e0069d6ff51df",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/xero/src/lib/triggers/new-contact.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "81c85d452beb3c7736b6f38d145a2cf47953925b",
+    "index_path": "xero/src/index.ts",
+    "index_sha256": "383444a195acc5f2d4088b58fc0c07b4af508ef7507dabfe9418b2298839ec30",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "claims-adjudicator"
+  ]
+}

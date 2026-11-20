@@ -1,0 +1,755 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "lh3.googleusercontent.com",
+    "oauth2.googleapis.com",
+    "people.googleapis.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "email",
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "google-contacts",
+  "name": "Google Contacts",
+  "operations": [
+    {
+      "description": "Add a new contact to your Google Contacts.",
+      "id": "add_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "firstName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Middle Name",
+          "name": "middleName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company",
+          "name": "company",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone Number",
+          "name": "phoneNumber",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Contact",
+      "source_path": "google-contacts/src/lib/action/create-contact.ts",
+      "source_sha256": "608138b30e5ec294bbd4fdaf6561a0bfa97c2fda970ad8cb6d08639dd43b61f7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/create-contact.ts"
+    },
+    {
+      "description": "Add contacts to a contact group or remove them from it.",
+      "id": "modify_contact_group_members",
+      "inputs": [
+        {
+          "description": "Opaque contact group resource name such as contactGroups/abc123, contactGroups/myContacts or contactGroups/starred. Resolve it with List Contact Groups.",
+          "label": "Contact Group Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Opaque contact resource names such as people/c12345 to add to the group.",
+          "label": "Contacts To Add",
+          "name": "resourceNamesToAdd",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Opaque contact resource names such as people/c12345 to remove from the group.",
+          "label": "Contacts To Remove",
+          "name": "resourceNamesToRemove",
+          "required": false,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Or Remove Contact Group Members",
+      "source_path": "google-contacts/src/lib/action/modify-contact-group-members.ts",
+      "source_sha256": "731c8d7d206823631c6693cea878595e8a86646793c3164073fde5dd5ce77fe1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/modify-contact-group-members.ts"
+    },
+    {
+      "description": "Create up to 200 contacts in a single call.",
+      "id": "batch_create_contacts",
+      "inputs": [
+        {
+          "description": "Up to 200 contacts to create. Each needs at least a name, an email or a phone number.",
+          "label": "Contacts",
+          "name": "contacts",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Batch Create Contacts",
+      "source_path": "google-contacts/src/lib/action/batch-create-contacts.ts",
+      "source_sha256": "7d9b9311a8f4cf471619a7a8da2dfa31c89810a32a6bb352432482cb627718c3",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/batch-create-contacts.ts"
+    },
+    {
+      "description": "Permanently delete up to 500 contacts in a single call.",
+      "id": "batch_delete_contacts",
+      "inputs": [
+        {
+          "description": "Up to 500 opaque contact resource names such as people/c12345. Every listed contact is deleted permanently and cannot be restored.",
+          "label": "Resource Names",
+          "name": "resourceNames",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Batch Delete Contacts",
+      "source_path": "google-contacts/src/lib/action/batch-delete-contacts.ts",
+      "source_sha256": "79a4d383a7ada36347b2161b8408434df8cbaf180ea3f097c64999db359c97ea",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/batch-delete-contacts.ts"
+    },
+    {
+      "description": "Read up to 200 contact groups in one call by their resource names.",
+      "id": "batch_get_contact_groups",
+      "inputs": [
+        {
+          "description": "Up to 200 opaque contact group resource names such as contactGroups/abc123, resolved with List Contact Groups.",
+          "label": "Resource Names",
+          "name": "resourceNames",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "How many member resource names to return per group. Defaults to 0, which returns none.",
+          "label": "Max Members",
+          "name": "maxMembers",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Batch Get Contact Groups",
+      "source_path": "google-contacts/src/lib/action/batch-get-contact-groups.ts",
+      "source_sha256": "8655158930ebe312ea7fab5e3b7b8b7a7ed99e8e616110cef9672755b21c0703",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/batch-get-contact-groups.ts"
+    },
+    {
+      "description": "Read up to 200 contacts in one call by their resource names.",
+      "id": "batch_get_contacts",
+      "inputs": [
+        {
+          "description": "Up to 200 opaque contact resource names such as people/c12345, resolved with List Contacts or Search Contacts.",
+          "label": "Resource Names",
+          "name": "resourceNames",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Batch Get Contacts",
+      "source_path": "google-contacts/src/lib/action/batch-get-contacts.ts",
+      "source_sha256": "86743113b98981859beac47fa8d96bcd7877a26bd571d3a3c0e7c54494f8658a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/batch-get-contacts.ts"
+    },
+    {
+      "description": "Update up to 200 contacts in a single call from full Person objects.",
+      "id": "batch_update_contacts",
+      "inputs": [
+        {
+          "description": "JSON array of up to 200 full Person objects taken from Batch Get Contacts, each keeping its resourceName and etag, with the fields to change edited in place.",
+          "label": "Contacts",
+          "name": "contacts",
+          "required": true,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Batch Update Contacts",
+      "source_path": "google-contacts/src/lib/action/batch-update-contacts.ts",
+      "source_sha256": "248607d4bf4c0700bfd432c1fadc79de53d28763680ca530574cc5064eed3d05",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/batch-update-contacts.ts"
+    },
+    {
+      "description": "Create a new contact in the connected Google account.",
+      "id": "create_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Middle Name",
+          "name": "middleName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Nickname",
+          "name": "nickname",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Array of email address strings, for example [\"ada@example.com\"]. A single address still has to be wrapped in an array.",
+          "label": "Email Addresses",
+          "name": "emails",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Array of phone number strings, for example [\"+1 555 0100\"]. A single number still has to be wrapped in an array.",
+          "label": "Phone Numbers",
+          "name": "phoneNumbers",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Company",
+          "name": "company",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Free-text notes stored on the contact biography.",
+          "label": "Notes",
+          "name": "biography",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Contact",
+      "source_path": "google-contacts/src/lib/action/create-contact-agent.ts",
+      "source_sha256": "64ab547b99f0b954b8f24e3364f8833337244d572b884824014259ac36c1090e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/create-contact-agent.ts"
+    },
+    {
+      "description": "Create a contact group, or return the existing one with that name.",
+      "id": "create_contact_group",
+      "inputs": [
+        {
+          "description": "Name of the contact group to find or create.",
+          "label": "Group Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Contact Group",
+      "source_path": "google-contacts/src/lib/action/create-contact-group.ts",
+      "source_sha256": "e2ce906476fefc64c32fb68e250395a6634b446c070b9dfcdb09b82e1e6a9ff1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/create-contact-group.ts"
+    },
+    {
+      "description": "Permanently delete a contact by its resource name.",
+      "id": "delete_contact",
+      "inputs": [
+        {
+          "description": "Opaque contact resource name such as people/c12345. Resolve it with List Contacts or Search Contacts. Deletion cannot be undone.",
+          "label": "Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Contact",
+      "source_path": "google-contacts/src/lib/action/delete-contact.ts",
+      "source_sha256": "2ab41630f4a31898b3dafbf8dfc410dd10e5a2c1e1aa78e4848a62b9e96fbb58",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/delete-contact.ts"
+    },
+    {
+      "description": "Delete a user-created contact group.",
+      "id": "delete_contact_group",
+      "inputs": [
+        {
+          "description": "Opaque contact group resource name such as contactGroups/abc123. Resolve it with List Contact Groups.",
+          "label": "Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "When enabled, every contact in the group is permanently deleted as well. Leave off to remove only the group.",
+          "label": "Also Delete Contacts",
+          "name": "deleteContacts",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Contact Group",
+      "source_path": "google-contacts/src/lib/action/delete-contact-group.ts",
+      "source_sha256": "a91c3a83252db8c83d5e43793ac4d88f02d881218105ed28c1758d2e37685a33",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/delete-contact-group.ts"
+    },
+    {
+      "description": "Remove the photo of an existing contact.",
+      "id": "delete_contact_photo",
+      "inputs": [
+        {
+          "description": "Opaque contact resource name such as people/c12345. Resolve it with List Contacts or Search Contacts.",
+          "label": "Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Contact Photo",
+      "source_path": "google-contacts/src/lib/action/delete-contact-photo.ts",
+      "source_sha256": "fefa2dd77b401c11fb949e080dc2cc6faa1a91366f34cb8ce3af9c85fb0a4e9b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/delete-contact-photo.ts"
+    },
+    {
+      "description": "Read a single contact by its resource name.",
+      "id": "get_contact",
+      "inputs": [
+        {
+          "description": "Opaque contact resource name such as people/c12345. Resolve it with List Contacts or Search Contacts.",
+          "label": "Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Contact",
+      "source_path": "google-contacts/src/lib/action/get-contact.ts",
+      "source_sha256": "0287909640111fcb47df36cd4270b117a71c561a4eee1e9dc6448659f8e98da1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/get-contact.ts"
+    },
+    {
+      "description": "Read one contact group, optionally with its member resource names.",
+      "id": "get_contact_group",
+      "inputs": [
+        {
+          "description": "Opaque contact group resource name such as contactGroups/abc123, or a system group like contactGroups/myContacts. Resolve it with List Contact Groups.",
+          "label": "Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "How many member resource names to return. Defaults to 0, which returns none.",
+          "label": "Max Members",
+          "name": "maxMembers",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Contact Group",
+      "source_path": "google-contacts/src/lib/action/get-contact-group.ts",
+      "source_sha256": "68d9c1b44bf9e87d43eeab9fe3d43e5823917c8b4f4060ed3961beffe67e483e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/get-contact-group.ts"
+    },
+    {
+      "description": "List every contact group of the connected Google account.",
+      "id": "list_contact_groups",
+      "inputs": [],
+      "kind": "action",
+      "name": "List Contact Groups",
+      "source_path": "google-contacts/src/lib/action/list-contact-groups.ts",
+      "source_sha256": "9cff0c9ab1c81e470b20f5f4af367688e0e753728ec49fc207f72904b00b34f1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/list-contact-groups.ts"
+    },
+    {
+      "description": "List the contacts of the connected Google account.",
+      "id": "list_contacts",
+      "inputs": [
+        {
+          "description": "Maximum number of contacts to return. Defaults to 200.",
+          "label": "Max Results",
+          "name": "maxResults",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Contacts",
+      "source_path": "google-contacts/src/lib/action/list-contacts.ts",
+      "source_sha256": "099d881c48d3f9301b14bfcd9e45288a26b5f35f04dbe05f6965bb7b931e9063",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/list-contacts.ts"
+    },
+    {
+      "description": "Find contacts by name, email, phone number or company.",
+      "id": "search_contact",
+      "inputs": [
+        {
+          "description": "Matches the start of any word in a name, email, phone or company.",
+          "label": "Search Text",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Contact details included in each result.",
+          "label": "Details to Return",
+          "name": "readMask",
+          "required": true,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "How many contacts to return, up to 30.",
+          "label": "Max Results",
+          "name": "pageSize",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Contacts",
+      "source_path": "google-contacts/src/lib/action/search-contact.ts",
+      "source_sha256": "05fbceba3d674b9259b4e8c014af5bbc6378aed65da9538d72b29a6e82da4147",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/search-contact.ts"
+    },
+    {
+      "description": "Search the connected account contacts by a plain-text query.",
+      "id": "search_contacts",
+      "inputs": [
+        {
+          "description": "Plain-text query prefix-matched against contact fields such as name, email and phone number.",
+          "label": "Query",
+          "name": "query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Number of results to return, maximum 30. Defaults to 30.",
+          "label": "Page Size",
+          "name": "pageSize",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Contacts",
+      "source_path": "google-contacts/src/lib/action/search-contacts.ts",
+      "source_sha256": "42a4a45600aec3b66683ee42c06e5218791a87ecbf3ebd5e051ca08472a1bfe9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/search-contacts.ts"
+    },
+    {
+      "description": "Change an existing contact's details in Google Contacts.",
+      "id": "update_contact",
+      "inputs": [
+        {
+          "description": "The resourceName (people/…) from Search Contacts or Add Contact.",
+          "label": "Contact ID",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The etag returned with the Contact ID. Fails if the contact changed.",
+          "label": "Version Tag",
+          "name": "etag",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only these fields change on the contact.",
+          "label": "Fields to Update",
+          "name": "updatePersonFields",
+          "required": true,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "",
+          "label": "Update Note",
+          "name": "updateNote",
+          "required": false,
+          "type": "MarkDown"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Middle Name",
+          "name": "middleName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company",
+          "name": "company",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone Number",
+          "name": "phoneNumber",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Contact",
+      "source_path": "google-contacts/src/lib/action/update-contact.ts",
+      "source_sha256": "43015b66a87a63f2ca628fdd4367ed1a5f21cd1d4e57137098268f826b9d1e40",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/update-contact.ts"
+    },
+    {
+      "description": "Update only the supplied fields on an existing contact.",
+      "id": "update_contact_fields",
+      "inputs": [
+        {
+          "description": "Opaque contact resource name such as people/c12345. Resolve it with List Contacts or Search Contacts.",
+          "label": "Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Middle Name",
+          "name": "middleName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Nickname",
+          "name": "nickname",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Array of email address strings, for example [\"ada@example.com\"]. Replaces every email address stored on the contact. Leaving it empty keeps the stored addresses; it does not clear them, because an untouched list and an emptied one cannot be told apart. Use Clear Email Addresses to remove them.",
+          "label": "Email Addresses",
+          "name": "emails",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Remove every email address from the contact, including the last one. This is the only way to clear them. Cannot be combined with a non-empty Email Addresses list.",
+          "label": "Clear Email Addresses",
+          "name": "clearEmails",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Array of phone number strings, for example [\"+1 555 0100\"]. Replaces every phone number stored on the contact. Leaving it empty keeps the stored numbers; it does not clear them, because an untouched list and an emptied one cannot be told apart. Use Clear Phone Numbers to remove them.",
+          "label": "Phone Numbers",
+          "name": "phoneNumbers",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Remove every phone number from the contact, including the last one. This is the only way to clear them. Cannot be combined with a non-empty Phone Numbers list.",
+          "label": "Clear Phone Numbers",
+          "name": "clearPhoneNumbers",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Company",
+          "name": "company",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Job Title",
+          "name": "jobTitle",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Notes",
+          "name": "biography",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Contact Fields",
+      "source_path": "google-contacts/src/lib/action/update-contact-fields.ts",
+      "source_sha256": "3931f5afbff1d8d69aed325c684a7224c05bbbbc441c6f8413836f5ebf9eba31",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/update-contact-fields.ts"
+    },
+    {
+      "description": "Rename an existing user-created contact group.",
+      "id": "update_contact_group",
+      "inputs": [
+        {
+          "description": "Opaque contact group resource name such as contactGroups/abc123. Resolve it with List Contact Groups.",
+          "label": "Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "New Group Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Contact Group",
+      "source_path": "google-contacts/src/lib/action/update-contact-group.ts",
+      "source_sha256": "c3bc15c003cc59795486a7d95fd3d223937614d36a07e461b3a8744891ff6ac2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/update-contact-group.ts"
+    },
+    {
+      "description": "Set the photo of an existing contact from base64 image bytes.",
+      "id": "update_contact_photo",
+      "inputs": [
+        {
+          "description": "Opaque contact resource name such as people/c12345. Resolve it with List Contacts or Search Contacts.",
+          "label": "Resource Name",
+          "name": "resourceName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Base64-encoded JPEG, PNG or WebP image. A data URL prefix is accepted and stripped.",
+          "label": "Photo Bytes",
+          "name": "photoBytes",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Contact Photo",
+      "source_path": "google-contacts/src/lib/action/update-contact-photo.ts",
+      "source_sha256": "bf365bd7b6413f7e900661bf94da193ad375755e5ae530c0f03ca639474713bc",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/action/update-contact-photo.ts"
+    },
+    {
+      "description": "Runs when a contact is added or edited in Google Contacts.",
+      "id": "new_or_updated_contact",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New or Updated Contact",
+      "source_path": "google-contacts/src/lib/trigger/new-contact.ts",
+      "source_sha256": "e6069beab103672740e16b2eb616fb995c480907a08ce178170d447aedd0fe97",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-contacts/src/lib/trigger/new-contact.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "7cd03e607fd284275955ea67282b798e4d87e58a",
+    "index_path": "google-contacts/src/index.ts",
+    "index_sha256": "93e8f4c3d4948172bf5e2a3d0efca84664d4c5f0d9c7d95aa17b01e7adc4f527",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach"
+  ]
+}

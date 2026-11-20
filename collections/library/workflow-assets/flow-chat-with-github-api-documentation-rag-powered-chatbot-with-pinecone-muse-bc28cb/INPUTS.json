@@ -1,0 +1,33 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-chat-with-github-api-documentation-rag-powered-chatbot-with-pinecone-muse-bc28cb",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null,
+    "step-3-pineconeindex": null,
+    "step-10-name": null,
+    "step-13-pineconeindex": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

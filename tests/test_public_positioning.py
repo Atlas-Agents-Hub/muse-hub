@@ -1,6 +1,7 @@
 """Public entry points describe tasks, packages, and the next action."""
 from pathlib import Path
 import re
+import json
 import unittest
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"tools"))
@@ -12,12 +13,15 @@ class ProductPositioningTests(unittest.TestCase):
         text=(ROOT/"README.md").read_text(encoding="utf-8")
         hero=text.split("\n## ",1)[0]
         data=load_collection()
-        for term in ("Muse Hub","15 independent assistants",str(len(data["skills"]))+" skills",str(len(data["workflows"]))+" workflows","51 tool guides","100 task starters","151 connectors"):
+        connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
+        guides=json.loads((ROOT/"collections/tool-guides.json").read_bytes())["guides"]
+        release=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
+        for term in ("Muse Hub","15 independent assistants",str(len(data["skills"]))+" skills",str(len(data["workflows"]))+" workflows",f"{len(guides)} tool guides",f"{len(data['starters'])} task starters",f"{len(connectors)} connectors"):
             self.assertIn(term,hero)
         for path in ("docs/DOWNLOAD_A_SPECIALIST.md","docs/GETTING_STARTED.md","docs/TERMINAL.md"):
             self.assertIn(path,text)
-        self.assertIn("releases/tag/v1.5.0",text)
-        self.assertIn("https://atlas-origins.github.io/muse-ai-agent-presets/",text)
+        self.assertIn(f"releases/tag/{release}",text)
+        self.assertIn("https://atlas-agents-hub.github.io/muse-hub/",text)
         prose=re.sub(r"\]\([^)]+\)","]()",text)
         self.assertNotRegex(prose,r"\b(?:H\d{2}|S[1-5])\b")
         for old in ("source-only","not installed native","not deployed","remain a draft","not additional agents"):

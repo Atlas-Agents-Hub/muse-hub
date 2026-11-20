@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-create-update-and-get-a-profile-in-humantic-ai-7e3684",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-userid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "humanticai": {
+      "connection": null
+    }
+  }
+}

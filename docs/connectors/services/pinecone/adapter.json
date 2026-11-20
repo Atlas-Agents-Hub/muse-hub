@@ -1,0 +1,531 @@
+{
+  "allowed_hosts": [
+    "api.pinecone.io"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Enter your Pinecone API key. You can create a new API key in the Pinecone console for your target project.",
+        "label": "API Key",
+        "name": "apiKey",
+        "required": true,
+        "type": "LongText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Search & Data",
+  "id": "pinecone",
+  "name": "Pinecone",
+  "operations": [
+    {
+      "description": "Creates a new Pinecone index with custom settings.",
+      "id": "create_index",
+      "inputs": [
+        {
+          "description": "You must pass a non-empty string for name in order to create an index",
+          "label": "Index Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "You must pass a positive integer for dimension in order to create an index. For dense indexes, this is required.",
+          "label": "Dimension",
+          "name": "dimension",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Choose between serverless or pod-based index deployment",
+          "label": "Index Type",
+          "name": "indexType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Cloud",
+          "name": "cloud",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<'aws' | 'gcp' | 'azure'>({ displayName: 'Cloud Provider', description: 'The public cloud where you would like your index hosted (for serverless)', required: false, options: { options: [ { label: 'AWS', value: 'aws' }, { label: 'GCP', value: 'gcp' }, { label: 'Azure', value: 'azure' } ] }, defaultValue: 'aws' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The region where you would like your index to be created (for serverless)",
+          "label": "Region",
+          "name": "region",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The environment where the index is hosted (for pod-based indexes)",
+          "label": "Environment",
+          "name": "environment",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The type of pod to use",
+          "label": "Pod Type",
+          "name": "podType",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The number of replicas. Replicas duplicate your index for higher availability and throughput.",
+          "label": "Replicas",
+          "name": "replicas",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The number of shards. Shards split your data across multiple pods.",
+          "label": "Shards",
+          "name": "shards",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The number of pods to be used in the index. This should be equal to shards x replicas.",
+          "label": "Pods",
+          "name": "pods",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Metric",
+          "name": "metric",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<'cosine' | 'euclidean' | 'dotproduct'>({ displayName: 'Metric', description: 'The distance metric to use. Defaults to cosine for dense indexes, dotproduct for sparse indexes.', required: false, options: { options: [ { label: 'Cosine', value: 'cosine' }, { label: 'Euclidean', value: 'euclidean' }, { label: 'Dot Product', value: 'dotproduct' } ] } })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Vector Type",
+          "name": "vectorType",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<'dense' | 'sparse'>({ displayName: 'Vector Type', description: 'The type of vectors to store. Dense is default for most use cases.', required: false, options: { options: [ { label: 'Dense', value: 'dense' }, { label: 'Sparse', value: 'sparse' } ] }, defaultValue: 'dense' })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Enable deletion protection for the index",
+          "label": "Deletion Protection",
+          "name": "deletionProtection",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Wait until the index is ready to receive data before completing",
+          "label": "Wait Until Ready",
+          "name": "waitUntilReady",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Do not throw if you attempt to create an index that already exists",
+          "label": "Suppress Conflicts",
+          "name": "suppressConflicts",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Optional tags for the index (e.g., {\"team\": \"data-science\"})",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "The name of the collection to be used as the source for the index",
+          "label": "Source Collection",
+          "name": "sourceCollection",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Index",
+      "source_path": "pinecone/src/lib/actions/create-index.ts",
+      "source_sha256": "456ed0663e66adab1481fa0a8db3a9b448a40c595343eeaef3bf0030cd3e9573",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pinecone/src/lib/actions/create-index.ts"
+    },
+    {
+      "description": "Delete vectors by ID from a namespace.",
+      "id": "delete_vector",
+      "inputs": [
+        {
+          "description": "The name of the index to delete vectors from",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique host for the index (optional, see Pinecone docs for targeting an index)",
+          "label": "Index Host",
+          "name": "indexHost",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The namespace to delete vectors from (e.g., \"example-namespace\")",
+          "label": "Namespace",
+          "name": "namespace",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Choose how to delete vectors",
+          "label": "Delete Mode",
+          "name": "deleteMode",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The ID of the vector to delete (for single vector deletion)",
+          "label": "Vector ID",
+          "name": "id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Array of vector IDs to delete (e.g., [\"id-2\", \"id-3\"])",
+          "label": "Vector IDs",
+          "name": "ids",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Check this box to confirm you want to delete ALL vectors in the namespace",
+          "label": "Confirm Delete All",
+          "name": "confirmDeleteAll",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Metadata filter expression to select vectors to delete. Examples:\n• {\"genre\": {\"$eq\": \"documentary\"}}\n• {\"year\": {\"$gt\": 2019}}\n• {\"$and\": [{\"genre\": \"comedy\"}, {\"year\": {\"$gte\": 2020}}]}",
+          "label": "Metadata Filter",
+          "name": "filter",
+          "required": false,
+          "type": "Json"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete a Vector",
+      "source_path": "pinecone/src/lib/actions/delete-vector.ts",
+      "source_sha256": "f2d0bda1723b3021feafd0a86694b1d295dc6bcbe79c6430929810a6e63044cd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pinecone/src/lib/actions/delete-vector.ts"
+    },
+    {
+      "description": "Look up and return vectors by ID from a namespace.",
+      "id": "get_vector",
+      "inputs": [
+        {
+          "description": "The name of the index to fetch vectors from",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique host for the index (optional, see Pinecone docs for targeting an index)",
+          "label": "Index Host",
+          "name": "indexHost",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The vector IDs to fetch. Does not accept values containing spaces (e.g., [\"id-1\", \"id-2\"])",
+          "label": "Vector IDs",
+          "name": "ids",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "The namespace containing the vectors to fetch (e.g., \"example-namespace\")",
+          "label": "Namespace",
+          "name": "namespace",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get a Vector",
+      "source_path": "pinecone/src/lib/actions/get-vector.ts",
+      "source_sha256": "b78fa26086126ccb3749d6c8d90f872e49f020f81cb2a3eb21fa245c9d78ba82",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pinecone/src/lib/actions/get-vector.ts"
+    },
+    {
+      "description": "Search indexes by name or list all indexes in your project.",
+      "id": "search_index",
+      "inputs": [
+        {
+          "description": "Choose how to search for indexes",
+          "label": "Search Mode",
+          "name": "searchMode",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The name of the specific index to search for (when using Find Specific Index mode)",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter indexes by name (partial match, case-insensitive)",
+          "label": "Name Filter",
+          "name": "nameFilter",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Index",
+      "source_path": "pinecone/src/lib/actions/search-index.ts",
+      "source_sha256": "f439e261b109c8aa3f82920af00cc716d121dac009725cdedb682efced82dd9e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pinecone/src/lib/actions/search-index.ts"
+    },
+    {
+      "description": "Search a namespace using a query vector to find similar records.",
+      "id": "search_vector",
+      "inputs": [
+        {
+          "description": "The name of the index to search in",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique host for the index (optional, see Pinecone docs for targeting an index)",
+          "label": "Index Host",
+          "name": "indexHost",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The number of results to return for each query (range: 1-10000)",
+          "label": "Top K",
+          "name": "topK",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "The namespace to query (e.g., \"example-namespace\")",
+          "label": "Namespace",
+          "name": "namespace",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Choose how to provide the query",
+          "label": "Query Method",
+          "name": "queryMethod",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The query vector. This should be the same length as the dimension of the index (e.g., [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8])",
+          "label": "Query Vector",
+          "name": "vector",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "The unique ID of the vector to be used as a query vector (max length: 512)",
+          "label": "Query Vector ID",
+          "name": "id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Array of indices for sparse vector data (optional)",
+          "label": "Sparse Indices",
+          "name": "sparseIndices",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Array of sparse values corresponding to indices (must be same length as indices)",
+          "label": "Sparse Values",
+          "name": "sparseValues",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter to apply using vector metadata. Examples:\n• {\"genre\": {\"$eq\": \"documentary\"}}\n• {\"year\": {\"$gt\": 2019}}\n• {\"$and\": [{\"genre\": {\"$in\": [\"comedy\", \"drama\"]}}, {\"year\": {\"$gte\": 2020}}]}",
+          "label": "Metadata Filter",
+          "name": "filter",
+          "required": false,
+          "type": "Json"
+        },
+        {
+          "description": "Whether vector values are included in the response",
+          "label": "Include Values",
+          "name": "includeValues",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether metadata is included in the response",
+          "label": "Include Metadata",
+          "name": "includeMetadata",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Search Vectors",
+      "source_path": "pinecone/src/lib/actions/search-vector.ts",
+      "source_sha256": "5b8855299fddd51d0c588ddb32bd545708a6e224140175dc149799741b7f2ccb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pinecone/src/lib/actions/search-vector.ts"
+    },
+    {
+      "description": "Updates a vector in a namespace. Overwrites existing values and metadata.",
+      "id": "update_vector",
+      "inputs": [
+        {
+          "description": "The name of the index containing the vector to update",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique host for the index (optional, see Pinecone docs for targeting an index)",
+          "label": "Index Host",
+          "name": "indexHost",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Vector's unique id (required, string length: 1 - 512)",
+          "label": "Vector ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The namespace containing the vector to update (e.g., \"example-namespace\")",
+          "label": "Namespace",
+          "name": "namespace",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Vector data to update (e.g., [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8])",
+          "label": "Vector Values",
+          "name": "values",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Array of indices for sparse values (optional)",
+          "label": "Sparse Indices",
+          "name": "sparseIndices",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Array of sparse values corresponding to indices (must be same length as indices)",
+          "label": "Sparse Values",
+          "name": "sparseValues",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Key-value pairs to set for the vector",
+          "label": "Metadata",
+          "name": "metadata",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Update a Vector",
+      "source_path": "pinecone/src/lib/actions/update-vector.ts",
+      "source_sha256": "480609064868e41201e5351727632dd9387771cccf0d2a5c9189b150bbc772c9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pinecone/src/lib/actions/update-vector.ts"
+    },
+    {
+      "description": "Upsert vectors into a namespace. Overwrites existing vectors with the same ID.",
+      "id": "upsert_vector",
+      "inputs": [
+        {
+          "description": "The name of the index to upsert vectors into",
+          "label": "Index Name",
+          "name": "indexName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique host for the index (optional, see Pinecone docs for targeting an index)",
+          "label": "Index Host",
+          "name": "indexHost",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The namespace where you upsert vectors (e.g., \"example-namespace\")",
+          "label": "Namespace",
+          "name": "namespace",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Choose how to provide vector data",
+          "label": "Input Method",
+          "name": "vectorsInput",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The unique identifier for the vector (e.g., \"vec1\")",
+          "label": "Vector ID",
+          "name": "id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Array of numbers representing the vector (e.g., [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1])",
+          "label": "Vector Values",
+          "name": "values",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Array of vectors to upsert (for multiple vectors input)",
+          "label": "Vectors",
+          "name": "vectors",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Upsert Vector",
+      "source_path": "pinecone/src/lib/actions/upsert-vector.ts",
+      "source_sha256": "bd2a322c9f7e1947ff63a345e88807fd940aadb827d56926b70231a1c983afd2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/pinecone/src/lib/actions/upsert-vector.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "dd60d5cce6d39519a38627b4345c6267c9f51bae",
+    "index_path": "pinecone/src/index.ts",
+    "index_sha256": "3f4d85bb680bcc7e78fbbf2e3a38ebecc64e4324ccd22692f1650f17375b6913",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "data-engineering-architect",
+    "research-evaluator",
+    "model-builder"
+  ]
+}

@@ -1,0 +1,1210 @@
+{
+  "allowed_hosts": [
+    "api.copper.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Email Address of the Token Owner",
+        "label": "Email Address",
+        "name": "email",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Your API Key in settings > integrations",
+        "label": "API Key",
+        "name": "apiKey",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Sales & CRM",
+  "id": "copper",
+  "name": "Copper",
+  "operations": [
+    {
+      "description": "Adds a new lead.",
+      "id": "createLead",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Full Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Category of the email address (e.g., work, personal)",
+          "name": "category",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone Numbers",
+          "name": "phone_numbers",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Street",
+          "name": "address_street",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "City",
+          "name": "address_city",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "State/Region",
+          "name": "address_state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Postal Code",
+          "name": "address_postal_code",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Country",
+          "name": "address_country",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Lead",
+      "source_path": "copper/src/lib/actions/create-lead.ts",
+      "source_sha256": "ce7a86af13f188c98d499f5997f8f6ae89b507f9e65f48270ebf054c70890b2d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/actions/create-lead.ts"
+    },
+    {
+      "description": "Adds a new task under a person, lead, or opportunity.",
+      "id": "createTask",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Task Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Details fo this task",
+          "label": "Details",
+          "name": "details",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Custom_Activity_Type_Id",
+          "name": "custom_activity_type_id",
+          "required": null,
+          "source_expression": "ActivityTypesDropdown('user')",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Assignee Id",
+          "name": "assigneeId",
+          "required": null,
+          "source_expression": "usersDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Choose the type of Copper record this task should be linked to (e.g. Person, Company, Lead, Opportunity, or Project).",
+          "label": "Related Record Type",
+          "name": "entity",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Select the specific record (from the chosen type above) that this task should be attached to. For example, pick the Person or Opportunity the task relates to.",
+          "label": "Related Record",
+          "name": "entityItemId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Enter date and time in 24-hour format, e.g. `2025-09-09 11:40` (11:40 AM) or `2025-09-09 13:00` (1:00 PM).",
+          "label": "Due Date/Time",
+          "name": "due_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Enter date and time in 24-hour format, e.g. `2025-09-09 11:40` (11:40 AM) or `2025-09-09 13:00` (1:00 PM)",
+          "label": "Reminder Date/Time",
+          "name": "reminder_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "priority",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Tags",
+          "name": "tags",
+          "required": true,
+          "type": "Array"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "copper/src/lib/actions/create-task.ts",
+      "source_sha256": "8377c8bf4f3df3370d2ce658d0ab03dacadf1b0a14690820ebf7951b9c419b83",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Lookup a company.",
+      "id": "searchForACompany",
+      "inputs": [
+        {
+          "description": "Full name of the Company to search for.",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone Number of the Company to search for.",
+          "label": "Phone Number",
+          "name": "phone_number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Email Domain of the Company to search for.",
+          "label": "Email Domain",
+          "name": "email_domains",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Contact_Type_Ids",
+          "name": "contact_type_ids",
+          "required": null,
+          "source_expression": "MultiContactTypesDropdown({})",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Assignee_Ids",
+          "name": "assignee_ids",
+          "required": null,
+          "source_expression": "multiUsersDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The city in which Company must be located.",
+          "label": "City",
+          "name": "city",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The state or province in which Company must be located.",
+          "label": "State",
+          "name": "state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The postal code in which Company must be located.",
+          "label": "Postal Code",
+          "name": "postal_code",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The two character country code where Company must be located.",
+          "label": "Country",
+          "name": "country",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter Company to those that match at least one of the tags specified.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter Company to those that match at least one of the social accounts specified.",
+          "label": "Socials",
+          "name": "socials",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter by followed state",
+          "label": "Followed",
+          "name": "followed",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The maximum age in seconds that Company must be.",
+          "label": "Age",
+          "name": "age",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Default 50. Max 200.",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Page Number",
+          "name": "page_number",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The field on which to sort the results",
+          "label": "Sort By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The direction in which to sort the result",
+          "label": "Sort Direction",
+          "name": "sort_direction",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The minimum number of interactions Company must have had.",
+          "label": "Minimum Interaction Count",
+          "name": "minimum_interaction_count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The maximum number of interactions Company must have had.",
+          "label": "Maximum Interaction Count",
+          "name": "maximum_interaction_count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date of the last interaction.",
+          "label": "Minimum Interaction Date",
+          "name": "minimum_interaction_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date of the last interaction.",
+          "label": "Maximum Interaction Date",
+          "name": "maximum_interaction_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date Company are created.",
+          "label": "Minimum Created Date",
+          "name": "minimum_created_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date Company are Created.",
+          "label": "Maximum Created Date",
+          "name": "maximum_created_date",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Search for a Company",
+      "source_path": "copper/src/lib/actions/search-for-a-company.ts",
+      "source_sha256": "70011282b94e2dbce07e062116daf1df167447143aff18d67926949245861a99",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/actions/search-for-a-company.ts"
+    },
+    {
+      "description": "Lookup a lead using match criteria.",
+      "id": "searchForALead",
+      "inputs": [
+        {
+          "description": "Full name of the Lead to search for.",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone Number of the Lead to search for.",
+          "label": "Phone Number",
+          "name": "phone_number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Emails of the Lead to search for.",
+          "label": "Emails",
+          "name": "emails",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Assignee_Ids",
+          "name": "assignee_ids",
+          "required": null,
+          "source_expression": "multiUsersDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status_Ids",
+          "name": "status_ids",
+          "required": null,
+          "source_expression": "MultiLeadStatusDropdown({})",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Customer_Source_Ids",
+          "name": "customer_source_ids",
+          "required": null,
+          "source_expression": "MultiCustomerSourceDropdown({})",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The city in which Lead must be located.",
+          "label": "City",
+          "name": "city",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The state or province in which Lead must be located.",
+          "label": "State",
+          "name": "state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The postal code in which Lead must be located.",
+          "label": "Postal Code",
+          "name": "postal_code",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The two character country code where Lead must be located.",
+          "label": "Country",
+          "name": "country",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter Lead to those that match at least one of the tags specified.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter Lead to those that match at least one of the social accounts specified.",
+          "label": "Socials",
+          "name": "socials",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter by followed state",
+          "label": "Followed",
+          "name": "followed",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The maximum age in seconds that Lead must be.",
+          "label": "Age",
+          "name": "age",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Default 50. Max 200.",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Page Number",
+          "name": "page_number",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The field on which to sort the results",
+          "label": "Sort By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The direction in which to sort the result",
+          "label": "Sort Direction",
+          "name": "sort_direction",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Specify if response should contain converted leads.",
+          "label": "Include Converted Leads",
+          "name": "include_converted_leads",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "The minimum monetary value Leads must have.",
+          "label": "Minimum Monetary Value",
+          "name": "minimum_monetary_value",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The maximum monetary value Leads must have.",
+          "label": "Maximum Monetary Value",
+          "name": "maximum_monetary_value",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The minimum number of interactions Lead must have had.",
+          "label": "Minimum Interaction Count",
+          "name": "minimum_interaction_count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The maximum number of interactions Lead must have had.",
+          "label": "Maximum Interaction Count",
+          "name": "maximum_interaction_count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date of the last interaction.",
+          "label": "Minimum Interaction Date",
+          "name": "minimum_interaction_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date of the last interaction.",
+          "label": "Maximum Interaction Date",
+          "name": "maximum_interaction_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date Lead are created.",
+          "label": "Minimum Created Date",
+          "name": "minimum_created_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date Lead are Created.",
+          "label": "Maximum Created Date",
+          "name": "maximum_created_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date Lead are Modified.",
+          "label": "Minimum Modified Date",
+          "name": "minimum_modified_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date Lead are Modified.",
+          "label": "Maximum Modified Date",
+          "name": "maximum_modified_date",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Search for a Lead",
+      "source_path": "copper/src/lib/actions/search-for-a-lead.ts",
+      "source_sha256": "3f69262d8617ca1786ea10a1497b24048b60e84c96be799a3c993b9e1ce1354d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/actions/search-for-a-lead.ts"
+    },
+    {
+      "description": "Lookup a person using match criteria.",
+      "id": "searchForAPerson",
+      "inputs": [
+        {
+          "description": "Full name of the People to search for.",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Phone Number of the People to search for.",
+          "label": "Phone Number",
+          "name": "phone_number",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Emails of the People to search for.",
+          "label": "Emails",
+          "name": "emails",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Contact_Type_Ids",
+          "name": "contact_type_ids",
+          "required": null,
+          "source_expression": "MultiContactTypesDropdown({})",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Assignee_Ids",
+          "name": "assignee_ids",
+          "required": null,
+          "source_expression": "multiUsersDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Company_Ids",
+          "name": "company_ids",
+          "required": null,
+          "source_expression": "multiCompanyDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Opportunity_Ids",
+          "name": "opportunity_ids",
+          "required": null,
+          "source_expression": "multiOpportunityDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The city in which People must be located.",
+          "label": "City",
+          "name": "city",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The state or province in which People must be located.",
+          "label": "State",
+          "name": "state",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The postal code in which People must be located.",
+          "label": "Postal Code",
+          "name": "postal_code",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The two character country code where People must be located.",
+          "label": "Country",
+          "name": "country",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Filter People to those that match at least one of the tags specified.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter People to those that match at least one of the social accounts specified.",
+          "label": "Socials",
+          "name": "socials",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter by followed state",
+          "label": "Followed",
+          "name": "followed",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The maximum age in seconds that People must be.",
+          "label": "Age",
+          "name": "age",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Default 50. Max 200.",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Page Number",
+          "name": "page_number",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The field on which to sort the results",
+          "label": "Sort By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The direction in which to sort the result",
+          "label": "Sort Direction",
+          "name": "sort_direction",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The minimum number of interactions People must have had.",
+          "label": "Minimum Interaction Count",
+          "name": "minimum_interaction_count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The maximum number of interactions People must have had.",
+          "label": "Maximum Interaction Count",
+          "name": "maximum_interaction_count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date of the last interaction.",
+          "label": "Minimum Interaction Date",
+          "name": "minimum_interaction_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date of the last interaction.",
+          "label": "Maximum Interaction Date",
+          "name": "maximum_interaction_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date People are created.",
+          "label": "Minimum Created Date",
+          "name": "minimum_created_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date People are Created.",
+          "label": "Maximum Created Date",
+          "name": "maximum_created_date",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Search for a Person",
+      "source_path": "copper/src/lib/actions/search-for-a-person.ts",
+      "source_sha256": "62b605835e4a07048ea72699271f8eb4691e063dba920de68b9b076512db48bf",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/actions/search-for-a-person.ts"
+    },
+    {
+      "description": "Lookup a project.",
+      "id": "searchForAProject",
+      "inputs": [
+        {
+          "description": "Full name of the Opportunity to search for.",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Assignee_Ids",
+          "name": "assignee_ids",
+          "required": null,
+          "source_expression": "multiUsersDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Filter by Opportunity status",
+          "label": "Status",
+          "name": "statuses",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Filter People to those that match at least one of the tags specified.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter by followed state",
+          "label": "Followed",
+          "name": "followed",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Default 50. Max 200.",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Page Number",
+          "name": "page_number",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The field on which to sort the results",
+          "label": "Sort By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The direction in which to sort the result",
+          "label": "Sort Direction",
+          "name": "sort_direction",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date Opportunity are created.",
+          "label": "Minimum Created Date",
+          "name": "minimum_created_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date Opportunity are Created.",
+          "label": "Maximum Created Date",
+          "name": "maximum_created_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date Opportunity are Modified.",
+          "label": "Minimum Modified Date",
+          "name": "minimum_modified_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date Opportunity are Modified.",
+          "label": "Maximum Modified Date",
+          "name": "maximum_modified_date",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Search for a Project",
+      "source_path": "copper/src/lib/actions/search-for-a-project.ts",
+      "source_sha256": "b796a115a245358153e1b87263a2e591c4e9f859d4d2d1fef9fc2132ed742e0e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/actions/search-for-a-project.ts"
+    },
+    {
+      "description": "Find an existing activity by type/criteria.",
+      "id": "searchForAnActivity",
+      "inputs": [
+        {
+          "description": "Select parent entity",
+          "label": "Parent Entity",
+          "name": "entity",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Select Resource",
+          "label": "Parent Entity Resource",
+          "name": "entityItemId",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "",
+          "label": "Activity_Types",
+          "name": "activity_types",
+          "required": null,
+          "source_expression": "MultiActivityTypesDropdown({})",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Default 50. Max 200.",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Page Number",
+          "name": "page_number",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 11:40. The timestamp of the earliest activity date.",
+          "label": "Minimum Activity Date",
+          "name": "minimum_activity_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest activity date.",
+          "label": "Maximum Activity Date",
+          "name": "maximum_activity_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "(Optional) If set, search performance improves but duplicate activity logs may be returned",
+          "label": "Full Result",
+          "name": "full_result",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Search for an Activity",
+      "source_path": "copper/src/lib/actions/search-for-an-activity.ts",
+      "source_sha256": "5d3eccab11be76c99ffd2040fba5ae886d3b40fad00467594da850de31183182",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/actions/search-for-an-activity.ts"
+    },
+    {
+      "description": "Lookup an opportunity.",
+      "id": "searchForAnOpportunity",
+      "inputs": [
+        {
+          "description": "Full name of the Opportunity to search for.",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Assignee_Ids",
+          "name": "assignee_ids",
+          "required": null,
+          "source_expression": "multiUsersDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Company_Ids",
+          "name": "company_ids",
+          "required": null,
+          "source_expression": "multiCompanyDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Filter by Opportunity status",
+          "label": "Status",
+          "name": "status_ids",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "",
+          "label": "Priority",
+          "name": "priorities",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "",
+          "label": "Pipeline_Ids",
+          "name": "pipeline_ids",
+          "required": null,
+          "source_expression": "multiPipelinesDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Select a stage",
+          "label": "Pipeline Stage",
+          "name": "pipeline_stage_ids",
+          "required": false,
+          "type": "MultiSelectDropdown"
+        },
+        {
+          "description": "",
+          "label": "Primary_Contact_Ids",
+          "name": "primary_contact_ids",
+          "required": null,
+          "source_expression": "multiPrimaryContactsDropdown({ refreshers: ['auth'] })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Customer_Source_Ids",
+          "name": "customer_source_ids",
+          "required": null,
+          "source_expression": "MultiCustomerSourceDropdown({})",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Loss_Reason_Ids",
+          "name": "loss_reason_ids",
+          "required": null,
+          "source_expression": "MultiLossReasonsDropdown({})",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Filter People to those that match at least one of the tags specified.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Filter by followed state",
+          "label": "Followed",
+          "name": "followed",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Default 50. Max 200.",
+          "label": "Page Size",
+          "name": "page_size",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Page Number",
+          "name": "page_number",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The field on which to sort the results",
+          "label": "Sort By",
+          "name": "sort_by",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The direction in which to sort the result",
+          "label": "Sort Direction",
+          "name": "sort_direction",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The minimum monetary value Opportunities must have.",
+          "label": "Minimum Monetary Value",
+          "name": "minimum_monetary_value",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The maximum monetary value Opportunities must have.",
+          "label": "Maximum Monetary Value",
+          "name": "maximum_monetary_value",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The minimum number of interactions Opportunity must have had.",
+          "label": "Minimum Interaction Count",
+          "name": "minimum_interaction_count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The maximum number of interactions Opportunity must have had.",
+          "label": "Maximum Interaction Count",
+          "name": "maximum_interaction_count",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date close date.",
+          "label": "Minimum Interaction Date",
+          "name": "minimum_close_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date close date.",
+          "label": "Maximum Interaction Date",
+          "name": "maximum_close_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date of the last interaction.",
+          "label": "Minimum Interaction Date",
+          "name": "minimum_interaction_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date of the last interaction.",
+          "label": "Maximum Interaction Date",
+          "name": "maximum_interaction_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date of a stage change.",
+          "label": "Minimum Stage Change Date",
+          "name": "minimum_stage_change_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date of a stage change.",
+          "label": "Maximum Stage Change Date",
+          "name": "maximum_stage_change_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date Opportunity are created.",
+          "label": "Minimum Created Date",
+          "name": "minimum_created_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date Opportunity are Created.",
+          "label": "Maximum Created Date",
+          "name": "maximum_created_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the earliest date Opportunity are Modified.",
+          "label": "Minimum Modified Date",
+          "name": "minimum_modified_date",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "24-hour format, e.g. 2025-09-10 13:00. The timestamp of the latest date Opportunity are Modified.",
+          "label": "Maximum Modified Date",
+          "name": "maximum_modified_date",
+          "required": false,
+          "type": "DateTime"
+        }
+      ],
+      "kind": "action",
+      "name": "Search for an Opportunity",
+      "source_path": "copper/src/lib/actions/search-for-an-opportunity.ts",
+      "source_sha256": "369df7ef17f164cc01d4ef968411d5f36003721e29936c2b5fe4d09321b63bf5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/actions/search-for-an-opportunity.ts"
+    },
+    {
+      "description": "Triggers when a new activity is logged",
+      "id": "newActivity",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Activity",
+      "source_path": "copper/src/lib/triggers/new-activity.ts",
+      "source_sha256": "59694e47515e1ebfa8051168adcfd88382e997f37d142eadb60675f75e341a15",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/triggers/new-activity.ts"
+    },
+    {
+      "description": "Triggers when a new lead is created.",
+      "id": "newLead",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Lead",
+      "source_path": "copper/src/lib/triggers/new-lead.ts",
+      "source_sha256": "e613dc5961ef45471796d36ddb1320392c77faf3f2e6a45bef2c82792aa605f9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/triggers/new-lead.ts"
+    },
+    {
+      "description": "Triggers when a new person/contact is created.",
+      "id": "newPerson",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Person",
+      "source_path": "copper/src/lib/triggers/new-person.ts",
+      "source_sha256": "95d256864bce33ae2fc97510b041e5a09af053dbeb7d78a64d76a1d1a9cf0ab1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/copper/src/lib/triggers/new-person.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "2f973c5d407834b373a35f1a90a22e00656a7a2c",
+    "index_path": "copper/src/index.ts",
+    "index_sha256": "7eb09fbaa95139236013360680975c87f0d5fb58b4d90ae3a03204119c47ec0c",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer"
+  ]
+}

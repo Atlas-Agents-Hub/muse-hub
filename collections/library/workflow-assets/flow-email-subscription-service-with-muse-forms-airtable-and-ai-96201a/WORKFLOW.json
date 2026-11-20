@@ -1,0 +1,1254 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-email-subscription-service-with-muse-forms-airtable-and-ai-96201a",
+  "title": "Email Subscription Service with n8n Forms, Airtable and AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Search daily",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-2-base"
+        },
+        "table": {
+          "configuration_input": "step-2-table"
+        },
+        "options": {},
+        "operation": "search",
+        "filterByFormula": "AND({Status} = 'active', {Interval} = 'daily')"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Search weekly",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-3-base"
+        },
+        "table": {
+          "configuration_input": "step-3-table"
+        },
+        "options": {},
+        "operation": "search",
+        "filterByFormula": {
+          "expression": "AND(\n {Status} = 'active', \n {Interval} = 'weekly', \n {Last Sent} <= DATEADD(TODAY(), -7, 'days')\n)"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "confirmation email1",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ steps[\"step-16\"].record.email }}"
+        },
+        "message": {
+          "expression": "This is to confirm your request to subscribe to \"Learn something every day!\" - a free service to send you facts about your favourite topics.\n\nTopic: {{ steps[\"step-16\"].record.topic }}\nSchedule: {{ steps[\"step-16\"].record.frequency }}"
+        },
+        "options": {
+          "appendAttribution": false
+        },
+        "subject": "Learn something every day confirmation"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Execute Workflow",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": false
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Create Event",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.Email }}"
+              }
+            },
+            {
+              "name": "topic",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.Topic }}"
+              }
+            },
+            {
+              "name": "interval",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.Interval }}"
+              }
+            },
+            {
+              "name": "id",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            },
+            {
+              "name": "created_at",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.Created }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-8",
+      "label": "Unsubscribe Form",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "path": "free-factoids-unsubscribe"
+        },
+        "formTitle": "Unsubscribe from Learn Something Every Day",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "ID",
+              "requiredField": true
+            },
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Reason For Unsubscribe",
+              "multiselect": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Emails not relevant"
+                  },
+                  {
+                    "option": "Too many Emails"
+                  },
+                  {
+                    "option": "I did not sign up to this service"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "formDescription": "We're sorry to see you go! Please take a moment to help us improve the service."
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Set Email Vars",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": {
+                "expression": "{{ steps[\"step-7\"].records[0].email }},[configured contact]"
+              }
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": {
+                "expression": "Your {{ steps[\"step-7\"].records[0].interval }} factoid"
+              }
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "value": {
+                "expression": "<p>\n<strong>You asked about \"{{ steps[\"step-17\"].records[0].topic.replace('\"','') }}\"</strong>\n</p>\n<p>\n<i>{{ steps[\"step-20\"].records[0].output }}</i>\n</p>"
+              }
+            },
+            {
+              "name": "unsubscribe_link",
+              "type": "string",
+              "value": {
+                "expression": "https://<MY_HOST>/form/inspiration-unsubscribe?ID={{ steps[\"step-7\"].records[0].id }}"
+              }
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Log Last Sent",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-10-base"
+        },
+        "table": {
+          "configuration_input": "step-10-table"
+        },
+        "columns": {
+          "value": {
+            "Last Sent": "2024-11-29T13:34:11"
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "inactive",
+                  "value": "inactive"
+                },
+                {
+                  "name": "active",
+                  "value": "active"
+                }
+              ],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "daily",
+                  "value": "daily"
+                },
+                {
+                  "name": "weekly",
+                  "value": "weekly"
+                },
+                {
+                  "name": "surprise",
+                  "value": "surprise"
+                }
+              ],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Interval",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "Mon",
+                  "value": "Mon"
+                },
+                {
+                  "name": "Tue",
+                  "value": "Tue"
+                },
+                {
+                  "name": "Wed",
+                  "value": "Wed"
+                },
+                {
+                  "name": "Thu",
+                  "value": "Thu"
+                },
+                {
+                  "name": "Fri",
+                  "value": "Fri"
+                },
+                {
+                  "name": "Sat",
+                  "value": "Sat"
+                },
+                {
+                  "name": "Sun",
+                  "value": "Sun"
+                }
+              ],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Start Day",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Topic",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "dateTime",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Last Sent",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ]
+        },
+        "options": {},
+        "operation": "update"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Search surprise",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-11-base"
+        },
+        "table": {
+          "configuration_input": "step-11-table"
+        },
+        "options": {},
+        "operation": "search",
+        "filterByFormula": {
+          "expression": "AND(\n {Status} = 'active', \n {Interval} = 'surprise'\n)"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Should Send = True",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.should_send }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Should Send?",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const luckyPick = Math.floor(Math.random() * 10) + 1;\nrecord.json.should_send = luckyPick == 8;\nreturn record;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Create Subscriber",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-14-base"
+        },
+        "table": {
+          "configuration_input": "step-14-table"
+        },
+        "columns": {
+          "value": {
+            "Email": {
+              "expression": "{{ record.email }}"
+            },
+            "Topic": {
+              "expression": "{{ record.topic }}"
+            },
+            "Status": "active",
+            "Interval": {
+              "expression": "{{ record.frequency }}"
+            },
+            "Start Day": {
+              "expression": "{{ record.submittedAt.toDateTime().format('EEE') }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "inactive",
+                  "value": "inactive"
+                },
+                {
+                  "name": "active",
+                  "value": "active"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "daily",
+                  "value": "daily"
+                },
+                {
+                  "name": "weekly",
+                  "value": "weekly"
+                },
+                {
+                  "name": "surprise",
+                  "value": "surprise"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Interval",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "Mon",
+                  "value": "Mon"
+                },
+                {
+                  "name": "Tue",
+                  "value": "Tue"
+                },
+                {
+                  "name": "Wed",
+                  "value": "Wed"
+                },
+                {
+                  "name": "Thu",
+                  "value": "Thu"
+                },
+                {
+                  "name": "Fri",
+                  "value": "Fri"
+                },
+                {
+                  "name": "Sat",
+                  "value": "Sat"
+                },
+                {
+                  "name": "Sun",
+                  "value": "Sun"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Start Day",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Topic",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "dateTime",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Last Sent",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Email"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Update Subscriber",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-15-base"
+        },
+        "table": {
+          "configuration_input": "step-15-table"
+        },
+        "columns": {
+          "value": {
+            "Status": "inactive"
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "inactive",
+                  "value": "inactive"
+                },
+                {
+                  "name": "active",
+                  "value": "active"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "daily",
+                  "value": "daily"
+                },
+                {
+                  "name": "weekly",
+                  "value": "weekly"
+                }
+              ],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Interval",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "Mon",
+                  "value": "Mon"
+                },
+                {
+                  "name": "Tue",
+                  "value": "Tue"
+                },
+                {
+                  "name": "Wed",
+                  "value": "Wed"
+                },
+                {
+                  "name": "Thu",
+                  "value": "Thu"
+                },
+                {
+                  "name": "Fri",
+                  "value": "Fri"
+                },
+                {
+                  "name": "Sat",
+                  "value": "Sat"
+                },
+                {
+                  "name": "Sun",
+                  "value": "Sun"
+                }
+              ],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Start Day",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Topic",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ]
+        },
+        "options": {},
+        "operation": "update"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Subscribe Form",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "path": "free-factoids-subscribe",
+          "appendAttribution": false,
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Thanks! Your factoid is on its way!"
+            }
+          }
+        },
+        "formTitle": "Learn something every day!",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "topic",
+              "placeholder": "What topic(s) would you like to learn about?",
+              "requiredField": true
+            },
+            {
+              "fieldType": "email",
+              "fieldLabel": "email",
+              "placeholder": {
+                "configuration_input": "step-16-values-1-placeholder"
+              },
+              "requiredField": true
+            },
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "frequency",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "daily"
+                  },
+                  {
+                    "option": "weekly"
+                  },
+                  {
+                    "option": "surprise me"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "formDescription": "Get a fact a day (or week) about any subject sent to your inbox."
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Execution Data",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "dataToSave": {
+          "values": [
+            {
+              "key": "email",
+              "value": {
+                "expression": "{{ record.email }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Window Buffer Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "scheduled_send_{{ record.email }}"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Wikipedia",
+      "operation": "service-read",
+      "adapter": "toolwikipedia",
+      "parameters": {}
+    },
+    {
+      "id": "step-20",
+      "label": "Content Generation Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Generate an new factoid on the following topic: \"{{ record.topic.replace('\"','') }}\"\nEnsure it is unique and not one generated previously."
+        },
+        "options": {},
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Groq Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Generate Image",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "Generate a child-friendly illustration which compliments the following paragraph:\n{{ record.output }}"
+        },
+        "options": {},
+        "resource": "image"
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Resize Image",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "width": 480,
+        "height": 360,
+        "options": {},
+        "operation": "resize"
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Send Message",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ record.to }}"
+        },
+        "message": {
+          "expression": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n <meta charset=\"UTF-8\">\n <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n <title>{{ record.subject }}</title>\n</head>\n<body>\n {{ record.message }}\n<p>\n<a href=\"{{ record.unsubscribe_link }}\">Unsubscribe</a>\n</p>\n</body>\n</html>"
+        },
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          },
+          "appendAttribution": false
+        },
+        "subject": {
+          "expression": "{{ record.subject }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-20",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-20",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-7",
+    "step-8",
+    "step-16"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-11-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-values-1-placeholder",
+      "purpose": "Provide the contact, recipient, or message content for placeholder.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Forms_and_Surveys/Email Subscription Service with n8n Forms, Airtable and AI.json",
+    "git_blob": "c26893713803bac44fb99b3b844c624b47a1f00d",
+    "sha256": "60b872fbfb9b82cd6e27f1d6aac4aad7b283ab250ff429b0bac861a67b7a25ab",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Forms_and_Surveys/Email%20Subscription%20Service%20with%20n8n%20Forms%2C%20Airtable%20and%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

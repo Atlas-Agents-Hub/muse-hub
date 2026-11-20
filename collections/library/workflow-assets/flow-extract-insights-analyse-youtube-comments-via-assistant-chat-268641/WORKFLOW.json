@@ -1,0 +1,1124 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-insights-analyse-youtube-comments-via-assistant-chat-268641",
+  "title": "Extract insights & analyse YouTube comments via Assistant chat",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "get_channel_details",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "get_channel_details",
+        "fields": {
+          "values": [
+            {
+              "name": "command",
+              "stringValue": {
+                "expression": "get_channel_details"
+              }
+            }
+          ]
+        },
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-2-workflowid"
+        },
+        "description": "Get channel_id, title and description by handle/username.\nChannel_id is required to find videos and details about this channel.\nIf Youtube link to channel provided - parse handle from there or return channel_id. (e.g. https://www.youtube.com/@example_handle - example_handle)\n\n\nExample Input:\nexample_handle\n\nExample Output:\nid:UCOgz_YflAsYnGbdvzXuKNCA\ntitle:Daniel Simmons\ndescription:Digital Diary 🤎\\n\\n\\nWeekly videos around fashion...",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "handle": {
+                "type": "string",
+                "description": "Handle/username of channel"
+              }
+            },
+            "required": [
+              "handle"
+            ]
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "get_video_description",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "get_video_description",
+        "fields": {
+          "values": [
+            {
+              "name": "command",
+              "stringValue": "video_details"
+            }
+          ]
+        },
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-3-workflowid"
+        },
+        "description": "Fetch video details - the full description, title, and publish date of a video using its video_id.\n\nExample input:\nvideo_id:dQw4w9WgXcQ\n\nExample Output:\ntitle:Never Gonna Give You Up\ndescription: \"The official video for “Never Gonna Give You Up” by Rick Astley.\nduration:4 min\nviewCount:154\nlikeCount:6\nthumbnails: urls",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "video_id": {
+                "type": "string",
+                "description": "The ID of the video to fetch details for"
+              }
+            },
+            "required": [
+              "video_id"
+            ]
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "get_list_of_videos",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "get_list_of_videos",
+        "fields": {
+          "values": [
+            {
+              "name": "command",
+              "stringValue": "videos"
+            }
+          ]
+        },
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-4-workflowid"
+        },
+        "description": "Retrieve a list of videos from a channel using channel_id. Supports sorting by date, relevance, or view count.\n\nExample Input:\nchannel_id\": \"UCxxxxxxxxxxxxxxxx\"\nnumber_of_videos\": 5\norder: \"date\"\npublishedAfter: \"timestamp\"\n\nExample Output:\nvideo_id:abc123\ntitle:Latest Video\nshort cut description:Latest Video\npublished_at:2023-12-05T10:00:00Z",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "channel_id": {
+                "type": "string",
+                "description": "The ID of the channel to fetch videos from"
+              },
+              "number_of_videos": {
+                "type": "integer",
+                "description": "The maximum number of videos to retrieve (max 50)"
+              },
+              "order": {
+                "type": "string",
+                "enum": [
+                  "date",
+                  "relevance",
+                  "viewCount"
+                ],
+                "description": "Order in which to fetch videos"
+              },
+              "publishedAfter": {
+                "type": "string",
+                "description": "Timestamp for filtering like 2023-11-03T15:28:05Z."
+              }
+            },
+            "required": [
+              "channel_id",
+              "number_of_videos",
+              "order"
+            ]
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "get_list_of_comments",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "get_list_of_comments",
+        "fields": {
+          "values": [
+            {
+              "name": "command",
+              "stringValue": "comments"
+            }
+          ]
+        },
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-5-workflowid"
+        },
+        "description": "Retrieve a list of comments from a video using video_id.\n\nInput:\n \"video_id\": \"dQw4w9WgXcQ\"\n\nOutput:\n \"author\": \"John Doe\",\n \"comment\": \"This is an amazing video!\",\n \"published_at\": \"2023-12-04T12:00:00Z\"",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "video_id": {
+                "type": "string",
+                "description": "The ID of the video to fetch comments from"
+              }
+            },
+            "required": [
+              "video_id"
+            ]
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "search",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "search",
+        "fields": {
+          "values": [
+            {
+              "name": "command",
+              "stringValue": "search"
+            }
+          ]
+        },
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-6-workflowid"
+        },
+        "description": "Search for videos or channels using a query. Supports filtering by type (video or channel) and sorting (date, viewCount, relevance). Use | for OR and - to exclude terms in the query.\n\nInput:\ntype: video or channel\nquery: search query\nsorting: date, viewCount, relevance\npublishedAfter: timestamp\n\nOutput:\n- id, title, short cut description, and published_at.",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "video",
+                  "channel"
+                ],
+                "description": "Type of results to retrieve: video or channel"
+              },
+              "query": {
+                "type": "string",
+                "description": "Search query. Supports | for OR and - to exclude terms"
+              },
+              "sorting": {
+                "type": "string",
+                "enum": [
+                  "date",
+                  "viewCount",
+                  "relevance"
+                ],
+                "description": "Sorting criteria for search results"
+              },
+              "publishedAfter": {
+                "type": "string",
+                "description": "Timestamp for filtering like 2023-11-03T15:28:05Z"
+              }
+            },
+            "required": [
+              "type",
+              "query",
+              "sorting"
+            ]
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "analyze_thumbnail",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "analyze_thumbnail",
+        "fields": {
+          "values": [
+            {
+              "name": "command",
+              "stringValue": "analyze_thumbnail"
+            }
+          ]
+        },
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-7-workflowid"
+        },
+        "description": "Analyze a thumbnail image based on a given prompt. The prompt can be customized for specific analysis needs, such as design critique, color scheme evaluation, or content assessment.\nUse link of maxRes thumbnail. \n\nInput:\n- url: URL of the thumbnail image.\n- prompt: Customizable instruction for the analysis.\n\nOutput:\n- Results of the analysis based on the given prompt.",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "URL of the thumbnail image to analyze"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Customizable instruction to guide the image analysis"
+              }
+            },
+            "required": [
+              "url",
+              "prompt"
+            ]
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "video_transcription",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "video_transcription",
+        "fields": {
+          "values": [
+            {
+              "name": "command",
+              "stringValue": "video_transcription"
+            }
+          ]
+        },
+        "schemaType": "manual",
+        "workflowId": {
+          "configuration_input": "step-8-workflowid"
+        },
+        "description": "Transcribe a video and retrieve its text transcription. Useful for analyzing video content or repurposing it for other formats.\n\nInput:\n- video_url: URL of the video to transcribe.\n\nOutput:\n- The text transcription of the video.",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "video_url": {
+                "type": "string",
+                "description": "URL of the video to transcribe"
+              }
+            },
+            "required": [
+              "video_url"
+            ]
+          }
+        },
+        "specifyInputSchema": true
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Postgres Chat Memory",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {
+        "sessionKey": {
+          "expression": "{{ steps[\"step-11\"].record.sessionId }}"
+        },
+        "sessionIdType": "customKey"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-11\"].record.chatInput }}"
+        },
+        "agent": "openAiFunctionsAgent",
+        "options": {
+          "systemMessage": "You are Youtube assistant. \nYou need to process user's requests and run relevant tools for that. \n\nPlan and execute in right order runs of tools to get data for user's request.\n\nIMPORTANT Search query and list of videos for channel tools returns all videos including shorts - use Get Video description tool to identify shorts (less than minute) and filter them out if needed.\n\nFeel free to ask questions before do actions - especially if you noticed some inconcistency in user requests that might be error/misspelling. "
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Get Comments",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://www.googleapis.com/youtube/v3/commentThreads"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "id,snippet,replies"
+            },
+            {
+              "name": "videoId",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.video_id }}"
+              }
+            },
+            {
+              "name": "maxResults",
+              "value": "100"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-14",
+      "label": "Get Channel Details",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://www.googleapis.com/youtube/v3/channels"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet"
+            },
+            {
+              "name": "forHandle",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.handle }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Get Video Description",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://www.googleapis.com/youtube/v3/videos"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet,contentDetails,statistics"
+            },
+            {
+              "name": "id",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.video_id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Edit Fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": {
+                "expression": "{{ JSON.stringify(` Comments: ${record.items.map(item => { const topLevelComment = `${item.snippet.topLevelComment.snippet.authorDisplayName}: ${item.snippet.topLevelComment.snippet.textOriginal}`; const replies = item.replies?.comments.map(reply => `${reply.snippet.authorDisplayName}: ${reply.snippet.textOriginal}` ).join('\\n') || ''; return [topLevelComment, replies].filter(Boolean).join('\\n'); }).join('\\n\\n')} `) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Run Query",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://www.googleapis.com/youtube/v3/search"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet"
+            },
+            {
+              "name": "q",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.query }}"
+              }
+            },
+            {
+              "name": "order",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.order }}"
+              }
+            },
+            {
+              "name": "type",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.type }}"
+              }
+            },
+            {
+              "name": "maxResults",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.number_of_videos }}"
+              }
+            },
+            {
+              "name": "publishedAfter",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.publishedAfter }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Get Videos by Channel",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://www.googleapis.com/youtube/v3/search"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet"
+            },
+            {
+              "name": "channelId",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.channel_id }}"
+              }
+            },
+            {
+              "name": "order",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.order }}"
+              }
+            },
+            {
+              "name": "maxResults",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.number_of_videos }}"
+              }
+            },
+            {
+              "name": "type",
+              "value": "video"
+            },
+            {
+              "name": "publishedAfter",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.publishedAfter }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "object",
+              "value": {
+                "expression": "{{record}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Switch",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "get_channel_details",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-13\"].record.command }}"
+                    },
+                    "rightValue": "get_channel_details"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "video_details",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-13\"].record.command }}"
+                    },
+                    "rightValue": "video_details"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "comments",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-13\"].record.command }}"
+                    },
+                    "rightValue": "comments"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "search",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-13\"].record.command }}"
+                    },
+                    "rightValue": "search"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "videos",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-13\"].record.command }}"
+                    },
+                    "rightValue": "videos"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "analyze_thumbnail",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-13\"].record.command }}"
+                    },
+                    "rightValue": "analyze_thumbnail"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "video_transcription",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ steps[\"step-13\"].record.command }}"
+                    },
+                    "rightValue": "video_transcription"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Get Video Transcription",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://api.apify.com/v2/acts/dB9f4B02ocpTICIEY/run-sync-get-dataset-items"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"startUrls\": [\n \"{{ steps[\"step-13\"].record.query.video_url }}\"\n ]\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "OpenAI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ steps[\"step-13\"].record.query.prompt }}"
+        },
+        "modelId": {
+          "configuration_input": "step-22-modelid"
+        },
+        "options": {},
+        "resource": "image",
+        "imageUrls": {
+          "expression": "{{ steps[\"step-13\"].record.query.url }}"
+        },
+        "operation": "analyze"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-22",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 2,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 3,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 4,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 5,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 6,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-10",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-10",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-10",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-10",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-10",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-10",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-18",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-21",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-11",
+    "step-13"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-6-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-8-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-22-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Extract insights & analyse YouTube comments via AI Agent chat.json",
+    "git_blob": "c0a38ded45444d6908aaadce55b35dde122fb3fe",
+    "sha256": "1bee884b0985ad1fd38a5db224f3d3612f0cfe25f5043638452950f88db44fbf",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Extract%20insights%20%26%20analyse%20YouTube%20comments%20via%20AI%20Agent%20chat.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

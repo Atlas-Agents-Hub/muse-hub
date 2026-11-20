@@ -1,0 +1,299 @@
+{
+  "allowed_hosts": [
+    "api.umami.is",
+    "cloud.umami.is",
+    "umami.example.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Base URL of your Umami instance (e.g. `https://umami.example.com`). Do not include a trailing slash.",
+        "label": "Instance URL",
+        "name": "baseUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "Your Umami login username.",
+        "label": "Username",
+        "name": "username",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', description: 'Your Umami login password.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Marketing",
+  "id": "umami",
+  "name": "Umami",
+  "operations": [
+    {
+      "description": "Returns the number of people currently browsing a website in real time.",
+      "id": "get_active_visitors",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "umamiCommon.websiteDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Active Visitors",
+      "source_path": "umami/src/lib/actions/get-active-visitors.ts",
+      "source_sha256": "0083888222161f8e1300847876018fc4b345b1c48a17b16f307f53eb6c9db31d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/actions/get-active-visitors.ts"
+    },
+    {
+      "description": "Returns pageview and session counts over time, broken down by hour, day, week, month, or year.",
+      "id": "get_pageviews",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "umamiCommon.websiteDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Start Date",
+          "name": "startDate",
+          "required": null,
+          "source_expression": "umamiCommon.dateRange.startDate",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "End Date",
+          "name": "endDate",
+          "required": null,
+          "source_expression": "umamiCommon.dateRange.endDate",
+          "type": "ProviderField"
+        },
+        {
+          "description": "How to bucket the results over time.",
+          "label": "Group By",
+          "name": "unit",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Timezone for date grouping, e.g. Europe/Paris or America/New_York. Defaults to UTC.",
+          "label": "Timezone",
+          "name": "timezone",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Pageviews",
+      "source_path": "umami/src/lib/actions/get-pageviews.ts",
+      "source_sha256": "2d0413360c0acb128328a907c7dde4bbb0d270fe03bf7cf3b5a4a67334276230",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/actions/get-pageviews.ts"
+    },
+    {
+      "description": "Returns a ranked list for a chosen metric category (e.g. top pages, browsers, or countries) over a date range.",
+      "id": "get_website_metrics",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "umamiCommon.websiteDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Start Date",
+          "name": "startDate",
+          "required": null,
+          "source_expression": "umamiCommon.dateRange.startDate",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "End Date",
+          "name": "endDate",
+          "required": null,
+          "source_expression": "umamiCommon.dateRange.endDate",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Which metric to rank results by.",
+          "label": "Metric",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Maximum number of results to return.",
+          "label": "Max Results",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Website Metrics",
+      "source_path": "umami/src/lib/actions/get-website-metrics.ts",
+      "source_sha256": "5d0289683b567da4cf53446930e150492c5afcab88f4bd1757af1c7d91e61a42",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/actions/get-website-metrics.ts"
+    },
+    {
+      "description": "Returns a summary of visitors, pageviews, bounce rate, and average visit duration for a date range.",
+      "id": "get_website_stats",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "umamiCommon.websiteDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Start Date",
+          "name": "startDate",
+          "required": null,
+          "source_expression": "umamiCommon.dateRange.startDate",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "End Date",
+          "name": "endDate",
+          "required": null,
+          "source_expression": "umamiCommon.dateRange.endDate",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Website Stats",
+      "source_path": "umami/src/lib/actions/get-website-stats.ts",
+      "source_sha256": "d52e46f40a8ef8f4ad139621108feedecd9fd6f1a120af2b3c3f1a157abfd0a6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/actions/get-website-stats.ts"
+    },
+    {
+      "description": "Returns all websites tracked in your Umami account.",
+      "id": "list_websites",
+      "inputs": [
+        {
+          "description": "Maximum number of websites to return.",
+          "label": "Max Results",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Websites",
+      "source_path": "umami/src/lib/actions/list-websites.ts",
+      "source_sha256": "28c6e9c85badef8c8447fe2cb6c4bbfdb904b78b7f2926e89537256be1072173",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/actions/list-websites.ts"
+    },
+    {
+      "description": "Records a custom event or pageview on a website. Leave the event name blank to track a plain pageview.",
+      "id": "send_event",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Website Id",
+          "name": "websiteId",
+          "required": null,
+          "source_expression": "umamiCommon.websiteDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Path of the page to record, e.g. /pricing.",
+          "label": "Page Path",
+          "name": "url",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Name of the custom event, e.g. signup-button-click. Leave blank to record a pageview.",
+          "label": "Event Name",
+          "name": "eventName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Extra key-value pairs to attach to the event.",
+          "label": "Event Properties",
+          "name": "eventData",
+          "required": false,
+          "type": "Object"
+        },
+        {
+          "description": "URL the visitor came from.",
+          "label": "Referrer",
+          "name": "referrer",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Title of the page being recorded.",
+          "label": "Page Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Send Event",
+      "source_path": "umami/src/lib/actions/send-event.ts",
+      "source_sha256": "3fa69cf68f87aed78fecb3107ef3dad743c93b0a0e59f977548df36725643ba0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/actions/send-event.ts"
+    },
+    {
+      "description": "Triggers when a new custom event is recorded on a website.",
+      "id": "new_event",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Event",
+      "source_path": "umami/src/lib/triggers/new-event.ts",
+      "source_sha256": "d8935773a9347b27c2fa249f894e5f43fdb6f528cafaecd695d4b7f807bcb5ad",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/triggers/new-event.ts"
+    },
+    {
+      "description": "Triggers when a new visitor session is detected on a website.",
+      "id": "new_session",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Session",
+      "source_path": "umami/src/lib/triggers/new-session.ts",
+      "source_sha256": "e43e6dd40db96ce2c9859ec66c6c15736ae3c3d184f5a458ebb0e3bf07ceb024",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/umami/src/lib/triggers/new-session.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "cb02d18d08aa89b86b7ab8fd08062c773733d2ed",
+    "index_path": "umami/src/index.ts",
+    "index_sha256": "87207b9905fbf224c4a35c0246eb29d61603ea83e28b14922e7b84f71806fd90",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

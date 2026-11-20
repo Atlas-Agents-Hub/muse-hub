@@ -1,0 +1,101 @@
+{
+  "allowed_hosts": [
+    "account.box.com",
+    "api.box.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://account.box.com/api/oauth2/authorize"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "manage_webhook",
+      "root_readonly",
+      "root_readwrite"
+    ],
+    "token_urls": [
+      "https://api.box.com/oauth2/token"
+    ]
+  },
+  "category": "Notes & docs",
+  "id": "box",
+  "name": "Box",
+  "operations": [
+    {
+      "description": "Triggers when a comment is created",
+      "id": "new_comment",
+      "inputs": [
+        {
+          "description": "The ID of the item to trigger a webhook",
+          "label": "File/Folder ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The type of the item to trigger a webhook",
+          "label": "Item Type",
+          "name": "type",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Comment",
+      "source_path": "box/src/lib/triggers/new-comment.ts",
+      "source_sha256": "4685918ec76da6d5245373470f4dd32a399d059eb13f3b0d4efed5a0077536ae",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/box/src/lib/triggers/new-comment.ts"
+    },
+    {
+      "description": "Triggers when a file is uploaded",
+      "id": "new_file",
+      "inputs": [
+        {
+          "description": "The ID of the folder in which file uploads will trigger this webhook",
+          "label": "Folder ID",
+          "name": "folder",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New File",
+      "source_path": "box/src/lib/triggers/new-file.ts",
+      "source_sha256": "41f9fdea5d1dbf5788955d0b885a5f6c81b110de64d3356855ee4576a9a8f6fd",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/box/src/lib/triggers/new-file.ts"
+    },
+    {
+      "description": "Triggers when a folder is created",
+      "id": "new_folder",
+      "inputs": [
+        {
+          "description": "The ID of the folder in which file uploads will trigger this webhook",
+          "label": "Folder ID",
+          "name": "folder",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Folder",
+      "source_path": "box/src/lib/triggers/new-folder.ts",
+      "source_sha256": "a798d7ccdffc104516ccc65f84bd44914cfc152b7d756883cfd25437e57d7c11",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/box/src/lib/triggers/new-folder.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "0bb9592803bf0b945bcac37e559ecb911690f90c",
+    "index_path": "box/src/index.ts",
+    "index_sha256": "eb176ae395c5d7ea6cba46e9ac947d0406469e6eb1ee7b9440752f9903380f49",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "research-evaluator",
+    "learning-coach"
+  ]
+}

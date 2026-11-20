@@ -1,0 +1,508 @@
+{
+  "allowed_hosts": [
+    "api.lokalise.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Translation",
+  "id": "lokalise",
+  "name": "Lokalise",
+  "operations": [
+    {
+      "description": "Create one or more keys in your Lokalise project",
+      "id": "createKey",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The name/identifier for the key (e.g., \"index.welcome\")",
+          "label": "Key Name",
+          "name": "keyName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional description for the key",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Select the platforms this key applies to",
+          "label": "Platforms",
+          "name": "platforms",
+          "required": true,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Comma-separated tags for the key (e.g., \"urgent,ui\")",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Whether to run automations on the new key translations",
+          "label": "Use Automations",
+          "name": "useAutomations",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Key",
+      "source_path": "lokalise/src/lib/actions/create-key.ts",
+      "source_sha256": "e80b26a5dc8dc7a04b16d482b09ce134322ba3b76f5ff0ae2268798b3f04b392",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/actions/create-key.ts"
+    },
+    {
+      "description": "Create a new task in your Lokalise project",
+      "id": "createTask",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Title of the task",
+          "label": "Task Title",
+          "name": "taskTitle",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Brief task description. Used as instructions for AI in automatic_translation and lqa_by_ai task types",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Type of the task",
+          "label": "Task Type",
+          "name": "taskType",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Comma-separated list of key IDs to include in the task (required unless parent_task_id is specified)",
+          "label": "Key",
+          "name": "keys",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Comma-separated language ISO codes for the task (e.g., \"fr,de,es\")",
+          "label": "Languages",
+          "name": "languages",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "Source language code for the task",
+          "label": "Source Language ISO",
+          "name": "sourceLanguageIso",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Due date in format: Y-m-d H:i:s (e.g., \"2024-12-31 23:59:59\")",
+          "label": "Due Date",
+          "name": "dueDate",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether languages should be closed automatically upon completion. Default is true",
+          "label": "Auto Close Languages",
+          "name": "autoCloseLanguages",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether the task should be automatically closed upon all language completion. Default is true",
+          "label": "Auto Close Task",
+          "name": "autoCloseTask",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Comma-separated tags to be added to keys when task is closed",
+          "label": "Closing Tags",
+          "name": "closingTags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "If set to true, will lock translations for non-assigned project members",
+          "label": "Lock Translations",
+          "name": "doLockTranslations",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Mark translations as verified. Only for automatic_translation tasks. Default is true",
+          "label": "Mark Verified",
+          "name": "markVerified",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Save AI translations to Translation Memory. Only for automatic_translation tasks",
+          "label": "Save AI Translation to TM",
+          "name": "saveAiTranslationToTm",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Apply 100% translation memory matches. Only for automatic_translation tasks",
+          "label": "Apply AI TM 100% Matches",
+          "name": "applyAiTm100Matches",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "lokalise/src/lib/actions/create-task.ts",
+      "source_sha256": "8b46b7f40b557e80bb5dd265049151985e8958a8b977d5921af0d35253dc1982",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Delete a key from your Lokalise project (software and marketing projects only)",
+      "id": "deleteKey",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Key Id",
+          "name": "keyId",
+          "required": null,
+          "source_expression": "keyIdProp",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Key",
+      "source_path": "lokalise/src/lib/actions/delete-key.ts",
+      "source_sha256": "273717ea99eb209513239d8a744a4448dab9fb5d30aef2e62821b61b74eb2fac",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/actions/delete-key.ts"
+    },
+    {
+      "description": "Retrieve a specific comment on a key in your Lokalise project",
+      "id": "retrieveAComment",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Key Id",
+          "name": "keyId",
+          "required": null,
+          "source_expression": "keyIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Unique identifier of the comment",
+          "label": "Comment ID",
+          "name": "commentId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Retrieve a comment",
+      "source_path": "lokalise/src/lib/actions/retrieve-a-comment.ts",
+      "source_sha256": "b73220062b489d3a22407782f50a2b317feaa9f60deb94b4940c24464d90b7a9",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/actions/retrieve-a-comment.ts"
+    },
+    {
+      "description": "Retrieve detailed information about a specific key in your Lokalise project",
+      "id": "retrieveAKey",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Key Id",
+          "name": "keyId",
+          "required": null,
+          "source_expression": "keyIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Disable key references in the response",
+          "label": "Disable References",
+          "name": "disableReferences",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Retrieve a key",
+      "source_path": "lokalise/src/lib/actions/retrieve-a-key.ts",
+      "source_sha256": "ab89da86116980768cfa1de492a34c2ae7b50dab084314ec2235150fec1a1911",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/actions/retrieve-a-key.ts"
+    },
+    {
+      "description": "Retrieve detailed information about a Lokalise project",
+      "id": "retrieveAProject",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Retrieve a project",
+      "source_path": "lokalise/src/lib/actions/retrieve-a-project.ts",
+      "source_sha256": "3bb18418cdd9ac477c8117e9f70c6131c031fccc1b88cb018b3bcafd7deb3ba5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/actions/retrieve-a-project.ts"
+    },
+    {
+      "description": "Retrieve a specific translation from your Lokalise project",
+      "id": "retrieveTranslation",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Unique translation identifier",
+          "label": "Translation ID",
+          "name": "translationId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Disable key references in the translation",
+          "label": "Disable References",
+          "name": "disableReferences",
+          "required": false,
+          "type": "Checkbox"
+        }
+      ],
+      "kind": "action",
+      "name": "Retrieve Translation",
+      "source_path": "lokalise/src/lib/actions/retrieve-translation.ts",
+      "source_sha256": "e8e811d0a893eaf60b0695e3194d21879222b86f222623b3c8781e284192f6e4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/actions/retrieve-translation.ts"
+    },
+    {
+      "description": "Update properties of a key in your Lokalise project",
+      "id": "updateKey",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Key Id",
+          "name": "keyId",
+          "required": null,
+          "source_expression": "keyIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Key identifier (or JSON with ios, android, web, other for per-platform names)",
+          "label": "Key Name",
+          "name": "keyName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Description of the key",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "List of platforms enabled for this key",
+          "label": "Platforms",
+          "name": "platforms",
+          "required": false,
+          "type": "StaticMultiSelectDropdown"
+        },
+        {
+          "description": "Comma-separated tags for the key",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Enable to merge specified tags with current tags",
+          "label": "Merge Tags",
+          "name": "mergeTags",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether this key is plural",
+          "label": "Is Plural",
+          "name": "isPlural",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Optional custom plural name",
+          "label": "Plural Name",
+          "name": "pluralName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether this key is hidden from non-admins",
+          "label": "Is Hidden",
+          "name": "isHidden",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Whether this key is archived",
+          "label": "Is Archived",
+          "name": "isArchived",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Optional context of the key (used with some file formats)",
+          "label": "Context",
+          "name": "context",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum allowed number of characters in translations",
+          "label": "Character Limit",
+          "name": "charLimit",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Key",
+      "source_path": "lokalise/src/lib/actions/update-key.ts",
+      "source_sha256": "7e352332e447f515c092f274c4b403939deaf09a06a2181b89b21d7dacd64e8a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/actions/update-key.ts"
+    },
+    {
+      "description": "Trigger when a new key is added to your Lokalise project",
+      "id": "keyAdded",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Key Added",
+      "source_path": "lokalise/src/lib/triggers/key-added.ts",
+      "source_sha256": "f2ab0086c1279be3e4067b90ad155eda27e43f689129c6001a91e6d83f7bad31",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/triggers/key-added.ts"
+    },
+    {
+      "description": "Trigger when a key is updated in your Lokalise project",
+      "id": "keyUpdated",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Key Updated",
+      "source_path": "lokalise/src/lib/triggers/key-updated.ts",
+      "source_sha256": "0a34681e50810f0ef970a0a00991286029c8f12f279738d357c2f79216f8ad23",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/triggers/key-updated.ts"
+    },
+    {
+      "description": "Trigger when a translation is updated in your Lokalise project",
+      "id": "translationUpdated",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Project Id",
+          "name": "projectId",
+          "required": null,
+          "source_expression": "projectDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "Translation Updated",
+      "source_path": "lokalise/src/lib/triggers/translation-updated.ts",
+      "source_sha256": "9eacf4b4d8753a370f98c995089081fdee22afd83914fb8c6b783dfaf6a0eba2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/lokalise/src/lib/triggers/translation-updated.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "d6278e7e1f9c3fcf7030b43621cd22a045995a6d",
+    "index_path": "lokalise/src/index.ts",
+    "index_sha256": "04d418e2b0c0aabc1ba1e20699a0ab11ebbe98a02c86566028742dcf9b9a4bff",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "learning-coach"
+  ]
+}

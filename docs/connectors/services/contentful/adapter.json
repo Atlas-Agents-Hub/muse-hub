@@ -1,0 +1,83 @@
+{
+  "allowed_hosts": [
+    "api.contentful.com",
+    "www.contentful.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "",
+        "label": "Contentful Access Token",
+        "name": "apiKey",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Space",
+        "name": "space",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Environment",
+        "name": "environment",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "Provider connection fields",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Blogging",
+  "id": "contentful",
+  "name": "Contentful",
+  "operations": [
+    {
+      "description": "Creates a new Contentful record for a given Content Model",
+      "id": "contentful_record_create",
+      "inputs": [],
+      "kind": "action",
+      "name": "Create Record",
+      "source_path": "contentful/src/lib/actions/records/create-record.ts",
+      "source_sha256": "69c3028715cead16c3af517e325511c8e7f22aace184a2a8addd943ab08762fa",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/contentful/src/lib/actions/records/create-record.ts"
+    },
+    {
+      "description": "Gets a Contentful record for a given Content Model",
+      "id": "contentful_record_get",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Record",
+      "source_path": "contentful/src/lib/actions/records/get-record.ts",
+      "source_sha256": "aab770a4b8b58e71063e7e954a387b272a3d0cfbe67ca5aa2e26fd44cf1c7f92",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/contentful/src/lib/actions/records/get-record.ts"
+    },
+    {
+      "description": "Searches for records of a given Content Model",
+      "id": "contentful_record_search",
+      "inputs": [],
+      "kind": "action",
+      "name": "Search Records",
+      "source_path": "contentful/src/lib/actions/records/search-records.ts",
+      "source_sha256": "ccd662f0163c8792560f76c2ec7f843a892e75ba2e4cdbe996cebf8aa3b8122c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/contentful/src/lib/actions/records/search-records.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "00daf7ea191e53f90fe76db58fa5f20684eebc3e",
+    "index_path": "contentful/src/index.ts",
+    "index_sha256": "972809cbd02ce7f8216e3ab97977fe1d059c1777f281b1953e46f1708b318de0",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "product-interface-designer",
+    "coordinator"
+  ]
+}

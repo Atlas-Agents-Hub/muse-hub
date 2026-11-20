@@ -1,0 +1,22 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-bitrix24-chatbot-application-workflow-example-with-webhook-integration-1640ab",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-assignments-1-id": null,
+    "step-2-assignments-1-value": null,
+    "step-2-assignments-4-id": null,
+    "step-2-assignments-4-value": null,
+    "step-8-parameters-7-value": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

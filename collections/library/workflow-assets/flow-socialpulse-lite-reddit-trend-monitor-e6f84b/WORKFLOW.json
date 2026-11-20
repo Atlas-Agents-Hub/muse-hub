@@ -1,0 +1,210 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-socialpulse-lite-reddit-trend-monitor-e6f84b",
+  "title": "SocialPulse Lite - Reddit Trend Monitor",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Run Daily (9 AM)",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Reddit: Fetch Posts",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "GET",
+        "url": {
+          "expression": "https://www.reddit.com/r/{{ $env.SOCIALPULSE_SUBREDDITS?.split(',')[0]?.trim() || 'SaaS' }}/hot.json?limit=20"
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "SocialPulse/1.0"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Parse & Rank Posts",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "try {\n  const reddit = records[0].json;\n  const posts = (reddit?.data?.children || []).map(c => ({ title: c.data?.title || '', score: c.data?.score || 0, comments: c.data?.num_comments || 0, url: 'https://reddit.com' + (c.data?.permalink || ''), subreddit: c.data?.subreddit || '' })).filter(p => p.score > 3).sort((a,b) => b.score - a.score).slice(0, 15);\n  return [{ json: { totalPosts: posts.length, posts, scannedAt: new Date().toISOString() } }];\n} catch (e) {\n  throw new Error('Failed to parse Reddit data: ' + e.message);\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "AI: Quick Analysis",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-4-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Analyze these Reddit posts. Find 3 trending topics and suggest 2 content ideas. JSON: { \"trends\": [\"topic1\"], \"contentIdeas\": [{ \"idea\": \"...\", \"platform\": \"Twitter\" }], \"sentiment\": \"positive/neutral/negative\" }"
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "Top Reddit posts:\n{{ record.posts.map((p,i) => (i+1) + '. ' + p.title + ' (score:' + p.score + ')').join('\\n') }}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.5,
+          "maxTokens": 800,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Merge Results",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "try {\n  const data = steps[\"step-3\"].records[0];\n  const aiRaw = records[0].json;\n  let ai;\n  try { ai = JSON.parse(aiRaw.message?.content || '{}'); } catch(e) { ai = { trends: [], contentIdeas: [], sentiment: 'unknown' }; }\n  return [{ json: { ...data, analysis: ai } }];\n} catch (e) {\n  throw new Error('Failed to merge: ' + e.message);\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Log to Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "expression": "{{ $env.SOCIALPULSE_SHEET_ID }}"
+        },
+        "sheetName": {
+          "configuration_input": "step-6-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": {
+              "expression": "{{ record.scannedAt }}"
+            },
+            "Posts": {
+              "expression": "{{ record.totalPosts }}"
+            },
+            "Trends": {
+              "expression": "{{ JSON.stringify(record.analysis.trends) }}"
+            },
+            "Content Ideas": {
+              "expression": "{{ JSON.stringify(record.analysis.contentIdeas) }}"
+            },
+            "Sentiment": {
+              "expression": "{{ record.analysis.sentiment }}"
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-6-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/SocialPulse Lite - Reddit Trend Monitor.json",
+    "git_blob": "cd3f1e2c7d393b24bd779274493373733d6dd9df",
+    "sha256": "d352f9783db2df4f02393335cf2fb0828c54017b6e6b7112dd7838d8d8e297f5",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/SocialPulse%20Lite%20-%20Reddit%20Trend%20Monitor.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

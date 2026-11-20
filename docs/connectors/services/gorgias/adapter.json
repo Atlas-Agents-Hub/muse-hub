@@ -1,0 +1,357 @@
+{
+  "allowed_hosts": [
+    "acme.gorgias.com."
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "Your Gorgias subdomain only, for example `acme` from https://acme.gorgias.com.",
+        "label": "Helpdesk Domain",
+        "name": "domain",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "The email address associated with your Gorgias API key.",
+        "label": "Email Address",
+        "name": "email",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api_Key",
+        "name": "api_key",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', description: 'Your Gorgias API key.', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Support",
+  "id": "gorgias",
+  "name": "Gorgias",
+  "operations": [
+    {
+      "description": "Create a reply or message on an existing Gorgias ticket.",
+      "id": "create_gorgias_ticket_message",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Ticket ID",
+          "name": "ticketId",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "True when the sender is an agent/user; false when the sender is a customer.",
+          "label": "From Agent",
+          "name": "fromAgent",
+          "required": true,
+          "type": "Checkbox"
+        },
+        {
+          "description": "User ID when From Agent is true, otherwise Customer ID.",
+          "label": "Sender ID",
+          "name": "senderId",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Customer ID when From Agent is true, otherwise User ID.",
+          "label": "Receiver ID",
+          "name": "receiverId",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "Email or channel address of the sender.",
+          "label": "From Address",
+          "name": "fromAddress",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Email or channel address of the receiver.",
+          "label": "To Address",
+          "name": "toAddress",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Message body. HTML is accepted by the API.",
+          "label": "Message",
+          "name": "message",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Channel",
+          "name": "channel",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Via",
+          "name": "via",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Optional ISO-8601 timestamp for when the message was sent.",
+          "label": "Sent Datetime",
+          "name": "sentDatetime",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Message",
+      "source_path": "gorgias/src/lib/actions/create-message.ts",
+      "source_sha256": "af56e51f905df4b0208e8f8d28b285035f83b42fb84eedeaec14c2be5ee83a02",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gorgias/src/lib/actions/create-message.ts"
+    },
+    {
+      "description": "Create a new Gorgias ticket with an initial message.",
+      "id": "create_gorgias_ticket",
+      "inputs": [
+        {
+          "description": "The sender address for the initial message, typically the customer email.",
+          "label": "From Address",
+          "name": "fromAddress",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The recipient address for the initial message.",
+          "label": "To Address",
+          "name": "toAddress",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Initial ticket message. HTML is accepted by the API.",
+          "label": "Message",
+          "name": "message",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Channel",
+          "name": "channel",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "How the message reached Gorgias.",
+          "label": "Via",
+          "name": "via",
+          "required": true,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Ticket",
+      "source_path": "gorgias/src/lib/actions/create-ticket.ts",
+      "source_sha256": "875b9a1ddfc45b7d7b55eb6150720d2b24b7b9148a511dccf3cd7f2bbc1669a0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gorgias/src/lib/actions/create-ticket.ts"
+    },
+    {
+      "description": "Retrieve a Gorgias customer by ID or find one by email.",
+      "id": "get_gorgias_customer",
+      "inputs": [
+        {
+          "description": "Use this when you already know the customer ID.",
+          "label": "Customer ID",
+          "name": "customerId",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "If Customer ID is not provided, search customers by email using Gorgias server-side filtering.",
+          "label": "Email",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Customer",
+      "source_path": "gorgias/src/lib/actions/get-customer.ts",
+      "source_sha256": "1257b07a0710d06fe97044e46c47573a0ab30018e04cae6bdcff2a3d05e7fcbb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gorgias/src/lib/actions/get-customer.ts"
+    },
+    {
+      "description": "Retrieve a Gorgias ticket by ID.",
+      "id": "get_gorgias_ticket",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Ticket ID",
+          "name": "ticketId",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Ticket",
+      "source_path": "gorgias/src/lib/actions/get-ticket.ts",
+      "source_sha256": "db11f09d95d79def96b6129b67f3e5276edb64d8542513bbc0cfb466a915b94f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gorgias/src/lib/actions/get-ticket.ts"
+    },
+    {
+      "description": "List Gorgias tickets with cursor-based pagination support.",
+      "id": "list_gorgias_tickets",
+      "inputs": [
+        {
+          "description": "Optional customer ID to filter tickets for one customer.",
+          "label": "Customer ID",
+          "name": "customerId",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Optional cursor returned by a previous list response.",
+          "label": "Cursor",
+          "name": "cursor",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Maximum number of tickets to return in this page. Defaults to 25.",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Optional ordering, for example `created_datetime:desc`.",
+          "label": "Order By",
+          "name": "orderBy",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "List Tickets",
+      "source_path": "gorgias/src/lib/actions/list-tickets.ts",
+      "source_sha256": "363d2566db2449f22adf22fefdde116a5b06dbe99941c25a6619ac31697a48ea",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gorgias/src/lib/actions/list-tickets.ts"
+    },
+    {
+      "description": "Update a Gorgias ticket.",
+      "id": "update_gorgias_ticket",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Ticket ID",
+          "name": "ticketId",
+          "required": true,
+          "type": "Number"
+        },
+        {
+          "description": "",
+          "label": "Subject",
+          "name": "subject",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Channel",
+          "name": "channel",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Optional customer ID to attach to the ticket.",
+          "label": "Customer ID",
+          "name": "customerId",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Optional customer email to attach alongside the customer ID.",
+          "label": "Customer Email",
+          "name": "customerEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether the first message of the ticket was sent by your company.",
+          "label": "From Agent",
+          "name": "fromAgent",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Is Unread",
+          "name": "isUnread",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Spam",
+          "name": "spam",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "External ID",
+          "name": "externalId",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Ticket",
+      "source_path": "gorgias/src/lib/actions/update-ticket.ts",
+      "source_sha256": "621d64e0a0940fd9d6eaed544643e48c61987ec5b3e4f912bb89c62766b4bab4",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/gorgias/src/lib/actions/update-ticket.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "449506d6d2ddda10b5c1347156313b6fd194482b",
+    "index_path": "gorgias/src/index.ts",
+    "index_sha256": "7fa476ce3f472ef2a5e7bd3f68f97702057459eac9dce63f52aaabe45f9630e6",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

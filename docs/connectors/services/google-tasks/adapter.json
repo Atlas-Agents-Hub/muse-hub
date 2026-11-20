@@ -1,0 +1,430 @@
+{
+  "allowed_hosts": [
+    "accounts.google.com",
+    "developers.google.com",
+    "oauth2.googleapis.com",
+    "tasks.google.com",
+    "tasks.googleapis.com",
+    "www.googleapis.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://accounts.google.com/o/oauth2/auth"
+    ],
+    "fields": [],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "email",
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "token_urls": [
+      "https://oauth2.googleapis.com/token"
+    ]
+  },
+  "category": "Scheduling",
+  "id": "google-tasks",
+  "name": "Google Tasks",
+  "operations": [
+    {
+      "description": "Add a new task to a specified task list",
+      "id": "add_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tasks_List",
+          "name": "tasks_list",
+          "required": null,
+          "source_expression": "googleTasksCommon.tasksList",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": null,
+          "source_expression": "googleTasksCommon.title",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Notes",
+          "name": "notes",
+          "required": null,
+          "source_expression": "googleTasksCommon.notes",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Due",
+          "name": "due",
+          "required": null,
+          "source_expression": "googleTasksCommon.due",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Completed",
+          "name": "completed",
+          "required": null,
+          "source_expression": "googleTasksCommon.completed",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Task",
+      "source_path": "google-tasks/src/lib/actions/new-task.ts",
+      "source_sha256": "9a76c039a1f7858dbcf112e8a53d115385ec9e24a2da25de0db6d9205312afe5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/actions/new-task.ts"
+    },
+    {
+      "description": "Create a new task in a task list, optionally as a subtask and/or positioned after a sibling.",
+      "id": "create_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tasks_List",
+          "name": "tasks_list",
+          "required": null,
+          "source_expression": "googleTasksCommon.tasksList",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": null,
+          "source_expression": "googleTasksCommon.title",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Notes",
+          "name": "notes",
+          "required": null,
+          "source_expression": "googleTasksCommon.notes",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Due_Date",
+          "name": "due_date",
+          "required": null,
+          "source_expression": "googleTasksCommon.due",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Make this a subtask of the task with this id (must be in the same list). Obtain the id from Find Tasks. Omit to create a top-level task.",
+          "label": "Parent Task ID",
+          "name": "parent_task_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Place the new task immediately after the sibling with this id. Obtain the id from Find Tasks. Omit to place it first among its siblings.",
+          "label": "Previous Task ID",
+          "name": "previous_task_id",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "google-tasks/src/lib/actions/create-task.ts",
+      "source_sha256": "ed807e2a6a6a690161a7967510e172773ad2b53ec4caa0ace4ab35af4cc7497a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/actions/create-task.ts"
+    },
+    {
+      "description": "Permanently delete a task by ID.",
+      "id": "delete_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tasks_List",
+          "name": "tasks_list",
+          "required": null,
+          "source_expression": "googleTasksCommon.tasksList",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The ID of the task to delete. Obtain the id from Find Tasks.",
+          "label": "Task ID",
+          "name": "task_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Task",
+      "source_path": "google-tasks/src/lib/actions/delete-task.ts",
+      "source_sha256": "a68c847e01485e5172b735e3deb4aaec4cd547d4199317d7cce08bb48f7f2f3c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/actions/delete-task.ts"
+    },
+    {
+      "description": "Search and list tasks in a task list with optional date-range and status filters.",
+      "id": "find_tasks",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tasks_List",
+          "name": "tasks_list",
+          "required": null,
+          "source_expression": "googleTasksCommon.tasksList",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Include completed tasks in results. Defaults to true.",
+          "label": "Show Completed",
+          "name": "show_completed",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Include hidden tasks (tasks that have been completed and a day has passed). Defaults to false.",
+          "label": "Show Hidden",
+          "name": "show_hidden",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Return tasks due on or after this date. RFC 3339 timestamp, e.g. 2026-06-01T00:00:00Z.",
+          "label": "Due Date From",
+          "name": "due_min",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Return tasks due before this date (exclusive). RFC 3339 timestamp, e.g. 2026-07-01T00:00:00Z.",
+          "label": "Due Date To",
+          "name": "due_max",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Return tasks completed on or after this date. RFC 3339 timestamp.",
+          "label": "Completed Date From",
+          "name": "completed_min",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Return tasks completed before this date (exclusive). RFC 3339 timestamp.",
+          "label": "Completed Date To",
+          "name": "completed_max",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Return tasks last modified on or after this date. Useful for \"since last run\" incremental reads. RFC 3339 timestamp.",
+          "label": "Updated Since",
+          "name": "updated_min",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Maximum number of tasks to return (1–100). Defaults to 20 when omitted.",
+          "label": "Max Results",
+          "name": "max_results",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Tasks",
+      "source_path": "google-tasks/src/lib/actions/find-tasks.ts",
+      "source_sha256": "1128ce1b2fe28ab0f2786545562b22219192800252dea4a6c098172453bb9757",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/actions/find-tasks.ts"
+    },
+    {
+      "description": "Fetch a single task by its ID.",
+      "id": "get_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tasks_List",
+          "name": "tasks_list",
+          "required": null,
+          "source_expression": "googleTasksCommon.tasksList",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The ID of the task to fetch. Obtain the id from Find Tasks.",
+          "label": "Task ID",
+          "name": "task_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Task",
+      "source_path": "google-tasks/src/lib/actions/get-task.ts",
+      "source_sha256": "69f80ae4c02e2ec1cb91272717df13d92590cf33294a2e2a5952a32090ae739f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/actions/get-task.ts"
+    },
+    {
+      "description": "List the authenticated user's task lists (id and title).",
+      "id": "list_task_lists",
+      "inputs": [
+        {
+          "description": "Maximum number of task lists to return (1–100). Defaults to 20 when omitted.",
+          "label": "Max Results",
+          "name": "max_results",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Task Lists",
+      "source_path": "google-tasks/src/lib/actions/list-task-lists.ts",
+      "source_sha256": "a46005b1736b710e6f01bfa142fad354d530200b92e3aa95f87f0a9a74743549",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/actions/list-task-lists.ts"
+    },
+    {
+      "description": "Reposition or reparent a task within its list, or move it to another list.",
+      "id": "move_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tasks_List",
+          "name": "tasks_list",
+          "required": null,
+          "source_expression": "googleTasksCommon.tasksList",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The ID of the task to move. Obtain the id from Find Tasks.",
+          "label": "Task ID",
+          "name": "task_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Reparent the task under the task with this id (must be in the destination list). Obtain the id from Find Tasks. Omit to move it to the top level.",
+          "label": "Parent Task ID",
+          "name": "parent_task_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Place the task immediately after the sibling with this id (must be in the destination list). Obtain the id from Find Tasks. Omit to place it first among its siblings; to move it to the end, pass the last sibling's id (read the current order with Find Tasks).",
+          "label": "Previous Task ID",
+          "name": "previous_task_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Move the task to this task list. Omit to keep it in the current list. Recurring tasks cannot be moved between lists.",
+          "label": "Destination Task List ID",
+          "name": "destination_tasklist_id",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Move Task",
+      "source_path": "google-tasks/src/lib/actions/move-task.ts",
+      "source_sha256": "3f4e4382631de99192db67819657e712939c69a4b8f91d475064ee3fb667eceb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/actions/move-task.ts"
+    },
+    {
+      "description": "Edit an existing task — title, notes, due date, or status.",
+      "id": "update_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tasks_List",
+          "name": "tasks_list",
+          "required": null,
+          "source_expression": "googleTasksCommon.tasksList",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The ID of the task to update. Obtain the id from Find Tasks.",
+          "label": "Task ID",
+          "name": "task_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "New title for the task.",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "New notes / description for the task.",
+          "label": "Notes",
+          "name": "notes",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "New due date for the task. RFC 3339 timestamp, e.g. 2026-07-15T00:00:00Z.",
+          "label": "Due Date",
+          "name": "due",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Task status. To simply complete a task prefer Mark Task Complete; set needsAction here to reopen a completed task.",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Task",
+      "source_path": "google-tasks/src/lib/actions/update-task.ts",
+      "source_sha256": "3b4a199f84556a322f2d9392c79d13fd029a5cc4a5debede7bac6211e8cd4b63",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/actions/update-task.ts"
+    },
+    {
+      "description": "Triggers when a task is added to a list, or also when one is edited if you choose New and edited tasks.",
+      "id": "new_task",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Tasks_List",
+          "name": "tasks_list",
+          "required": null,
+          "source_expression": "googleTasksCommon.tasksList",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Run_On",
+          "name": "run_on",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<string",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Info",
+          "name": "info",
+          "required": false,
+          "type": "MarkDown"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Task",
+      "source_path": "google-tasks/src/lib/triggers/new-task.ts",
+      "source_sha256": "4ae542507d1e7f2970b58932e3ab342f1ccada8e5201d06f7cc27052da775fa1",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/google-tasks/src/lib/triggers/new-task.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "4556fbc257832ffd097be81b182d034ada618a6e",
+    "index_path": "google-tasks/src/index.ts",
+    "index_sha256": "93357a54bc43ad6fc82966c17f173a575652451bb66244d420d65d8899572d7b",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

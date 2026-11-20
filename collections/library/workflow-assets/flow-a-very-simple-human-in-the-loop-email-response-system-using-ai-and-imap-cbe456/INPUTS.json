@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-a-very-simple-human-in-the-loop-email-response-system-using-ai-and-imap-cbe456",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-7-toemail": null,
+    "step-7-fromemail": null
+  },
+  "adapters": {
+    "emailreadimap": {
+      "connection": null
+    },
+    "emailsend": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

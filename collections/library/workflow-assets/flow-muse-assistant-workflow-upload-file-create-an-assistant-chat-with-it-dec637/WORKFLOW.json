@@ -1,0 +1,101 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-muse-assistant-workflow-upload-file-create-an-assistant-chat-with-it-dec637",
+  "title": "OpenAI Assistant workflow upload file, create an Assistant, chat with it!",
+  "nodes": [
+    {
+      "id": "step-2",
+      "label": "Get File",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "configuration_input": "step-2-fileid"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          }
+        },
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Chat Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI Assistant",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "resource": "assistant",
+        "assistantId": {
+          "configuration_input": "step-4-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Upload File to OpenAI",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {
+          "purpose": "assistants"
+        },
+        "resource": "file"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-fileid",
+      "purpose": "Select the fileId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-assistantid",
+      "purpose": "Select the assistantId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/OpenAI Assistant workflow_ upload file, create an Assistant, chat with it!.json",
+    "git_blob": "35095fc014b900969589ec6956418d7becb5540b",
+    "sha256": "555472158d62cbc4b7258eb22ef0b591bb205dcfe5bdb9e04f267d6c133580cc",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/OpenAI%20Assistant%20workflow_%20upload%20file%2C%20create%20an%20Assistant%2C%20chat%20with%20it%21.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

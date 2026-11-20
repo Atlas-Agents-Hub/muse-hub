@@ -1,0 +1,306 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-create-dynamic-twitter-profile-banner-202468",
+  "title": "Create dynamic Twitter profile banner",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On clicking 'execute'",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Fetch new followers",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Item Lists",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "data"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Function",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "functionCode": {
+          "language": "javascript",
+          "reference": "const binary = {};\nfor (let i=0; i < items.length; i++) {\n binary[`data${i}`] = items[i].binary.avatar;\n}\n\nreturn [\n {\n json: {\n numIcons: items.length,\n },\n binary,\n }\n];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "mergeByIndex"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Fetching images",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "{{record[\"profile_image_url\"].replace('normal','400x400')}}"
+        },
+        "options": {},
+        "responseFormat": "file",
+        "dataPropertyName": "avatar"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Fetch bg",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": "{TEMPLATE_IMAGE_URL}",
+        "options": {},
+        "responseFormat": "file",
+        "dataPropertyName": "bg"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Resize",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "width": 200,
+        "height": 200,
+        "options": {},
+        "operation": "resize",
+        "dataPropertyName": "avatar"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Crop",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "format": "png"
+        },
+        "operation": "multiStep",
+        "operations": {
+          "operations": [
+            {
+              "width": 200,
+              "height": 200,
+              "operation": "create",
+              "backgroundColor": "#000000ff"
+            },
+            {
+              "color": "#ffffff00",
+              "operation": "draw",
+              "primitive": "circle",
+              "endPositionX": 25,
+              "endPositionY": 50,
+              "startPositionX": 100,
+              "startPositionY": 100
+            },
+            {
+              "operator": "In",
+              "operation": "composite",
+              "dataPropertyNameComposite": "avatar"
+            }
+          ]
+        },
+        "dataPropertyName": "avatar"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Edit Image",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "multiStep",
+        "operations": {
+          "operations": [
+            {
+              "operation": "composite",
+              "positionX": 1000,
+              "positionY": 375,
+              "dataPropertyNameComposite": "data0"
+            },
+            {
+              "operation": "composite",
+              "positionX": 1100,
+              "positionY": 375,
+              "dataPropertyNameComposite": "data1"
+            },
+            {
+              "operation": "composite",
+              "positionX": 1200,
+              "positionY": 375,
+              "dataPropertyNameComposite": "data2"
+            }
+          ]
+        },
+        "dataPropertyName": "bg"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Resize1",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "width": 75,
+        "height": 75,
+        "options": {},
+        "operation": "resize",
+        "dataPropertyName": "avatar"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-12-url"
+        },
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "sendBinaryData": true,
+        "binaryPropertyName": "banner:bg"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-10",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.twitter.com/2/users/{YOUR_USER_ID}/followers?user.fields={value}&max_results={value}"
+    },
+    {
+      "id": "step-12-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.twitter.com/1.1/account/{resource}.json"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/Create dynamic Twitter profile banner.json",
+    "git_blob": "a1193ed241a235ec3472dcf3f6f8432dc8b23b5b",
+    "sha256": "2cf30945ea0f028be618af5cce963264a69a76c78111120b3cfee48ee4871367",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/Create%20dynamic%20Twitter%20profile%20banner.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,487 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-muse-examples-muse-dalle-2-whisper-1-5-in-1-6dc990",
+  "title": "OpenAI examples ChatGPT, DALLE-2, Whisper-1 – 5-in-1",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Execute Workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "davinci-003-complete",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "{{ record.text }}\n\nTl;dr:"
+        },
+        "options": {
+          "maxTokens": 500
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "ChatGPT-ex2",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": {
+                "expression": "You are an assistant. Always add 5 emojis to the end of your answer."
+              }
+            },
+            {
+              "content": {
+                "expression": "Write tl;dr of the wollowing text: {{ record.text}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.8
+        },
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "davinci-003-edit",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "input": {
+          "expression": "{{ record.text }}"
+        },
+        "options": {},
+        "operation": "edit",
+        "instruction": "translate to German"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "ChatGPT-ex1.1",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "messages": [
+            {
+              "content": {
+                "expression": "Write a Tl;dr of the followint text: {{ record.text }}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500
+        },
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "ChatGPT-ex1.2",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "messages": [
+            {
+              "content": {
+                "expression": "Translate to German the following text: {{ record.message.content }}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500
+        },
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Text-example",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return [\n {\n \"text\": \"Science Underground with your host, Anissa Ramirez. In this episode, how to stop your bathroom mirror from fogging up with a little dash of science. I'm Anissa Ramirez and this is Science Underground. We've all been there. You come out of the shower and you go to the mirror and you can't see yourself because the mirror is fogged up. You can't see anything until you first clear off the surface. Every morning it's the same thing. Shower, fog, shower, fog, shower, fog. There's gotta be a better way. Well, there is. Before you take the next shower, wipe a bit of shaving cream on the surface of the mirror and keep it there for about 30 seconds. Then wipe it off. The next time you take a shower, that part of the mirror that was covered with shaving cream will be amazingly fog free. And the shaving cream will keep the water from fogging up for a few weeks. So what's going on? Well, the fog on your mirror is made out of little itty bitty water droplets. If you were to look at the surface of the mirror under the microscope, you will see that the surface looks like a newly waxed car. The water forms beads, preventing you from seeing yourself in the mirror. When you add shaving cream to the surface of the mirror, the water droplets are no longer beads. They are a thin, smoothed out layer of water. Just like the surface of an old car that hasn't been waxed. Scientists would say that the shaving cream has changed the surface tension of the mirror. So there you have it. There's the answer. The secret to fogless mirrors is shaving cream. A little dab of science will do you. I'm Anissa Ramirez, and this was Science Underground.\"\n }\n];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Code-ex3.1",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "var intext = records[0].json;\n\nvar messages = [\n {\"role\": \"system\", \"content\": \"You are a helpful assistant. Write a Tl;dr of each user message\"},\n {\"role\": \"user\", \"content\": intext.text}\n];\n\nreturn {\"messages\":messages};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "ChatGPT-ex3.1",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-9-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-3.5-turbo"
+            },
+            {
+              "name": "temperature",
+              "value": {
+                "expression": "{{ parseFloat(0.8) }}"
+              }
+            },
+            {
+              "name": "n",
+              "value": {
+                "expression": "{{ Number(1) }}"
+              }
+            },
+            {
+              "name": "max_tokens",
+              "value": {
+                "expression": "{{ Number(500) }}"
+              }
+            },
+            {
+              "name": "messages",
+              "value": {
+                "expression": "{{ record.messages }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "ChatGPT-ex3.2",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": {
+                "expression": "You are now a DALLE-2 prompt generation tool that will generate a suitable prompt. Write a promt to create a cover image relevant to the user input. The image should be in a comic style of the 60-s."
+              }
+            },
+            {
+              "content": {
+                "expression": "{{ record.choices[0].message.content }}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.8
+        },
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "DALLE-ex3.3",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "{{ record.message.content }}"
+        },
+        "options": {
+          "n": 4,
+          "size": "512x512"
+        },
+        "resource": "image"
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "ChatGPT-ex4",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-12-model"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "content": {
+                "expression": "{{ record.prompt }}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.5
+        },
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Set-ex4",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "model",
+              "value": "code-davinci-002"
+            },
+            {
+              "name": "suffix",
+              "value": "</svg>"
+            },
+            {
+              "name": "prompt",
+              "value": {
+                "expression": "Create an HTML code with and SVG tag that contains random shapes of various colors. Include triangles, lines, ellipses and other shapes"
+              }
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "HTML-ex4",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "html": {
+          "expression": "{{record.message.content }}"
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "ChatGPT-ex",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-15-model"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Act as an e-mail client. Provide a five to eight word answers to a given user messages."
+            },
+            {
+              "content": "Hi There! My name is Jack.\n\nI'm sending you an overview of my pricelist attached.\nCould you please reply to me within 3 days?\n\nBest regards and have a nice day,\nJack"
+            }
+          ]
+        },
+        "options": {
+          "n": 3,
+          "maxTokens": 15,
+          "temperature": 0.8
+        },
+        "resource": "chat"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "LoadMP3",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Whisper-transcribe",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {
+        "bypass": true,
+        "instruction": "Pass the incoming records to the next connected operation."
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-16",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-9-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/chat/completions"
+    },
+    {
+      "id": "step-12-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-15-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/OpenAI examples_ ChatGPT, DALLE-2, Whisper-1 – 5-in-1.json",
+    "git_blob": "218ca72c938d4e336b89b50d38f8b5904f523147",
+    "sha256": "81f4c93d5d3b8781b36ec06e63dd7225448b9b42d189660b8f341b2a6f86c7a9",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/OpenAI%20examples_%20ChatGPT%2C%20DALLE-2%2C%20Whisper-1%20%E2%80%93%205-in-1.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

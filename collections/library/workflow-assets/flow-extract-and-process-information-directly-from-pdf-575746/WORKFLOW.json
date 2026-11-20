@@ -1,0 +1,196 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-extract-and-process-information-directly-from-pdf-575746",
+  "title": "Extract and process information directly from PDF using Claude and Gemini",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking 'Test workflow'",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Extract from File",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "binaryToPropery"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "configuration_input": "step-3-fileid"
+        },
+        "options": {},
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Call Gemini 2.0 Flash with PDF Capabilities",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-4-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"contents\": [\n {\n \"parts\": [\n {\n \"inline_data\": {\n \"mime_type\": \"application/pdf\",\n \"data\": \"{{ record.data }}\"\n }\n },\n {\n \"text\": \"{{ steps[\"step-6\"].record.prompt }}\"\n }\n ]\n }\n ]\n}"
+        },
+        "sendBody": true,
+        "specifyBody": "json"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Call Claude 3.5 Sonnet with PDF Capabilities",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "expression": "{\n \"model\": \"claude-3-5-sonnet-20241022\",\n \"max_tokens\": 1024,\n \"messages\": [{\n \"role\": \"user\",\n \"content\": [{\n \"type\": \"document\",\n \"source\": {\n \"type\": \"base64\",\n \"media_type\": \"application/pdf\",\n \"data\": \"{{record.data}}\"\n }\n },\n {\n \"type\": \"text\",\n \"text\": \"{{ steps[\"step-6\"].record.prompt }}\"\n }]\n }]\n}"
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": {
+                "configuration_input": "step-5-parameters-0-value"
+              }
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Define Prompt",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "prompt",
+              "type": "string",
+              "value": "Extract the VAT numbers for each country"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-fileid",
+      "purpose": "Select the fileId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent"
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.anthropic.com/v1/messages"
+    },
+    {
+      "id": "step-5-parameters-0-value",
+      "purpose": "Provide the contact, recipient, or message content for value.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "PDF_and_Document_Processing/Extract and process information directly from PDF using Claude and Gemini.json",
+    "git_blob": "5430e3727eeba8a32f1c7d1643f40d08db16494a",
+    "sha256": "fb59cf0ce424f0d1e2f310b37cfbbb88e4df950d5be2569f069bce31899ee85a",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/PDF_and_Document_Processing/Extract%20and%20process%20information%20directly%20from%20PDF%20using%20Claude%20and%20Gemini.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

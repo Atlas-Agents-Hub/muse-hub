@@ -1,0 +1,488 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-automatic-background-removal-for-images-in-google-drive-34ede8",
+  "title": "Automatic Background Removal for Images in Google Drive",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Config",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "bg_color",
+              "type": "string",
+              "value": "white"
+            },
+            {
+              "name": "padding",
+              "type": "string",
+              "value": "5%"
+            },
+            {
+              "name": "keepInputSize",
+              "type": "boolean",
+              "value": true
+            },
+            {
+              "name": "outputSize",
+              "type": "string",
+              "value": "1600x1600"
+            },
+            {
+              "name": "inputFileName",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.originalFilename }}"
+              }
+            },
+            {
+              "name": "OutputDriveFolder",
+              "type": "string",
+              "value": "ENTER GOOGLE DRIVE FOLDER URL"
+            },
+            {
+              "id": {
+                "configuration_input": "step-1-assignments-6-id"
+              },
+              "name": "api-key",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-1-assignments-6-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "remove background",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "background.color",
+              "value": {
+                "expression": "{{ record.bg_color }}"
+              }
+            },
+            {
+              "name": "imageFile",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "padding",
+              "value": {
+                "expression": "{{ record.padding }}"
+              }
+            },
+            {
+              "name": "outputSize",
+              "value": {
+                "expression": "{{ record.Geometry }}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": {
+                "configuration_input": "step-2-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {
+          "includeBinary": true
+        },
+        "fieldToSplitOut": "Geometry"
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Upload Picture to Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "name": {
+          "expression": "BG-Removed-{{record.inputFileName.split('.').slice(0, -1).join('.') }}.png"
+        },
+        "driveId": {
+          "configuration_input": "step-4-driveid"
+        },
+        "options": {},
+        "folderId": {
+          "expression": "{{ record.OutputDriveFolder }}"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "remove background fixed size",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "background.color",
+              "value": {
+                "expression": "{{ record.bg_color }}"
+              }
+            },
+            {
+              "name": "imageFile",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "padding",
+              "value": {
+                "expression": "{{ record.padding }}"
+              }
+            },
+            {
+              "name": "outputSize",
+              "value": {
+                "expression": "{{ record.outputSize }}"
+              }
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": {
+                "configuration_input": "step-5-parameters-0-value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Upload Picture to Google Drive1",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "name": {
+          "expression": "BG-Removed-{{record.inputFileName.split('.').slice(0, -1).join('.') }}.png"
+        },
+        "driveId": {
+          "configuration_input": "step-7-driveid"
+        },
+        "options": {},
+        "folderId": {
+          "expression": "{{ record.OutputDriveFolder }}"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Download Image",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.id }}"
+        },
+        "options": {},
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Get Image Size",
+      "operation": "image",
+      "adapter": "local",
+      "parameters": {
+        "operation": "information"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Watch for new images",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "event": "fileCreated",
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "configuration_input": "step-10-foldertowatch"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "check which output size method is used",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.keepInputSize }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "loop all over your images",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-12",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-10"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-assignments-6-id",
+      "purpose": "Select the id for step-1.",
+      "required": true
+    },
+    {
+      "id": "step-1-assignments-6-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://image-api.photoroom.com/v2/edit"
+    },
+    {
+      "id": "step-2-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-4-driveid",
+      "purpose": "Select the driveId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://image-api.photoroom.com/v2/edit"
+    },
+    {
+      "id": "step-5-parameters-0-value",
+      "purpose": "Configure the named authentication setting in the selected service connection.",
+      "required": true
+    },
+    {
+      "id": "step-7-driveid",
+      "purpose": "Select the driveId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-10-foldertowatch",
+      "purpose": "Select the folderToWatch for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Automatic Background Removal for Images in Google Drive.json",
+    "git_blob": "8315fe7a5966f0d727ee2f71536f26b975f34066",
+    "sha256": "79b37d138b28cf8b33791cddeedc2f0fef0a740d608a029621cb1754f61513cf",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Automatic%20Background%20Removal%20for%20Images%20in%20Google%20Drive.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

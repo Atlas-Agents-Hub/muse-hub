@@ -1,0 +1,274 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-learn-anything-from-hn-get-top-resource-recommendations-from-hacker-news-5ff94e",
+  "title": "Learn Anything from HN - Get Top Resource Recommendations from Hacker News",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Google Gemini Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Basic LLM Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Your Task is to find the best resources to learn {{ steps[\"step-7\"].record[\"I want to learn\"] }}. \n\nI have scraped the HackerNews and The following is the list of comments from HackerNews on topic about Learning {{ steps[\"step-7\"].record[\"I want to learn\"] }}\n\n\nFocus only on comments that provide any resouces or advice or insight about learning {{ steps[\"step-7\"].record.Learn }}. Ignore all other comments that are off topic discussions.\n\nNow based on these comments, you need to find the top resources and list them. \n\nCategorize them based on resource type (course, book, article, youtube videos, lectures, etc) and also figure out the difficultiy level (beginner, intermediate, advanced, expert).\n\nYou don't always to have fill in these categories exactly, these are given here for reference. Use your intution to find the best categorization.\n\nNow based on these metrics and running a basic sentiment analysis on comments you need to figure out what the top resources are. \n\nRespond back in Markdown formatted text. In the following format\n\n**OUTPUT FORMAT**\n\n```\n\n## Top HN Recomended Resources To Learn <topic Name> \n\n### Category 1\n\n- **Resource 1** - One line description\n- **Resource 2** - One line description\n- ... \n\n<add hyperlinks if any exists>\n\n### Category 2\n\n- **Resource 1** - One line description\n- **Resource 2** - One line description\n- ... \n\n<add hyperlinks in markdown format to the resource name itself if any exists. Example [resource name](https://example.com)>\n\n...\n```\n\nHere is the list of HackerNews Comments.\n\n{{ record.text }}"
+        },
+        "promptType": "define"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "SearchAskHN",
+      "operation": "service-read",
+      "adapter": "hackernews",
+      "parameters": {
+        "limit": 150,
+        "resource": "all",
+        "additionalFields": {
+          "tags": [
+            "ask_hn"
+          ],
+          "keyword": {
+            "expression": "{{ record[\"I want to learn\"] }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "FindHNComments",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://hacker-news.firebaseio.com/v0/item/{{ record.children }}.json?print=pretty"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "CombineIntoSingleText",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "SplitOutChildrenIDs",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "children"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "GetTopicFromToLearn",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "options": {
+          "path": "learn",
+          "buttonLabel": "Submit",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "We'll shortly send you an email with top recommendations."
+            }
+          }
+        },
+        "formTitle": "What do You want to learn ?",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "I want to learn",
+              "placeholder": "Python, DevOps, Ai, or just about anything"
+            },
+            {
+              "fieldType": "email",
+              "fieldLabel": "What's your email ?",
+              "placeholder": {
+                "configuration_input": "step-7-values-1-placeholder"
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "formDescription": "We'll find the best resources from HackerNews and send you an email"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "SendEmailWithTopResources",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "FYI, We read through {{ steps[\"step-6\"].all().length }} comments in search for the best.\n\n{{ record.data }}"
+        },
+        "options": {},
+        "subject": {
+          "expression": "Here are Top HN Recommendations for Learning {{ steps[\"step-7\"].record[\"I want to learn\"] }}"
+        },
+        "toEmail": {
+          "expression": "{{ steps[\"step-7\"].record[\"What's your email ?\"] }}"
+        },
+        "fromEmail": {
+          "configuration_input": "step-8-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Convert2HTML",
+      "operation": "file",
+      "adapter": "local",
+      "parameters": {
+        "mode": "markdownToHtml",
+        "options": {},
+        "markdown": {
+          "expression": "{{ record.text }}"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Finished",
+      "operation": "inspect",
+      "adapter": "local",
+      "parameters": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-7"
+  ],
+  "configuration": [
+    {
+      "id": "step-7-values-1-placeholder",
+      "purpose": "Provide the contact, recipient, or message content for placeholder.",
+      "required": true
+    },
+    {
+      "id": "step-8-fromemail",
+      "purpose": "Select the fromEmail for step-8.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Learn Anything from HN - Get Top Resource Recommendations from Hacker News.json",
+    "git_blob": "ecf505d21d5dca5e5b5d5636126adcc7939a64ae",
+    "sha256": "18ebd1b0d69218fcf9a7d0070ab58791827d538ab577449f665fcc5efdd4da35",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Learn%20Anything%20from%20HN%20-%20Get%20Top%20Resource%20Recommendations%20from%20Hacker%20News.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

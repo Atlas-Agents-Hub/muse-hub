@@ -1,0 +1,292 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-auto-label-incoming-gmail-messages-with-ai-nodes-f13752",
+  "title": "Auto-label incoming Gmail messages with AI nodes",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Gmail trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "simple": false,
+        "filters": {},
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get message content",
+      "operation": "service-read",
+      "adapter": "gmail",
+      "parameters": {
+        "simple": false,
+        "options": {},
+        "messageId": {
+          "expression": "{{ record.id }}"
+        },
+        "operation": "get"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Set label values",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "labels",
+              "type": "arrayValue",
+              "arrayValue": {
+                "expression": "{{ record.labels }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get all labels",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "resource": "label",
+        "returnAll": true
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Split out assigned labels",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "labels"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Merge corresponding labels",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "name",
+              "field2": "labels"
+            }
+          ]
+        },
+        "outputDataFrom": "input1"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Aggregate label IDs",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "renameField": true,
+              "outputFieldName": "label_ids",
+              "fieldToAggregate": "id"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Add labels to message",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "labelIds": {
+          "expression": "{{ record.label_ids }}"
+        },
+        "messageId": {
+          "expression": "{{ steps[\"step-1\"].record[\"id\"] }}"
+        },
+        "operation": "addLabels"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Assign labels for message",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "{{ record.text }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Your task is to categorize the message according to the following labels.\n\nPartnership - email about sponsored content, cooperation etc.\nInquiry - email about products, services.\nNotification - email that doesn't require response. \n\nOne email can have more than one label. Return only label names in JSON format, nothing else. Do not make things up. "
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "JSON Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Inquiry",
+                    "Partnership",
+                    "Notification"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "labels"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "OpenAI Chat",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-8",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Gmail_and_Email_Automation/Auto-label incoming Gmail messages with AI nodes.json",
+    "git_blob": "badbfe4803a599c334ea00e99c44882e341b97b6",
+    "sha256": "98293985f86ae8e742f55db7365f6d10b2c8c21f114e26e55e75de869312edad",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Gmail_and_Email_Automation/Auto-label%20incoming%20Gmail%20messages%20with%20AI%20nodes.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

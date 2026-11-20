@@ -1,0 +1,210 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-integrating-ai-with-open-meteo-api-for-enhanced-weather-forecasting-0fa838",
+  "title": "Integrating AI with Open-Meteo API for Enhanced Weather Forecasting",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {
+          "title": "N8N 👋",
+          "subtitle": "Weather Assistant: Example of Tools Using ChatGPT",
+          "allowFileUploads": false,
+          "loadPreviousSession": "memory"
+        },
+        "initialMessages": "Type like this: Weather Forecast for the Next 7 Days in São Paulo"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Generic AI Tool Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Chat Memory Buffer",
+      "operation": "session",
+      "adapter": "session-store",
+      "parameters": {}
+    },
+    {
+      "id": "step-5",
+      "label": "A tool to get the weather forecast based on geolocation",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "latitude"
+            },
+            {
+              "name": "longitude"
+            },
+            {
+              "name": "daily",
+              "value": "temperature_2m_max,precipitation_sum",
+              "valueProvider": "fieldValue"
+            },
+            {
+              "name": "timezone",
+              "value": "GMT",
+              "valueProvider": "fieldValue"
+            },
+            {
+              "name": "forecast_days"
+            }
+          ]
+        },
+        "toolDescription": "To get forecast of next [forecast_days] input the geolocation of an City",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "longitude",
+              "type": "number",
+              "description": "longitude"
+            },
+            {
+              "name": "latitude",
+              "type": "number",
+              "description": "latitude"
+            },
+            {
+              "name": "forecast_days",
+              "type": "number",
+              "description": "forecast_days number of days ahead"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "A tool for inputting the city and obtaining geolocation",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://geocoding-api.open-meteo.com/v1/search"
+        },
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "name"
+            },
+            {
+              "name": "count",
+              "value": "1",
+              "valueProvider": "fieldValue"
+            },
+            {
+              "name": "format",
+              "value": "json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        },
+        "toolDescription": "Input the City and get geolocation, geocode or coordinates from Requested City",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "name",
+              "type": "string",
+              "description": "Requested City"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "memory",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-3",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.open-meteo.com/v1/forecast"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Integrating AI with Open-Meteo API for Enhanced Weather Forecasting.json",
+    "git_blob": "07ea441e86d69d75fb68743185a43d6ce09685ad",
+    "sha256": "045ad2ce02da4f0d8a74760ee2a90bcb12b03bb4b127b9d28d71258372f991a7",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Integrating%20AI%20with%20Open-Meteo%20API%20for%20Enhanced%20Weather%20Forecasting.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

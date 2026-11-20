@@ -1,0 +1,416 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-flowscribe-lite-ai-content-repurposing-4-platforms-d353dc",
+  "title": "FlowScribe Lite - AI Content Repurposing 4 Platforms",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Receive Content",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "flowscribe-lite",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Validate Input",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const body = records[0].json.body || records[0].json;\nconst content = body.content || body.text || '';\nconst title = body.title || 'Untitled';\nconst brandVoice = body.brand_voice || 'professional yet approachable';\n\nif (!content || content.trim().length < 50) {\n  throw new Error('Content must be at least 50 characters.');\n}\n\nreturn [{\n  json: { content, title, brandVoice, requestId: require('crypto').randomUUID(), processedAt: new Date().toISOString() }\n}];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "AI: Quick Analysis",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-3-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Analyze the content and extract: 5 key points, core message in one sentence, 10 hashtags, 5 SEO keywords. Respond in JSON: { keyPoints, coreMessage, hashtags, seoKeywords }"
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "Title: {{record.title}}\nBrand Voice: {{record.brandVoice}}\n\nContent:\n{{record.content}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 1000,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Merge Data",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let analysis;\ntry {\n  analysis = JSON.parse(records[0].json.message?.content || '{}');\n} catch (e) {\n  throw new Error('Failed to parse AI analysis: ' + e.message);\n}\nconst original = steps[\"step-2\"].records[0];\nreturn [{ json: { ...original, analysis } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Generate: Twitter Thread",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-5-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Create a Twitter/X thread (5-7 tweets, each under 280 chars). First tweet: powerful hook. Last: CTA + hashtags. Use numbered format 1/, 2/. JSON: { \"thread\": [\"tweet1\", ...] }"
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "Title: {{record.title}}\nKey Points: {{JSON.stringify(record.analysis.keyPoints)}}\nCore Message: {{record.analysis.coreMessage}}\nBrand Voice: {{record.brandVoice}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 1200,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Generate: LinkedIn Post",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-6-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Create a LinkedIn post: bold first line, short paragraphs, personal insight, end with question, 3-5 hashtags. 1300-1800 chars. JSON: { \"post\": \"...\" }"
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "Title: {{record.title}}\nKey Points: {{JSON.stringify(record.analysis.keyPoints)}}\nCore Message: {{record.analysis.coreMessage}}\nBrand Voice: {{record.brandVoice}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 1000,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Generate: Instagram Caption",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-7-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Create an Instagram caption: hook line, micro-story, emojis, CTA, 20-30 hashtags in separate block. JSON: { \"caption\": \"...\", \"hashtags\": [...] }"
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "Title: {{record.title}}\nKey Points: {{JSON.stringify(record.analysis.keyPoints)}}\nBrand Voice: {{record.brandVoice}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.75,
+          "maxTokens": 1200,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Generate: Facebook Post",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "model": {
+          "configuration_input": "step-8-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Create a Facebook post: relatable opening, story format, 100-250 words, conversation question at end, no external links, friendly tone. JSON: { \"post\": \"...\" }"
+            },
+            {
+              "role": "user",
+              "content": {
+                "expression": "Title: {{record.title}}\nKey Points: {{JSON.stringify(record.analysis.keyPoints)}}\nBrand Voice: {{record.brandVoice}}"
+              }
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 800,
+          "responseFormat": "json_object"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Collect Results",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const original = steps[\"step-4\"].records[0];\nconst parse = (n) => { try { return JSON.parse($(n).first().json.message?.content || '{}'); } catch(e) { return { error: e.message }; } };\n\nconst result = {\n  requestId: original.requestId,\n  title: original.title,\n  completedAt: new Date().toISOString(),\n  platforms: {\n    twitter: parse('Generate: Twitter Thread'),\n    linkedin: parse('Generate: LinkedIn Post'),\n    instagram: parse('Generate: Instagram Caption'),\n    facebook: parse('Generate: Facebook Post')\n  }\n};\n\nreturn [{ json: result }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Save to Google Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "expression": "{{ $env.FLOWSCRIBE_SHEET_ID }}"
+        },
+        "sheetName": {
+          "configuration_input": "step-10-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Request ID": {
+              "expression": "{{ record.requestId }}"
+            },
+            "Title": {
+              "expression": "{{ record.title }}"
+            },
+            "Completed At": {
+              "expression": "{{ record.completedAt }}"
+            },
+            "Twitter Thread": {
+              "expression": "{{ JSON.stringify(record.platforms.twitter.thread) }}"
+            },
+            "LinkedIn Post": {
+              "expression": "{{ record.platforms.linkedin.post }}"
+            },
+            "Instagram Caption": {
+              "expression": "{{ record.platforms.instagram.caption }}"
+            },
+            "Facebook Post": {
+              "expression": "{{ record.platforms.facebook.post }}"
+            }
+          }
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Respond: Success",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ JSON.stringify({ success: true, requestId: record.requestId, title: record.title, platforms: ['twitter', 'linkedin', 'instagram', 'facebook'], message: '4 platform contents generated. Check Google Sheets.' }) }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-5-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-6-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-7-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-8-model",
+      "purpose": "Select an available model with the required input and output capability.",
+      "required": true
+    },
+    {
+      "id": "step-10-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/FlowScribe Lite - AI Content Repurposing 4 Platforms.json",
+    "git_blob": "e1117a9c77c8cafbe91671bd27bb4096a73ccc88",
+    "sha256": "a733b4f24fccd3aa35d8430459886bf1449ba394fe2f9fe4cd76418a2adb9763",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/FlowScribe%20Lite%20-%20AI%20Content%20Repurposing%204%20Platforms.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

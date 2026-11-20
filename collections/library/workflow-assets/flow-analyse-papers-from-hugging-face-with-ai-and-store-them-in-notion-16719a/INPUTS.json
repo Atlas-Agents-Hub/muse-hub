@@ -1,0 +1,30 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-analyse-papers-from-hugging-face-with-ai-and-store-them-in-notion-16719a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-url": null,
+    "step-7-databaseid": null,
+    "step-9-modelid": null,
+    "step-10-databaseid": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "notion": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

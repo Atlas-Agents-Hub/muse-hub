@@ -1,0 +1,703 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-hacker-news-job-listing-scraper-and-parser-24e8a9",
+  "title": "Hacker News Job Listing Scraper and Parser",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking ‘Test workflow’",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Split Out",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "hits"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "company": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "description": "Name of the hiring company"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "description": "Job title/role being advertised"
+              },
+              "location": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "description": "Work location including remote/hybrid status"
+              },
+              "type": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "enum": [
+                  "FULL_TIME",
+                  "PART_TIME",
+                  "CONTRACT",
+                  "INTERNSHIP",
+                  "FREELANCE",
+                  null
+                ],
+                "description": "Employment type (Full-time, Contract, etc)"
+              },
+              "work_location": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "enum": [
+                  "REMOTE",
+                  "HYBRID",
+                  "ON_SITE",
+                  null
+                ],
+                "description": "Work arrangement type"
+              },
+              "salary": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "description": "Compensation details if provided"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "description": "Main job description text including requirements and team info"
+              },
+              "apply_url": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "description": "Direct application/job posting URL"
+              },
+              "company_url": {
+                "type": [
+                  "string",
+                  null
+                ],
+                "description": "Company website or careers page"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Search for Who is hiring posts",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-5-url"
+        },
+        "method": "POST",
+        "options": {},
+        "jsonBody": {
+          "json": {
+            "query": "\"Ask HN: Who is hiring\"",
+            "analyticsTags": [
+              "web"
+            ],
+            "page": 0,
+            "hitsPerPage": 30,
+            "minWordSizefor1Typo": 4,
+            "minWordSizefor2Typos": 8,
+            "advancedSyntax": true,
+            "ignorePlurals": false,
+            "clickAnalytics": true,
+            "minProximity": 7,
+            "numericFilters": [],
+            "tagFilters": [
+              [
+                "story"
+              ],
+              []
+            ],
+            "typoTolerance": "min",
+            "queryType": "prefixNone",
+            "restrictSearchableAttributes": [
+              "title",
+              "comment_text",
+              "url",
+              "story_text",
+              "author"
+            ],
+            "getRankingInfo": true
+          }
+        },
+        "sendBody": true,
+        "sendQuery": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "x-algolia-agent",
+              "value": "Algolia for JavaScript (4.13.1); Browser (lite)"
+            },
+            {
+              "name": "x-algolia-application-id",
+              "value": "UJ5WYC0L7X"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-GB,en-US;q=0.9,en;q=0.8"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "DNT",
+              "value": "1"
+            },
+            {
+              "name": "Origin",
+              "value": {
+                "configuration_input": "step-5-parameters-4-value"
+              }
+            },
+            {
+              "name": "Referer",
+              "value": {
+                "configuration_input": "step-5-parameters-5-value"
+              }
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "cross-site"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"133\", \"Not(A:Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Get relevant data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "title",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.title }}"
+              }
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.created_at }}"
+              }
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.updated_at }}"
+              }
+            },
+            {
+              "name": "storyId",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.story_id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get latest post",
+      "operation": "filter",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              },
+              "leftValue": {
+                "expression": "{{ record.createdAt }}"
+              },
+              "rightValue": {
+                "expression": "{{current_time.minus({days: 30})}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Split out children (jobs)",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "kids"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Trun into structured data",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.cleaned_text }}"
+        },
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Extract the JSON data"
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Extract text",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "text",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Clean text",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// In a Function node in n8n\nconst inputData = records;\n\nfunction cleanAllPosts(data) {\n return data.map(item => {\n try {\n // Check if item exists and has the expected structure\n if (!item || typeof item !== 'object') {\n return { cleaned_text: '', error: 'Invalid item structure' };\n }\n\n // Get the text, with multiple fallbacks\n let text = '';\n if (typeof item === 'string') {\n text = item;\n } else if (item.json && item.json.text) {\n text = item.json.text;\n } else if (typeof item.json === 'string') {\n text = item.json;\n } else {\n text = JSON.stringify(item);\n }\n\n // Make sure text is a string\n text = String(text);\n \n // Perform the cleaning operations\n try {\n text = text.replace(/&#x2F;/g, '/');\n text = text.replace(/&#x27;/g, \"'\");\n text = text.replace(/&\\w+;/g, ' ');\n text = text.replace(/<[^>]*>/g, '');\n text = text.replace(/\\|\\s*/g, '| ');\n text = text.replace(/\\s+/g, ' ');\n text = text.replace(/\\s*(https?:\\/\\/[^\\s]+)\\s*/g, '\\n$1\\n');\n text = text.replace(/\\n{3,}/g, '\\n\\n');\n text = text.trim();\n } catch (cleaningError) {\n console.log('Error during text cleaning:', cleaningError);\n // Return original text if cleaning fails\n return { cleaned_text: text, warning: 'Partial cleaning applied' };\n }\n\n return { cleaned_text: text };\n \n } catch (error) {\n console.log('Error processing item:', error);\n return { \n cleaned_text: '', \n error: `Processing error: ${error.message}`,\n original: item\n };\n }\n }).filter(result => result.cleaned_text || result.error); \n}\n\ntry {\n return cleanAllPosts(inputData);\n} catch (error) {\n console.log('Fatal error:', error);\n return [{ \n cleaned_text: '', \n error: `Fatal error: ${error.message}`,\n input: inputData \n }];\n}",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Limit for testing (optional)",
+      "operation": "limit",
+      "adapter": "local",
+      "parameters": {
+        "maxItems": 5
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Write results to airtable",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "base": {
+          "configuration_input": "step-13-base"
+        },
+        "table": {
+          "configuration_input": "step-13-table"
+        },
+        "columns": {
+          "value": {
+            "type": {
+              "expression": "{{ record.output.type }}"
+            },
+            "title": {
+              "expression": "{{ record.output.title }}"
+            },
+            "salary": {
+              "expression": "{{ record.output.salary }}"
+            },
+            "company": {
+              "expression": "{{ record.output.company }}"
+            },
+            "location": {
+              "expression": "{{ record.output.location }}"
+            },
+            "apply_url": {
+              "expression": "{{ record.output.apply_url }}"
+            },
+            "company_url": {
+              "expression": "{{ record.output.company_url }}"
+            },
+            "description": {
+              "expression": "{{ record.output.description }}"
+            }
+          },
+          "schema": [
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "company",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "location",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "type",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "salary",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "apply_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "company_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "posted_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "create"
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "HI API: Get the individual job post",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://hacker-news.firebaseio.com/v0/item/{{ record.kids }}.json?print=pretty"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "HN API: Get Main Post",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://hacker-news.firebaseio.com/v0/item/{{ record.storyId }}.json?print=pretty"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-5-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://uj5wyc0l7x-dsn.algolia.net/1/indexes/{resource}/query"
+    },
+    {
+      "id": "step-5-parameters-4-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://hn.algolia.com"
+    },
+    {
+      "id": "step-5-parameters-5-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://hn.algolia.com/"
+    },
+    {
+      "id": "step-13-base",
+      "purpose": "Select the base for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-table",
+      "purpose": "Select the table for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Hacker News Job Listing Scraper and Parser.json",
+    "git_blob": "a183678f4303de9afe5dfca89aa993adfcc55bdf",
+    "sha256": "9cce91449ea61dc846d8b455c2d4b4c777e46bfcf25db28517b0d5420af48787",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Hacker%20News%20Job%20Listing%20Scraper%20and%20Parser.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automate-customer-support-issue-resolution-using-ai-text-classifier-4ab6b0",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-7-updatefields-statusid": null,
+    "step-18-channelid": null,
+    "step-19-updatefields-statusid": null,
+    "step-28-channelid": null
+  },
+  "adapters": {
+    "jira": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "notion": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    },
+    "workflow": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,1230 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-internship-informer-7318c7",
+  "title": "Internship Informer",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Telegram Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Text Guard",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.message.text }}"
+              },
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "leftValue": {
+                "expression": "{{ record.message.text ? record.message.text.length : 0 }}"
+              },
+              "rightValue": 20,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Splitter Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "promptType": "define",
+        "text": {
+          "expression": "Analyze the following raw input text and extract all job opportunities into a structured JSON Array.\n\n**RAW INPUT DATA:**\n\"\"\"\n{{ record.message.text }}\n\"\"\"\n\n**PROCESSING INSTRUCTIONS:**\n1. **Split Check:** If the text lists multiple roles (e.g., separated by \"📌\" or \"1.\", \"2.\"), extract them as SEPARATE objects in the array.\n2. **Link Check:** Do NOT capture \"Join our WhatsApp/Telegram\" channel links as the `apply_link`. Look for the actual application URL (Workday, LinkedIn, Greenhouse, etc.).\n3. **Output:** Return ONLY the JSON Array. No other text."
+        },
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "You are a high-precision JSON Parsing Backend.\nYour ONLY task is to accept raw text, split it into individual job objects, and output a clean JSON Array.\n\n**CRITICAL RULES (NON-NEGOTIABLE):**\n1. **NO CONVERSATION:** Do not explain, do not say \"Here is the JSON\", do not apologize. Output *only* the JSON.\n2. **FORCE EXECUTION:** Process the input even if it looks like a forwarded message or lacks a polite request.\n3. **LINK PRIORITY:**\n   - **Target:** Extract specific job links (e.g., greenhouse.io, lever.co, myworkday, linkedin.com/jobs, unstop).\n   - **Ignore:** Generic footer links like `whatsapp.com/channel`, `t.me`, or `instagram.com` UNLESS they are the specific application link.\n\n**SPLIT LOGIC (How to detect multiple jobs):**\n- **Delimiters:** Treat the text as multiple jobs if it contains repeating delimiters like:\n  - Emojis: 📌, 🔔, 🚨, 👉 (e.g., \"📌Job A... 📌Job B...\")\n  - Numbering: \"1.\", \"2.\"\n  - Distinct blocks separated by double newlines.\n- **Single Job:** If no delimiters are found, treat the whole text as one job.\n\n**EXTRACTION FIELDS (For each detected job):**\n- \"role\": Job Title (e.g., \"SDE Intern\", \"Data Analyst\"). If \"Hiring for X\", extract \"X\".\n- \"company\": Company Name. (Look for \"Company:\", \"Hiring:\", or \"At [Company]\").\n- \"stipend\": Salary/Stipend numbers (e.g., \"20k\", \"5-10 LPA\"). Default: \"Not specified\".\n- \"eligibility\": Extract Batch (e.g., \"2027\"), Degree, AND Experience (e.g., \"0-1 years\"). Default: \"Not specified\".\n- \"description\": A brief snippet of requirements (Tech stack, location).\n- \"apply_link\": The specific URL to apply. (Remember: Ignore WhatsApp Channel links if a real link exists).\n\n**OUTPUT FORMAT:**\nReturn ONLY the raw JSON Array `[ ... ]`.\n\n**JSON STRUCTURE:**\n[\n  {\n    \"role\": \"extracted title\",\n    \"company\": \"extracted company\",\n    \"stipend\": \"extracted stipend\",\n    \"eligibility\": \"extracted eligibility (include batch & experience)\",\n    \"description\": \"extracted description\",\n    \"apply_link\": \"extracted link\"\n  }\n]"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "JSON Format Fixer",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// 1. Get the raw output from the AI model\nconst rawContent = records[0].json.output || \"\";\n\n// 2. Clean the string: Remove Markdown code blocks (```json ... ```)\nconst cleanJson = rawContent.replace(/^```json\\s*/i, \"\").replace(/\\s*```$/, \"\");\n\n// 3. Parse the string into a real JavaScript Array\nlet jobsArray = [];\ntry {\n  jobsArray = JSON.parse(cleanJson);\n} catch (error) {\n  console.log(\"JSON Parse Error:\", error);\n  jobsArray = [];\n}\n\n// 4. Return separate items for n8n to process\nreturn jobsArray.map(job => {\n  return {\n    json: job\n  };\n});",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Loop Over Each Link",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Firecrawl Scrape",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-6-url"
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": {
+                "expression": "{{ record.apply_link }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Pre-Check",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// ============================================================\n// Pre-Check Node — FIXED for blocked ATS sites (Workday etc.)\n// ============================================================\n\nconst CONFIG = {\n  wrong_years: /\\b(2020|2021|2022|2023|2024|2025|2026)\\b/,\n  target_year: /2027/,\n  blocked_domains: []\n};\n\nreturn items.map(item => {\n  const rawMarkdown = (item.json.data?.markdown || \"\").substring(0, 30000);\n  const telegramText = steps[\"step-1\"].records[0].message.text || \"\";\n  const url = (item.json.apply_link || \"\").toLowerCase();\n  const isBlockedDomain = CONFIG.blocked_domains.some(domain => url.includes(domain));\n  const scrapeSucceeded = rawMarkdown.length > 150 && !isBlockedDomain;\n  const scrape_failed = !scrapeSucceeded;\n\n  const scraped_markdown = scrapeSucceeded\n    ? rawMarkdown\n    : `[Scraping unavailable — site blocked automated access (${isBlockedDomain ? 'known blocked ATS domain' : 'empty response'}). Using original Telegram job post for analysis below.]\\n\\n${telegramText}`;\n\n  const combinedText = [\n    item.json.role,\n    item.json.company,\n    item.json.eligibility,\n    scraped_markdown,\n    telegramText\n  ].filter(Boolean).join(\" \").toLowerCase();\n\n  let status = \"PASS\";\n  let rejectReason = \"N/A\";\n\n  if (CONFIG.wrong_years.test(combinedText) && !CONFIG.target_year.test(combinedText)) {\n    status = \"REJECT\";\n    rejectReason = \"Hard Filter: Explicit Old Batch (Mentioned older years but not 2027)\";\n  }\n\n  const debug = {\n    markdown_length: rawMarkdown.length,\n    scrape_failed: scrape_failed,\n    using_fallback: scrape_failed,\n    is_blocked_domain: isBlockedDomain,\n    apply_link: item.json.apply_link || \"\",\n    telegram_text_found: !!telegramText,\n    years_found: combinedText.match(CONFIG.wrong_years) || \"None\",\n    target_found: CONFIG.target_year.test(combinedText)\n  };\n\n  return {\n    json: {\n      ...item.json,\n      scraped_markdown: scraped_markdown,\n      pre_filter_status: status,\n      rejection_reason: rejectReason,\n      debug_log: debug\n    }\n  };\n});",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "For 2027?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ record.pre_filter_status }}"
+              },
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Analyst Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "promptType": "define",
+        "text": {
+          "expression": "Process the following job opportunity data and extract the structured output.\n\n**TASK:**\n1. Analyze the \"JOB PAGE MARKDOWN\" below to determine eligibility.\n2. IF the text is missing the Batch Year (e.g., just says \"Student\" or \"Intern\"), use `serpapi_search` to verify if it is for 2027 graduates.\n3. NOTE: If the JOB PAGE MARKDOWN starts with \"[Scraping unavailable\", it means the job page could not be scraped (blocked ATS like Workday/Greenhouse). In this case, rely entirely on the Telegram text provided after that label and the INPUT DATA fields above.\n\n**INPUT DATA:**\nTitle: {{ steps[\"step-4\"].record.role }}\nCompany: {{ steps[\"step-4\"].record.company }}\nEligibilty : {{ steps[\"step-4\"].record.eligibility }}\nStipend : {{ steps[\"step-4\"].record.stipend }}\nLink: {{ steps[\"step-4\"].record.apply_link }}\n\n**JOB PAGE MARKDOWN (SOURCE):**\n\"\"\"\n{{ record.scraped_markdown }}\n\"\"\"\n\n**OUTPUT REQUIREMENTS:**\n- Verify strict eligibility for **Batch of 2027** (Pre-final year).\n- Return the final JSON using the \"Final Answer\" format defined in the system message."
+        },
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "You are a backend JSON Data Processing Engine.\nYour ONLY function is to analyze job data and output a JSON response.\n\n**CORE OBJECTIVE:**\nIdentify valid **TECHNICAL** internship opportunities for **Pre-final Year Students (Batch of 2027)**.\n\n**STRICT DEFINITIONS:**\n- **Valid Role:** \"Intern\", \"Summer Analyst\", \"Trainee\" (only if <1 yr exp).\n- **Invalid Role:** \"Full Time\", \"FTE\", \"Software Engineer\" (without 'Intern'), \"Associate\", \"SDE-1\".\n- **Valid Batch:** 2027, Pre-final year, Penultimate year.\n\n**SCRAPING FAILURE HANDLING:**\n- If the JOB PAGE MARKDOWN starts with \"[Scraping unavailable\", the job site blocked automated access (common for Workday, Greenhouse, Lever).\n- In this case, base your analysis ONLY on the INPUT DATA fields (Title, Company, Eligibility, Stipend, Link) and the Telegram text included in the fallback message.\n- Do NOT reject a job solely because the page couldn't be scraped. Apply the same eligibility logic using available text.\n\n**EXECUTION PROTOCOL (STRICT ORDER - DO NOT SKIP):**\n\n**STEP 1: MANDATORY DUPLICATE CHECK (BLOCKING)**\n- **Action:** You MUST call the tool `check_duplicate` first.\n- **Input:** Use the job link provided in the prompt.\n- **Logic:**\n  - If tool returns `true`: **STOP IMMEDIATELY.** Output `{\"send_whatsapp\": false, \"reason\": \"Duplicate\"}`.\n\n**STEP 2: EXCLUSION LOGIC (THE \"KILL SWITCH\")**\n- Read the Markdown text. If ANY of these are true, **STOP and REJECT**.\n\n  - **A. DOMAIN FILTER:**\n    - Is the role Finance, HR, Sales, Marketing, Operations, Customer Support?\n    - -> **REJECT** (Reason: \"Non-technical\").\n\n  - **B. EXPLICIT WRONG BATCH (CRITICAL):**\n    - Does the text mention specific years (e.g., \"2023\", \"2024\", \"2025\", \"2026\") BUT NOT \"2027\"?\n    - *Example:* \"Hiring 2025 & 2026 grads\" -> **REJECT**.\n    - *Example:* \"For 2023/24 batch\" -> **REJECT**.\n    - *Logic:* If years are present, 2027 MUST be one of them.\n\n  - **C. EXPERIENCE FILTER:**\n    - Does it require \"1+ years\", \"1-3 years\", or \"Graduates from [past year]\"?\n    - -> **REJECT** (Reason: \"Experience required\").\n\n  - **D. FTE TRAP:**\n    - Is the title \"Software Engineer\", \"Developer\", or \"SDE\" (with NO mention of \"Intern\" or \"Trainee\")?\n    - -> **REJECT** (Reason: \"Full-time role\").\n\n**STEP 3: VALIDATION SCAN (POSITIVE MATCH)**\n- *Only runs if Step 2 passed.*\n- **CHECK A:** Does text contain \"2027\"? -> **VALID**.\n- **CHECK B:** Does text contain \"Pre-final\" or \"Penultimate\"? -> **VALID**.\n- **CHECK C:** Is it a generic \"Intern\" role (e.g., \"SDE Intern\") with NO year mentioned? -> **SEARCH REQUIRED** (Go to Step 4).\n\n**STEP 4: FALLBACK SEARCH (LAST RESORT)**\n- *Only runs if text is ambiguous (e.g., \"SDE Intern\" with no year).*\n- **Action:** Call `serpapi_request`.\n- **Input Schema:** `{ \"query\": \"Company Role 2027 eligibility\" }`\n\n**STEP 5: DEADLINE EXTRACTION**\n- Scan the text for keywords like \"Apply by\", \"Deadline\", \"Last Date\", \"Closes on\", or \"Test Date\".\n- If a date is found, convert it strictly to `YYYY-MM-DD` format (e.g., \"March 15th 2026\" becomes \"2026-03-15\").\n- If no specific date is mentioned, set the JSON value to `null`.\n\n**WHATSAPP MESSAGE TEMPLATE:**\n   `*New Internship Alert!*`\n   ` `\n   `*Title:* <Job Title>`\n   `*Company:* <Company Name>`\n   `*Eligibility:* <Short Batch Info>`\n   `*Deadline:* <Date or 'Not Specified'>`\n   ` `\n   `*Apply Link:* <Link>`\n\n**OUTPUT INSTRUCTION:**\nReturn ONLY the raw JSON object inside a code block.\nFinal Answer:\n```json\n{\n  \"send_whatsapp\": boolean,\n  \"reason\": \"...\",\n  \"whatsapp_message\": \"...\",\n  \"deadline\": \"YYYY-MM-DD or Not Specified\"\n}"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "serpapi_request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "toolDescription": "Performs a Google search to verify internship eligibility. Use this ONLY when the provided text is ambiguous or missing the batch year (e.g., '2027'). CRITICAL: You must provide a specific query string (e.g., 'Google Software Engineer Intern 2027 eligibility').",
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-10-url"
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": {
+                "expression": "{{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `The search query string (e.g. 'Company Role 2027 eligibility')`, 'string') }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Analyst Fallback",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.1
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "check_duplicate",
+      "operation": "service-read",
+      "adapter": "datatable",
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "CRITICAL: Call this FIRST. Checks if the job link is already in the database. If it returns any valid item as output, you must STOP immediately and return send_whatsapp: false.",
+        "operation": "get",
+        "dataTableId": {
+          "configuration_input": "step-12-datatableid"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Application_Link",
+              "keyValue": {
+                "expression": "{{ steps[\"step-5\"].record.apply_link }}"
+              }
+            }
+          ]
+        },
+        "returnAll": {
+          "expression": "{{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Output Parser",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "// 1. Get the raw text output safely\nconst rawText = items[0]?.json?.output;\n\nif (!rawText) {\n  return [{ json: { error: \"No output received from Analyst Agent\" } }];\n}\n\n// 2. Try to find JSON inside markdown blocks\nconst markdownMatch = rawText.match(/```json\\s*([\\s\\S]*?)\\s*```/);\n\n// 3. Robust JSON Extraction\nconst firstOpen = rawText.indexOf('{');\nconst lastClose = rawText.lastIndexOf('}');\n\nlet finalJson = {};\n\ntry {\n  if (markdownMatch) {\n    finalJson = JSON.parse(markdownMatch[1]);\n  } else if (firstOpen !== -1 && lastClose !== -1 && lastClose > firstOpen) {\n    const jsonString = rawText.substring(firstOpen, lastClose + 1);\n    finalJson = JSON.parse(jsonString);\n  } else {\n    throw new Error(\"No JSON structure found\");\n  }\n} catch (error) {\n  finalJson = {\n    send_whatsapp: false,\n    reason: \"JSON Parsing Failed\",\n    org_text: steps[\"step-1\"].records[0].message.text || \"Text unavailable\",\n    error_details: error.message,\n    raw_output: rawText\n  };\n}\n\nreturn [{ json: finalJson }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Check for duplicate valid",
+      "operation": "service-read",
+      "adapter": "datatable",
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "configuration_input": "step-14-datatableid"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Application_Link",
+              "keyValue": {
+                "expression": "{{ steps[\"step-5\"].record.apply_link }}"
+              }
+            }
+          ]
+        },
+        "limit": 1
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Not Duplicate?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ steps[\"step-13\"].record.send_whatsapp }}"
+              },
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": {
+                "expression": "{{ record.title }}"
+              },
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Deadline Exists?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": {
+                "expression": "{{ steps[\"step-13\"].record.deadline }}"
+              },
+              "rightValue": "Not Specified",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "ignoreCase": true
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Add event reminder",
+      "operation": "service-read",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "calendar": {
+          "configuration_input": "step-17-calendar"
+        },
+        "start": {
+          "expression": "{{ steps[\"step-13\"].record.deadline }}T09:00:00Z"
+        },
+        "end": {
+          "expression": "{{ steps[\"step-13\"].record.deadline }}T10:00:00Z"
+        },
+        "additionalFields": {
+          "description": {
+            "expression": "Link : {{ steps[\"step-4\"].record.apply_link }}"
+          },
+          "summary": {
+            "expression": "🚨 APPLY TODAY: {{ steps[\"step-4\"].record.role }} at {{ steps[\"step-4\"].record.company }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Get Mobile Numbers",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "documentId": {
+          "configuration_input": "step-18-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-18-sheetname"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "Loop Over Items",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-20",
+      "label": "Append Valid",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "configuration_input": "step-20-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-20-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": {
+              "expression": "{{ current_time }}"
+            },
+            "Telegram Message": {
+              "expression": "{{ steps[\"step-1\"].record.message.text }}"
+            },
+            "Title": {
+              "expression": "{{ steps[\"step-5\"].record.role }}"
+            },
+            "Company Name": {
+              "expression": "{{ steps[\"step-5\"].record.company }}"
+            },
+            "Eligibility": {
+              "expression": "{{ steps[\"step-5\"].record.eligibility }}"
+            },
+            "Application Link": {
+              "expression": "{{ steps[\"step-5\"].record.apply_link }}"
+            },
+            "Status": "Pending"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Telegram Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Eligibility",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Application Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-21",
+      "label": "Send Whatsapp Message",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "method": "POST",
+        "url": {
+          "configuration_input": "step-21-url"
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "to",
+              "value": {
+                "expression": "+{{ record['Phone Number'] }}"
+              }
+            },
+            {
+              "name": "message",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.whatsapp_message }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-22",
+      "label": "Insert row",
+      "operation": "service-read",
+      "adapter": "datatable",
+      "parameters": {
+        "dataTableId": {
+          "configuration_input": "step-22-datatableid"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": {
+              "expression": "{{ steps[\"step-5\"].record.role }}"
+            },
+            "Eligibilty": {
+              "expression": "{{ steps[\"step-5\"].record.eligibility }}"
+            },
+            "Application_Link": {
+              "expression": "{{ steps[\"step-5\"].record.apply_link }}"
+            },
+            "Company_Name": {
+              "expression": "{{ steps[\"step-5\"].record.company }}"
+            }
+          },
+          "matchingColumns": [
+            "Internship"
+          ],
+          "schema": [
+            {
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "displayName": "Company_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "displayName": "Eligibilty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "displayName": "Application_Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-23",
+      "label": "Append Rejected",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "configuration_input": "step-23-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-23-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": {
+              "expression": "{{ current_time }}"
+            },
+            "Rejection Reason": {
+              "expression": "{{ record.rejection_reason || steps[\"step-13\"].record.reason || \"duplicate found\" }}"
+            },
+            "Application Link": {
+              "expression": "{{ steps[\"step-5\"].record.apply_link }}"
+            },
+            "Telegram Message": {
+              "expression": "{{ steps[\"step-1\"].record.message.text }}"
+            }
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "displayName": "Telegram Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "displayName": "Application Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "displayName": "Rejection Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-24",
+      "label": "Merge",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-25",
+      "label": "Wait",
+      "operation": "wait",
+      "adapter": "local",
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      }
+    },
+    {
+      "id": "step-26",
+      "label": "Resend failed message",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "expression": "{{ steps[\"step-1\"].record.message.chat.id }}"
+        },
+        "text": {
+          "expression": "{{ steps[\"step-1\"].record.message.text }}"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-27",
+      "label": "Splitter Fallback",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-28",
+      "label": "Splitter Main",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0.1
+        }
+      }
+    },
+    {
+      "id": "step-29",
+      "label": "Analyst Main",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-30",
+      "label": "Notify User",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "workflowId": {
+          "configuration_input": "step-30-workflowid"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-30",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 1,
+      "input": 1
+    },
+    {
+      "from": "step-9",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-25",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-12",
+      "to": "step-9",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-24",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-18",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-20",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-19",
+      "to": "step-21",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-20",
+      "to": "step-22",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-21",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-22",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-23",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-24",
+      "to": "step-23",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-25",
+      "to": "step-26",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-26",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-27",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-28",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-29",
+      "to": "step-9",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-17",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-20",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-20",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-21",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-22",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-23",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-26",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-5",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-6-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://your-deployment/firecrawl/v1/scrape"
+    },
+    {
+      "id": "step-10-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://your-deployment/webhook/serpapi_search"
+    },
+    {
+      "id": "step-12-datatableid",
+      "purpose": "Select the dataTableId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-datatableid",
+      "purpose": "Select the dataTableId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-18-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-20-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-20-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-21-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://your-deployment/send"
+    },
+    {
+      "id": "step-22-datatableid",
+      "purpose": "Select the dataTableId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-23-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-23-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-30-workflowid",
+      "purpose": "Select the workflowId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Telegram/Internship Informer.json",
+    "git_blob": "2e0a5982de63a8ce9c0b166f83b694ab3281fdfe",
+    "sha256": "55a6d10b9da561b5753d72db0dd86c76de9ef43ba3f7e266f0be347195086b7e",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Telegram/Internship%20Informer.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

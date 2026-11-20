@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-chatbot-that-can-search-the-web-abae9d",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {},
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "toolserpapi": {
+      "connection": null
+    },
+    "toolwikipedia": {
+      "connection": null
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-automatic-background-removal-for-images-in-google-drive-34ede8",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-assignments-6-id": null,
+    "step-1-assignments-6-value": null,
+    "step-2-url": null,
+    "step-2-parameters-0-value": null,
+    "step-4-driveid": null,
+    "step-5-url": null,
+    "step-5-parameters-0-value": null,
+    "step-7-driveid": null,
+    "step-10-foldertowatch": null
+  },
+  "adapters": {
+    "googledrive": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    }
+  }
+}

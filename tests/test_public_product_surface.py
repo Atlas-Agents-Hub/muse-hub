@@ -14,6 +14,7 @@ from muse_presets.public_export import select_public_files
 
 ROOT=Path(__file__).resolve().parents[1]
 DOCS=ROOT/"docs"
+VERSION=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
 ROLE_SLUGS={
  "coordinator","software-engineer","model-builder","research-evaluator",
  "creative-studio","adversarial-verifier","personal-companion",
@@ -46,7 +47,7 @@ class PublicProductSurfaceTests(unittest.TestCase):
  def test_readme_is_short_product_entrypoint(self):
   readme=(ROOT/"README.md").read_text(encoding="utf-8")
   self.assertLess(len(readme.encode("utf-8")),8000)
-  for text in ("# Muse Hub","v1.5.0","docs/CAPABILITIES.md",
+  for text in ("# Muse Hub",VERSION,"docs/CAPABILITIES.md",
                "docs/GITHUB_QUICKSTART.md","MIT","docs/TERMINAL.md"):
    self.assertIn(text,readme)
   for role in ROLE_SLUGS:
@@ -64,8 +65,9 @@ class PublicProductSurfaceTests(unittest.TestCase):
   # all other top-level docs is unchanged and still rejects arbitrary sprawl.
   self.assertLessEqual(len(current - {
       "README.md", "HUB_FEATURE_READINESS.md", "COMPANION_HOME.md",
-      "GETTING_STARTED.md", "TERMINAL.md",
+      "GETTING_STARTED.md", "TERMINAL.md", "BRAND_SYSTEM.md",
   }),19)
+  self.assertIn("BRAND_SYSTEM.md", current)
   self.assertIn("DOWNLOAD_A_SPECIALIST.md",current)  # preserve topical-doc limit; allow one index
 
  def test_all_product_docs_exist_and_read_as_product(self):
@@ -97,8 +99,8 @@ class PublicProductSurfaceTests(unittest.TestCase):
  def test_published_download_links_present_without_private_credential_urls(self):
   text="\n".join((ROOT/x).read_text(encoding="utf-8")
                  for x in ("README.md","CHANGELOG.md","docs/RELEASES.md"))
-  self.assertIn("releases/tag/v1.5.0",text)
-  self.assertIn("releases/download/v1.5.0/SHA256SUMS",text)
+  self.assertIn("releases/tag/"+VERSION,text)
+  self.assertIn("releases/download/"+VERSION+"/SHA256SUMS",text)
   self.assertNotIn("token=",text.lower())
   self.assertNotIn("example-private-account/muse-ai-agent-presets-r32" + "-private",text)
 

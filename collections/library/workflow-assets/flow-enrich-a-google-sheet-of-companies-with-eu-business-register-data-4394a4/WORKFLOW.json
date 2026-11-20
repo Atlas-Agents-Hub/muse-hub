@@ -1,0 +1,227 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-enrich-a-google-sheet-of-companies-with-eu-business-register-data-4394a4",
+  "title": "Enrich a Google Sheet of companies with EU business register data",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Run it",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Read the sheet",
+      "operation": "service-read",
+      "adapter": "googlesheets",
+      "parameters": {
+        "documentId": {
+          "configuration_input": "step-2-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-2-sheetname"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Look up the official register",
+      "operation": "service-read",
+      "adapter": "apify",
+      "parameters": {
+        "resource": "Actors",
+        "operation": "Run actor and get dataset",
+        "actorSource": "store",
+        "actorId": "gubidonius~company-registry-lookup",
+        "customBody": {
+          "expression": "{{ JSON.stringify({ queries: [record.company], countries: ['cz','ee','fi','fr','no','pl','sk'], maxResultsPerQuery: 1, onlyActive: true }) }}"
+        },
+        "timeout": 600,
+        "memory": 1024,
+        "build": ""
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Keep the columns worth writing back",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "company",
+              "value": {
+                "expression": "{{ record.name }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "registrationNumber",
+              "value": {
+                "expression": "{{ record.registrationNumber }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "vatNumber",
+              "value": {
+                "expression": "{{ record.vatNumber }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "country",
+              "value": {
+                "expression": "{{ record.countryName }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "registry",
+              "value": {
+                "expression": "{{ record.registry }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "status",
+              "value": {
+                "expression": "{{ record.status }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "incorporatedAt",
+              "value": {
+                "expression": "{{ record.incorporatedAt }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "address",
+              "value": {
+                "expression": "{{ record.address }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "city",
+              "value": {
+                "expression": "{{ record.city }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "website",
+              "value": {
+                "expression": "{{ record.website }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "registryUrl",
+              "value": {
+                "expression": "{{ record.registryUrl }}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Write it back to the sheet",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "configuration_input": "step-5-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-5-sheetname"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [
+            "company"
+          ],
+          "value": {}
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-2-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Enrich a Google Sheet of companies with EU business register data.json",
+    "git_blob": "b6b114ec0dd76dd769fb11c6f9890332d4926618",
+    "sha256": "96d06f3e010158a8c7a96126ecec7d8ce0a58d40d32513e6ee0a3554556ee1ab",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Enrich%20a%20Google%20Sheet%20of%20companies%20with%20EU%20business%20register%20data.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

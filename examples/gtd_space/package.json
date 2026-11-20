@@ -1,0 +1,40 @@
+{
+  "name": "muse-hub-planner-space",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.3.10",
+  "scripts": {
+    "typecheck": "bun x tsc --noEmit -p client/tsconfig.json && bun x tsc --noEmit -p server/tsconfig.json && bun x tsc --noEmit -p tsconfig.runtime.json",
+    "test:mounted": "bun test client/tests/mounted-workspace.test.tsx",
+    "build": "bun run test:mounted && bun run build:server && bun run build:client",
+    "build:server": "cd server && bun build ./src/actions.ts --target=bun --outfile=./dist/actions.js",
+    "build:client": "bun ./client/build.mjs",
+    "db:migrate": "bun scripts/migrate.ts",
+    "build:standalone": "bun scripts/build-client-standalone.mjs",
+    "serve:standalone": "bun scripts/serve-standalone.ts",
+    "test:server": "bun scripts/test-database.ts server/tests",
+    "test": "bun run test:server && bun run test:mounted",
+    "verify": "bun run typecheck && bun run test && bun run build:server && bun run build:standalone && bun run test:preview",
+    "sdk:prepare": "bun scripts/prepare-sdk.ts",
+    "test:preview": "bun scripts/test-database.ts tests/preview.test.ts"
+  },
+  "dependencies": {
+    "@hatch/space-sdk": "file:./.sdk/space-sdk.tgz",
+    "@tanstack/react-query": "5.100.10",
+    "drizzle-orm": "0.45.2",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "recharts": "2.15.3",
+    "zod": "4.4.3",
+    "@libsql/client": "0.14.0"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.10",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "happy-dom": "20.14.5",
+    "tailwindcss": "4.1.13",
+    "tailwindcss-safe-area": "1.3.0",
+    "typescript": "5.6.3"
+  }
+}

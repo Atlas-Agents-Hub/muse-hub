@@ -1,6 +1,10 @@
 /* Muse Hub specialist discovery and setup. */
 (() => {
   'use strict';
+  const directory = document.querySelector('.specialist-directory');
+  const directoryLabel = document.getElementById('role-directory-label');
+  const searchPanel = document.querySelector('.specialist-search-panel');
+  const setupDisclosure = document.querySelector('.setup-disclosure');
   const search = document.getElementById('role-search');
   const category = document.getElementById('role-category');
   const count = document.getElementById('role-count');
@@ -8,41 +12,85 @@
   const empty = document.getElementById('role-empty');
   const emptyClear = document.getElementById('role-empty-clear');
   const cards = [...document.querySelectorAll('.role-card[data-role]')];
+  const quickPicks = [...document.querySelectorAll('[data-suggest-role]')];
   if (!search || !category || !count || !reset || !empty || !emptyClear || cards.length !== 15) return;
+  let suggestedRole = '';
 
   function update() {
     const needle = search.value.trim().toLocaleLowerCase();
     const group = category.value;
     let visible = 0;
     for (const card of cards) {
-      const hasTerm = !needle || card.dataset.search.toLocaleLowerCase().includes(needle);
+      const hasTerm = suggestedRole
+        ? card.dataset.role === suggestedRole
+        : !needle || card.dataset.search.toLocaleLowerCase().includes(needle);
       const hasGroup = group === 'all' || card.dataset.category === group;
       const show = hasTerm && hasGroup;
       card.hidden = !show;
       if (show) visible += 1;
     }
     count.textContent = `Showing ${visible} of ${cards.length} specialists`;
+    if (directoryLabel) {
+      const filtered = !!needle || group !== 'all';
+      directoryLabel.textContent = filtered
+        ? 'View ' + visible + ' matching specialist' + (visible === 1 ? '' : 's')
+        : 'Browse all ' + cards.length + ' specialists';
+    }
     empty.hidden = visible !== 0;
+    for (const button of quickPicks) {
+      button.setAttribute('aria-pressed', String(suggestedRole === button.dataset.suggestRole));
+    }
   }
   function clear() {
+    suggestedRole = '';
     search.value = '';
     category.value = 'all';
     update();
     search.focus();
   }
-  search.addEventListener('input', update);
-  category.addEventListener('change', update);
+  // Outcome shortcuts resolve only the 15 reviewed role cards. No arbitrary path input.
+  for (const button of quickPicks) {
+    button.addEventListener('click', () => {
+      const target = cards.find(card => card.dataset.role === button.dataset.suggestRole);
+      const heading = target?.querySelector('h3');
+      if (!target || !heading) return;
+      if (suggestedRole === target.dataset.role) {
+        clear();
+        return;
+      }
+      suggestedRole = target.dataset.role;
+      search.value = heading.textContent.trim();
+      category.value = 'all';
+      if (directory) directory.open = true;
+      update();
+      target.tabIndex = -1;
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ block: 'center', behavior: 'auto' });
+    });
+  }
+  search.addEventListener('focus', () => { if (directory) directory.open = true; });
+  function applyManualFilters() {
+    suggestedRole = '';
+    if (directory) directory.open = true;
+    update();
+  }
+  search.addEventListener('input', applyManualFilters);
+  category.addEventListener('change', applyManualFilters);
   reset.addEventListener('click', clear);
   emptyClear.addEventListener('click', clear);
+  if (window.location.hash === '#specialists' && directory) directory.open = true;
+  for (const link of document.querySelectorAll('a[href="#specialists"], a[href="index.html#specialists"]')) {
+    link.addEventListener('click', () => { if (directory) directory.open = true; });
+  }
   document.addEventListener('keydown', event => {
     if (event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey) {
       const active = document.activeElement;
       const typing = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT' || active.isContentEditable);
-      if (!typing) { event.preventDefault(); search.focus(); }
+      if (!typing) { event.preventDefault(); if (directory) directory.open = true; search.focus(); }
     }
     if (event.key === 'Escape' && document.activeElement === search) {
       search.value = '';
-      update();
+      applyManualFilters();
     }
   });
   // Use only the role and asset identifiers present in the reviewed cards.
@@ -55,8 +103,9 @@
   const setupProfile = document.getElementById('setup-role-profile');
   const setupDownload = document.getElementById('setup-role-download');
   const roleAssets = new Map(cards.map(card => [card.dataset.role, card.dataset.asset]));
+  const roleDownloads = new Map(cards.map(card => [card.dataset.role, card.querySelector('.role-card-download')?.href]));
   const knownRoles = new Set(cards.map(card => card.dataset.role));
-  const sourceBase = 'https://github.com/atlas-origins/muse-ai-agent-presets/blob/main/presets/';
+  const sourceBase = 'https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/presets/';
   const setupReady = setupSelect && setupResult && setupEmpty && setupTitle &&
     setupDescription && setupInstall && setupProfile && setupDownload && knownRoles.size === 15;
 
@@ -75,7 +124,9 @@
     setupDescription.textContent = option.dataset.description || '';
     setupInstall.href = `${sourceBase}${slug}/INSTALL.md`;
     setupProfile.href = `${sourceBase}${slug}/README.md`;
-    setupDownload.href = `https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/v1.5.0/muse-${asset}-v1.5.0.zip`;
+    const download = roleDownloads.get(slug);
+    if (!download || !download.startsWith('https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/')) return;
+    setupDownload.href = download;
     setupEmpty.hidden = true;
     setupResult.hidden = false;
   }
@@ -84,7 +135,9 @@
     const incomingRole = new URL(window.location.href).searchParams.get('role');
     if (incomingRole && knownRoles.has(incomingRole)) {
       setupSelect.value = incomingRole;
+      if (setupDisclosure) setupDisclosure.open = true;
     }
+    if (window.location.hash === '#setup' && setupDisclosure) setupDisclosure.open = true;
     function syncRoleURL(slug) {
       const url = new URL(window.location.href);
       if (slug && knownRoles.has(slug)) {
@@ -110,6 +163,7 @@
         if (!knownRoles.has(slug)) return;
         event.preventDefault();
         setupSelect.value = slug;
+        if (setupDisclosure) setupDisclosure.open = true;
         selectSetupRole();
         syncRoleURL(slug);
         const reduceMotion = window.matchMedia &&
@@ -132,4 +186,5 @@
     selectSetupRole();
   }
   update();
+  if (searchPanel) searchPanel.hidden = false;
 })();

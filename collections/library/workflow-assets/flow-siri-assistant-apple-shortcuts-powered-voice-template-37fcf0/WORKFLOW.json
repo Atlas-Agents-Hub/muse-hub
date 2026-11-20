@@ -1,0 +1,100 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-siri-assistant-apple-shortcuts-powered-voice-template-37fcf0",
+  "title": "Siri Assistant Apple Shortcuts powered voice template",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Respond to Apple Shortcut",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "text",
+        "responseBody": {
+          "expression": "{{ record.output }}"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "Here is my request: {{ record.body.input }}"
+        },
+        "agent": "conversationalAgent",
+        "options": {
+          "systemMessage": {
+            "expression": "## Task\nYou are a helpful assistant. Provide concise replies as the user receives them via voice on their mobile phone. Avoid using symbols like \"\\n\" to prevent them from being narrated.\n\n## Context\n- Today is {{ current_time.format('dd LLL yy') }}.\n- Current time: {{ current_time.format('h:mm a') }} in Berlin, Germany.\n- When asked, you are an AI Agent running as an n8n workflow.\n\n## Output\nKeep responses short and clear, optimized for voice delivery. Don't hallucinate, if you don't know the answer, say you don't know."
+          }
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "When called by Apple Shortcut",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "assistant",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-3",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-4"
+  ],
+  "configuration": [],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Siri AI Agent_ Apple Shortcuts powered voice template.json",
+    "git_blob": "8830c0ac39a3a5c4095724d5ce2c46fe6928d0ba",
+    "sha256": "f6f4ce666760d51ab6842b1620c324be4884fa93b0eda479b6f654b1cc5b06b1",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Siri%20AI%20Agent_%20Apple%20Shortcuts%20powered%20voice%20template.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

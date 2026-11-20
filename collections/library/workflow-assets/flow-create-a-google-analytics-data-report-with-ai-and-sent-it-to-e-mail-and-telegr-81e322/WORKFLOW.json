@@ -1,0 +1,628 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-create-a-google-analytics-data-report-with-ai-and-sent-it-to-e-mail-and-telegr-81e322",
+  "title": "Create a Google Analytics Data Report with AI and sent it to E-Mail and Telegram",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Schedule Trigger",
+      "operation": "schedule",
+      "adapter": "scheduler",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Google Analytics Letzte 7 Tage",
+      "operation": "service-read",
+      "adapter": "googleanalytics",
+      "parameters": {
+        "metricsGA4": {
+          "metricValues": [
+            {
+              "listName": "screenPageViews"
+            },
+            {},
+            {
+              "listName": "sessions"
+            },
+            {
+              "listName": "sessionsPerUser"
+            },
+            {
+              "name": "averageSessionDuration",
+              "listName": "other"
+            },
+            {
+              "name": "ecommercePurchases",
+              "listName": "other"
+            },
+            {
+              "name": "averagePurchaseRevenue",
+              "listName": "other"
+            },
+            {
+              "name": "purchaseRevenue",
+              "listName": "other"
+            }
+          ]
+        },
+        "propertyId": {
+          "configuration_input": "step-2-propertyid"
+        },
+        "dimensionsGA4": {
+          "dimensionValues": [
+            {}
+          ]
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Send Email",
+      "operation": "service-write",
+      "adapter": "emailsend",
+      "parameters": {
+        "html": {
+          "expression": "{{ record.message.content }}"
+        },
+        "options": {},
+        "subject": "Weekly Report: Google Analytics: Last 7 days",
+        "toEmail": {
+          "configuration_input": "step-3-toemail"
+        },
+        "fromEmail": {
+          "configuration_input": "step-3-fromemail"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "text": {
+          "expression": "{{ record.message.content }}"
+        },
+        "chatId": {
+          "configuration_input": "step-4-chatid"
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Processing for Telegram",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-5-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Convert the following text from HTML to normal text:\n\n{{ record.message.content }}\n\nPlease format the table so that each metric is a separate paragraph!\n\nExample:\n\nTotal views: xx.xxx\nTotal views previous year: xx,xxx\nDifference: x.xx %\n\nTotal users: xx,xxx\nTotal users previous year: xx,xxx\nDifference: -x.xx %"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Calculator",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {}
+    },
+    {
+      "id": "step-7",
+      "label": "Google Analytics: Past 7 days of the previous year",
+      "operation": "service-read",
+      "adapter": "googleanalytics",
+      "parameters": {
+        "endDate": {
+          "expression": "{{ record.endDate }}"
+        },
+        "dateRange": "custom",
+        "startDate": {
+          "expression": "{{ record.startDate }}"
+        },
+        "metricsGA4": {
+          "metricValues": [
+            {
+              "listName": "screenPageViews"
+            },
+            {},
+            {
+              "listName": "sessions"
+            },
+            {
+              "listName": "sessionsPerUser"
+            },
+            {
+              "name": "averageSessionDuration",
+              "listName": "other"
+            },
+            {
+              "name": "ecommercePurchases",
+              "listName": "other"
+            },
+            {
+              "name": "averagePurchaseRevenue",
+              "listName": "other"
+            },
+            {
+              "name": "purchaseRevenue",
+              "listName": "other"
+            }
+          ]
+        },
+        "propertyId": {
+          "configuration_input": "step-7-propertyid"
+        },
+        "dimensionsGA4": {
+          "dimensionValues": [
+            {}
+          ]
+        },
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Summarize Data",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "field": "Aufrufe",
+              "aggregation": "sum"
+            },
+            {
+              "field": "Nutzer",
+              "aggregation": "sum"
+            },
+            {
+              "field": "Sitzungen",
+              "aggregation": "sum"
+            },
+            {
+              "field": "Sitzungen pro Nutzer",
+              "aggregation": "average"
+            },
+            {
+              "field": "Sitzungsdauer",
+              "aggregation": "average"
+            },
+            {
+              "field": "Käufe",
+              "aggregation": "sum"
+            },
+            {
+              "field": "Revenue pro Kauf",
+              "aggregation": "average"
+            },
+            {
+              "field": "Revenue",
+              "aggregation": "sum"
+            },
+            {
+              "field": "date"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Summarize Data1",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "field": "Aufrufe",
+              "aggregation": "sum"
+            },
+            {
+              "field": "Nutzer",
+              "aggregation": "sum"
+            },
+            {
+              "field": "Sitzungen",
+              "aggregation": "sum"
+            },
+            {
+              "field": "Sitzungen pro Nutzer",
+              "aggregation": "average"
+            },
+            {
+              "field": "Sitzungsdauer",
+              "aggregation": "average"
+            },
+            {
+              "field": "Käufe",
+              "aggregation": "sum"
+            },
+            {
+              "field": "Revenue pro Kauf",
+              "aggregation": "average"
+            },
+            {
+              "field": "Revenue",
+              "aggregation": "sum"
+            },
+            {
+              "field": "date"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Calculation same period previous year",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return {\n // Berechnung des Startdatums: Vorjahr, gleiche Woche, 7 Tage zurück\n startDate: (() => {\n const date = new Date();\n date.setFullYear(date.getFullYear() - 1); // Zurück ins Vorjahr\n date.setDate(date.getDate() - 7); // 7 Tage zurück\n return date.toISOString().split('T')[0];\n })(),\n \n // Berechnung des Enddatums: Vorjahr, heutiges Datum\n endDate: (() => {\n const date = new Date();\n date.setFullYear(date.getFullYear() - 1); // Zurück ins Vorjahr\n return date.toISOString().split('T')[0];\n })(),\n};",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Assign data",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "Aufrufe",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.screenPageViews }}"
+              }
+            },
+            {
+              "name": "Nutzer",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.totalUsers }}"
+              }
+            },
+            {
+              "name": "Sitzungen",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.sessions }}"
+              }
+            },
+            {
+              "name": "Sitzungen pro Nutzer",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.sessionsPerUser }}"
+              }
+            },
+            {
+              "name": "Sitzungsdauer",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.averageSessionDuration }}"
+              }
+            },
+            {
+              "name": {
+                "expression": "Käufe"
+              },
+              "type": "number",
+              "value": {
+                "expression": "{{ record.ecommercePurchases }}"
+              }
+            },
+            {
+              "name": "Revenue pro Kauf",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.averagePurchaseRevenue }}"
+              }
+            },
+            {
+              "name": "Revenue",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.purchaseRevenue }}"
+              }
+            },
+            {
+              "name": "date",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.date }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Assign data1",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "Aufrufe",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.screenPageViews }}"
+              }
+            },
+            {
+              "name": "Nutzer",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.totalUsers }}"
+              }
+            },
+            {
+              "name": "Sitzungen",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.sessions }}"
+              }
+            },
+            {
+              "name": "Sitzungen pro Nutzer",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.sessionsPerUser }}"
+              }
+            },
+            {
+              "name": "Sitzungsdauer",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.averageSessionDuration }}"
+              }
+            },
+            {
+              "name": {
+                "expression": "Käufe"
+              },
+              "type": "number",
+              "value": {
+                "expression": "{{ record.ecommercePurchases }}"
+              }
+            },
+            {
+              "name": "Revenue pro Kauf",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.averagePurchaseRevenue }}"
+              }
+            },
+            {
+              "name": "Revenue",
+              "type": "number",
+              "value": {
+                "expression": "{{ record.purchaseRevenue }}"
+              }
+            },
+            {
+              "name": {
+                "expression": "date"
+              },
+              "type": "string",
+              "value": {
+                "expression": "{{ record.date }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Processing for email",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-13-modelid"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Please analyze the following data and output the results in tabular form:\n\n| Metrics | Last 7 days | Previous year | Percentage change |\n|-------------------------------|---------------|---------|\n| Total page views | {{ steps[\"step-8\"].record.sum_Aufrufe }} | {{ steps[\"step-9\"].record.sum_Aufrufe }} | Percentage change |\n| total users | {{ steps[\"step-8\"].record.sum_Nutzer }} | {{ steps[\"step-9\"].record.sum_Nutzer }} | Percentage change |\n| Total sessions | {{ steps[\"step-8\"].record.sum_Sitzungen }} | {{ steps[\"step-9\"].record.sum_Sitzungen }} | Percentage change |\n| Average sessions/user | {{ steps[\"step-8\"].record.average_Sitzungen_pro_Nutzer }} | {{ steps[\"step-9\"].record.average_Sitzungen_pro_Nutzer }} | Percentage change |\n| Average session duration | {{ steps[\"step-8\"].record.average_Sitzungsdauer }} | {{ steps[\"step-9\"].record.average_Sitzungsdauer }} | Percentage change |\n| Total purchases | {{ steps[\"step-8\"].record['sum_Käufe'] }} | {{ steps[\"step-9\"].record['sum_Käufe'] }} | Percentage change |\n| Average revenue/purchase | {{ steps[\"step-8\"].record.average_Revenue_pro_Kauf }} | {{ steps[\"step-9\"].record.average_Revenue_pro_Kauf }} | Percentage change |\n| Total revenue | {{ steps[\"step-8\"].record.sum_Revenue }} | {{ steps[\"step-9\"].record.sum_Revenue }} | Percentage change |\n\nFormat for numbers:\n- Dot (.) for numbers in thousands (e.g. 4,000)\n- Comma (,) for decimal numbers (e.g. 3.4)\n- Conversion of average session duration in minutes instead of seconds\n- Average turnover/purchase and total turnover in €\n\nPlease write a short summary of the analyzed data above the table (in a maximum of 3 sentences!)\n\nPlease format to a sleek and modern HTML format so that the result can be sent as HTML mail!\n\nStructure of the e-mail:\n\n“Hello! Here is the Weekly Report: Google Analytics of the last 7 days!\n[Summary]\n[Table]”"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-13",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-13",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [
+    {
+      "from": "step-4",
+      "channel": "main",
+      "branch": 0
+    }
+  ],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-propertyid",
+      "purpose": "Select the propertyId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-toemail",
+      "purpose": "Select the toEmail for step-3.",
+      "required": true
+    },
+    {
+      "id": "step-3-fromemail",
+      "purpose": "Select the fromEmail for step-3.",
+      "required": true
+    },
+    {
+      "id": "step-4-chatid",
+      "purpose": "Select the chatId for step-4.",
+      "required": true
+    },
+    {
+      "id": "step-5-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-7-propertyid",
+      "purpose": "Select the propertyId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-13-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "AI_Research_RAG_and_Data_Analysis/Create a Google Analytics Data Report with AI and sent it to E-Mail and Telegram.json",
+    "git_blob": "dc317b39ba3c423c7d5b5a7f77ca4eeee0109cd7",
+    "sha256": "00071fe8de1c36e34e66c50a73f5a0bb8b1fc9b816acb3364445963109afa1b7",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/AI_Research_RAG_and_Data_Analysis/Create%20a%20Google%20Analytics%20Data%20Report%20with%20AI%20and%20sent%20it%20to%20E-Mail%20and%20Telegram.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

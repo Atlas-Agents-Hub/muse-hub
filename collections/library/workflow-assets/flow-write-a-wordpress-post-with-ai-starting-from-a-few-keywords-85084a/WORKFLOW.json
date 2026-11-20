@@ -1,0 +1,584 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-write-a-wordpress-post-with-ai-starting-from-a-few-keywords-85084a",
+  "title": "Write a WordPress post with AI (starting from a few keywords)",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Form",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "path": "create-wordpress-post",
+        "formTitle": "Create a WordPress post with AI",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Keywords (comma-separated)",
+              "requiredField": true
+            },
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Number of chapters",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "1"
+                  },
+                  {
+                    "option": "2"
+                  },
+                  {
+                    "option": "3"
+                  },
+                  {
+                    "option": "4"
+                  },
+                  {
+                    "option": "5"
+                  },
+                  {
+                    "option": "6"
+                  },
+                  {
+                    "option": "7"
+                  },
+                  {
+                    "option": "8"
+                  },
+                  {
+                    "option": "9"
+                  },
+                  {
+                    "option": "10"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldType": "number",
+              "fieldLabel": "Max words count",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "formDescription": "Fill this form with the required information to create a draft post on WordPress"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Settings",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "wordpress_url",
+              "type": "string",
+              "value": {
+                "configuration_input": "step-2-assignments-0-value"
+              }
+            },
+            {
+              "name": "keywords",
+              "type": "string",
+              "value": {
+                "expression": "{{ record['Keywords (comma-separated)'] }}"
+              }
+            },
+            {
+              "name": "chapters",
+              "type": "number",
+              "value": {
+                "expression": "{{ record['Number of chapters'] }}"
+              }
+            },
+            {
+              "name": "words",
+              "type": "number",
+              "value": {
+                "expression": "{{ record['Max words count'] }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Check data consistency",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content.title }}"
+              },
+              "rightValue": ""
+            },
+            {
+              "operator": {
+                "type": "array",
+                "operation": "lengthGte",
+                "rightType": "number"
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content.chapters }}"
+              },
+              "rightValue": {
+                "expression": "{{ 1 }}"
+              }
+            },
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content.subtitle }}"
+              },
+              "rightValue": ""
+            },
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content.introduction }}"
+              },
+              "rightValue": ""
+            },
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content.conclusions }}"
+              },
+              "rightValue": ""
+            },
+            {
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": {
+                "expression": "{{ record.message.content.imagePrompt }}"
+              },
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Split out chapters",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "message.content.chapters"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Merge chapters title and text",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Final article text",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let article = \"\";\n\n// Introduction\narticle += steps[\"step-14\"].records[0].message.content.introduction;\narticle += \"<br><br>\";\n\nfor (const item of records) {\n article += \"<strong>\" + item.json.title + \"</strong>\";\n article += \"<br><br>\";\n article += item.json.message.content;\n article += \"<br><br>\";\n}\n\n// Conclusions\narticle += \"<strong>Conclusions</strong>\";\narticle += \"<br><br>\";\narticle += steps[\"step-14\"].records[0].message.content.conclusions;\n\n\nreturn [\n {\n \"article\": article\n }\n];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Post on Wordpress",
+      "operation": "service-write",
+      "adapter": "wordpress",
+      "parameters": {
+        "title": {
+          "expression": "{{ steps[\"step-14\"].all()[0].json.message.content.title }}"
+        },
+        "additionalFields": {
+          "status": "draft",
+          "content": {
+            "expression": "{{ record.article }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Upload media",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-8-url"
+        },
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "contentType": "binaryData",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Disposition",
+              "value": "attachment; filename=\"example.jpg\""
+            }
+          ]
+        },
+        "inputDataFieldName": "data"
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Set image ID for the post",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://wp-demo.mondo.surf/wp-json/wp/v2/posts/{{ steps[\"step-7\"].record.id }}"
+        },
+        "method": "POST",
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "featured_media",
+              "value": {
+                "expression": "{{ record.id }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Respond: Success",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{\n \"formSubmittedText\": \"The article {{ record.title.rendered }} was correctly created as a draft on WordPress!\"\n}"
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Respond: Error",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "options": {},
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{\n 'formSubmittedText': 'There was a problem creating the article, please refresh the form and try again!'\n}"
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Generate featured image",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "prompt": {
+          "expression": "Generate a photographic image to be used as the cover image for the article titled: {{ steps[\"step-14\"].all()[0].json.message.content.title }}. This is the prompt for the image: {{ steps[\"step-14\"].all()[0].json.message.content.imagePrompt }}, photography, realistic, sigma 85mm f/1.4"
+        },
+        "options": {
+          "size": "1792x1024",
+          "style": "natural",
+          "quality": "hd"
+        },
+        "resource": "image"
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Wikipedia",
+      "operation": "service-read",
+      "adapter": "toolwikipedia",
+      "parameters": {}
+    },
+    {
+      "id": "step-14",
+      "label": "Create post title and structure",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-14-modelid"
+        },
+        "options": {
+          "maxTokens": 2048
+        },
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Write the title, the subtitle, the chapters details, the introduction, the conclusions, and an image prompt for a SEO-friendly article about these topics:\n{{ record.keywords }}.\n\nInstructions:\n- Place the article title in a JSON field called `title`\n- Place the subtitle in a JSON field called `subtitle`\n- Place the introduction in a JSON field called `introduction`\n- In the introduction introduce the topic that is then explored in depth in the rest of the text\n- The introduction should be around 60 words\n- Place the conclusions in a JSON field called `conclusions`\n- The conclusions should be around 60 words\n- Use the conclusions to sum all said in the article and offer a conclusion to the reader\n- The image prompt will be used to produce a photographic cover image for the article and should depict the topics discussed in the article\n- Place the image prompt in a JSON field called `imagePrompt`\n- There should be {{ record.chapters.toString() }} chapters.\n- For each chapter provide a title and an exaustive prompt that will be used to write the chapter text.\n- Place the chapters in an array field called `chapters`\n- For each chapter provide the fields `title` and `prompt`\n- The chapters should follow a logical flow and not repeat the same concepts.\n- The chapters should be one related to the other and not isolated blocks of text. The text should be fluent and folow a linear logic.\n- Don't start the chapters with \"Chapter 1\", \"Chapter 2\", \"Chapter 3\"... just write the title of the chapter\n- For the title and the capthers' titles don't use colons (`:`)\n- For the text, use HTML for formatting, but limited to bold, italic and lists.\n- Don't use markdown for formatting.\n- Always search on Wikipedia for useful information or verify the accuracy of what you write.\n- Never mention it if you don't find information on Wikipedia or the web\n- Go deep in the topic you treat, don't just throw some superficial info"
+              }
+            }
+          ]
+        },
+        "jsonOutput": true
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Create chapters text",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "modelId": {
+          "configuration_input": "step-15-modelid"
+        },
+        "options": {
+          "maxTokens": 2048
+        },
+        "messages": {
+          "values": [
+            {
+              "content": {
+                "expression": "Write a chapter for the article: {{ steps[\"step-14\"].record.message.content.title }}, {{ steps[\"step-14\"].record.message.content.subtitle }}, that talks about {{ steps[\"step-2\"].record[\"keywords\"] }}\n\nThis is the prompt for the chapter titled {{ record.title }}: {{ record.prompt }}.\n\nGuidelines:\n- Just return the plain text for each chapter (no JSON structure).\n- Don't use markdown for formatting.\n- Use HTML for formatting, but limited to bold, italic and lists.\n- Don't add internal titles or headings.\n- The length of each chapther should be around {{ Math.round((steps[\"step-2\"].record.words - 120)/ steps[\"step-2\"].record.chapters) }} words long\n- Go deep in the topic you treat, don't just throw some superficial info\n{{ record_index > 0 ? \"- The previous chapter talks about \" + records[record_index-1].json.title : \"\" }}\n{{ record_index > 0 ? \"- The promt for the previous chapter is \" + records[record_index-1].json.prompt : \"\" }}\n{{ record_index < records.length ? \"- The following chapter will talk about \" + records[record_index+1].json.title: \"\" }}\n{{ record_index < records.length ? \"- The prompt for the following chapter is \" + records[record_index+1].json.prompt : \"\" }}\n- Consider the previous and following chapters what writing the text for this chapter. The text must be coherent with the previous and following chapters.\n- This chapter should not repeat the concepts already exposed in the previous chapter.\n- This chapter is a part of a larger article so don't include an introduction or conclusions. This chapter should merge with the rest of the article."
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-4",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-6",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-7",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-9",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-12",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-15",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assignments-0-value",
+      "purpose": "Set the value endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://you-wordpress-url-here.com/"
+    },
+    {
+      "id": "step-8-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://wp-demo.mondo.surf/wp-json/wp/v2/media"
+    },
+    {
+      "id": "step-14-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-15-modelid",
+      "purpose": "Select the modelId for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "WordPress/Write a WordPress post with AI (starting from a few keywords).json",
+    "git_blob": "421a48819c91301c3d202ccaf9e04f7d61d430db",
+    "sha256": "7b701fc5b4097e0f4c6ca75aa8cf75ed99f3ba8d0696a359abda591811d5df2e",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/WordPress/Write%20a%20WordPress%20post%20with%20AI%20%28starting%20from%20a%20few%20keywords%29.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

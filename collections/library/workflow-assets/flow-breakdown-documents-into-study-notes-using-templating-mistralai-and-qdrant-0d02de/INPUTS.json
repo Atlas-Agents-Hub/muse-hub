@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-breakdown-documents-into-study-notes-using-templating-mistralai-and-qdrant-0d02de",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-16-qdrantcollection": null,
+    "step-34-qdrantcollection": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

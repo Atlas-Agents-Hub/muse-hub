@@ -1,0 +1,29 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-scrape-trustpilot-reviews-with-muse-analyze-sentiment-d02355",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-9-sheetname": null,
+    "step-9-documentid": null,
+    "step-10-sheetname": null,
+    "step-10-documentid": null,
+    "step-13-sheetname": null,
+    "step-13-documentid": null
+  },
+  "adapters": {
+    "googlesheets": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    }
+  }
+}

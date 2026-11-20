@@ -1,0 +1,39 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-line-assistant-with-google-calendar-and-gmail-integration-6cb998",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-5-modelid": null,
+    "step-10-url": null,
+    "step-10-jsonheaders-body-authorization": null,
+    "step-11-url": null,
+    "step-11-jsonheaders-body-authorization": null,
+    "step-12-calendar": null,
+    "step-13-calendar": null
+  },
+  "adapters": {
+    "gmail": {
+      "connection": null
+    },
+    "googlecalendar": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "model": {
+      "connection": null
+    },
+    "session-store": {
+      "connection": null
+    },
+    "toolwikipedia": {
+      "connection": null
+    }
+  }
+}

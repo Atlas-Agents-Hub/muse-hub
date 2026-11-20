@@ -1,0 +1,118 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-gcf-token-optimization-for-llm-tool-responses-69f284",
+  "title": "GCF Token Optimization for LLM Tool Responses",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking 'Execute workflow'",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "GET /contributors (100 records)",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Batch into Array",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const allData = records.map(i => i.json);\nreturn [{ json: { payload: allData } }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "GCF Encode",
+      "operation": "service-read",
+      "adapter": "gcf",
+      "parameters": {
+        "operation": "encode",
+        "inputData": "payload",
+        "outputField": "data",
+        "additionalOptions": {
+          "includeTokenMetrics": true
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "GCF Decode (lossless)",
+      "operation": "service-read",
+      "adapter": "gcf",
+      "parameters": {
+        "operation": "decode",
+        "inputData": "data",
+        "outputField": "decoded"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.github.com/repos/n8n-io/n8n/contributors?per_page={value}"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/GCF Token Optimization for LLM Tool Responses.json",
+    "git_blob": "e0e7e7832d7c8b7906c95731812ebe40753463c0",
+    "sha256": "2df2037f515cb969504033c1419ce4b927aa8360327d2fd72af3e9b85340bbf4",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/GCF%20Token%20Optimization%20for%20LLM%20Tool%20Responses.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

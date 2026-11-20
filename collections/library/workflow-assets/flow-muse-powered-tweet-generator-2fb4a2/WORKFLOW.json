@@ -1,0 +1,142 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-muse-powered-tweet-generator-2fb4a2",
+  "title": "OpenAI-powered tweet generator",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On clicking 'execute'",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "FunctionItem",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "functionCode": {
+          "language": "javascript",
+          "reference": "// hashtag list\nconst Hashtags = [\n \"#techtwitter\",\n \"#n8n\"\n];\n\n// random output function\nconst randomHashtag = Hashtags[Math.floor(Math.random() * Hashtags.length)];\nitem.hashtag = randomHashtag;\nreturn item;",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "HTTP Request",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-3-url"
+        },
+        "options": {},
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": {
+          "expression": "{\n \"prompt\": \"Generate a tweet, with under 100 characters, about and including the hashtag {{steps[\"step-2\"].json[\"hashtag\"]}}:\",\n \"temperature\": 0.7,\n \"max_tokens\": 64,\n \"top_p\": 1,\n \"frequency_penalty\": 0,\n \"presence_penalty\": 0\n}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Airtable",
+      "operation": "service-write",
+      "adapter": "airtable",
+      "parameters": {
+        "table": "main",
+        "options": {},
+        "operation": "append",
+        "application": "appOaG8kEA8FAABOr"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Set",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "Hashtag",
+              "value": {
+                "expression": "{{steps[\"step-2\"].json[\"hashtag\"]}}"
+              }
+            },
+            {
+              "name": "Content",
+              "value": {
+                "expression": "{{steps[\"step-3\"].json[\"choices\"][0][\"text\"]}}"
+              }
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://api.openai.com/v1/engines/text-davinci-001/completions"
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Instagram_Twitter_Social_Media/OpenAI-powered tweet generator.json",
+    "git_blob": "8775ef9d68e506cd83c33002df9bd7c0cf3ecb8d",
+    "sha256": "58aba09d969681bd26021df49e08220cf96c2b0f965983fd4efbb8d67312aedc",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Instagram_Twitter_Social_Media/OpenAI-powered%20tweet%20generator.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

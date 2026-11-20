@@ -1,0 +1,21 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-slack-slash-commands-ai-chat-bot-75075a",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-1-path": null
+  },
+  "adapters": {
+    "model": {
+      "connection": null
+    },
+    "slack": {
+      "connection": null
+    }
+  }
+}

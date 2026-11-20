@@ -1,0 +1,153 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-clientflow-lite-client-onboarding-automation-8c2d7b",
+  "title": "ClientFlow Lite - Client Onboarding Automation",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "New Client",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "clientflow-lite",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Validate",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "try {\n  const b = records[0].json.body || records[0].json;\n  if (!b.name && !b.client_name) throw new Error('Client name required.');\n  return [{ json: { name: b.client_name || b.name, email: b.client_email || b.email || '', company: b.company_name || b.company || '', projectType: b.project_type || 'General', clientId: 'CF-' + Date.now().toString(36).toUpperCase(), onboardedAt: new Date().toISOString() } }];\n} catch (e) { throw new Error('Invalid data: ' + e.message); }",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Gmail: Welcome Email",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ record.email }}"
+        },
+        "subject": {
+          "expression": "Welcome aboard, {{ record.name }}!"
+        },
+        "emailType": "text",
+        "message": {
+          "expression": "Hi {{ record.name }},\n\nWelcome! We're excited to start working on your {{ record.projectType }} project.\n\nWe'll be in touch soon with next steps and a kick-off meeting invite.\n\nBest regards,\n{{ $env.CLIENTFLOW_SENDER_NAME || 'The Team' }}"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Log to Sheets",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "expression": "{{ $env.CLIENTFLOW_SHEET_ID }}"
+        },
+        "sheetName": {
+          "configuration_input": "step-4-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Client ID": {
+              "expression": "{{ record.clientId }}"
+            },
+            "Name": {
+              "expression": "{{ record.name }}"
+            },
+            "Email": {
+              "expression": "{{ record.email }}"
+            },
+            "Company": {
+              "expression": "{{ record.company }}"
+            },
+            "Project": {
+              "expression": "{{ record.projectType }}"
+            },
+            "Onboarded": {
+              "expression": "{{ record.onboardedAt }}"
+            }
+          }
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Respond",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": {
+          "expression": "{{ JSON.stringify({ success: true, clientId: record.clientId, name: record.name }) }}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-4-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/ClientFlow Lite - Client Onboarding Automation.json",
+    "git_blob": "25432061ca74ae147749dc456acae3da82141e06",
+    "sha256": "aab4b697d91a8265cfb14c3efa858d69090d0579df99a69d472d29fa930f1e3d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/ClientFlow%20Lite%20-%20Client%20Onboarding%20Automation.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

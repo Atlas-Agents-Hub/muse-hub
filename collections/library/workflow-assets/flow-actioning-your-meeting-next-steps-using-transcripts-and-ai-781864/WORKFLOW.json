@@ -1,0 +1,571 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-actioning-your-meeting-next-steps-using-transcripts-and-ai-781864",
+  "title": "Actioning Your Meeting Next Steps using Transcripts and AI",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "OpenAI Chat Model1",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {
+          "temperature": 0
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Get Meeting ConferenceRecords",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "configuration_input": "step-2-url"
+        },
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "filter",
+              "value": {
+                "expression": "space.meeting_code={{ record.conferenceData.conferenceId }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Get Meeting Transcript Location",
+      "operation": "http",
+      "adapter": "http",
+      "parameters": {
+        "url": {
+          "expression": "https://meet.googleapis.com/v2/{{ record.conferenceRecords[0].name }}/transcripts"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Get Transcript File",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "expression": "{{ record.docsDestination.document }}"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          }
+        },
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "When clicking \"Test workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-6",
+      "label": "PDF Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Get Calendar Event",
+      "operation": "service-read",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "eventId": "abc123",
+        "options": {},
+        "calendar": {
+          "configuration_input": "step-7-calendar"
+        },
+        "operation": "get"
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Structured Output Parser",
+      "operation": "parse",
+      "adapter": "local",
+      "parameters": {
+        "jsonSchema": {
+          "json": {
+            "type": "object",
+            "properties": {
+              "summary": {
+                "type": "string"
+              },
+              "highlights": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "attendee": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "next_steps": {
+                "type": "array",
+                "items:": {
+                  "type": "string"
+                }
+              },
+              "meetings_created": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "event_title": {
+                      "type": "string"
+                    },
+                    "event_invite_url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-10",
+      "label": "Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "string",
+              "value": {
+                "expression": "{{ JSON.stringify(steps[\"step-17\"].record) }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Edit Fields",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": {
+                "expression": "route"
+              },
+              "type": "string",
+              "value": {
+                "expression": "{{ record.route }}"
+              }
+            },
+            {
+              "name": "query",
+              "type": "object",
+              "value": {
+                "expression": "{{ record.query.parseJson() }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Fallback Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "json": {
+            "response": {
+              "ok": false,
+              "error": "The requested tool was not found or the service may be unavailable. Do not retry."
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Actions Router",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "meetings.create",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": {
+                      "expression": "{{ record.route }}"
+                    },
+                    "rightValue": "meetings.create"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Get Attendees",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "attendees",
+              "type": "array",
+              "value": {
+                "expression": "{{ steps[\"step-13\"].record.query.attendees }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-15",
+      "label": "Attendees List",
+      "operation": "batch",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "attendees"
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Add Attendee to Invite",
+      "operation": "service-write",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "eventId": {
+          "expression": "{{ steps[\"step-17\"].record.id }}"
+        },
+        "calendar": {
+          "configuration_input": "step-16-calendar"
+        },
+        "operation": "update",
+        "updateFields": {
+          "attendees": [
+            {
+              "expression": "{{ record.name }} <{{ record.email }}>"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-17",
+      "label": "Create Calendar Event1",
+      "operation": "service-read",
+      "adapter": "googlecalendar",
+      "parameters": {
+        "end": {
+          "expression": "{{ record.query.end_date }} {{ record.query.end_time }}"
+        },
+        "start": {
+          "expression": "{{ record.query.start_date }} {{ record.query.start_time }}"
+        },
+        "calendar": {
+          "configuration_input": "step-17-calendar"
+        },
+        "additionalFields": {
+          "summary": {
+            "expression": "{{ record.query.title }}"
+          },
+          "attendees": [],
+          "description": {
+            "expression": "{{ record.query.description }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "step-18",
+      "label": "Schedule Meeting",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "create_calendar_event",
+        "fields": {
+          "values": [
+            {
+              "name": "route",
+              "stringValue": "meetings.create"
+            }
+          ]
+        },
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "Call this tool to create an calendar event. This tool requires the following object request body.\n```\n{\n \"type\": \"object\",\n \"properties\": {\n \"title\": { \"type\": \"string\" },\n \"description\": { \"type\": \"string\" },\n \"start_date\": { \"type\": \"string\" },\n \"start_time\": { \"type\": \"string\" },\n \"end_date\": { \"type\": \"string\" },\n \"end_time\": { \"type\": \"string\" },\n \"attendees\": {\n \"type\": \"array\",\n \"items\": {\n \"type\": \"object\",\n \"properties\": {\n \"name\": { \"type\": \"string\" },\n \"email\": { \"type\": \"string\" }\n }\n }\n }\n }\n}\n```\nNote that dates are in the format yyyy-MM-dd and times are in the format HH:mm:ss."
+      }
+    },
+    {
+      "id": "step-19",
+      "label": "AI Agent",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "text": {
+          "expression": "system: your role is to help people get the most out of their meetings. You achieve this by helpfully summarising the meeting transcript to pull out useful information and key points of interest and delivery this in note form. You also help carry out any follow-up actions on behalf of the meeting attendees.\n1. Summarise the meeting and highlight any key goals of the meeting.\n2. Identify and list important points mentioned by each attendee. If non-applicable for an attendee, skip and proceed to the next attendee.\n3. Identify and list all next steps agreed by the attendees. If there are none, make a maximum of 3 suggestions based on the transcript instead. Please list the steps even if they've already been actioned.\n4. identify and perform follow-up actions based on a transcript of a meeting. These actions which are allowed are: creating follow-up calendar events if suggested by the attendees.\n\nThe meeting details were as follows:\n* The creator of the meeting was {{ steps[\"step-7\"].record[\"creator\"][\"displayName\"] }} <{{ steps[\"step-7\"].record[\"creator\"][\"email\"]}}>\n* The attendees were {{ steps[\"step-7\"].record[\"attendees\"].map(attendee => `${attendee.display_name} <${attendee.email}>`).join(', ') }}\n* The meeting was scheduled for {{ steps[\"step-7\"].record[\"start\"][\"dateTime\"] }}\n\nThe meeting transcript as follows:\n```\n{{ record[\"text\"] }}\n```"
+        },
+        "agent": "openAiFunctionsAgent",
+        "options": {},
+        "promptType": "define",
+        "hasOutputParser": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-6",
+      "to": "step-19",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-13",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-14",
+      "to": "step-15",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-17",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-12",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-15",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-18",
+      "to": "step-19",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-19",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-16",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-19",
+      "channel": "outputParser",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-10",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-14",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-17",
+      "to": "step-16",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-7",
+      "to": "step-19",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-5",
+    "step-9"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-url",
+      "purpose": "Set the url endpoint or source URL for this operation.",
+      "required": true,
+      "endpoint_template": "https://meet.googleapis.com/v2/conferenceRecords"
+    },
+    {
+      "id": "step-7-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    },
+    {
+      "id": "step-17-calendar",
+      "purpose": "Select the calendar for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/Actioning Your Meeting Next Steps using Transcripts and AI.json",
+    "git_blob": "a4a573f7282620f3c9977351eab238a0ba77e5d0",
+    "sha256": "a21ae8b8923ac92fee069f897f822658a4adc37d8521887f5bf43e829e6f5335",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/Actioning%20Your%20Meeting%20Next%20Steps%20using%20Transcripts%20and%20AI.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

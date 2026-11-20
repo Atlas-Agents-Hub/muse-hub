@@ -1,0 +1,241 @@
+{
+  "allowed_hosts": [
+    "canny.io",
+    "yourcompany.canny.io"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Project management",
+  "id": "canny",
+  "name": "Canny",
+  "operations": [
+    {
+      "description": "Creates a new post on a Canny board.",
+      "id": "create_post",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Board Id",
+          "name": "boardID",
+          "required": null,
+          "source_expression": "boardIdProp",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The unique identifier of the post author (Canny user ID).",
+          "label": "Author ID",
+          "name": "authorID",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "A brief title describing the post.",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The longer description of the post.",
+          "label": "Details",
+          "name": "details",
+          "required": true,
+          "type": "LongText"
+        },
+        {
+          "description": "The unique identifier of the admin creating the post on behalf of the author.",
+          "label": "By ID",
+          "name": "byID",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique identifier of the category to assign.",
+          "label": "Category ID",
+          "name": "categoryID",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique identifier of the user responsible for completing the work.",
+          "label": "Owner ID",
+          "name": "ownerID",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The estimated delivery date in MM/YYYY format (e.g. \"06/2026\").",
+          "label": "ETA",
+          "name": "eta",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether the ETA should be visible to all users.",
+          "label": "ETA Public",
+          "name": "etaPublic",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Custom fields as key-value pairs (keys max 30 chars, values max 200 chars).",
+          "label": "Custom Fields",
+          "name": "customFields",
+          "required": false,
+          "type": "Object"
+        },
+        {
+          "description": "Original creation date in ISO 8601 format, for migrating posts from another source.",
+          "label": "Created At",
+          "name": "createdAt",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Post",
+      "source_path": "canny/src/lib/actions/create-post.ts",
+      "source_sha256": "1d0e0bd9f968bb7513200838d47e7b6351b79bc0faa5d888872eb790a6d0b9ed",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/canny/src/lib/actions/create-post.ts"
+    },
+    {
+      "description": "Casts a vote on a post on behalf of a user.",
+      "id": "create_vote",
+      "inputs": [
+        {
+          "description": "The unique identifier of the post to vote on.",
+          "label": "Post ID",
+          "name": "postID",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique identifier of the voter (Canny user ID).",
+          "label": "Voter ID",
+          "name": "voterID",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Vote",
+      "source_path": "canny/src/lib/actions/create-vote.ts",
+      "source_sha256": "a4588d6cb68bccbc88340144c709c948b3f010fb9eed6e23e8529d78260b0874",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/canny/src/lib/actions/create-vote.ts"
+    },
+    {
+      "description": "Removes a vote from a post for a given user.",
+      "id": "delete_vote",
+      "inputs": [
+        {
+          "description": "The unique identifier of the post to remove the vote from.",
+          "label": "Post ID",
+          "name": "postID",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The unique identifier of the voter (Canny user ID).",
+          "label": "Voter ID",
+          "name": "voterID",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Vote",
+      "source_path": "canny/src/lib/actions/delete-vote.ts",
+      "source_sha256": "cb5b6639407f19bb4221e725175f71a0a38a9e723c40e0c831d9cfedc0df2f1a",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/canny/src/lib/actions/delete-vote.ts"
+    },
+    {
+      "description": "Returns a list of posts for a board, with optional filtering and sorting.",
+      "id": "list_posts",
+      "inputs": [
+        {
+          "description": "The board to list posts for (optional — omit to list across all boards).",
+          "label": "Board",
+          "name": "boardID",
+          "required": false,
+          "type": "Dropdown"
+        },
+        {
+          "description": "A search query to filter posts.",
+          "label": "Search",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The order of returned posts.",
+          "label": "Sort",
+          "name": "sort",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Comma-separated list of statuses to filter by (e.g. \"open,planned\").",
+          "label": "Status",
+          "name": "status",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Number of posts to fetch (default 10).",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Number of posts to skip (for pagination).",
+          "label": "Skip",
+          "name": "skip",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Posts",
+      "source_path": "canny/src/lib/actions/list-posts.ts",
+      "source_sha256": "bc2e5130f68bf668e9efc30d6d27a62ba2d539500a146fb2ba50746d8b55e426",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/canny/src/lib/actions/list-posts.ts"
+    },
+    {
+      "description": "Retrieves the details of an existing post by its ID.",
+      "id": "retrieve_post",
+      "inputs": [
+        {
+          "description": "The unique identifier of the post.",
+          "label": "Post ID",
+          "name": "id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Retrieve Post",
+      "source_path": "canny/src/lib/actions/retrieve-post.ts",
+      "source_sha256": "a9f5a764de75be15468e71569c3db81f9d93c103fef515388f4a08e084c43b17",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/canny/src/lib/actions/retrieve-post.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "71eca01431e59a66e3ecb486b4c25cc74896a48a",
+    "index_path": "canny/src/index.ts",
+    "index_sha256": "df0daaff981e3f2aac56b2571c0c42a5633e2ae3d87ee262af36bba46eeeaa05",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer",
+    "software-engineer"
+  ]
+}

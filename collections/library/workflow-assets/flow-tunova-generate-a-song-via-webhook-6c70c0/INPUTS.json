@@ -1,0 +1,18 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-tunova-generate-a-song-via-webhook-6c70c0",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

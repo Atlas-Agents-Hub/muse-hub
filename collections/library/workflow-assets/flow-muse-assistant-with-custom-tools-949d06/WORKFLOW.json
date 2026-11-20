@@ -1,0 +1,277 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-muse-assistant-with-custom-tools-949d06",
+  "title": "OpenAI assistant with custom tools",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "On new manual Chat Message",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "OpenAI Assistant",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {
+        "options": {},
+        "assistantId": {
+          "configuration_input": "step-2-assistantid"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Execute Workflow Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "Mapping data",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return [\n {\n \"country\": \"Wakanda\",\n \"capital\": \"Birnin Zana\"\n },\n {\n \"country\": \"Narnia\",\n \"capital\": \"Cair Paravel\"\n },\n {\n \"country\": \"Gondor\",\n \"capital\": \"Minas Tirith\"\n },\n {\n \"country\": \"Oz\",\n \"capital\": \"The Emerald City\"\n },\n {\n \"country\": \"Westeros\",\n \"capital\": \"King's Landing\"\n },\n {\n \"country\": \"Panem\",\n \"capital\": \"The Capitol\"\n },\n {\n \"country\": \"Ruritania\",\n \"capital\": \"Strelsau\"\n },\n {\n \"country\": \"Mordor\",\n \"capital\": \"Barad-dûr\"\n },\n {\n \"country\": \"Latveria\",\n \"capital\": \"Doomstadt\"\n },\n {\n \"country\": \"Atlantis\",\n \"capital\": \"Poseidonis\"\n }\n]",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "List countries?",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": {
+                "expression": "{{ record.query }}"
+              },
+              "value2": "list"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Mapping data1",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return [\n {\n \"country\": \"Wakanda\",\n \"capital\": \"Birnin Zana\"\n },\n {\n \"country\": \"Narnia\",\n \"capital\": \"Cair Paravel\"\n },\n {\n \"country\": \"Gondor\",\n \"capital\": \"Minas Tirith\"\n },\n {\n \"country\": \"Oz\",\n \"capital\": \"The Emerald City\"\n },\n {\n \"country\": \"Westeros\",\n \"capital\": \"King's Landing\"\n },\n {\n \"country\": \"Panem\",\n \"capital\": \"The Capitol\"\n },\n {\n \"country\": \"Ruritania\",\n \"capital\": \"Strelsau\"\n },\n {\n \"country\": \"Mordor\",\n \"capital\": \"Barad-dûr\"\n },\n {\n \"country\": \"Latveria\",\n \"capital\": \"Doomstadt\"\n },\n {\n \"country\": \"Atlantis\",\n \"capital\": \"Poseidonis\"\n }\n]",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Return country list",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "response",
+              "stringValue": {
+                "expression": "{{ record.concatenated_country }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Return specific capital",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "response",
+              "stringValue": {
+                "expression": "{{ $ifEmpty(record.capital, 'Capital not found') }}"
+              }
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Tool to call the workflow below",
+      "operation": "service-read",
+      "adapter": "workflow",
+      "parameters": {
+        "name": "country_capitals_tool",
+        "workflowId": {
+          "expression": "{{ workflow_id }}"
+        },
+        "description": "This tool has two modes:\n1. Pass 'list' to the tool to get a list of countries that the tool has the capitals for (one per line). This is useful if you can't find a match, to see if the country being asked about might have been misspelled.\n2. Pass one of the country names in the list to the tool to get the capital of that country. Note that the country must be spelled exactly as it is in the list of countries returned in mode 1"
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Concatenate country names",
+      "operation": "aggregate",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "field": "country",
+              "separateBy": "\n",
+              "aggregation": "concatenate"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Get the matching country's details",
+      "operation": "join",
+      "adapter": "local",
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "joinMode": "enrichInput1",
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "query",
+              "field2": "country"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Tool: Get current date and time",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "name": "date_tool",
+        "jsCode": {
+          "language": "javascript",
+          "reference": "let now = DateTime.now()\nreturn now.toISO()",
+          "inputs": "records, record, and named steps"
+        },
+        "description": "Call this tool to get the current timestamp (in ISO format). No parameters necessary"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-4",
+      "to": "step-10",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 0,
+      "input": 1
+    },
+    {
+      "from": "step-5",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-11",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-2",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-2",
+      "channel": "tool",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1",
+    "step-3"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-assistantid",
+      "purpose": "Select the assistantId for step-2.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/OpenAI assistant with custom tools.json",
+    "git_blob": "945413a349ff2757a4dec777372511a578ea4010",
+    "sha256": "13f83ecdc8b3df22e03d87b951319241016047df4e6632897b6f23da90a14215",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/OpenAI%20assistant%20with%20custom%20tools.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

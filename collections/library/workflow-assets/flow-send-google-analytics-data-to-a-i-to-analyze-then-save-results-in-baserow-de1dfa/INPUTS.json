@@ -1,0 +1,43 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-send-google-analytics-data-to-a-i-to-analyze-then-save-results-in-baserow-de1dfa",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-propertyid": null,
+    "step-4-propertyid": null,
+    "step-7-metricvalues-4-name": null,
+    "step-7-metricvalues-5-name": null,
+    "step-7-metricvalues-7-name": null,
+    "step-7-propertyid": null,
+    "step-8-metricvalues-4-name": null,
+    "step-8-metricvalues-5-name": null,
+    "step-8-metricvalues-7-name": null,
+    "step-8-propertyid": null,
+    "step-11-propertyid": null,
+    "step-12-propertyid": null,
+    "step-15-url": null,
+    "step-16-url": null,
+    "step-17-url": null,
+    "step-18-tableid": null,
+    "step-18-databaseid": null
+  },
+  "adapters": {
+    "baserow": {
+      "connection": null
+    },
+    "googleanalytics": {
+      "connection": null
+    },
+    "http": {
+      "connection": null
+    },
+    "scheduler": {
+      "connection": null
+    }
+  }
+}

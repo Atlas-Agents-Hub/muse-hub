@@ -1,0 +1,375 @@
+{
+  "allowed_hosts": [
+    "api.close.com",
+    "app.close.com",
+    "google.com",
+    "www.github.com",
+    "www.linkedin.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Sales & CRM",
+  "id": "close",
+  "name": "Close",
+  "operations": [
+    {
+      "description": "Creates a new contact.",
+      "id": "create_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Lead_Id",
+          "name": "lead_id",
+          "required": null,
+          "source_expression": "leadId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Office Phone",
+          "name": "officePhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Mobile Phone",
+          "name": "mobilePhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Home Phone",
+          "name": "homePhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Direct Phone",
+          "name": "directPhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Fax Phone",
+          "name": "faxPhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Other Phone",
+          "name": "otherPhone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Office Email",
+          "name": "officeEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Home Email",
+          "name": "homeEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Direct Email",
+          "name": "directEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Other Email",
+          "name": "otherEmail",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "URL",
+          "name": "url",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Custom Fields",
+          "name": "customFields",
+          "required": null,
+          "source_expression": "customFields('contact')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Contact",
+      "source_path": "close/src/lib/actions/create-contact.ts",
+      "source_sha256": "2dfe57af867ad1a8554b25384cced649313cf4ad70a20c1e237f1beeac126c90",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/close/src/lib/actions/create-contact.ts"
+    },
+    {
+      "description": "Creates a new lead.",
+      "id": "create_lead",
+      "inputs": [
+        {
+          "description": "The name of the lead/company.",
+          "label": "Lead Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "URL",
+          "name": "url",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "Array of contact details for this lead",
+          "label": "Contacts",
+          "name": "contacts",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "",
+          "label": "Status Id",
+          "name": "statusId",
+          "required": null,
+          "source_expression": "statusId('lead', false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Custom Fields",
+          "name": "customFields",
+          "required": null,
+          "source_expression": "customFields('lead')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Lead",
+      "source_path": "close/src/lib/actions/create-lead.ts",
+      "source_sha256": "e4ff99ec3fad9eacc597485a13dde92c3d175adc503b524a140dd2fa0fb86576",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/close/src/lib/actions/create-lead.ts"
+    },
+    {
+      "description": "Create a new opportunity.",
+      "id": "create_opportunity",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Lead_Id",
+          "name": "lead_id",
+          "required": null,
+          "source_expression": "leadId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Status_Id",
+          "name": "status_id",
+          "required": null,
+          "source_expression": "statusId('opportunity', true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "A descriptive name for the opportunity.",
+          "label": "Opportunity Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Additional details about the opportunity.",
+          "label": "Notes",
+          "name": "note",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "The probability of winning this opportunity (0-100).",
+          "label": "Confidence %",
+          "name": "confidence",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Monetary value in cents of your organization currency, e.g. 340000 for $3,400.00.",
+          "label": "Value (cents)",
+          "name": "value",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "The period for the opportunity value.",
+          "label": "Value Period",
+          "name": "value_period",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The ID of the contact associated with this opportunity.",
+          "label": "Contact ID",
+          "name": "contact_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "User_Id",
+          "name": "user_id",
+          "required": null,
+          "source_expression": "userId()",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Custom_Fields",
+          "name": "custom_fields",
+          "required": null,
+          "source_expression": "customFields('opportunity')",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Opportunity",
+      "source_path": "close/src/lib/actions/create-opportunity.ts",
+      "source_sha256": "c160995fc459fa916ac4ac14fa2ea7ca7e56701ae034a01a9f3e6255b8bfe196",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/close/src/lib/actions/create-opportunity.ts"
+    },
+    {
+      "description": "Search for contacts by name, email, or other criteria with advanced filtering",
+      "id": "find_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Search Type",
+          "name": "search_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Search Query",
+          "name": "search_query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Match Type",
+          "name": "match_type",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Contact",
+      "source_path": "close/src/lib/actions/find-contact.ts",
+      "source_sha256": "641e81133f82fe524894da1939b8d43804ada670a3ef16926a4718fb0d73909e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/close/src/lib/actions/find-contact.ts"
+    },
+    {
+      "description": "Search for leads with advanced filtering options",
+      "id": "find_lead",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Search Type",
+          "name": "search_type",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Search Query",
+          "name": "search_query",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Match Type",
+          "name": "match_type",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Lead",
+      "source_path": "close/src/lib/actions/find-lead.ts",
+      "source_sha256": "6803f09784b7886f33d328207bd3636d62084750cb4b9278ed8b2f6ada143803",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/close/src/lib/actions/find-lead.ts"
+    },
+    {
+      "description": "Triggers when a new contact is created.",
+      "id": "new_contact_added",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Contact Added",
+      "source_path": "close/src/lib/triggers/new-contact-added.ts",
+      "source_sha256": "432fee737bba3bfadad2aa9f96714ae55e760f26973bf7092defbdf714cbba8f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/close/src/lib/triggers/new-contact-added.ts"
+    },
+    {
+      "description": "Triggers when a new lead is created.",
+      "id": "new_lead_created",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Lead Created",
+      "source_path": "close/src/lib/triggers/new-lead-added.ts",
+      "source_sha256": "beca07023a8e9be5da1aba919115a14c39e0676724b2d09d852f4b8f2c996d2d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/close/src/lib/triggers/new-lead-added.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "73ff2eb7f996f4e5ff7c320e1a5c46baf2b9cc31",
+    "index_path": "close/src/index.ts",
+    "index_sha256": "9ff7748b82b572726e2dc131951b3b4b91d1e4babf7cd27a57cdc5ec69968539",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer"
+  ]
+}

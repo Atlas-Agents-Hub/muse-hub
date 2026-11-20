@@ -17,7 +17,7 @@ SCHEMA="muse-presets/component-catalog-v1"
 PINS_SCHEMA="muse-presets/component-source-pins-v1"
 BASE="generic-first-party-source-v1"
 # Immutable local source digest, NOT a publisher signature.
-PINNED_MANIFEST_SHA256="97751df2242d6f0d918286f14ce1f215ab1df848d16275fbdc796f0019eb0e3c"
+PINNED_MANIFEST_SHA256="dc52785978a57b0c9763ef075262463123a2f459f86422e296e391e1a8f7ef3e"
 MAX_MANIFEST=40_000
 MAX_MODULE=300_000
 MAX_OUTPUT=256_000
@@ -34,6 +34,10 @@ SPECS={
    "src/muse_presets/catalog.py",
    "src/muse_presets/playbooks.py",
    "src/muse_presets/neutrality.py",
+   "src/muse_presets/site_social.py",
+   "src/muse_presets/site_product.py",
+   "src/muse_presets/planner_package.py",
+   "src/muse_presets/source_limits.py",
    "examples/research_evaluator_demo.py")),
  "garden":("garden-companion",(
    "src/muse_presets/garden_calendar.py",

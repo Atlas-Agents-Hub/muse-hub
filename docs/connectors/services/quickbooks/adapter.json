@@ -1,0 +1,382 @@
+{
+  "allowed_hosts": [
+    "appcenter.intuit.com",
+    "developer.intuit.com",
+    "oauth.platform.intuit.com",
+    "quickbooks.api.intuit.com"
+  ],
+  "auth": {
+    "authorization_urls": [
+      "https://appcenter.intuit.com/connect/oauth2"
+    ],
+    "fields": [
+      {
+        "description": "",
+        "label": "Company ID",
+        "name": "companyId",
+        "required": true,
+        "type": "ShortText"
+      }
+    ],
+    "method": "OAuth 2.0 account connection",
+    "scopes": [
+      "com.intuit.quickbooks.accounting"
+    ],
+    "token_urls": [
+      "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer"
+    ]
+  },
+  "category": "Finance & Commerce",
+  "id": "quickbooks",
+  "name": "Quickbooks Online",
+  "operations": [
+    {
+      "description": "Creates a bill (accounts payable) in QuickBooks.",
+      "id": "create_bill",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Vendor",
+          "name": "vendorRef",
+          "required": true,
+          "type": "Dropdown"
+        },
+        {
+          "description": "Details of the bill (expense categories). At least one line is required.",
+          "label": "Line Items",
+          "name": "lineItems",
+          "required": true,
+          "type": "Array"
+        },
+        {
+          "description": "The date of the bill. Defaults to today if empty.",
+          "label": "Bill Date",
+          "name": "txnDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "The date the payment is due. If empty, the vendor/company term is used.",
+          "label": "Due Date",
+          "name": "dueDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Reference number for the bill.",
+          "label": "Bill Number",
+          "name": "docNumber",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Internal note about the bill.",
+          "label": "Memo (Private Note)",
+          "name": "privateNote",
+          "required": false,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Bill",
+      "source_path": "quickbooks/src/actions/create-bill.ts",
+      "source_sha256": "4613d65fc3b7243d1a8ca4c23ca8209ae0723f1fb7b0dc38d5924a02f9ee3039",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/actions/create-bill.ts"
+    },
+    {
+      "description": "Creates a vendor in QuickBooks.",
+      "id": "create_vendor",
+      "inputs": [
+        {
+          "description": "The name QuickBooks will show for this vendor. Must be unique across all vendors, customers, and employees.",
+          "label": "Vendor Display Name",
+          "name": "displayName",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Company Name",
+          "name": "companyName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Email Address",
+          "name": "email",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone Number",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address Line 1",
+          "name": "billAddrLine1",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address City",
+          "name": "billAddrCity",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "State or province code, e.g. CA.",
+          "label": "Billing Address State",
+          "name": "billAddrState",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Billing Address Postal Code",
+          "name": "billAddrPostalCode",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Whether this vendor should be tracked for 1099 reporting.",
+          "label": "Track for 1099",
+          "name": "vendor1099",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "",
+          "label": "Tax ID (SSN or EIN)",
+          "name": "taxIdentifier",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Your own reference/account number for this vendor (external ID). Shown on checks.",
+          "label": "Account Number",
+          "name": "acctNum",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional. The default payment term for bills from this vendor.",
+          "label": "Payment Term",
+          "name": "termRef",
+          "required": false,
+          "type": "Dropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Vendor",
+      "source_path": "quickbooks/src/actions/create-vendor.ts",
+      "source_sha256": "c709038ea0d9a805e970874392ed33a74ae465312ffe36c50f9c163547a26185",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/actions/create-vendor.ts"
+    },
+    {
+      "description": "List or search the chart of accounts to get an account Id (e.g. an expense account for a bill).",
+      "id": "find_account",
+      "inputs": [
+        {
+          "description": "Optional. Filter accounts whose name contains this text.",
+          "label": "Account Name Contains",
+          "name": "search_term",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional. Filter by account type.",
+          "label": "Account Type",
+          "name": "accountType",
+          "required": false,
+          "type": "StaticDropdown"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Account",
+      "source_path": "quickbooks/src/actions/find-account.ts",
+      "source_sha256": "0d96818c55f7f92f8acdc604dde6298b2c299d937ce4813049915228b3e635f2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/actions/find-account.ts"
+    },
+    {
+      "description": "Search for a customer by display name in QuickBooks.",
+      "id": "find_customer",
+      "inputs": [
+        {
+          "description": "The display name of the customer to search for.",
+          "label": "Customer Name",
+          "name": "search_term",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Customer",
+      "source_path": "quickbooks/src/actions/find-customer.ts",
+      "source_sha256": "b19f70af9ba0077ef47fcb9417ac9844e9e8d9c279ff0f9274ce977951c0f752",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/actions/find-customer.ts"
+    },
+    {
+      "description": "Search for an invoice by its number in QuickBooks.",
+      "id": "find_invoice",
+      "inputs": [
+        {
+          "description": "The document number (DocNumber) of the invoice to search for.",
+          "label": "Invoice Number",
+          "name": "invoice_number",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Invoice",
+      "source_path": "quickbooks/src/actions/find-invoice.ts",
+      "source_sha256": "6540bb95783f0b9e1815bfc2f5ccd2bde4820e26536cdbc5ebbabe9729e2b112",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/actions/find-invoice.ts"
+    },
+    {
+      "description": "Finds an existing payment in QuickBooks.",
+      "id": "find_payment",
+      "inputs": [
+        {
+          "description": "The ID of the customer to find payments for.",
+          "label": "Customer ID",
+          "name": "customerId",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Payment",
+      "source_path": "quickbooks/src/actions/find-payment.ts",
+      "source_sha256": "a260ce977b305230b70ce35128584a202f7216a4e14be5115393a6378382a504",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/actions/find-payment.ts"
+    },
+    {
+      "description": "Search for a vendor in QuickBooks by display name, email address, or account number.",
+      "id": "find_vendor",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Search By",
+          "name": "searchBy",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The exact vendor display name, email address, or account number to search for, depending on Search By.",
+          "label": "Search Value",
+          "name": "search_term",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Vendor",
+      "source_path": "quickbooks/src/actions/find-vendor.ts",
+      "source_sha256": "7e08bc8e1c72ef29bf412fbdfa9ade6cf897f2675d2755b8f2ceab806fa2d7df",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/actions/find-vendor.ts"
+    },
+    {
+      "description": "Reads an accounts receivable or accounts payable aging report from QuickBooks.",
+      "id": "read_aging_report",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Report",
+          "name": "reportType",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "The date to age balances against. Defaults to today if empty.",
+          "label": "As Of Date",
+          "name": "reportDate",
+          "required": false,
+          "type": "DateTime"
+        },
+        {
+          "description": "Number of days in each aging bucket (e.g. 30).",
+          "label": "Days Per Period",
+          "name": "agingPeriod",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "How many aging buckets to include.",
+          "label": "Number of Periods",
+          "name": "numPeriods",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Whether buckets are calculated from the report date or from each transaction's due date.",
+          "label": "Aging Method",
+          "name": "agingMethod",
+          "required": false,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "Only include transactions overdue by at least this many days.",
+          "label": "Minimum Days Past Due",
+          "name": "pastDue",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Read AR/AP Aging",
+      "source_path": "quickbooks/src/actions/read-aging-report.ts",
+      "source_sha256": "5fb7279b0dae4e8a470f09e04c40f90c7f2602f3e786d6bcf63cd83f2a60049d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/actions/read-aging-report.ts"
+    },
+    {
+      "description": "Triggers when a new bill (accounts payable) is created in QuickBooks.",
+      "id": "new_bill",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Bill",
+      "source_path": "quickbooks/src/triggers/new-bill.ts",
+      "source_sha256": "e686da5725716955232231473769dd80b570bf4b7d1e0345e3e9fa4aaeb3c4db",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/triggers/new-bill.ts"
+    },
+    {
+      "description": "Triggers when a new customer is created.",
+      "id": "new_customer",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Customer",
+      "source_path": "quickbooks/src/triggers/new-customer.ts",
+      "source_sha256": "18517e431e3da9464d431baec2ed891725cb874213aac77dfcbc278b58b49991",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/triggers/new-customer.ts"
+    },
+    {
+      "description": "Triggers when a Deposit is created.",
+      "id": "new_deposit",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Deposit",
+      "source_path": "quickbooks/src/triggers/new-deposit.ts",
+      "source_sha256": "cf2f98d411ad4596c86ef522141ebf12bd69594e1006ef5eef86323064e9447f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/quickbooks/src/triggers/new-deposit.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "ae632ed049932d8de9d16dc1d103b83812ec0b11",
+    "index_path": "quickbooks/src/index.ts",
+    "index_sha256": "1b4f24d61f851385ba94a2f87a555d8b6cb6c317a0d275d033d695b12955956d",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "personal-companion",
+    "claims-adjudicator"
+  ]
+}

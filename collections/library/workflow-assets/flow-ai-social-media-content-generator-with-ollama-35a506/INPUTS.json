@@ -1,0 +1,19 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-ai-social-media-content-generator-with-ollama-35a506",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-3-url": null,
+    "step-5-url": null
+  },
+  "adapters": {
+    "http": {
+      "connection": null
+    }
+  }
+}

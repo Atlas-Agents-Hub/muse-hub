@@ -1,0 +1,309 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-supabase-insertion-upsertion-retrieval-a25db1",
+  "title": "Supabase Insertion & Upsertion & Retrieval",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Google Drive",
+      "operation": "service-read",
+      "adapter": "googledrive",
+      "parameters": {
+        "fileId": {
+          "configuration_input": "step-1-fileid"
+        },
+        "options": {},
+        "operation": "download"
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Default Data Loader",
+      "operation": "extract-document",
+      "adapter": "local",
+      "parameters": {
+        "loader": "epubLoader",
+        "options": {},
+        "dataType": "binary"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Question and Answer Chain",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Vector Store Retriever",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "topK": 10
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Recursive Character Text Splitter1",
+      "operation": "chunk",
+      "adapter": "local",
+      "parameters": {
+        "options": {}
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Customize Response",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "output",
+              "type": "string",
+              "value": {
+                "expression": "{{ record.response.text }}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "When chat message received",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "public": true,
+        "options": {
+          "responseMode": "lastNode"
+        },
+        "initialMessages": {
+          "expression": "Hi there! 🙏\n\nYou can ask me anything about Venerable Geshe Kelsang Gyatso's Book - 'How To Transform Your Life'\n\nWhat would you like to know?"
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Retrieve by Query",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "options": {
+          "queryName": "match_documents"
+        },
+        "tableName": {
+          "configuration_input": "step-9-tablename"
+        }
+      }
+    },
+    {
+      "id": "step-10",
+      "label": "Embeddings OpenAI Retrieval",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-11",
+      "label": "Embeddings OpenAI Insertion",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-12",
+      "label": "Placeholder (File/Content to Upsert)",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": {
+          "expression": "{\n \"Date\": \"{{ current_time.format('dd MMM yyyy') }}\",\n \"Time\": \"{{ current_time.format('HH:mm ZZZZ z') }}\"\n}"
+        }
+      }
+    },
+    {
+      "id": "step-13",
+      "label": "Embeddings OpenAI Upserting",
+      "operation": "embed",
+      "adapter": "embedding",
+      "parameters": {
+        "capability": "text embeddings",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-14",
+      "label": "Insert Documents",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "tableName": {
+          "configuration_input": "step-14-tablename"
+        }
+      }
+    },
+    {
+      "id": "step-16",
+      "label": "Update Documents",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "mode": "update",
+        "options": {
+          "queryName": "match_documents"
+        },
+        "tableName": {
+          "configuration_input": "step-16-tablename"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-14",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-9",
+      "to": "step-5",
+      "channel": "vectorStore",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-14",
+      "channel": "document",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "retriever",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-8",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-11",
+      "to": "step-14",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-10",
+      "to": "step-9",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-13",
+      "to": "step-16",
+      "channel": "embedding",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-2",
+      "channel": "textSplitter",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-12",
+      "to": "step-16",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-8"
+  ],
+  "configuration": [
+    {
+      "id": "step-1-fileid",
+      "purpose": "Select the fileId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-9-tablename",
+      "purpose": "Select the tableName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-14-tablename",
+      "purpose": "Select the tableName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-16-tablename",
+      "purpose": "Select the tableName for this task.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Database_and_Storage/Supabase Insertion & Upsertion & Retrieval.json",
+    "git_blob": "53f9e4bf9a882cae0fd7cca001f232ffb91cabbe",
+    "sha256": "75ad8027d1167467e4de772d89a186ba35d5d14ae7e204f153d9edf539dca999",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Database_and_Storage/Supabase%20Insertion%20%26%20Upsertion%20%26%20Retrieval.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

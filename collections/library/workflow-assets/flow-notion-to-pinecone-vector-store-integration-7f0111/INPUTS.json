@@ -1,0 +1,25 @@
+{
+  "schema": "muse-workflow-inputs/v1",
+  "workflow": "flow-notion-to-pinecone-vector-store-integration-7f0111",
+  "request": "Describe the result and provide the source material.",
+  "selection": {
+    "records": null,
+    "date_range": null,
+    "output_destination": null
+  },
+  "settings": {
+    "step-2-databaseid": null,
+    "step-8-pineconeindex": null
+  },
+  "adapters": {
+    "embedding": {
+      "connection": null
+    },
+    "notion": {
+      "connection": null
+    },
+    "vector-store": {
+      "connection": null
+    }
+  }
+}

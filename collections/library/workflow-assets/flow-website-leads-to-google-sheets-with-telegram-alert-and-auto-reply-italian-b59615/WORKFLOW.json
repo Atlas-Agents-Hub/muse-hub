@@ -1,0 +1,205 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-website-leads-to-google-sheets-with-telegram-alert-and-auto-reply-italian-b59615",
+  "title": "Website leads to Google Sheets with Telegram alert and auto-reply (Italian)",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Nuovo lead dal sito",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nuovo-lead",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Estrai campi del lead",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "nome",
+              "value": {
+                "expression": "{{ record.body.nome || record.body.name || 'Non indicato' }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "email",
+              "value": {
+                "expression": "{{ record.body.email || '' }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "telefono",
+              "value": {
+                "expression": "{{ record.body.telefono || record.body.phone || 'Non indicato' }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "messaggio",
+              "value": {
+                "expression": "{{ record.body.messaggio || record.body.message || '' }}"
+              },
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "value": {
+                "expression": "{{ current_time.format('dd/MM/yyyy HH:mm') }}"
+              },
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Salva nel Registro Lead",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "configuration_input": "step-3-documentid"
+        },
+        "sheetName": {
+          "configuration_input": "step-3-sheetname"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Data": {
+              "expression": "{{ record.data }}"
+            },
+            "Nome": {
+              "expression": "{{ record.nome }}"
+            },
+            "Email": {
+              "expression": "{{ record.email }}"
+            },
+            "Telefono": {
+              "expression": "{{ record.telefono }}"
+            },
+            "Messaggio": {
+              "expression": "{{ record.messaggio }}"
+            },
+            "Stato": "Nuovo"
+          }
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Avvisami su Telegram",
+      "operation": "service-write",
+      "adapter": "telegram",
+      "parameters": {
+        "chatId": {
+          "configuration_input": "step-4-chatid"
+        },
+        "text": {
+          "expression": "🔔 *Nuovo lead dal sito!*\n\n👤 {{ record.Nome }}\n📧 {{ record.Email }}\n📞 {{ record.Telefono }}\n\n💬 {{ record.Messaggio }}\n\n_Rispondi entro 1 ora: i lead caldi si chiudono 7 volte di più._"
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Email di cortesia al cliente",
+      "operation": "service-write",
+      "adapter": "gmail",
+      "parameters": {
+        "sendTo": {
+          "expression": "{{ steps[\"step-2\"].record.email }}"
+        },
+        "subject": "Abbiamo ricevuto la tua richiesta ✔",
+        "message": {
+          "expression": "Ciao {{ steps[\"step-2\"].record.nome }},\n\ngrazie per averci contattato! Abbiamo ricevuto la tua richiesta e ti risponderemo entro poche ore lavorative.\n\nNel frattempo, se la cosa è urgente, puoi chiamarci direttamente.\n\nA presto,\n[IL TUO NOME / AZIENDA]"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-5",
+      "channel": "data",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-3-documentid",
+      "purpose": "Select the documentId for this task.",
+      "required": true
+    },
+    {
+      "id": "step-3-sheetname",
+      "purpose": "Select the sheetName for this task.",
+      "required": true
+    },
+    {
+      "id": "step-4-chatid",
+      "purpose": "Select the chatId for step-4.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Website leads to Google Sheets with Telegram alert and auto-reply (Italian).json",
+    "git_blob": "9dcf112e0f194a717af206533dbf6645e31f4679",
+    "sha256": "5c21a7e61d9200c09801141647fd84e12d8253d666b38129a8b9850e69500174",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Website%20leads%20to%20Google%20Sheets%20with%20Telegram%20alert%20and%20auto-reply%20%28Italian%29.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

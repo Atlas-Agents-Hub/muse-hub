@@ -29,6 +29,23 @@ class PublicReleaseDownloads(unittest.TestCase):
         cls.checker=load_script('check_release_links')
         cls.directory=json.loads((ROOT/'hub/site/downloads.json').read_text(encoding='utf-8'))
 
+
+    def test_release_and_site_use_atlas_agents_hub(self):
+        from xml.etree import ElementTree
+
+        repository = 'https://github.com/Atlas-Agents-Hub/muse-hub'
+        pages = 'https://atlas-agents-hub.github.io/muse-hub/'
+        release_prefix = repository + '/releases/download/' + self.directory['version'] + '/'
+        self.assertEqual(self.renderer.REPO, repository)
+        self.assertEqual(self.checker.REPOSITORY, repository)
+        for item in self.directory['items'] + self.directory['bundles']:
+            self.assertEqual(item['url'], release_prefix + item['asset'])
+        root = ElementTree.parse(ROOT/'hub/site/sitemap.xml')
+        locations = [node.text for node in root.findall('.//{*}loc')]
+        self.assertIn(pages, locations)
+        self.assertTrue(all(location.startswith(pages) for location in locations))
+        self.checker.check(self.release_fixture(), self.directory)
+
     def test_rendered_directory_matches_validated_collection(self):
         self.assertEqual(self.directory, self.renderer.catalog())
         for name,expected in self.renderer.outputs().items():
@@ -36,7 +53,8 @@ class PublicReleaseDownloads(unittest.TestCase):
         collection=self.renderer.load_collection(ROOT/'collections/muse-starters-v1')
         self.assertEqual(self.directory['counts'],{'specialist':15,'skill':len(collection['skills']),
             'workflow':len(collection['workflows']),'tool-guide':51})
-        self.assertEqual(len({row['asset'] for row in self.directory['items']}),sum(self.directory['counts'].values()))
+        self.assertEqual(len({(row['kind'],row['id']) for row in self.directory['items']}),sum(self.directory['counts'].values()))
+        self.assertLessEqual(len({row['asset'] for row in self.directory['items']}),1000)
 
     def test_all_specialist_aliases_agree_between_site_and_discovery(self):
         roles=json.loads((ROOT/'hub/site/roles.json').read_text(encoding='utf-8'))['roles']
@@ -48,10 +66,24 @@ class PublicReleaseDownloads(unittest.TestCase):
         self.assertTrue(urls['data-engineering-architect'].endswith('/muse-data-engineer-'+version+'.zip'))
         self.assertTrue(urls['infrastructure-reliability-engineer'].endswith('/muse-reliability-engineer-'+version+'.zip'))
 
+    def test_planner_download_and_discovery_use_the_same_release_and_roles(self):
+        row = next(row for row in self.directory['bundles'] if row['id'] == 'space-planner')
+        version = self.renderer.release_version()
+        self.assertEqual(row['asset'], 'muse-space-planner-' + version + '.zip')
+        self.assertEqual(row['url'], self.renderer.REPO + '/releases/download/' + version + '/' + row['asset'])
+        self.assertEqual(row['roles'], ['coordinator', 'personal-companion'])
+        self.assertTrue(row['guide_url'].endswith('/docs/spaces/MUSE_PLANNER.md'))
+        discovery = json.loads((ROOT / 'docs/discovery/agent-capabilities.json').read_bytes())
+        space = next(space for space in discovery['spaces'] if space['id'] == 'planner')
+        self.assertEqual(space['download_url'], row['url'])
+        self.assertEqual(space['specialists'], row['roles'])
+        self.assertTrue((ROOT / space['guide']).is_file())
+
     def release_fixture(self):
         rows=self.directory['items']+self.directory['bundles']
-        assets=[{'name':row['asset'],'state':'uploaded','size':123,'browser_download_url':row['url']} for row in rows]
-        base='https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/'+self.directory['version']+'/'
+        unique={row['asset']:row for row in rows}
+        assets=[{'name':row['asset'],'state':'uploaded','size':123,'browser_download_url':row['url']} for row in unique.values()]
+        base='https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/'+self.directory['version']+'/'
         names=('SHA256SUMS','SPECIALIST_DOWNLOADS.json','SKILL_DOWNLOADS.json',
                'WORKFLOW_DOWNLOADS.json','RELEASE_MANIFEST.json','DOWNLOADS.md',
                'muse-role-procedures-50-'+self.directory['version']+'.zip')
@@ -111,6 +143,39 @@ class PublicReleaseDownloads(unittest.TestCase):
             for phrase in ('source-only','source only','unpublished draft','not deployed','not additional agents','no authenticated cross-account','not a claim','h11 /','h12 /','h00–h21'):
                 self.assertNotIn(phrase,text,(name,phrase))
 
+    def test_initial_page_is_bounded_and_static_subject_pages_cover_every_item(self):
+        from html.parser import HTMLParser
+
+        class Page(HTMLParser):
+            def __init__(self):
+                super().__init__();self.cards=[];self.links=[];self.results={}
+            def handle_starttag(self,tag,attrs):
+                attrs=dict(attrs)
+                if tag=='article' and attrs.get('class')=='download-card':self.cards.append(attrs)
+                if tag=='a' and 'href' in attrs:self.links.append(attrs['href'])
+                if attrs.get('id')=='download-results':self.results=attrs
+
+        output=self.renderer.outputs()
+        page=Page();page.feed(output['downloads.html'].decode())
+        self.assertEqual(len(page.cards),min(60,len(self.directory['items'])))
+        self.assertEqual(int(page.results['data-total']),len(self.directory['items']))
+        self.assertEqual(page.results['data-version'],self.directory['version'])
+        self.assertLess(len(output['downloads.html']),200000)
+        self.assertEqual([(row['data-kind'],row['data-id']) for row in page.cards],
+                         [(row['kind'],row['id']) for row in self.directory['items'][:60]])
+        subjects={name for name in output if name.startswith('library/')}
+        self.assertEqual({href for href in page.links if href.startswith('library/')},subjects)
+        card_count=0
+        download_links=[]
+        for name in subjects:
+            part=Page();part.feed(output[name].decode())
+            self.assertGreater(len(part.cards),0,name)
+            self.assertLessEqual(len(part.cards),200,name)
+            card_count+=len(part.cards)
+            download_links.extend(href for href in part.links if '/releases/download/' in href)
+        self.assertEqual(card_count,len(self.directory['items']))
+        self.assertCountEqual(download_links,[row['url'] for row in self.directory['items']])
+
 
 
 
@@ -169,6 +234,7 @@ class GeneratedReleasePresentation(unittest.TestCase):
             root=Path(directory)
             site=self.fixture(root)
             for name,content in self.renderer.outputs(root).items():
+                (site/name).parent.mkdir(parents=True,exist_ok=True)
                 (site/name).write_bytes(content)
             current=(site/'index.html').read_text(encoding='utf-8')
             for caption in ('Version 0.1.0','Version v0.1.0'):
@@ -190,7 +256,9 @@ class GeneratedReleasePresentation(unittest.TestCase):
             for name,key in (('index.html','packages'),('index.html','specialist'),
                              ('index.html','footer'),('downloads.html','footer')):
                 with self.subTest(page=name,caption=key):
-                    for output,content in expected.items():(site/output).write_bytes(content)
+                    for output,content in expected.items():
+                        (site/output).parent.mkdir(parents=True,exist_ok=True)
+                        (site/output).write_bytes(content)
                     page=expected[name].decode('utf-8')
                     stale,count=re.subn(r'(data-release-caption="'+key+r'"[^>]*>)([^<]+)',
                                         lambda match:match[1]+match[2].replace('9.8.7','0.1.0'),page)
@@ -226,9 +294,11 @@ class GeneratedReleasePresentation(unittest.TestCase):
                         labels=re.findall(r'\bversion\s+v?([0-9]+\.[0-9]+\.[0-9]+)\b',' '.join(page.text),re.IGNORECASE)
                         self.assertEqual(labels,[version.removeprefix('v')]*label_count,name)
                         downloads={url for url in page.links if '/releases/download/' in url}
-                        self.assertEqual(len(downloads),18 if name=='index.html' else len(expected_urls),name)
+                        expected_page_urls=({row['url'] for row in data['items'][:60]+data['bundles']})
+                        self.assertEqual(len(downloads),18 if name=='index.html' else len(expected_page_urls),name)
                         planning_url=self.renderer.REPO+'/releases/download/'+version+'/muse-skill-project-prioritization-'+version+'.zip'
-                        self.assertIn(planning_url,downloads,name)
+                        if name=='index.html':self.assertIn(planning_url,downloads,name)
+                        else:self.assertEqual(downloads,expected_page_urls)
                         self.assertTrue(downloads<=expected_urls,(name,downloads-expected_urls))
                         releases=[url for url in page.links if '/releases/tag/' in url]
                         self.assertTrue(all(url==self.renderer.REPO+'/releases/tag/'+version for url in releases))
@@ -285,12 +355,13 @@ class ReleaseContentProof(unittest.TestCase):
         rows=list(self.directory['items'])+list(self.directory['bundles'])
         name='muse-role-procedures-50-'+self.directory['version']+'.zip'
         rows.append({'id':'role-procedures-50','asset':name,
-                     'url':'https://github.com/atlas-origins/muse-ai-agent-presets/releases/download/'+self.directory['version']+'/'+name})
+                     'url':'https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/'+self.directory['version']+'/'+name})
         for row in rows:
             raw=bodies[row['asset']]
             records[key.get(row.get('kind'),'bundles')].append({
                 'id':row['id'],'asset':row['asset'],'url':row['url'],
-                'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+                'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),
+                **{field:row[field] for field in ('entry','pack_id','pack_size','pack_kind') if field in row}})
         packages={row['asset']:{'bytes':row['bytes'],'sha256':row['sha256']}
                   for group in records.values() for row in group}
         manifest={'schema':'muse-release/v2','version':self.directory['version'],
@@ -397,8 +468,8 @@ class SpecialistDownloadDiscovery(unittest.TestCase):
                     'Personal planning', 'Home & travel', 'Learning & study', 'Security',
                     'Infrastructure & reliability', 'Using Muse'}
         self.assertEqual(set(self.directory['categories']), expected)
-        self.assertEqual(len(self.directory['items']), 585)
-        self.assertEqual(len({row['url'] for row in self.directory['items']}), 585)
+        self.assertEqual(len(self.directory['items']),sum(self.directory['counts'].values()))
+        self.assertEqual(len({(row['kind'],row['id']) for row in self.directory['items']}),len(self.directory['items']))
         by_id = {(row['kind'], row['id']): row for row in self.directory['items']}
         skills = {row['id']: row for row in self.collection['skills']}
         for skill in skills.values():

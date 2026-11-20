@@ -1,0 +1,111 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-ai-ask-questions-about-any-data-source-using-the-muse-workflow-retriever-b9f014",
+  "title": "AI Ask questions about any data source (using the n8n workflow retriever)",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "When clicking \"Execute Workflow\"",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Workflow Retriever",
+      "operation": "retrieve",
+      "adapter": "vector-store",
+      "parameters": {
+        "workflowId": {
+          "configuration_input": "step-2-workflowid"
+        }
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Retrieval QA Chain2",
+      "operation": "generate",
+      "adapter": "model",
+      "parameters": {}
+    },
+    {
+      "id": "step-4",
+      "label": "OpenAI Chat Model",
+      "operation": "model",
+      "adapter": "model",
+      "parameters": {
+        "capability": "text generation",
+        "settings": {}
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Example Prompt",
+      "operation": "map-fields",
+      "adapter": "local",
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "input",
+              "stringValue": "What notes can you find for Jay Gatsby and what is his email address?"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-5",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-3",
+      "channel": "languageModel",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "retriever",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-workflowid",
+      "purpose": "Select the workflowId for step-2.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "OpenAI_and_LLMs/AI_ Ask questions about any data source (using the n8n workflow retriever).json",
+    "git_blob": "84e637211670755c48c4fe1eb080e0ec353c6eb5",
+    "sha256": "d8875470a75afbdcb10403e16ff5dbd948584663a92f2dc1af682c6a0102d62d",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/OpenAI_and_LLMs/AI_%20Ask%20questions%20about%20any%20data%20source%20%28using%20the%20n8n%20workflow%20retriever%29.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

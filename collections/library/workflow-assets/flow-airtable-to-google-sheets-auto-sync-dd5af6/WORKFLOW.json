@@ -1,0 +1,89 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-airtable-to-google-sheets-auto-sync-dd5af6",
+  "title": "Airtable to Google Sheets Auto-Sync",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Manual Trigger",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {}
+    },
+    {
+      "id": "step-2",
+      "label": "Airtable Search",
+      "operation": "service-read",
+      "adapter": "airtable",
+      "parameters": {
+        "operation": "search",
+        "baseId": {
+          "configuration_input": "step-2-baseid"
+        },
+        "table": "TableName",
+        "filterByFormula": "{LastUpdated} >= DATEADD(TODAY(), -1, 'days')"
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Google Sheets Upsert",
+      "operation": "service-write",
+      "adapter": "googlesheets",
+      "parameters": {
+        "operation": "upsert",
+        "sheetId": {
+          "configuration_input": "step-3-sheetid"
+        },
+        "range": "A1:E1000",
+        "columnHeaderRow": 1,
+        "valueInputMode": "RAW",
+        "options": {
+          "compareColumn": "Email"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-1",
+      "to": "step-2",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-1"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-baseid",
+      "purpose": "Select the baseId for step-2.",
+      "required": true
+    },
+    {
+      "id": "step-3-sheetid",
+      "purpose": "Select the sheetId for step-3.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Google_Drive_and_Google_Sheets/Airtable to Google Sheets Auto-Sync.json",
+    "git_blob": "df16582693437bfc34ed0a9cb64139bab5315531",
+    "sha256": "e1d8712a9c57c8b13a22d42c99730b69027d1a24e5988229cc6fe4c0d2b2cd28",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Google_Drive_and_Google_Sheets/Airtable%20to%20Google%20Sheets%20Auto-Sync.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

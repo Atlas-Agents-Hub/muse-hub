@@ -1,0 +1,251 @@
+{
+  "allowed_hosts": [
+    "api.bannerbear.com",
+    "images.bannerbear.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [],
+    "method": "API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Media management",
+  "id": "bannerbear",
+  "name": "Bannerbear",
+  "operations": [
+    {
+      "description": "Create image from Bannerbear template",
+      "id": "bannerbear_create_image",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Template",
+          "name": "template",
+          "required": null,
+          "source_expression": "bannerbearProps.template({ required: true })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Render a specific template version. Leave empty for latest.",
+          "label": "Template version",
+          "name": "template_version",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Values for each template layer. Empty fields are skipped.",
+          "label": "Template modifications",
+          "name": "modifications",
+          "required": true,
+          "type": "DynamicProperties"
+        },
+        {
+          "description": "Render a PNG with a transparent background.",
+          "label": "Transparent background",
+          "name": "transparent",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Also render a PDF (uses extra credits).",
+          "label": "Render a PDF",
+          "name": "render_pdf",
+          "required": false,
+          "type": "Checkbox"
+        },
+        {
+          "description": "Any text to store with the image, e.g. a record ID.",
+          "label": "Metadata",
+          "name": "metadata",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Wait_For_Completion",
+          "name": "wait_for_completion",
+          "required": null,
+          "source_expression": "bannerbearProps.waitForCompletion",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Image",
+      "source_path": "bannerbear/src/lib/actions/create-image.ts",
+      "source_sha256": "b15e50c870209c8f13f9a28751052ce3557345e51905d279c35851e7d8ed4f24",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bannerbear/src/lib/actions/create-image.ts"
+    },
+    {
+      "description": "Get plan and credit usage for this API key.",
+      "id": "get_account",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Account",
+      "source_path": "bannerbear/src/lib/actions/get-account.ts",
+      "source_sha256": "27f2c3a57eb20326416430a0cd6102afd9c074fb3e148c4d0962134ebf41e016",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bannerbear/src/lib/actions/get-account.ts"
+    },
+    {
+      "description": "Get an image and its status by ID.",
+      "id": "get_image",
+      "inputs": [
+        {
+          "description": "The image UID returned by Create Image.",
+          "label": "Image ID",
+          "name": "image_uid",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Image",
+      "source_path": "bannerbear/src/lib/actions/get-image.ts",
+      "source_sha256": "354e0413112ab70facd0dbea667a7699521cc2838258c59acd2df7b2c96ffdfe",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bannerbear/src/lib/actions/get-image.ts"
+    },
+    {
+      "description": "Get a template and its layer names.",
+      "id": "get_template",
+      "inputs": [
+        {
+          "description": "The template UID, from List Templates.",
+          "label": "Template ID",
+          "name": "template_uid",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Template",
+      "source_path": "bannerbear/src/lib/actions/get-template.ts",
+      "source_sha256": "10a2351c109af644ab9bff52c41216b9725746da56f6cb6fedd8d31ff034d293",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bannerbear/src/lib/actions/get-template.ts"
+    },
+    {
+      "description": "List images, one page at a time.",
+      "id": "list_images",
+      "inputs": [
+        {
+          "description": "Page number, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Images per page, 1 to 100.",
+          "label": "Per Page",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Images",
+      "source_path": "bannerbear/src/lib/actions/list-images.ts",
+      "source_sha256": "4e7a7ee5cfea4d159c8bde87489b4d2098f928ccc273af0f970da47bdef89e47",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bannerbear/src/lib/actions/list-images.ts"
+    },
+    {
+      "description": "List image templates, optionally filtered by name or tag.",
+      "id": "list_templates",
+      "inputs": [
+        {
+          "description": "Only templates whose name contains this text.",
+          "label": "Name Contains",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only templates with this tag.",
+          "label": "Tag",
+          "name": "tag",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Page number, starting at 1.",
+          "label": "Page",
+          "name": "page",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "List Templates",
+      "source_path": "bannerbear/src/lib/actions/list-templates.ts",
+      "source_sha256": "93122df8d22d07a2cef8276a923fdd8d43cbc9b787bf0f83570f67c0f2053c0d",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bannerbear/src/lib/actions/list-templates.ts"
+    },
+    {
+      "description": "Rename a template or change its tags.",
+      "id": "update_template",
+      "inputs": [
+        {
+          "description": "The template UID, from List Templates.",
+          "label": "Template ID",
+          "name": "template_uid",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "New template name.",
+          "label": "Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Replaces all tags. Leave empty to keep current tags.",
+          "label": "Tags",
+          "name": "tags",
+          "required": false,
+          "type": "Array"
+        },
+        {
+          "description": "Text stored with the template.",
+          "label": "Metadata (V2 keys only)",
+          "name": "metadata",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Template description.",
+          "label": "Description (V5 keys only)",
+          "name": "description",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Template",
+      "source_path": "bannerbear/src/lib/actions/update-template.ts",
+      "source_sha256": "577a54faa0579e0b5add95bed28b28cbad76e0f0627a4a41c6a8e8db740d9a3b",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bannerbear/src/lib/actions/update-template.ts"
+    },
+    {
+      "description": "Triggers when an image finishes rendering.",
+      "id": "new_image_completed",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Image Completed",
+      "source_path": "bannerbear/src/lib/triggers/new-image-completed.ts",
+      "source_sha256": "31833ece190ee42b67bd3e3c511837ed06fffaaff9385bec5b43e114c58a72d5",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/bannerbear/src/lib/triggers/new-image-completed.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "aa0e6839856504661870ac20f761309dc484602e",
+    "index_path": "bannerbear/src/index.ts",
+    "index_sha256": "11b982deb8b620d3f06636a6bcc770d8f994fc82b822489ac439f9f098998342",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "creative-studio",
+    "automation-engineer"
+  ]
+}

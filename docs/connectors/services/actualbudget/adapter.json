@@ -1,0 +1,288 @@
+{
+  "allowed_hosts": [
+    ".",
+    "actual.example.com"
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "The URL of your Actual server, e.g. https://actual.example.com",
+        "label": "Server URL",
+        "name": "server_url",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Password",
+        "name": "password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Password', description: 'The password you use to log in to the server', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Sync_Id",
+        "name": "sync_id",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'Sync ID', description: 'Settings → Show advanced settings → Sync ID', required: true, })",
+        "type": "ProviderField"
+      },
+      {
+        "description": "",
+        "label": "Encryption_Password",
+        "name": "encryption_password",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'End-to-end encryption password', description: 'Only if end-to-end encryption is turned on for this budget', required: false, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Productivity",
+  "id": "actualbudget",
+  "name": "Actual Budget",
+  "operations": [
+    {
+      "description": "Deletes a transaction (and its splits). This cannot be undone from the flow.",
+      "id": "delete_transaction",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Transaction ID",
+          "name": "transaction_id",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Delete Transaction",
+      "source_path": "actualbudget/src/lib/actions/delete-transaction.ts",
+      "source_sha256": "ff7479547e7738e9b76e735d7bfb23633ab9beb939aa3652fa67145ba1175fec",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/actions/delete-transaction.ts"
+    },
+    {
+      "description": "Finds payees whose name contains the search text (all payees when empty).",
+      "id": "find_payees",
+      "inputs": [
+        {
+          "description": "Part of the payee name, e.g. \"kroger\". Leave empty to list all payees.",
+          "label": "Name Contains",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Payees",
+      "source_path": "actualbudget/src/lib/actions/find-payees.ts",
+      "source_sha256": "9e1036264cf2b70a7035c51f253b01cc3e0a18a44ddb03fd3992d38758c48d38",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/actions/find-payees.ts"
+    },
+    {
+      "description": "Finds transactions in a date range, optionally filtered by account, payee, category, amount or text.",
+      "id": "find_transactions",
+      "inputs": [
+        {
+          "description": "YYYY-MM-DD (inclusive)",
+          "label": "Start Date",
+          "name": "start_date",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "YYYY-MM-DD (inclusive). Leave empty for no end.",
+          "label": "End Date",
+          "name": "end_date",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only this account. Leave empty for all accounts.",
+          "label": "Account ID",
+          "name": "account_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only this payee (ID from Find Payees)",
+          "label": "Payee ID",
+          "name": "payee_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Only this category",
+          "label": "Category ID",
+          "name": "category_id",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "e.g. -100 (currency units; expenses are negative)",
+          "label": "Minimum Amount",
+          "name": "min_amount",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "e.g. 0 to get only expenses",
+          "label": "Maximum Amount",
+          "name": "max_amount",
+          "required": false,
+          "type": "Number"
+        },
+        {
+          "description": "Matched against notes, payee name and imported payee",
+          "label": "Search Text",
+          "name": "search",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "Max transactions to return (1-${MAX_LIMIT}, default 100)",
+          "label": "Limit",
+          "name": "limit",
+          "required": false,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Transactions",
+      "source_path": "actualbudget/src/lib/actions/find-transactions.ts",
+      "source_sha256": "1df29f9b243c9ee9b5fed01ae931daf4b767023634637162d1d0d9ad6e3a60bb",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/actions/find-transactions.ts"
+    },
+    {
+      "description": "Gets every account in the budget (open and closed).",
+      "id": "get_accounts",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Accounts",
+      "source_path": "actualbudget/src/lib/actions/get-accounts.ts",
+      "source_sha256": "df84d5fc64e50a04e7ccaa440d3a89adced3a421806c0dfc02160d80d01d7f56",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/actions/get-accounts.ts"
+    },
+    {
+      "description": "Gets the budget for one month: totals plus budgeted, spent and balance per category (amounts in cents).",
+      "id": "get_budget",
+      "inputs": [
+        {
+          "description": "The month of the budget you want to get",
+          "label": "Month",
+          "name": "month",
+          "required": true,
+          "type": "StaticDropdown"
+        },
+        {
+          "description": "",
+          "label": "Year",
+          "name": "year",
+          "required": null,
+          "source_expression": "yearDropdown",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Get Budget",
+      "source_path": "actualbudget/src/lib/actions/get-budget.ts",
+      "source_sha256": "74c9768b88fd8d2a74ac506b63cfa6013eb6e19dcd2ce38ece7b7d5d61393d51",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/actions/get-budget.ts"
+    },
+    {
+      "description": "Gets every budget category as a flat list.",
+      "id": "get_categories",
+      "inputs": [],
+      "kind": "action",
+      "name": "Get Categories",
+      "source_path": "actualbudget/src/lib/actions/get-categories.ts",
+      "source_sha256": "45d9609dee0947f39fbd0539d7a03f3426530e82530582ba97132ccc4fdeba4c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/actions/get-categories.ts"
+    },
+    {
+      "description": "Pulls new transactions from the bank for one linked account, or for all linked accounts.",
+      "id": "run_bank_sync",
+      "inputs": [
+        {
+          "description": "Linked account to sync. Leave empty to sync all linked accounts.",
+          "label": "Account ID",
+          "name": "account_id",
+          "required": false,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Run Bank Sync",
+      "source_path": "actualbudget/src/lib/actions/run-bank-sync.ts",
+      "source_sha256": "f1c85395aa50258d59be31c67519736e5e918c2bd4038407a6e8b82cb9a7dec0",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/actions/run-bank-sync.ts"
+    },
+    {
+      "description": "Sets how much is budgeted for a category in a month (replaces the current amount).",
+      "id": "set_budget_amount",
+      "inputs": [
+        {
+          "description": "YYYY-MM, e.g. 2026-10",
+          "label": "Month",
+          "name": "month",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Category ID",
+          "name": "category_id",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Budgeted amount in currency units, e.g. 250",
+          "label": "Amount",
+          "name": "amount",
+          "required": true,
+          "type": "Number"
+        }
+      ],
+      "kind": "action",
+      "name": "Set Budget Amount",
+      "source_path": "actualbudget/src/lib/actions/set-budget-amount.ts",
+      "source_sha256": "a07bfd26d5cd0abcaec74df512fb6e8cfefe581ce0f84e211e1007a3763411b2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/actions/set-budget-amount.ts"
+    },
+    {
+      "description": "Triggers when a transaction dated within the last ${LOOKBACK_DAYS} days (or later) is added to an account. Split transactions trigger once, with their splits.",
+      "id": "new_transaction",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account_Id",
+          "name": "account_id",
+          "required": null,
+          "source_expression": "accountDropdown({ required: false, description: 'Only watch this account. Leave empty to watch all accounts.', })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "trigger",
+      "name": "New Transaction",
+      "source_path": "actualbudget/src/lib/triggers/new-transaction.ts",
+      "source_sha256": "61084f5f122d7b7348e5d5dd4a91ec32c46a37d127bc7507743cc00d90dc9f64",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/actualbudget/src/lib/triggers/new-transaction.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "24e4d267c53f74fac0ac79fbb6e6db90f61b02b8",
+    "index_path": "actualbudget/src/index.ts",
+    "index_sha256": "867bf7d1d5a7421003e7f9c0789e17f0b11d5a753da87c1bba6268533564b8ab",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "personal-companion",
+    "coordinator",
+    "automation-engineer"
+  ]
+}

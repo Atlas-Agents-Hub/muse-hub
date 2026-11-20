@@ -1,0 +1,245 @@
+{
+  "schema": "muse-workflow-graph/v1",
+  "id": "flow-deterministic-exact-match-quote-guard-for-ai-and-ocr-inputs-3a7643",
+  "title": "Deterministic Exact-Match Quote Guard for AI and OCR Inputs",
+  "nodes": [
+    {
+      "id": "step-1",
+      "label": "Build Rejected Response",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "return records.map((item) => ({ json: {\n  ok: false,\n  status: 'REJECTED',\n  request_id: item.json.request_id,\n  invalid_fields: item.json.invalid_fields\n} }));",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-2",
+      "label": "Receive Synthetic Request",
+      "operation": "input",
+      "adapter": "muse",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": {
+          "configuration_input": "step-2-path"
+        },
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "step-3",
+      "label": "Validate Untrusted Extraction",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const input = record.body ?? record;\nconst requestId = typeof input.request_id === 'string' ? input.request_id : '';\nconst sourceDescription = typeof input.source_description === 'string' ? input.source_description : '';\nconst laborHours = input.labor_hours;\nconst travelRequired = input.travel_required;\nconst extractedItems = Array.isArray(input.extracted_items) ? input.extracted_items : [];\nconst errors = [];\nif (!/^quote-[a-z0-9-]{3,40}$/i.test(requestId)) errors.push('request_id');\nif (!sourceDescription || sourceDescription.length > 1000) errors.push('source_description');\nconst laborHundredths = typeof laborHours === 'number' ? laborHours * 100 : Number.NaN;\nif (typeof laborHours !== 'number' || !Number.isFinite(laborHours) || laborHours < 0 || laborHours > 24 || Math.abs(Math.round(laborHundredths) - laborHundredths) > 1e-9) errors.push('labor_hours');\nif (typeof travelRequired !== 'boolean') errors.push('travel_required');\nif (extractedItems.length < 1 || extractedItems.length > 10) errors.push('extracted_items');\nconst normalizedItems = extractedItems.map((item, index) => {\n  const reference = typeof item?.reference === 'string' ? item.reference : '';\n  const quantity = item?.quantity;\n  if (!/^SYN-[A-Z]+-[0-9]{3}$/.test(reference)) errors.push(`extracted_items[${index}].reference`);\n  if (!Number.isInteger(quantity) || quantity < 1 || quantity > 20) errors.push(`extracted_items[${index}].quantity`);\n  if (item?.claimed_unit_price_chf !== undefined && (typeof item.claimed_unit_price_chf !== 'number' || !Number.isFinite(item.claimed_unit_price_chf))) errors.push(`extracted_items[${index}].claimed_unit_price_chf`);\n  return { reference, quantity, claimed_unit_price_chf: item?.claimed_unit_price_chf ?? null };\n});\nreturn [{ json: {\n  ok: errors.length === 0,\n  status: errors.length === 0 ? 'VALIDATED' : 'REJECTED',\n  request_id: requestId || null,\n  invalid_fields: [...new Set(errors)],\n  source_description: sourceDescription,\n  labor_hours: laborHours,\n  travel_required: travelRequired,\n  extracted_items: normalizedItems,\n  extraction_boundary: 'untrusted_synthetic_fixture'\n} }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-4",
+      "label": "Is Input Valid",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": {
+                "expression": "{{ record.ok }}"
+              },
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        },
+        "combineOperation": "all"
+      }
+    },
+    {
+      "id": "step-5",
+      "label": "Exact Match and Calculate",
+      "operation": "transform",
+      "adapter": "local",
+      "parameters": {
+        "jsCode": {
+          "language": "javascript",
+          "reference": "const catalog = Object.freeze({\n  'SYN-VALVE-100': Object.freeze({ name: 'Synthetic isolation valve 100', unit_price_cents: 12000 }),\n  'SYN-PIPE-200': Object.freeze({ name: 'Synthetic pipe section 200', unit_price_cents: 8550 }),\n  'SYN-SEAL-300': Object.freeze({ name: 'Synthetic seal kit 300', unit_price_cents: 3240 })\n});\nconst centsToChf = (value) => Number((value / 100).toFixed(2));\nconst matchedItems = [];\nconst missingReferences = [];\nlet ignoredClaimedPrices = false;\nfor (const item of record.extracted_items) {\n  const catalogItem = catalog[item.reference];\n  if (!catalogItem) {\n    missingReferences.push(item.reference);\n    continue;\n  }\n  if (item.claimed_unit_price_chf !== null && Math.round(item.claimed_unit_price_chf * 100) !== catalogItem.unit_price_cents) ignoredClaimedPrices = true;\n  const lineTotalCents = catalogItem.unit_price_cents * item.quantity;\n  matchedItems.push({\n    reference: item.reference,\n    name: catalogItem.name,\n    quantity: item.quantity,\n    unit_price_chf: centsToChf(catalogItem.unit_price_cents),\n    line_total_chf: centsToChf(lineTotalCents),\n    line_total_cents: lineTotalCents\n  });\n}\nif (missingReferences.length > 0) {\n  return [{ json: {\n    ok: false,\n    status: 'NEEDS_REVIEW',\n    request_id: record.request_id,\n    exact_match: false,\n    matched_items: matchedItems.map(({ line_total_cents, ...item }) => item),\n    missing_references: missingReferences,\n    ignored_claimed_prices: ignoredClaimedPrices,\n    totals: null,\n    reason: \"{{input:step-5-jscode-literal}}\"\n  } }];\n}\nconst materialsCents = matchedItems.reduce((sum, item) => sum + item.line_total_cents, 0);\nconst marginCents = Math.round(materialsCents * 0.15);\nconst laborCents = Math.round(record.labor_hours * 9500);\nconst travelCents = record.travel_required ? 4500 : 0;\nconst netCents = materialsCents + marginCents + laborCents + travelCents;\nconst vatCents = Math.round(netCents * 0.081);\nconst totalCents = netCents + vatCents;\nreturn [{ json: {\n  ok: true,\n  status: 'QUOTABLE',\n  request_id: record.request_id,\n  exact_match: true,\n  matched_items: matchedItems.map(({ line_total_cents, ...item }) => item),\n  missing_references: [],\n  ignored_claimed_prices: ignoredClaimedPrices,\n  rates: { material_margin_percent: 15, labor_hour_chf: 95, travel_flat_chf: 45, vat_percent: 8.1 },\n  totals: {\n    materials_chf: centsToChf(materialsCents),\n    material_margin_chf: centsToChf(marginCents),\n    labor_chf: centsToChf(laborCents),\n    travel_chf: centsToChf(travelCents),\n    net_chf: centsToChf(netCents),\n    vat_chf: centsToChf(vatCents),\n    total_chf: centsToChf(totalCents)\n  }\n} }];",
+          "inputs": "records, record, and named steps"
+        }
+      }
+    },
+    {
+      "id": "step-6",
+      "label": "Is Quote Ready",
+      "operation": "branch",
+      "adapter": "local",
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": {
+                "expression": "{{ record.ok }}"
+              },
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        },
+        "combineOperation": "all"
+      }
+    },
+    {
+      "id": "step-7",
+      "label": "Respond Quotable",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-8",
+      "label": "Respond Needs Review",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseCode": 422,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "step-9",
+      "label": "Respond Rejected",
+      "operation": "respond",
+      "adapter": "muse",
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseCode": 400,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "step-2",
+      "to": "step-3",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-3",
+      "to": "step-4",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-5",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-4",
+      "to": "step-1",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-5",
+      "to": "step-6",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-7",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    },
+    {
+      "from": "step-6",
+      "to": "step-8",
+      "channel": "main",
+      "branch": 1,
+      "input": 0
+    },
+    {
+      "from": "step-1",
+      "to": "step-9",
+      "channel": "main",
+      "branch": 0,
+      "input": 0
+    }
+  ],
+  "terminal_branches": [],
+  "entrypoints": [
+    "step-2"
+  ],
+  "configuration": [
+    {
+      "id": "step-2-path",
+      "purpose": "Choose the path resource value for this task.",
+      "required": true
+    },
+    {
+      "id": "step-5-jscode-literal",
+      "purpose": "Provide the configured resource or key used by this transformation.",
+      "required": true
+    }
+  ],
+  "source": {
+    "repository": "enescingoz/awesome-n8n-templates",
+    "revision": "827110332c21cbe000ab13f6d292d5adb1f1f8db",
+    "path": "Other_Integrations_and_Use_Cases/Deterministic Exact-Match Quote Guard for AI and OCR Inputs.json",
+    "git_blob": "4e0ec241206731506279b27f414c03a837dd9635",
+    "sha256": "adb2b48a126b0a20bb6a7a00e527c07bd93366a7a53df5462f929a4604c0203b",
+    "url": "https://github.com/enescingoz/awesome-n8n-templates/blob/827110332c21cbe000ab13f6d292d5adb1f1f8db/Other_Integrations_and_Use_Cases/Deterministic%20Exact-Match%20Quote%20Guard%20for%20AI%20and%20OCR%20Inputs.json",
+    "author": "Enes Cingoz and template contributors",
+    "license": "CC-BY-4.0",
+    "adaptation": "Muse operation graph, provider-neutral model bindings, named configuration inputs and connected skill methods"
+  }
+}

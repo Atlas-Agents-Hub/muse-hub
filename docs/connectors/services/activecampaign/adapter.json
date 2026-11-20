@@ -1,0 +1,500 @@
+{
+  "allowed_hosts": [
+    "youraccount.api-us1.com",
+    "youraccount.api-us1.com."
+  ],
+  "auth": {
+    "authorization_urls": [],
+    "fields": [
+      {
+        "description": "For example https://youraccount.api-us1.com",
+        "label": "API URL",
+        "name": "apiUrl",
+        "required": true,
+        "type": "ShortText"
+      },
+      {
+        "description": "",
+        "label": "Api Key",
+        "name": "apiKey",
+        "required": null,
+        "source_expression": "PieceAuth.SecretText({ displayName: 'API Key', required: true, })",
+        "type": "ProviderField"
+      }
+    ],
+    "method": "Provider connection fields; API key or access token",
+    "scopes": [],
+    "token_urls": []
+  },
+  "category": "Sales & CRM",
+  "id": "activecampaign",
+  "name": "ActiveCampaign",
+  "operations": [
+    {
+      "description": "Adds a note to a contact, deal or account.",
+      "id": "activecampaign_create_note_human",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Record Type",
+          "name": "recordType",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<string>({ displayName: 'Add To', required: true, options: { disabled: false, options: [ { label: 'Contact', value: 'Subscriber' }, { label: 'Deal', value: 'Deal' }, { label: 'Account', value: 'CustomerAccount' }, ], }, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "The ID of the contact, deal or account. Map it from the trigger or an earlier step, for example the contact ID from Find Contact.",
+          "label": "Record ID",
+          "name": "recordId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Note",
+          "name": "note",
+          "required": true,
+          "type": "LongText"
+        }
+      ],
+      "kind": "action",
+      "name": "Add Note",
+      "source_path": "activecampaign/src/lib/actions/notes/create-note.ts",
+      "source_sha256": "7d1541148e0cccd80024509e77bff52c137b699868073709c3c27e656e037963",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/actions/notes/create-note.ts"
+    },
+    {
+      "description": "Creates a new account.",
+      "id": "activecampaign_create_account",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account Name",
+          "name": "name",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Account URL",
+          "name": "accountUrl",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Account Custom Fields",
+          "name": "accountCustomFields",
+          "required": null,
+          "source_expression": "activecampaignCommon.accountCustomFields",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Account",
+      "source_path": "activecampaign/src/lib/actions/accounts/create-account.ts",
+      "source_sha256": "63bed0f163c48ac044bccfa92ce3c2c70c9d6fd9350ddb58e1144b7e121fc7d2",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/actions/accounts/create-account.ts"
+    },
+    {
+      "description": "Creates a new contact.",
+      "id": "activecampaign_create_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "First Name",
+          "name": "firstName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Last Name",
+          "name": "lastName",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Phone",
+          "name": "phone",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Contact Custom Fields",
+          "name": "contactCustomFields",
+          "required": null,
+          "source_expression": "activecampaignCommon.contactCustomFields",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Contact",
+      "source_path": "activecampaign/src/lib/actions/contacts/create-contact.ts",
+      "source_sha256": "5f97bc70a8714ae4888e61186dd0019ba73d57fdf1de47d796c24762b4498ba6",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/actions/contacts/create-contact.ts"
+    },
+    {
+      "description": "Creates a deal in a pipeline stage, linked to a contact, an account or both.",
+      "id": "activecampaign_create_deal_human",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "The amount as a decimal, such as 1500 or 1234.50.",
+          "label": "Value",
+          "name": "value",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "3-letter currency code, such as usd or eur.",
+          "label": "Currency",
+          "name": "currency",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Pipeline Id",
+          "name": "pipelineId",
+          "required": null,
+          "source_expression": "activecampaignCommon.pipelineId(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Stage Id",
+          "name": "stageId",
+          "required": null,
+          "source_expression": "activecampaignCommon.stageId(true)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Owner Id",
+          "name": "ownerId",
+          "required": null,
+          "source_expression": "activecampaignCommon.userId({ displayName: 'Owner', description: 'Required when the pipeline does not auto-assign owners; otherwise ActiveCampaign rejects the deal.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Contact Id",
+          "name": "contactId",
+          "required": null,
+          "source_expression": "activecampaignCommon.optionalContactId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Account Id",
+          "name": "accountId",
+          "required": null,
+          "source_expression": "activecampaignCommon.optionalAccountId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<string>({ displayName: 'Status', description: 'Defaults to open.', required: false, options: { disabled: false, options: [ { label: 'Open', value: 'open' }, { label: 'Won', value: 'won' }, { label: 'Lost', value: 'lost' }, ], }, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Deal",
+      "source_path": "activecampaign/src/lib/actions/deals/create-deal.ts",
+      "source_sha256": "028c37e189b36ee5cc34b613fac8787e2b850705f53fd299b576354b8e0be667",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/actions/deals/create-deal.ts"
+    },
+    {
+      "description": "Creates a task on a contact or deal.",
+      "id": "activecampaign_create_task_human",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Owner Type",
+          "name": "ownerType",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<string>({ displayName: 'Attach To', required: true, defaultValue: 'contact', options: { disabled: false, options: [ { label: 'Contact', value: 'contact' }, { label: 'Deal', value: 'deal' }, ], }, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "Map it from the trigger or an earlier step.",
+          "label": "Contact or Deal ID",
+          "name": "recordId",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Task Type Id",
+          "name": "taskTypeId",
+          "required": null,
+          "source_expression": "activecampaignCommon.taskTypeId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Note",
+          "name": "note",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "An ISO 8601 date or date-time, such as 2026-03-01 or 2026-03-01T09:00:00Z. Times are UTC unless you add an offset (2026-03-01T09:00:00-06:00). A date without a time is sent as 12:00 UTC, which keeps the task on that day for accounts between UTC-11 and UTC+11; for other time zones, give a time with an offset.",
+          "label": "Due Date",
+          "name": "dueDate",
+          "required": true,
+          "type": "ShortText"
+        },
+        {
+          "description": "Optional, in the same format as Due Date and not before it. A date without a time means 12:00 UTC. Defaults to 15 minutes after the due date.",
+          "label": "End Date",
+          "name": "endDate",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Assignee Id",
+          "name": "assigneeId",
+          "required": null,
+          "source_expression": "activecampaignCommon.userId({ displayName: 'Assignee', required: false })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Create Task",
+      "source_path": "activecampaign/src/lib/actions/tasks/create-task.ts",
+      "source_sha256": "f9c953d17a396e877ffbd9fced973cac37f53ea83c7c2d48970278b7eac0b957",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/actions/tasks/create-task.ts"
+    },
+    {
+      "description": "Finds a contact by email address.",
+      "id": "activecampaign_find_contact",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Email",
+          "name": "email",
+          "required": true,
+          "type": "ShortText"
+        }
+      ],
+      "kind": "action",
+      "name": "Find Contact",
+      "source_path": "activecampaign/src/lib/actions/contacts/find-contact.ts",
+      "source_sha256": "471f4af9fde9ebc02a51d764739c11fb715f93cff0d06646afe86f6535fe45e7",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/actions/contacts/find-contact.ts"
+    },
+    {
+      "description": "Updates an account.",
+      "id": "activecampaign_update_account",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Account Id",
+          "name": "accountId",
+          "required": null,
+          "source_expression": "activecampaignCommon.accountId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Account Name",
+          "name": "name",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Account URL",
+          "name": "accountUrl",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Account Custom Fields",
+          "name": "accountCustomFields",
+          "required": null,
+          "source_expression": "activecampaignCommon.accountCustomFields",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Account",
+      "source_path": "activecampaign/src/lib/actions/accounts/update-account.ts",
+      "source_sha256": "47bc7f1a6293b35562dd03bd6ee713f62255b0ffcffef7e2ba50b5df3a8e6a16",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/actions/accounts/update-account.ts"
+    },
+    {
+      "description": "Updates a deal. Fields left empty keep their current value.",
+      "id": "activecampaign_update_deal_human",
+      "inputs": [
+        {
+          "description": "",
+          "label": "Deal Id",
+          "name": "dealId",
+          "required": null,
+          "source_expression": "activecampaignCommon.dealId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Title",
+          "name": "title",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "The amount as a decimal, such as 1500 or 1234.50.",
+          "label": "Value",
+          "name": "value",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "3-letter currency code, such as usd or eur.",
+          "label": "Currency",
+          "name": "currency",
+          "required": false,
+          "type": "ShortText"
+        },
+        {
+          "description": "",
+          "label": "Pipeline Id",
+          "name": "pipelineId",
+          "required": null,
+          "source_expression": "activecampaignCommon.pipelineId(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Stage Id",
+          "name": "stageId",
+          "required": null,
+          "source_expression": "activecampaignCommon.stageId(false)",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Owner Id",
+          "name": "ownerId",
+          "required": null,
+          "source_expression": "activecampaignCommon.userId({ displayName: 'Owner', description: 'Needed when moving a deal without an owner into a pipeline that does not auto-assign owners.', required: false, })",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Contact Id",
+          "name": "contactId",
+          "required": null,
+          "source_expression": "activecampaignCommon.optionalContactId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Account Id",
+          "name": "accountId",
+          "required": null,
+          "source_expression": "activecampaignCommon.optionalAccountId",
+          "type": "ProviderField"
+        },
+        {
+          "description": "",
+          "label": "Description",
+          "name": "description",
+          "required": false,
+          "type": "LongText"
+        },
+        {
+          "description": "",
+          "label": "Status",
+          "name": "status",
+          "required": null,
+          "source_expression": "Property.StaticDropdown<string>({ displayName: 'Status', required: false, options: { disabled: false, options: [ { label: 'Open', value: 'open' }, { label: 'Won', value: 'won' }, { label: 'Lost', value: 'lost' }, ], }, })",
+          "type": "ProviderField"
+        }
+      ],
+      "kind": "action",
+      "name": "Update Deal",
+      "source_path": "activecampaign/src/lib/actions/deals/update-deal.ts",
+      "source_sha256": "b159a910bfcdbb131f962d86a654f9498b3791ec94daaf7d6e2dedebfeedc77c",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/actions/deals/update-deal.ts"
+    },
+    {
+      "description": "Triggers when a contact unsubscribes from a list. Also fires for changes made through the API, including this piece's own actions, so a flow that changes the same record can trigger itself again.",
+      "id": "activecampaign_contact_unsubscribed",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Contact Unsubscribed",
+      "source_path": "activecampaign/src/lib/triggers/contact-unsubscribed.ts",
+      "source_sha256": "8371fb66bf9e98656a7e5701c0c978872cd0632cc9a926af3711935488e8d8af",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/triggers/contact-unsubscribed.ts"
+    },
+    {
+      "description": "Triggers when a deal task has been completed. Also fires for changes made through the API, including this piece's own actions, so a flow that changes the same record can trigger itself again.",
+      "id": "activecampaign_deal_task_completed",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "Deal Task Completed",
+      "source_path": "activecampaign/src/lib/triggers/deal-task-completed.ts",
+      "source_sha256": "a2a88b1038fe89e88196363e934f259b12199d66c22a0df1253cbc4d96c7616e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/triggers/deal-task-completed.ts"
+    },
+    {
+      "description": "Triggers when a contact clicks a link in a campaign message (will only run once for each unique link).",
+      "id": "activecampaign_campaign_link_clicked",
+      "inputs": [],
+      "kind": "trigger",
+      "name": "New Campaign Link Click",
+      "source_path": "activecampaign/src/lib/triggers/campaign-link-clicked.ts",
+      "source_sha256": "2b5ca559cdcf591e61a28991e0657574827c7833f0acc9cfbfe9399036a62c1e",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/activecampaign/src/lib/triggers/campaign-link-clicked.ts"
+    }
+  ],
+  "schema": "muse-hub/service-adapter-v1",
+  "source": {
+    "commit": "5110199059649227b42a805020ab03ef429103aa",
+    "index_git_blob": "396500d257682889536188da9129649b6dc023cc",
+    "index_path": "activecampaign/src/index.ts",
+    "index_sha256": "2d3b59a390b999d00532695fe5e55e00fe2d735337bea57e2775b5fa568abb8e",
+    "repository": "activepieces/activepieces"
+  },
+  "specialists": [
+    "coordinator",
+    "automation-engineer"
+  ]
+}

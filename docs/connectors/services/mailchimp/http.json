@@ -1,0 +1,24 @@
+{
+  "id": "mailchimp",
+  "requests": [
+    {
+      "credential": {
+        "name": "Authorization",
+        "placement": "header",
+        "prefix": "OAuth "
+      },
+      "credential_source_path": "mailchimp/src/index.ts",
+      "credential_source_sha256": "6305e3171fe496ae72cb71cd1db00cd2a271355ef5307036e2b542498deff12f",
+      "headers": {},
+      "host": "login.mailchimp.com",
+      "id": "read-oauth2-metadata",
+      "method": "GET",
+      "parameters": [],
+      "source_path": "mailchimp/src/index.ts",
+      "source_sha256": "6305e3171fe496ae72cb71cd1db00cd2a271355ef5307036e2b542498deff12f",
+      "source_url": "https://github.com/activepieces/activepieces/blob/5110199059649227b42a805020ab03ef429103aa/packages/pieces/community/mailchimp/src/index.ts",
+      "url_template": "https://login.mailchimp.com/oauth2/metadata"
+    }
+  ],
+  "schema": "muse-hub/connector-http-v1"
+}
