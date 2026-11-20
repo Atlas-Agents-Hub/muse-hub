@@ -19,7 +19,7 @@ Get more out of Muse. Explore its features, customize an assistant, connect your
 - [Connector guides](../docs/connectors/README.md): setup information for 273 services and integrations.
 - [Companion Home](../docs/COMPANION_HOME.md): five rooms, persistent notes, Studio motion controls, and Signal Trail in the Arcade.
 - [Daily Desk](../docs/spaces/DAILY_DESK.md): tasks and notes with backup and restore.
-- [Family Link](../docs/FAMILY_LINK.md): prepare a focused handoff for another specialist.
+- [Family Link](../docs/FAMILY_LINK.md): connect two Muse personal assistants to exchange requests and results.
 - [Resource library](https://atlas-agents-hub.github.io/muse-hub/public/index.html): 63 tools and projects, grouped by how you want to use Muse.
 
 ## Website files

@@ -10,7 +10,7 @@ The Muse Hub identity is a controlled part of the product, not a replaceable the
 | Ink | `#161616` | Text on paper, black detail work |
 | Warm paper | `#F8F6E9` | Alternating light sections, page backgrounds |
 | Paper strong | `#FFFCF1` | Cards, fields, editorial surfaces |
-| Electric signal | `#F4FF52` | Primary CTA, signal labels, selected accents, focus indicator |
+| Muse Electric | `#F4FF52` | Signature M mark, primary CTA, signal labels, selected accents, focus indicator |
 | Dark border | `#43433F` | Lines on black |
 | Paper border | `#C9C7BD` | Lines on cream |
 

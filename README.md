@@ -1,8 +1,8 @@
 # Muse Hub
 
-**Build, research, create and plan with Muse Hub.** This open-source toolkit for Meta's Muse AI brings together specialist assistants, a searchable library, and full-stack Space templates.
+**Turn an idea into something you can use.** Muse Hub is an open-source toolkit for Meta's Muse AI with specialist assistants, a searchable library, and full-stack Space templates.
 
-Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5242 skills**, **396 workflows**, **51 tool guides**, **558 task starters**, and **273 connectors**. Explore Companion Home, persistent notes, Studio, Arcade, and a library of 63 tools and projects.
+Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5242 skills**, **396 workflows**, **51 tool guides**, **558 task starters**, and **273 connectors**.
 
 **[Browse Space templates](docs/spaces/README.md)** · **[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.0](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)** · [Get started](docs/GETTING_STARTED.md)
 
@@ -18,7 +18,7 @@ Choose from **15 independent assistants**, each with Main and **three subchats**
 
 - **[Organize your day](docs/journeys/ORGANIZE_YOUR_DAY.md):** ready-to-copy reminder, calendar and goal worksheets, a Personal Companion, and a place for your notes.
 - **[Build and automate](docs/journeys/BUILD_AND_AUTOMATE.md):** an engineering specialist, terminal tools, HTML accessibility checks, browser testing, and a review handoff.
-- **[Create something](docs/journeys/CREATE_SOMETHING.md):** a creative brief, a production plan, media tools, and time to explore the Studio.
+- **[Create something](docs/journeys/CREATE_SOMETHING.md):** turn a concept into images, animation, video, or interactive scenes with Creative Studio. Build storyboards, plan shots, and keep the look consistent.
 
 ## Choose your assistant
 
@@ -26,7 +26,7 @@ Choose from **15 independent assistants**, each with Main and **three subchats**
 2. Extract it into its own folder and give Muse the included `START_HERE.md`, or attach the ZIP with your current task.
 3. Follow the guide to configure a separate Muse assistant, add its Main instructions and three subchats, and try the first task.
 
-Each package brings the role's methods, skills, workflows and examples together. [Setup and saved data](docs/INSTALL_AND_PERSISTENCE.md) covers customization and updates.
+Each kit includes role-specific skills, workflows, and examples. [Setup and saved data](docs/INSTALL_AND_PERSISTENCE.md) covers customization and updates.
 
 ## The 15 specialists
 
@@ -51,7 +51,7 @@ Each package brings the role's methods, skills, workflows and examples together.
 <details>
 <summary><strong>Create and learn</strong> — 4 specialists</summary>
 
-- [Creative Studio](presets/creative-studio/INSTALL.md) — Create visual concepts, images, animation, video and interactive scenes.
+- [Creative Studio](presets/creative-studio/INSTALL.md) — Develop visual worlds, images, animation, video, and interactive scenes from concept and storyboards through production review.
 - [Product & Interface Designer](presets/product-interface-designer/INSTALL.md) — Design and review user journeys, interfaces, states, and accessibility.
 - [Model Builder](presets/model-builder/INSTALL.md) — Build AI applications, design datasets, plan training and evaluate models.
 - [Learning Coach](presets/learning-coach/INSTALL.md) — Create lessons, flashcards, practice sessions and adaptive study plans.
@@ -73,7 +73,7 @@ Each package brings the role's methods, skills, workflows and examples together.
 - **[Skills and workflows](docs/SKILLS.md):** find methods for research, data analysis, design reviews and project handoffs.
 - **[Task starters](collections/muse-starters-v1/CATALOG.md):** start from one of 558 focused configurations, then bring your own brief and files.
 - **[Engineering](docs/WORKFLOWS.md#engineering-reproduce-repair-review):** reproduce a failure, make a focused repair, run regression checks, and review the result.
-- **[Family Link](docs/FAMILY_LINK.md):** prepare a handoff with clear context, a recipient role, and an expected result.
+- **[Family Link](docs/FAMILY_LINK.md):** link two Muse personal assistants through a connection you configure, so they can exchange requests and results while keeping their own notes and preferences.
 - **[Companion Home](docs/COMPANION_HOME.md):** save room notes, explore the Studio, and take an Arcade break.
 - **[Connectors](docs/connectors/README.md):** find setup instructions for 273 services, then choose the account and permissions for the service you need.
 
@@ -92,7 +92,7 @@ python -B quickstart.py --role personal-companion --to "$HOME/my-assistant-kit"
 python -B tools/muse_collection.py demo data-engineer
 ```
 
-Prepare an editable assistant kit, then run a worked data-engineering example. The [developer quickstart](docs/GITHUB_QUICKSTART.md) covers more tools and exports.
+For more tools and exports, see the [developer quickstart](docs/GITHUB_QUICKSTART.md).
 
 ## Find and build your own pack
 

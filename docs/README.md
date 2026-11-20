@@ -35,7 +35,7 @@ Open the [Space template catalogue](spaces/README.md) for runnable projects, sou
 - [Daily Desk](spaces/DAILY_DESK.md) — tasks, notes, backup, and restore.
 - [Muse Task Board](spaces/TASK_BOARD.md) — move projects from To do to Done, save cards and plan the next actions.
 - [Muse Planner](spaces/MUSE_PLANNER.md) — organize projects, next actions, routines, weekly reviews, notes and calendars in one Space.
-- [Family Link](FAMILY_LINK.md) — prepare and review handoffs.
+- [Family Link](FAMILY_LINK.md) — connect two Muse personal assistants so they can exchange requests and results.
 - [Learning sessions](LEARNING_LOCAL_STUDY.md) — study methods and a local storage example.
 - [Garden calendar](GARDEN_LOCAL_CALENDAR.md) — observations, planning, and a calendar example.
 
