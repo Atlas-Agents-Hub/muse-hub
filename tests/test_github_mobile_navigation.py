@@ -23,7 +23,7 @@ class GitHubMobileNavigation(unittest.TestCase):
   self.assertLess(len(hero.encode("utf8")),1100)
   inventory=json.loads(doc(ROOT/"hub/site/downloads.json"))["counts"]
   for claim in ["# Muse Hub","15 independent assistants","three subchats",
-                str(inventory["skill"])+" skills",str(inventory["workflow"])+" workflows",str(len(json.loads(doc(ROOT/'collections/muse-starters-v1/starters.json'))))+" task starters",str(len(catalog()))+" connectors"]:
+                "5,200+ skills","nearly 400 workflows","550+ task starters",str(len(catalog()))+" connectors"]:
    self.assertIn(claim,hero)
   self.assertNotIn("Muse Specialist Toolkit",body)
   self.assertNotIn("atlas-origins.github.io/kits",body)

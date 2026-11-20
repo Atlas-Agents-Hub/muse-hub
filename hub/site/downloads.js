@@ -5,6 +5,9 @@
   const kind = document.getElementById('download-kind');
   const role = document.getElementById('download-role');
   const category = document.getElementById('download-category');
+  const sort = document.getElementById('download-sort');
+  const typeLinks = [...document.querySelectorAll('[data-download-type]')];
+  const catalog = document.getElementById('catalog');
   const count = document.getElementById('download-count');
   const empty = document.getElementById('download-empty');
   const reset = document.getElementById('download-reset');
@@ -15,17 +18,18 @@
   const next = document.getElementById('download-next');
   const pageLabel = document.getElementById('download-page-label');
   const sections = [...document.querySelectorAll('.download-section')];
-  if (!search || !kind || !role || !category || !count || !empty || !reset || !clearEmpty || !results || !sections.length) return;
+  if (!search || !kind || !role || !category || !sort || !catalog || !count || !empty || !reset || !clearEmpty || !results || !sections.length) return;
   const filters = { type: kind, role, subject: category };
   const allowed = Object.fromEntries(Object.entries(filters).map(([name, control]) =>
     [name, new Set([...control.options].map(option => option.value))]));
-  const controls = [search, kind, role, category, reset, clearEmpty];
+  const controls = [search, kind, role, category, sort, reset, clearEmpty];
   const pageSize = 60;
   const repository = 'https://github.com/Atlas-Agents-Hub/muse-hub';
   const expectedTotal = Number(results.dataset.total);
   const initialCount = document.querySelectorAll('.download-card').length;
   const groupKinds = {specialists:'specialist',skills:'skill',workflows:'workflow','tool-guides':'tool-guide'};
   let page = 1;
+  const titles = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
   let indexed = [];
 
   function verifyCatalog(data) {
@@ -90,6 +94,8 @@
       control.value = values.length === 1 && allowed[name].has(values[0]) ? values[0] : 'all';
     }
     if (!params.has('type')) kind.value = groupKinds[location.hash.slice(1)] || 'all';
+    const sorts = params.getAll('sort');
+    sort.value = sorts.length === 1 && ['az','za'].includes(sorts[0]) ? sorts[0] : 'catalog';
     const terms = params.getAll('q');
     search.value = terms.length === 1 && terms[0].length <= 200 ? terms[0] : '';
     const pages = params.getAll('page');
@@ -103,6 +109,12 @@
       (role.value === 'all' || item.row.roles.includes(role.value)) &&
       (category.value === 'all' || category.value === item.row.category) &&
       terms.every(term => item.text.includes(term)));
+    if (sort.value !== 'catalog') matches.sort((left, right) => (sort.value === 'za' ? -1 : 1) *
+      (titles.compare(left.row.title, right.row.title) || titles.compare(left.row.id, right.row.id)));
+    for (const link of typeLinks) {
+      if (link.dataset.downloadType === kind.value) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    }
     const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
     page = Math.max(1, Math.min(page, pageCount));
     const shown = matches.slice((page - 1) * pageSize, page * pageSize);
@@ -127,6 +139,8 @@
         url.searchParams.delete(name);
         if (control.value !== 'all') url.searchParams.set(name, control.value);
       }
+      url.searchParams.delete('sort');
+      if (sort.value !== 'catalog') url.searchParams.set('sort', sort.value);
       url.searchParams.delete('q');
       if (search.value.trim()) url.searchParams.set('q', search.value.trim().slice(0, 200));
       url.searchParams.delete('page');
@@ -140,13 +154,14 @@
     kind.value = 'all';
     role.value = 'all';
     category.value = 'all';
+    sort.value = 'catalog';
     page = 1;
     update(true);
     search.focus();
   }
   search.maxLength = 200;
   search.addEventListener('input', () => { page = 1; update(true); });
-  for (const control of Object.values(filters)) control.addEventListener('change', () => { page = 1; update(true); });
+  for (const control of [...Object.values(filters), sort]) control.addEventListener('change', () => { page = 1; update(true); });
   window.addEventListener('popstate', () => { if (indexed.length) { readUrl(); update(); } });
   reset.addEventListener('click', clear);
   clearEmpty.addEventListener('click', clear);
@@ -159,14 +174,11 @@
     previous.addEventListener('click', () => turn(-1));
     next.addEventListener('click', () => turn(1));
   }
-  for (const link of document.querySelectorAll('.download-jumps a')) {
-    if (!groupKinds[link.hash.slice(1)]) continue;
-    link.addEventListener('click', () => {
-      if (!indexed.length) return;
-      search.value = '';
-      kind.value = groupKinds[link.hash.slice(1)];
-      role.value = 'all';
-      category.value = 'all';
+  for (const link of typeLinks) {
+    link.addEventListener('click', event => {
+      if (!indexed.length || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      kind.value = link.dataset.downloadType;
       page = 1;
       update(true);
     });
@@ -186,7 +198,7 @@
       results.removeAttribute('aria-busy');
       results.dataset.catalogSize = String(indexed.length);
       document.body.classList.add('downloads-ready');
-      if (groupKinds[location.hash.slice(1)]) document.getElementById(location.hash.slice(1)).scrollIntoView({ block: 'start', behavior: 'auto' });
+      if (groupKinds[location.hash.slice(1)]) catalog.scrollIntoView({ block: 'start', behavior: 'instant' });
     })
     .catch(() => {
       results.removeAttribute('aria-busy');

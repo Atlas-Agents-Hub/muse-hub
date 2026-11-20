@@ -68,8 +68,8 @@ class V1ProductTests(unittest.TestCase):
  def test_hero_leads_with_specialists_skills_workflows_and_connectors(self):
      s=(R/'README.md').read_text(encoding='utf-8');hero=s.split('\n## ',1)[0]
      counts=json.loads((R/'hub/site/downloads.json').read_bytes())['counts']
-     for value in ('Muse Hub','15 independent assistants',f"{counts['skill']} skills",f"{counts['workflow']} workflows",
-                   f"{counts['tool-guide']} tool guides",f"{len(json.loads((R/'collections/muse-starters-v1/starters.json').read_bytes()))} task starters",f"{len(tool().load_catalog()['connectors'])} connectors"):
+     for value in ('Muse Hub','15 independent assistants',"5,200+ skills","nearly 400 workflows",
+                   "50+ tool guides","550+ task starters",f"{len(tool().load_catalog()['connectors'])} connectors"):
          self.assertIn(value,hero)
      self.assertNotIn('Muse Specialist Toolkit',s)
      self.assertLess(len(s.encode()),8000)

@@ -267,6 +267,19 @@ async function runChecks() {
     assert.equal(await evaluate('document.querySelector("#download-previous").disabled'),true);
     await navigate('downloads.html?entry=skills#skills');
     assert.equal(await evaluate('document.querySelector("#download-kind").value'),'skill');
+    const visibleSearch = () => evaluate('document.querySelector("#download-search").getBoundingClientRect().top < innerHeight && document.querySelector("#download-search").getBoundingClientRect().bottom > document.querySelector(".site-header").getBoundingClientRect().bottom');
+    await wait('document.querySelector("#download-search").getBoundingClientRect().top < innerHeight', 'legacy Skills link keeps catalog controls in view');
+    assert.equal(await visibleSearch(), true);
+    await evaluate('(() => { const sort = document.querySelector("#download-sort"); sort.value="az"; sort.dispatchEvent(new Event("change")); })()');
+    const alphabeticalStart = await visibleIds();
+    await evaluate('(() => { const sort = document.querySelector("#download-sort"); sort.value="za"; sort.dispatchEvent(new Event("change")); })()');
+    const descending = await visibleIds();
+    assert(descending.every(id => !alphabeticalStart.includes(id)));
+    assert.equal(new URL(await evaluate('location.href')).searchParams.get('sort'), 'za');
+    const sortedUrl = await evaluate('location.href');
+    await navigate('downloads.html');
+    await navigate(sortedUrl);
+    assert.deepEqual(await visibleIds(), descending);
     await click('#download-reset');
     const cleared = await evaluate('location.href');
     assert.equal(new URL(cleared).hash,'');
@@ -387,7 +400,7 @@ async function runChecks() {
     const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img");const field=document.getElementById("role-search");return {loaded:!!img&&img.complete&&img.naturalWidth>0,mobile:!!img&&new URL(img.currentSrc).pathname.endsWith("/planner-mobile.png"),searchVisible:!!field&&!!field.getClientRects().length,searchOutside:!!field&&!field.closest("details"),directory:document.querySelector(".specialist-directory").open}})()');
     assert(proof.loaded && proof.mobile && proof.searchVisible && proof.searchOutside && proof.directory, JSON.stringify(proof));
     const ring = await evaluate('(()=>{const field=document.getElementById("role-search");field.focus();const css=getComputedStyle(field);return {focused:document.activeElement === field,color:css.borderTopColor,style:css.borderTopStyle,width:parseFloat(css.borderTopWidth)}})()');
-    assert.equal(ring.color, 'rgb(22, 22, 22)', 'Search focus indicator must contrast against the cream panel');
+    assert.equal(ring.color, 'rgb(244, 255, 82)', 'Search focus indicator must contrast against the dark panel');
     assert(ring.focused && ring.style === 'solid' && ring.width >= 2, JSON.stringify(ring));
     await type('#role-search', 'software engineer');
     const narrowed = await evaluate('document.querySelectorAll(".role-card:not([hidden])").length');
@@ -459,7 +472,10 @@ async function runChecks() {
       await navigate(relative); rows.push({ page: name, ...await layout() });
       await screenshot(name + '-' + viewport + '.png');
       if (name === 'downloads') {
-        await click('a[href="#download-search"]');
+        const controls = await evaluate('({top:document.querySelector("#download-search").getBoundingClientRect().top,height:innerHeight,background:getComputedStyle(document.body).backgroundColor})');
+        assert(controls.top > 0 && controls.top < controls.height, JSON.stringify(controls));
+        assert.equal(controls.background, 'rgb(21, 21, 21)');
+        await evaluate('document.querySelector("#download-search").focus({preventScroll:true})');
         await wait('document.activeElement.id === "download-search"');
         rows.push({page:'download filters',...await layout()});
         await screenshot('download-filters-' + viewport + '.png');

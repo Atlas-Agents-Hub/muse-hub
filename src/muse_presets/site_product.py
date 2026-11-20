@@ -1,4 +1,4 @@
-"""Admit the two immutable real-Muse-Planner browser captures by hash and geometry."""
+"""Admit Muse Hub captures and the mark by reviewed hash and geometry."""
 from __future__ import annotations
 
 import json
@@ -12,6 +12,7 @@ from .site_social import valid_social_card
 PRODUCT_CAPTURE_SPECS = {
     "hub/site/planner-desktop.png": (980, 745),
     "hub/site/planner-mobile.png": (390, 490),
+    "hub/site/muse-mark.png": (384, 384),
 }
 
 def reviewed_product_capture_digests(root: Path) -> dict[str, str]:

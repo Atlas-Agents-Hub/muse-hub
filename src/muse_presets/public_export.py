@@ -26,6 +26,7 @@ PUBLIC_HUB_FILES=frozenset({
     "hub/site/downloads.js",
     "hub/site/downloads.json",
     "hub/site/index.html",
+    "hub/site/muse-mark.png",
     "hub/site/planner-desktop.png",
     "hub/site/planner-mobile.png",
     "hub/site/social-card.png",

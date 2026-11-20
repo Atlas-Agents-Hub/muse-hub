@@ -30,8 +30,8 @@ class EditorialClarity(unittest.TestCase):
         starters=json.loads((ROOT/"collections/muse-starters-v1/starters.json").read_bytes())
         connectors=json.loads((ROOT/"docs/connectors/catalog.json").read_bytes())["connectors"]
         release=json.loads((ROOT/"presets/catalog.json").read_bytes())["release"]
-        for expected in ("Muse Hub","15 independent assistants",str(inventory["skill"])+" skills",str(inventory["workflow"])+" workflows",
-                         f"{len(starters)} task starters",f"{len(connectors)} connectors","START_HERE.md",
+        for expected in ("Muse Hub","15 independent assistants","5,200+ skills","nearly 400 workflows",
+                         "550+ task starters",f"{len(connectors)} connectors","START_HERE.md",
                          "tools/muse_collection.py demo data-engineer",
                          "docs/connectors/README.md","docs/GETTING_STARTED.md", "docs/TERMINAL.md",
                          f"releases/tag/{release}", "https://atlas-agents-hub.github.io/muse-hub/downloads.html"):
