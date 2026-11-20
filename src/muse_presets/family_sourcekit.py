@@ -31,7 +31,7 @@ SOURCE_PINS = {
     "src/muse_presets/family_envelope.py": '02fd3b8d6d811bfa21554b09702807f6cf39ec05ed869bb7f672b6e367e5083b',
     "src/muse_presets/neutrality.py": '6f9463d2334c17ec304473a18febe0329dc23d5045545525077d50bfd69b7326',
     "src/muse_presets/site_social.py": 'c5643da37e770374358e8b20175ff44dd0251c452a39aa1e2a69c808afc97992',
-    "src/muse_presets/site_product.py": 'afd8b8c0e694ff913c1d978c2adcb7e295ad1d3c4f784eecd10fee539deffdd7',
+    "src/muse_presets/site_product.py": '63479bfa188e2abdda3cbb935bc754dbfd070757a84c753a01127b6047ccb1ba',
     "src/muse_presets/planner_package.py": 'ae34f9e82aaa373be0130e42e6ced40b59af5f8461b7758e7a7f32496393d0c0',
     "src/muse_presets/source_limits.py": '692b4c92957073e97c28347481730729154970f3dcc5e9dfb2cc9a7e91155f7d',
     "src/muse_presets/playbooks.py": 'c3abac0812efe26fbf34698e24fcdc18ebbd0d756bdc771092353b1859e04774',
