@@ -17,7 +17,7 @@ SCHEMA="muse-presets/component-catalog-v1"
 PINS_SCHEMA="muse-presets/component-source-pins-v1"
 BASE="generic-first-party-source-v1"
 # Immutable local source digest, NOT a publisher signature.
-PINNED_MANIFEST_SHA256="8682cfdb119a96d96aeac79844be807ec539073d26076ce4391826f8a1a57a4e"
+PINNED_MANIFEST_SHA256="7547c72011b2ba276417b4dc60558dc2d033c4a888cc6b87e9cf46a714ab6b91"
 MAX_MANIFEST=40_000
 MAX_MODULE=300_000
 MAX_OUTPUT=256_000
@@ -34,6 +34,7 @@ SPECS={
    "src/muse_presets/catalog.py",
    "src/muse_presets/playbooks.py",
    "src/muse_presets/neutrality.py",
+   "src/muse_presets/site_social.py",
    "src/muse_presets/planner_package.py",
    "src/muse_presets/source_limits.py",
    "examples/research_evaluator_demo.py")),

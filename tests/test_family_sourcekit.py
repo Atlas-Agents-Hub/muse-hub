@@ -53,6 +53,7 @@ class FamilySourcekitTests(unittest.TestCase):
             self.assertIn("SOURCEKIT_MANIFEST.json", names)
             self.assertIn("START_HERE.md", names)
             self.assertIn("src/muse_presets/family_envelope.py", names)
+            self.assertIn("src/muse_presets/site_social.py", names)
             self.assertIn("examples/family_offline_handoff_demo.py", names)
             self.assertIn("presets/catalog.json", names)
             manifest = json.loads(z.read("SOURCEKIT_MANIFEST.json"))

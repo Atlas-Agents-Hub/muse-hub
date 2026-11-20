@@ -65,8 +65,9 @@ class PublicProductSurfaceTests(unittest.TestCase):
   # all other top-level docs is unchanged and still rejects arbitrary sprawl.
   self.assertLessEqual(len(current - {
       "README.md", "HUB_FEATURE_READINESS.md", "COMPANION_HOME.md",
-      "GETTING_STARTED.md", "TERMINAL.md",
+      "GETTING_STARTED.md", "TERMINAL.md", "BRAND_SYSTEM.md",
   }),19)
+  self.assertIn("BRAND_SYSTEM.md", current)
   self.assertIn("DOWNLOAD_A_SPECIALIST.md",current)  # preserve topical-doc limit; allow one index
 
  def test_all_product_docs_exist_and_read_as_product(self):
