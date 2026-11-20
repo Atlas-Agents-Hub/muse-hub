@@ -35,7 +35,7 @@ const catalog = JSON.parse(fs.readFileSync(path.join(site, 'public/catalog.json'
 const routes = new Map(catalog.routes.map(route => [route.id, route]));
 assert.deepEqual([...routes.keys()].sort(), ['cli', 'companion', 'desktop', 'doors', 'family', 'watch']);
 const report = { schema: 'muse-hub/experience-browser/v1', started_at: new Date().toISOString(), site, chrome: chromePath, node: process.version, require_journeys: flags.includes('--require-journeys'), harness_sha256: sha256(fs.readFileSync(__filename)), source_files: {}, checks: [], screenshots: [], errors: [], blocked_external_requests: [], requests: [] };
-for (const name of ['index.html', 'site.js', 'site.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json']) {
+for (const name of ['index.html', 'site.js', 'site.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json', 'planner-desktop.png', 'planner-mobile.png']) {
   const bytes = fs.readFileSync(path.join(site, name));
   report.source_files[name] = { bytes: bytes.length, sha256: sha256(bytes) };
 }
@@ -205,10 +205,12 @@ async function start() {
       const { requestId, request } = message.params;
       const allowed = request.url.startsWith(base);
       if (!allowed) report.blocked_external_requests.push(request.url);
-      call(allowed ? 'Fetch.continueRequest' : 'Fetch.failRequest', allowed ? { requestId } : { requestId, errorReason: 'BlockedByClient' }).catch(error => report.errors.push({ kind: 'request', message: error.message }));
+      call(allowed ? 'Fetch.continueRequest' : 'Fetch.failRequest', allowed ? { requestId } : { requestId, errorReason: 'BlockedByClient' }).catch(error => report.errors.push({ kind: 'request', url: request.url, message: error.message }));
     }
   });
   await call('Page.enable'); await call('Runtime.enable');
+  // A headless window otherwise lacks OS focus even when its input is active.
+  await call('Emulation.setFocusEmulationEnabled', { enabled: true });
   await call('Fetch.enable', { patterns: [{ urlPattern: '*' }] });
   await call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   await resize(1440);
@@ -384,6 +386,9 @@ async function runChecks() {
     await navigate('index.html#specialists');
     const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img");const field=document.getElementById("role-search");return {loaded:!!img&&img.complete&&img.naturalWidth>0,mobile:!!img&&new URL(img.currentSrc).pathname.endsWith("/planner-mobile.png"),searchVisible:!!field&&!!field.getClientRects().length,searchOutside:!!field&&!field.closest("details"),directory:document.querySelector(".specialist-directory").open}})()');
     assert(proof.loaded && proof.mobile && proof.searchVisible && proof.searchOutside && proof.directory, JSON.stringify(proof));
+    const ring = await evaluate('(()=>{const field=document.getElementById("role-search");field.focus();const css=getComputedStyle(field);return {focused:document.activeElement === field,color:css.borderTopColor,style:css.borderTopStyle,width:parseFloat(css.borderTopWidth)}})()');
+    assert.equal(ring.color, 'rgb(22, 22, 22)', 'Search focus indicator must contrast against the cream panel');
+    assert(ring.focused && ring.style === 'solid' && ring.width >= 2, JSON.stringify(ring));
     await type('#role-search', 'software engineer');
     const narrowed = await evaluate('document.querySelectorAll(".role-card:not([hidden])").length');
     assert(narrowed>=1 && narrowed<15,narrowed);
@@ -398,11 +403,17 @@ async function runChecks() {
   await check('authentic Planner captures remain inspectable on phone and desktop', async () => {
     const observations = [];
     for (const viewport of [320, 390, 768, 1024, 1440]) {
+      // Set the size away from the showcase before a fresh load so resizing
+      // the old page cannot cancel a pending responsive image request.
+      await navigate('public/index.html');
       await resize(viewport); await navigate('index.html');
-      const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img"),peek=document.querySelector(".premium-mobile-peek"),links=[...document.querySelectorAll(".premium-capture-inspect a")];return {loaded:img.complete&&img.naturalWidth>0,source:new URL(img.currentSrc).pathname,rect:{width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height},peekVisible:getComputedStyle(peek).display!=="none",links:links.map(a=>a.getAttribute("href")),scrollWidth:document.documentElement.scrollWidth}})()');
+      const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img"),peek=document.querySelector(".premium-mobile-peek"),links=[...document.querySelectorAll(".premium-capture-inspect a")];return {loaded:img.complete&&img.naturalWidth>0,source:new URL(img.currentSrc).pathname,rect:{width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height,top:img.getBoundingClientRect().top},height:innerHeight,peekVisible:getComputedStyle(peek).display!=="none",links:links.map(a=>a.getAttribute("href")),scrollWidth:document.documentElement.scrollWidth}})()');
       assert(proof.loaded, 'Planner capture failed to load: ' + viewport);
       assert(proof.source.endsWith(viewport <= 690 ? '/planner-mobile.png' : '/planner-desktop.png'), JSON.stringify(proof));
       assert(proof.rect.width >= (viewport <= 690 ? viewport * .75 : Math.min(500,viewport * .55)) && proof.rect.height >= (viewport <= 690 ? 280 : 330), JSON.stringify(proof));
+      assert(proof.rect.top + 200 <= proof.height, 'Planner needs a useful first-screen preview: ' + viewport);
+      assert(Math.abs(proof.rect.width / proof.rect.height - (viewport <= 690 ? 390 / 490 : 980 / 745)) < .015,
+        'Planner capture must keep its original aspect ratio');
       assert.equal(proof.peekVisible, viewport > 690, 'Dual-device evidence mode differs from viewport');
       assert.deepEqual(proof.links, ['planner-desktop.png', 'planner-mobile.png']);
       for (const name of proof.links) assert(fs.statSync(path.join(site, name)).isFile(), name);
@@ -413,7 +424,10 @@ async function runChecks() {
   });
   await check('outcome shortcuts expose real specialist cards with keyboard focus', async () => {
     await resize(390); await navigate('index.html');
-    await click('[data-suggest-role="claims-adjudicator"]');
+    await call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    assert(await evaluate('getComputedStyle(document.querySelector(".role-quickpick-button")).transitionDuration === "0s"'));
+    await evaluate('document.querySelector("[data-suggest-role=claims-adjudicator]").focus()');
+    await key('Enter');
     const first = await evaluate('({open:document.querySelector(".specialist-directory").open,visible:[...document.querySelectorAll(".role-card:not([hidden])")].map(c=>c.dataset.role),search:document.getElementById("role-search").value,count:document.getElementById("role-count").textContent,pressed:document.querySelector("[data-suggest-role=claims-adjudicator]").getAttribute("aria-pressed"),label:document.getElementById("role-directory-label").textContent,focus:document.activeElement?.dataset?.role})');
     assert(first.open && first.search === 'Claims Adjudicator' && first.count === 'Showing 1 of 15 specialists' && first.label === 'View 1 matching specialist' && first.pressed === 'true',JSON.stringify(first));
     assert.deepEqual(first.visible,['claims-adjudicator']);
@@ -424,7 +438,18 @@ async function runChecks() {
     assert.deepEqual(second.visible,['product-interface-designer']);
     assert.deepEqual(second.pressed,['product-interface-designer']);
     assert.equal(second.focused,'product-interface-designer');
+    await click('[data-suggest-role="product-interface-designer"]');
+    assert(await evaluate('document.querySelectorAll(".role-card:not([hidden])").length === 15'));
+    for (const id of ['software-engineer', 'coordinator']) {
+      await click('[data-suggest-role="' + id + '"]');
+      assert.deepEqual(await evaluate('[...document.querySelectorAll(".role-card:not([hidden])")].map(card => card.dataset.role)'), [id]);
+    }
+    await evaluate('document.getElementById("role-search").focus()');
+    await key('Escape');
+    assert(await evaluate('document.getElementById("role-search").value === "" && document.querySelectorAll(".role-card:not([hidden])").length === 15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
+    await click('[data-suggest-role="coordinator"]');
     await click('#role-reset');
+    await call('Emulation.setEmulatedMedia', { features: [] });
     assert(await evaluate('document.getElementById("role-search").value==="" && [...document.querySelectorAll(".role-card:not([hidden])")].length===15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
     return {first,second,reset:true};
   });
@@ -461,6 +486,18 @@ async function runChecks() {
       assert.equal(await evaluate('getComputedStyle(document.querySelector("#filters")).display'), 'none');
       await layout(); await screenshot('resources-no-javascript-375.png');
       return { visible_project_links: links.length };
+    } finally { await call('Emulation.setScriptExecutionDisabled', { value: false }); }
+  });
+  await check('specialist kits remain reachable without JavaScript', async () => {
+    await resize(390);
+    await call('Emulation.setScriptExecutionDisabled', { value: true });
+    try {
+      await navigate('index.html#specialists', false);
+      assert(await evaluate('document.querySelector(".specialist-search-panel").hidden'));
+      await click('.specialist-directory summary');
+      const kits = await evaluate('[...document.querySelectorAll(".role-card-download")].filter(a => a.getClientRects().length).length');
+      assert.equal(kits, 15);
+      return { accessible_downloads: kits };
     } finally { await call('Emulation.setScriptExecutionDisabled', { value: false }); }
   });
   await check('downloads remain usable without JavaScript', async () => {

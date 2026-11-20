@@ -32,12 +32,12 @@ Display headings use `Georgia, "Iowan Old Style", Baskerville, serif`, regular w
 
 ## Authentic product showcase
 
-The first screen must establish product value by displaying a **real working Muse Space** rather than a decorative mock interface. The two reviewed browser captures are `hub/site/planner-desktop.png` (980 ? 745) and `planner-mobile.png` (390 ? 490). Their bytes and hashes remain sealed in `hub/site/INTEGRITY.json`. On desktop, the main screenshot is paired with a smaller phone-capture inset; on phones, the responsive `<picture>` displays the mobile capture directly. Both have links to inspect the full-size originals. Label these as **app screenshots**: a static preview must never imply that visitors are manipulating the actual running Space.
+The first screen must establish product value by displaying a **real working Muse Space** rather than a decorative mock interface. The two reviewed browser captures are `hub/site/planner-desktop.png` (980 × 745) and `planner-mobile.png` (390 × 490). Their bytes and hashes remain sealed in `hub/site/INTEGRITY.json`. On desktop, the main screenshot is paired with a smaller phone-capture inset; on phones, the responsive `<picture>` displays the mobile capture directly. Both have links to inspect the full-size originals. Label these as **app screenshots**: a static preview must never imply that visitors are manipulating the actual running Space.
 
 - Keep actual app data, controls, and states legible at desktop and phone widths; images must be responsive and provide useful alt text.
 - Every showcase should link to the matching app's setup guide and source, not an unrelated generic directory.
 - Keep mobile evidence visible in the first-screen journey. Never hide the only product demonstration on phones.
-- Specialist discovery starts with visible search and an accessible results count, then expands the full directory on input, focus, or in-page navigation.
+- Specialist discovery starts with visible search and an accessible results count, then expands the full directory on input, focus, or in-page navigation. Without JavaScript, the native directory disclosure still exposes all 15 kits.
 - Four outcome-first shortcuts resolve only reviewed specialist identifiers (software engineer, claims adjudicator, product interface designer, coordinator). Shortcuts update the real filter, count and selection state, open the real kit directory and move keyboard focus to the matching card. The directory summary must reflect the filtered count.
 - Maintain real links, browser tested keyboard/deep-link behavior, no horizontal overflow, and a clear primary action. Do not imply a static illustration is an interactive application.
 - Preserve deterministic image inventory and fail-closed source distribution controls when adding screenshots; a new image needs explicit asset review and tests.

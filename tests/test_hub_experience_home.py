@@ -9,7 +9,8 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "hub" / "site"
-DOCS = "https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/docs/"
+REPO_BLOB = "https://github.com/Atlas-Agents-Hub/muse-hub/blob/"
+SPACE_GUIDE_REF = "f6b71534070d41806b5eeca5765ad2c3f0dd0ac7"
 ROLES = {
     "software-engineer", "data-engineering-architect", "automation-engineer",
     "infrastructure-reliability-engineer", "research-evaluator", "claims-adjudicator",
@@ -107,8 +108,10 @@ class HubExperienceHomeTests(unittest.TestCase):
         for title,subpath in paths.items():
             with self.subTest(title=title):
                 self.assertTrue((ROOT/"docs"/subpath).is_file())
+                ref = "main" if title == "Daily Desk" else SPACE_GUIDE_REF
+                guide_url = f"{REPO_BLOB}{ref}/docs/{subpath}"
                 self.assertTrue(any(title in card.text() and any(
-                    a.tag=="a" and a.attrs.get("href")==DOCS+subpath
+                    a.tag=="a" and a.attrs.get("href") == guide_url
                     for a in card.descendants()) for card in cards))
 
     def test_site_copy_is_clear_and_product_led(self):
@@ -116,7 +119,7 @@ class HubExperienceHomeTests(unittest.TestCase):
         text=self.page.root.text()
         for unwanted in ("Inside Muse","Included with Muse Hub","independently built for"):
             self.assertNotIn(unwanted,text)
-        self.assertIn("Start with something that works."," ".join(text.split()))
+        self.assertIn("Build on a working app."," ".join(text.split()))
         self.assertIn("Find a specialist",text)
         self.assertIn("Start with a working Space.",text)
         self.assertEqual(len([n for n in self.page.nodes if "origin-label" in n.attrs.get("class","").split()]),0)

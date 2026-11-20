@@ -18,6 +18,8 @@ from tool_guides import load_guides
 from build_release import ALIASES, ROLE_WORKFLOWS, skill_download_layout, planner_asset
 
 REPO = 'https://github.com/Atlas-Agents-Hub/muse-hub'
+# The reviewed Planner guide must resolve before the release and main cutover.
+PLANNER_GUIDE = REPO + '/blob/f6b71534070d41806b5eeca5765ad2c3f0dd0ac7/docs/spaces/MUSE_PLANNER.md'
 SITE_BASE = 'https://atlas-agents-hub.github.io/muse-hub/'
 SOCIAL_IMAGE = SITE_BASE + 'social-card.png'
 
@@ -295,7 +297,7 @@ def catalog(root: Path = ROOT) -> dict:
     bundles.append(dict(id='space-planner',title='Muse Planner',
         description='A full-stack Muse Space for projects, next actions, daily routines, weekly reviews, notes and calendars.',
         asset=asset,url=base+asset,roles=['coordinator','personal-companion'],
-        guide_url=REPO+'/blob/main/docs/spaces/MUSE_PLANNER.md'))
+        guide_url=PLANNER_GUIDE))
     connectors_path=root/'docs/connectors/catalog.json'
     connector_count=len(json.loads(connectors_path.read_bytes())['connectors']) if connectors_path.exists() else 151
     return {'schema':'muse-hub/downloads/v1','version':version,'counts':counts,

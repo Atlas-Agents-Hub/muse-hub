@@ -3,6 +3,7 @@
   'use strict';
   const directory = document.querySelector('.specialist-directory');
   const directoryLabel = document.getElementById('role-directory-label');
+  const searchPanel = document.querySelector('.specialist-search-panel');
   const setupDisclosure = document.querySelector('.setup-disclosure');
   const search = document.getElementById('role-search');
   const category = document.getElementById('role-category');
@@ -13,13 +14,16 @@
   const cards = [...document.querySelectorAll('.role-card[data-role]')];
   const quickPicks = [...document.querySelectorAll('[data-suggest-role]')];
   if (!search || !category || !count || !reset || !empty || !emptyClear || cards.length !== 15) return;
+  let suggestedRole = '';
 
   function update() {
     const needle = search.value.trim().toLocaleLowerCase();
     const group = category.value;
     let visible = 0;
     for (const card of cards) {
-      const hasTerm = !needle || card.dataset.search.toLocaleLowerCase().includes(needle);
+      const hasTerm = suggestedRole
+        ? card.dataset.role === suggestedRole
+        : !needle || card.dataset.search.toLocaleLowerCase().includes(needle);
       const hasGroup = group === 'all' || card.dataset.category === group;
       const show = hasTerm && hasGroup;
       card.hidden = !show;
@@ -34,13 +38,11 @@
     }
     empty.hidden = visible !== 0;
     for (const button of quickPicks) {
-      const card = cards.find(item => item.dataset.role === button.dataset.suggestRole);
-      const selected = !!card && group === 'all' &&
-        needle === card.querySelector('h3').textContent.toLocaleLowerCase();
-      button.setAttribute('aria-pressed', String(selected));
+      button.setAttribute('aria-pressed', String(suggestedRole === button.dataset.suggestRole));
     }
   }
   function clear() {
+    suggestedRole = '';
     search.value = '';
     category.value = 'all';
     update();
@@ -52,6 +54,11 @@
       const target = cards.find(card => card.dataset.role === button.dataset.suggestRole);
       const heading = target?.querySelector('h3');
       if (!target || !heading) return;
+      if (suggestedRole === target.dataset.role) {
+        clear();
+        return;
+      }
+      suggestedRole = target.dataset.role;
       search.value = heading.textContent.trim();
       category.value = 'all';
       if (directory) directory.open = true;
@@ -62,12 +69,17 @@
     });
   }
   search.addEventListener('focus', () => { if (directory) directory.open = true; });
-  search.addEventListener('input', () => { if (directory) directory.open = true; update(); });
-  category.addEventListener('change', () => { if (directory) directory.open = true; update(); });
+  function applyManualFilters() {
+    suggestedRole = '';
+    if (directory) directory.open = true;
+    update();
+  }
+  search.addEventListener('input', applyManualFilters);
+  category.addEventListener('change', applyManualFilters);
   reset.addEventListener('click', clear);
   emptyClear.addEventListener('click', clear);
   if (window.location.hash === '#specialists' && directory) directory.open = true;
-  for (const link of document.querySelectorAll('a[href="#specialists"]')) {
+  for (const link of document.querySelectorAll('a[href="#specialists"], a[href="index.html#specialists"]')) {
     link.addEventListener('click', () => { if (directory) directory.open = true; });
   }
   document.addEventListener('keydown', event => {
@@ -78,7 +90,7 @@
     }
     if (event.key === 'Escape' && document.activeElement === search) {
       search.value = '';
-      update();
+      applyManualFilters();
     }
   });
   // Use only the role and asset identifiers present in the reviewed cards.
@@ -174,4 +186,5 @@
     selectSetupRole();
   }
   update();
+  if (searchPanel) searchPanel.hidden = false;
 })();
