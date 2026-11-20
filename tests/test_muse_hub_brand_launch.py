@@ -61,8 +61,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
         html=(SITE/"index.html").read_text(encoding="utf-8")
         self.assertIn("<title>Muse Hub",html)
         self.assertIn('class="brand-symbol"',html)
-        self.assertIn("Start with something",html)
-        self.assertIn("that works.",html)
+        self.assertIn('<h1 id="hero-heading">Build on a <span>working app.</span></h1>', html)
         self.assertIn('id="companion-spaces"',html)
         self.assertIn('id="specialists"',html)
         for path in ('href="downloads.html"',
