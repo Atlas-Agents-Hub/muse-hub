@@ -18,12 +18,40 @@ from tool_guides import load_guides
 from build_release import ALIASES, ROLE_WORKFLOWS, skill_download_layout, planner_asset
 
 REPO = 'https://github.com/Atlas-Agents-Hub/muse-hub'
+SITE_BASE = 'https://atlas-agents-hub.github.io/muse-hub/'
+SOCIAL_IMAGE = SITE_BASE + 'social-card.png'
+
+
+def social_meta(url: str, title: str, description: str) -> str:
+    # Use the same branded image and page-specific description on each landing page.
+    content = [
+        ('og:type', 'website'),
+        ('og:site_name', 'Muse Hub'),
+        ('og:url', url),
+        ('og:title', title),
+        ('og:description', description),
+        ('og:image', SOCIAL_IMAGE),
+        ('og:image:secure_url', SOCIAL_IMAGE),
+        ('og:image:type', 'image/png'),
+        ('og:image:width', '1200'),
+        ('og:image:height', '630'),
+        ('og:image:alt', 'Muse Hub: build more with specialists, skills, Spaces and workflows.'),
+    ]
+    tags = ['<meta property="' + name + '" content="' + html.escape(value,quote=True) + '">' for name,value in content]
+    tags.extend('<meta name="' + name + '" content="' + html.escape(value,quote=True) + '">' for name,value in (
+        ('twitter:card', 'summary_large_image'),
+        ('twitter:title', title),
+        ('twitter:description', description),
+        ('twitter:image', SOCIAL_IMAGE),
+    ))
+    return '\n'.join(tags)
+
 SITE = ROOT / 'hub/site'
 DOWNLOAD_PAGE_SIZE = 60
 HOME_CAPTIONS = {
     'packages': 'Complete ZIP packages · Version {version}',
     'specialist': 'YOUR SPECIALIST / VERSION {version}',
-    'footer': 'VERSION {version} · BUILT FOR MUSE',
+    'footer': 'MUSE HUB · VERSION {version}',
 }
 CAPTION = re.compile(
     r'(?P<open><(?P<tag>div|span)\b[^<>]*\bdata-release-caption="(?P<key>[^"]+)"[^<>]*>)'
@@ -151,12 +179,15 @@ def subject_pages(data: dict) -> dict[str,bytes]:
                 entry=f'<p class="download-entry"><code>{esc(row["entry"])}</code></p>' if packed else ''
                 cards.append(f'<article class="download-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p><p>{read}<a href="{esc(row["url"])}">{download}</a></p>{entry}</article>')
             url='https://atlas-agents-hub.github.io/muse-hub/'+route
+            page_description=(intros[label] if len(pages)==1 else
+                f'{intros[label]} Browse {label.lower()} resources on page {number} of {len(pages)}.')
             schema={'@context':'https://schema.org','@type':'CollectionPage','name':title,
-                    'url':url,'description':intros[label],
+                    'url':url,'description':page_description,'image':SOCIAL_IMAGE,
                     'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}}
             body=f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(intros[label])}">
+<title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(page_description)}">
+{social_meta(url, f'{title} | Page {number} | Muse Hub', page_description)}
 <link rel="canonical" href="{url}"><link rel="stylesheet" href="../site.css">
 <script type="application/ld+json">{json.dumps(schema,ensure_ascii=False)}</script></head>
 <body class="section-paper"><a class="skip-link" href="#main">Skip to resources</a>
@@ -380,21 +411,14 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="description" content="Download {data['counts']['skill']} Muse AI skills, {data['counts']['workflow']} workflows, 15 specialists and practical tool guides. Search by subject or specialist and choose a ready-to-use ZIP.">
   <link rel="canonical" href="https://atlas-agents-hub.github.io/muse-hub/downloads.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Muse Hub">
-  <meta property="og:url" content="https://atlas-agents-hub.github.io/muse-hub/downloads.html">
-  <meta property="og:title" content="Muse AI Skills, Workflows and Specialist Downloads">
-  <meta property="og:description" content="Find the skills, workflows and tools for your next task.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Muse Hub Downloads">
-  <meta name="twitter:description" content="Muse AI skills, workflows, specialists and tool guides.">
-  <script type="application/ld+json">{json.dumps({'@context':'https://schema.org','@type':'CollectionPage','name':'Muse Hub Downloads','url':'https://atlas-agents-hub.github.io/muse-hub/downloads.html','description':'Muse AI skills, workflows, specialists and tool guides.','isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}})}</script>
+{social_meta(SITE_BASE + 'downloads.html', 'Muse AI Skills, Workflows and Specialist Downloads', 'Find the skills, workflows and tools for your next task.')}
+  <script type="application/ld+json">{json.dumps({'@context':'https://schema.org','@type':'CollectionPage','name':'Muse Hub Downloads','url':'https://atlas-agents-hub.github.io/muse-hub/downloads.html','image':SOCIAL_IMAGE,'description':'Muse AI skills, workflows, specialists and tool guides.','isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}})}</script>
   <title>Muse AI Skills &amp; Workflow Downloads | Muse Hub</title>
 {favicon}
   <link rel="stylesheet" href="site.css">
   <script defer src="downloads.js"></script>
 </head>
-<body id="top">
+<body id="top" class="muse-premium downloads-page">
   <a class="skip-link" href="#main">Skip to downloads</a>
 {header}  <main id="main">
     <section class="downloads-hero section-dark"><div class="shell">

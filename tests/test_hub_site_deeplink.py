@@ -57,7 +57,7 @@ class MuseHubDeepLinkTests(unittest.TestCase):
         html = (SITE / "index.html").read_text(encoding="utf-8")
         self.assertIn('href="downloads.html"', html)
         self.assertIn("docs/TERMINAL.md", html)
-        self.assertIn("docs/COMPANION_HOME.md", html)
+        self.assertIn("docs/spaces/MUSE_PLANNER.md", html)
         self.assertNotIn("community-built", html.lower())
         self.assertIn("connect-src 'none'", html)
         self.assertNotRegex(html, r"\b[HS]\d{2}\b")

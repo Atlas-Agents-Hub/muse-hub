@@ -81,75 +81,57 @@ class HubExperienceHomeTests(unittest.TestCase):
     def setUpClass(cls):
         cls.page = Page(SITE / "index.html")
 
-    def test_six_entry_paths_reach_sections_with_usable_actions(self):
-        """A visitor can reach every product area without traversing 15 roles."""
-        paths = [node for node in self.page.nodes if node.tag == "nav" and node.attrs.get("aria-label") == "Explore Muse Hub"]
-        self.assertEqual(len(paths), 1, "The hero needs one accessible six-path navigation.")
-        links = [node for node in paths[0].descendants() if node.tag == "a"]
-        destinations = {urlsplit(node.attrs["href"]).fragment for node in links}
-        self.assertEqual(destinations, {"explore-muse", "specialists", "connect-automate", "companion-spaces", "computer-devices", "explore"})
-        self.assertEqual(len(links), 6)
-        for link in links:
-            with self.subTest(path=link.attrs["href"]):
-                self.assertTrue(link.text(), "Every path needs an accessible name.")
-                section = self.page.ids[urlsplit(link.attrs["href"]).fragment]
-                actions = [node for node in section.descendants() if node.tag == "a" and node.attrs.get("href") and not node.attrs["href"].startswith("#")]
-                self.assertTrue(actions, "A product area must lead to a guide, download or service.")
+    def test_three_task_paths_reach_real_destinations(self):
+        """A first-time visitor chooses one of three distinct useful jobs."""
+        cards=[node for node in self.page.nodes if "premium-path-card" in node.attrs.get("class","").split()]
+        self.assertEqual(len(cards),3)
+        targets={card.attrs["href"] for card in cards}
+        self.assertEqual(targets,{"#companion-spaces","#specialists","downloads.html"})
+        for card in cards:
+            self.assertTrue(card.text().strip())
+            url=card.attrs["href"]
+            if url.startswith("#"):
+                self.assertIn(url[1:],self.page.ids)
+            else:
+                self.assertTrue((SITE/url).is_file())
 
-    def test_journeys_reach_the_three_complete_guides(self):
-        """Life, development and creative users have a path through the Hub."""
-        roadmap = self.page.ids["roadmap"]
-        targets = {node.attrs.get("href") for node in roadmap.descendants() if node.tag == "a"}
-        self.assertTrue({DOCS + "journeys/" + name for name in (
-            "ORGANIZE_YOUR_DAY.md", "BUILD_AND_AUTOMATE.md", "CREATE_SOMETHING.md",
-        )}.issubset(targets), "All three journeys need their own working guide destination.")
-
-    def test_feature_actions_explain_origin_and_reach_the_right_source(self):
-        """Native features, Hub tools and community integrations remain distinct."""
-        destinations = {
-            "https://muse.ai/": "Official Muse resource",
-            "https://www.meta.com/help/superintelligence/1484325780075655/": "Official Muse resource",
-            "https://platform.muse.ai/docs": "Official Muse resource",
-            DOCS + "COMPANION_HOME.md": "Included with Muse Hub",
-            DOCS + "spaces/DAILY_DESK.md": "Included with Muse Hub",
-            DOCS + "FAMILY_LINK.md": "Included with Muse Hub",
-            DOCS + "connectors/README.md": "Included with Muse Hub",
-            DOCS + "TERMINAL.md": "Community project",
-            "https://gadgets.muse.ai/": "Official Muse resource",
+    def test_primary_journey_to_three_working_space_guides(self):
+        """Featured apps have direct usable setup destinations."""
+        paths={
+            "Muse Planner":"spaces/MUSE_PLANNER.md",
+            "Task Board":"spaces/TASK_BOARD.md",
+            "Daily Desk":"spaces/DAILY_DESK.md",
         }
-        for href, expected in destinations.items():
-            with self.subTest(destination=href):
-                links = [node for node in self.page.links if node.attrs["href"] == href]
-                self.assertTrue(links, f"Missing discovery route: {href}")
-                has_context = False
-                for link in links:
-                    context = link.parent
-                    while context and context.tag not in {"article", "section"}:
-                        context = context.parent
-                    if context:
-                        labels = {" ".join(node.text().split()) for node in context.descendants() if "origin-label" in node.attrs.get("class", "").split()}
-                        if expected in labels:
-                            has_context = True
-                self.assertTrue(has_context, "The action needs an origin label in its feature context.")
-        labels = [node for node in self.page.nodes if "origin-label" in node.attrs.get("class", "").split()]
-        self.assertTrue(all(" ".join(node.text().split()) in ORIGINS for node in labels))
+        cards=[n for n in self.page.nodes if "premium-space-card" in n.attrs.get("class","").split()]
+        self.assertEqual(len(cards),3)
+        for title,subpath in paths.items():
+            with self.subTest(title=title):
+                self.assertTrue((ROOT/"docs"/subpath).is_file())
+                self.assertTrue(any(title in card.text() and any(
+                    a.tag=="a" and a.attrs.get("href")==DOCS+subpath
+                    for a in card.descendants()) for card in cards))
 
-    def test_space_templates_link_to_the_working_apps(self):
-        overview = self.page.ids["explore-muse"]
-        self.assertTrue(any(
-            node.tag == "a" and node.attrs.get("href") == "#companion-spaces"
-            and "Space templates" in node.text() for node in overview.descendants()
-        ))
-        templates = self.page.ids["companion-spaces"]
-        sources = {
-            node.attrs["href"] for node in templates.descendants() if node.tag == "a"
-        }
-        self.assertIn(DOCS + "spaces/README.md", sources)
-        self.assertTrue((ROOT / "docs/spaces/README.md").is_file())
-        for path in ("examples/gtd_space", "examples/task_board"):
-            self.assertIn(DOCS.replace("/blob/main/docs/", f"/tree/main/{path}"), sources)
-            self.assertTrue((ROOT / path / "README.md").is_file())
-        self.assertNotIn("Inside Muse", self.page.root.text())
+    def test_site_copy_is_clear_and_product_led(self):
+        """Public copy must not bury the value behind confusing origin badges."""
+        text=self.page.root.text()
+        for unwanted in ("Inside Muse","Included with Muse Hub","independently built for"):
+            self.assertNotIn(unwanted,text)
+        self.assertIn("Start with something that works."," ".join(text.split()))
+        self.assertIn("Find a specialist",text)
+        self.assertIn("Start with a working Space.",text)
+        self.assertEqual(len([n for n in self.page.nodes if "origin-label" in n.attrs.get("class","").split()]),0)
+
+    def test_app_entrypoints_support_keyboard_and_progressive_disclosure(self):
+        """Menus and specialist/setup directories should not create a long mobile scroll."""
+        disclosures=[n for n in self.page.nodes if n.tag=="details"]
+        self.assertEqual(len(disclosures),3)
+        self.assertTrue(all("open" not in d.attrs for d in disclosures))
+        self.assertTrue(all(any(n.tag=="summary" for n in d.children if isinstance(n,Element)) for d in disclosures))
+        primary=[n for n in self.page.nodes if n.tag=="nav" and n.attrs.get("aria-label")=="Primary navigation"]
+        self.assertEqual(len(primary),1)
+        self.assertEqual([a.text() for a in primary[0].descendants() if a.tag=="a"],["Spaces","Specialists","Library"])
+        self.assertIn("mobile-navigation",(SITE/"index.html").read_text(encoding="utf8"))
+        self.assertIn("premium-space-grid",(SITE/"index.html").read_text(encoding="utf8"))
 
     def test_local_navigation_and_reused_header_footer_resolve(self):
         """In-page and downloads-page navigation cannot silently become dead links."""

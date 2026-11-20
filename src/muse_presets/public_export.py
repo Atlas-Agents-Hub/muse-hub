@@ -9,6 +9,8 @@ import zipfile
 from .neutrality import REVIEWED_TEXT_FILES, audit_public_tree
 from .source_limits import reviewed_library_assets, source_file_limit
 from .planner_package import reviewed_planner_assets
+from .site_social import SOCIAL_CARD_PATH, reviewed_social_digest, valid_social_card
+from .site_product import PRODUCT_CAPTURE_SPECS, reviewed_product_capture_digests, valid_product_capture
 
 SCHEMA="muse-source-package/v2"
 PUBLIC_DIRS=frozenset({
@@ -24,6 +26,9 @@ PUBLIC_HUB_FILES=frozenset({
     "hub/site/downloads.js",
     "hub/site/downloads.json",
     "hub/site/index.html",
+    "hub/site/planner-desktop.png",
+    "hub/site/planner-mobile.png",
+    "hub/site/social-card.png",
     "hub/site/public/app.js",
     "hub/site/public/catalog.json",
     "hub/site/public/index.html",
@@ -104,6 +109,16 @@ def _validate_file(path:Path,relative:Path,*,reviewed_assets:dict[str,str]|None=
             or any(part in ("", ".git", "control") for part in relative.parts)):
         raise PublicExportError("UNSAFE_PUBLIC_PATH")
     expected = (reviewed_assets or {}).get(relative.as_posix())
+    if relative.as_posix() == SOCIAL_CARD_PATH:
+        raw = path.read_bytes()
+        if not valid_social_card(raw, expected):
+            raise PublicExportError("UNREVIEWED_SOCIAL_PREVIEW")
+        return raw
+    if relative.as_posix() in PRODUCT_CAPTURE_SPECS:
+        raw = path.read_bytes()
+        if not valid_product_capture(relative.as_posix(), raw, expected):
+            raise PublicExportError("UNREVIEWED_PRODUCT_CAPTURE")
+        return raw
     template=(expected is not None
               and path.name.lower() in {'.env.example','.env.template'})
     if (path.name.lower() in SENSITIVE_NAMES
@@ -137,6 +152,10 @@ def _reviewed_assets(root:Path)->dict[str,str]:
         raise PublicExportError("INVALID_LIBRARY_ASSET_CATALOG") from exc
     try:
         assets.update(reviewed_planner_assets(root))
+        social_digest = reviewed_social_digest(root)
+        if social_digest is not None:
+            assets[SOCIAL_CARD_PATH] = social_digest
+        assets.update(reviewed_product_capture_digests(root))
     except (OSError, ValueError, TypeError, KeyError) as exc:
         raise PublicExportError("INVALID_PLANNER_ASSET_INVENTORY") from exc
     return assets

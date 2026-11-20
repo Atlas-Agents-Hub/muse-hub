@@ -61,11 +61,14 @@ class MuseHubBrandLaunch(unittest.TestCase):
         html=(SITE/"index.html").read_text(encoding="utf-8")
         self.assertIn("<title>Muse Hub",html)
         self.assertIn('class="brand-symbol"',html)
-        self.assertIn("YOUR PERSONAL AI TOOLKIT",html)
+        self.assertIn("Start with something",html)
+        self.assertIn("that works.",html)
+        self.assertIn('id="companion-spaces"',html)
+        self.assertIn('id="specialists"',html)
         for path in ('href="downloads.html"',
                      "docs/GETTING_STARTED.md",
                      "docs/TERMINAL.md",
-                     "docs/COMPANION_HOME.md",
+                     "docs/spaces/TASK_BOARD.md",
                      f"releases/download/{RELEASE}/"):
             self.assertIn(path,html)
         self.assertNotRegex(html, r"\b[HS]\d{2}\b")
@@ -82,7 +85,8 @@ class MuseHubBrandLaunch(unittest.TestCase):
             "README.md", "index.html", "site.css", "site.js", "roles.json",
             "downloads.html", "downloads.js", "downloads.json",
             "public/index.html", "public/styles.css", "public/app.js",
-            "public/catalog.json", "sitemap.xml",
+            "public/catalog.json", "sitemap.xml", "social-card.png",
+            "planner-desktop.png", "planner-mobile.png",
         }
         catalog=json.loads((SITE/"downloads.json").read_bytes())
         subjects=Counter(row["category"] for row in catalog["items"])
