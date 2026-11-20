@@ -32,4 +32,4 @@ Add a specialist filter such as `--role data-engineering-architect` to narrow th
 
 ## Check your download
 
-Compare the ZIP's SHA-256 digest with `SHA256SUMS` on the [v1.6.0 release page](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0). Keep the extracted toolkit in its own folder so updates preserve your existing work.
+Compare the ZIP's SHA-256 digest with `SHA256SUMS` on the [v1.6.1 release page](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1). Keep the extracted toolkit in its own folder so updates preserve your existing work.

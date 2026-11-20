@@ -4,7 +4,7 @@ Support daily life with personal planning, routines, accessible interactions and
 
 **115 skills · 15 workflows · 9 tool guides** · **37 task starters** · **108 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-personal-companion-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-personal-companion-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=personal-companion) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

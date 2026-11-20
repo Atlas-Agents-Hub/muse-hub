@@ -4,7 +4,7 @@ Understand software and protocol behavior with authorized observations, defensiv
 
 **441 skills · 5 workflows · 11 tool guides** · **1 task starters** · **8 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-reverse-engineering-researcher-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=reverse-engineering-researcher) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-reverse-engineering-researcher-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=reverse-engineering-researcher) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

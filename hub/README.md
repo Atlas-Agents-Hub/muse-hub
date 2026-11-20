@@ -1,6 +1,6 @@
 # Muse Hub
 
-[Open the website](https://atlas-agents-hub.github.io/muse-hub/) · [Download Muse Hub](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Get started](../docs/GETTING_STARTED.md)
+[Open the website](https://atlas-agents-hub.github.io/muse-hub/) · [Download Muse Hub](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1) · [Get started](../docs/GETTING_STARTED.md)
 
 Get more out of Muse. Explore its features, customize an assistant, connect your tools, and build a workspace around the work you do.
 

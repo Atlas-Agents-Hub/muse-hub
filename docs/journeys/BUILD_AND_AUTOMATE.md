@@ -75,7 +75,7 @@ This reviews the workflow's dependencies, declared approvals and expected result
 
 ### Check a web app in the browser
 
-Start with the [HTML source checker](../../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) included in the [Accessible UI download](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-skill-accessible-ui-v1.6.0.zip). Extract the ZIP and run its included example from that folder with Python 3.10 or newer:
+Start with the [HTML source checker](../../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) included in the [Accessible UI download](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-skill-accessible-ui-v1.6.1.zip). Extract the ZIP and run its included example from that folder with Python 3.10 or newer:
 
 ```sh
 python -B tools/accessibility_check.py --input skills/accessible-ui/examples/clean.html

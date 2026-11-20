@@ -1,20 +1,20 @@
 # Muse Hub downloads and versions
 
-**Current release: [v1.6.0](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0)** · [Latest release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/latest) · [SHA256SUMS](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
+**Current release: [v1.6.1](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1)** · [Latest release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/latest) · [SHA256SUMS](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/SHA256SUMS)
 
-## v1.6.0 — a toolkit for the work you want to do
+## v1.6.1 — find the right skill, specialist or Space
 
-Explore **5242 skills, 396 workflows, 558 task starters and 273 connectors**. Choose one of [15 specialist assistants](DOWNLOAD_A_SPECIALIST.md), each with Main instructions, three subchats, its expanded library, practical tools and selected service guides.
+Explore **5,200+ skills, nearly 400 workflows, 550+ task starters and 273 connectors**. Choose one of [15 specialist assistants](DOWNLOAD_A_SPECIALIST.md), each with Main instructions, three subchats, its expanded library, practical tools and selected service guides.
 
 Find methods for building apps, debugging code, scientific research, SQL and data pipelines, retrieval and model evaluation, design, creative production, business operations, learning and daily life. Every skill travels with its supporting reference files, scripts and examples.
 
 ### Find the right method quickly
 
-The [download directory](https://atlas-agents-hub.github.io/muse-hub/downloads.html) searches by task, subject, type and specialist. Share a filtered link, read the guide directly, or download its subject pack. Each result names the exact `skills/<skill-id>/SKILL.md` file to open. The [skill index](../collections/muse-starters-v1/SKILL_INDEX.md) provides readable subject pages on GitHub.
+Search the [skill and workflow library](https://atlas-agents-hub.github.io/muse-hub/downloads.html#skills) by keyword, refine by subject or specialist, and sort by name. Share filtered results, open a guide or download its subject pack. The [skill index](../collections/muse-starters-v1/SKILL_INDEX.md) provides readable subject pages on GitHub.
 
 ### Connect the steps
 
-The [396 workflows](../collections/library/WORKFLOWS.md) cover useful tasks across research, documents, messaging, data, customer operations and creative work. Converted automation recipes include named inputs, operation settings, branches and dependencies. Their downloadable packages include the skill methods and graph files needed to work through the task with Muse.
+The [workflows](../collections/library/WORKFLOWS.md) cover useful tasks across research, documents, messaging, data, customer operations and creative work. Converted automation recipes include named inputs, operation settings, branches and dependencies. Their downloadable packages include the skill methods and graph files needed to work through the task with Muse.
 
 ### Bring your services
 
@@ -22,16 +22,16 @@ The [273 connectors](connectors/README.md) include 122 new service adapters with
 
 ### Start with a concrete task
 
-Choose from [558 task starters](../collections/muse-starters-v1/CATALOG.md), including complete workflow requests and focused tasks for extraction, field mapping, branching, retrieval and reconciliation. The [51 tool guides](tools/README.md) connect specialist methods to useful tools and practical examples.
+Choose from [550+ task starters](../collections/muse-starters-v1/CATALOG.md), including complete workflow requests and focused tasks for extraction, field mapping, branching, retrieval and reconciliation. The [50+ tool guides](tools/README.md) connect specialist methods to useful tools and practical examples.
 
 ## Complete collections
 
-- [Complete toolkit](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-specialist-toolkit-v1.6.0.zip)
-- [All specialists](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-specialists-v1.6.0.zip)
-- [Skills and subject packs](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-skills-v1.6.0.zip)
-- [Workflows](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-workflows-v1.6.0.zip)
-- [Tool guides](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-tool-guides-v1.6.0.zip)
-- [Task starters](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-starters-v1.6.0.zip)
+- [Complete toolkit](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-specialist-toolkit-v1.6.1.zip)
+- [All specialists](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-specialists-v1.6.1.zip)
+- [Skills and subject packs](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-skills-v1.6.1.zip)
+- [Workflows](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-workflows-v1.6.1.zip)
+- [Tool guides](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-tool-guides-v1.6.1.zip)
+- [Task starters](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-starters-v1.6.1.zip)
 
 ## Open and check your download
 
@@ -42,24 +42,29 @@ Each package includes `VERIFY.py`. Run `python -B VERIFY.py` in the extracted fo
 **Windows PowerShell:**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.6.0.zip
+Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.6.1.zip
 ```
 
 **macOS:**
 
 ```sh
-shasum -a 256 muse-personal-companion-v1.6.0.zip
+shasum -a 256 muse-personal-companion-v1.6.1.zip
 ```
 
 **Linux:**
 
 ```sh
-sha256sum muse-personal-companion-v1.6.0.zip
+sha256sum muse-personal-companion-v1.6.1.zip
 ```
 
 Keep the original ZIP and your customized working copy separately. [Setup and saved data](INSTALL_AND_PERSISTENCE.md) explains updates and backup.
 
 ## Earlier releases
+
+### v1.6.0 — a larger library and working Spaces
+
+The [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) expanded the skill and workflow library and introduced Muse Planner and Task Board.
+
 
 ### v1.5.0 — a larger practical library
 

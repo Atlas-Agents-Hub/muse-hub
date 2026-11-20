@@ -4,7 +4,7 @@ Investigate scientific and technical questions, compare explanations, audit prim
 
 **784 skills · 57 workflows · 27 tool guides** · **101 task starters** · **50 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-research-evaluator-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=research-evaluator) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-research-evaluator-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=research-evaluator) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

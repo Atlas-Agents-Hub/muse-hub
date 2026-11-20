@@ -6,7 +6,7 @@ Muse Hub is an open-source toolkit for Meta's Muse AI. Set up a specialist, sear
 
 Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5,200+ skills**, **nearly 400 workflows**, **50+ tool guides**, **550+ task starters**, and **273 connectors**.
 
-**[Browse Space templates](docs/spaces/README.md)** · **[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.0](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)** · [Get started](docs/GETTING_STARTED.md)
+**[Browse Space templates](docs/spaces/README.md)** · **[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.1](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)** · [Get started](docs/GETTING_STARTED.md)
 
 ## Build from a Space template
 
