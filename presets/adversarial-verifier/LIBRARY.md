@@ -4,7 +4,7 @@ Challenge authorized software, agent systems and releases with threat models, fa
 
 **426 skills · 6 workflows · 21 tool guides** · **3 task starters** · **10 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-adversarial-verifier-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=adversarial-verifier) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-adversarial-verifier-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=adversarial-verifier) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

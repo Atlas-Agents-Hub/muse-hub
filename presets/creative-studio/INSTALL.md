@@ -2,7 +2,7 @@
 
 Develop original visual media, animation, video and interactive scenes—from creative direction, characters, environments and asset development to motion, render inspection, continuity and delivery.
 
-**[Download Creative Studio](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-creative-studio-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
+**[Download Creative Studio](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-creative-studio-v1.6.1.zip)** · [v1.6.1 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/SHA256SUMS)
 
 **519 skills · 27 workflows · 22 tool guides**. [Explore the full selection](LIBRARY.md).
 
@@ -26,6 +26,6 @@ Start with [this specialist's library](LIBRARY.md). A skill describes a focused 
 
 Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
 
-Role ID: `creative-studio`. Package: `muse-creative-studio-v1.6.0.zip`.
+Role ID: `creative-studio`. Package: `muse-creative-studio-v1.6.1.zip`.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)

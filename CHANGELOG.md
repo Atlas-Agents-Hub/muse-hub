@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.1
+
+- Search skills and workflows by keyword, filter by subject or specialist, and sort by name.
+- Open a Space, find a specialist, or browse the library from shorter homepage shortcuts.
+- Explore the real Muse Planner interface in mobile and desktop previews.
+- Browse the site in a consistent dark theme with a distinct Muse Hub mark.
+
 ## v1.6.0
 
 - Expand the collection to 5242 skills, 396 workflows, 558 task starters and 273 connectors.

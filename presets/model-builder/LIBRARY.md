@@ -4,7 +4,7 @@ Design datasets, models and adapters, conduct training experiments, compare cand
 
 **724 skills · 99 workflows · 24 tool guides** · **174 task starters** · **28 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-model-builder-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=model-builder) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-model-builder-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=model-builder) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

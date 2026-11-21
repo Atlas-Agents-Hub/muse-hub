@@ -1,10 +1,10 @@
 {
   "schema": "muse-hub/distribution-links/v1",
-  "release": "v1.6.0",
-  "release_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0",
+  "release": "v1.6.1",
+  "release_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1",
   "website_url": "https://atlas-agents-hub.github.io/muse-hub/",
   "downloads_url": "https://atlas-agents-hub.github.io/muse-hub/downloads.html",
-  "release_manifest_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/RELEASE_MANIFEST.json",
+  "release_manifest_url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/RELEASE_MANIFEST.json",
   "specialist_catalog": "../../presets/catalog.json",
   "capability_catalog": "agent-capabilities.json",
   "setup_guides": "setup-journeys.json"

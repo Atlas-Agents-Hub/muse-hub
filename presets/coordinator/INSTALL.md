@@ -2,7 +2,7 @@
 
 Turn complex goals into scoped work across specialists: sequence dependencies, manage owner approvals and resources, recover interrupted work and verify handoffs.
 
-**[Download Coordinator](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-coordinator-v1.6.0.zip)** · [v1.6.0 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.0) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/SHA256SUMS)
+**[Download Coordinator](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-coordinator-v1.6.1.zip)** · [v1.6.1 release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1) · [Checksums](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/SHA256SUMS)
 
 **664 skills · 15 workflows · 21 tool guides**. [Explore the full selection](LIBRARY.md).
 
@@ -34,6 +34,6 @@ Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage
 
 Your download includes [Muse Planner](../../docs/spaces/MUSE_PLANNER.md), a complete Space for projects, next actions, daily routines, weekly reviews, notes and calendars. Open `spaces/planner/README.md` in the ZIP to create your Space and save your first project.
 
-Role ID: `coordinator`. Package: `muse-coordinator-v1.6.0.zip`.
+Role ID: `coordinator`. Package: `muse-coordinator-v1.6.1.zip`.
 
 [All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)

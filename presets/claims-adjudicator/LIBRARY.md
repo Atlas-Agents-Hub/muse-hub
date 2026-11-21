@@ -4,7 +4,7 @@ Resolve competing factual and technical claims by tracing original evidence, tes
 
 **106 skills · 7 workflows · 16 tool guides** · **4 task starters** · **16 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-claims-adjudicator-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=claims-adjudicator) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-claims-adjudicator-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=claims-adjudicator) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

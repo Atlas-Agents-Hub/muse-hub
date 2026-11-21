@@ -4,7 +4,7 @@ Build, debug, refactor and release software. Work from reproduction and architec
 
 **2517 skills · 16 workflows · 37 tool guides** · **163 task starters** · **57 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.0/muse-software-engineer-v1.6.0.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-software-engineer-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=software-engineer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

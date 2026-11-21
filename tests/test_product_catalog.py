@@ -26,7 +26,7 @@ class ProductCatalogRegression(unittest.TestCase):
             root=Path(directory)
             names=['presets/catalog.json','docs/connectors/catalog.json',
                    'docs/discovery/agent-capabilities.json','docs/discovery/hub-feature-status.json',
-                   'hub/site/roles.json','kits/family-handoff/role-boundaries.json']
+                   'hub/site/roles.json','kits/family-handoff/role-boundaries.json','README.md']
             names.extend('presets/'+role+'/preset.json' for role in renderer.ROLE_WORKFLOWS)
             for name in names:
                 target=root/name
@@ -46,6 +46,13 @@ class ProductCatalogRegression(unittest.TestCase):
             self.assertEqual(discovery['release_url'],renderer.REPO+'/releases/tag/v9.8.7')
             self.assertEqual(discovery['release_manifest_url'],
                              renderer.REPO+'/releases/download/v9.8.7/RELEASE_MANIFEST.json')
+            capabilities=json.loads(outputs['docs/discovery/agent-capabilities.json'])
+            roles=json.loads(outputs['hub/site/roles.json'])
+            self.assertEqual(capabilities['specialist_downloads'],actual['downloads'])
+            self.assertEqual(capabilities['release_page'],discovery['release_url'])
+            self.assertEqual(roles['version'],'v9.8.7')
+            self.assertEqual({row['id']:row['download_url'] for row in roles['roles']},actual['downloads'])
+            self.assertIn('nearly 400 workflows',outputs['README.md'].decode())
             self.assertEqual(set(actual['downloads']),set(catalog['presets']))
             planner_url=renderer.REPO+'/releases/download/v9.8.7/muse-space-planner-v9.8.7.zip'
             self.assertIn(planner_url,outputs['docs/spaces/MUSE_PLANNER.md'].decode())

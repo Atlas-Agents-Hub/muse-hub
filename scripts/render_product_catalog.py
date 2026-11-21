@@ -116,7 +116,7 @@ def outputs(root=ROOT):
     def current(text):
         text=re.sub(r'v1\.5\.0\b',version,text)
         for term,number in counts.items():
-            text=re.sub(r'\b[0-9]+(?= (?:\*\*)?'+re.escape(term)+r'\b)',str(number),text)
+            text=re.sub(r'(?<!nearly )\b[0-9]+(?= (?:\*\*)?'+re.escape(term)+r'\b)',str(number),text,flags=re.IGNORECASE)
         text=re.sub(r'\b[0-9]+(?= (?:reusable |developed )skills\b)',str(counts['skills']),text)
         text=re.sub(r'\b[0-9]+(?= connector guides\b)',str(counts['connectors']),text)
         text=re.sub(r'one of [0-9]+ focused configurations',f"one of {counts['task starters']} focused configurations",text)
@@ -255,8 +255,9 @@ Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
     chooser+='## Open your package\n\n1. Download the ZIP and extract it into a new folder.\n2. Open `START_HERE.md`, or give Muse the ZIP and your current task.\n3. Follow the included guide for Main and the three subchats, then try the specialist\'s first task.\n\nNo Python is needed for assistant instructions. Optional local tools include their requirements and commands.\n\n[Get started](GETTING_STARTED.md) · [Setup and updates](INSTALL_AND_PERSISTENCE.md) · [Browse tasks](handbook/specialists-by-task.md) · [Release notes](RELEASES.md)\n'
     add('docs/DOWNLOAD_A_SPECIALIST.md',chooser)
     doc=json.loads((root/'docs/discovery/agent-capabilities.json').read_bytes())
-    doc=json.loads(current(json.dumps(doc)))
+    doc=json.loads(current(json.dumps(doc).replace(doc['release'],version)))
     doc['release']=version
+    doc['specialist_downloads']=preset_catalog['downloads']
     doc['curated_task_collection'].update(skills=counts['skills'],workflow_recipes=counts['workflows'],starter_configurations=counts['task starters'])
     doc['configuration_count']=counts['task starters']+15
     doc['configuration_breakdown']['task_starters']=counts['task starters']
@@ -283,8 +284,10 @@ Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
                             'entrypoint':'skills/<skill-id>/SKILL.md','directory':SITE+'downloads.html#skills'}
     add('docs/discovery/agent-capabilities.json',encode(doc))
     role_directory=json.loads(current((root/'hub/site/roles.json').read_text(encoding='utf-8')))
+    role_directory['version']=version
     for row in role_directory['roles']:
         row['description']=COPY[row['id']][1]
+        row['download_url']=preset_catalog['downloads'][row['id']]
         row['library']=summaries[row['id']]
     add('hub/site/roles.json',encode(role_directory))
     return result
