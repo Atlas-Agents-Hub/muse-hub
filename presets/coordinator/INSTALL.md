@@ -29,23 +29,11 @@ Wait for me to approve the proposed changes. Apply only what the supported Muse 
 
 ## Set up by hand
 
-1. Extract the ZIP into its own folder and open `START_HERE.md`. You can also give Muse the ZIP with your current task.
-2. Choose a **separate Muse assistant** for Coordinator and add the supplied Main instructions.
-3. Set up its **three subchats** using their included instructions, context, tools and memory documents.
-4. Personalize the assistant's working preferences. Open `PROFILE.md` to choose the methods for your task.
-5. Try the first task below, check the result against the method's expected outputs, and save your work.
+Extract the ZIP into a new folder and open `START_HERE.md`. Choose a **separate Muse assistant**, add the Main instructions, and set up its **three subchats** with their included documents.
 
 **First task to try:** Bring a project goal, deadline and available resources. Break the work into dependencies, assign specialist roles and prepare the first handoff.
 
-No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account and permissions for each connection you add.
-
-## Use a skill or workflow
-
-Start with [this specialist's library](LIBRARY.md). A skill describes a focused method and includes its reference files. A workflow connects several methods with named inputs, expected results and checks. Load the method that fits the current task; the complete selection remains available in the download.
-
-[Find and build your own pack](../../docs/collection/FIND_AND_BUILD.md) to search this specialist's methods, preview the included files and create a ZIP for your task. Add `--role coordinator` to the toolkit's search command to focus on this specialist.
-
-Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.
+Use `PROFILE.md` to choose a method and `CONNECTORS.md` to select the account and permissions for a service. Follow `START_HERE.md` for optional local tools.
 
 ## Review email with saved preferences
 
@@ -55,6 +43,4 @@ Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage
 
 Your download includes [Muse Planner](../../docs/spaces/MUSE_PLANNER.md), a complete Space for projects, next actions, daily routines, weekly reviews, notes and calendars. Open `spaces/planner/README.md` in the ZIP to create your Space and save your first project.
 
-Role ID: `coordinator`. Package: `muse-coordinator-v1.6.2.zip`.
-
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Terminal guide](../../docs/TERMINAL.md)

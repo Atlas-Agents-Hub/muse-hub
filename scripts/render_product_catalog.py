@@ -200,27 +200,13 @@ Keep your customized instructions, preferences and memory in your working copy. 
 
 ## Set up by hand
 
-1. Extract the ZIP into its own folder and open `START_HERE.md`. You can also give Muse the ZIP with your current task.
-2. Choose a **separate Muse assistant** for {title} and add the supplied Main instructions.
-3. Set up its **three subchats** using their included instructions, context, tools and memory documents.
-4. Personalize the assistant's working preferences. Open `PROFILE.md` to choose the methods for your task.
-5. Try the first task below, check the result against the method's expected outputs, and save your work.
+Extract the ZIP into a new folder and open `START_HERE.md`. Choose a **separate Muse assistant**, add the Main instructions, and set up its **three subchats** with their included documents.
 
 **First task to try:** {first}
 
-No Python is needed for the assistant instructions. Optional local tools include their commands and requirements in `START_HERE.md`. Use `CONNECTORS.md` for the included service guides and select the account and permissions for each connection you add.
+Use `PROFILE.md` to choose a method and `CONNECTORS.md` to select the account and permissions for a service. Follow `START_HERE.md` for optional local tools.{inbox_note}{planner_note}
 
-## Use a skill or workflow
-
-Start with [this specialist's library](LIBRARY.md). A skill describes a focused method and includes its reference files. A workflow connects several methods with named inputs, expected results and checks. Load the method that fits the current task; the complete selection remains available in the download.
-
-[Find and build your own pack](../../docs/collection/FIND_AND_BUILD.md) to search this specialist's methods, preview the included files and create a ZIP for your task. Add `--role {canonical}` to the toolkit's search command to focus on this specialist.
-
-Explore the [working methods and included engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md). For terminal tools, follow the [terminal guide](../../docs/TERMINAL.md). Keep the original download and your personalized working copy separately when updating.{inbox_note}{planner_note}
-
-Role ID: `{canonical}`. Package: `{specialist_asset(canonical,version)}`.
-
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Get started](../../docs/GETTING_STARTED.md)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Terminal guide](../../docs/TERMINAL.md)
 '''
         groups=Counter(subject(skills[key]['category']) for key in selected)
         library=f'# {title}: skills, workflows and connections\n\n{scope}\n\n{summary} · **{len(starters)} task starters** · **{len(selected_connectors)} recommended connectors**\n\n[Download the specialist]({url}) · [Search its methods]({browse}) · [Setup](INSTALL.md)\n\n## Browse by subject\n\n| Subject | Skills | Browse |\n| --- | ---: | --- |\n'

@@ -24,7 +24,7 @@ ROLE = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*\Z")
 SOURCE_PINS = {
     "LICENSE": "af30e586ca6503924d5e4d99894ec6c7ce61ba77a55ba081b7a129d33f43fddf",
     "examples/family_offline_handoff_demo.py": 'a10917b6c541307f5963cf2d09f88db0542d5ea5442f16e9acee23bb553f71b7',
-    "presets/catalog.json": 'd671abf91a067bfc22dddf6a294614d371578171a1ec0b6b8657243578415401',
+    "presets/catalog.json": 'bb976bcff8e40c42698df00ac90d65562daae7c767b79222e1978e1b00fb2194',
     "src/muse_presets/__init__.py": 'f83f4c4be911f649be5321b16a735953134b869be60b423965554a2d28d5a863',
     "src/muse_presets/catalog.py": '685a1c393f8581a4741e40da47fa31accd3577a94a0185a5ca5008e4b690ca48',
     "src/muse_presets/family.py": "af043cc6edc7e0670d2ec098bdd94f7064f4998d58e784f5669cc740bb23780b",
