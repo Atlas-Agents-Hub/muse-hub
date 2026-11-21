@@ -4,7 +4,7 @@ Improve service reliability using SLOs, error budgets, capacity forecasts, incid
 
 **531 skills · 8 workflows · 20 tool guides** · **5 task starters** · **25 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-reliability-engineer-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=reliability-engineer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-reliability-engineer-v1.6.2.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=reliability-engineer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

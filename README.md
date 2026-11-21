@@ -6,7 +6,7 @@ Muse Hub is an open-source toolkit for Meta's Muse AI. Set up a specialist, sear
 
 Choose from **15 independent assistants**, each with Main and **three subchats**. Add **5,200+ skills**, **nearly 400 workflows**, **50+ tool guides**, **550+ task starters**, and **273 connectors**.
 
-**[Browse Space templates](docs/spaces/README.md)** · **[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.1](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)** · [Get started](docs/GETTING_STARTED.md)
+**[Browse Space templates](docs/spaces/README.md)** · **[Choose an assistant](docs/DOWNLOAD_A_SPECIALIST.md)** · **[Download v1.6.2](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.2)** · **[Visit Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)** · [Get started](docs/GETTING_STARTED.md)
 
 ## Build from a Space template
 
@@ -108,6 +108,6 @@ Filter by specialist, preview a selection with `plan`, then use `build` to creat
 
 ## Explore Muse Hub
 
-Explore [Muse features](https://muse.ai/), companion spaces, computer tools and automation on [the website](https://atlas-agents-hub.github.io/muse-hub/). Search the [63-resource library](https://atlas-agents-hub.github.io/muse-hub/public/index.html) for your next tool or project.
+Explore [Muse features](https://muse.ai/), companion spaces, computer tools and automation on [the website](https://atlas-agents-hub.github.io/muse-hub/). Search the [Muse Hub guides and official Meta resources](https://atlas-agents-hub.github.io/muse-hub/public/index.html) for your next tool or project.
 
 [All downloads](https://atlas-agents-hub.github.io/muse-hub/downloads.html) · [Current release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/latest) · [Downloads and checksums](docs/RELEASES.md) · [Documentation](docs/README.md) · [AI-agent discovery index](llms.txt) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)

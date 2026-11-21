@@ -23,7 +23,7 @@
   const allowed = Object.fromEntries(Object.entries(filters).map(([name, control]) =>
     [name, new Set([...control.options].map(option => option.value))]));
   const controls = [search, kind, role, category, sort, reset, clearEmpty];
-  const pageSize = 60;
+  const pageSize = Number(results.dataset.pageSize);
   const repository = 'https://github.com/Atlas-Agents-Hub/muse-hub';
   const expectedTotal = Number(results.dataset.total);
   const initialCount = document.querySelectorAll('.download-card').length;

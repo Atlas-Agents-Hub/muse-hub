@@ -17,12 +17,22 @@
   const expectedRoutes = new Set(['cli', 'desktop', 'watch', 'family', 'doors', 'companion']);
   const textField = value => typeof value === 'string' &&
     value.length > 0 && value.length <= 4096;
+  const officialMetaUrls = new Set([
+    'https://muse.ai/',
+    'https://github.com/facebookincubator/muse-gadget-sdk',
+    'https://dev.meta.ai/docs/muse-code',
+    'https://dev.meta.ai/docs/computer-use',
+  ]);
   const safeUrl = value => {
     if (typeof value !== 'string' || !value.startsWith('https://')) return false;
     try {
       const url = new URL(value);
-      return url.protocol === 'https:' && Boolean(url.hostname) &&
-        !url.username && !url.password && !url.port;
+      if (url.href !== value || url.username || url.password || url.port) return false;
+      return officialMetaUrls.has(value) ||
+        (url.origin === 'https://github.com' &&
+          url.pathname.startsWith('/Atlas-Agents-Hub/muse-hub/blob/main/docs/')) ||
+        (url.origin === 'https://atlas-agents-hub.github.io' &&
+          url.pathname === '/muse-hub/downloads.html');
     } catch { return false; }
   };
   const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -31,14 +41,15 @@
   // This is a locally embedded source catalogue, not a provider response.
   const validateCatalog = catalog => {
     if (!isRecord(catalog) || catalog.schema !== 'muse-resource-directory/v2' ||
-        catalog.count !== 63 ||
-        !Array.isArray(catalog.items) || catalog.items.length !== 63 ||
+        !Array.isArray(catalog.items) || catalog.items.length !== catalog.count ||
+        catalog.count < 1 || catalog.count > 12 ||
         !Array.isArray(catalog.routes) || catalog.routes.length !== expectedRoutes.size) return false;
 
     const seenItems = new Set();
     for (const item of catalog.items) {
       if (!isRecord(item) || !textField(item.id) || !/^MH-\d{3}$/.test(item.id) ||
           seenItems.has(item.id) || !safeUrl(item.url) ||
+          item.category !== (officialMetaUrls.has(item.url) ? 'Official Meta' : 'Muse Hub') ||
           !['name', 'summary', 'category', 'platform', 'install_method',
             'license_class'].every(key => textField(item[key])) ||
           !Array.isArray(item.route_tags) ||
@@ -107,13 +118,15 @@
     if (value !== undefined) node.textContent = value;
     return node;
   };
-  const sourceLink = (item, classname, label) => {
+  const sourceLink = (item, classname) => {
     if (!safeUrl(item.url)) return null;
     const link = elt('a', classname);
     link.href = item.url;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    link.append(elt('span', '', label), elt('span', '', '↗'));
+    const arrow = elt('span', '', '↗');
+    arrow.setAttribute('aria-hidden', 'true');
+    link.append(elt('span', '', item.url === 'https://muse.ai/' ? 'Open Muse' : 'Open guide'), arrow);
     return link;
   };
   const makeMeta = (key, value, container) => {
@@ -172,7 +185,7 @@
     makeMeta('Platform', item.platform, metadata);
     makeMeta('Getting started', item.install_method, metadata);
     detailBody.append(category, heading, summary, metadata);
-    const link = sourceLink(item, 'detail-source', 'Open project');
+    const link = sourceLink(item, 'detail-source');
     if (link) detailBody.append(link);
     markSelection();
     if (trigger && isMobileSheet()) {
@@ -210,7 +223,7 @@
     detailsButton.setAttribute('aria-pressed', String(item.id === selectedId));
     detailsButton.addEventListener('click', () => showDetails(item, detailsButton));
     actions.append(detailsButton);
-    const link = sourceLink(item, 'record-link', 'Open project');
+    const link = sourceLink(item, 'record-link');
     if (link) actions.append(link);
     article.append(actions);
     return article;
@@ -235,7 +248,7 @@
     chip.hidden = !route;
     chip.textContent = route ? route.title : '';
     notice.hidden = !route;
-    if (route) notice.replaceChildren(elt('strong', '', 'About this route'), elt('span', '', route.notice));
+    if (route) notice.replaceChildren(elt('strong', '', 'Recommended guides'), elt('span', '', route.notice));
     else notice.replaceChildren();
     if (items.length) showDetails(items.find(item => item.id === selectedId) || items[0]);
     else {

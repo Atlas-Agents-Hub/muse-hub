@@ -1,8 +1,12 @@
 # Muse Hub downloads and versions
 
-**Current release: [v1.6.1](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1)** · [Latest release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/latest) · [SHA256SUMS](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/SHA256SUMS)
+**Current release: [v1.6.2](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.2)** · [Latest release](https://github.com/Atlas-Agents-Hub/muse-hub/releases/latest) · [SHA256SUMS](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/SHA256SUMS)
 
-## v1.6.1 — find the right skill, specialist or Space
+## v1.6.2 — set up and update a Muse specialist
+
+Every specialist includes a complete portable skill inventory and a prompt you can paste into Muse to set up Main and three focused subchats or update an existing assistant. Open the prompt in your [specialist's setup guide](DOWNLOAD_A_SPECIALIST.md) or in `INSTALL_IN_MUSE.md` inside its ZIP.
+
+Browse [Muse Hub setup guides and official Meta resources](https://atlas-agents-hub.github.io/muse-hub/public/index.html), then use the [download library](https://atlas-agents-hub.github.io/muse-hub/downloads.html) to find a skill, workflow or tool guide.
 
 Explore **5,200+ skills, nearly 400 workflows, 550+ task starters and 273 connectors**. Choose one of [15 specialist assistants](DOWNLOAD_A_SPECIALIST.md), each with Main instructions, three subchats, its expanded library, practical tools and selected service guides.
 
@@ -26,12 +30,12 @@ Choose from [550+ task starters](../collections/muse-starters-v1/CATALOG.md), in
 
 ## Complete collections
 
-- [Complete toolkit](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-specialist-toolkit-v1.6.1.zip)
-- [All specialists](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-specialists-v1.6.1.zip)
-- [Skills and subject packs](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-skills-v1.6.1.zip)
-- [Workflows](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-workflows-v1.6.1.zip)
-- [Tool guides](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-tool-guides-v1.6.1.zip)
-- [Task starters](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-starters-v1.6.1.zip)
+- [Complete toolkit](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-specialist-toolkit-v1.6.2.zip)
+- [All specialists](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-specialists-v1.6.2.zip)
+- [Skills and subject packs](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-v1.6.2.zip)
+- [Workflows](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-workflows-v1.6.2.zip)
+- [Tool guides](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-tool-guides-v1.6.2.zip)
+- [Task starters](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-starters-v1.6.2.zip)
 
 ## Open and check your download
 
@@ -42,24 +46,28 @@ Each package includes `VERIFY.py`. Run `python -B VERIFY.py` in the extracted fo
 **Windows PowerShell:**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.6.1.zip
+Get-FileHash -Algorithm SHA256 .\muse-personal-companion-v1.6.2.zip
 ```
 
 **macOS:**
 
 ```sh
-shasum -a 256 muse-personal-companion-v1.6.1.zip
+shasum -a 256 muse-personal-companion-v1.6.2.zip
 ```
 
 **Linux:**
 
 ```sh
-sha256sum muse-personal-companion-v1.6.1.zip
+sha256sum muse-personal-companion-v1.6.2.zip
 ```
 
 Keep the original ZIP and your customized working copy separately. [Setup and saved data](INSTALL_AND_PERSISTENCE.md) explains updates and backup.
 
 ## Earlier releases
+
+### v1.6.1 — searchable skills and a clearer homepage
+
+Browse the dark Muse Hub site, filter and sort the library, and preview Muse Planner on mobile and desktop. [v1.6.1 downloads](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1) · [Changelog](../CHANGELOG.md#v161)
 
 ### v1.6.0 — a larger library and working Spaces
 

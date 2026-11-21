@@ -12,6 +12,7 @@ import sys
 import tempfile
 import unittest
 import zipfile
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -160,6 +161,32 @@ class ReleasePackagesTests(unittest.TestCase):
             for guide in expected:
                 self.assertTrue((folder/'docs/tools'/f'{guide}.md').is_file())
                 self.assertIn('docs/tools/'+guide+'.md',index)
+
+    def test_specialists_inventory_and_setup_prompt_match_package(self):
+        for record in self.records["specialists"]:
+            folder = self.extracted[record["asset"]]
+            with self.subTest(role=record["id"]):
+                manifest = json.loads((folder / "MANIFEST.json").read_bytes())
+                selected = json.loads((folder / "SPECIALIST.json").read_bytes())["skills"]
+                inventory = yaml.safe_load((folder / "skills.yaml").read_text(encoding="utf-8"))
+                guides = {path.parent.name: path.relative_to(folder).as_posix()
+                          for path in (folder / "skills").glob("*/SKILL.md")}
+                self.assertEqual(inventory["specialist"], record["id"])
+                self.assertEqual(inventory["skills"], guides)
+                self.assertEqual(manifest["skills"], sorted(guides))
+                self.assertEqual(selected, manifest["skills"])
+                self.assertEqual(record["skills"], len(guides))
+                native = yaml.safe_load((folder / inventory["native_registry"]).read_text(encoding="utf-8"))
+                self.assertEqual(len(native["entries"]), 8)
+                self.assertTrue(all(entry["status"] == "disabled" for entry in native["entries"].values()))
+                mapping = json.loads((folder / inventory["subchat_mapping"]).read_bytes())["mapping"]
+                self.assertEqual(set(mapping), {path.parent.name for path in
+                    (folder / "assistant/subchat-scopes/subchats").glob("*/SUBCHAT.json")})
+                guide = (folder / "INSTALL_IN_MUSE.md").read_text(encoding="utf-8")
+                public_guide = (ROOT / "presets" / record["id"] / "INSTALL.md").read_text(encoding="utf-8")
+                self.assertIn(release.specialist_setup_prompt(record["id"], release.DEFAULT_VERSION), guide)
+                self.assertIn(guide.split("```text", 1)[1], public_guide)
+                self.assertIn("[Copy the prompt", (folder / "START_HERE.md").read_text(encoding="utf-8"))
 
     def test_planner_is_complete_alone_and_in_the_two_planning_specialists(self):
         from muse_presets import planner_package

@@ -4,7 +4,7 @@ Turn complex goals into scoped work across specialists: sequence dependencies, m
 
 **664 skills · 15 workflows · 21 tool guides** · **22 task starters** · **135 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-coordinator-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-coordinator-v1.6.2.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=coordinator) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

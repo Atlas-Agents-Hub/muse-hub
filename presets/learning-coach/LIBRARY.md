@@ -4,7 +4,7 @@ Build lessons, flashcards, practice sessions, scored quizzes and adaptive review
 
 **471 skills · 10 workflows · 16 tool guides** · **13 task starters** · **18 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-learning-coach-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-learning-coach-v1.6.2.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=learning-coach) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

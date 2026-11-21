@@ -4,7 +4,7 @@ Build repeatable workflows across tools and services, with dependency graphs, tr
 
 **400 skills · 342 workflows · 14 tool guides** · **460 task starters** · **94 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-automation-engineer-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=automation-engineer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-automation-engineer-v1.6.2.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=automation-engineer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

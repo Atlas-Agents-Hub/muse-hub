@@ -53,16 +53,25 @@ class MuseHubOverlay(unittest.TestCase):
                 self.assertIn('class="role-card-download" href="' + expected + '"', body)
         self.assertIn('aria-live="polite"', self.html)
 
-    def test_catalog_is_rights_filtered_without_native_runtime_authority(self):
-        self.assertEqual(self.catalog['count'], 63)
-        self.assertEqual(len(self.catalog['items']), 63)
+    def test_catalog_contains_only_muse_hub_and_official_meta_links(self):
+        self.assertEqual(self.catalog['count'], len(self.catalog['items']))
+        self.assertLessEqual(self.catalog['count'], 12)
         self.assertEqual(self.catalog['schema'], 'muse-resource-directory/v2')
         self.assertNotIn('native_muse_connected',self.catalog)
         self.assertEqual(len(self.catalog['routes']), 6)
         self.assertIn('connect-src \'none\'', self.html)
         self.assertIn('connect-src \'none\'', self.explore)
-        self.assertEqual(len({row['id'] for row in self.catalog['items']}), 63)
-        self.assertTrue(all(row['url'].startswith('https://') for row in self.catalog['items']))
+        official = {'https://muse.ai/', 'https://github.com/facebookincubator/muse-gadget-sdk',
+                    'https://dev.meta.ai/docs/muse-code', 'https://dev.meta.ai/docs/computer-use'}
+        self.assertEqual({row['url'] for row in self.catalog['items'] if row['category'] == 'Official Meta'}, official)
+        published = {row['url'] for row in self.catalog['items']}
+        fallback = set(re.findall(r'class="record-link" href="([^"]+)"', self.explore))
+        self.assertEqual(fallback, published)
+        for url in published - official:
+            self.assertTrue(url.startswith('https://github.com/Atlas-Agents-Hub/muse-hub/blob/main/docs/')
+                           or url == 'https://atlas-agents-hub.github.io/muse-hub/downloads.html?type=workflow', url)
+        for text in ('Unofficial backends', 'nikships', 'Open project', 'Muse 300 tips'):
+            self.assertNotIn(text, self.explore)
 
     def test_no_dead_local_code_assets_and_scoped_catalog_loading(self):
         for file in ('index.html','site.css','site.js','roles.json','downloads.html','downloads.js','downloads.json','public/index.html','public/styles.css','public/app.js','public/catalog.json','README.md'):

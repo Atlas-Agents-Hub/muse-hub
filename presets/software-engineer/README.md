@@ -2,7 +2,7 @@
 
 **Muse Hub specialist:** Build, debug, refactor and release software. Work from reproduction and architecture decisions through implementation, regression tests, source integrity and reviewed delivery.
 
-**[Download the assistant](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-software-engineer-v1.6.1.zip)** · **[Set up Software Engineer](INSTALL.md)** · [Browse its library](LIBRARY.md)
+**[Download the assistant](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-software-engineer-v1.6.2.zip)** · **[Set up Software Engineer](INSTALL.md)** · [Browse its library](LIBRARY.md)
 
 **2517 skills · 16 workflows · 37 tool guides**. Give this specialist its own Main conversation and **three subchats**. Its package includes the selected methods, supporting files, examples and service guides for your work.
 
@@ -21,4 +21,4 @@ Bring your current task and source material. Open `PROFILE.md` in the download a
 
 Keep your customized instructions, preferences and memory in your working copy. [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) explains updates.
 
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.6.1 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.6.2 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)

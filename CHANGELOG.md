@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.2
+
+- Copy a setup or update prompt for any of the 15 specialists, with guidance for Main, subchats and existing personal settings.
+- Find every portable skill in each specialist ZIP using its complete `skills.yaml` inventory.
+- Browse a shorter guide directory with Muse Hub and official Meta resources.
+- Search, filter and sort the skills library with 18 results per page and a shorter subject index.
+
 ## v1.6.1
 
 - Search skills and workflows by keyword, filter by subject or specialist, and sort by name.

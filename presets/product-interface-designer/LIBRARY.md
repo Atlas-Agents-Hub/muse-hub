@@ -4,7 +4,7 @@ Design and evaluate complete product experiences: user research, information arc
 
 **285 skills · 6 workflows · 24 tool guides** · **1 task starters** · **38 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-product-interface-designer-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-product-interface-designer-v1.6.2.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=product-interface-designer) · [Setup](INSTALL.md)
 
 ## Browse by subject
 

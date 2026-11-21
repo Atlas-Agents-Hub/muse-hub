@@ -280,3 +280,11 @@ body:not(.directory-ready) .catalog-stage { grid-template-columns: minmax(0,1fr)
 :is(.route-notice strong,.detail-metadata dd) { color:var(--ink) }
 :is(.skip-link,.empty-state button) { color:var(--paper) }
 .intro-description,.filters label,.filter-search input::placeholder,.detail-panel .section-kicker { color:var(--muted) }
+
+/* Keep the guide list readable at phone widths without oversized result cards. */
+.intro-grid { grid-template-columns: 1fr; }
+.intro-description { max-width: 48ch; }
+.resource-card { min-height: 0; padding-block: 16px; }
+.resource-summary { margin-bottom: 10px; }
+.card-actions { margin-top: 0; }
+.card-actions > :is(a, button) { min-height: 44px; }

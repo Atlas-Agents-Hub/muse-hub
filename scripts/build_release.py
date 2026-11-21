@@ -99,6 +99,29 @@ def specialist_asset(role,version):
 def planner_asset(version=DEFAULT_VERSION):
     return 'muse-space-planner-' + _version(version) + '.zip'
 
+def specialist_setup_prompt(role, version):
+    download = asset_url(specialist_asset(role, version), version)
+    checksums = asset_url("SHA256SUMS", version)
+    return f"""Paste this into your Meta Muse Personal AI Assistant. If Muse asks for the ZIP, download it on your phone and attach it to the conversation.
+
+```text
+Help me set up or update the Muse Hub specialist in this package. Use the ZIP I attach, or download this release if you can access it:
+{download}
+Release checksums: {checksums}
+
+Extract the ZIP into a new staging folder. Check the ZIP against the release checksum if you can hash files. Check the package ID ({role}) and version ({version}) in MANIFEST.json. If you cannot download or extract the ZIP, ask me to attach it or share the extracted folder. If you detect a mismatch, stop and report it.
+
+Read START_HERE.md. Use the root skills.yaml as the portable inventory, or the skills list in MANIFEST.json for older packs. Use only the skills relevant to my task. The disabled registry in assistant/role-skills/config/skills.yaml is for host methods. Use the subchat mapping in that folder to see which method goes with each subchat.
+
+Show a setup or update plan before making changes:
+- Main: map IDENTITY.md, SOUL.md, SYSTEM_PROMPT.md, SYSTEM_INSTRUCTIONS.md, AGENTS.md, MEMORY.md, USER.md, TOOLS.md, and SUBCHATS.md in assistant/system-profile/profile/ to the supported Main instructions, settings, or reference files.
+- Subchats: match the three folders under assistant/subchat-scopes/subchats/ to my existing subchats, or propose new ones. Use SUBCHAT.json to identify each scope. Map AGENTS.md, ROLE.md, CONTEXT.md, MEMORY.md, TOOLS.md, PREFERENCES.md, and HEARTBEAT.md where supported. Keep private memory within its original scope.
+- For an update, compare with my current setup, keep a private backup of the files you plan to edit, preserve my identity, preferences, memory, credentials, and custom instructions, and show any conflicts for me to resolve.
+
+Wait for me to approve the proposed changes. Apply only what the supported Muse controls allow, then reopen the affected content and tell me what you verified. When a change needs to be done by hand, give me the file to open, what to copy, and where to put it. Finish by suggesting the first task in FIRST_TASK.md.
+```
+"""
+
 def _seal(files,kind,identity,version,**details):
     result=dict(files)
     if "MANIFEST.json" in result: raise ValueError("OUTER_MANIFEST_COLLISION")
@@ -143,17 +166,35 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
     if spaces:
         files.update(planner_package.package_files(ROOT))
     connectors=json.loads(files['connectors/catalog.json'])['connectors']
-    selected=sorted(name.split("/")[1] for name in files
-                    if name.startswith("skills/") and name.endswith("/SKILL.md"))
+    selected = sorted(match[1] for name in files
+                      if (match := re.fullmatch(r"skills/([^/]+)/SKILL\.md", name)))
     title=preset["title"]
     skills={s["id"]:s for s in data["skills"]};flows={w["id"]:w for w in data["workflows"]}
+    files["skills.yaml"] = (
+        "# Portable inventory for this specialist. Native registrations are listed separately.\n"
+        "schema: muse-hub/specialist-skills/v1\n"
+        f"specialist: {role}\n"
+        "native_registry: assistant/role-skills/config/skills.yaml\n"
+        "subchat_mapping: assistant/role-skills/config/subchat-skills.json\n"
+        "skills:\n" + "".join(
+            f"  {json.dumps(skill)}: {json.dumps(f'skills/{skill}/SKILL.md')}\n"
+            for skill in selected
+        )
+    ).encode("utf-8")
+    files["INSTALL_IN_MUSE.md"] = (
+        f"# Set up or update {title} in Muse\n\n" + specialist_setup_prompt(role, version)
+    ).encode("utf-8")
     files["AGENTS.md"]=("# "+title+"\n\n"+preset["description"]+"\n\n"
         "Read PROFILE.md and ROLE_PLAYBOOK.md. Select the skills and workflows relevant "
         "to the user's current task. Keep the existing assistant identity, preferences, memory "
         "and tool permissions. Use observed results to decide what has completed; reconcile "
         "an uncertain external action before retrying it.\n").encode()
     profile="# "+title+"\n\n"+preset["description"]+"\n\n## Skills\n\n"
-    profile+="\n".join("- ["+skills[k]["title"]+"](skills/"+k+"/SKILL.md)" for k in selected)+"\n"
+    profile+=(f"Find a method in the [skill index](SKILLS.md) or give Muse the "
+              f"[complete inventory of {len(selected):,} skills](skills.yaml).\n")
+    files["SKILLS.md"] = ("# Skills for " + title + "\n\n" +
+        "\n".join("- [" + skills[k]["title"] + "](skills/" + k + "/SKILL.md)" for k in selected) +
+        "\n").encode("utf-8")
     if workflows:
         profile+="\n## Workflows\n\n"+"\n".join("- ["+flows[k]["title"]+"](workflows/"+k+".md)" for k in workflows)+"\n"
     profile+="\n## First task\n\nRead [FIRST_TASK.md](FIRST_TASK.md), or start with your current request.\n"
@@ -179,6 +220,7 @@ def specialist_files(data,role,version=DEFAULT_VERSION):
     if spaces:
         files['FIRST_TASK.md']+=planner_note.encode('utf-8')
     start=_use_text("Start with "+title,"PROFILE.md",files=files)
+    start=start.replace("\n\n1. Extract", "\n\n[Copy the prompt to set up or update in Muse](INSTALL_IN_MUSE.md).\n\n1. Extract", 1)
     start+="\n## Connect your tools\n\nOpen [CONNECTORS.md](CONNECTORS.md) for service guides, action inputs and the included request helper.\n"
     start+=("\n## Use the host-format components\n\n"
         "- Profile documents: assistant/system-profile/profile/.\n"

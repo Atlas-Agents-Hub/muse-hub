@@ -233,14 +233,15 @@ async function start() {
 }
 
 async function runChecks() {
+  const pageSize = 18;
   const downloads = JSON.parse(fs.readFileSync(path.join(site, 'downloads.json'), 'utf8'));
   await check('download inventory, specialist filters and shareable search', async () => {
     await navigate('downloads.html');
     const links = await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
-    assert.equal(links.length, Math.min(60, downloads.items.length));
-    assert.deepEqual(links, downloads.items.slice(0,60).map(item => item.url));
+    assert.equal(links.length, Math.min(pageSize, downloads.items.length));
+    assert.deepEqual(links, downloads.items.slice(0,pageSize).map(item => item.url));
     assert.equal(await evaluate('Number(document.querySelector("#download-results").dataset.catalogSize)'), downloads.items.length);
-    const sample = downloads.items.slice(60).findLast(row => row.kind === 'skill' && row.roles.includes('software-engineer'));
+    const sample = downloads.items.slice(pageSize).findLast(row => row.kind === 'skill' && row.roles.includes('software-engineer'));
     assert(sample, 'Software engineering skill must be discoverable');
     await navigate('downloads.html?type=skill&role=software-engineer&q=' + encodeURIComponent(sample.id));
     const visible = await evaluate('[...document.querySelectorAll(".download-card:not([hidden])")].map(card=>({id:card.dataset.id,kind:card.dataset.kind,url:card.querySelector("a[aria-label]").href}))');
@@ -249,14 +250,14 @@ async function runChecks() {
     await type('#download-search', 'no-matching-download-39715');
     assert.equal(await evaluate('document.querySelector("#download-empty").hidden'), false);
     await click('#download-clear-empty');
-    assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(60, downloads.items.length));
+    assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(pageSize, downloads.items.length));
     assert.equal(new URL(await evaluate('location.href')).searchParams.has('role'), false);
     return {searchable_resources:downloads.items.length, rendered_cards:links.length, specialist_search:true, empty_state_reset:true};
   });
   await check('invalid download filters recover without reflected markup', async () => {
     for (const query of ['type=bad&role=bad', 'type=skill&type=workflow', 'role=%3Cimg%20src=x%3E', 'q='+'x'.repeat(3000)]) {
       await navigate('downloads.html?' + query);
-      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(60, downloads.items.length));
+      assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(pageSize, downloads.items.length));
       assert.equal(await evaluate('document.querySelectorAll("#download-role img").length'), 0);
     }
     return {invalid_queries:4};
@@ -265,11 +266,11 @@ async function runChecks() {
     await navigate('downloads.html?type=skill');
     const visibleIds=() => evaluate('[...document.querySelectorAll(".download-card:not([hidden])")].map(card=>card.dataset.id)');
     const first=await visibleIds();
-    assert.equal(first.length,60);
+    assert.equal(first.length,pageSize);
     await click('#download-next');
     await wait('new URL(location.href).searchParams.get("page") === "2" && document.querySelector("#download-page-label").textContent.startsWith("Page 2")', 'second page URL and rendered state settled');
     const second=await visibleIds();
-    assert.equal(second.length,60);
+    assert.equal(second.length,pageSize);
     assert(second.every(id=>!first.includes(id)));
     assert.equal(new URL(await evaluate('location.href')).searchParams.get('page'),'2');
     await navigate(await evaluate('location.href'));
@@ -301,7 +302,7 @@ async function runChecks() {
     assert.equal(new URL(cleared).hash,'');
     await navigate(cleared);
     assert.equal(await evaluate('document.querySelector("#download-kind").value'),'all');
-    return {page_size:60, distinct_pages:true, shareable_page:true, filter_resets_page:true};
+    return {page_size:pageSize, distinct_pages:true, shareable_page:true, filter_resets_page:true};
   });
   await check('unavailable or invalid catalog retains safe downloads and subject navigation', async () => {
     try {
@@ -313,7 +314,7 @@ async function runChecks() {
         assert.equal(await evaluate('document.querySelector("#download-search").disabled'),true);
         assert.equal(await evaluate('document.querySelector(".catalog-subjects").open'),true);
         const links=await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
-        assert.deepEqual(links,downloads.items.slice(0,60).map(row=>row.url));
+        assert.deepEqual(links,downloads.items.slice(0,pageSize).map(row=>row.url));
         await layout();
       }
     } finally { catalogFault = null; }
@@ -512,7 +513,7 @@ async function runChecks() {
     assert.equal(await evaluate('document.activeElement.className'), 'details-button');
     return { tab_contained: true, escape_restored: true };
   });
-  await check('no JavaScript keeps all project links usable', async () => {
+  await check('no JavaScript keeps all selected guide links usable', async () => {
     await call('Emulation.setScriptExecutionDisabled', { value: true });
     try {
       await navigate('public/index.html?route=cli', false);
@@ -521,7 +522,7 @@ async function runChecks() {
       assert.deepEqual(new Set(links.map(link => link.href)), new Set(catalog.items.map(item => item.url)));
       assert.equal(await evaluate('getComputedStyle(document.querySelector("#filters")).display'), 'none');
       await layout(); await screenshot('resources-no-javascript-375.png');
-      return { visible_project_links: links.length };
+      return { visible_guide_links: links.length };
     } finally { await call('Emulation.setScriptExecutionDisabled', { value: false }); }
   });
   await check('specialist kits remain reachable without JavaScript', async () => {
@@ -541,10 +542,10 @@ async function runChecks() {
     try {
       await navigate('downloads.html?role=software-engineer', false);
       const initial=await evaluate('document.querySelectorAll(".download-card:not([hidden]) a[aria-label]").length');
-      assert.equal(initial,Math.min(60,downloads.items.length));
+      assert.equal(initial,Math.min(pageSize,downloads.items.length));
       await click('.catalog-subjects summary');
       const subjects=await evaluate('[...document.querySelectorAll("nav[aria-label=\\"Subject library\\"] a")].map(a=>({href:a.href,visible:!!a.getClientRects().length}))');
-      const expectedSubjects=fs.readdirSync(path.join(site,'library')).filter(name=>name.endsWith('.html')).map(name=>new URL('library/'+name,base).href);
+      const expectedSubjects=fs.readdirSync(path.join(site,'library')).filter(name=>name.endsWith('-001.html')).map(name=>new URL('library/'+name,base).href);
       assert.deepEqual(new Set(subjects.map(row=>row.href)),new Set(expectedSubjects));
       assert(subjects.every(row=>row.visible));
       await layout();

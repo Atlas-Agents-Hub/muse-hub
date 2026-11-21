@@ -41,7 +41,7 @@ Open the [Space template catalogue](spaces/README.md) for runnable projects, sou
 
 ## Explore Muse and community tools
 
-[Muse features](https://muse.ai/) · [Reminders and scheduled tasks](https://www.meta.com/help/superintelligence/1484325780075655/) · [Muse Gadgets](https://gadgets.muse.ai/) · [63-resource library](https://atlas-agents-hub.github.io/muse-hub/public/index.html)
+[Muse features](https://muse.ai/) · [Reminders and scheduled tasks](https://www.meta.com/help/superintelligence/1484325780075655/) · [Muse Gadgets](https://gadgets.muse.ai/) · [Muse Hub guides and official Meta resources](https://atlas-agents-hub.github.io/muse-hub/public/index.html)
 
 ## Build and extend
 
