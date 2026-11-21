@@ -157,14 +157,16 @@ class PublicReleaseDownloads(unittest.TestCase):
 
         output=self.renderer.outputs()
         page=Page();page.feed(output['downloads.html'].decode())
-        self.assertEqual(len(page.cards),min(60,len(self.directory['items'])))
+        self.assertEqual(len(page.cards),min(18,len(self.directory['items'])))
         self.assertEqual(int(page.results['data-total']),len(self.directory['items']))
+        self.assertEqual(int(page.results['data-page-size']),18)
         self.assertEqual(page.results['data-version'],self.directory['version'])
         self.assertLess(len(output['downloads.html']),200000)
         self.assertEqual([(row['data-kind'],row['data-id']) for row in page.cards],
-                         [(row['kind'],row['id']) for row in self.directory['items'][:60]])
+                         [(row['kind'],row['id']) for row in self.directory['items'][:18]])
         subjects={name for name in output if name.startswith('library/')}
-        self.assertEqual({href for href in page.links if href.startswith('library/')},subjects)
+        self.assertEqual({href for href in page.links if href.startswith('library/')},
+                         {name for name in subjects if name.endswith('-001.html')})
         card_count=0
         download_links=[]
         for name in subjects:
@@ -297,7 +299,7 @@ class GeneratedReleasePresentation(unittest.TestCase):
                         labels=re.findall(r'\bversion\s+v?([0-9]+\.[0-9]+\.[0-9]+)\b',' '.join(page.text),re.IGNORECASE)
                         self.assertEqual(labels,[version.removeprefix('v')]*label_count,name)
                         downloads={url for url in page.links if '/releases/download/' in url}
-                        expected_page_urls=({row['url'] for row in data['items'][:60]+data['bundles']})
+                        expected_page_urls=({row['url'] for row in data['items'][:18]+data['bundles']})
                         self.assertEqual(len(downloads),18 if name=='index.html' else len(expected_page_urls),name)
                         planning_url=self.renderer.REPO+'/releases/download/'+version+'/muse-skill-project-prioritization-'+version+'.zip'
                         if name=='index.html':self.assertIn(planning_url,downloads,name)

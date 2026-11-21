@@ -46,7 +46,6 @@ class ExplorerFailClosed(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.valid = json.loads(CATALOG.read_text(encoding="utf-8"))
-        assert len(cls.valid["items"]) == 63
 
     def assert_rejected_without_runtime_exception(self, doc):
         result = subprocess.run(
@@ -103,6 +102,15 @@ class ExplorerFailClosed(unittest.TestCase):
     def test_insecure_item_url(self):
         doc = copy.deepcopy(self.valid)
         doc["items"][0]["url"] = "javascript:alert(1)"
+        self.assert_rejected_without_runtime_exception(doc)
+
+    def test_external_and_mislabelled_resource_urls(self):
+        for url in ("https://github.com/example/muse-cli", "https://muse.ai.example.org/"):
+            doc = copy.deepcopy(self.valid)
+            doc["items"][0]["url"] = url
+            self.assert_rejected_without_runtime_exception(doc)
+        doc = copy.deepcopy(self.valid)
+        doc["items"][0]["category"] = "Official Meta"
         self.assert_rejected_without_runtime_exception(doc)
 
     def test_duplicate_item_id(self):

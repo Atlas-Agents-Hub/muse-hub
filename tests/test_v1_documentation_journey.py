@@ -29,15 +29,13 @@ class V1DocumentationJourney(unittest.TestCase):
   self.assertIn("Get-FileHash",page)
   self.assertIn("sha256sum",page)
 
- def test_terminal_guide_distinguishes_existing_connection_and_first_setup(self):
+ def test_terminal_guide_links_muse_and_runs_the_hub_toolkit(self):
   page=read("docs/TERMINAL.md")
-  self.assertLess(page.index("If your connection is already set up"),page.index("Install and connect"))
-  for command in ("muse-cli --version","muse-cli status","muse-cli threads","muse-cli history --limit 5","muse-cli chat","uv tool install muse-cli"):
-   self.assertIn(command,page)
-  self.assertIn("Python 3.10+",page)
-  self.assertIn("Python 3.12+",page)
-  self.assertIn("--browser agent-browser",page)
-  self.assertIn("quickstart.py --all",page)
+  for text in ("https://muse.ai/", "https://dev.meta.ai/docs/muse-code",
+               "Python 3.12+", "quickstart.py --all", "tools/discover.py search"):
+   self.assertIn(text,page)
+  self.assertNotIn("nikships/muse-cli",page)
+  self.assertNotIn("auth export",page)
 
  def test_skill_and_tool_pages_offer_current_methods(self):
   inventory=json.loads(read("hub/site/downloads.json"))["counts"]

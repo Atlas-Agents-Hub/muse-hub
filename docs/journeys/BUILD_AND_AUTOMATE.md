@@ -42,7 +42,7 @@ muse-cli chat
 
 `status` shows the connected account, `threads` lists Main and side chats, and `chat` starts an interactive conversation. Use the personal Muse command, `muse-cli`, for this route.
 
-Explore [desktop and computer tools](https://atlas-agents-hub.github.io/muse-hub/public/index.html?route=desktop) or [terminal projects](https://atlas-agents-hub.github.io/muse-hub/public/index.html?route=cli) when you need another connection method. Open the selected tool's setup instructions and connect it to your project.
+Explore [desktop and computer tools](https://atlas-agents-hub.github.io/muse-hub/public/index.html?route=desktop) or [terminal projects](https://atlas-agents-hub.github.io/muse-hub/public/index.html?route=cli) for Muse Hub setup and official Meta documentation.
 
 ## 3. Try a reproducible repair
 
@@ -75,7 +75,7 @@ This reviews the workflow's dependencies, declared approvals and expected result
 
 ### Check a web app in the browser
 
-Start with the [HTML source checker](../../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) included in the [Accessible UI download](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-skill-accessible-ui-v1.6.1.zip). Extract the ZIP and run its included example from that folder with Python 3.10 or newer:
+Start with the [HTML source checker](../../collections/muse-starters-v1/skills/accessible-ui/SOURCE_CHECK.md) included in the [Accessible UI download](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skill-accessible-ui-v1.6.2.zip). Extract the ZIP and run its included example from that folder with Python 3.10 or newer:
 
 ```sh
 python -B tools/accessibility_check.py --input skills/accessible-ui/examples/clean.html

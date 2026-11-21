@@ -168,8 +168,8 @@ class H03Compatibility(unittest.TestCase):
             self.assertIn(option, guide)
         self.assertNotIn(chr(92) + "`", guide)
         terminal = (ROOT / "docs/TERMINAL.md").read_text(encoding="utf-8")
-        for command in ("muse-cli status", "muse-cli threads", "muse-cli chat"):
-            self.assertIn(command, terminal)
+        self.assertIn("quickstart.py --all", terminal)
+        self.assertNotIn("nikships/muse-cli", terminal)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 
 **Muse Hub specialist:** Support daily life with personal planning, routines, accessible interactions and privacy-aware assistance shaped to the owner's preferences.
 
-**[Download the assistant](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-personal-companion-v1.6.1.zip)** · **[Set up Personal Companion](INSTALL.md)** · [Browse its library](LIBRARY.md)
+**[Download the assistant](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-personal-companion-v1.6.2.zip)** · **[Set up Personal Companion](INSTALL.md)** · [Browse its library](LIBRARY.md)
 
 **115 skills · 15 workflows · 9 tool guides**. Give this specialist its own Main conversation and **three subchats**. Its package includes the selected methods, supporting files, examples and service guides for your work.
 
@@ -29,4 +29,4 @@ Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage
 
 Your download includes [Muse Planner](../../docs/spaces/MUSE_PLANNER.md), a complete Space for projects, next actions, daily routines, weekly reviews, notes and calendars. Open `spaces/planner/README.md` in the ZIP to create your Space and save your first project.
 
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.6.1 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [v1.6.2 downloads](../../docs/RELEASES.md) · [Muse Hub](https://atlas-agents-hub.github.io/muse-hub/)

@@ -2,7 +2,7 @@
 
 ## Set up a specialist
 
-[Download a specialist](DOWNLOAD_A_SPECIALIST.md), extract it into a new folder, and open `START_HERE.md`. Give Muse the guide or ZIP with your current task. Follow its instructions for one separate Muse assistant, Main, and three focused subchats.
+Choose a [specialist setup guide](DOWNLOAD_A_SPECIALIST.md) and paste its setup prompt into your Meta Muse Personal AI Assistant. Muse can use the release link or a ZIP you attach. Review its plan for Main and the three focused subchats before applying it. To set up by hand, download the ZIP, extract it into a new folder, and open `START_HERE.md`.
 
 No Python is needed for these instructions. When you add a connector, choose its account and permissions through the service's setup flow. Keep credentials and personal memory in your private workspace.
 

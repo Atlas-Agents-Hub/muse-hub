@@ -49,7 +49,7 @@ def social_meta(url: str, title: str, description: str) -> str:
     return '\n'.join(tags)
 
 SITE = ROOT / 'hub/site'
-DOWNLOAD_PAGE_SIZE = 60
+DOWNLOAD_PAGE_SIZE = 18
 HOME_CAPTIONS = {
     'packages': 'Complete ZIP packages · Version {version}',
     'specialist': 'YOUR SPECIALIST / VERSION {version}',
@@ -401,10 +401,8 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
     subject_links = []
     for label in data['categories']:
         count = sum(row['category'] == label for row in data['items'])
-        pages = (count + 199) // 200
-        for page in range(1, pages + 1):
-            title = label + (f' · Page {page}' if pages > 1 else '')
-            subject_links.append(f'<a href="library/{subject_slug(label)}-{page:03d}.html">{esc(title)}</a>')
+        if count:
+            subject_links.append(f'<a href="library/{subject_slug(label)}-001.html">{esc(label)}</a>')
     sections=[]
     for kind, heading, anchor in (('specialist','Specialists','specialists'),('skill','Skills','skills'),('workflow','Workflows','workflows'),('tool-guide','Tool guides','tool-guides')):
         cards=[]
@@ -466,7 +464,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
       </div>
       <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items']):,} downloads</p>
       <details class="catalog-subjects"><summary>Browse every download by subject</summary><nav class="download-jumps" aria-label="Subject library">{''.join(subject_links)}</nav></details>
-      <div id="download-results" data-total="{len(data['items'])}" data-version="{esc(version)}">{''.join(sections)}</div>
+      <div id="download-results" data-total="{len(data['items'])}" data-page-size="{DOWNLOAD_PAGE_SIZE}" data-version="{esc(version)}">{''.join(sections)}</div>
       <nav id="download-pages" class="download-pagination" aria-label="Download result pages" hidden><button id="download-previous" class="reset-btn" type="button">Previous</button><span id="download-page-label"></span><button id="download-next" class="reset-btn" type="button">Next</button></nav>
       <div id="download-empty" class="role-empty" hidden><h2>No matching downloads.</h2><p>Try a shorter search or clear the filters.</p><button id="download-clear-empty" type="button">Show all downloads</button></div>
     </div></section>

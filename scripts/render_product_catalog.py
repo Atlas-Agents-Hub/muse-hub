@@ -15,7 +15,7 @@ sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'scripts')]
 import muse_collection
 import tool_guides
 from collection_compatibility import current_inventory
-from build_release import ALIASES, ROLE_WORKFLOWS, specialist_asset, planner_asset
+from build_release import ALIASES, ROLE_WORKFLOWS, specialist_asset, planner_asset, specialist_setup_prompt
 from muse_presets.planner_package import ROLES as PLANNER_ROLES
 from render_downloads import subject
 from render_specialist_directory import AREAS, COPY
@@ -194,7 +194,11 @@ Keep your customized instructions, preferences and memory in your working copy. 
 
 {summary}. [Explore the full selection](LIBRARY.md).
 
-## Set up this assistant
+## Set up or update in Muse
+
+{specialist_setup_prompt(canonical, version).rstrip()}
+
+## Set up by hand
 
 1. Extract the ZIP into its own folder and open `START_HERE.md`. You can also give Muse the ZIP with your current task.
 2. Choose a **separate Muse assistant** for {title} and add the supplied Main instructions.

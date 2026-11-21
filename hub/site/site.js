@@ -122,7 +122,7 @@
     const option = setupSelect.selectedOptions[0];
     setupTitle.textContent = option.textContent;
     setupDescription.textContent = option.dataset.description || '';
-    setupInstall.href = `${sourceBase}${slug}/INSTALL.md`;
+    setupInstall.href = `${sourceBase}${slug}/INSTALL.md#set-up-or-update-in-muse`;
     setupProfile.href = `${sourceBase}${slug}/README.md`;
     const download = roleDownloads.get(slug);
     if (!download || !download.startsWith('https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/')) return;

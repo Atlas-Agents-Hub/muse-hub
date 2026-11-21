@@ -1,6 +1,6 @@
 # Muse Hub
 
-[Open the website](https://atlas-agents-hub.github.io/muse-hub/) · [Download Muse Hub](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.1) · [Get started](../docs/GETTING_STARTED.md)
+[Open the website](https://atlas-agents-hub.github.io/muse-hub/) · [Download Muse Hub](https://github.com/Atlas-Agents-Hub/muse-hub/releases/tag/v1.6.2) · [Get started](../docs/GETTING_STARTED.md)
 
 Get more out of Muse. Explore its features, customize an assistant, connect your tools, and build a workspace around the work you do.
 
@@ -20,8 +20,8 @@ Get more out of Muse. Explore its features, customize an assistant, connect your
 - [Companion Home](../docs/COMPANION_HOME.md): five rooms, persistent notes, Studio motion controls, and Signal Trail in the Arcade.
 - [Daily Desk](../docs/spaces/DAILY_DESK.md): tasks and notes with backup and restore.
 - [Family Link](../docs/FAMILY_LINK.md): connect two Muse personal assistants to exchange requests and results.
-- [Resource library](https://atlas-agents-hub.github.io/muse-hub/public/index.html): 63 tools and projects, grouped by how you want to use Muse.
+- [Resource library](https://atlas-agents-hub.github.io/muse-hub/public/index.html): Muse Hub setup guides and official Meta documentation by task.
 
 ## Website files
 
-[Homepage](site/index.html) · [Downloads](site/downloads.html) · [Tools and projects](site/public/index.html) · [Website maintenance](site/README.md)
+[Homepage](site/index.html) · [Downloads](site/downloads.html) · [Setup guides](site/public/index.html) · [Website maintenance](site/README.md)

@@ -4,7 +4,7 @@ Organize plants, growing seasons and gardening projects through observations, ev
 
 **25 skills · 2 workflows · 9 tool guides** · **2 task starters** · **8 recommended connectors**
 
-[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.1/muse-garden-companion-v1.6.1.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=garden-companion) · [Setup](INSTALL.md)
+[Download the specialist](https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-garden-companion-v1.6.2.zip) · [Search its methods](https://atlas-agents-hub.github.io/muse-hub/downloads.html?role=garden-companion) · [Setup](INSTALL.md)
 
 ## Browse by subject
 
