@@ -193,6 +193,10 @@ async function start() {
   assert(target, 'Fresh profile has no blank page');
   socket = new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((resolve, reject) => { const timer = setTimeout(() => reject(Error('CDP connection timeout')), 5000); socket.addEventListener('open', () => { clearTimeout(timer); resolve(); }, { once: true }); socket.addEventListener('error', error => { clearTimeout(timer); reject(error); }, { once: true }); });
+  const isolationProbe = new URL('favicon.ico?isolation-probe', base);
+  isolationProbe.hostname = 'localhost';
+  let probeRequest, probeBlockReason;
+  let probing = true;
   socket.addEventListener('message', event => {
     const message = JSON.parse(event.data);
     if (message.id) {
@@ -201,17 +205,29 @@ async function start() {
     } else if (message.method === 'Page.loadEventFired') loaded++;
     else if (message.method === 'Runtime.exceptionThrown') report.errors.push({ kind: 'page', details: message.params.exceptionDetails });
     else if (message.method === 'Runtime.consoleAPICalled' && message.params.type === 'error') report.errors.push({ kind: 'console', details: message.params.args });
-    else if (message.method === 'Fetch.requestPaused') {
+    else if (message.method === 'Network.requestWillBeSent') {
       const { requestId, request } = message.params;
-      const allowed = request.url.startsWith(base);
-      if (!allowed) report.blocked_external_requests.push(request.url);
-      call(allowed ? 'Fetch.continueRequest' : 'Fetch.failRequest', allowed ? { requestId } : { requestId, errorReason: 'BlockedByClient' }).catch(error => report.errors.push({ kind: 'request', url: request.url, message: error.message }));
+      if (probing && request.url === isolationProbe.href) probeRequest = requestId;
+      else if (!request.url.startsWith(base)) report.blocked_external_requests.push(request.url);
+    } else if (message.method === 'Network.loadingFailed' && message.params.requestId === probeRequest) {
+      probeBlockReason = message.params.blockedReason;
     }
   });
   await call('Page.enable'); await call('Runtime.enable');
   // A headless window otherwise lacks OS focus even when its input is active.
   await call('Emulation.setFocusEmulationEnabled', { enabled: true });
-  await call('Fetch.enable', { patterns: [{ urlPattern: '*' }] });
+  // Leave local requests in Chrome's network stack so a viewport change can
+  // cancel an image without racing a CDP request interception.
+  await call('Network.enable');
+  await call('Network.setBlockedURLs', { urlPatterns: [
+    { urlPattern: base + '*', block: false },
+    { urlPattern: '*://*:*/*', block: true }
+  ] });
+  await evaluate('fetch(' + q(isolationProbe.href) + ').catch(() => {})');
+  for (let attempt = 0; !probeBlockReason && attempt < 40; attempt++) await pause(25);
+  assert.equal(probeBlockReason, 'inspector', 'Chrome must block requests to other origins');
+  probing = false;
+  report.network_isolation = { blocked_reason: probeBlockReason };
   await call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   await resize(1440);
 }
@@ -575,6 +591,7 @@ const finish = () => finalization ||= (async () => {
     report.status = report.failed || report.errors.length || report.blocked_external_requests.length || report.changed_source_files.length ? 'FAIL' : 'PASS';
     fs.writeFileSync(path.join(out, 'CHROME.log'), chromeLog);
     fs.writeFileSync(path.join(out, 'BROWSER_REPORT.json'), JSON.stringify(report, null, 2) + '\n');
+    for (const error of report.errors) console.error(JSON.stringify(error));
     console.log(JSON.stringify({ status: report.status, passed: report.passed, failed: report.failed, errors: report.errors.length, blocked_external: report.blocked_external_requests.length, evidence: out }));
     if (report.status !== 'PASS') process.exitCode = 1;
   })();
