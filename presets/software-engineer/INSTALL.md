@@ -35,4 +35,4 @@ Extract the ZIP into a new folder and open `START_HERE.md`. Choose a **separate 
 
 Use `PROFILE.md` to choose a method and `CONNECTORS.md` to select the account and permissions for a service. Follow `START_HERE.md` for optional local tools.
 
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Terminal guide](../../docs/TERMINAL.md)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Working methods and engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [Terminal guide](../../docs/TERMINAL.md)

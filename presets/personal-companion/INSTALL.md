@@ -43,4 +43,4 @@ Use the [inbox workspace](../../collections/muse-starters-v1/skills/inbox-triage
 
 Your download includes [Muse Planner](../../docs/spaces/MUSE_PLANNER.md), a complete Space for projects, next actions, daily routines, weekly reviews, notes and calendars. Open `spaces/planner/README.md` in the ZIP to create your Space and save your first project.
 
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Terminal guide](../../docs/TERMINAL.md)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Working methods and engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [Terminal guide](../../docs/TERMINAL.md)

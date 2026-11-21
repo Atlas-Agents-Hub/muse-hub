@@ -206,7 +206,7 @@ Extract the ZIP into a new folder and open `START_HERE.md`. Choose a **separate 
 
 Use `PROFILE.md` to choose a method and `CONNECTORS.md` to select the account and permissions for a service. Follow `START_HERE.md` for optional local tools.{inbox_note}{planner_note}
 
-[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Terminal guide](../../docs/TERMINAL.md)
+[All specialists](../../docs/DOWNLOAD_A_SPECIALIST.md) · [Setup and saved data](../../docs/INSTALL_AND_PERSISTENCE.md) · [Working methods and engines](../../docs/collection/SPECIALIST_SCOPE_AND_ENGINES.md) · [Terminal guide](../../docs/TERMINAL.md)
 '''
         groups=Counter(subject(skills[key]['category']) for key in selected)
         library=f'# {title}: skills, workflows and connections\n\n{scope}\n\n{summary} · **{len(starters)} task starters** · **{len(selected_connectors)} recommended connectors**\n\n[Download the specialist]({url}) · [Search its methods]({browse}) · [Setup](INSTALL.md)\n\n## Browse by subject\n\n| Subject | Skills | Browse |\n| --- | ---: | --- |\n'
