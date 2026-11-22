@@ -501,7 +501,7 @@ async function runChecks() {
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
       if (name === 'home') {
-        const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header .brand-symbol");return {loaded:!!i&&i.complete&&i.naturalWidth>0,width:i?.getBoundingClientRect().width}})()');
+        const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header svg.brand-symbol");return {loaded:!!i&&i.querySelectorAll("path").length>=2&&!i.querySelector("script, foreignObject")&&i.getAttribute("aria-hidden")==="true",width:i?.getBoundingClientRect().width}})()');
         assert(mark.loaded && mark.width >= (viewport <= 850 ? 44 : 50), 'Brand mark must load at a legible size: ' + viewport);
         if (viewport <= 850) {
           const labels = await evaluate('[...document.querySelectorAll(".r7-metrics dt")].map(x=>parseFloat(getComputedStyle(x).fontSize))');
