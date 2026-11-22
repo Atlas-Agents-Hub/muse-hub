@@ -288,3 +288,68 @@ body:not(.directory-ready) .catalog-stage { grid-template-columns: minmax(0,1fr)
 .resource-summary { margin-bottom: 10px; }
 .card-actions { margin-top: 0; }
 .card-actions > :is(a, button) { min-height: 44px; }
+
+/* R8 mobile guide directory: same Muse identity and comfortably readable routes. */
+:root { --directory-ui:system-ui,-apple-system,"Segoe UI",Arial,sans-serif; }
+body { font-family:var(--directory-ui);font-size:16px;line-height:1.57; }
+.site-header .header-inner { min-height:85px; }
+.wordmark { font-family:var(--directory-ui);font-size:21px;letter-spacing:.015em; }
+.wordmark-symbol { width:48px;height:48px; }
+.header-nav a { font-size:14px; }
+.directory-section { padding-top:64px;padding-bottom:92px; }
+.intro-grid h1 { font-size:clamp(43px,4.5vw,62px);line-height:1.09;letter-spacing:-.045em; }
+.intro-description { font-size:17px;line-height:1.65;max-width:690px; }
+.filters { padding:20px;gap:16px; }
+.filters label { font-size:12px; }
+.route-grid { gap:10px;background:transparent;border:0; }
+.route-card { min-height:112px;border:1px solid var(--line-strong);padding:18px; }
+.route-title { font-size:16px;line-height:1.27; }
+.route-description { font-size:13px;line-height:1.5; }
+.route-symbol { width:44px;height:44px; }
+.route-arrow { font-size:21px; }
+.routes-section { padding-block:48px 37px; }
+.resources-section { padding-top:48px; }
+.resources-heading h2 { font-size:clamp(27px,3vw,35px); }
+.resource-card { padding:22px;gap:10px; }
+.resource-card h3 { font-size:21px;line-height:1.32; }
+.resource-summary { font-size:15px;line-height:1.6; }
+.category-badge,.record-id { font-size:11px; }
+.card-actions :is(.details-button,.record-link) { font-size:14px; }
+.detail-panel { padding:26px; }
+.detail-summary { font-size:16px;line-height:1.6; }
+.detail-metadata dd { font-size:14px; }
+.detail-source { font-size:14px; }
+@media(max-width:760px) {
+  .shell { padding-inline:22px; }
+  .site-header .header-inner { min-height:80px; }
+  .wordmark { font-size:20px;letter-spacing:.008em; }
+  .wordmark-symbol { width:43px;height:43px;margin-right:10px; }
+  .header-nav a { font-size:13px;min-height:46px;padding-inline:8px; }
+  .directory-section { padding-top:43px;padding-bottom:68px; }
+  .intro-grid { margin-bottom:30px; }
+  .intro-grid h1 { font-size:clamp(39px,9vw,52px); }
+  .intro-description { font-size:16px;line-height:1.6; }
+  .filters { padding:17px;gap:14px; }
+  .filter-search input { font-size:16px; }
+  .routes-section { padding-top:37px;padding-bottom:28px; }
+  .route-grid { grid-template-columns:1fr;gap:8px; }
+  .route-card { min-height:89px;padding:14px 17px;gap:15px; }
+  .route-symbol { width:37px;height:37px; }
+  .route-title { font-size:16px; }
+  .route-description { font-size:13px;line-height:1.42; }
+  .route-arrow { font-size:19px; }
+  .resources-section { padding-top:35px; }
+  .resource-card { padding:18px 17px; }
+  .resource-card h3 { font-size:19px; }
+  .resource-summary { font-size:14px; }
+  .detail-panel { padding:22px; }
+  .about-grid p { font-size:15px;line-height:1.6; }
+}
+@media(max-width:370px) {
+  .shell { padding-inline:17px; }
+  .wordmark-symbol { width:40px;height:40px; }
+  .wordmark { font-size:18px; }
+  .route-symbol { display:inline-flex; }
+  .route-card { padding:12px; }
+  .route-title { font-size:15px; }
+}

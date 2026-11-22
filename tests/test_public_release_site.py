@@ -151,7 +151,7 @@ class PublicReleaseDownloads(unittest.TestCase):
                 super().__init__();self.cards=[];self.links=[];self.results={}
             def handle_starttag(self,tag,attrs):
                 attrs=dict(attrs)
-                if tag=='article' and attrs.get('class')=='download-card':self.cards.append(attrs)
+                if tag=='article' and 'download-card' in attrs.get('class','').split():self.cards.append(attrs)
                 if tag=='a' and 'href' in attrs:self.links.append(attrs['href'])
                 if attrs.get('id')=='download-results':self.results=attrs
 

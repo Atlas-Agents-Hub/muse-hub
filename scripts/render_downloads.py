@@ -18,8 +18,7 @@ from tool_guides import load_guides
 from build_release import ALIASES, ROLE_WORKFLOWS, skill_download_layout, planner_asset
 
 REPO = 'https://github.com/Atlas-Agents-Hub/muse-hub'
-# The reviewed Planner guide must resolve before the release and main cutover.
-PLANNER_GUIDE = REPO + '/blob/f6b71534070d41806b5eeca5765ad2c3f0dd0ac7/docs/spaces/MUSE_PLANNER.md'
+# Versioned guide links must match the actual selected downloadable release.
 SITE_BASE = 'https://atlas-agents-hub.github.io/muse-hub/'
 SOCIAL_IMAGE = SITE_BASE + 'social-card.png'
 
@@ -145,7 +144,7 @@ def subject_slug(label: str) -> str:
     return re.sub(r'[^a-z0-9]+', '-', label.lower()).strip('-')
 
 
-def subject_pages(data: dict) -> dict[str,bytes]:
+def subject_pages(data: dict, home: str) -> dict[str,bytes]:
     """Publish readable subject indexes that work with ordinary links."""
     result={}
     intros={
@@ -163,6 +162,13 @@ def subject_pages(data: dict) -> dict[str,bytes]:
         'Using Muse':'Set up your assistant, organize its work and choose the right resources for a task. Start here when building a personal Muse toolkit.',
     }
     esc=html.escape
+    # Single source of truth for global navigation; all subject pages share the
+    # authored homepage header/footer and resolve relative links from /library/.
+    def from_library(fragment: str) -> str:
+        return re.sub(r'(?P<attr>(?:href|src)=")(?P<path>index\.html|downloads\.html|public/index\.html|muse-mark\.png)',
+                      lambda match: match['attr']+'../'+match['path'], fragment)
+    shared_header = from_library(home[home.index('  <header'):home.index('  <main')])
+    shared_footer = from_library(home[home.index('  <footer'):home.index('\n</body>')])
     for label in data['categories']:
         rows=[row for row in data['items'] if row['category']==label]
         pages=[rows[i:i+200] for i in range(0,len(rows),200)]
@@ -175,11 +181,11 @@ def subject_pages(data: dict) -> dict[str,bytes]:
             for row in items:
                 text=row['description']
                 if len(text)>400:text=text[:397].rsplit(' ',1)[0]+'…'
-                read=f'<a href="{esc(row["guide_url"])}">Read the method</a> · ' if row.get('guide_url') else ''
+                read=f'<a class="subject-guide-link" href="{esc(row["guide_url"])}">Read method →</a>' if row.get('guide_url') else ''
                 packed=row.get('pack_kind')=='skill-pack'
                 download='Download skill pack' if packed else 'Download ZIP'
-                entry=f'<p class="download-entry"><code>{esc(row["entry"])}</code></p>' if packed else ''
-                cards.append(f'<article class="download-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p><p>{read}<a href="{esc(row["url"])}">{download}</a></p>{entry}</article>')
+                entry=f'<p class="download-entry">Inside this collection: <code>{esc(row["entry"])}</code></p>' if packed else ''
+                cards.append(f'<article class="download-card subject-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p><div class="subject-card-actions">{read}<a href="{esc(row["url"])}">{download} ↓</a></div>{entry}</article>')
             url='https://atlas-agents-hub.github.io/muse-hub/'+route
             page_description=(intros[label] if len(pages)==1 else
                 f'{intros[label]} Browse {label.lower()} resources on page {number} of {len(pages)}.')
@@ -187,18 +193,25 @@ def subject_pages(data: dict) -> dict[str,bytes]:
                     'url':url,'description':page_description,'image':SOCIAL_IMAGE,
                     'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}}
             body=f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#151515">
 <title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(page_description)}">
 {social_meta(url, f'{title} | Page {number} | Muse Hub', page_description)}
-<link rel="canonical" href="{url}"><link rel="stylesheet" href="../site.css"><link rel="icon" type="image/png" href="../muse-mark.png">
+<link rel="canonical" href="{url}"><link rel="stylesheet" href="../site.css"><link rel="stylesheet" href="../experience.css"><link rel="icon" type="image/png" href="../muse-mark.png">
 <script type="application/ld+json">{json.dumps(schema,ensure_ascii=False)}</script></head>
-<body class="muse-premium"><a class="skip-link" href="#main">Skip to resources</a>
-<main id="main" class="shell" style="padding-block:2rem"><nav aria-label="Breadcrumb"><a href="../index.html">Muse Hub</a> / <a href="../downloads.html">Downloads</a> / {esc(label)}</nav>
-<h1>{esc(title)}</h1><p>{esc(intros[label])}</p>
-<p>{len(rows)} resources · Page {number} of {len(pages)} · <a href="../downloads.html?subject={quote(label)}">Search this subject</a></p>
-<nav class="download-pagination" aria-label="Subject pages">{navigation}</nav>
-<div class="download-grid">{''.join(cards)}</div><nav class="download-pagination" aria-label="More subject pages">{navigation}</nav>
-<p><a href="../downloads.html">Explore all Muse skills, workflows and specialist kits</a></p></main></body></html>
+<body id="top" class="muse-premium subject-index"><a class="skip-link" href="#main">Skip to resources</a>
+{shared_header}
+<main id="main" class="shell subject-main">
+  <nav class="subject-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Muse Hub</a><span aria-hidden="true">/</span><a href="../downloads.html">Library</a><span aria-hidden="true">/</span><span>{esc(label)}</span></nav>
+  <header class="subject-heading"><span class="subject-kicker">THE MUSE HUB LIBRARY / {esc(label).upper()}</span><h1>{esc(title)}</h1><p>{esc(intros[label])}</p>
+  <div class="subject-summary"><span><strong>{len(rows):,}</strong> resources</span><span>Page {number} of {len(pages)}</span><a href="../downloads.html?subject={quote(label)}">Search this subject →</a></div></header>
+  <nav class="download-pagination subject-pagination" aria-label="Subject pages">{navigation}</nav>
+  <div class="download-grid subject-grid">{''.join(cards)}</div>
+  <nav class="download-pagination subject-pagination" aria-label="More subject pages">{navigation}</nav>
+  <p class="subject-return"><a href="../downloads.html">← Explore all Muse skills, workflows and specialist kits</a></p>
+</main>
+{shared_footer}
+</body></html>
 '''
             result[route]=body.encode('utf-8')
     return result
@@ -297,7 +310,7 @@ def catalog(root: Path = ROOT) -> dict:
     bundles.append(dict(id='space-planner',title='Muse Planner',
         description='A full-stack Muse Space for projects, next actions, daily routines, weekly reviews, notes and calendars.',
         asset=asset,url=base+asset,roles=['coordinator','personal-companion'],
-        guide_url=PLANNER_GUIDE))
+        guide_url=REPO+'/blob/'+version+'/docs/spaces/MUSE_PLANNER.md'))
     connectors_path=root/'docs/connectors/catalog.json'
     connector_count=len(json.loads(connectors_path.read_bytes())['connectors']) if connectors_path.exists() else 151
     return {'schema':'muse-hub/downloads/v1','version':version,'counts':counts,
@@ -310,6 +323,8 @@ def catalog(root: Path = ROOT) -> dict:
 def render_homepage(data: dict, root: Path = ROOT) -> str:
     """Keep authored page markup while deriving every current release field."""
     home = (root / 'hub/site/index.html').read_text(encoding='utf-8')
+    # Keep authored links readable on main, but publish Space guides at the release tag.
+    home = home.replace(REPO+'/blob/main/docs/spaces/', REPO+'/blob/'+data['version']+'/docs/spaces/')
     seen = []
 
     def caption(match: re.Match) -> str:
@@ -436,7 +451,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
   <script type="application/ld+json">{json.dumps({'@context':'https://schema.org','@type':'CollectionPage','name':'Muse Hub Downloads','url':'https://atlas-agents-hub.github.io/muse-hub/downloads.html','image':SOCIAL_IMAGE,'description':'Muse AI skills, workflows, specialists and tool guides.','isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}})}</script>
   <title>Muse AI Skills &amp; Workflow Downloads | Muse Hub</title>
 {favicon}
-  <link rel="stylesheet" href="site.css">\n  <script defer src="downloads.js"></script>
+  <link rel="stylesheet" href="site.css">\n  <link rel="stylesheet" href="experience.css">\n  <script defer src="downloads.js"></script>
 </head>
 <body id="top" class="muse-premium downloads-page">
   <a class="skip-link" href="#main">Skip to downloads</a>
@@ -453,13 +468,13 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
         <a href="downloads.html?type=specialist#catalog" data-download-type="specialist">Specialists</a>
         <a href="downloads.html?type=tool-guide#catalog" data-download-type="tool-guide">Tool guides</a>
       </nav>
-      <div class="role-toolbar">
+      <div class="role-toolbar download-toolbar">
         <div class="field-wrap"><label for="download-search">Search the library</label><input id="download-search" type="search" placeholder="Try debugging, design, research…" autocomplete="off" aria-controls="download-results"></div>
-        <div class="field-wrap category-wrap"><label for="download-kind">Type</label><select id="download-kind" aria-controls="download-results"><option value="all">Everything</option><option value="specialist">Specialists</option><option value="skill">Skills</option><option value="workflow">Workflows</option><option value="tool-guide">Tool guides</option></select></div>
+        <details class="download-advanced"><summary>Refine results</summary><div class="download-filter-grid"><div class="field-wrap category-wrap"><label for="download-kind">Type</label><select id="download-kind" aria-controls="download-results"><option value="all">Everything</option><option value="specialist">Specialists</option><option value="skill">Skills</option><option value="workflow">Workflows</option><option value="tool-guide">Tool guides</option></select></div>
         <div class="field-wrap category-wrap"><label for="download-role">Specialist</label><select id="download-role" aria-controls="download-results"><option value="all">All specialists</option>{''.join('<option value="'+esc(key)+'">'+esc(title)+'</option>' for key,title in data['roles'].items())}</select></div>
         <div class="field-wrap category-wrap"><label for="download-category">Subject</label><select id="download-category" aria-controls="download-results"><option value="all">All subjects</option>{''.join('<option value="'+esc(title)+'">'+esc(title)+'</option>' for title in data['categories'])}</select></div>
         <div class="field-wrap category-wrap"><label for="download-sort">Sort by title</label><select id="download-sort" aria-controls="download-results"><option value="catalog">Catalog order</option><option value="az">A to Z</option><option value="za">Z to A</option></select></div>
-        <button id="download-reset" class="reset-btn" type="button">Clear</button>
+        </div></details>\n        <button id="download-reset" class="reset-btn" type="button">Clear</button>
       </div>
       <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items']):,} downloads</p>
       <details class="catalog-subjects"><summary>Browse every download by subject</summary><nav class="download-jumps" aria-label="Subject library">{''.join(subject_links)}</nav></details>
@@ -487,7 +502,7 @@ def outputs(root: Path = ROOT) -> dict[str,bytes]:
     result={'index.html':home.encode('utf-8'),
             'downloads.json':(json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8'),
             'downloads.html':render(data,root,home=home).encode('utf-8')}
-    result.update(subject_pages(data))
+    result.update(subject_pages(data,home))
     urls=['','downloads.html','public/index.html',*sorted(name for name in result if name.startswith('library/'))]
     result['sitemap.xml']=('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
         ''.join('<url><loc>https://atlas-agents-hub.github.io/muse-hub/'+name+'</loc></url>\n' for name in urls)+'</urlset>\n').encode('utf-8')

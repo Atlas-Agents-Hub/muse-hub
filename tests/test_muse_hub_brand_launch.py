@@ -84,7 +84,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
         self.assertEqual(meta["schema"],"muse-hub/public-website-overlay/v1")
         self.assertEqual(meta["source_kind"],"STATIC_WEBSITE")
         expected={
-            "README.md", "index.html", "site.css", "site.js", "roles.json",
+            "README.md", "index.html", "site.css", "experience.css", "site.js", "roles.json",
             "downloads.html", "downloads.js", "downloads.json",
             "public/index.html", "public/styles.css", "public/app.js",
             "public/catalog.json", "sitemap.xml", "social-card.png",

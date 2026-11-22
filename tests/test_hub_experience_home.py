@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "hub" / "site"
 REPO_BLOB = "https://github.com/Atlas-Agents-Hub/muse-hub/blob/"
-SPACE_GUIDE_REF = "f6b71534070d41806b5eeca5765ad2c3f0dd0ac7"
+SPACE_GUIDE_REF = __import__("json").loads((ROOT / "presets/catalog.json").read_text("utf8"))["release"]
 ROLES = {
     "software-engineer", "data-engineering-architect", "automation-engineer",
     "infrastructure-reliability-engineer", "research-evaluator", "claims-adjudicator",
@@ -120,7 +120,7 @@ class HubExperienceHomeTests(unittest.TestCase):
         for title,subpath in paths.items():
             with self.subTest(title=title):
                 self.assertTrue((ROOT/"docs"/subpath).is_file())
-                ref = "main" if title == "Daily Desk" else SPACE_GUIDE_REF
+                ref = SPACE_GUIDE_REF
                 guide_url = f"{REPO_BLOB}{ref}/docs/{subpath}"
                 self.assertTrue(any(title in card.text() and any(
                     a.tag=="a" and a.attrs.get("href") == guide_url

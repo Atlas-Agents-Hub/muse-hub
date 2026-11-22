@@ -27,6 +27,7 @@
   <title>Muse AI Skills &amp; Workflow Downloads | Muse Hub</title>
   <link rel="icon" type="image/png" href="muse-mark.png">
   <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="experience.css">
   <script defer src="downloads.js"></script>
 </head>
 <body id="top" class="muse-premium downloads-page">
@@ -55,12 +56,13 @@
         <a href="downloads.html?type=specialist#catalog" data-download-type="specialist">Specialists</a>
         <a href="downloads.html?type=tool-guide#catalog" data-download-type="tool-guide">Tool guides</a>
       </nav>
-      <div class="role-toolbar">
+      <div class="role-toolbar download-toolbar">
         <div class="field-wrap"><label for="download-search">Search the library</label><input id="download-search" type="search" placeholder="Try debugging, design, research…" autocomplete="off" aria-controls="download-results"></div>
-        <div class="field-wrap category-wrap"><label for="download-kind">Type</label><select id="download-kind" aria-controls="download-results"><option value="all">Everything</option><option value="specialist">Specialists</option><option value="skill">Skills</option><option value="workflow">Workflows</option><option value="tool-guide">Tool guides</option></select></div>
+        <details class="download-advanced"><summary>Refine results</summary><div class="download-filter-grid"><div class="field-wrap category-wrap"><label for="download-kind">Type</label><select id="download-kind" aria-controls="download-results"><option value="all">Everything</option><option value="specialist">Specialists</option><option value="skill">Skills</option><option value="workflow">Workflows</option><option value="tool-guide">Tool guides</option></select></div>
         <div class="field-wrap category-wrap"><label for="download-role">Specialist</label><select id="download-role" aria-controls="download-results"><option value="all">All specialists</option><option value="software-engineer">Software Engineer</option><option value="data-engineer">Data Engineering &amp; Database Architect</option><option value="automation-engineer">Automation Engineer</option><option value="reliability-engineer">Infrastructure &amp; Reliability Engineer</option><option value="research-evaluator">Research Evaluator</option><option value="claims-adjudicator">Claims Adjudicator</option><option value="adversarial-verifier">Adversarial Verifier</option><option value="reverse-engineering-researcher">Reverse Engineering &amp; Security Researcher</option><option value="creative-studio">Creative Studio</option><option value="product-interface-designer">Product &amp; Interface Designer</option><option value="model-builder">Model Builder</option><option value="learning-coach">Learning Coach</option><option value="personal-companion">Personal Companion</option><option value="garden-companion">Garden Companion</option><option value="coordinator">Coordinator</option></select></div>
         <div class="field-wrap category-wrap"><label for="download-category">Subject</label><select id="download-category" aria-controls="download-results"><option value="all">All subjects</option><option value="Business &amp; projects">Business &amp; projects</option><option value="Creative &amp; games">Creative &amp; games</option><option value="Data &amp; AI">Data &amp; AI</option><option value="Design &amp; visualization">Design &amp; visualization</option><option value="Home &amp; travel">Home &amp; travel</option><option value="Infrastructure &amp; reliability">Infrastructure &amp; reliability</option><option value="Learning &amp; study">Learning &amp; study</option><option value="Personal planning">Personal planning</option><option value="Research &amp; science">Research &amp; science</option><option value="Security">Security</option><option value="Software &amp; automation">Software &amp; automation</option><option value="Using Muse">Using Muse</option></select></div>
         <div class="field-wrap category-wrap"><label for="download-sort">Sort by title</label><select id="download-sort" aria-controls="download-results"><option value="catalog">Catalog order</option><option value="az">A to Z</option><option value="za">Z to A</option></select></div>
+        </div></details>
         <button id="download-reset" class="reset-btn" type="button">Clear</button>
       </div>
       <p id="download-count" role="status" aria-live="polite">Showing 1–18 of 5,704 downloads</p>

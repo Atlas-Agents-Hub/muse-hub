@@ -501,7 +501,7 @@ async function runChecks() {
   });
   for (const viewport of [320, 375, 390, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
-    for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
+    for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
       if (name === 'home') {
         const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header img.brand-symbol");return {loaded:!!i&&i.complete&&i.naturalWidth>=64&&i.getAttribute("src")==="muse-mark.png",width:i?.getBoundingClientRect().width}})()');
@@ -537,6 +537,43 @@ async function runChecks() {
       }
     }
     return rows;
+  });
+  await check('all generated subject pages share navigation, legibility and overflow safety', async () => {
+    const names = fs.readdirSync(path.join(site, 'library')).filter(name=>name.endsWith('.html')).sort();
+    assert(names.length >= 35, 'Full public subject catalogue must be present');
+    const visited = [];
+    for (const viewport of [390, 1440]) {
+      await resize(viewport);
+      for (const name of names) {
+        await navigate('library/' + name);
+        const proof = await evaluate('(()=>{const header=document.querySelector(".r7-header"),main=document.querySelector(".subject-main"),footer=document.querySelector(".premium-footer"),cards=document.querySelectorAll(".subject-card"),h=document.querySelector(".subject-heading h1"),first=cards[0];return {header:!!header&&header.getBoundingClientRect().height>=70,footer:!!footer,main:!!main,cards:cards.length,heading:h?.textContent.trim().length,brand:document.querySelector(".r7-header img.brand-symbol")?.complete,font:parseFloat(getComputedStyle(first.querySelector("h2")).fontSize),overflow:document.documentElement.scrollWidth-innerWidth,styles:[...document.styleSheets].some(s=>s.href?.endsWith("/experience.css"))}})()');
+        assert(proof.header && proof.footer && proof.main && proof.cards>0 && proof.cards<=200 && proof.heading>10 && proof.brand && proof.styles,
+          'Missing shared subject experience '+name+' '+viewport+' '+JSON.stringify(proof));
+        assert(proof.overflow<=1, 'Subject horizontal overflow: '+name+' '+viewport+' '+JSON.stringify(proof));
+        assert(proof.font>=20, 'Subject card titles too small: '+name+' '+viewport+' '+proof.font);
+        if ((name==='software-automation-001.html' && viewport===390) ||
+            (name==='design-visualization-001.html' && viewport===1440))
+          await screenshot('subject-' + viewport + '.png');
+        visited.push(name+':'+viewport);
+      }
+    }
+    return {subject_pages:names.length,verified_viewports:[390,1440],checked:visited.length};
+  });
+  await check('library advanced filters disclose without losing search and reset', async () => {
+    for (const viewport of [390,1440]) {
+      await resize(viewport);
+      await navigate('downloads.html');
+      assert.equal(await evaluate('document.querySelector(".download-advanced").open'),false);
+      await click('.download-advanced summary');
+      assert.equal(await evaluate('document.querySelector(".download-advanced").open'),true);
+      const proof = await evaluate('(()=>({controls:["download-kind","download-role","download-category","download-sort"].every(id=>{const e=document.getElementById(id);return !!e.getClientRects().length}),overflow:document.documentElement.scrollWidth-innerWidth}))()');
+      assert(proof.controls && proof.overflow<=1,'Expanded filters must be fully accessible: '+JSON.stringify(proof));
+      await click('.download-advanced summary');
+      assert.equal(await evaluate('document.querySelector(".download-advanced").open'),false);
+      const search = await evaluate('document.querySelector("#download-search").getBoundingClientRect().height');
+      assert(search>=50,'Search remains primary on '+viewport);
+    }
+    return {viewport:[390,1440],disclosure:true,search_first:true};
   });
   await check('mobile detail dialog keeps and restores keyboard focus', async () => {
     await resize(375); await navigate('public/index.html?route=cli'); await click('.details-button');
