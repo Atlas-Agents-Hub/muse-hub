@@ -188,7 +188,28 @@ async function start() {
   }
   assert(port, 'Chrome did not expose a complete valid CDP port: ' + chromeLog);
   const endpoint = 'http://127.0.0.1:' + port;
-  const targets = await fetch(endpoint + '/json/list', { signal: AbortSignal.timeout(5000) }).then(response => response.json());
+  // A complete DevToolsActivePort file only proves the socket was announced,
+  // not that a cold hosted-runner Chrome is already serving HTTP. Retry ONLY
+  // this bounded startup handshake; never retry/ignore page or product failures.
+  const discoveryUntil = Date.now() + 20000;
+  let targets, lastDiscoveryError, discoveryAttempts = 0;
+  while (Date.now() < discoveryUntil && chrome.exitCode === null) {
+    discoveryAttempts++;
+    try {
+      const response = await fetch(endpoint + '/json/list', { signal: AbortSignal.timeout(2500) });
+      assert(response.ok, 'DevTools HTTP ' + response.status);
+      const candidate = await response.json();
+      assert(Array.isArray(candidate), 'DevTools target list is not an array');
+      targets = candidate;
+      break;
+    } catch (error) {
+      lastDiscoveryError = String(error);
+      if (Date.now() < discoveryUntil) await pause(150);
+    }
+  }
+  assert(Array.isArray(targets),
+    'CDP endpoint did not become ready after ' + discoveryAttempts +
+    ' bounded attempts: ' + lastDiscoveryError + '; Chrome=' + chromeLog.slice(-1200));
   const target = targets.find(item => item.type === 'page' && item.url === 'about:blank');
   assert(target, 'Fresh profile has no blank page');
   socket = new WebSocket(target.webSocketDebuggerUrl);
