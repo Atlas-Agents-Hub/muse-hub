@@ -244,3 +244,356 @@ html { scroll-padding-top:105px; }
 @media(prefers-reduced-motion:reduce) {
   .muse-premium :is(.r7-button,.r7-task-card,.download-card,.role-card){transition:none;animation:none;}
 }
+
+/*
+ * R10: One visible product system across Home, Library, generated subjects,
+ * and Setup Guides. Previous stylesheets remain page-specific foundations;
+ * this is the single final authority for shared visual components and tokens.
+ * No external typefaces, scripts, assets or service dependencies.
+ */
+:root {
+  --muse-bg: #151515;
+  --muse-panel: #21231e;
+  --muse-panel-hover: #2a2c25;
+  --muse-text: #f6f4eb;
+  --muse-muted: #c9cbbd;
+  --muse-border: #575b4e;
+  --muse-accent: #eaff43;
+  --muse-sans: system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --muse-serif: "Iowan Old Style",Baskerville,"Palatino Linotype",Georgia,serif;
+  --muse-gutter: clamp(20px, 3.2vw, 36px);
+  --muse-content: 1260px;
+  --muse-card-radius: 4px;
+  --muse-gap: 16px;
+  --muse-space-xs: 8px;
+  --muse-space-sm: 12px;
+  --muse-space-md: 20px;
+  --muse-space-lg: 32px;
+  --muse-space-xl: 48px;
+  --muse-space-2xl: 72px;
+}
+html { scroll-padding-top:88px; }
+body.muse-premium,body.guide-page {
+  color:var(--muse-text);
+  background:var(--muse-bg);
+  font:16px/1.55 var(--muse-sans);
+}
+.muse-premium .shell { width:min(var(--muse-content),calc(100% - 2 * var(--muse-gutter))); }
+.guide-page .shell { width:min(calc(var(--muse-content) + 2 * var(--muse-gutter)),100%);padding-inline:var(--muse-gutter); }
+.muse-premium :is(.r7-task-card,.role-card,.download-card,.bundle-card,.premium-space-card,.r7-feature-card),
+.guide-page :is(.route-card,.resource-card,.detail-panel,.filters) {
+  border:1px solid var(--muse-border);
+  border-radius:var(--muse-card-radius);
+  background:var(--muse-panel);
+}
+.muse-premium :is(.r7-task-card,.role-card,.download-card,.premium-space-card):hover,
+.guide-page :is(.route-card,.resource-card):hover { background:var(--muse-panel-hover); }
+.muse-premium :is(.download-kind,.subject-kicker,.r7-feature-overline,.premium-eyebrow,.role-type,.r7-kicker),
+.guide-page :is(.eyebrow,.section-kicker,.category-badge,.record-id) {
+  font:700 11px/1.45 var(--muse-sans);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.muse-premium :is(.download-card h2,.download-card h3,.role-card h3),
+.guide-page :is(.resource-card h3,.route-title) {
+  font-family:var(--muse-sans);
+  font-weight:730;
+  letter-spacing:-.025em;
+}
+.muse-premium :is(.download-card p,.role-card p),
+.guide-page :is(.resource-summary,.route-description) {
+  color:var(--muse-muted);
+  font-size:15px;
+  line-height:1.55;
+}
+.muse-premium :is(.r7-button,.download-card a,.role-card-actions a),
+.guide-page :is(.record-link,.details-button,.route-card) {
+  font-family:var(--muse-sans);
+  font-weight:700;
+}
+.muse-premium :is(a,button,summary,input,select):focus-visible,
+.guide-page :is(a,button,summary,input,select):focus-visible {
+  outline:3px solid var(--muse-accent);
+  outline-offset:3px;
+}
+
+/* Identical site header and responsive disclosure in every page family. */
+.site-header.muse-header {
+  background:var(--muse-bg);
+  border-bottom:1px solid var(--muse-border);
+  position:sticky;
+  top:0;
+  z-index:70;
+}
+.muse-premium .muse-header .header-inner,
+.guide-page .muse-header .header-inner {
+  display:flex;
+  align-items:center;
+  flex-wrap:nowrap;
+  min-height:76px;
+  padding-block:8px;
+  gap:20px;
+}
+.muse-premium .muse-header .brand,
+.guide-page .muse-header .brand {
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  flex:none;
+  min-width:0;
+  text-decoration:none;
+}
+.muse-premium .muse-header .brand-symbol,
+.guide-page .muse-header .brand-symbol {
+  display:block;
+  width:56px;height:56px;
+  object-fit:contain;
+  border-radius:12px;
+  flex:none;
+}
+.muse-premium .muse-header .brand-text,
+.guide-page .muse-header .brand-text {
+  font:750 22px/1 var(--muse-sans);
+  letter-spacing:.005em;
+  color:var(--muse-text);
+  white-space:nowrap;
+}
+.muse-premium .muse-header .brand-text span,
+.guide-page .muse-header .brand-text span { font-weight:750; }
+.muse-premium .muse-header .header-nav,
+.guide-page .muse-header .header-nav {
+  display:flex;align-items:center;justify-content:center;
+  flex:1;flex-wrap:nowrap;
+  gap:clamp(12px,2.1vw,28px);
+  margin-left:auto;
+}
+.muse-premium .muse-header .header-nav a,
+.guide-page .muse-header .header-nav a {
+  color:#e5e5da;
+  font:630 14px/1.4 var(--muse-sans);
+  min-height:44px;
+  display:inline-flex;align-items:center;
+  padding:0;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.muse-header .header-nav a:hover { color:var(--muse-accent); }
+.muse-premium .muse-header .r7-search-link,
+.guide-page .muse-header .r7-search-link {
+  width:44px;height:44px;display:grid;place-items:center;
+  border:1px solid var(--muse-border);border-radius:var(--muse-card-radius);
+  flex:none;color:var(--muse-text);
+}
+.muse-header .r7-search-link svg { width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7; }
+.muse-premium .muse-header .r7-header-cta,
+.guide-page .muse-header .r7-header-cta {
+  display:inline-flex;justify-content:center;align-items:center;
+  flex:none;min-height:44px;
+  padding:0 18px;
+  background:var(--muse-accent);
+  color:#151515;
+  border-radius:var(--muse-card-radius);
+  text-decoration:none;
+  font:750 14px/1.2 var(--muse-sans);
+}
+.muse-header .r7-header-cta:hover { background:#f3ff83; }
+.muse-premium .muse-header .mobile-navigation,
+.guide-page .muse-header .mobile-navigation { display:none; }
+.muse-header .r7-menu-bars { display:flex;flex-direction:column;justify-content:center;gap:5px;width:21px;height:21px; }
+.muse-header .r7-menu-bars i { display:block;width:21px;height:2px;background:var(--muse-accent);border-radius:1px; }
+.muse-header .mobile-navigation > summary {
+  list-style:none;
+  display:grid;place-items:center;min-height:46px;min-width:48px;
+  padding:11px;border:1px solid var(--muse-border);
+  border-radius:var(--muse-card-radius);cursor:pointer;font-size:0;
+}
+.muse-header .mobile-navigation > summary::-webkit-details-marker { display:none; }
+.muse-header .mobile-navigation nav {
+  position:absolute;right:0;top:calc(100% + 10px);
+  width:min(308px,calc(100vw - 32px));
+  padding:8px;background:#252620;border:1px solid var(--muse-border);
+  border-radius:var(--muse-card-radius);box-shadow:0 18px 42px #000a;z-index:80;
+}
+.muse-header .mobile-navigation nav a {
+  display:flex;align-items:center;min-height:48px;padding:10px 14px;
+  text-decoration:none;font:650 15px/1.4 var(--muse-sans);
+  color:var(--muse-text);border-radius:3px;
+}
+.muse-header .mobile-navigation nav a:hover,
+.muse-header .mobile-navigation nav a:focus-visible { background:#383d2d;color:var(--muse-accent); }
+
+/* Home page: a single editorial rhythm rather than decorative spacing bands. */
+.muse-premium .r7-release-row { color:#b5b6a6; }
+.muse-premium .r7-task-grid { gap:var(--muse-gap); }
+.muse-premium .r7-task-card { border-color:var(--muse-border);border-radius:var(--muse-card-radius); }
+.muse-premium .r7-task-paths>.shell { padding-top:var(--muse-space-lg); }
+.muse-premium .r7-task-paths { padding-bottom:var(--muse-space-lg); }
+.muse-premium .r7-featured { padding-bottom:var(--muse-space-xl); }
+.muse-premium .r7-feature-card { gap:var(--muse-space-lg); }
+.muse-premium .r7-real-app { padding-block:var(--muse-space-2xl); }
+.muse-premium .premium-spaces,.muse-premium .specialists {
+  padding-top:var(--muse-space-2xl);padding-bottom:var(--muse-space-2xl);
+}
+.muse-premium .premium-section-heading h2,
+.muse-premium .r7-app-copy h2 { font-family:var(--muse-serif);letter-spacing:-.045em; }
+.muse-premium .role-grid { gap:var(--muse-gap); }
+.muse-premium .role-card { padding:24px; }
+
+/* Home, Library and Subject pages use one content and heading scale. */
+.muse-premium .downloads-catalog { padding:var(--muse-space-xl) 0 var(--muse-space-2xl); }
+.muse-premium .catalog-heading h1,.muse-premium .subject-heading h1,
+.guide-page .intro-grid h1 {
+  font:400 clamp(42px,4.7vw,64px)/1.09 var(--muse-serif);
+  letter-spacing:-.046em;
+}
+.muse-premium .catalog-heading p,.muse-premium .subject-heading>p,
+.guide-page .intro-description {
+  font:400 17px/1.6 var(--muse-sans);
+  color:var(--muse-muted);
+  max-width:750px;
+}
+.muse-premium .download-jumps { gap:8px; }
+.muse-premium .download-toolbar { padding-bottom:var(--muse-space-md); }
+.muse-premium .catalog-subjects { margin:var(--muse-space-xs) 0 var(--muse-space-md); }
+.muse-premium .download-section { margin-top:var(--muse-space-lg); }
+.muse-premium .download-section>h2 { margin-bottom:var(--muse-space-md); }
+.muse-premium .download-grid { gap:var(--muse-gap); }
+.muse-premium .download-card {
+  min-height:0;padding:24px;display:flex;flex-direction:column;
+  border-color:var(--muse-border);background:var(--muse-panel);
+}
+.muse-premium .download-card h2,.muse-premium .download-card h3 {
+  font:750 22px/1.22 var(--muse-sans);
+  letter-spacing:-.035em;
+  margin:14px 0 10px;
+  overflow-wrap:anywhere;
+}
+.muse-premium .download-card>p {
+  color:var(--muse-muted);
+  font-size:15px;
+  line-height:1.54;
+  margin:0 0 var(--muse-space-md);
+}
+.muse-premium .subject-main { padding-top:var(--muse-space-lg);padding-bottom:var(--muse-space-2xl); }
+.muse-premium .subject-breadcrumb { margin-bottom:var(--muse-space-md); }
+.muse-premium .subject-heading { padding-block:var(--muse-space-lg);margin-bottom:var(--muse-space-md); }
+.muse-premium .subject-heading h1 { margin:12px 0 14px; }
+.muse-premium .subject-heading>p { margin:0 0 16px; }
+.muse-premium .subject-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.muse-premium .subject-card { min-height:235px; }
+.muse-premium .subject-card>p { max-width:66ch; }
+.muse-premium .subject-source { margin:2px 0 12px;border-top:1px solid #414638;padding-top:9px; }
+.muse-premium .subject-source summary { color:var(--muse-muted);font:650 12px/1.4 var(--muse-sans);cursor:pointer; }
+.muse-premium .subject-source summary:hover { color:var(--muse-accent); }
+.muse-premium .subject-source code { display:block;color:#dadbce;font:12px/1.48 ui-monospace,Consolas,monospace;margin:8px 0 4px;overflow-wrap:anywhere; }
+.muse-premium .subject-card-actions {
+  margin-top:auto;padding-top:12px;gap:14px;
+  border-top:1px solid #4d5146;
+}
+.muse-premium .subject-card-actions a { font-size:13px;line-height:1.4;min-height:44px; }
+.muse-premium .subject-pagination { margin:var(--muse-space-md) 0; }
+
+/* Setup Guides: same brand, container, type hierarchy, input and card language. */
+.guide-page .directory-section { padding-block:var(--muse-space-xl) var(--muse-space-2xl); }
+.guide-page .intro-grid { margin-bottom:var(--muse-space-lg); }
+.guide-page .intro-grid h1 { max-width:950px;margin:0 0 12px; }
+.guide-page .intro-description { margin:0; }
+.guide-page .filters { padding:var(--muse-space-md);gap:var(--muse-gap); }
+.guide-page :is(.filters label,.section-kicker) { color:var(--muse-muted);font-size:12px; }
+.guide-page :is(.search-field,.filter-select select,.filter-actions button) {
+  border:1px solid var(--muse-border);
+  background:#2c2e28;color:var(--muse-text);
+  border-radius:var(--muse-card-radius);
+}
+.guide-page .route-grid { gap:var(--muse-gap);background:transparent;border:0; }
+.guide-page .route-card { padding:18px;min-height:105px;gap:14px; }
+.guide-page .route-symbol { border-color:var(--muse-border);background:#282a23;width:42px;height:42px; }
+.guide-page .route-title { font-size:16px; }
+.guide-page .route-description { font-size:13px; }
+.guide-page .resource-card { padding:20px;gap:10px;border-left:1px solid var(--muse-border); }
+.guide-page .resource-card h3 { font-size:21px; }
+.guide-page .resource-summary { margin-bottom:0; }
+.guide-page .resource-card.is-selected { border-left:3px solid var(--muse-accent); }
+.guide-page .route-notice {
+  background:var(--muse-panel);border:1px solid var(--muse-border);
+  border-left:3px solid var(--muse-accent);color:var(--muse-muted);
+  padding:12px 16px;font:500 14px/1.5 var(--muse-sans);
+}
+
+.guide-page .detail-panel { padding:24px; }
+.guide-page .route-card:hover,.guide-page .resource-card:hover { border-color:#899575; }
+.guide-page :is(.section-heading h2,.resources-heading h2,.about-grid h2) {
+  font-family:var(--muse-serif);letter-spacing:-.035em;line-height:1.16;
+}
+.guide-page .routes-section { padding-block:var(--muse-space-lg); }
+.guide-page .resources-section { padding-top:var(--muse-space-lg); }
+.guide-page .footer { background:var(--muse-bg);border-top:1px solid var(--muse-border); }
+.guide-page .footer-inner { min-height:75px; }
+.guide-page .footer-brand { color:var(--muse-text);font:750 19px/1.1 var(--muse-sans);letter-spacing:.005em; }
+.guide-page .footer-brand span { color:var(--muse-accent); }
+
+@media(max-width:1100px) {
+  .muse-premium .subject-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .muse-premium .muse-header .header-nav,.guide-page .muse-header .header-nav { gap:13px; }
+  .muse-premium .muse-header .header-nav a,.guide-page .muse-header .header-nav a { font-size:13px; }
+}
+@media(max-width:850px) {
+  .muse-premium .muse-header .header-inner,.guide-page .muse-header .header-inner { min-height:70px;padding-block:7px; }
+  .muse-premium .muse-header .brand-symbol,.guide-page .muse-header .brand-symbol { width:56px;height:56px; }
+  .muse-premium .muse-header .brand-text,.guide-page .muse-header .brand-text { font-size:21px; }
+  .muse-premium .muse-header .header-nav,.guide-page .muse-header .header-nav { display:none; }
+  .muse-premium .muse-header .r7-search-link,.guide-page .muse-header .r7-search-link,
+  .muse-premium .muse-header .r7-header-cta,.guide-page .muse-header .r7-header-cta { display:none; }
+  .muse-premium .muse-header .mobile-navigation,.guide-page .muse-header .mobile-navigation {
+    display:block;position:relative;margin-left:auto;
+  }
+  .muse-premium .r7-feature-card { gap:var(--muse-space-md); }
+  .muse-premium .premium-spaces,.muse-premium .specialists { padding-block:var(--muse-space-xl); }
+  .muse-premium .r7-real-app { padding-block:var(--muse-space-xl); }
+}
+@media(max-width:690px) {
+  :root { --muse-gutter:20px; --muse-gap:12px; }
+  .muse-premium .r7-task-paths>.shell { padding-top:16px; }
+  .muse-premium .r7-task-paths { padding-bottom:var(--muse-space-md); }
+  .muse-premium .r7-featured { padding-bottom:var(--muse-space-lg); }
+  .muse-premium .r7-task-grid,.muse-premium .role-grid,.muse-premium .download-grid,
+  .muse-premium .subject-grid { grid-template-columns:1fr;gap:var(--muse-gap); }
+  .muse-premium .r7-task-card { min-height:92px;padding:16px; }
+  .muse-premium .r7-feature-card { padding:20px; }
+  .muse-premium .downloads-catalog { padding:16px 0 var(--muse-space-xl); }
+  .muse-premium .catalog-heading h1,.muse-premium .subject-heading h1,
+  .guide-page .intro-grid h1 { font-size:clamp(38px,9.4vw,48px); }
+  .muse-premium .catalog-heading p,.muse-premium .subject-heading>p,
+  .guide-page .intro-description { font-size:16px;line-height:1.55; }
+  .muse-premium .subject-main { padding-top:var(--muse-space-md); }
+  .muse-premium .subject-heading { padding-block:var(--muse-space-md); }
+  .muse-premium .download-card { padding:20px; }
+  .muse-premium .download-card h2,.muse-premium .download-card h3 { font-size:20px; }
+  .muse-premium .subject-card { min-height:0; }
+  /* All multi-page subject lists keep a one-line pager on narrow phones.
+     Current page is also announced in .subject-summary; all adjacent
+     pages remain navigable through the original Prev/Next links. */
+  .muse-premium .subject-pagination a:not([rel]):not([aria-current]),
+  .muse-premium .subject-pagination .subject-ellipsis { display:none; }
+  .muse-premium .subject-pagination { flex-wrap:nowrap;gap:8px; }
+  .muse-premium .subject-card>p { margin-bottom:14px; }
+  .muse-premium .subject-card-actions { gap:10px; }
+  .guide-page .directory-section { padding-block:var(--muse-space-lg) var(--muse-space-xl); }
+  .guide-page .intro-grid { margin-bottom:var(--muse-space-md); }
+  .guide-page .filters { padding:16px;gap:12px; }
+  .guide-page .routes-section { padding-block:var(--muse-space-md); }
+  .guide-page .route-grid { gap:var(--muse-gap); }
+  .guide-page .route-card { min-height:88px;padding:14px; }
+  .guide-page .resources-section { padding-top:var(--muse-space-lg); }
+  .guide-page .resource-card { padding:18px; }
+}
+@media(max-width:370px) {
+  :root { --muse-gutter:16px; }
+  .muse-premium .muse-header .brand-symbol,.guide-page .muse-header .brand-symbol { width:54px;height:54px; }
+  .muse-premium .muse-header .brand-text,.guide-page .muse-header .brand-text { font-size:19px; }
+  .muse-premium .r7-actions { grid-template-columns:1fr; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .muse-premium :is(.r7-task-card,.download-card,.role-card),
+  .guide-page :is(.route-card,.resource-card) { transition:none;animation:none; }
+}

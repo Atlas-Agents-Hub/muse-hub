@@ -37,7 +37,7 @@ class SitewideExperienceTests(unittest.TestCase):
             with self.subTest(page=page.name):
                 source = page.read_text(encoding="utf-8")
                 self.assertIn('class="muse-premium subject-index"', source)
-                self.assertIn('class="site-header r7-header"', source)
+                self.assertIn('class="site-header r7-header muse-header"', source)
                 self.assertIn('class="site-footer premium-footer"', source)
                 self.assertIn('class="subject-breadcrumb"', source)
                 self.assertIn('class="subject-summary"', source)
@@ -56,18 +56,22 @@ class SitewideExperienceTests(unittest.TestCase):
                     else:
                         self.assertIn('rel="prev"', source)
                 self.assertIn('href="../experience.css"', source)
+                if 'class="subject-source"' in source:
+                    self.assertIn('<summary>Included pack path</summary>', source)
+                    self.assertIn('class="subject-card-actions"', source)
                 self.assertIn('href="../downloads.html"', source)
                 self.assertIn('src="../muse-mark.png"', source)
 
     def test_guides_have_progressive_mobile_navigation(self):
         source = (SITE / "public/index.html").read_text(encoding="utf-8")
-        self.assertIn('class="guide-mobile-nav"', source)
-        self.assertIn('aria-label="Mobile guide navigation"', source)
-        self.assertIn('<summary>Menu ', source)
+        self.assertIn('class="site-header r7-header muse-header"', source)
+        self.assertIn('class="mobile-navigation"', source)
+        self.assertIn('aria-label="Mobile navigation"', source)
         self.assertIn('href="../downloads.html"', source)
-        styles = (SITE / "public/styles.css").read_text(encoding="utf-8")
-        self.assertIn(".guide-mobile-nav > summary:focus-visible", styles)
-        self.assertIn(".guide-mobile-nav nav a", styles)
+        self.assertIn('href="../experience.css"', source)
+        styles = (SITE / "experience.css").read_text(encoding="utf-8")
+        self.assertIn(".muse-header .mobile-navigation > summary", styles)
+        self.assertIn(".muse-header .mobile-navigation nav a", styles)
 
     def test_all_local_page_links_and_assets_resolve(self):
         pages = [SITE / "index.html", SITE / "downloads.html", *self.subjects, SITE / "public/index.html"]
@@ -111,6 +115,35 @@ class SitewideExperienceTests(unittest.TestCase):
                 styles = [attrs.get("href") for tag, attrs in parser.elements
                           if tag == "link" and attrs.get("rel") == "stylesheet"]
                 self.assertEqual(styles, ["site.css", "experience.css"])
+
+    def test_same_site_header_and_spacing_tokens_on_every_page_family(self):
+        pages = [SITE / "index.html", SITE / "downloads.html",
+                 *self.subjects, SITE / "public/index.html"]
+        for page in pages:
+            with self.subTest(page=page.name):
+                content = page.read_text(encoding="utf-8")
+                self.assertIn('class="site-header r7-header muse-header"', content)
+                self.assertIn('class="mobile-navigation"', content)
+                self.assertIn('experience.css', content)
+        css = self.css
+        self.assertIn('.subject-pagination a:not([rel]):not([aria-current])', css)
+        for token in ("--muse-gutter", "--muse-panel", "--muse-border",
+                      "--muse-gap", "--muse-sans", "--muse-serif"):
+            self.assertIn(token, css)
+        guide = (SITE / "public/index.html").read_text("utf-8")
+        self.assertNotIn("guide-mobile-nav", guide)
+        self.assertNotIn("wordmark-symbol", guide)
+
+    def test_subject_pack_paths_are_accessible_and_not_primary_card_copy(self):
+        pages = self.subjects
+        disclosed = 0
+        for page in pages:
+            source = page.read_text("utf-8")
+            disclosed += source.count('<details class="subject-source">')
+            self.assertNotIn('class="download-entry">Inside this collection:', source)
+        catalog = json.loads((SITE / 'downloads.json').read_text('utf-8'))
+        packed = sum(row.get('pack_kind') == 'skill-pack' for row in catalog['items'])
+        self.assertEqual(disclosed, packed, 'Every skill-pack resource must retain its source-path disclosure')
 
     def test_library_exposes_search_and_advanced_filters_without_js_dependency(self):
         source = (SITE / "downloads.html").read_text("utf-8")

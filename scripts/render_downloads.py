@@ -201,12 +201,12 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
             cards=[]
             for row in items:
                 text=row['description']
-                if len(text)>400:text=text[:397].rsplit(' ',1)[0]+'…'
+                if len(text)>220:text=text[:217].rsplit(' ',1)[0]+'…'
                 read=f'<a class="subject-guide-link" href="{esc(row["guide_url"])}">Read method →</a>' if row.get('guide_url') else ''
                 packed=row.get('pack_kind')=='skill-pack'
                 download='Download skill pack' if packed else 'Download ZIP'
-                entry=f'<p class="download-entry">Inside this collection: <code>{esc(row["entry"])}</code></p>' if packed else ''
-                cards.append(f'<article class="download-card subject-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p><div class="subject-card-actions">{read}<a href="{esc(row["url"])}">{download} ↓</a></div>{entry}</article>')
+                entry=f'<details class="subject-source"><summary>Included pack path</summary><code>{esc(row["entry"])}</code></details>' if packed else ''
+                cards.append(f'<article class="download-card subject-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p>{entry}<div class="subject-card-actions">{read}<a href="{esc(row["url"])}">{download} ↓</a></div></article>')
             url='https://atlas-agents-hub.github.io/muse-hub/'+route
             page_description=(intros[label] if len(pages)==1 else
                 f'{intros[label]} Browse {label.lower()} resources on page {number} of {len(pages)}.')

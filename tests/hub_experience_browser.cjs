@@ -14,7 +14,7 @@ const { spawn, execFile } = require('node:child_process');
 
 const [rootArg, chromeArg, outArg, ...flags] = process.argv.slice(2);
 assert(rootArg && chromeArg && outArg, 'Usage: <repo-or-site-root> <chrome-executable> <new-output-dir> [--require-journeys]');
-assert(flags.every(flag => flag === '--require-journeys'), 'Unknown argument');
+assert(flags.every(flag => ['--require-journeys','--visual-inventory'].includes(flag)), 'Unknown argument');
 assert(Number(process.versions.node.split('.')[0]) >= 22 && typeof WebSocket === 'function', 'Node 22+ with built-in WebSocket required');
 const suppliedRoot = fs.realpathSync(rootArg);
 const site = fs.existsSync(path.join(suppliedRoot, 'hub/site/index.html')) ? path.join(suppliedRoot, 'hub/site') : suppliedRoot;
@@ -538,7 +538,7 @@ async function runChecks() {
       }
       if (name === 'resources') {
         const palette = await evaluate('({text:getComputedStyle(document.querySelector(".intro-description")).color,background:getComputedStyle(document.body).backgroundColor})');
-        assert.deepEqual(palette, {text:'rgb(198, 196, 184)',background:'rgb(21, 21, 21)'});
+        assert.deepEqual(palette, {text:'rgb(201, 203, 189)',background:'rgb(21, 21, 21)'});
       }
       await screenshot(name + '-' + viewport + '.png');
       if (name === 'home' && (viewport === 390 || viewport === 1440)) {
@@ -572,9 +572,16 @@ async function runChecks() {
           'Missing shared subject experience '+name+' '+viewport+' '+JSON.stringify(proof));
         assert(proof.overflow<=1, 'Subject horizontal overflow: '+name+' '+viewport+' '+JSON.stringify(proof));
         assert(proof.font>=20, 'Subject card titles too small: '+name+' '+viewport+' '+proof.font);
+        if (viewport<=690) {
+          const pager=await evaluate('(()=>{const nav=document.querySelector(".subject-pagination");if(!nav)return null;const visible=[...nav.querySelectorAll("a")].filter(a=>a.getClientRects().length);return {count:visible.length,topRows:[...new Set(visible.map(a=>Math.round(a.getBoundingClientRect().top)))],types:visible.map(a=>a.getAttribute("rel")||a.getAttribute("aria-current")||"unexpected")}})()');
+          assert(!pager || (pager.count<=3 && pager.topRows.length===1 && pager.types.every(t=>['prev','next','page'].includes(t))),
+            'Mobile pagination must have one row with accessible Prev/current/Next: '+name+' '+viewport+' '+JSON.stringify(pager));
+        }
         if ((name==='software-automation-001.html' && viewport===390) ||
             (name==='design-visualization-001.html' && viewport===1440))
           await screenshot('subject-' + viewport + '.png');
+        if (flags.includes('--visual-inventory') && (viewport===390 || viewport===1440))
+          await screenshot('visual-subject-'+name.replace('.html','')+'-'+viewport+'.png');
         visited.push(name+':'+viewport);
       }
     }
@@ -596,6 +603,51 @@ async function runChecks() {
     }
     return {viewport:[390,1440],disclosure:true,search_first:true};
   });
+  await check('shared R10 header, typography and card tokens across all page families', async () => {
+    const screens = [];
+    const families = [
+      ['index.html','.r7-task-card'],
+      ['downloads.html','.download-card'],
+      ['library/design-visualization-001.html','.subject-card'],
+      ['public/index.html','.route-card']
+    ];
+    for (const viewport of [390, 1440]) {
+      await resize(viewport);
+      const measurements = [];
+      for (const [page,card] of families) {
+        await navigate(page);
+        const state = await evaluate('(()=>{const h=document.querySelector(".muse-header"),logo=h.querySelector(".brand-symbol"),title=document.querySelector("h1"),card=document.querySelector(' + q(card) + '),shell=document.querySelector("main .shell")||document.querySelector("main.shell")||document.querySelector("main .directory-section");const cs=getComputedStyle(card),hs=getComputedStyle(h),ts=getComputedStyle(title),s= shell?.getBoundingClientRect();return {headerHeight:Math.round(h.getBoundingClientRect().height),logoSize:Math.round(logo.getBoundingClientRect().width),headerBackground:hs.backgroundColor,titleFamily:ts.fontFamily,cardBackground:cs.backgroundColor,cardBorder:cs.borderTopColor,cardRadius:cs.borderTopLeftRadius,gutter:s?Math.round(s.left+(parseFloat(getComputedStyle(shell).paddingLeft)||0)):null,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+        assert(state.overflow<=1,'Unexpected horizontal overflow '+page+' '+viewport);
+        assert(state.headerHeight>=68&&state.headerHeight<=85,'Inconsistent header height '+page+' '+viewport+' '+JSON.stringify(state));
+        assert(state.logoSize>=(viewport<=370?54:56)&&state.logoSize<=60,'Inconsistent logo size '+page+' '+viewport);
+        assert.equal(state.cardRadius,'4px','Cards must share visible corners: '+page);
+        measurements.push({page,...state});
+      }
+      const a=measurements[0];
+      for(const m of measurements.slice(1)){
+        assert.equal(m.headerHeight,a.headerHeight,'Header height differs from Home: '+m.page);
+        assert.equal(m.logoSize,a.logoSize,'Logo size differs from Home: '+m.page);
+        assert.equal(m.headerBackground,a.headerBackground,'Header surface differs: '+m.page);
+        assert.equal(m.titleFamily,a.titleFamily,'Primary heading font family differs: '+m.page);
+        assert.equal(m.cardBackground,a.cardBackground,'Primary card surfaces differ: '+m.page);
+        assert.equal(m.cardBorder,a.cardBorder,'Primary card borders differ: '+m.page);
+        assert(Math.abs(m.gutter-a.gutter)<=2,'Content gutters drift across families: '+m.page+' '+JSON.stringify(measurements));
+      }
+      screens.push({viewport,measurements});
+    }
+    return {screens};
+  });
+  await check('subject pack paths are accessible disclosures with working method links', async () => {
+    await resize(390);
+    await navigate('library/design-visualization-001.html');
+    const details = await evaluate('document.querySelectorAll(".subject-source").length');
+    assert(details>1,'Expected multiple skill-pack disclosures');
+    const first = await evaluate('(()=>{const e=document.querySelector(".subject-source");return {closed:!e.open,link:!!e.closest(".subject-card").querySelector(".subject-guide-link"),path:e.querySelector("code")?.textContent}})()');
+    assert(first.closed&&first.link&&first.path.includes('/SKILL.md'),'Pack path and read guide must be preserved');
+    await click('.subject-source summary');
+    assert(await evaluate('document.querySelector(".subject-source").open'),'Pack path must disclose on click');
+    return {details,first};
+  });
   await check('mobile-first page rhythm and guide navigation are measurable', async () => {
     const observations = [];
     for (const viewport of [320, 360, 375, 390, 393]) {
@@ -611,21 +663,21 @@ async function runChecks() {
       assert(library.searchTop < 360 && library.firstCardTop < library.viewport-80 && library.overflow<=1,
         'Library must reach first result within initial phone view: '+viewport+' '+JSON.stringify(library));
       await navigate('public/index.html');
-      const guide = await evaluate('(()=>{const h=document.querySelector(".site-header").getBoundingClientRect(),nav=document.querySelector(".header-nav"),menu=document.querySelector(".guide-mobile-nav"),title=document.querySelector("h1").getBoundingClientRect();return {header:h.height,menu:!!menu&&!!menu.getClientRects().length,oldNav:!!nav.getClientRects().length,titleTop:title.top,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+      const guide = await evaluate('(()=>{const h=document.querySelector(".site-header").getBoundingClientRect(),nav=document.querySelector(".header-nav"),menu=document.querySelector(".mobile-navigation"),title=document.querySelector("h1").getBoundingClientRect();return {header:h.height,menu:!!menu&&!!menu.getClientRects().length,oldNav:!!nav.getClientRects().length,titleTop:title.top,overflow:document.documentElement.scrollWidth-innerWidth}})()');
       assert(guide.header<=80 && guide.menu && !guide.oldNav && guide.titleTop>=guide.header && guide.overflow<=1,
         'Guide directory needs one-row mobile header: '+viewport+' '+JSON.stringify(guide));
-      await click('.guide-mobile-nav summary');
-      assert(await evaluate('document.querySelector(".guide-mobile-nav").open'), 'Menu must actually open on mobile');
-      const links = await evaluate('[...document.querySelectorAll(".guide-mobile-nav nav a")].map(a=>({href:a.getAttribute("href"),height:a.getBoundingClientRect().height,visible:!!a.getClientRects().length}))');
-      assert(links.length===4 && links.every(a=>a.visible&&a.height>=44),
+      await click('.mobile-navigation summary');
+      assert(await evaluate('document.querySelector(".mobile-navigation").open'), 'Menu must actually open on mobile');
+      const links = await evaluate('[...document.querySelectorAll(".mobile-navigation nav a")].map(a=>({href:a.getAttribute("href"),height:a.getBoundingClientRect().height,visible:!!a.getClientRects().length}))');
+      assert(links.length===6 && links.every(a=>a.visible&&a.height>=44),
         'Menu links must have accessible touch targets: '+JSON.stringify(links));
       if(viewport===390) await screenshot('resources-mobile-menu-390.png');
-      await click('.guide-mobile-nav summary');
-      assert.equal(await evaluate('document.querySelector(".guide-mobile-nav").open'),false);
+      await click('.mobile-navigation summary');
+      assert.equal(await evaluate('document.querySelector(".mobile-navigation").open'),false);
       observations.push({viewport,home,library,guide});
     }
     await resize(1440); await navigate('public/index.html');
-    const desktop = await evaluate('({nav:!!document.querySelector(".header-nav").getClientRects().length,mobile:!!document.querySelector(".guide-mobile-nav").getClientRects().length})');
+    const desktop = await evaluate('({nav:!!document.querySelector(".header-nav").getClientRects().length,mobile:!!document.querySelector(".mobile-navigation").getClientRects().length})');
     assert(desktop.nav&&!desktop.mobile, 'Desktop must preserve full guide navigation');
     return {phones:observations,desktop};
   });
