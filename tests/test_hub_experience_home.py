@@ -82,19 +82,31 @@ class HubExperienceHomeTests(unittest.TestCase):
     def setUpClass(cls):
         cls.page = Page(SITE / "index.html")
 
-    def test_three_task_paths_reach_real_destinations(self):
-        """A first-time visitor chooses one of three distinct useful jobs."""
-        cards=[node for node in self.page.nodes if "premium-path-card" in node.attrs.get("class","").split()]
-        self.assertEqual(len(cards),3)
-        targets={card.attrs["href"] for card in cards}
-        self.assertEqual(targets,{"#companion-spaces","#specialists","downloads.html"})
+    def test_four_task_paths_reach_correct_specialist_setup(self):
+        """Each R7 task goes to its matching kit; none may resolve to a generic dead end."""
+        cards = [node for node in self.page.nodes if "premium-path-card" in node.attrs.get("class", "").split()]
+        expected = {
+            "Build an app": "software-engineer",
+            "Research a question": "research-evaluator",
+            "Improve a design": "product-interface-designer",
+            "Plan a project": "coordinator",
+        }
+        self.assertEqual(len(cards), len(expected))
+        seen = set()
         for card in cards:
-            self.assertTrue(card.text().strip())
-            url=card.attrs["href"]
-            if url.startswith("#"):
-                self.assertIn(url[1:],self.page.ids)
-            else:
-                self.assertTrue((SITE/url).is_file())
+            headings = [node.text() for node in card.descendants() if node.tag == "strong"]
+            self.assertEqual(len(headings), 1)
+            title = headings[0]
+            self.assertIn(title, expected)
+            self.assertNotIn(title, seen)
+            seen.add(title)
+            url = urlsplit(card.attrs["href"])
+            self.assertEqual(url.path, "")
+            self.assertEqual(url.fragment, "setup")
+            self.assertEqual(parse_qs(url.query).get("role"), [expected[title]])
+            self.assertIn(expected[title], ROLES)
+            self.assertTrue(any(node.tag == "small" and node.text().strip() for node in card.descendants()))
+        self.assertEqual(seen, set(expected))
 
     def test_primary_journey_to_three_working_space_guides(self):
         """Featured apps have direct usable setup destinations."""
@@ -119,7 +131,7 @@ class HubExperienceHomeTests(unittest.TestCase):
         text=self.page.root.text()
         for unwanted in ("Inside Muse","Included with Muse Hub","independently built for"):
             self.assertNotIn(unwanted,text)
-        self.assertIn("Build on a working app."," ".join(text.split()))
+        self.assertIn("Make Muse your own."," ".join(text.split()))
         self.assertIn("Find a specialist",text)
         self.assertIn("Start with a working Space.",text)
         self.assertEqual(len([n for n in self.page.nodes if "origin-label" in n.attrs.get("class","").split()]),0)
@@ -132,7 +144,11 @@ class HubExperienceHomeTests(unittest.TestCase):
         self.assertTrue(all(any(n.tag=="summary" for n in d.children if isinstance(n,Element)) for d in disclosures))
         primary=[n for n in self.page.nodes if n.tag=="nav" and n.attrs.get("aria-label")=="Primary navigation"]
         self.assertEqual(len(primary),1)
-        self.assertEqual([a.text() for a in primary[0].descendants() if a.tag=="a"],["Spaces","Specialists","Library"])
+        self.assertEqual([a.text() for a in primary[0].descendants() if a.tag == "a"],
+                         ["Spaces", "Specialists", "Library", "Tool guides", "Getting started"])
+        self.assertEqual([a.attrs["href"] for a in primary[0].descendants() if a.tag == "a"],
+                         ["index.html#companion-spaces", "index.html#specialists", "downloads.html",
+                          "downloads.html?type=tool-guide", "index.html#setup"])
         self.assertIn("mobile-navigation",(SITE/"index.html").read_text(encoding="utf8"))
         self.assertIn("premium-space-grid",(SITE/"index.html").read_text(encoding="utf8"))
 

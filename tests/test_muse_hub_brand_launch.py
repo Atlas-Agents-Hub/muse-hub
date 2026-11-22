@@ -62,7 +62,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
         self.assertIn("<title>Muse Hub",html)
         self.assertIn('class="brand-symbol"',html)
         self.assertIn('<h1 id="hero-heading">Make Muse <span>your own.</span></h1>', html)
-        self.assertIn('<svg class="brand-symbol"', html)
+        self.assertIn('<img class="brand-symbol" src="muse-mark.png"', html)
         self.assertIn('class="r7-pyramid-svg"', html)
         self.assertNotIn('muse-mark-r7.svg', html)
         self.assertIn('id="companion-spaces"',html)

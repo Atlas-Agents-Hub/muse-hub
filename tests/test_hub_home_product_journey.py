@@ -2,6 +2,7 @@
 from html.parser import HTMLParser
 from pathlib import Path
 import json
+import gzip
 import re
 import unittest
 
@@ -37,15 +38,18 @@ class HomeJourneys(unittest.TestCase):
         self.assertIn('id="specialists"',self.html)
         self.assertIn('id="toolkit"',self.html)
         self.assertLessEqual(len(self.page.sections),6)
-        self.assertLessEqual(len(self.html),48000)  # Full specialist dataset remains in a closed, user-opened directory.
+        # R7 adds four direct task journeys and an architectural hero. Bound BOTH
+        # source size and compressed transfer payload instead of treating whitespace as performance.
+        self.assertLessEqual(len(self.html.encode("utf-8")), 54000)
+        self.assertLessEqual(len(gzip.compress(self.html.encode("utf-8"), mtime=0)), 10300)
         self.assertLessEqual(len(re.findall(r"<h2\b",self.html)),9)
         self.assertNotIn("Inside Muse",self.html)
         self.assertNotIn("Included with Muse Hub",self.html)
         self.assertNotIn("independently built for",self.html.casefold())
-        self.assertIn("Build on a <span>working app.</span>",self.html)
+        self.assertIn("Make Muse <span>your own.</span>",self.html)
         self.assertIn('class="mobile-navigation"',self.html)
         self.assertIn('class="premium-space-grid"',self.html)
-        self.assertIn('class="premium-path-grid"',self.html)
+        self.assertIn('class="premium-path-grid r7-task-grid"',self.html)
         self.assertIn('class="specialist-directory"',self.html)
 
     def test_routes_and_downloads_have_real_targets(self):

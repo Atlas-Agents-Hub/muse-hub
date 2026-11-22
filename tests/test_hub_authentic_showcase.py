@@ -20,7 +20,7 @@ class _Page(HTMLParser):
         self.links=[]
     def handle_starttag(self,tag,attrs):
         a=dict(attrs)
-        if tag=="section" and "premium-hero" in a.get("class","").split():
+        if tag=="section" and "r7-real-app" in a.get("class","").split():
             self.in_hero=True
         if tag=="img" and self.in_hero:self.images.append(a)
         if tag=="details":self.details_depth+=1
@@ -38,7 +38,7 @@ class AuthenticShowcase(unittest.TestCase):
         cls.js=(SITE/"site.js").read_text(encoding="utf8")
         cls.doc=_Page();cls.doc.feed(cls.home)
 
-    def test_hero_uses_authentic_local_planner_screens(self):
+    def test_featured_showcase_uses_authentic_local_planner_screens(self):
         self.assertIn('srcset="planner-mobile.png"',self.home)
         self.assertIn('src="planner-desktop.png"',self.home)
         self.assertTrue(any("Muse Planner" in x.get("alt","") for x in self.doc.images))

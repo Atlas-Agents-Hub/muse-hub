@@ -390,13 +390,13 @@ async function runChecks() {
     await navigate('');
     const journeys = await evaluate('({paths:[...document.querySelectorAll(".premium-path-grid > a.premium-path-card")].map(a=>({href:a.getAttribute("href"),visible:!!a.getClientRects().length})),spaces:[...document.querySelectorAll(".premium-space-card a[href]")].map(a=>a.href),directory:[...document.querySelectorAll("a[href]")].some(a=>a.getAttribute("href")==="public/index.html")})');
     if (report.require_journeys) {
-      assert.deepEqual(journeys.paths.map(link => link.href), ['#companion-spaces', '?role=research-evaluator#setup', '?role=product-interface-designer#setup', '?role=coordinator#setup']);
+      assert.deepEqual(journeys.paths.map(link => link.href), ['?role=software-engineer#setup', '?role=research-evaluator#setup', '?role=product-interface-designer#setup', '?role=coordinator#setup']);
       assert(await evaluate('document.querySelector("#hero-heading")?.textContent?.replace(/\\s+/g," ").trim()==="Make Muse your own."'), 'R7 home heading must be present');
       assert(await evaluate('Boolean(document.querySelector(".r7-pyramid svg") && document.querySelector(".r7-metrics"))'), 'R7 must preserve pyramid artwork and resource inventory');
       const inventory = await evaluate('[...document.querySelectorAll(".r7-metrics dd")].map(x=>x.textContent.trim())');
       assert.deepEqual(inventory, ['5,200+', '375+', '15', '50+'], 'Resource counts must remain visible');
       assert(journeys.paths.every(link => link.visible), 'All four task paths must be visible');
-      for (const role of ['research-evaluator', 'product-interface-designer', 'coordinator']) {
+      for (const role of ['software-engineer', 'research-evaluator', 'product-interface-designer', 'coordinator']) {
         await navigate('index.html?role=' + role + '#setup');
         const selection = await evaluate('({selected:document.getElementById("setup-role-select").value,expanded:document.querySelector(".setup-disclosure").open})');
         assert(selection.selected === role && selection.expanded, 'Task choice must open its named specialist: ' + role);
@@ -447,6 +447,9 @@ async function runChecks() {
       // the old page cannot cancel a pending responsive image request.
       await navigate('public/index.html');
       await resize(viewport); await navigate('index.html');
+      // The authentic capture is intentionally lazy-loaded. Reveal it before checking load state.
+      await evaluate('document.querySelector(".r7-app-preview").scrollIntoView({block:"start",behavior:"instant"})');
+      await wait('(()=>{const i=document.querySelector(".premium-capture-picture img");return !!i&&i.complete&&i.naturalWidth>0&&!!i.currentSrc})()');
       const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img"),peek=document.querySelector(".premium-mobile-peek"),links=[...document.querySelectorAll(".premium-capture-inspect a")];return {loaded:img.complete&&img.naturalWidth>0,source:new URL(img.currentSrc).pathname,rect:{width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height,top:img.getBoundingClientRect().top},height:innerHeight,peekVisible:getComputedStyle(peek).display!=="none",links:links.map(a=>a.getAttribute("href")),scrollWidth:document.documentElement.scrollWidth}})()');
       assert(proof.loaded, 'Planner capture failed to load: ' + viewport);
       assert(proof.source.endsWith(viewport <= 690 ? '/planner-mobile.png' : '/planner-desktop.png'), JSON.stringify(proof));
@@ -501,18 +504,28 @@ async function runChecks() {
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
       if (name === 'home') {
-        const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header svg.brand-symbol");return {loaded:!!i&&i.querySelectorAll("path").length>=2&&!i.querySelector("script, foreignObject")&&i.getAttribute("aria-hidden")==="true",width:i?.getBoundingClientRect().width}})()');
-        assert(mark.loaded && mark.width >= (viewport <= 850 ? 44 : 50), 'Brand mark must load at a legible size: ' + viewport);
+        const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header img.brand-symbol");return {loaded:!!i&&i.complete&&i.naturalWidth>=64&&i.getAttribute("src")==="muse-mark.png",width:i?.getBoundingClientRect().width}})()');
+        assert(mark.loaded && mark.width >= (viewport <= 850 ? 52 : 56), 'Brand mark must load at a legible size: ' + viewport);
         if (viewport <= 850) {
           const labels = await evaluate('[...document.querySelectorAll(".r7-metrics dt")].map(x=>parseFloat(getComputedStyle(x).fontSize))');
-          assert(labels.length === 4 && labels.every(x=>x>=14), 'Resource labels must be readable on mobile: ' + viewport);
+          assert(labels.length === 4 && labels.every(x=>x>=15), 'Resource labels must be readable on mobile: ' + viewport);
+          const tasks = await evaluate('[...document.querySelectorAll(".r7-task-card")].map(x=>({width:x.getBoundingClientRect().width,height:x.getBoundingClientRect().height,title:parseFloat(getComputedStyle(x.querySelector("strong")).fontSize),body:parseFloat(getComputedStyle(x.querySelector("small")).fontSize)}))');
+          assert(tasks.length === 4 && tasks.every(x=>x.width >= viewport*.80 && x.height>=85 && x.title>=17 && x.body>=14), 'Four readable touch targets required: ' + JSON.stringify(tasks));
         }
+        const header = await evaluate('getComputedStyle(document.querySelector(".r7-header")).backgroundColor');
+        assert.equal(header, 'rgb(21, 21, 21)', 'Sticky header must be fully opaque while scrolling');
       }
       if (name === 'resources') {
         const palette = await evaluate('({text:getComputedStyle(document.querySelector(".intro-description")).color,background:getComputedStyle(document.body).backgroundColor})');
         assert.deepEqual(palette, {text:'rgb(198, 196, 184)',background:'rgb(21, 21, 21)'});
       }
       await screenshot(name + '-' + viewport + '.png');
+      if (name === 'home' && (viewport === 390 || viewport === 1440)) {
+        await evaluate('document.querySelector("#roadmap").scrollIntoView({block:"start",behavior:"instant"})');
+        await screenshot('home-tasks-' + viewport + '.png');
+        await evaluate('document.querySelector("#specialists").scrollIntoView({block:"start",behavior:"instant"})');
+        await screenshot('home-specialists-' + viewport + '.png');
+      }
       if (name === 'downloads') {
         const controls = await evaluate('({top:document.querySelector("#download-search").getBoundingClientRect().top,height:innerHeight,background:getComputedStyle(document.body).backgroundColor})');
         assert(controls.top > 0 && controls.top < controls.height, JSON.stringify(controls));
