@@ -952,19 +952,19 @@ button { cursor:pointer; }
   .muse-premium .r7-actions{margin-top:22px;gap:9px}
   .muse-premium .r7-actions>.r7-button{font-size:14px;min-height:53px;padding:10px 13px;letter-spacing:-.015em}
   .muse-premium .r7-pyramid{
-    width:calc(100% + 8px);height:167px;margin:18px -4px 0;right:auto;
+    width:calc(100% + 8px);height:116px;margin:12px -4px 0;right:auto;
     filter:none;border-color:rgba(164,171,142,.3);
     background:radial-gradient(ellipse at 65% 79%,rgba(118,136,87,.23),transparent 68%);
   }
-  .muse-premium .r7-pyramid-svg{height:222px;width:115%;right:-18px;bottom:-30px;filter:contrast(1.23) brightness(1.13)}
+  .muse-premium .r7-pyramid-svg{height:195px;width:115%;right:-18px;bottom:-54px;filter:contrast(1.23) brightness(1.13)}
   .muse-premium .r7-art-index{left:9px;bottom:10px;font-size:10px;letter-spacing:.13em;color:#e1e6c8}
   .muse-premium .r7-metrics{
     display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:0;margin:0;padding:15px 0 11px;border:0;
+    gap:0;margin:0;padding:8px 0 7px;border:0;
   }
   .muse-premium .r7-metrics>div{
     display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
-    padding:15px 16px 14px;min-height:85px;gap:6px;
+    padding:11px 16px 10px;min-height:67px;gap:4px;
     background:linear-gradient(135deg,#23261f,#1d201a);
     border:1px solid #484d40;
   }
@@ -972,11 +972,11 @@ button { cursor:pointer; }
   .muse-premium .r7-metrics>div:nth-child(2){border-bottom:0;border-left:1px solid #484d40;padding-left:16px}
   .muse-premium .r7-metrics>div:nth-child(3){border-right:0}
   .muse-premium .r7-metrics>div:nth-child(4){border-left:1px solid #484d40;padding-left:16px}
-  .muse-premium .r7-metrics dd{font-size:33px;line-height:1;letter-spacing:-.052em;font-weight:780}
+  .muse-premium .r7-metrics dd{font-size:28px;line-height:1;letter-spacing:-.052em;font-weight:780}
   .muse-premium .r7-metrics dt{font-size:15px;line-height:1.25;font-weight:650;letter-spacing:-.005em}
   .muse-premium .r7-release-row{padding:3px 0 12px;font-size:11px}
   .muse-premium .r7-task-paths{padding-bottom:20px}
-  .muse-premium .r7-task-paths>.shell{padding-top:18px}
+  .muse-premium .r7-task-paths>.shell{padding-top:16px}
   .muse-premium .r7-task-paths h2{font-size:12px;letter-spacing:.13em;margin-bottom:12px}
   .muse-premium .r7-task-grid{grid-template-columns:1fr;gap:9px}
   .muse-premium .r7-task-card{

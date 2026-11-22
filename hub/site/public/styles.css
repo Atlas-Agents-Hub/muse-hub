@@ -289,14 +289,41 @@ body:not(.directory-ready) .catalog-stage { grid-template-columns: minmax(0,1fr)
 .card-actions { margin-top: 0; }
 .card-actions > :is(a, button) { min-height: 44px; }
 
+/* Accessible one-line guide navigation on phones; no JavaScript required. */
+.guide-mobile-nav { display:none;position:relative;margin-left:auto; }
+.guide-mobile-nav > summary {
+  display:flex;align-items:center;gap:10px;justify-content:center;
+  min-height:46px;min-width:76px;padding:10px 12px;
+  border:1px solid #85877a;border-radius:3px;
+  color:var(--ink);font-size:14px;font-weight:700;cursor:pointer;
+  list-style:none;
+}
+.guide-mobile-nav > summary::-webkit-details-marker { display:none; }
+.guide-mobile-nav > summary span { color:var(--signal);font-size:17px; }
+.guide-mobile-nav > summary:focus-visible { outline:3px solid var(--signal);outline-offset:3px; }
+.guide-mobile-nav nav {
+  position:absolute;top:calc(100% + 12px);right:0;width:min(270px,calc(100vw - 32px));
+  padding:8px;background:#252620;border:1px solid #85877a;
+  box-shadow:0 14px 40px #000a;z-index:71;
+}
+.guide-mobile-nav nav a { display:flex;align-items:center;min-height:48px;
+  padding:10px 13px;font-size:15px;font-weight:650;text-decoration:none;color:var(--ink); }
+.guide-mobile-nav nav a:hover,.guide-mobile-nav nav a:focus-visible { background:#3b3f2b;color:var(--signal); }
+@media(max-width:760px) {
+  .site-header { position:sticky;top:0;z-index:65; }
+  .site-header .header-inner { flex-wrap:nowrap; }
+  .header-nav { display:none; }
+  .guide-mobile-nav { display:block; }
+}
+
 /* R8 mobile guide directory: same Muse identity and comfortably readable routes. */
 :root { --directory-ui:system-ui,-apple-system,"Segoe UI",Arial,sans-serif; }
 body { font-family:var(--directory-ui);font-size:16px;line-height:1.57; }
-.site-header .header-inner { min-height:85px; }
+.site-header .header-inner { min-height:78px; }
 .wordmark { font-family:var(--directory-ui);font-size:21px;letter-spacing:.015em; }
 .wordmark-symbol { width:48px;height:48px; }
 .header-nav a { font-size:14px; }
-.directory-section { padding-top:64px;padding-bottom:92px; }
+.directory-section { padding-top:52px;padding-bottom:82px; }
 .intro-grid h1 { font-size:clamp(43px,4.5vw,62px);line-height:1.09;letter-spacing:-.045em; }
 .intro-description { font-size:17px;line-height:1.65;max-width:690px; }
 .filters { padding:20px;gap:16px; }
@@ -321,17 +348,17 @@ body { font-family:var(--directory-ui);font-size:16px;line-height:1.57; }
 .detail-source { font-size:14px; }
 @media(max-width:760px) {
   .shell { padding-inline:22px; }
-  .site-header .header-inner { min-height:80px; }
+  .site-header .header-inner { min-height:70px;flex-wrap:nowrap;padding-block:8px; }
   .wordmark { font-size:20px;letter-spacing:.008em; }
   .wordmark-symbol { width:43px;height:43px;margin-right:10px; }
   .header-nav a { font-size:13px;min-height:46px;padding-inline:8px; }
-  .directory-section { padding-top:43px;padding-bottom:68px; }
-  .intro-grid { margin-bottom:30px; }
+  .directory-section { padding-top:27px;padding-bottom:60px; }
+  .intro-grid { margin-bottom:21px; }
   .intro-grid h1 { font-size:clamp(39px,9vw,52px); }
   .intro-description { font-size:16px;line-height:1.6; }
-  .filters { padding:17px;gap:14px; }
+  .filters { padding:14px;gap:11px; }
   .filter-search input { font-size:16px; }
-  .routes-section { padding-top:37px;padding-bottom:28px; }
+  .routes-section { padding-top:24px;padding-bottom:24px; }
   .route-grid { grid-template-columns:1fr;gap:8px; }
   .route-card { min-height:89px;padding:14px 17px;gap:15px; }
   .route-symbol { width:37px;height:37px; }

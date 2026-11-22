@@ -176,7 +176,28 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
         for number,items in enumerate(pages,1):
             route=f'library/{slug}-{number:03d}.html'
             title=f'{label} skills and workflows for Muse'
-            navigation=' '.join(f'<a href="{slug}-{i:03d}.html"'+(' aria-current="page"' if i==number else '')+f'>{i}</a>' for i in range(1,len(pages)+1))
+            # Show no dead-end pager for a single page; trim long page lists
+            # but preserve access to every page via Prev/Next and edge links.
+            total_pages=len(pages)
+            navigation=''
+            if total_pages>1:
+                visible={1,total_pages,number-1,number,number+1}
+                if number<=2:visible.add(3)
+                if number>=total_pages-1:visible.add(total_pages-2)
+                visible=sorted(i for i in visible if 1<=i<=total_pages)
+                links=[]
+                if number>1:links.append(f'<a rel="prev" href="{slug}-{number-1:03d}.html" aria-label="Previous subject page">← Prev</a>')
+                last=0
+                for i in visible:
+                    if i-last>1:links.append('<span class="subject-ellipsis" aria-hidden="true">…</span>')
+                    current=' aria-current="page"' if i==number else ''
+                    links.append(f'<a href="{slug}-{i:03d}.html"{current}>{i}</a>')
+                    last=i
+                if number<total_pages:links.append(f'<a rel="next" href="{slug}-{number+1:03d}.html" aria-label="Next subject page">Next →</a>')
+                navigation=' '.join(links)
+            page_summary=f'Page {number} of {total_pages}' if total_pages>1 else 'All resources'
+            pager_top=f'<nav class="download-pagination subject-pagination" aria-label="Subject pages">{navigation}</nav>' if navigation else ''
+            pager_bottom=f'<nav class="download-pagination subject-pagination" aria-label="More subject pages">{navigation}</nav>' if navigation else ''
             cards=[]
             for row in items:
                 text=row['description']
@@ -204,10 +225,10 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
 <main id="main" class="shell subject-main">
   <nav class="subject-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Muse Hub</a><span aria-hidden="true">/</span><a href="../downloads.html">Library</a><span aria-hidden="true">/</span><span>{esc(label)}</span></nav>
   <header class="subject-heading"><span class="subject-kicker">THE MUSE HUB LIBRARY / {esc(label).upper()}</span><h1>{esc(title)}</h1><p>{esc(intros[label])}</p>
-  <div class="subject-summary"><span><strong>{len(rows):,}</strong> resources</span><span>Page {number} of {len(pages)}</span><a href="../downloads.html?subject={quote(label)}">Search this subject →</a></div></header>
-  <nav class="download-pagination subject-pagination" aria-label="Subject pages">{navigation}</nav>
+  <div class="subject-summary"><span><strong>{len(rows):,}</strong> resources</span><span>{page_summary}</span><a href="../downloads.html?subject={quote(label)}">Search this subject →</a></div></header>
+{pager_top}
   <div class="download-grid subject-grid">{''.join(cards)}</div>
-  <nav class="download-pagination subject-pagination" aria-label="More subject pages">{navigation}</nav>
+{pager_bottom}
   <p class="subject-return"><a href="../downloads.html">← Explore all Muse skills, workflows and specialist kits</a></p>
 </main>
 {shared_footer}

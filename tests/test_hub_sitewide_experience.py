@@ -42,10 +42,32 @@ class SitewideExperienceTests(unittest.TestCase):
                 self.assertIn('class="subject-breadcrumb"', source)
                 self.assertIn('class="subject-summary"', source)
                 self.assertIn('class="download-card subject-card"', source)
-                self.assertIn('class="download-pagination subject-pagination"', source)
+                match = re.search(r'<strong>([\d,]+)</strong> resources', source)
+                self.assertIsNotNone(match, "Subject must state resource count")
+                count = int(match.group(1).replace(",", ""))
+                if count <= 200:
+                    self.assertNotIn('class="download-pagination subject-pagination"', source, "Do not render unusable one-page pagination")
+                    self.assertIn('<span>All resources</span>', source)
+                else:
+                    self.assertEqual(source.count('class="download-pagination subject-pagination"'), 2)
+                    self.assertEqual(source.count('aria-current="page"'), 2)
+                    if page.name.endswith("-001.html"):
+                        self.assertIn('rel="next"', source)
+                    else:
+                        self.assertIn('rel="prev"', source)
                 self.assertIn('href="../experience.css"', source)
                 self.assertIn('href="../downloads.html"', source)
                 self.assertIn('src="../muse-mark.png"', source)
+
+    def test_guides_have_progressive_mobile_navigation(self):
+        source = (SITE / "public/index.html").read_text(encoding="utf-8")
+        self.assertIn('class="guide-mobile-nav"', source)
+        self.assertIn('aria-label="Mobile guide navigation"', source)
+        self.assertIn('<summary>Menu ', source)
+        self.assertIn('href="../downloads.html"', source)
+        styles = (SITE / "public/styles.css").read_text(encoding="utf-8")
+        self.assertIn(".guide-mobile-nav > summary:focus-visible", styles)
+        self.assertIn(".guide-mobile-nav nav a", styles)
 
     def test_all_local_page_links_and_assets_resolve(self):
         pages = [SITE / "index.html", SITE / "downloads.html", *self.subjects, SITE / "public/index.html"]

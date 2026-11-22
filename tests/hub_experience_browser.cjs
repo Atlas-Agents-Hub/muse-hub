@@ -35,7 +35,7 @@ const catalog = JSON.parse(fs.readFileSync(path.join(site, 'public/catalog.json'
 const routes = new Map(catalog.routes.map(route => [route.id, route]));
 assert.deepEqual([...routes.keys()].sort(), ['cli', 'companion', 'desktop', 'doors', 'family', 'watch']);
 const report = { schema: 'muse-hub/experience-browser/v1', started_at: new Date().toISOString(), site, chrome: chromePath, node: process.version, require_journeys: flags.includes('--require-journeys'), harness_sha256: sha256(fs.readFileSync(__filename)), source_files: {}, checks: [], screenshots: [], errors: [], blocked_external_requests: [], requests: [] };
-for (const name of ['index.html', 'site.js', 'site.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json', 'planner-desktop.png', 'planner-mobile.png']) {
+for (const name of ['index.html', 'site.js', 'site.css', 'experience.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json', 'planner-desktop.png', 'planner-mobile.png']) {
   const bytes = fs.readFileSync(path.join(site, name));
   report.source_files[name] = { bytes: bytes.length, sha256: sha256(bytes) };
 }
@@ -463,7 +463,7 @@ async function runChecks() {
   });
   await check('authentic Planner captures remain inspectable on phone and desktop', async () => {
     const observations = [];
-    for (const viewport of [320, 390, 768, 1024, 1440]) {
+    for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) {
       // Set the size away from the showcase before a fresh load so resizing
       // the old page cannot cancel a pending responsive image request.
       await navigate('public/index.html');
@@ -520,7 +520,7 @@ async function runChecks() {
     assert(await evaluate('document.getElementById("role-search").value==="" && [...document.querySelectorAll(".role-card:not([hidden])")].length===15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
     return {first,second,reset:true};
   });
-  for (const viewport of [320, 375, 390, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
+  for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
@@ -563,7 +563,7 @@ async function runChecks() {
     const names = fs.readdirSync(path.join(site, 'library')).filter(name=>name.endsWith('.html')).sort();
     assert(names.length >= 35, 'Full public subject catalogue must be present');
     const visited = [];
-    for (const viewport of [390, 1440]) {
+    for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) {
       await resize(viewport);
       for (const name of names) {
         await navigate('library/' + name);
@@ -578,7 +578,7 @@ async function runChecks() {
         visited.push(name+':'+viewport);
       }
     }
-    return {subject_pages:names.length,verified_viewports:[390,1440],checked:visited.length};
+    return {subject_pages:names.length,verified_viewports:[320,360,375,390,393,768,1024,1440],checked:visited.length};
   });
   await check('library advanced filters disclose without losing search and reset', async () => {
     for (const viewport of [390,1440]) {
@@ -595,6 +595,39 @@ async function runChecks() {
       assert(search>=50,'Search remains primary on '+viewport);
     }
     return {viewport:[390,1440],disclosure:true,search_first:true};
+  });
+  await check('mobile-first page rhythm and guide navigation are measurable', async () => {
+    const observations = [];
+    for (const viewport of [320, 360, 375, 390, 393]) {
+      await resize(viewport);
+      await navigate('index.html');
+      const home = await evaluate('(()=>{const h=document.querySelector(".r7-header").getBoundingClientRect(),hero=document.querySelector(".r7-hero").getBoundingClientRect(),task=document.querySelector(".r7-task-card").getBoundingClientRect(),label=document.querySelector(".r7-task-paths h2").getBoundingClientRect();return {header:h.height,heroBottom:hero.bottom,taskTop:task.top,taskHeight:task.height,labelTop:label.top,viewport:innerHeight,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+      assert(home.header<=79 && home.heroBottom < home.viewport-85,
+        'Mobile hero pushes tasks out of reach: '+viewport+' '+JSON.stringify(home));
+      assert(home.taskTop < home.viewport-40 && home.taskHeight>=85 && home.overflow<=1,
+        'First task must be visible without a scroll: '+viewport+' '+JSON.stringify(home));
+      await navigate('downloads.html');
+      const library = await evaluate('(()=>{const heading=document.querySelector(".download-section h2").getBoundingClientRect(),card=document.querySelector(".download-card").getBoundingClientRect(),search=document.getElementById("download-search").getBoundingClientRect();return {searchTop:search.top,headingTop:heading.top,firstCardTop:card.top,viewport:innerHeight,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+      assert(library.searchTop < 360 && library.firstCardTop < library.viewport-80 && library.overflow<=1,
+        'Library must reach first result within initial phone view: '+viewport+' '+JSON.stringify(library));
+      await navigate('public/index.html');
+      const guide = await evaluate('(()=>{const h=document.querySelector(".site-header").getBoundingClientRect(),nav=document.querySelector(".header-nav"),menu=document.querySelector(".guide-mobile-nav"),title=document.querySelector("h1").getBoundingClientRect();return {header:h.height,menu:!!menu&&!!menu.getClientRects().length,oldNav:!!nav.getClientRects().length,titleTop:title.top,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+      assert(guide.header<=80 && guide.menu && !guide.oldNav && guide.titleTop>=guide.header && guide.overflow<=1,
+        'Guide directory needs one-row mobile header: '+viewport+' '+JSON.stringify(guide));
+      await click('.guide-mobile-nav summary');
+      assert(await evaluate('document.querySelector(".guide-mobile-nav").open'), 'Menu must actually open on mobile');
+      const links = await evaluate('[...document.querySelectorAll(".guide-mobile-nav nav a")].map(a=>({href:a.getAttribute("href"),height:a.getBoundingClientRect().height,visible:!!a.getClientRects().length}))');
+      assert(links.length===4 && links.every(a=>a.visible&&a.height>=44),
+        'Menu links must have accessible touch targets: '+JSON.stringify(links));
+      if(viewport===390) await screenshot('resources-mobile-menu-390.png');
+      await click('.guide-mobile-nav summary');
+      assert.equal(await evaluate('document.querySelector(".guide-mobile-nav").open'),false);
+      observations.push({viewport,home,library,guide});
+    }
+    await resize(1440); await navigate('public/index.html');
+    const desktop = await evaluate('({nav:!!document.querySelector(".header-nav").getClientRects().length,mobile:!!document.querySelector(".guide-mobile-nav").getClientRects().length})');
+    assert(desktop.nav&&!desktop.mobile, 'Desktop must preserve full guide navigation');
+    return {phones:observations,desktop};
   });
   await check('mobile detail dialog keeps and restores keyboard focus', async () => {
     await resize(375); await navigate('public/index.html?route=cli'); await click('.details-button');
