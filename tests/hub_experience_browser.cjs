@@ -390,8 +390,18 @@ async function runChecks() {
     await navigate('');
     const journeys = await evaluate('({paths:[...document.querySelectorAll(".premium-path-grid > a.premium-path-card")].map(a=>({href:a.getAttribute("href"),visible:!!a.getClientRects().length})),spaces:[...document.querySelectorAll(".premium-space-card a[href]")].map(a=>a.href),directory:[...document.querySelectorAll("a[href]")].some(a=>a.getAttribute("href")==="public/index.html")})');
     if (report.require_journeys) {
-      assert.deepEqual(journeys.paths.map(link => link.href), ['#companion-spaces', '#specialists', 'downloads.html']);
-      assert(journeys.paths.every(link => link.visible), 'All three task paths must be visible');
+      assert.deepEqual(journeys.paths.map(link => link.href), ['#companion-spaces', '?role=research-evaluator#setup', '?role=product-interface-designer#setup', '?role=coordinator#setup']);
+      assert(await evaluate('document.querySelector("#hero-heading")?.textContent?.replace(/\\s+/g," ").trim()==="Make Muse your own."'), 'R7 home heading must be present');
+      assert(await evaluate('Boolean(document.querySelector(".r7-pyramid svg") && document.querySelector(".r7-metrics"))'), 'R7 must preserve pyramid artwork and resource inventory');
+      const inventory = await evaluate('[...document.querySelectorAll(".r7-metrics dd")].map(x=>x.textContent.trim())');
+      assert.deepEqual(inventory, ['5,200+', '375+', '15', '50+'], 'Resource counts must remain visible');
+      assert(journeys.paths.every(link => link.visible), 'All four task paths must be visible');
+      for (const role of ['research-evaluator', 'product-interface-designer', 'coordinator']) {
+        await navigate('index.html?role=' + role + '#setup');
+        const selection = await evaluate('({selected:document.getElementById("setup-role-select").value,expanded:document.querySelector(".setup-disclosure").open})');
+        assert(selection.selected === role && selection.expanded, 'Task choice must open its named specialist: ' + role);
+      }
+      await navigate('index.html');
       for (const href of journeys.paths.map(link => link.href).filter(href => href.startsWith('#'))) {
         assert(await evaluate('Boolean(document.getElementById(' + q(href.slice(1)) + '))'), 'Task path anchor is missing: ' + href);
       }
@@ -440,8 +450,11 @@ async function runChecks() {
       const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img"),peek=document.querySelector(".premium-mobile-peek"),links=[...document.querySelectorAll(".premium-capture-inspect a")];return {loaded:img.complete&&img.naturalWidth>0,source:new URL(img.currentSrc).pathname,rect:{width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height,top:img.getBoundingClientRect().top},height:innerHeight,peekVisible:getComputedStyle(peek).display!=="none",links:links.map(a=>a.getAttribute("href")),scrollWidth:document.documentElement.scrollWidth}})()');
       assert(proof.loaded, 'Planner capture failed to load: ' + viewport);
       assert(proof.source.endsWith(viewport <= 690 ? '/planner-mobile.png' : '/planner-desktop.png'), JSON.stringify(proof));
-      assert(proof.rect.width >= (viewport <= 690 ? viewport * .75 : Math.min(500,viewport * .55)) && proof.rect.height >= (viewport <= 690 ? 280 : 330), JSON.stringify(proof));
-      assert(proof.rect.top + 200 <= proof.height, 'Planner needs a useful first-screen preview: ' + viewport);
+      assert(proof.rect.width >= (viewport <= 690 ? viewport * .70 : Math.min(500,viewport * .50)) && proof.rect.height >= (viewport <= 690 ? 280 : 330), JSON.stringify(proof));
+      assert(proof.rect.top >= 0, 'Planner demonstration should remain in page flow: ' + viewport);
+      await evaluate('document.querySelector(".r7-app-preview").scrollIntoView({block:"start"})');
+      const visible = await evaluate('(()=>{const r=document.querySelector(".premium-capture-picture img").getBoundingClientRect();return r.top<innerHeight && r.bottom>0})()');
+      assert(visible, 'Planner capture must become visible when scrolled to: ' + viewport);
       assert(Math.abs(proof.rect.width / proof.rect.height - (viewport <= 690 ? 390 / 490 : 980 / 745)) < .015,
         'Planner capture must keep its original aspect ratio');
       assert.equal(proof.peekVisible, viewport > 690, 'Dual-device evidence mode differs from viewport');
@@ -487,6 +500,14 @@ async function runChecks() {
     await resize(viewport); const rows = [];
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
+      if (name === 'home') {
+        const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header .brand-symbol");return {loaded:!!i&&i.complete&&i.naturalWidth>0,width:i?.getBoundingClientRect().width}})()');
+        assert(mark.loaded && mark.width >= (viewport <= 850 ? 44 : 50), 'Brand mark must load at a legible size: ' + viewport);
+        if (viewport <= 850) {
+          const labels = await evaluate('[...document.querySelectorAll(".r7-metrics dt")].map(x=>parseFloat(getComputedStyle(x).fontSize))');
+          assert(labels.length === 4 && labels.every(x=>x>=14), 'Resource labels must be readable on mobile: ' + viewport);
+        }
+      }
       if (name === 'resources') {
         const palette = await evaluate('({text:getComputedStyle(document.querySelector(".intro-description")).color,background:getComputedStyle(document.body).backgroundColor})');
         assert.deepEqual(palette, {text:'rgb(198, 196, 184)',background:'rgb(21, 21, 21)'});

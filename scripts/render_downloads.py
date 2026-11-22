@@ -436,7 +436,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
   <script type="application/ld+json">{json.dumps({'@context':'https://schema.org','@type':'CollectionPage','name':'Muse Hub Downloads','url':'https://atlas-agents-hub.github.io/muse-hub/downloads.html','image':SOCIAL_IMAGE,'description':'Muse AI skills, workflows, specialists and tool guides.','isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}})}</script>
   <title>Muse AI Skills &amp; Workflow Downloads | Muse Hub</title>
 {favicon}
-  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="site.css">\n  <link rel="stylesheet" href="r7-home.css">
   <script defer src="downloads.js"></script>
 </head>
 <body id="top" class="muse-premium downloads-page">

@@ -1,0 +1,185 @@
+/* Muse Hub R7: reference-led editorial desktop and independent mobile presentation.
+   Scoped to the homepage. Keep existing specialists, Spaces, library and setup implementation intact. */
+.muse-premium{--r7-night:#151515;--r7-white:#f3f1e8;--r7-muted:#c8c6bc;--r7-accent:#f0ff3e;--r7-rule:#5c5c52;color:var(--r7-white);font-family:"Segoe UI Variable","Segoe UI",Arial,sans-serif;background:var(--r7-night)}
+.muse-premium .shell{max-width:1370px}
+.muse-premium .r7-header{background:rgba(19,19,18,.96);border-bottom:1px solid #505048}
+.muse-premium .r7-header .header-inner{min-height:74px;gap:28px}
+.muse-premium .r7-header .brand{display:inline-flex;align-items:center;gap:13px;min-width:max-content;text-decoration:none}
+.muse-premium .r7-header .brand-symbol{width:51px;height:51px;object-fit:contain;flex:none;filter:drop-shadow(0 2px 8px rgba(0,0,0,.22))}
+.muse-premium .r7-header .brand-text{font:750 23px/1 "Segoe UI Variable","Segoe UI",Arial,sans-serif;letter-spacing:.055em;color:#f7f5ea}
+.muse-premium .r7-header .brand-text span{font-weight:750}
+.muse-premium .r7-header .header-nav{display:flex;align-items:center;justify-content:center;gap:clamp(15px,2.3vw,36px);flex:1}
+.muse-premium .r7-header .header-nav a{font-size:15px;font-weight:540;letter-spacing:-.013em;color:#e2e1d8;white-space:nowrap;text-decoration:none}
+.muse-premium .r7-header .header-nav a:hover{color:var(--r7-accent)}
+.muse-premium .r7-search-link{display:grid;place-items:center;width:46px;height:44px;border:1px solid #919185;border-radius:4px;color:#f7f6ea;flex:none}
+.muse-premium .r7-search-link svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round}
+.muse-premium .r7-header-cta{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 23px;border-radius:3px;background:var(--r7-accent);color:#10110d;text-decoration:none;font-weight:750;font-size:14px}
+.muse-premium .r7-header-cta:hover{background:#fbffa0;color:#10110d}
+.muse-premium .r7-header :is(a,summary):focus-visible{outline:3px solid var(--r7-accent);outline-offset:3px}
+.muse-premium .r7-hero{position:relative;overflow:hidden;padding:0;background:radial-gradient(ellipse at 56% 40%,#24251f 0,#191a17 38%,#151514 72%)}
+.muse-premium .r7-hero-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(185px,215px);gap:0;min-height:313px}
+.muse-premium .r7-hero-stage{position:relative;min-height:306px;display:flex;align-items:flex-start;isolation:isolate;overflow:hidden}
+.muse-premium .r7-hero-copy{position:relative;z-index:2;padding:48px 0 29px 0;min-width:0;max-width:760px}
+.muse-premium .r7-kicker{display:none}
+.muse-premium .r7-hero h1{font:400 clamp(48px,5.2vw,79px)/.99 "Iowan Old Style","Baskerville","Palatino Linotype",Georgia,serif;letter-spacing:-.043em;color:var(--r7-white);text-wrap:initial;max-width:none;margin:0 0 13px;white-space:nowrap}
+.muse-premium .r7-hero h1 span{display:inline;color:inherit}
+.muse-premium .r7-lead{margin:0;font-size:clamp(17px,1.51vw,21px);line-height:1.42;font-weight:450;letter-spacing:-.02em;max-width:690px;color:#e5e3db}
+.muse-premium .r7-actions{display:flex;gap:15px;align-items:center;margin-top:23px}
+.muse-premium .r7-button{display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:50px;padding:11px 23px;font:750 14px/1.2 "Segoe UI Variable","Segoe UI",Arial,sans-serif;text-decoration:none;border:1px solid #a19f92;border-radius:2px;white-space:nowrap;transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
+.muse-premium .r7-button-primary{background:var(--r7-accent);color:#17170f;border-color:var(--r7-accent)}
+.muse-premium .r7-button-outline{background:rgba(20,20,19,.20);color:var(--r7-white)}
+.muse-premium .r7-button span{margin-left:auto;font-size:19px;font-weight:400}
+.muse-premium .r7-button:hover{transform:translateY(-2px)}
+.muse-premium .r7-button-primary:hover{background:#fcffa0;color:#17170f}
+.muse-premium .r7-button-outline:hover{border-color:var(--r7-accent);color:var(--r7-accent)}
+.muse-premium .r7-actions>.r7-button:first-child{min-width:230px;justify-content:space-between}
+.muse-premium .r7-actions>.r7-button:last-child{min-width:196px}
+.muse-premium .r7-pyramid{position:absolute;bottom:0;right:-15px;width:min(610px,66%);height:263px;z-index:1;pointer-events:none}
+.muse-premium .r7-pyramid-svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 10px 28px rgba(0,0,0,.18))}
+.muse-premium .r7-art-index{display:none}
+.muse-premium .r7-metrics{display:flex;flex-direction:column;margin:0;border-left:1px solid var(--r7-rule);padding:25px 0 26px 30px;justify-content:space-between;z-index:3;position:relative}
+.muse-premium .r7-metrics>div{display:flex;align-items:baseline;justify-content:flex-start;gap:9px;padding:10px 0 13px;border-bottom:1px solid #515148;min-height:57px}
+.muse-premium .r7-metrics>div:last-child{border-bottom:0}
+.muse-premium .r7-metrics dt{order:2;margin:0;color:var(--r7-white);font-size:15px;font-weight:460;white-space:nowrap}
+.muse-premium .r7-metrics dd{order:1;margin:0;color:var(--r7-accent);font:780 27px/1 "Segoe UI Variable","Segoe UI",Arial,sans-serif;letter-spacing:-.045em;white-space:nowrap}
+.muse-premium .r7-metrics dd span{font-weight:760}
+.muse-premium .r7-release-row{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:0 0 9px;min-height:20px;color:#898d78;font-size:10px;letter-spacing:.095em}
+.muse-premium .r7-release-row>span:last-child{letter-spacing:.17em}
+.muse-premium .r7-task-paths{background:var(--r7-night);padding:0 0 20px;border:0}
+.muse-premium .r7-task-paths>.shell{padding-top:23px;border-top:1px solid #88877d}
+.muse-premium .r7-task-paths h2{font:750 12px/1.2 "Segoe UI Variable","Segoe UI",Arial,sans-serif;letter-spacing:.12em;color:var(--r7-white);margin:0 0 17px}
+.muse-premium .r7-task-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0}
+.muse-premium .r7-task-card{position:relative;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:12px;text-align:left;min-height:157px;padding:16px 17px 17px;border:1px solid #77766d;background:transparent;color:var(--r7-white);text-decoration:none;transition:border-color .18s ease,background-color .18s ease}
+.muse-premium .r7-task-card:hover{background:#24251f;border-color:var(--r7-accent);box-shadow:none;transform:none}
+.muse-premium .r7-task-icon{display:block;color:#f6f5ea;width:34px;height:34px;flex:none}
+.muse-premium .r7-task-icon-code{color:var(--r7-accent)}
+.muse-premium .r7-task-icon svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.muse-premium .r7-task-content{display:block;padding-right:17px}
+.muse-premium .r7-task-card .r7-task-content strong{display:block;font-size:17px;font-weight:720;line-height:1.15;letter-spacing:-.025em;margin:0}
+.muse-premium .r7-task-card .r7-task-content small{display:block;margin-top:5px;color:#d0cec4;font-size:13px;line-height:1.28;font-weight:450;max-width:250px}
+.muse-premium .r7-task-arrow{position:absolute;bottom:15px;right:17px;font:400 22px/1 Arial,sans-serif;color:var(--r7-accent)}
+.muse-premium .r7-featured{padding:0 0 43px;background:var(--r7-night)}
+.muse-premium .r7-feature-card{border:1px solid #77766d;min-height:151px;padding:21px 24px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.92fr) minmax(195px,.66fr);gap:26px;align-items:center;background:linear-gradient(115deg,#1b1c19,#171815)}
+.muse-premium .r7-feature-intro{min-width:0}
+.muse-premium .r7-feature-overline{display:block;color:#dcdbcf;font-size:11px;font-weight:720;letter-spacing:.095em;line-height:1.3}
+.muse-premium .r7-feature-intro h2{margin:3px 0 4px;color:var(--r7-white);font:400 clamp(28px,2.5vw,38px)/1.02 "Iowan Old Style","Baskerville",Georgia,serif;letter-spacing:-.03em}
+.muse-premium .r7-feature-intro p{margin:0;max-width:600px;font-size:13px;line-height:1.43;color:#deddd4}
+.muse-premium .r7-feature-capabilities{list-style:none;padding:0 0 0 24px;margin:0;border-left:1px solid #77776a;display:grid;gap:13px;color:#eae8dc;font-size:13px;line-height:1.3}
+.muse-premium .r7-feature-capabilities li{display:flex;gap:11px;align-items:flex-start}
+.muse-premium .r7-feature-capabilities li span{color:var(--r7-accent);font-size:16px;line-height:1;min-width:14px}
+.muse-premium .r7-feature-actions{display:grid;gap:9px}
+.muse-premium .r7-feature-actions .r7-button{min-height:42px;font-size:13px;padding:8px 12px;justify-content:space-between}
+.muse-premium .r7-feature-actions .r7-button-outline{border-color:#b1afa1}
+.muse-premium .r7-real-app{padding:44px 0 55px;background:#22221f;border-top:1px solid #46463e}
+.muse-premium .r7-app-layout{display:grid;grid-template-columns:minmax(230px,.6fr) minmax(0,1.4fr);gap:44px;align-items:center}
+.muse-premium .r7-app-copy h2{font:400 clamp(30px,4vw,52px)/1.06 "Iowan Old Style",Georgia,serif;letter-spacing:-.035em;margin:12px 0 10px}
+.muse-premium .r7-app-copy p{max-width:340px;color:#c7c7b9;font-size:16px;line-height:1.5;margin:0 0 16px}
+.muse-premium .r7-inline-link{color:var(--r7-accent);font-size:15px;font-weight:750}
+.muse-premium .r7-app-preview{max-width:770px;margin:0}
+.muse-premium .r7-app-preview .premium-capture-picture img{height:auto}
+.muse-premium .r7-hero :is(a,button):focus-visible,.muse-premium :is(.r7-task-card,.r7-feature-actions a,.r7-inline-link):focus-visible{outline:3px solid var(--r7-accent);outline-offset:3px}
+@media(max-width:1200px){
+ .muse-premium .r7-header .header-inner{gap:17px}
+ .muse-premium .r7-header .header-nav{gap:16px}
+ .muse-premium .r7-header .header-nav a{font-size:13px}
+ .muse-premium .r7-hero h1{font-size:clamp(45px,5.25vw,68px)}
+ .muse-premium .r7-pyramid{right:-25px;width:62%}
+ .muse-premium .r7-feature-card{grid-template-columns:1.05fr .95fr .67fr;gap:16px}
+ .muse-premium .r7-task-grid{gap:12px}
+}
+@media(max-width:920px){
+ .muse-premium .r7-header .header-nav{display:none}
+ .muse-premium .r7-header-cta,.muse-premium .r7-search-link{display:none}
+ .muse-premium .r7-header .mobile-navigation{display:block;margin-left:auto}
+ .muse-premium .r7-hero-shell{grid-template-columns:minmax(0,1fr) 166px;min-height:275px}
+ .muse-premium .r7-hero-stage{min-height:270px}
+ .muse-premium .r7-hero-copy{padding-top:38px}
+ .muse-premium .r7-hero h1{font-size:clamp(43px,6.0vw,56px)}
+ .muse-premium .r7-lead{font-size:16px;max-width:450px}
+ .muse-premium .r7-pyramid{width:65%;height:218px}
+ .muse-premium .r7-metrics{padding:17px 0 18px 17px}
+ .muse-premium .r7-metrics dd{font-size:23px}
+ .muse-premium .r7-metrics dt{font-size:12px}
+ .muse-premium .r7-task-card{padding:14px 12px;min-height:159px}
+ .muse-premium .r7-task-card .r7-task-content strong{font-size:15px}
+ .muse-premium .r7-task-card .r7-task-content small{font-size:12px}
+ .muse-premium .r7-feature-card{grid-template-columns:1.25fr 1fr;gap:18px}
+ .muse-premium .r7-feature-actions{grid-column:1/-1;grid-template-columns:1fr 1fr}
+}
+@media(max-width:850px){
+ .muse-premium .r7-header .header-inner{min-height:70px;padding-top:7px;padding-bottom:7px;gap:12px}
+ .muse-premium .r7-header .brand-symbol{width:47px;height:47px}
+ .muse-premium .r7-header .brand-text{font-size:22px;letter-spacing:.035em}
+ .muse-premium .r7-header .mobile-navigation summary{min-height:44px;min-width:44px;padding:10px;border:1px solid #77786c;border-radius:4px;font-size:0;display:grid;place-items:center}
+ .muse-premium .r7-menu-bars{width:22px;display:flex;flex-direction:column;gap:4px}
+ .muse-premium .r7-menu-bars i{display:block;width:22px;height:2px;background:var(--r7-accent);border-radius:1px}
+ .muse-premium .r7-hero{background:radial-gradient(ellipse at 77% 40%,#24261e,#191a17 49%,#151514 83%);padding:0}
+ .muse-premium .r7-hero-shell{display:flex;flex-direction:column;min-height:0;gap:0}
+ .muse-premium .r7-hero-stage{display:flex;flex-direction:column;min-height:0;overflow:visible}
+ .muse-premium .r7-hero-copy{padding:32px 0 0;max-width:100%}
+ .muse-premium .r7-kicker{display:block;color:var(--r7-accent);font-size:11px;font-weight:760;letter-spacing:.13em;margin:0 0 15px}
+ .muse-premium .r7-hero h1{font:400 clamp(46px,12.4vw,64px)/.99 "Iowan Old Style","Baskerville","Palatino Linotype",Georgia,serif;letter-spacing:-.042em;white-space:normal;margin:0 0 13px;max-width:480px}
+ .muse-premium .r7-hero h1 span{display:block}
+ .muse-premium .r7-lead{font-size:17px;line-height:1.43;letter-spacing:-.012em;max-width:440px;color:#e1dfd4}
+ .muse-premium .r7-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+ .muse-premium .r7-actions>.r7-button{width:auto;min-width:0!important;min-height:50px;font-size:13px;padding:10px 11px}
+ .muse-premium .r7-actions>.r7-button:first-child{justify-content:space-between}
+ .muse-premium .r7-actions>.r7-button:last-child{justify-content:center}
+ .muse-premium .r7-pyramid{position:relative;order:2;width:calc(100% + 16px);max-width:none;right:auto;bottom:auto;height:199px;margin:18px -8px 0;overflow:hidden;border-top:1px solid rgba(147,149,124,.17);border-bottom:1px solid rgba(147,149,124,.42);background:radial-gradient(ellipse at 70% 67%,rgba(94,99,71,.17),transparent 63%)}
+ .muse-premium .r7-pyramid-svg{position:absolute;width:115%;height:230px;right:-25px;bottom:-22px;filter:none}
+ .muse-premium .r7-art-index{display:block;position:absolute;left:13px;bottom:14px;color:#b2b29f;font-size:10px;font-weight:690;letter-spacing:.12em}
+ .muse-premium .r7-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:0;padding:21px 0 20px;gap:17px 0}
+ .muse-premium .r7-metrics>div{display:flex;flex-direction:column;gap:4px;align-items:flex-start;min-height:0;padding:0 8px 0 0;border:0}
+ .muse-premium .r7-metrics>div:nth-child(even){border-left:1px solid #5e5e53;padding-left:20px}
+ .muse-premium .r7-metrics dd{order:0;font-size:31px;letter-spacing:-.047em;line-height:1.02}
+ .muse-premium .r7-metrics dt{order:1;font-size:14px;font-weight:550;letter-spacing:.002em;color:#d6d4c8;line-height:1.25}
+ .muse-premium .r7-release-row{padding:4px 0 14px;font-size:11px;letter-spacing:.025em;color:#aeb09f}
+ .muse-premium .r7-release-row>span:last-child{display:none}
+ .muse-premium .r7-task-paths{padding:0 0 20px}
+ .muse-premium .r7-task-paths>.shell{padding-top:22px}
+ .muse-premium .r7-task-paths h2{font-size:12px;margin-bottom:14px;letter-spacing:.13em}
+ .muse-premium .r7-task-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .muse-premium .r7-task-card{min-height:167px;padding:13px 13px 17px;gap:11px;justify-content:flex-start}
+ .muse-premium .r7-task-icon{width:31px;height:31px}
+ .muse-premium .r7-task-card .r7-task-content strong{font-size:16px;line-height:1.18;font-weight:760}
+ .muse-premium .r7-task-card .r7-task-content small{font-size:12px;line-height:1.34;max-width:180px;margin-top:6px;color:#d2d0c5}
+ .muse-premium .r7-task-arrow{bottom:8px;right:12px;font-size:21px}
+ .muse-premium .r7-featured{padding:0 0 28px}
+ .muse-premium .r7-feature-card{display:flex;flex-direction:column;align-items:stretch;gap:17px;padding:20px;border-color:#78786c}
+ .muse-premium .r7-feature-overline{font-size:11px}
+ .muse-premium .r7-feature-intro h2{font-size:34px;margin:7px 0}
+ .muse-premium .r7-feature-intro p{font-size:14px;line-height:1.5}
+ .muse-premium .r7-feature-capabilities{border-left:0;border-top:1px solid #56564d;padding:15px 0 0;font-size:13px;gap:9px}
+ .muse-premium .r7-feature-actions{display:grid;grid-template-columns:1fr;gap:8px}
+ .muse-premium .r7-feature-actions .r7-button{min-height:45px;font-size:14px}
+ .muse-premium .r7-real-app{padding:32px 0 38px}
+ .muse-premium .r7-app-layout{display:flex;flex-direction:column;align-items:stretch;gap:21px}
+ .muse-premium .r7-app-copy h2{font-size:37px}
+ .muse-premium .r7-app-copy p{font-size:15px;line-height:1.5}
+ .muse-premium .r7-app-preview{max-width:100%;width:100%}
+ .muse-premium .r7-app-preview .premium-capture-picture img{height:auto;aspect-ratio:390/490}
+ /* Below-the-fold discovery must be readable on a phone, not condensed into micro-labels. */
+ .muse-premium .role-type,.muse-premium .role-order,.muse-premium .premium-card-number{font-size:12px;line-height:1.3}
+ .muse-premium .role-card h3{font-size:21px;line-height:1.2}
+ .muse-premium .role-card p{font-size:14px;line-height:1.48}
+ .muse-premium .role-quickpick-button strong{font-size:15px}
+ .muse-premium .role-quickpick-button small{font-size:12px}
+ .muse-premium .premium-section-heading p{font-size:15px;line-height:1.5}
+}
+@media(max-width:380px){
+ .muse-premium .r7-actions{grid-template-columns:1fr}
+ .muse-premium .r7-actions>.r7-button{font-size:14px;min-height:47px}
+ .muse-premium .r7-pyramid{height:181px}
+ .muse-premium .r7-pyramid-svg{height:215px}
+ .muse-premium .r7-task-grid{gap:8px}
+ .muse-premium .r7-task-card{padding:11px;min-height:178px}
+ .muse-premium .r7-task-card .r7-task-content strong{font-size:15px}
+ .muse-premium .r7-task-card .r7-task-content small{font-size:12px}
+ .muse-premium .r7-feature-intro h2{font-size:32px}
+}
+@media(prefers-reduced-motion:reduce){.muse-premium .r7-button,.muse-premium .r7-task-card{transition:none}.muse-premium .r7-button:hover{transform:none}}
+
+/* Tablet uses the real desktop capture; keep its native proportions. */
+@media(min-width:691px) and (max-width:850px){.muse-premium .r7-app-preview .premium-capture-picture img{aspect-ratio:980/745}}
+
+@media(min-width:691px) and (max-width:850px){.muse-premium .r7-hero h1{font-size:clamp(45px,6vw,55px);white-space:nowrap}.muse-premium .r7-hero h1 span{display:inline}.muse-premium .r7-pyramid{height:200px}}
