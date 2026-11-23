@@ -1,0 +1,246 @@
+/* Muse Hub R8: shared, source-backed page rhythm.
+   Loaded after site.css for Home, Downloads and all 35 generated subjects.
+   Keep brand geometry, corpus, URLs, and interaction semantics unchanged. */
+:root {
+  --rhythm-1:8px; --rhythm-2:16px; --rhythm-3:24px;
+  --rhythm-4:36px; --rhythm-5:56px; --rhythm-6:88px;
+  --rhythm-ui:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+html { scroll-padding-top:105px; }
+.muse-premium { font-family:var(--rhythm-ui); }
+.muse-premium .shell { width:min(1260px,calc(100% - 72px));max-width:none; }
+.muse-premium :is(.specialists,.premium-spaces,.setup,.downloads-hero,.r7-real-app) { scroll-margin-top:105px; }
+.muse-premium .r7-header .header-inner { min-height:88px;gap:25px; }
+.muse-premium .r7-header .brand-symbol { width:62px;height:62px; }
+.muse-premium .r7-header .brand-text { font-size:24px;letter-spacing:.015em; }
+.muse-premium .r7-header .header-nav a { font-size:15px;font-weight:650; }
+.muse-premium .r7-header-cta { font-size:15px;min-height:46px; }
+.muse-premium .r7-button { font-family:var(--rhythm-ui); }
+.muse-premium .r7-feature-capabilities,
+.muse-premium .r7-feature-intro p,
+.muse-premium .r7-task-card,
+.muse-premium .r7-metrics,
+.muse-premium .r7-release-row { font-family:var(--rhythm-ui); }
+
+/* Editorial home: a deliberate hero, four legible entry points, distinct proof. */
+@media (min-width:921px) {
+  .muse-premium .r7-hero-shell { grid-template-columns:minmax(0,1fr) 242px;min-height:405px; }
+  .muse-premium .r7-hero-stage { min-height:398px;align-items:center; }
+  .muse-premium .r7-hero-copy { padding:56px 0 48px; }
+  .muse-premium .r7-hero h1 { font-size:clamp(58px,5.55vw,86px);margin-bottom:24px; }
+  .muse-premium .r7-lead { font-size:20px;line-height:1.55;max-width:580px; }
+  .muse-premium .r7-actions { margin-top:34px;gap:15px; }
+  .muse-premium .r7-actions>.r7-button { min-height:57px;font-size:15px; }
+  .muse-premium .r7-pyramid { width:min(738px,67%);height:367px;right:-10px; }
+  .muse-premium .r7-metrics { padding:36px 0 37px 24px;justify-content:center;gap:3px; }
+  .muse-premium .r7-metrics>div { min-height:85px;align-items:center;gap:11px; }
+  .muse-premium .r7-metrics dd { font-size:32px; }
+  .muse-premium .r7-metrics dt { font-size:16px; }
+  .muse-premium .r7-task-paths { padding:0 0 28px; }
+  .muse-premium .r7-task-paths>.shell { padding-top:42px; }
+  .muse-premium .r7-task-paths h2 { font-size:14px;letter-spacing:.13em;margin-bottom:21px; }
+  .muse-premium .r7-task-grid { gap:18px; }
+  .muse-premium .r7-task-card { min-height:174px;padding:22px 24px 20px;gap:14px; }
+  .muse-premium .r7-task-icon { height:42px;width:42px; }
+  .muse-premium .r7-task-card .r7-task-content strong { font-size:21px;line-height:1.24; }
+  .muse-premium .r7-task-card .r7-task-content small { font-size:15px;line-height:1.52; }
+  .muse-premium .r7-featured { padding-bottom:76px; }
+  .muse-premium .r7-feature-card { min-height:189px;padding:29px 34px;gap:30px;grid-template-columns:1.12fr .9fr .75fr; }
+  .muse-premium .r7-feature-overline { font-size:12px;letter-spacing:.12em; }
+  .muse-premium .r7-feature-intro h2 { font-size:44px;margin:10px 0 13px; }
+  .muse-premium .r7-feature-intro p { font-size:16px;line-height:1.55;max-width:420px; }
+  .muse-premium .r7-feature-capabilities { font-size:15px;line-height:1.48;gap:17px;padding-left:26px; }
+  .muse-premium .r7-feature-actions .r7-button { min-height:52px;font-size:14px;padding:12px 15px; }
+  .muse-premium .r7-real-app { padding:72px 0 82px; }
+  .muse-premium .r7-app-layout { gap:54px;grid-template-columns:minmax(240px,.68fr) minmax(0,1.32fr); }
+  .muse-premium .r7-app-copy h2 { font-size:clamp(44px,4vw,58px);margin:19px 0 20px; }
+  .muse-premium .r7-app-copy p { font-size:17px;line-height:1.65;margin-bottom:28px;max-width:380px; }
+  .muse-premium .r7-inline-link { font-size:16px; }
+}
+.muse-premium .premium-spaces,
+.muse-premium .specialists { padding-top:clamp(60px,6.5vw,98px);padding-bottom:clamp(68px,7vw,110px); }
+.muse-premium .premium-section-heading h2 { line-height:1.08; }
+.muse-premium .premium-section-heading p { font-size:17px;line-height:1.6;max-width:640px; }
+.muse-premium .role-grid { gap:12px;background:transparent;border:none; }
+.muse-premium .role-card { border:1px solid var(--divider);padding:28px; }
+.muse-premium .role-card h3 { margin:22px 0 14px;font-size:clamp(26px,2.5vw,35px); }
+.muse-premium .role-card p { font-size:15px;line-height:1.65; }
+.muse-premium .role-card-actions a { font-size:14px;min-height:48px; }
+
+/* Library: search, browse, then disclose refinements as needed. */
+.muse-premium .downloads-catalog { padding:65px 0 88px; }
+.muse-premium .catalog-heading { margin-bottom:18px; }
+.muse-premium .catalog-heading h1 { font-size:clamp(45px,5.0vw,72px);letter-spacing:-.045em; }
+.muse-premium .catalog-heading p { font-size:18px;line-height:1.6;margin:14px 0 0; }
+.muse-premium .downloads-catalog .download-jumps { gap:9px;margin:0 0 16px; }
+.muse-premium a[data-download-type] { min-height:48px;padding:9px 18px;font-size:14px;font-weight:650; }
+.muse-premium .downloads-catalog .download-toolbar {
+  display:grid;grid-template-columns:minmax(0,1fr) 180px auto;
+  gap:12px;align-items:end;margin-top:0;padding:0 0 24px;
+}
+.muse-premium .download-toolbar > .field-wrap:first-child { grid-column:1;max-width:none; }
+.muse-premium .download-toolbar .field-wrap label { font-size:12px;letter-spacing:.055em;margin-bottom:9px; }
+.muse-premium .download-toolbar .field-wrap input { min-height:51px;font-size:16px;border-radius:3px; }
+.muse-premium .download-advanced { position:relative;grid-column:2;align-self:end;min-width:0; }
+.muse-premium .download-advanced > summary {
+  min-height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:12px 15px;border:1px solid #85877a;border-radius:3px;
+  background:var(--panel);font-size:14px;font-weight:700;cursor:pointer;
+}
+.muse-premium .download-advanced > summary::after { content:"＋";color:var(--signal);font-size:21px;line-height:1; }
+.muse-premium .download-advanced[open] > summary::after { content:"−"; }
+.muse-premium .download-advanced > summary:focus-visible { outline:3px solid var(--signal);outline-offset:3px; }
+.muse-premium .download-filter-grid {
+  position:absolute;z-index:20;right:0;top:calc(100% + 8px);
+  width:min(815px,calc(100vw - 48px));display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;padding:23px;background:#252620;border:1px solid #a4a692;
+  box-shadow:0 18px 60px #0009;border-radius:4px;
+}
+.muse-premium .download-filter-grid .field-wrap { min-width:0;max-width:none; }
+.muse-premium .download-filter-grid .field-wrap select { min-height:50px;font-size:15px; }
+.muse-premium .download-toolbar #download-reset { grid-column:3;min-height:56px;padding:10px 18px;font-size:14px; }
+.muse-premium #download-count { font-size:14px;font-weight:700;color:#d4d4c8;margin:8px 0; }
+.muse-premium .catalog-subjects { margin:8px 0 22px; }
+.muse-premium .catalog-subjects summary { font-size:15px;cursor:pointer; }
+.muse-premium .download-section { margin-top:30px; }
+.muse-premium .download-section > h2 { font-size:clamp(32px,3.4vw,46px);margin-bottom:22px; }
+.muse-premium .download-grid { gap:18px; }
+.muse-premium .download-card { min-height:275px;padding:26px;background:#22231e;border-color:#65675e; }
+.muse-premium .download-kind { font-size:12px;line-height:1.3;letter-spacing:.06em;color:#d4d5bd; }
+.muse-premium .download-card h2,.muse-premium .download-card h3 {
+  font:700 clamp(20px,2vw,25px)/1.22 var(--rhythm-ui);letter-spacing:-.03em;margin:20px 0 12px;
+}
+.muse-premium .download-card p { font-size:15px;line-height:1.62;margin-bottom:20px; }
+.muse-premium .download-card a { min-height:48px;font-size:14px;line-height:1.45; }
+.muse-premium .download-entry { font-size:13px;line-height:1.5; }
+.muse-premium .downloads-hero { padding:80px 0 90px; }
+.muse-premium .bundle-card { padding:27px;min-height:205px; }
+.muse-premium .bundle-card p { font-size:15px;line-height:1.55; }
+.muse-premium .bundle-card strong { font-size:14px; }
+.muse-premium .download-pagination { gap:9px;margin:34px 0; }
+
+/* The 35 static subject indexes share the same header, cards and footer. */
+.muse-premium .subject-main { padding-top:44px;padding-bottom:95px; }
+.muse-premium .subject-breadcrumb { display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px;color:#c4c4b7;margin-bottom:25px; }
+.muse-premium .subject-breadcrumb a { color:var(--signal);text-decoration:underline; }
+.muse-premium .subject-heading { padding:30px 0 28px;border-top:1px solid #77776c;border-bottom:1px solid #77776c;margin-bottom:22px; }
+.muse-premium .subject-kicker { color:var(--signal);display:block;font-size:12px;font-weight:740;letter-spacing:.12em; }
+.muse-premium .subject-heading h1 { font:400 clamp(39px,4.6vw,62px)/1.08 var(--serif);letter-spacing:-.04em;max-width:930px;margin:14px 0 15px; }
+.muse-premium .subject-heading >p { font-size:18px;line-height:1.6;color:#d6d5c8;max-width:790px;margin:0 0 18px; }
+.muse-premium .subject-summary { display:flex;align-items:center;gap:16px 24px;flex-wrap:wrap;font-size:14px;color:#dddccf; }
+.muse-premium .subject-summary strong { color:var(--signal);font-size:18px; }
+.muse-premium .subject-summary a { color:var(--signal);font-weight:740; }
+.muse-premium .subject-pagination { display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap;gap:7px;margin:27px 0; }
+.muse-premium .subject-pagination a { display:grid;place-items:center;min-width:47px;min-height:47px;border:1px solid #76776c;text-decoration:none;font-size:15px;font-weight:720; }
+.muse-premium .subject-pagination a[aria-current="page"] { background:var(--signal);color:#151515;border-color:var(--signal); }
+.muse-premium .subject-pagination a[rel] { padding:0 15px;white-space:nowrap; }
+.muse-premium .subject-ellipsis { min-width:24px;min-height:44px;display:grid;place-items:center;color:#d6d6ca;font-size:19px; }
+
+.muse-premium .subject-card { min-height:272px; }
+.muse-premium .subject-card h2 { margin:17px 0 13px;overflow-wrap:break-word; }
+.muse-premium .subject-card-actions { display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:auto;border-top:1px solid #53554b;padding-top:8px; }
+.muse-premium .subject-card-actions a { border:0;flex:1 1 auto;padding:8px 0 0;min-height:42px; }
+.muse-premium .subject-card-actions a:last-child { color:var(--signal); }
+.muse-premium .subject-card .download-entry { margin:15px 0 0;color:#c5c6b8;overflow-wrap:anywhere; }
+.muse-premium .subject-return { margin-top:34px;font-size:16px;font-weight:710; }
+.muse-premium .subject-return a { color:var(--signal); }
+
+/* Constrain density on tablets and phones; no horizontal page overflow. */
+@media(max-width:1100px) {
+  .muse-premium .r7-header .header-inner { gap:15px; }
+  .muse-premium .r7-header .header-nav { gap:12px; }
+  .muse-premium .r7-header .header-nav a { font-size:13px; }
+  .muse-premium .r7-feature-card { gap:18px; }
+  .muse-premium .download-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:920px) {
+  .muse-premium .r7-header .header-inner { min-height:80px; }
+  .muse-premium .r7-hero-shell { min-height:0; }
+  .muse-premium .r7-task-card { min-height:165px; }
+  .muse-premium .r7-task-card .r7-task-content small { font-size:14px;line-height:1.44; }
+  .muse-premium .r7-metrics dt { font-size:16px; }
+  .muse-premium .r7-feature-intro p { font-size:15px;line-height:1.55; }
+}
+@media(max-width:690px) {
+  html { scroll-padding-top:92px; }
+  .muse-premium .shell { width:calc(100% - 40px); }
+  .muse-premium .r7-header .header-inner { min-height:70px;padding-block:7px; }
+  .muse-premium .r7-header .brand-symbol { width:56px;height:56px; }
+  .muse-premium .r7-header .brand-text { font-size:21px;letter-spacing:.004em; }
+  .muse-premium .r7-hero-copy { padding-top:23px; }
+  .muse-premium .r7-hero h1 { font-size:clamp(46px,12.1vw,61px);line-height:1.03; }
+  .muse-premium .r7-kicker { font-size:12px; }
+  .muse-premium .r7-lead { font-size:17px;line-height:1.55; }
+  .muse-premium .r7-actions>.r7-button { min-height:49px; }
+  .muse-premium .r7-task-paths>.shell { padding-top:16px; }
+  .muse-premium .r7-task-paths h2 { font-size:13px;margin-bottom:15px; }
+  .muse-premium .r7-task-card { min-height:100px;padding:18px;gap:15px; }
+  .muse-premium .r7-task-card .r7-task-content strong { font-size:19px; }
+  .muse-premium .r7-task-card .r7-task-content small { font-size:15px;line-height:1.43; }
+  .muse-premium .r7-feature-card { padding:26px;gap:19px; }
+  .muse-premium .r7-feature-intro h2 { font-size:37px; }
+  .muse-premium .r7-feature-intro p { font-size:16px; }
+  .muse-premium .r7-feature-capabilities { font-size:15px; }
+  .muse-premium .r7-real-app { padding:52px 0 65px; }
+  .muse-premium .r7-app-copy h2 { font-size:39px; }
+  .muse-premium .premium-spaces,.muse-premium .specialists { padding-top:64px;padding-bottom:75px; }
+  .muse-premium .premium-section-heading p { font-size:16px; }
+  .muse-premium .role-card h3 { font-size:27px; }
+  .muse-premium .role-card p { font-size:16px; }
+  .muse-premium .role-card-actions a { font-size:15px; }
+  .muse-premium .downloads-catalog { padding:24px 0 58px; }
+  .muse-premium .catalog-heading h1 { font-size:clamp(38px,10vw,52px); }
+  .muse-premium .catalog-heading p { font-size:16px;line-height:1.5; }
+  .muse-premium .downloads-catalog .download-jumps { flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:2px 0 13px;gap:7px; }
+  .muse-premium .downloads-catalog .download-jumps::-webkit-scrollbar { display:none; }
+  .muse-premium a[data-download-type] { min-height:45px;white-space:nowrap;padding:8px 14px;flex:none; }
+  .muse-premium .downloads-catalog .download-toolbar { grid-template-columns:minmax(0,1fr) auto;gap:10px; }
+  .muse-premium .download-toolbar > .field-wrap:first-child { grid-column:1/-1; }
+  .muse-premium .download-advanced { grid-column:1; }
+  .muse-premium .download-toolbar #download-reset { grid-column:2;min-height:48px; }
+  .muse-premium .download-advanced > summary { min-height:48px; }
+  .muse-premium .download-filter-grid { right:auto;left:0;grid-template-columns:1fr;gap:12px;padding:16px; }
+  .muse-premium .download-grid { grid-template-columns:1fr;gap:12px; }
+  .muse-premium .download-card { padding:22px;min-height:0; }
+  .muse-premium .download-card h2,.muse-premium .download-card h3 { font-size:21px;margin:12px 0 9px; }
+  .muse-premium .download-card p { font-size:15px;line-height:1.6; }
+  .muse-premium .download-card a { font-size:14px; }
+  .muse-premium .download-section > h2 { font-size:34px; }
+  .muse-premium .downloads-hero { padding:56px 0 72px; }
+  .muse-premium .subject-main { padding-top:20px;padding-bottom:68px; }
+  .muse-premium .subject-breadcrumb { margin-bottom:22px;gap:7px;font-size:13px; }
+  .muse-premium .subject-heading { padding:23px 0;margin-bottom:18px; }
+  .muse-premium .subject-heading h1 { font-size:clamp(36px,9.4vw,48px);line-height:1.08; }
+  .muse-premium .subject-heading >p { font-size:16px;line-height:1.62; }
+  .muse-premium .subject-summary { font-size:13px;gap:11px 14px; }
+  .muse-premium .subject-pagination a { min-width:44px;min-height:44px; }
+  .muse-premium .subject-card { min-height:0; }
+}
+/* 351–380px can keep both primary actions side by side without truncation. */
+@media(min-width:351px) and (max-width:380px) {
+  .muse-premium .r7-actions { grid-template-columns:repeat(2,minmax(0,1fr));gap:8px; }
+  .muse-premium .r7-actions>.r7-button { font-size:13px;padding-inline:10px;min-width:0; }
+}
+@media(max-width:370px) {
+  .muse-premium .shell { width:calc(100% - 32px); }
+  .muse-premium .r7-header .brand-symbol { width:54px;height:54px; }
+  .muse-premium .r7-header .brand-text { font-size:19px; }
+  .muse-premium .r7-task-card { padding:14px;gap:11px; }
+  .muse-premium .r7-task-card .r7-task-content strong { font-size:17px; }
+  .muse-premium .r7-task-card .r7-task-content small { font-size:14px; }
+  .muse-premium .download-filter-grid { width:calc(100vw - 32px); }
+  /* The smallest phones retain stacked CTAs but keep the first task above the fold. */
+  .muse-premium .r7-hero-copy { padding-top:14px; }
+  .muse-premium .r7-kicker { margin-bottom:9px; }
+  .muse-premium .r7-actions { margin-top:14px; }
+  .muse-premium .r7-pyramid { height:82px;margin-top:6px; }
+  .muse-premium .r7-pyramid-svg { height:170px;bottom:-62px; }
+  .muse-premium .r7-metrics > div { min-height:59px;padding-top:7px;padding-bottom:7px; }
+  .muse-premium .r7-metrics dd { font-size:26px; }
+}
+@media(max-width:350px) {
+  .muse-premium .r7-actions { grid-template-columns:1fr; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .muse-premium :is(.r7-button,.r7-task-card,.download-card,.role-card){transition:none;animation:none;}
+}

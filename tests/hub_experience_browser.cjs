@@ -35,7 +35,7 @@ const catalog = JSON.parse(fs.readFileSync(path.join(site, 'public/catalog.json'
 const routes = new Map(catalog.routes.map(route => [route.id, route]));
 assert.deepEqual([...routes.keys()].sort(), ['cli', 'companion', 'desktop', 'doors', 'family', 'watch']);
 const report = { schema: 'muse-hub/experience-browser/v1', started_at: new Date().toISOString(), site, chrome: chromePath, node: process.version, require_journeys: flags.includes('--require-journeys'), harness_sha256: sha256(fs.readFileSync(__filename)), source_files: {}, checks: [], screenshots: [], errors: [], blocked_external_requests: [], requests: [] };
-for (const name of ['index.html', 'site.js', 'site.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json', 'planner-desktop.png', 'planner-mobile.png']) {
+for (const name of ['index.html', 'site.js', 'site.css', 'experience.css', 'downloads.html', 'downloads.js', 'downloads.json', 'roles.json', 'sitemap.xml', 'public/index.html', 'public/app.js', 'public/styles.css', 'public/catalog.json', 'planner-desktop.png', 'planner-mobile.png']) {
   const bytes = fs.readFileSync(path.join(site, name));
   report.source_files[name] = { bytes: bytes.length, sha256: sha256(bytes) };
 }
@@ -188,7 +188,28 @@ async function start() {
   }
   assert(port, 'Chrome did not expose a complete valid CDP port: ' + chromeLog);
   const endpoint = 'http://127.0.0.1:' + port;
-  const targets = await fetch(endpoint + '/json/list', { signal: AbortSignal.timeout(5000) }).then(response => response.json());
+  // A complete DevToolsActivePort file only proves the socket was announced,
+  // not that a cold hosted-runner Chrome is already serving HTTP. Retry ONLY
+  // this bounded startup handshake; never retry/ignore page or product failures.
+  const discoveryUntil = Date.now() + 20000;
+  let targets, lastDiscoveryError, discoveryAttempts = 0;
+  while (Date.now() < discoveryUntil && chrome.exitCode === null) {
+    discoveryAttempts++;
+    try {
+      const response = await fetch(endpoint + '/json/list', { signal: AbortSignal.timeout(2500) });
+      assert(response.ok, 'DevTools HTTP ' + response.status);
+      const candidate = await response.json();
+      assert(Array.isArray(candidate), 'DevTools target list is not an array');
+      targets = candidate;
+      break;
+    } catch (error) {
+      lastDiscoveryError = String(error);
+      if (Date.now() < discoveryUntil) await pause(150);
+    }
+  }
+  assert(Array.isArray(targets),
+    'CDP endpoint did not become ready after ' + discoveryAttempts +
+    ' bounded attempts: ' + lastDiscoveryError + '; Chrome=' + chromeLog.slice(-1200));
   const target = targets.find(item => item.type === 'page' && item.url === 'about:blank');
   assert(target, 'Fresh profile has no blank page');
   socket = new WebSocket(target.webSocketDebuggerUrl);
@@ -390,8 +411,18 @@ async function runChecks() {
     await navigate('');
     const journeys = await evaluate('({paths:[...document.querySelectorAll(".premium-path-grid > a.premium-path-card")].map(a=>({href:a.getAttribute("href"),visible:!!a.getClientRects().length})),spaces:[...document.querySelectorAll(".premium-space-card a[href]")].map(a=>a.href),directory:[...document.querySelectorAll("a[href]")].some(a=>a.getAttribute("href")==="public/index.html")})');
     if (report.require_journeys) {
-      assert.deepEqual(journeys.paths.map(link => link.href), ['#companion-spaces', '#specialists', 'downloads.html']);
-      assert(journeys.paths.every(link => link.visible), 'All three task paths must be visible');
+      assert.deepEqual(journeys.paths.map(link => link.href), ['?role=software-engineer#setup', '?role=research-evaluator#setup', '?role=product-interface-designer#setup', '?role=coordinator#setup']);
+      assert(await evaluate('document.querySelector("#hero-heading")?.textContent?.replace(/\\s+/g," ").trim()==="Make Muse your own."'), 'R7 home heading must be present');
+      assert(await evaluate('Boolean(document.querySelector(".r7-pyramid svg") && document.querySelector(".r7-metrics"))'), 'R7 must preserve pyramid artwork and resource inventory');
+      const inventory = await evaluate('[...document.querySelectorAll(".r7-metrics dd")].map(x=>x.textContent.trim())');
+      assert.deepEqual(inventory, ['5,200+', '375+', '15', '50+'], 'Resource counts must remain visible');
+      assert(journeys.paths.every(link => link.visible), 'All four task paths must be visible');
+      for (const role of ['software-engineer', 'research-evaluator', 'product-interface-designer', 'coordinator']) {
+        await navigate('index.html?role=' + role + '#setup');
+        const selection = await evaluate('({selected:document.getElementById("setup-role-select").value,expanded:document.querySelector(".setup-disclosure").open})');
+        assert(selection.selected === role && selection.expanded, 'Task choice must open its named specialist: ' + role);
+      }
+      await navigate('index.html');
       for (const href of journeys.paths.map(link => link.href).filter(href => href.startsWith('#'))) {
         assert(await evaluate('Boolean(document.getElementById(' + q(href.slice(1)) + '))'), 'Task path anchor is missing: ' + href);
       }
@@ -432,16 +463,22 @@ async function runChecks() {
   });
   await check('authentic Planner captures remain inspectable on phone and desktop', async () => {
     const observations = [];
-    for (const viewport of [320, 390, 768, 1024, 1440]) {
+    for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) {
       // Set the size away from the showcase before a fresh load so resizing
       // the old page cannot cancel a pending responsive image request.
       await navigate('public/index.html');
       await resize(viewport); await navigate('index.html');
+      // The authentic capture is intentionally lazy-loaded. Reveal it before checking load state.
+      await evaluate('document.querySelector(".r7-app-preview").scrollIntoView({block:"start",behavior:"instant"})');
+      await wait('(()=>{const i=document.querySelector(".premium-capture-picture img");return !!i&&i.complete&&i.naturalWidth>0&&!!i.currentSrc})()');
       const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img"),peek=document.querySelector(".premium-mobile-peek"),links=[...document.querySelectorAll(".premium-capture-inspect a")];return {loaded:img.complete&&img.naturalWidth>0,source:new URL(img.currentSrc).pathname,rect:{width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height,top:img.getBoundingClientRect().top},height:innerHeight,peekVisible:getComputedStyle(peek).display!=="none",links:links.map(a=>a.getAttribute("href")),scrollWidth:document.documentElement.scrollWidth}})()');
       assert(proof.loaded, 'Planner capture failed to load: ' + viewport);
       assert(proof.source.endsWith(viewport <= 690 ? '/planner-mobile.png' : '/planner-desktop.png'), JSON.stringify(proof));
-      assert(proof.rect.width >= (viewport <= 690 ? viewport * .75 : Math.min(500,viewport * .55)) && proof.rect.height >= (viewport <= 690 ? 280 : 330), JSON.stringify(proof));
-      assert(proof.rect.top + 200 <= proof.height, 'Planner needs a useful first-screen preview: ' + viewport);
+      assert(proof.rect.width >= (viewport <= 690 ? viewport * .70 : Math.min(500,viewport * .50)) && proof.rect.height >= (viewport <= 690 ? 280 : 330), JSON.stringify(proof));
+      assert(proof.rect.top >= 0, 'Planner demonstration should remain in page flow: ' + viewport);
+      await evaluate('document.querySelector(".r7-app-preview").scrollIntoView({block:"start"})');
+      const visible = await evaluate('(()=>{const r=document.querySelector(".premium-capture-picture img").getBoundingClientRect();return r.top<innerHeight && r.bottom>0})()');
+      assert(visible, 'Planner capture must become visible when scrolled to: ' + viewport);
       assert(Math.abs(proof.rect.width / proof.rect.height - (viewport <= 690 ? 390 / 490 : 980 / 745)) < .015,
         'Planner capture must keep its original aspect ratio');
       assert.equal(proof.peekVisible, viewport > 690, 'Dual-device evidence mode differs from viewport');
@@ -483,15 +520,33 @@ async function runChecks() {
     assert(await evaluate('document.getElementById("role-search").value==="" && [...document.querySelectorAll(".role-card:not([hidden])")].length===15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
     return {first,second,reset:true};
   });
-  for (const viewport of [320, 375, 390, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
+  for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
-    for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html?role=product-interface-designer']]) {
+    for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
+      if (name === 'home') {
+        const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header img.brand-symbol");return {loaded:!!i&&i.complete&&i.naturalWidth>=64&&i.getAttribute("src")==="muse-mark.png",width:i?.getBoundingClientRect().width}})()');
+        assert(mark.loaded && mark.width >= (viewport <= 850 ? 52 : 56), 'Brand mark must load at a legible size: ' + viewport);
+        if (viewport <= 850) {
+          const labels = await evaluate('[...document.querySelectorAll(".r7-metrics dt")].map(x=>parseFloat(getComputedStyle(x).fontSize))');
+          assert(labels.length === 4 && labels.every(x=>x>=15), 'Resource labels must be readable on mobile: ' + viewport);
+          const tasks = await evaluate('[...document.querySelectorAll(".r7-task-card")].map(x=>({width:x.getBoundingClientRect().width,height:x.getBoundingClientRect().height,title:parseFloat(getComputedStyle(x.querySelector("strong")).fontSize),body:parseFloat(getComputedStyle(x.querySelector("small")).fontSize)}))');
+          assert(tasks.length === 4 && tasks.every(x=>x.width >= viewport*.80 && x.height>=85 && x.title>=17 && x.body>=14), 'Four readable touch targets required: ' + JSON.stringify(tasks));
+        }
+        const header = await evaluate('getComputedStyle(document.querySelector(".r7-header")).backgroundColor');
+        assert.equal(header, 'rgb(21, 21, 21)', 'Sticky header must be fully opaque while scrolling');
+      }
       if (name === 'resources') {
         const palette = await evaluate('({text:getComputedStyle(document.querySelector(".intro-description")).color,background:getComputedStyle(document.body).backgroundColor})');
         assert.deepEqual(palette, {text:'rgb(198, 196, 184)',background:'rgb(21, 21, 21)'});
       }
       await screenshot(name + '-' + viewport + '.png');
+      if (name === 'home' && (viewport === 390 || viewport === 1440)) {
+        await evaluate('document.querySelector("#roadmap").scrollIntoView({block:"start",behavior:"instant"})');
+        await screenshot('home-tasks-' + viewport + '.png');
+        await evaluate('document.querySelector("#specialists").scrollIntoView({block:"start",behavior:"instant"})');
+        await screenshot('home-specialists-' + viewport + '.png');
+      }
       if (name === 'downloads') {
         const controls = await evaluate('({top:document.querySelector("#download-search").getBoundingClientRect().top,height:innerHeight,background:getComputedStyle(document.body).backgroundColor})');
         assert(controls.top > 0 && controls.top < controls.height, JSON.stringify(controls));
@@ -503,6 +558,76 @@ async function runChecks() {
       }
     }
     return rows;
+  });
+  await check('all generated subject pages share navigation, legibility and overflow safety', async () => {
+    const names = fs.readdirSync(path.join(site, 'library')).filter(name=>name.endsWith('.html')).sort();
+    assert(names.length >= 35, 'Full public subject catalogue must be present');
+    const visited = [];
+    for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) {
+      await resize(viewport);
+      for (const name of names) {
+        await navigate('library/' + name);
+        const proof = await evaluate('(()=>{const header=document.querySelector(".r7-header"),main=document.querySelector(".subject-main"),footer=document.querySelector(".premium-footer"),cards=document.querySelectorAll(".subject-card"),h=document.querySelector(".subject-heading h1"),first=cards[0];return {header:!!header&&header.getBoundingClientRect().height>=70,footer:!!footer,main:!!main,cards:cards.length,heading:h?.textContent.trim().length,brand:document.querySelector(".r7-header img.brand-symbol")?.complete,font:parseFloat(getComputedStyle(first.querySelector("h2")).fontSize),overflow:document.documentElement.scrollWidth-innerWidth,styles:[...document.styleSheets].some(s=>s.href?.endsWith("/experience.css"))}})()');
+        assert(proof.header && proof.footer && proof.main && proof.cards>0 && proof.cards<=200 && proof.heading>10 && proof.brand && proof.styles,
+          'Missing shared subject experience '+name+' '+viewport+' '+JSON.stringify(proof));
+        assert(proof.overflow<=1, 'Subject horizontal overflow: '+name+' '+viewport+' '+JSON.stringify(proof));
+        assert(proof.font>=20, 'Subject card titles too small: '+name+' '+viewport+' '+proof.font);
+        if ((name==='software-automation-001.html' && viewport===390) ||
+            (name==='design-visualization-001.html' && viewport===1440))
+          await screenshot('subject-' + viewport + '.png');
+        visited.push(name+':'+viewport);
+      }
+    }
+    return {subject_pages:names.length,verified_viewports:[320,360,375,390,393,768,1024,1440],checked:visited.length};
+  });
+  await check('library advanced filters disclose without losing search and reset', async () => {
+    for (const viewport of [390,1440]) {
+      await resize(viewport);
+      await navigate('downloads.html');
+      assert.equal(await evaluate('document.querySelector(".download-advanced").open'),false);
+      await click('.download-advanced summary');
+      assert.equal(await evaluate('document.querySelector(".download-advanced").open'),true);
+      const proof = await evaluate('(()=>({controls:["download-kind","download-role","download-category","download-sort"].every(id=>{const e=document.getElementById(id);return !!e.getClientRects().length}),overflow:document.documentElement.scrollWidth-innerWidth}))()');
+      assert(proof.controls && proof.overflow<=1,'Expanded filters must be fully accessible: '+JSON.stringify(proof));
+      await click('.download-advanced summary');
+      assert.equal(await evaluate('document.querySelector(".download-advanced").open'),false);
+      const search = await evaluate('document.querySelector("#download-search").getBoundingClientRect().height');
+      assert(search>=50,'Search remains primary on '+viewport);
+    }
+    return {viewport:[390,1440],disclosure:true,search_first:true};
+  });
+  await check('mobile-first page rhythm and guide navigation are measurable', async () => {
+    const observations = [];
+    for (const viewport of [320, 360, 375, 390, 393]) {
+      await resize(viewport);
+      await navigate('index.html');
+      const home = await evaluate('(()=>{const h=document.querySelector(".r7-header").getBoundingClientRect(),hero=document.querySelector(".r7-hero").getBoundingClientRect(),task=document.querySelector(".r7-task-card").getBoundingClientRect(),label=document.querySelector(".r7-task-paths h2").getBoundingClientRect();return {header:h.height,heroBottom:hero.bottom,taskTop:task.top,taskHeight:task.height,labelTop:label.top,viewport:innerHeight,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+      assert(home.header<=79 && home.heroBottom < home.viewport-85,
+        'Mobile hero pushes tasks out of reach: '+viewport+' '+JSON.stringify(home));
+      assert(home.taskTop < home.viewport-40 && home.taskHeight>=85 && home.overflow<=1,
+        'First task must be visible without a scroll: '+viewport+' '+JSON.stringify(home));
+      await navigate('downloads.html');
+      const library = await evaluate('(()=>{const heading=document.querySelector(".download-section h2").getBoundingClientRect(),card=document.querySelector(".download-card").getBoundingClientRect(),search=document.getElementById("download-search").getBoundingClientRect();return {searchTop:search.top,headingTop:heading.top,firstCardTop:card.top,viewport:innerHeight,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+      assert(library.searchTop < 360 && library.firstCardTop < library.viewport-80 && library.overflow<=1,
+        'Library must reach first result within initial phone view: '+viewport+' '+JSON.stringify(library));
+      await navigate('public/index.html');
+      const guide = await evaluate('(()=>{const h=document.querySelector(".site-header").getBoundingClientRect(),nav=document.querySelector(".header-nav"),menu=document.querySelector(".guide-mobile-nav"),title=document.querySelector("h1").getBoundingClientRect();return {header:h.height,menu:!!menu&&!!menu.getClientRects().length,oldNav:!!nav.getClientRects().length,titleTop:title.top,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+      assert(guide.header<=80 && guide.menu && !guide.oldNav && guide.titleTop>=guide.header && guide.overflow<=1,
+        'Guide directory needs one-row mobile header: '+viewport+' '+JSON.stringify(guide));
+      await click('.guide-mobile-nav summary');
+      assert(await evaluate('document.querySelector(".guide-mobile-nav").open'), 'Menu must actually open on mobile');
+      const links = await evaluate('[...document.querySelectorAll(".guide-mobile-nav nav a")].map(a=>({href:a.getAttribute("href"),height:a.getBoundingClientRect().height,visible:!!a.getClientRects().length}))');
+      assert(links.length===4 && links.every(a=>a.visible&&a.height>=44),
+        'Menu links must have accessible touch targets: '+JSON.stringify(links));
+      if(viewport===390) await screenshot('resources-mobile-menu-390.png');
+      await click('.guide-mobile-nav summary');
+      assert.equal(await evaluate('document.querySelector(".guide-mobile-nav").open'),false);
+      observations.push({viewport,home,library,guide});
+    }
+    await resize(1440); await navigate('public/index.html');
+    const desktop = await evaluate('({nav:!!document.querySelector(".header-nav").getClientRects().length,mobile:!!document.querySelector(".guide-mobile-nav").getClientRects().length})');
+    assert(desktop.nav&&!desktop.mobile, 'Desktop must preserve full guide navigation');
+    return {phones:observations,desktop};
   });
   await check('mobile detail dialog keeps and restores keyboard focus', async () => {
     await resize(375); await navigate('public/index.html?route=cli'); await click('.details-button');

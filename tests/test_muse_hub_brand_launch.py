@@ -61,7 +61,10 @@ class MuseHubBrandLaunch(unittest.TestCase):
         html=(SITE/"index.html").read_text(encoding="utf-8")
         self.assertIn("<title>Muse Hub",html)
         self.assertIn('class="brand-symbol"',html)
-        self.assertIn('<h1 id="hero-heading">Build on a <span>working app.</span></h1>', html)
+        self.assertIn('<h1 id="hero-heading">Make Muse <span>your own.</span></h1>', html)
+        self.assertIn('<img class="brand-symbol" src="muse-mark.png"', html)
+        self.assertIn('class="r7-pyramid-svg"', html)
+        self.assertNotIn('muse-mark-r7.svg', html)
         self.assertIn('id="companion-spaces"',html)
         self.assertIn('id="specialists"',html)
         for path in ('href="downloads.html"',
@@ -81,7 +84,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
         self.assertEqual(meta["schema"],"muse-hub/public-website-overlay/v1")
         self.assertEqual(meta["source_kind"],"STATIC_WEBSITE")
         expected={
-            "README.md", "index.html", "site.css", "site.js", "roles.json",
+            "README.md", "index.html", "site.css", "experience.css", "site.js", "roles.json",
             "downloads.html", "downloads.js", "downloads.json",
             "public/index.html", "public/styles.css", "public/app.js",
             "public/catalog.json", "sitemap.xml", "social-card.png",
