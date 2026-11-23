@@ -1,0 +1,101 @@
+{
+    "screenshots":  [
+                        {
+                            "sha256":  "039761332a5a3b613e1ee29c776362a647337c352beaf8a7f8fd190a6d9f69a8",
+                            "description":  "Baseline failing layout, 390x844",
+                            "file":  "r15-before-deeplink-mobile-390.png",
+                            "bytes":  30972
+                        },
+                        {
+                            "sha256":  "7a0b2c7c602fe94f766251daeb0df77b0a3d08eef314c382278401e9a60232c4",
+                            "description":  "Final committed R15 action in view, 390x844",
+                            "file":  "r15-after-deeplink-mobile-390.png",
+                            "bytes":  39288
+                        },
+                        {
+                            "sha256":  "cdb076da7beb6f774e3c133fdf2082872a11ba133088de1ebea26dce8e4a67ab",
+                            "description":  "Final committed R15 action in view, 1440x900",
+                            "file":  "r15-after-deeplink-desktop-1440.png",
+                            "bytes":  67635
+                        },
+                        {
+                            "sha256":  "b9cd769301bc2383f9913577c743adf422be186874175c82fcf2c502555f859c",
+                            "description":  "R15 homepage, 390px",
+                            "file":  "r15-mobile-home-390.png",
+                            "bytes":  117631
+                        },
+                        {
+                            "sha256":  "e41212096de61a2664b52f40395b8e9a25f3395e0e2debc60d6f565690d670ee",
+                            "description":  "R15 homepage, 1440px",
+                            "file":  "r15-desktop-home-1440.png",
+                            "bytes":  291526
+                        },
+                        {
+                            "sha256":  "e0dd6df251ed1147f99dc506a42fd5ec822dcf81edca3064d5a29298ff43c492",
+                            "description":  "R15 resource directory, 390px",
+                            "file":  "r15-mobile-library-390.png",
+                            "bytes":  40419
+                        },
+                        {
+                            "sha256":  "0ed6ae5d36350e8e9a850180d34363919e0252214ee0f6b94a40fe7b0ca49414",
+                            "description":  "R15 resource directory, 1440px",
+                            "file":  "r15-desktop-library-1440.png",
+                            "bytes":  86363
+                        },
+                        {
+                            "sha256":  "bdf992352a6315962fdbd622ff77d7746a27e9ebe920b5afa8af01d0f66a83fe",
+                            "description":  "R15 setup guides directory, 390px",
+                            "file":  "r15-mobile-guides-390.png",
+                            "bytes":  35938
+                        },
+                        {
+                            "sha256":  "b72e1423b9a319371b121713b3e231ff0f1fb78e13d1350b3d9deda0f8d89633",
+                            "description":  "R15 setup guides directory, 1440px",
+                            "file":  "r15-desktop-guides-1440.png",
+                            "bytes":  79463
+                        },
+                        {
+                            "sha256":  "30b6bc67a69cdb9b2ed5efed5a488a45b688d0529d360430ff3ceebe5bfe4d68",
+                            "description":  "R15 screenshot contact sheet 390 px group 1",
+                            "file":  "r15-all-subjects-mobile-1.png",
+                            "bytes":  878879
+                        },
+                        {
+                            "sha256":  "b7f1629d5c97f22f0a9f4b3411e4831188b13c1e4590878f0cbc36196cb68fc6",
+                            "description":  "R15 screenshot contact sheet 390 px group 2",
+                            "file":  "r15-all-subjects-mobile-2.png",
+                            "bytes":  836498
+                        },
+                        {
+                            "sha256":  "402486447e033a0bb11ed6611354f7920fc110cd1805fb4a7768691ca9affd2d",
+                            "description":  "R15 screenshot contact sheet 390 px group 3",
+                            "file":  "r15-all-subjects-mobile-3.png",
+                            "bytes":  587473
+                        },
+                        {
+                            "sha256":  "14b9519ea2112565ac5f349612715f2eb347b4df9a4870498b823a8a5cedf15c",
+                            "description":  "R15 screenshot contact sheet 1440 px group 1",
+                            "file":  "r15-all-subjects-desktop-1.png",
+                            "bytes":  501713
+                        },
+                        {
+                            "sha256":  "f0f8071c752476c613a83ad353ac682a9ff41770a0b27f540c3e4a9afbcf6ac4",
+                            "description":  "R15 screenshot contact sheet 1440 px group 2",
+                            "file":  "r15-all-subjects-desktop-2.png",
+                            "bytes":  493870
+                        },
+                        {
+                            "sha256":  "c5f20fee666096ce43da911bccb395b77bcca986e04667fc694bd2ef692ed37a",
+                            "description":  "R15 screenshot contact sheet 1440 px group 3",
+                            "file":  "r15-all-subjects-desktop-3.png",
+                            "bytes":  412865
+                        }
+                    ],
+    "chrome_checks_passed":  42,
+    "schema":  "muse-hub/r15-visual-evidence/v1",
+    "individual_chrome_screenshots":  117,
+    "candidate_commit":  "da47a5ec0f25291c1222323318634529cd3ce5eb",
+    "chrome_checks_failed":  0,
+    "review_note":  "Screenshots are real local Chrome captures; contact sheets organize the 35 pages by viewport and page index; Safari/VoiceOver and human approval remain pending.",
+    "generated_subject_html_pages":  35
+}
