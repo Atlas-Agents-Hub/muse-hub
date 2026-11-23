@@ -414,8 +414,11 @@ async function runChecks() {
       assert.deepEqual(journeys.paths.map(link => link.href), ['?role=software-engineer#setup', '?role=research-evaluator#setup', '?role=product-interface-designer#setup', '?role=coordinator#setup']);
       assert(await evaluate('document.querySelector("#hero-heading")?.textContent?.replace(/\\s+/g," ").trim()==="Make Muse your own."'), 'R7 home heading must be present');
       assert(await evaluate('Boolean(document.querySelector(".r7-pyramid svg") && document.querySelector(".r7-metrics"))'), 'R7 must preserve pyramid artwork and resource inventory');
-      const inventory = await evaluate('[...document.querySelectorAll(".r7-metrics dd")].map(x=>x.textContent.trim())');
-      assert.deepEqual(inventory, ['5,200+', '375+', '15', '50+'], 'Resource counts must remain visible');
+      const inventory = await evaluate('[...document.querySelectorAll(".r7-metrics dd")].map(x=>({kind:x.dataset.libraryCount,value:x.textContent.trim()}))');
+      const expected = ['skill', 'workflow', 'specialist', 'tool-guide'].map(kind => ({
+        kind, value: downloads.counts[kind].toLocaleString('en-US')
+      }));
+      assert.deepEqual(inventory, expected, 'Visible resource counts must match the release catalog');
       assert(journeys.paths.every(link => link.visible), 'All four task paths must be visible');
       for (const role of ['software-engineer', 'research-evaluator', 'product-interface-designer', 'coordinator']) {
         await navigate('index.html?role=' + role + '#setup');
@@ -522,7 +525,7 @@ async function runChecks() {
     assert(await evaluate('document.getElementById("role-search").value==="" && [...document.querySelectorAll(".role-card:not([hidden])")].length===15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
     return {first,second,reset:true};
   });
-  for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
+  for (const viewport of [320, 360, 375, 390, 393, 768, 886, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
@@ -534,6 +537,10 @@ async function runChecks() {
           assert(labels.length === 4 && labels.every(x=>x.size>=13&&x.left>=x.cellLeft-1&&x.right<=x.cellRight+1&&x.valueRight<=x.cellRight+1), 'Resource labels must fit their own column without clipping: ' + viewport + ' ' + JSON.stringify(labels));
           const tasks = await evaluate('[...document.querySelectorAll(".r7-task-card")].map(x=>({width:x.getBoundingClientRect().width,height:x.getBoundingClientRect().height,title:parseFloat(getComputedStyle(x.querySelector("strong")).fontSize),body:parseFloat(getComputedStyle(x.querySelector("small")).fontSize)}))');
           assert(tasks.length === 4 && tasks.every(x=>x.width >= viewport*.80 && x.height>=85 && x.title>=17 && x.body>=14), 'Four readable touch targets required: ' + JSON.stringify(tasks));
+        }
+        if (viewport === 886) {
+          const nav = await evaluate('({menu:getComputedStyle(document.querySelector(".mobile-navigation")).display,desktop:getComputedStyle(document.querySelector(".header-nav")).display})');
+          assert(nav.menu !== 'none' && nav.desktop === 'none', 'Intermediate tablet width must use the uncluttered mobile navigation');
         }
         const header = await evaluate('getComputedStyle(document.querySelector(".r7-header")).backgroundColor');
         assert.equal(header, 'rgb(21, 21, 21)', 'Sticky header must be fully opaque while scrolling');
@@ -565,7 +572,7 @@ async function runChecks() {
     const names = fs.readdirSync(path.join(site, 'library')).filter(name=>name.endsWith('.html')).sort();
     assert(names.length >= 35, 'Full public subject catalogue must be present');
     const visited = [];
-    for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) {
+    for (const viewport of [320, 360, 375, 390, 393, 768, 886, 1024, 1440]) {
       await resize(viewport);
       for (const name of names) {
         await navigate('library/' + name);
@@ -587,7 +594,7 @@ async function runChecks() {
         visited.push(name+':'+viewport);
       }
     }
-    return {subject_pages:names.length,verified_viewports:[320,360,375,390,393,768,1024,1440],checked:visited.length};
+    return {subject_pages:names.length,verified_viewports:[320,360,375,390,393,768,886,1024,1440],checked:visited.length};
   });
   await check('library advanced filters disclose without losing search and reset', async () => {
     for (const viewport of [390,1440]) {

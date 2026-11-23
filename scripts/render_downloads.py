@@ -206,13 +206,18 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
                 packed=row.get('pack_kind')=='skill-pack'
                 download='Download skill pack' if packed else 'Download ZIP'
                 entry=f'<details class="subject-source"><summary>Included pack path</summary><code>{esc(row["entry"])}</code></details>' if packed else ''
-                cards.append(f'<article class="download-card subject-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p>{entry}<div class="subject-card-actions">{read}<a href="{esc(row["url"])}">{download} ↓</a></div></article>')
+                cards.append(f'<article class="download-card subject-card" data-kind="{esc(row["kind"])}"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p>{entry}<div class="subject-card-actions">{read}<a href="{esc(row["url"])}">{download} ↓</a></div></article>')
             url='https://atlas-agents-hub.github.io/muse-hub/'+route
             page_description=(intros[label] if len(pages)==1 else
                 f'{intros[label]} Browse {label.lower()} resources on page {number} of {len(pages)}.')
             schema={'@context':'https://schema.org','@type':'CollectionPage','name':title,
                     'url':url,'description':page_description,'image':SOCIAL_IMAGE,
-                    'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}}
+                    'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':SITE_BASE},
+                    'breadcrumb':{'@type':'BreadcrumbList','itemListElement':[
+                        {'@type':'ListItem','position':1,'name':'Muse Hub','item':SITE_BASE},
+                        {'@type':'ListItem','position':2,'name':'Library','item':SITE_BASE+'downloads.html'},
+                        {'@type':'ListItem','position':3,'name':label,'item':url},
+                    ]}}
             body=f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark"><meta name="theme-color" content="#151515">
@@ -361,8 +366,8 @@ def render_homepage(data: dict, root: Path = ROOT) -> str:
         key=match['key']
         values={**data['counts'],'starter':data['starter_count'],'connector':data['connector_count']}
         if key not in values:raise ValueError('Unknown homepage inventory count.')
-        return match['open']+str(values[key])+match['close']
-    home=re.sub(r'(?P<open><(?:strong|span) data-library-count="(?P<key>[a-z-]+)">)\d+(?P<close></(?:strong|span)>)',library_count,home)
+        return match['open']+f'{values[key]:,}'+match['close']
+    home=re.sub(r'(?P<open><(?P<tag>strong|span|dd) data-library-count="(?P<key>[a-z-]+)">)[\d,]+(?P<close></(?P=tag)>)',library_count,home)
     for row in (item for item in data['items'] if item['kind']=='specialist'):
         identity=re.escape(row['id'])
         pattern=r'(<article class="role-card" data-role="'+identity+r'"[^>]*>)(.*?)(</article>)'
@@ -396,12 +401,7 @@ def render_homepage(data: dict, root: Path = ROOT) -> str:
 
 
 def display_count(kind: str, count: int) -> str:
-    """Use rounded counts in marketing copy and exact counts in result inventories."""
-    if kind == 'workflow' and 390 <= count < 400:
-        return 'nearly 400'
-    step = {'skill': 100, 'tool-guide': 10, 'starter': 50}.get(kind)
-    if step and count >= step and count % step:
-        return f'{(count // step) * step:,}+'
+    """Show verified catalog totals, not lower rounded marketing estimates."""
     return f'{count:,}'
 
 

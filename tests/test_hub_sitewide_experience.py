@@ -2,6 +2,7 @@
 import json
 import re
 import unittest
+from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
@@ -155,6 +156,45 @@ class SitewideExperienceTests(unittest.TestCase):
             self.assertIn('id="' + element + '"', source)
         self.assertIn('class="catalog-subjects"', source)
         self.assertIn('class="download-grid"', source)
+
+    def test_public_inventory_counts_match_catalog(self):
+        data = json.loads((SITE / "downloads.json").read_text("utf-8"))
+        home = (SITE / "index.html").read_text("utf-8")
+        downloads = (SITE / "downloads.html").read_text("utf-8")
+        for kind, count in data["counts"].items():
+            with self.subTest(kind=kind):
+                self.assertIn(f'<dd data-library-count="{kind}">{count:,}</dd>', home)
+        self.assertIn(
+            f'Search {data["counts"]["skill"]:,} skills, '
+            f'{data["counts"]["workflow"]:,} workflows, and '
+            f'{data["counts"]["tool-guide"]:,} tool guides.',
+            downloads,
+        )
+
+    def test_subject_structured_breadcrumbs_match_visible_pages(self):
+        site_base = "https://atlas-agents-hub.github.io/muse-hub/"
+        for page in self.subjects:
+            with self.subTest(page=page.name):
+                source = page.read_text("utf-8")
+                match = re.search(
+                    r'<script type="application/ld\+json">(.*?)</script>', source, re.S
+                )
+                self.assertIsNotNone(match, "Subject page requires JSON-LD")
+                schema = json.loads(match.group(1))
+                self.assertEqual(schema["@type"], "CollectionPage")
+                elements = schema["breadcrumb"]["itemListElement"]
+                self.assertEqual(len(elements), 3)
+                self.assertEqual([row["position"] for row in elements], [1, 2, 3])
+                self.assertEqual(
+                    [row["name"] for row in elements[:2]], ["Muse Hub", "Library"]
+                )
+                self.assertEqual(elements[0]["item"], site_base)
+                self.assertEqual(elements[1]["item"], site_base + "downloads.html")
+                self.assertEqual(elements[2]["item"], site_base + "library/" + page.name)
+                self.assertIn(
+                    f'<span>{escape(elements[2]["name"])}</span></nav>',
+                    source,
+                )
 
     def test_release_guide_matches_released_version(self):
         data = json.loads((SITE / "downloads.json").read_text("utf-8"))
