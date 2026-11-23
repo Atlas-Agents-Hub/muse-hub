@@ -7,6 +7,8 @@
   --rhythm-ui:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
 }
 html { scroll-padding-top:105px; }
+/* Indexed subject pages contain long native ranges; their in-page jumps must land immediately. */
+html.subject-directory-page { scroll-behavior:auto; }
 .muse-premium { font-family:var(--rhythm-ui); }
 .muse-premium .shell { width:min(1260px,calc(100% - 72px));max-width:none; }
 .muse-premium :is(.specialists,.premium-spaces,.setup,.downloads-hero,.r7-real-app) { scroll-margin-top:105px; }
@@ -136,6 +138,21 @@ html { scroll-padding-top:105px; }
 .muse-premium .subject-pagination a[rel] { padding:0 15px;white-space:nowrap; }
 .muse-premium .subject-ellipsis { min-width:24px;min-height:44px;display:grid;place-items:center;color:#d6d6ca;font-size:19px; }
 
+.muse-premium .subject-preview-note { margin:0 0 15px;font-size:14px;line-height:1.5;color:var(--soft); }
+.muse-premium .subject-preview-note a { color:var(--signal);font-weight:730;text-underline-offset:3px; }
+.muse-premium .subject-more { display:grid;gap:9px;margin-top:22px; }
+.muse-premium .subject-more h2 { font:400 25px/1.25 var(--serif);letter-spacing:-.02em;margin:0 0 5px;scroll-margin-top:95px; }
+.muse-premium .subject-slice { border:1px solid var(--divider);background:var(--panel);border-radius:var(--muse-card-radius); }
+.muse-premium .subject-slice>summary { display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;padding:13px 17px;list-style:none;cursor:pointer;font-size:15px;line-height:1.45;font-weight:720;color:var(--paper); }
+.muse-premium .subject-slice>summary::-webkit-details-marker { display:none; }
+.muse-premium .subject-slice>summary::after { content:"+";color:var(--signal);font-size:22px;line-height:1;flex:0 0 auto; }
+.muse-premium .subject-slice[open]>summary::after { content:"−"; }
+.muse-premium .subject-slice>summary:focus-visible { outline:2px solid var(--signal);outline-offset:3px; }
+.muse-premium .subject-slice>.subject-grid { padding:15px;border-top:1px solid var(--divider); }
+
+/* The shared catalogue's offscreen 280px placeholders caused 18-card anchor jumps.
+   Subject pages show only 18 cards at a time; use their real measured heights. */
+.muse-premium .subject-grid .subject-card { content-visibility:visible;contain-intrinsic-size:none; }
 .muse-premium .subject-card { min-height:272px; }
 .muse-premium .subject-card h2 { margin:17px 0 13px;overflow-wrap:break-word; }
 .muse-premium .subject-card-actions { display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:auto;border-top:1px solid #53554b;padding-top:8px; }

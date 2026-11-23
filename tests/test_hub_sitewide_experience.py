@@ -63,6 +63,33 @@ class SitewideExperienceTests(unittest.TestCase):
                 self.assertIn('href="../downloads.html"', source)
                 self.assertIn('src="../muse-mark.png"', source)
 
+    def test_subject_pages_limit_initial_cards_with_native_range_disclosures(self):
+        catalog = json.loads((SITE / 'downloads.json').read_text('utf-8'))
+        self.assertEqual(len(self.subjects), 35, 'Preserve existing published subject URLs')
+        totals = 0
+        for page in self.subjects:
+            with self.subTest(page=page.name):
+                source = page.read_text(encoding='utf-8')
+                self.assertIn('<html lang="en" class="subject-directory-page">', source)
+                count = source.count('class="download-card subject-card"')
+                totals += count
+                self.assertLessEqual(count, 200)
+                before_more = source.split('<section class="subject-more"', 1)[0]
+                self.assertEqual(before_more.count('class="download-card subject-card"'), min(count, 18))
+                ranges = [(int(a), int(b)) for a, b in re.findall(
+                    r'<details class="subject-slice" data-start="(\d+)" data-end="(\d+)">', source)]
+                expected = [(start + 1, min(start + 18, count)) for start in range(18, count, 18)]
+                self.assertEqual(ranges, expected, 'Native range disclosures must cover every remaining resource once')
+                if expected:
+                    self.assertIn('href="#subject-more"', source)
+                    self.assertIn('<h2 id="subject-more" tabindex="-1">More resources on this page</h2>', source)
+                    self.assertNotIn('heading.dataset.alignProbe', source)
+                    self.assertNotIn("history.pushState(null, '', url)", source)
+                    self.assertEqual(source.count('class="subject-slice"'), len(expected))
+                else:
+                    self.assertNotIn('id="subject-more"', source)
+        self.assertEqual(totals, len(catalog['items']), 'Preserve every resource card across subject pages')
+
     def test_guides_have_progressive_mobile_navigation(self):
         source = (SITE / "public/index.html").read_text(encoding="utf-8")
         self.assertIn('class="site-header r7-header muse-header"', source)

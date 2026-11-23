@@ -641,6 +641,50 @@ async function runChecks() {
     }
     return {subject_pages:names.length,verified_viewports:[320,360,375,390,393,768,886,1024,1440],checked:visited.length};
   });
+  await check('subject pages make all 200 resources reachable in native short ranges', async () => {
+    const results = [];
+    for (const viewport of [390,1440]) {
+      await resize(viewport);
+      await navigate('library/business-projects-001.html');
+      const inspect = () => evaluate('(()=>{const cards=[...document.querySelectorAll(".subject-card")],ranges=[...document.querySelectorAll(".subject-slice")];return {total:cards.length,visible:cards.filter(card=>!card.closest(".subject-slice:not([open])")&&card.getClientRects().length).length,ranges:ranges.length,open:ranges.filter(item=>item.open).length,height:document.documentElement.scrollHeight,links:document.querySelectorAll(".subject-card-actions a:last-child").length}})()');
+      const closed = await inspect();
+      assert.equal(closed.total,200);
+      assert.equal(closed.visible,18);
+      assert.equal(closed.ranges,11);
+      assert.equal(closed.open,0);
+      assert.equal(closed.links,200);
+      assert(closed.height < 10000,'Subject page should not require a 200-card scroll: '+viewport+' '+JSON.stringify(closed));
+      await click('.subject-preview-note a');
+      await wait('location.hash==="#subject-more"');
+      await pause(160);
+      const anchorPosition = await evaluate('(()=>{const target=document.getElementById("subject-more"),top=target.getBoundingClientRect().top;return {top,viewport:innerHeight,scrollY,hash:location.hash,contentVisibility:getComputedStyle(document.querySelector(".subject-card")).contentVisibility}})()');
+      assert.equal(anchorPosition.contentVisibility,'visible','Subject cards must use measured heights for reliable fragment navigation');
+      await screenshot('subject-ranges-index-'+viewport+'.png');
+      assert(anchorPosition.top>=64 && anchorPosition.top<anchorPosition.viewport*.55,
+        'Jump to more ranges must land at the range controls, not partway through the preceding 18 cards: '+JSON.stringify(anchorPosition));
+      await click('.subject-slice summary');
+      const expanded = await inspect();
+      assert.equal(expanded.visible,36);
+      assert.equal(expanded.open,1);
+      await screenshot('subject-ranges-expanded-'+viewport+'.png');
+      await click('.subject-slice summary');
+      assert.equal((await inspect()).visible,18);
+      await call('Emulation.setScriptExecutionDisabled',{value:true});
+      try {
+        await navigate('library/business-projects-001.html',false);
+        await click('.subject-preview-note a');
+        await click('.subject-slice summary');
+        assert.equal((await inspect()).visible,36,'Native disclosure must work with JavaScript disabled');
+      } finally { await call('Emulation.setScriptExecutionDisabled',{value:false}); }
+      await navigate('library/using-muse-001.html');
+      const small=await inspect();
+      assert.equal(small.total,9);
+      assert.equal(small.visible,9);
+      assert.equal(small.ranges,0);
+      results.push({viewport,closed,expanded,small});
+    }
+    return results;
+  });
   await check('library advanced filters disclose without losing search and reset', async () => {
     for (const viewport of [390,1440]) {
       await resize(viewport);

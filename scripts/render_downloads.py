@@ -207,6 +207,21 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
                 download='Download skill pack' if packed else 'Download ZIP'
                 entry=f'<details class="subject-source"><summary>Included pack path</summary><code>{esc(row["entry"])}</code></details>' if packed else ''
                 cards.append(f'<article class="download-card subject-card" data-kind="{esc(row["kind"])}"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p>{entry}<div class="subject-card-actions">{read}<a href="{esc(row["url"])}">{download} ↓</a></div></article>')
+            # The published URL retains at most 200 indexed cards, but only the
+            # first 18 should consume layout space by default. Native details
+            # keep the remainder reachable with JavaScript completely disabled.
+            first_cards=''.join(cards[:DOWNLOAD_PAGE_SIZE])
+            slices=[]
+            for offset in range(DOWNLOAD_PAGE_SIZE,len(cards),DOWNLOAD_PAGE_SIZE):
+                end=min(offset+DOWNLOAD_PAGE_SIZE,len(cards))
+                slices.append(
+                    f'<details class="subject-slice" data-start="{offset+1}" data-end="{end}">'
+                    f'<summary>Show resources {offset+1}&ndash;{end} of {len(cards)} on this page</summary>'
+                    f'<div class="download-grid subject-grid">{"".join(cards[offset:end])}</div></details>')
+            preview=(f'<p class="subject-preview-note">Showing the first {DOWNLOAD_PAGE_SIZE} of {len(cards)} '
+                     f'resources on this page. <a href="#subject-more">Jump to more ranges</a></p>' if slices else '')
+            more=(f'<section class="subject-more" aria-label="More resources on this page">'
+                  f'<h2 id="subject-more" tabindex="-1">More resources on this page</h2>{"".join(slices)}</section>' if slices else '')
             url='https://atlas-agents-hub.github.io/muse-hub/'+route
             page_description=(intros[label] if len(pages)==1 else
                 f'{intros[label]} Browse {label.lower()} resources on page {number} of {len(pages)}.')
@@ -219,7 +234,7 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
                         {'@type':'ListItem','position':3,'name':label,'item':url},
                     ]}}
             body=f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<html lang="en" class="subject-directory-page"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark"><meta name="theme-color" content="#151515">
 <title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(page_description)}">
 {social_meta(url, f'{title} | Page {number} | Muse Hub', page_description)}
@@ -232,7 +247,9 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
   <header class="subject-heading"><span class="subject-kicker">SKILLS, WORKFLOWS &amp; SPECIALISTS</span><h1>{esc(label)}</h1><p>{esc(intros[label])}</p>
   <div class="subject-summary"><span><strong>{len(rows):,}</strong> resources</span><span>{page_summary}</span><a href="../downloads.html?subject={quote(label)}">Search this subject →</a></div></header>
 {pager_top}
-  <div class="download-grid subject-grid">{''.join(cards)}</div>
+{preview}
+  <div class="download-grid subject-grid">{first_cards}</div>
+{more}
 {pager_bottom}
   <p class="subject-return"><a href="../downloads.html">← Explore all Muse skills, workflows and specialist kits</a></p>
 </main>
