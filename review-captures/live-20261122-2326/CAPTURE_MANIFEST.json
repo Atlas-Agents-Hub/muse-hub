@@ -1,0 +1,27 @@
+﻿{
+    "capture_id":  "20261122-2326",
+    "repo":  "Atlas-Agents-Hub/muse-hub",
+    "source_commit":  "b2543016ae59eb3861f61b5bda1f9c96bbfec723",
+    "source_branch":  "fix/muse-hub-r11-space-hierarchy-20261122",
+    "browser_started_utc":  "2026-11-23T04:25:50.274Z",
+    "browser_finished_utc":  "2026-11-23T04:26:19.946Z",
+    "test_status":  "PASS",
+    "test_passed":  39,
+    "test_failed":  0,
+    "test_errors":  0,
+    "total_screenshots":  111,
+    "representative_files":  [
+                                 "home-390.png",
+                                 "home-1440.png",
+                                 "home-tasks-390.png",
+                                 "home-specialists-390.png",
+                                 "home-specialists-1440.png",
+                                 "downloads-390.png",
+                                 "downloads-1440.png",
+                                 "resources-390.png",
+                                 "resources-1440.png",
+                                 "subject-390.png",
+                                 "subject-1440.png",
+                                 "resources-mobile-menu-390.png"
+                             ]
+}
