@@ -85,6 +85,15 @@ DESCRIPTIONS = {
     'product-to-implementation': 'Turn a product request into interface, data and automation specifications your team can build.',
     'pipeline-validation': 'Review schema changes, reconcile a data batch and inspect query performance.',
     'idea-to-offer': 'Explore customer needs and shape a practical offer.',
+    # Verified against the linked source SKILL.md files; retain source terminology.
+    'azure-eventhub-dotnet': 'Send and receive events with the Azure Event Hubs .NET SDK. Covers EventProcessorClient checkpointing, Azure Identity and event-streaming configuration.',
+    'cc-skill-project-guidelines-example': 'Use an illustrative project-skill template for architecture, code patterns, tests and deployment. Adapt its examples to your own repository; it is not a universal project policy.',
+    'claude-scientific-skills': 'Find relevant workflows in the upstream Scientific Agent Skills library and review dependencies, licenses and evidence before importing. This is a discovery guide, not a bundled scientific toolkit.',
+    'expo-dev-client': 'Create an Expo development client with EAS Build for native modules and platform extensions beyond Expo Go. Includes development build profiles and device testing.',
+    'favicon': 'Generate favicon variants from a supplied image, place them in the correct static assets folder and update HTML links. Includes ImageMagick and framework detection.',
+    'geo-citability': 'Review answer clarity and source evidence with a citability rubric, then measure AI citations on a dated query sample. This editorial method does not guarantee ranking gains.',
+    'geo-crawlers': 'Review crawler access against search, privacy and training preferences. Distinguish search bots, training crawlers and user-directed requests before changing site rules.',
+    'hugging-face-dataset-viewer': 'Explore datasets with the read-only Hugging Face Dataset Viewer API: inspect splits, preview rows, search or filter entries, and retrieve statistics and Parquet links.',
 }
 TITLES = {
     'release-readiness': 'Prepare a Release for Delivery',
