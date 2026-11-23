@@ -639,6 +639,22 @@ async function runChecks() {
     }
     return {screens};
   });
+  await check('all mobile Spaces and all five library types stay fully visible without sideways scrolling', async () => {
+    const observations=[];
+    for (const viewport of [320,360,375,390,393]) {
+      await resize(viewport);
+      await navigate('index.html');
+      const spaces=await evaluate('(()=>{const grid=document.querySelector(".premium-space-grid"),cards=[...grid.querySelectorAll(".premium-space-card")],rects=cards.map(c=>c.getBoundingClientRect()),r=grid.getBoundingClientRect();return {display:getComputedStyle(grid).display,count:cards.length,gridWidth:r.width,overflow:grid.scrollWidth-grid.clientWidth,cardWidth:Math.max(...rects.map(a=>a.width)),rows:[...new Set(rects.map(a=>Math.round(a.top)))]}})()');
+      assert(spaces.display==='grid' && spaces.count>=3 && spaces.overflow<=1 && spaces.cardWidth<=spaces.gridWidth+1 && spaces.rows.length===spaces.count,
+        'All phone Spaces must appear as full-width readable vertical cards: '+viewport+' '+JSON.stringify(spaces));
+      await navigate('downloads.html');
+      const filters=await evaluate('(()=>{const nav=document.querySelector(".downloads-catalog .download-jumps"),links=[...nav.querySelectorAll("a[data-download-type]")],r=nav.getBoundingClientRect(),bounds=links.map(a=>a.getBoundingClientRect());return {count:links.length,overflow:nav.scrollWidth-nav.clientWidth,rows:[...new Set(bounds.map(a=>Math.round(a.top)))],links:links.map((a,i)=>({type:a.dataset.downloadType,visible:!!a.getClientRects().length,left:bounds[i].left,right:bounds[i].right,height:bounds[i].height})),left:r.left,right:r.right}})()');
+      assert(filters.count===5 && filters.overflow<=1 && filters.rows.length===2 && filters.links.every(x=>x.visible&&x.height>=44&&x.left>=filters.left-1&&x.right<=filters.right+1),
+        'All five phone library filters must be visible within the container on two orderly rows: '+viewport+' '+JSON.stringify(filters));
+      observations.push({viewport,spaces,filters});
+    }
+    return observations;
+  });
   await check('subject pack paths are accessible disclosures with working method links', async () => {
     await resize(390);
     await navigate('library/design-visualization-001.html');
