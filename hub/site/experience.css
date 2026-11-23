@@ -626,7 +626,7 @@ body.muse-premium,body.guide-page {
   .muse-premium .r7-actions>.r7-button:first-child { justify-content:center;gap:16px; }
   .muse-premium .r7-pyramid { display:none; }
   .muse-premium .r7-metrics {
-    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+    display:grid;grid-template-columns:minmax(0,.93fr) minmax(0,1.16fr) minmax(0,1.16fr) minmax(0,.75fr);
     padding:17px 0 14px;gap:0;margin-top:0;
   }
   .muse-premium .r7-metrics>div,
@@ -635,15 +635,16 @@ body.muse-premium,body.guide-page {
   .muse-premium .r7-metrics>div:nth-child(4) {
     box-sizing:border-box;min-width:0;min-height:56px;
     border:0;border-left:1px solid #4b4e42;
-    padding:2px 5px 0 10px;gap:5px;align-items:flex-start;
+    padding:2px 2px 0 4px;gap:5px;align-items:flex-start;
   }
   .muse-premium .r7-metrics>div:first-child { border-left:0;padding-left:0; }
   .muse-premium .r7-metrics dd {
-    font-size:clamp(18px,5.4vw,23px);letter-spacing:-.04em;line-height:1.05;
+    font-size:clamp(18px,5.4vw,23px);letter-spacing:-.04em;line-height:1.05;max-width:100%;
   }
   .muse-premium .r7-metrics dt {
     font-size:13px;font-weight:550;
-    letter-spacing:-.025em;line-height:1.23;white-space:normal;
+    letter-spacing:-.05em;line-height:1.23;white-space:normal;
+    max-width:100%;overflow-wrap:anywhere;
   }
   .muse-premium .r7-release-row { display:none; }
   .muse-premium .premium-space-grid { display:grid;grid-template-columns:1fr;overflow:visible;padding:0;scroll-snap-type:none; }
@@ -707,7 +708,7 @@ body.muse-premium,body.guide-page {
   .muse-premium .r7-hero-copy { padding-top:17px; }
   .muse-premium .r7-metrics>div,
   .muse-premium .r7-metrics>div:nth-child(2),
-  .muse-premium .r7-metrics>div:nth-child(4) { padding-left:6px; }
+  .muse-premium .r7-metrics>div:nth-child(4) { padding-left:4px; }
   .muse-premium .r7-metrics>div:first-child { padding-left:0; }
   .muse-premium .muse-header .brand-symbol,.guide-page .muse-header .brand-symbol { width:54px;height:54px; }
   .muse-premium .muse-header .brand-text,.guide-page .muse-header .brand-text { font-size:19px; }
