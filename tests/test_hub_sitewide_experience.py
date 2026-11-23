@@ -157,6 +157,24 @@ class SitewideExperienceTests(unittest.TestCase):
         self.assertIn('class="catalog-subjects"', source)
         self.assertIn('class="download-grid"', source)
 
+    def test_specialist_setup_links_match_installed_kit_guides(self):
+        catalog = json.loads((SITE / "downloads.json").read_text("utf-8"))
+        roles = json.loads((SITE / "roles.json").read_text("utf-8"))["roles"]
+        specialists = {row["id"]: row for row in catalog["items"] if row["kind"] == "specialist"}
+        self.assertEqual(set(specialists), {role["id"] for role in roles})
+        self.assertEqual(len(specialists), 15)
+        home = (SITE / "index.html").read_text("utf-8")
+        library = (SITE / "downloads.html").read_text("utf-8")
+        subject_pages = "\n".join(page.read_text("utf-8") for page in self.subjects)
+        for role_id, entry in specialists.items():
+            with self.subTest(role=role_id):
+                setup_link = f"index.html?role={role_id}#setup"
+                self.assertEqual(entry["guide_url"], setup_link)
+                self.assertTrue((ROOT / "presets" / role_id / "INSTALL.md").is_file())
+                self.assertIn(f'<option value="{role_id}"', home)
+                self.assertIn(f'href="{setup_link}"', library)
+                self.assertIn(f'href="../{setup_link}"', subject_pages)
+
     def test_public_inventory_counts_match_catalog(self):
         data = json.loads((SITE / "downloads.json").read_text("utf-8"))
         home = (SITE / "index.html").read_text("utf-8")

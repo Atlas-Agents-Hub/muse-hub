@@ -43,7 +43,10 @@
           !allowed.type.has(row.kind) || row.kind === 'all' || !allowed.subject.has(row.category) || row.category === 'all' ||
           !Array.isArray(row.roles) || !row.roles.every(value => value !== 'all' && allowed.role.has(value)) ||
           !/^[a-z0-9][a-z0-9._-]*\.zip$/.test(row.asset) || row.url !== releaseBase + row.asset ||
-          (row.guide_url !== undefined && (typeof row.guide_url !== 'string' || !row.guide_url.startsWith(repository + '/blob/main/'))) ||
+          (row.kind === 'specialist' && (!/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(row.id) ||
+            row.guide_url !== 'index.html?role=' + row.id + '#setup')) ||
+          (row.kind !== 'specialist' && row.guide_url !== undefined &&
+            (typeof row.guide_url !== 'string' || !row.guide_url.startsWith(repository + '/blob/main/'))) ||
           (row.pack_kind === 'skill-pack' && (typeof row.entry !== 'string' || !Number.isInteger(row.pack_size) || row.pack_size < 1))) throw Error('Invalid download entry');
       const identity = row.kind + ':' + row.id;
       if (identities.has(identity)) throw Error('Duplicate download entry');
@@ -67,10 +70,11 @@
     card.dataset.search = [row.title, row.description, row.id, row.category, row.keywords || ''].join(' ');
     const description = row.description.length > 320 ? row.description.slice(0, 317).replace(/ [^ ]*$/, '') + '…' : row.description;
     card.append(element('span', 'download-kind', row.category), element('h3', '', row.title), element('p', '', description));
+    const actions = element('div', 'download-card-actions');
     if (row.guide_url) {
-      const guide = element('a', 'guide-link', 'Read guide →');
+      const guide = element('a', 'guide-link', (row.kind === 'specialist' ? 'Setup guide' : 'Read guide') + ' →');
       guide.href = row.guide_url;
-      card.append(guide);
+      actions.append(guide);
     }
     const packed = row.pack_kind === 'skill-pack';
     if (packed) {
@@ -84,7 +88,8 @@
     const arrow = element('span', '', '↓');
     arrow.setAttribute('aria-hidden', 'true');
     download.append(arrow);
-    card.append(download);
+    actions.append(download);
+    card.append(actions);
     return card;
   }
   function readUrl() {

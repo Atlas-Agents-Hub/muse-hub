@@ -78,7 +78,8 @@
       "keywords": "specialists build Build & automate",
       "roles": [
         "software-engineer"
-      ]
+      ],
+      "guide_url": "index.html?role=software-engineer#setup"
     },
     {
       "id": "data-engineering-architect",
@@ -91,7 +92,8 @@
       "keywords": "specialists build Build & automate",
       "roles": [
         "data-engineer"
-      ]
+      ],
+      "guide_url": "index.html?role=data-engineering-architect#setup"
     },
     {
       "id": "automation-engineer",
@@ -104,7 +106,8 @@
       "keywords": "specialists build Build & automate",
       "roles": [
         "automation-engineer"
-      ]
+      ],
+      "guide_url": "index.html?role=automation-engineer#setup"
     },
     {
       "id": "infrastructure-reliability-engineer",
@@ -117,7 +120,8 @@
       "keywords": "specialists build Build & automate",
       "roles": [
         "reliability-engineer"
-      ]
+      ],
+      "guide_url": "index.html?role=infrastructure-reliability-engineer#setup"
     },
     {
       "id": "research-evaluator",
@@ -130,7 +134,8 @@
       "keywords": "specialists research Research & evaluate",
       "roles": [
         "research-evaluator"
-      ]
+      ],
+      "guide_url": "index.html?role=research-evaluator#setup"
     },
     {
       "id": "claims-adjudicator",
@@ -143,7 +148,8 @@
       "keywords": "specialists research Research & evaluate",
       "roles": [
         "claims-adjudicator"
-      ]
+      ],
+      "guide_url": "index.html?role=claims-adjudicator#setup"
     },
     {
       "id": "adversarial-verifier",
@@ -156,7 +162,8 @@
       "keywords": "specialists research Research & evaluate",
       "roles": [
         "adversarial-verifier"
-      ]
+      ],
+      "guide_url": "index.html?role=adversarial-verifier#setup"
     },
     {
       "id": "reverse-engineering-researcher",
@@ -169,7 +176,8 @@
       "keywords": "specialists research Research & evaluate",
       "roles": [
         "reverse-engineering-researcher"
-      ]
+      ],
+      "guide_url": "index.html?role=reverse-engineering-researcher#setup"
     },
     {
       "id": "creative-studio",
@@ -182,7 +190,8 @@
       "keywords": "specialists create Create & learn",
       "roles": [
         "creative-studio"
-      ]
+      ],
+      "guide_url": "index.html?role=creative-studio#setup"
     },
     {
       "id": "product-interface-designer",
@@ -195,7 +204,8 @@
       "keywords": "specialists create Create & learn",
       "roles": [
         "product-interface-designer"
-      ]
+      ],
+      "guide_url": "index.html?role=product-interface-designer#setup"
     },
     {
       "id": "model-builder",
@@ -208,7 +218,8 @@
       "keywords": "specialists create Create & learn",
       "roles": [
         "model-builder"
-      ]
+      ],
+      "guide_url": "index.html?role=model-builder#setup"
     },
     {
       "id": "learning-coach",
@@ -221,7 +232,8 @@
       "keywords": "specialists create Create & learn",
       "roles": [
         "learning-coach"
-      ]
+      ],
+      "guide_url": "index.html?role=learning-coach#setup"
     },
     {
       "id": "personal-companion",
@@ -234,7 +246,8 @@
       "keywords": "specialists life Life & planning",
       "roles": [
         "personal-companion"
-      ]
+      ],
+      "guide_url": "index.html?role=personal-companion#setup"
     },
     {
       "id": "garden-companion",
@@ -247,7 +260,8 @@
       "keywords": "specialists life Life & planning",
       "roles": [
         "garden-companion"
-      ]
+      ],
+      "guide_url": "index.html?role=garden-companion#setup"
     },
     {
       "id": "coordinator",
@@ -260,7 +274,8 @@
       "keywords": "specialists life Life & planning",
       "roles": [
         "coordinator"
-      ]
+      ],
+      "guide_url": "index.html?role=coordinator#setup"
     },
     {
       "id": "dotnet-core-expert",

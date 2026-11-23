@@ -520,6 +520,21 @@ body.muse-premium,body.guide-page {
   margin:10px 0 8px;
   overflow-wrap:anywhere;
 }
+.muse-premium.downloads-page .download-card-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  border-top:1px solid var(--muse-border);
+  margin-top:auto;
+}
+.muse-premium.downloads-page .download-card-actions a {
+  flex:1 1 120px;
+  min-width:0;
+  min-height:48px;
+  border-top:0;
+  padding-top:8px;
+  margin-bottom:0;
+}
 .muse-premium .download-card>p {
   color:var(--muse-muted);
   font-size:14px;

@@ -202,7 +202,7 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
             for row in items:
                 text=row['description']
                 if len(text)>220:text=text[:217].rsplit(' ',1)[0]+'…'
-                read=f'<a class="subject-guide-link" href="{esc(row["guide_url"])}">Read method →</a>' if row.get('guide_url') else ''
+                read=f'<a class="subject-guide-link" href="{esc("../" + row["guide_url"] if row["kind"] == "specialist" else row["guide_url"])}">{"Setup guide" if row["kind"] == "specialist" else "Read method"} →</a>' if row.get('guide_url') else ''
                 packed=row.get('pack_kind')=='skill-pack'
                 download='Download skill pack' if packed else 'Download ZIP'
                 entry=f'<details class="subject-source"><summary>Included pack path</summary><code>{esc(row["entry"])}</code></details>' if packed else ''
@@ -287,7 +287,8 @@ def catalog(root: Path = ROOT) -> dict:
                          description=role['description'], asset=asset, url=base+asset,
                          category=SPECIALIST_SUBJECTS[ALIASES.get(role['id'],role['id'])],
                          keywords='specialists '+role['category']+' '+role['category_label'],
-                         roles=[ALIASES.get(role['id'],role['id'])]))
+                         roles=[ALIASES.get(role['id'],role['id'])],
+                         guide_url=f'index.html?role={role["id"]}#setup'))
     for key, kind, description in (('skills', 'skill', 'trigger'), ('workflows', 'workflow', 'goal')):
         for item in sorted(collection[key], key=lambda row: (TITLES.get(row['id'],row['title']).casefold(), row['id'])):
             asset = f"muse-{kind}-{item['id']}-{version}.zip"
@@ -448,13 +449,13 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
             if len(description)>320:
                 description=description[:317].rsplit(' ',1)[0]+'…'
             search=esc(' '.join((row['title'],description,row['id'],row['category'],row.get('keywords',''))))
-            read_link=f'<a class="guide-link" href="{esc(row["guide_url"])}">Read guide →</a>' if row.get('guide_url') else ''
+            read_link=f'<a class="guide-link" href="{esc(row["guide_url"])}">{"Setup guide" if kind == "specialist" else "Read guide"} →</a>' if row.get('guide_url') else ''
             packed=row.get('pack_kind')=='skill-pack'
             label=f"Download skill pack · {row['pack_size']} skills" if packed else 'Download ZIP'
             hint=f'<p class="download-entry">Open <code>{esc(row["entry"])}</code> in this pack.</p>' if packed else ''
             cards.append(f'''<article class="download-card" data-id="{esc(row['id'])}" data-kind="{kind}" data-category="{esc(row['category'])}" data-roles="{esc(' '.join(row['roles']))}" data-search="{search}">
-  <span class="download-kind">{esc(row['category'])}</span><h3>{esc(row['title'])}</h3><p>{esc(description)}</p>{read_link}{hint}
-  <a href="{esc(row['url'])}" aria-label="Download {esc(row['title'])}{' skill pack' if packed else ' ZIP'}">{esc(label)} <span aria-hidden="true">↓</span></a>
+  <span class="download-kind">{esc(row['category'])}</span><h3>{esc(row['title'])}</h3><p>{esc(description)}</p>{hint}
+  <div class="download-card-actions">{read_link}<a href="{esc(row['url'])}" aria-label="Download {esc(row['title'])}{' skill pack' if packed else ' ZIP'}">{esc(label)} <span aria-hidden="true">↓</span></a></div>
 </article>''')
         count_label = display_count(kind, data['counts'][kind])
         sections.append(f'<section class="download-section" data-kind="{kind}" id="{anchor}" aria-labelledby="{anchor}-heading"'+(' hidden' if not cards else '')+f'><h2 id="{anchor}-heading">{heading} <span>{count_label}</span></h2><div class="download-grid">'+ '\n'.join(cards)+'</div></section>')

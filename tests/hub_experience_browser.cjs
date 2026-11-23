@@ -275,6 +275,34 @@ async function runChecks() {
     assert.equal(new URL(await evaluate('location.href')).searchParams.has('role'), false);
     return {searchable_resources:downloads.items.length, rendered_cards:links.length, specialist_search:true, empty_state_reset:true};
   });
+  await check('all specialist library setup links open matching onboarding', async () => {
+    await navigate('downloads.html?type=specialist');
+    const specialistRows = downloads.items.filter(row => row.kind === 'specialist');
+    const links = await evaluate('[...document.querySelectorAll(".download-card[data-kind=specialist] .guide-link")].map(a=>({id:a.closest(".download-card").dataset.id,label:a.textContent.trim(),href:a.getAttribute("href")}))');
+    assert.equal(specialistRows.length, 15);
+    assert.deepEqual(links.map(link => link.id), specialistRows.map(row => row.id));
+    for (const link of links) {
+      assert.equal(link.href, 'index.html?role=' + link.id + '#setup');
+      assert(link.label.startsWith('Setup guide'), 'Specialist path should describe the setup action');
+      assert(fs.statSync(path.join(repo, 'presets', link.id, 'INSTALL.md')).isFile(), 'Missing original installation guide for ' + link.id);
+    }
+    await resize(390);
+    const actions = await evaluate('(() => {const card=document.querySelector(".download-card[data-id=software-engineer]");const links=[...card.querySelectorAll(".download-card-actions a")];const boxes=links.map(a=>{const r=a.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,right:r.right}});return {boxes,viewport:innerWidth,pageWidth:document.documentElement.scrollWidth}})()');
+    assert.equal(actions.boxes.length, 2, 'Mobile card must show setup and download actions');
+    assert(actions.boxes.every(box => box.height >= 44), 'Mobile setup and download targets must be touch sized');
+    assert(Math.abs(actions.boxes[0].y - actions.boxes[1].y) < 3, '390px card actions should share a row');
+    assert(actions.boxes[0].right <= actions.boxes[1].x, 'Mobile card actions must not overlap');
+    assert(actions.pageWidth <= actions.viewport + 1, 'Mobile card actions must not overflow');
+    await resize(1440);
+    await click('.download-card[data-id="creative-studio"] .guide-link');
+    await wait('document.getElementById("setup-role-select")?.value === "creative-studio" && document.querySelector(".setup-disclosure")?.open',
+      'Selecting a library specialist must open that role in on-site setup');
+    const result = await evaluate('({path:location.pathname,role:new URL(location.href).searchParams.get("role"),download:document.getElementById("setup-role-download").href})');
+    assert(result.path.endsWith('/index.html'));
+    assert.equal(result.role, 'creative-studio');
+    assert.equal(result.download, specialistRows.find(row=>row.id === 'creative-studio').url);
+    return {specialists:links.length,all_setup_links_valid:true,selected_role:'creative-studio'};
+  });
   await check('invalid download filters recover without reflected markup', async () => {
     for (const query of ['type=bad&role=bad', 'type=skill&type=workflow', 'role=%3Cimg%20src=x%3E', 'q='+'x'.repeat(3000)]) {
       await navigate('downloads.html?' + query);
