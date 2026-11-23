@@ -172,7 +172,22 @@ html { scroll-padding-top:105px; }
   .muse-premium .r7-kicker { font-size:12px; }
   .muse-premium .r7-lead { font-size:17px;line-height:1.55; }
   .muse-premium .r7-actions>.r7-button { min-height:49px; }
-  .muse-premium .r7-task-paths>.shell { padding-top:16px; }
+  .muse-premium .r7-task-paths>.shell { padding-top:12px; }
+  .muse-premium .r7-hero-copy { padding-top:17px; }
+  .muse-premium .r7-hero h1 { font-size:clamp(41px,10.6vw,50px);line-height:1.02;margin-bottom:10px; }
+  .muse-premium .r7-lead { font-size:15.5px;line-height:1.48; }
+  .muse-premium .r7-actions { margin-top:13px;gap:8px; }
+  .muse-premium .r7-actions>.r7-button { min-height:45px; }
+  .muse-premium .r7-pyramid { height:92px;margin-top:10px; }
+  .muse-premium .r7-pyramid-svg { height:190px;bottom:-64px; }
+  .muse-premium .r7-metrics { padding:10px 0 8px;gap:0; }
+  .muse-premium .r7-metrics>div { min-height:54px;padding-block:6px; }
+  .muse-premium .r7-metrics dd { font-size:25px; }
+  .muse-premium .r7-metrics dt { font-size:15px;line-height:1.16; }
+  .muse-premium .r7-release-row { padding:0 0 9px;font-size:10px; }
+  .muse-premium .premium-space-grid { display:grid;grid-template-columns:1fr;overflow:visible;padding:0;scroll-snap-type:none; }
+  .muse-premium .premium-space-card { width:auto;flex:auto;scroll-snap-align:none; }
+  .muse-premium .premium-space-art { height:132px; }
   .muse-premium .r7-task-paths h2 { font-size:13px;margin-bottom:15px; }
   .muse-premium .r7-task-card { min-height:100px;padding:18px;gap:15px; }
   .muse-premium .r7-task-card .r7-task-content strong { font-size:19px; }
@@ -263,14 +278,14 @@ html { scroll-padding-top:105px; }
   --muse-serif: "Iowan Old Style",Baskerville,"Palatino Linotype",Georgia,serif;
   --muse-gutter: clamp(20px, 3.2vw, 36px);
   --muse-content: 1260px;
-  --muse-card-radius: 4px;
+  --muse-card-radius: 5px;
   --muse-gap: 16px;
   --muse-space-xs: 8px;
   --muse-space-sm: 12px;
   --muse-space-md: 20px;
-  --muse-space-lg: 32px;
-  --muse-space-xl: 48px;
-  --muse-space-2xl: 72px;
+  --muse-space-lg: 28px;
+  --muse-space-xl: 40px;
+  --muse-space-2xl: 56px;
 }
 html { scroll-padding-top:88px; }
 body.muse-premium,body.guide-page {
@@ -424,12 +439,27 @@ body.muse-premium,body.guide-page {
 
 /* Home page: a single editorial rhythm rather than decorative spacing bands. */
 .muse-premium .r7-release-row { color:#b5b6a6; }
+@media(min-width:921px) {
+  .muse-premium .r7-hero-shell { min-height:340px;grid-template-columns:minmax(0,1fr) 220px; }
+  .muse-premium .r7-hero-stage { min-height:336px; }
+  .muse-premium .r7-hero-copy { padding-block:38px 32px; }
+  .muse-premium .r7-hero h1 { font-size:clamp(54px,5.05vw,72px);margin-bottom:17px; }
+  .muse-premium .r7-lead { font-size:18px;line-height:1.45; }
+  .muse-premium .r7-actions { margin-top:23px; }
+  .muse-premium .r7-actions>.r7-button { min-height:51px; }
+  .muse-premium .r7-pyramid { height:304px;width:min(680px,68%); }
+  .muse-premium .r7-metrics { padding-block:17px; }
+  .muse-premium .r7-metrics>div { min-height:69px; }
+  .muse-premium .r7-metrics dd { font-size:28px; }
+  .muse-premium .r7-metrics dt { font-size:14px; }
+}
+
 .muse-premium .r7-task-grid { gap:var(--muse-gap); }
 .muse-premium .r7-task-card { border-color:var(--muse-border);border-radius:var(--muse-card-radius); }
-.muse-premium .r7-task-paths>.shell { padding-top:var(--muse-space-lg); }
+.muse-premium .r7-task-paths>.shell { padding-top:23px; }
 .muse-premium .r7-task-paths { padding-bottom:var(--muse-space-lg); }
-.muse-premium .r7-featured { padding-bottom:var(--muse-space-xl); }
-.muse-premium .r7-feature-card { gap:var(--muse-space-lg); }
+.muse-premium .r7-featured { padding-bottom:34px; }
+.muse-premium .r7-feature-card { gap:24px; }
 .muse-premium .r7-real-app { padding-block:var(--muse-space-2xl); }
 .muse-premium .premium-spaces,.muse-premium .specialists {
   padding-top:var(--muse-space-2xl);padding-bottom:var(--muse-space-2xl);
@@ -437,13 +467,13 @@ body.muse-premium,body.guide-page {
 .muse-premium .premium-section-heading h2,
 .muse-premium .r7-app-copy h2 { font-family:var(--muse-serif);letter-spacing:-.045em; }
 .muse-premium .role-grid { gap:var(--muse-gap); }
-.muse-premium .role-card { padding:24px; }
+.muse-premium .role-card { padding:22px; }
 
 /* Home, Library and Subject pages use one content and heading scale. */
-.muse-premium .downloads-catalog { padding:var(--muse-space-xl) 0 var(--muse-space-2xl); }
+.muse-premium .downloads-catalog { padding:28px 0 58px; }
 .muse-premium .catalog-heading h1,.muse-premium .subject-heading h1,
 .guide-page .intro-grid h1 {
-  font:400 clamp(42px,4.7vw,64px)/1.09 var(--muse-serif);
+  font:400 clamp(40px,4.0vw,54px)/1.09 var(--muse-serif);
   letter-spacing:-.046em;
 }
 .muse-premium .catalog-heading p,.muse-premium .subject-heading>p,
@@ -453,60 +483,78 @@ body.muse-premium,body.guide-page {
   max-width:750px;
 }
 .muse-premium .download-jumps { gap:8px; }
-.muse-premium .download-toolbar { padding-bottom:var(--muse-space-md); }
-.muse-premium .catalog-subjects { margin:var(--muse-space-xs) 0 var(--muse-space-md); }
-.muse-premium .download-section { margin-top:var(--muse-space-lg); }
-.muse-premium .download-section>h2 { margin-bottom:var(--muse-space-md); }
+.muse-premium .download-toolbar { padding-bottom:13px; }
+.muse-premium .catalog-subjects { margin:6px 0 11px; }
+.muse-premium .download-section { margin-top:12px; }
+.muse-premium .download-section>h2 { font-size:clamp(29px,3vw,38px);margin-bottom:14px; }
 .muse-premium .download-grid { gap:var(--muse-gap); }
+.muse-premium .catalog-heading { margin-bottom:13px; }
+.muse-premium .catalog-heading p { margin-top:8px; }
+.muse-premium .downloads-catalog .download-jumps { margin-bottom:12px; }
+.muse-premium a[data-download-type] { min-height:42px;padding:7px 14px; }
+.muse-premium .download-toolbar .field-wrap label { margin-bottom:6px; }
+.muse-premium .download-toolbar .field-wrap input,
+.muse-premium .download-advanced>summary,
+.muse-premium .download-toolbar #download-reset { min-height:46px; }
+.muse-premium .download-count { margin-block:7px; }
+.muse-premium .download-card>p:not(.subject-card>p) { display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden; }
+
 .muse-premium .download-card {
-  min-height:0;padding:24px;display:flex;flex-direction:column;
+  min-height:0;padding:20px;display:flex;flex-direction:column;
   border-color:var(--muse-border);background:var(--muse-panel);
 }
 .muse-premium .download-card h2,.muse-premium .download-card h3 {
-  font:750 22px/1.22 var(--muse-sans);
-  letter-spacing:-.035em;
-  margin:14px 0 10px;
+  font:740 20px/1.25 var(--muse-sans);
+  letter-spacing:-.03em;
+  margin:10px 0 8px;
   overflow-wrap:anywhere;
 }
 .muse-premium .download-card>p {
   color:var(--muse-muted);
-  font-size:15px;
-  line-height:1.54;
-  margin:0 0 var(--muse-space-md);
+  font-size:14px;
+  line-height:1.5;
+  margin:0 0 12px;
 }
-.muse-premium .subject-main { padding-top:var(--muse-space-lg);padding-bottom:var(--muse-space-2xl); }
-.muse-premium .subject-breadcrumb { margin-bottom:var(--muse-space-md); }
-.muse-premium .subject-heading { padding-block:var(--muse-space-lg);margin-bottom:var(--muse-space-md); }
-.muse-premium .subject-heading h1 { margin:12px 0 14px; }
-.muse-premium .subject-heading>p { margin:0 0 16px; }
+.muse-premium .subject-main { padding-top:18px;padding-bottom:var(--muse-space-2xl); }
+.muse-premium .subject-breadcrumb { margin-bottom:12px; }
+.muse-premium .subject-heading { padding-block:18px;margin-bottom:12px; }
+.muse-premium .subject-heading h1 { margin:8px 0 9px;max-width:none; }
+.muse-premium .subject-heading>p { margin:0 0 10px; }
 .muse-premium .subject-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .muse-premium .subject-card { min-height:235px; }
-.muse-premium .subject-card>p { max-width:66ch; }
-.muse-premium .subject-source { margin:2px 0 12px;border-top:1px solid #414638;padding-top:9px; }
+.muse-premium .subject-card>p {
+  max-width:66ch;display:-webkit-box;-webkit-line-clamp:4;
+  -webkit-box-orient:vertical;overflow:hidden;flex:none;
+}
+.muse-premium .subject-source { margin:2px 0 9px;border-top:1px solid #414638;padding-top:8px; }
 .muse-premium .subject-source summary { color:var(--muse-muted);font:650 12px/1.4 var(--muse-sans);cursor:pointer; }
 .muse-premium .subject-source summary:hover { color:var(--muse-accent); }
 .muse-premium .subject-source code { display:block;color:#dadbce;font:12px/1.48 ui-monospace,Consolas,monospace;margin:8px 0 4px;overflow-wrap:anywhere; }
 .muse-premium .subject-card-actions {
-  margin-top:auto;padding-top:12px;gap:14px;
+  margin-top:auto;padding-top:9px;gap:12px;
   border-top:1px solid #4d5146;
 }
 .muse-premium .subject-card-actions a { font-size:13px;line-height:1.4;min-height:44px; }
-.muse-premium .subject-pagination { margin:var(--muse-space-md) 0; }
+.muse-premium .subject-pagination { margin:11px 0 15px;gap:6px; }
+.muse-premium .subject-pagination a { min-height:42px;min-width:42px;font-size:13px; }
+.muse-premium .subject-summary { gap:8px 16px; }
+.muse-premium .subject-summary strong { font-size:16px; }
+
 
 /* Setup Guides: same brand, container, type hierarchy, input and card language. */
-.guide-page .directory-section { padding-block:var(--muse-space-xl) var(--muse-space-2xl); }
-.guide-page .intro-grid { margin-bottom:var(--muse-space-lg); }
-.guide-page .intro-grid h1 { max-width:950px;margin:0 0 12px; }
+.guide-page .directory-section { padding-block:25px var(--muse-space-2xl); }
+.guide-page .intro-grid { margin-bottom:17px; }
+.guide-page .intro-grid h1 { max-width:950px;margin:0 0 7px; }
 .guide-page .intro-description { margin:0; }
-.guide-page .filters { padding:var(--muse-space-md);gap:var(--muse-gap); }
+.guide-page .filters { padding:14px 16px;gap:12px; }
 .guide-page :is(.filters label,.section-kicker) { color:var(--muse-muted);font-size:12px; }
 .guide-page :is(.search-field,.filter-select select,.filter-actions button) {
   border:1px solid var(--muse-border);
   background:#2c2e28;color:var(--muse-text);
   border-radius:var(--muse-card-radius);
 }
-.guide-page .route-grid { gap:var(--muse-gap);background:transparent;border:0; }
-.guide-page .route-card { padding:18px;min-height:105px;gap:14px; }
+.guide-page .route-grid { gap:12px;background:transparent;border:0; }
+.guide-page .route-card { padding:15px;min-height:88px;gap:12px; }
 .guide-page .route-symbol { border-color:var(--muse-border);background:#282a23;width:42px;height:42px; }
 .guide-page .route-title { font-size:16px; }
 .guide-page .route-description { font-size:13px; }
@@ -526,7 +574,7 @@ body.muse-premium,body.guide-page {
   font-family:var(--muse-serif);letter-spacing:-.035em;line-height:1.16;
 }
 .guide-page .routes-section { padding-block:var(--muse-space-lg); }
-.guide-page .resources-section { padding-top:var(--muse-space-lg); }
+.guide-page .resources-section { padding-top:20px; }
 .guide-page .footer { background:var(--muse-bg);border-top:1px solid var(--muse-border); }
 .guide-page .footer-inner { min-height:75px; }
 .guide-page .footer-brand { color:var(--muse-text);font:750 19px/1.1 var(--muse-sans);letter-spacing:.005em; }
@@ -553,21 +601,49 @@ body.muse-premium,body.guide-page {
 }
 @media(max-width:690px) {
   :root { --muse-gutter:20px; --muse-gap:12px; }
-  .muse-premium .r7-task-paths>.shell { padding-top:16px; }
-  .muse-premium .r7-task-paths { padding-bottom:var(--muse-space-md); }
+  .muse-premium .r7-task-paths>.shell { padding-top:12px; }
+  .muse-premium .r7-hero-copy { padding-top:17px; }
+  .muse-premium .r7-hero h1 { font-size:clamp(41px,10.6vw,50px);line-height:1.02;margin-bottom:10px; }
+  .muse-premium .r7-lead { font-size:15.5px;line-height:1.48; }
+  .muse-premium .r7-actions { margin-top:13px;gap:8px; }
+  .muse-premium .r7-actions>.r7-button { min-height:45px; }
+  .muse-premium .r7-pyramid { height:92px;margin-top:10px; }
+  .muse-premium .r7-pyramid-svg { height:190px;bottom:-64px; }
+  .muse-premium .r7-metrics { padding:10px 0 8px;gap:0; }
+  .muse-premium .r7-metrics>div { min-height:54px;padding-block:6px; }
+  .muse-premium .r7-metrics dd { font-size:25px; }
+  .muse-premium .r7-metrics dt { font-size:15px;line-height:1.16; }
+  .muse-premium .r7-release-row { padding:0 0 9px;font-size:10px; }
+  .muse-premium .premium-space-grid { display:grid;grid-template-columns:1fr;overflow:visible;padding:0;scroll-snap-type:none; }
+  .muse-premium .premium-space-card { width:auto;flex:auto;scroll-snap-align:none; }
+  .muse-premium .premium-space-art { height:132px; }
+  .muse-premium .r7-task-paths { padding-bottom:16px; }
   .muse-premium .r7-featured { padding-bottom:var(--muse-space-lg); }
   .muse-premium .r7-task-grid,.muse-premium .role-grid,.muse-premium .download-grid,
   .muse-premium .subject-grid { grid-template-columns:1fr;gap:var(--muse-gap); }
   .muse-premium .r7-task-card { min-height:92px;padding:16px; }
   .muse-premium .r7-feature-card { padding:20px; }
-  .muse-premium .downloads-catalog { padding:16px 0 var(--muse-space-xl); }
+  .muse-premium .downloads-catalog { padding:17px 0 40px; }
   .muse-premium .catalog-heading h1,.muse-premium .subject-heading h1,
-  .guide-page .intro-grid h1 { font-size:clamp(38px,9.4vw,48px); }
+  .guide-page .intro-grid h1 { font-size:clamp(35px,9.0vw,43px); }
   .muse-premium .catalog-heading p,.muse-premium .subject-heading>p,
-  .guide-page .intro-description { font-size:16px;line-height:1.55; }
-  .muse-premium .subject-main { padding-top:var(--muse-space-md); }
-  .muse-premium .subject-heading { padding-block:var(--muse-space-md); }
-  .muse-premium .download-card { padding:20px; }
+  .guide-page .intro-description { font-size:15px;line-height:1.5; }
+  .muse-premium .subject-main { padding-top:14px; }
+  .muse-premium .subject-heading { padding-block:15px; }
+  .muse-premium .download-card { padding:17px; }
+  /* All five library types visible without a hidden horizontal scroller. */
+  .muse-premium .downloads-catalog .download-jumps:first-of-type {
+    display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+    overflow:visible;padding:0;margin-bottom:12px;gap:6px;
+  }
+  .muse-premium .downloads-catalog .download-jumps:first-of-type a {
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;padding:6px;min-height:44px;white-space:nowrap;
+    grid-column:span 2;
+  }
+  .muse-premium .downloads-catalog .download-jumps:first-of-type a:nth-child(n+4) {
+    grid-column:span 3;
+  }
   .muse-premium .download-card h2,.muse-premium .download-card h3 { font-size:20px; }
   .muse-premium .subject-card { min-height:0; }
   /* All multi-page subject lists keep a one-line pager on narrow phones.
@@ -578,13 +654,13 @@ body.muse-premium,body.guide-page {
   .muse-premium .subject-pagination { flex-wrap:nowrap;gap:8px; }
   .muse-premium .subject-card>p { margin-bottom:14px; }
   .muse-premium .subject-card-actions { gap:10px; }
-  .guide-page .directory-section { padding-block:var(--muse-space-lg) var(--muse-space-xl); }
-  .guide-page .intro-grid { margin-bottom:var(--muse-space-md); }
-  .guide-page .filters { padding:16px;gap:12px; }
+  .guide-page .directory-section { padding-block:19px 40px; }
+  .guide-page .intro-grid { margin-bottom:13px; }
+  .guide-page .filters { padding:12px;gap:9px; }
   .guide-page .routes-section { padding-block:var(--muse-space-md); }
   .guide-page .route-grid { gap:var(--muse-gap); }
-  .guide-page .route-card { min-height:88px;padding:14px; }
-  .guide-page .resources-section { padding-top:var(--muse-space-lg); }
+  .guide-page .route-card { min-height:80px;padding:12px; }
+  .guide-page .resources-section { padding-top:20px; }
   .guide-page .resource-card { padding:18px; }
 }
 @media(max-width:370px) {

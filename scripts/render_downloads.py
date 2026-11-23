@@ -224,7 +224,7 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
 {shared_header}
 <main id="main" class="shell subject-main">
   <nav class="subject-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Muse Hub</a><span aria-hidden="true">/</span><a href="../downloads.html">Library</a><span aria-hidden="true">/</span><span>{esc(label)}</span></nav>
-  <header class="subject-heading"><span class="subject-kicker">THE MUSE HUB LIBRARY / {esc(label).upper()}</span><h1>{esc(title)}</h1><p>{esc(intros[label])}</p>
+  <header class="subject-heading"><span class="subject-kicker">SKILLS, WORKFLOWS &amp; SPECIALISTS</span><h1>{esc(label)}</h1><p>{esc(intros[label])}</p>
   <div class="subject-summary"><span><strong>{len(rows):,}</strong> resources</span><span>{page_summary}</span><a href="../downloads.html?subject={quote(label)}">Search this subject →</a></div></header>
 {pager_top}
   <div class="download-grid subject-grid">{''.join(cards)}</div>

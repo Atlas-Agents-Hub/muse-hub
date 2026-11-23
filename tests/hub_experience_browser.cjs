@@ -445,6 +445,8 @@ async function runChecks() {
   await check('authentic Planner capture and direct specialist search on mobile', async () => {
     await resize(375);
     await navigate('index.html#specialists');
+    await evaluate('document.querySelector(".r7-app-preview").scrollIntoView({block:"start",behavior:"instant"})');
+    await wait('(()=>{const img=document.querySelector(".premium-capture-picture img");return !!img&&img.complete&&img.naturalWidth>0&&!!img.currentSrc})()');
     const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img");const field=document.getElementById("role-search");return {loaded:!!img&&img.complete&&img.naturalWidth>0,mobile:!!img&&new URL(img.currentSrc).pathname.endsWith("/planner-mobile.png"),searchVisible:!!field&&!!field.getClientRects().length,searchOutside:!!field&&!field.closest("details"),directory:document.querySelector(".specialist-directory").open}})()');
     assert(proof.loaded && proof.mobile && proof.searchVisible && proof.searchOutside && proof.directory, JSON.stringify(proof));
     const ring = await evaluate('(()=>{const field=document.getElementById("role-search");field.focus();const css=getComputedStyle(field);return {focused:document.activeElement === field,color:css.borderTopColor,style:css.borderTopStyle,width:parseFloat(css.borderTopWidth)}})()');
@@ -567,8 +569,8 @@ async function runChecks() {
       await resize(viewport);
       for (const name of names) {
         await navigate('library/' + name);
-        const proof = await evaluate('(()=>{const header=document.querySelector(".r7-header"),main=document.querySelector(".subject-main"),footer=document.querySelector(".premium-footer"),cards=document.querySelectorAll(".subject-card"),h=document.querySelector(".subject-heading h1"),first=cards[0];return {header:!!header&&header.getBoundingClientRect().height>=70,footer:!!footer,main:!!main,cards:cards.length,heading:h?.textContent.trim().length,brand:document.querySelector(".r7-header img.brand-symbol")?.complete,font:parseFloat(getComputedStyle(first.querySelector("h2")).fontSize),overflow:document.documentElement.scrollWidth-innerWidth,styles:[...document.styleSheets].some(s=>s.href?.endsWith("/experience.css"))}})()');
-        assert(proof.header && proof.footer && proof.main && proof.cards>0 && proof.cards<=200 && proof.heading>10 && proof.brand && proof.styles,
+        const proof = await evaluate('(()=>{const header=document.querySelector(".r7-header"),main=document.querySelector(".subject-main"),footer=document.querySelector(".premium-footer"),cards=document.querySelectorAll(".subject-card"),h=document.querySelector(".subject-heading h1"),first=cards[0];return {header:!!header&&header.getBoundingClientRect().height>=70,footer:!!footer,main:!!main,cards:cards.length,heading:h?.textContent.trim(),crumb:document.querySelector(".subject-breadcrumb span:last-child")?.textContent.trim(),brand:document.querySelector(".r7-header img.brand-symbol")?.complete,font:parseFloat(getComputedStyle(first.querySelector("h2")).fontSize),overflow:document.documentElement.scrollWidth-innerWidth,styles:[...document.styleSheets].some(s=>s.href?.endsWith("/experience.css"))}})()');
+        assert(proof.header && proof.footer && proof.main && proof.cards>0 && proof.cards<=200 && proof.heading && proof.heading===proof.crumb && proof.brand && proof.styles,
           'Missing shared subject experience '+name+' '+viewport+' '+JSON.stringify(proof));
         assert(proof.overflow<=1, 'Subject horizontal overflow: '+name+' '+viewport+' '+JSON.stringify(proof));
         assert(proof.font>=20, 'Subject card titles too small: '+name+' '+viewport+' '+proof.font);
@@ -620,7 +622,7 @@ async function runChecks() {
         assert(state.overflow<=1,'Unexpected horizontal overflow '+page+' '+viewport);
         assert(state.headerHeight>=68&&state.headerHeight<=85,'Inconsistent header height '+page+' '+viewport+' '+JSON.stringify(state));
         assert(state.logoSize>=(viewport<=370?54:56)&&state.logoSize<=60,'Inconsistent logo size '+page+' '+viewport);
-        assert.equal(state.cardRadius,'4px','Cards must share visible corners: '+page);
+        assert.equal(state.cardRadius,'5px','Cards must share visible corners: '+page);
         measurements.push({page,...state});
       }
       const a=measurements[0];
