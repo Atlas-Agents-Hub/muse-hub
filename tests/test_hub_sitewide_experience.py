@@ -173,6 +173,28 @@ class SitewideExperienceTests(unittest.TestCase):
         packed = sum(row.get('pack_kind') == 'skill-pack' for row in catalog['items'])
         self.assertEqual(disclosed, packed, 'Every skill-pack resource must retain its source-path disclosure')
 
+
+    def test_curated_goal_links_are_distinct_real_subject_pages(self):
+        source = (SITE / "downloads.html").read_text(encoding="utf-8")
+        self.assertIn('id="catalog-goals-title">Explore by goal</h2>', source)
+        self.assertIn('class="catalog-goal-links"', source)
+        parser = PageRefs()
+        parser.feed(source)
+        links = [attrs['href'] for tag, attrs in parser.elements
+                 if tag == 'a' and attrs.get('href', '').startswith('library/')]
+        goals = (
+            'library/software-automation-001.html',
+            'library/research-science-001.html',
+            'library/design-visualization-001.html',
+            'library/learning-study-001.html',
+        )
+        for href in goals:
+            self.assertEqual(links.count(href), 2)
+            self.assertTrue((SITE / href).is_file())
+        self.assertEqual(source.count('class="catalog-goal-links"'), 1)
+        self.assertEqual(source.count('class="catalog-subjects"'), 1)
+        self.assertIn('15 specialist kits', source)
+
     def test_library_exposes_search_and_advanced_filters_without_js_dependency(self):
         source = (SITE / "downloads.html").read_text("utf-8")
         self.assertIn('<details class="download-advanced">', source)
@@ -210,8 +232,9 @@ class SitewideExperienceTests(unittest.TestCase):
             with self.subTest(kind=kind):
                 self.assertIn(f'<dd data-library-count="{kind}">{count:,}</dd>', home)
         self.assertIn(
-            f'Search {data["counts"]["skill"]:,} skills, '
-            f'{data["counts"]["workflow"]:,} workflows, and '
+            f'Find {data["counts"]["skill"]:,} Muse skills, '
+            f'{data["counts"]["workflow"]:,} workflows, '
+            f'{data["counts"]["specialist"]:,} specialist kits and '
             f'{data["counts"]["tool-guide"]:,} tool guides.',
             downloads,
         )

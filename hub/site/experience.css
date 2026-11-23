@@ -765,3 +765,49 @@ body.muse-premium,body.guide-page {
   .muse-premium :is(.r7-task-card,.download-card,.role-card),
   .guide-page :is(.route-card,.resource-card) { transition:none;animation:none; }
 }
+
+/* Compact editorial routes to real subject pages, not another card grid. */
+.muse-premium .catalog-goals {
+  border-block:1px solid var(--muse-border);
+  padding:12px 0 13px;margin:14px 0 11px;
+}
+.muse-premium .catalog-goals h2 {
+  font:700 13px/1.4 var(--muse-sans);
+  letter-spacing:.07em;text-transform:uppercase;margin:0 0 8px;
+}
+.muse-premium .catalog-goal-links {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.muse-premium .catalog-goal-links a {
+  display:flex;flex-direction:column;gap:4px;
+  min-width:0;min-height:70px;padding:7px 23px 8px 14px;
+  border-left:1px solid var(--muse-border);
+  color:var(--muse-text);text-decoration:none;position:relative;
+}
+.muse-premium .catalog-goal-links a:first-child {border-left:0;padding-left:0;}
+.muse-premium .catalog-goal-links a strong {
+  font:700 16px/1.28 var(--muse-sans);letter-spacing:-.02em;
+}
+.muse-premium .catalog-goal-links a span {
+  font:400 13px/1.42 var(--muse-sans);color:var(--muse-muted);
+}
+.muse-premium .catalog-goal-links a::after {
+  content:"↗";position:absolute;top:7px;right:7px;
+  color:var(--signal);font-size:15px;
+}
+.muse-premium .catalog-goal-links a:hover strong {color:var(--signal);}
+.muse-premium .catalog-goal-links a:focus-visible {
+  outline:3px solid var(--signal);outline-offset:-3px;
+}
+@media(max-width:720px) {
+  .muse-premium .catalog-goals {padding:7px 0 8px;margin:7px 0;}
+  .muse-premium .catalog-goals h2 {font-size:12px;margin-bottom:2px;}
+  .muse-premium .catalog-goal-links {grid-template-columns:repeat(4,minmax(0,1fr));}
+  .muse-premium .catalog-goal-links a {
+    min-height:44px;padding:8px 2px;align-items:center;justify-content:center;
+  }
+  .muse-premium .catalog-goal-links a:first-child {padding-left:2px;}
+  .muse-premium .catalog-goal-links a strong {font-size:13px;line-height:1.2;}
+  .muse-premium .catalog-goal-links a span,
+  .muse-premium .catalog-goal-links a::after {display:none;}
+}

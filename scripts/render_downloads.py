@@ -452,6 +452,20 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
         f'<a class="bundle-card" href="{esc(row["url"])}"><span>{esc(bundle_title(row))}</span><p>{esc(row["description"])}</p><strong>Download ZIP ↓</strong></a>'
         for row in data['bundles'])
     initial_items = data['items'][:DOWNLOAD_PAGE_SIZE]
+    # Curated editorial entry points share the authoritative subject pages.
+    goal_paths = (
+        ('Build', 'Software & automation', 'Apps, debugging and workflows'),
+        ('Research', 'Research & science', 'Questions, evidence and analysis'),
+        ('Design', 'Design & visualization', 'Interfaces, graphics and charts'),
+        ('Learn', 'Learning & study', 'Lessons, flashcards and review'),
+    )
+    if any(category not in data['categories'] for _, category, _ in goal_paths):
+        raise ValueError('A discovery link lacks a subject page')
+    goal_links = ''.join(
+        f'<a href="library/{subject_slug(category)}-001.html">'
+        f'<strong>{esc(title)}</strong><span>{esc(detail)}</span></a>'
+        for title, category, detail in goal_paths
+    )
     subject_links = []
     for label in data['categories']:
         count = sum(row['category'] == label for row in data['items'])
@@ -498,7 +512,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
     <section class="downloads-catalog section-dark" id="catalog"><div class="shell">
       <div class="catalog-heading">
         <h1>Muse Hub Library</h1>
-        <p>Search {display_count('skill', counts['skill'])} skills, {display_count('workflow', counts['workflow'])} workflows, and {display_count('tool-guide', counts['tool-guide'])} tool guides.</p>
+        <p>Find {display_count('skill', counts['skill'])} Muse skills, {display_count('workflow', counts['workflow'])} workflows, {display_count('specialist', counts['specialist'])} specialist kits and {display_count('tool-guide', counts['tool-guide'])} tool guides. Search by task or start with a subject.</p>
       </div>
       <nav class="download-jumps" aria-label="Library types">
         <a href="downloads.html#catalog" data-download-type="all">All</a>
@@ -516,6 +530,10 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
         </div></details>\n        <button id="download-reset" class="reset-btn" type="button">Clear</button>
       </div>
       <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items']):,} downloads</p>
+      <section class="catalog-goals" aria-labelledby="catalog-goals-title">
+        <h2 id="catalog-goals-title">Explore by goal</h2>
+        <nav class="catalog-goal-links" aria-label="Find a subject for your next task">{goal_links}</nav>
+      </section>
       <details class="catalog-subjects"><summary>Browse every download by subject</summary><nav class="download-jumps" aria-label="Subject library">{''.join(subject_links)}</nav></details>
       <div id="download-results" data-total="{len(data['items'])}" data-page-size="{DOWNLOAD_PAGE_SIZE}" data-version="{esc(version)}">{''.join(sections)}</div>
       <nav id="download-pages" class="download-pagination" aria-label="Download result pages" hidden><button id="download-previous" class="reset-btn" type="button">Previous</button><span id="download-page-label"></span><button id="download-next" class="reset-btn" type="button">Next</button></nav>

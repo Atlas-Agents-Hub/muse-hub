@@ -256,6 +256,27 @@ async function start() {
 async function runChecks() {
   const pageSize = 18;
   const downloads = JSON.parse(fs.readFileSync(path.join(site, 'downloads.json'), 'utf8'));
+  await check('goal discovery reaches curated subjects with touch-safe links', async () => {
+    const results = [];
+    for (const viewport of [320, 390, 768, 1440]) {
+      await resize(viewport);
+      await navigate('downloads.html');
+      const state = await evaluate("(() => {const a=[...document.querySelectorAll('.catalog-goal-links a')];return {links:a.map(e=>{const r=e.getBoundingClientRect();return {href:e.getAttribute('href'),left:r.left,right:r.right,width:r.width,height:r.height};}),pageWidth:document.documentElement.scrollWidth};})()");
+      assert.deepEqual(state.links.map(link => link.href), [
+        'library/software-automation-001.html','library/research-science-001.html',
+        'library/design-visualization-001.html','library/learning-study-001.html']);
+      assert(state.links.every(link=>link.height>=44 && link.width>=44 && link.left>=-1 && link.right<=viewport+1),
+        'Goal links must be visible and touch sized: '+JSON.stringify(state));
+      assert(state.pageWidth<=viewport+1,'No horizontal scrolling: '+JSON.stringify(state));
+      if (viewport===390 || viewport===1440) await screenshot('goal-discovery-'+viewport+'.png');
+      await click('.catalog-goal-links a:nth-child(2)');
+      assert.equal(await evaluate('document.querySelector("main h1")?.textContent.trim()'), 'Research & science');
+      assert((await evaluate('location.pathname')).endsWith('/library/research-science-001.html'));
+      results.push({viewport,goals:state.links.length,navigated:true});
+    }
+    return results;
+  });
+
   await check('download inventory, specialist filters and shareable search', async () => {
     await navigate('downloads.html');
     const links = await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
