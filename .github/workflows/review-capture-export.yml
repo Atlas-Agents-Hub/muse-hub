@@ -1,0 +1,22 @@
+﻿name: Review capture export
+on:
+  push:
+    branches:
+      - review/muse-hub-r7-screenshots-20261122
+    paths:
+      - .github/workflows/review-capture-export.yml
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload review screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: muse-hub-r12-fresh-screenshots-20261122-2326
+          path: review-captures/live-20261122-2326/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
