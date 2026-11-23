@@ -141,6 +141,70 @@ SPECIALIST_SUBJECTS = {
 }
 
 
+# Presentation-only taxonomy fixes, grounded in the linked SKILL.md topics.
+# The upstream collection and install-package membership remain unchanged.
+SUBJECT_CORRECTIONS = {
+    '2d-games': 'Creative & games',
+    '3d-games': 'Creative & games',
+}
+
+# Editorial task paths link only to existing source guides. These are not
+# rankings, endorsements or an alternative release inventory.
+SUBJECT_STARTS = {
+    'Business & projects': (
+        ('customer-research', 'Learn from customers', 'Plan or synthesize customer research before choosing a direction.'),
+        ('project-prioritization', 'Prioritize the backlog', 'Compare impact, dependencies and capacity before selecting work.'),
+        ('idea-to-offer', 'Test a proposed offer', 'Move from customer needs to a defensible offer without overpromising.'),
+    ),
+    'Creative & games': (
+        ('creative-brief', 'Define the brief', 'Turn an idea into a clear production brief with constraints and deliverables.'),
+        ('storyboard', 'Plan a visual sequence', 'Map scene purpose and progression before producing video or animation.'),
+        ('game-design', 'Design a game loop', 'Plan mechanics, player goals and progression before implementation.'),
+    ),
+    'Data & AI': (
+        ('data-quality-auditor', 'Inspect a dataset', 'Check missing values, inconsistencies and quality risks before analysis.'),
+        ('senior-data-engineer', 'Design a data pipeline', 'Plan ETL and ELT jobs, scheduling and data quality checks.'),
+        ('sql-pro', 'Investigate a slow query', 'Use query plans, schema design and indexes to diagnose SQL performance.'),
+    ),
+    'Design & visualization': (
+        ('ux-flow', 'Map a user journey', 'Lay out navigation and the steps people take to finish a task.'),
+        ('ux-audit', 'Find interface friction', 'Review usability issues and prioritize fixes grounded in observed screens.'),
+        ('design-token-audit', 'Verify interface colors', 'Check actual foreground and background token pairs for contrast.'),
+    ),
+    'Infrastructure & reliability': (
+        ('incident-commander', 'Coordinate an incident', 'Organize response roles, status and safe next actions during an outage.'),
+        ('performance-profiler', 'Find a bottleneck', 'Use profiling and traces to isolate slow endpoints or memory spikes.'),
+        ('capacity-planner', 'Plan for demand', 'Translate measured performance into realistic infrastructure capacity.'),
+    ),
+    'Learning & study': (
+        ('lecture-map', 'Preview a lecture', 'Build a concept map from slides or notes before detailed study.'),
+        ('source-flashcards', 'Practice from source', 'Turn supplied material into traceable questions and flashcards.'),
+        ('teach-back', 'Explain it aloud', 'Use an explanation to reveal missing links in your understanding.'),
+    ),
+    'Personal planning': (
+        ('daily-briefing', 'Plan today', 'Fit commitments into the time available with a practical daily briefing.'),
+        ('inbox-triage', 'Triage the inbox', 'Prioritize threads, draft replies and resume from the last review.'),
+        ('weekly-reset', 'Review the week', 'Revisit goals and available capacity to choose what matters next.'),
+    ),
+    'Research & science': (
+        ('question-to-evidence', 'Frame a research question', 'Define an answerable question and the evidence needed to check it.'),
+        ('literature-triage', 'Map the literature', 'Sort papers into themes and gaps before writing a review.'),
+        ('claim-audit', 'Check a claim', 'Trace a factual statement to the evidence that actually supports it.'),
+    ),
+    'Security': (
+        ('ai-agent-security', 'Harden an AI agent', 'Review prompt injection, tool privileges and data-exposure risks.'),
+        ('agentic-actions-auditor', 'Audit workflow permissions', 'Check automation integrations for insecure GitHub Action patterns.'),
+        ('security-pen-testing', 'Test with authorization', 'Define scope and check vulnerabilities only in permitted systems.'),
+    ),
+    'Software & automation': (
+        ('ai-code-review-triage', 'Review an AI-built change', 'Triage pull requests and focus review on high-impact defects.'),
+        ('api-contract-testing', 'Check an API change', 'Test consumer and provider contracts before schema changes break clients.'),
+        ('agentic-test-audit', 'Audit a test suite', 'Find flaky tests, surviving mutants and coverage gaps before release.'),
+    ),
+}
+
+
+
 def subject(category: str) -> str:
     if category in SUBJECTS.values():
         return category
@@ -204,6 +268,25 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
                     last=i
                 if number<total_pages:links.append(f'<a rel="next" href="{slug}-{number+1:03d}.html" aria-label="Next subject page">Next →</a>')
                 navigation=' '.join(links)
+            start_panel=''
+            if number==1 and label in SUBJECT_STARTS:
+                by_id={row['id']:row for row in rows}
+                paths=[]
+                for item_id, action, summary in SUBJECT_STARTS[label]:
+                    selected=by_id.get(item_id)
+                    if not selected or selected['kind'] not in ('skill','workflow') or not selected.get('guide_url'):
+                        raise ValueError(f'Invalid curated starting point: {label} / {item_id}')
+                    paths.append(
+                        f'<a class="subject-start-link" data-resource-id="{esc(item_id)}" '
+                        f'href="{esc(selected["guide_url"])}">'
+                        f'<strong>{esc(action)}</strong><span>{esc(summary)}</span>'
+                        f'<em>Read method →</em></a>')
+                start_panel=(
+                    '<section class="subject-start" aria-labelledby="subject-start-title">'
+                    '<div class="subject-start-heading">'
+                    '<h2 id="subject-start-title">Start with a task</h2></div>'
+                    f'<nav class="subject-start-grid" aria-label="Task paths in {esc(label)}">'
+                    f'{"".join(paths)}</nav></section>\n')
             page_summary=f'Page {number} of {total_pages}' if total_pages>1 else 'All resources'
             pager_top=f'<nav class="download-pagination subject-pagination" aria-label="Subject pages">{navigation}</nav>' if navigation else ''
             pager_bottom=f'<nav class="download-pagination subject-pagination" aria-label="More subject pages">{navigation}</nav>' if navigation else ''
@@ -255,7 +338,7 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
   <nav class="subject-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Muse Hub</a><span aria-hidden="true">/</span><a href="../downloads.html">Library</a><span aria-hidden="true">/</span><span>{esc(label)}</span></nav>
   <header class="subject-heading"><span class="subject-kicker">SKILLS, WORKFLOWS &amp; SPECIALISTS</span><h1>{esc(label)}</h1><p>{esc(intros[label])}</p>
   <div class="subject-summary"><span><strong>{len(rows):,}</strong> resources</span><span>{page_summary}</span><a href="../downloads.html?subject={quote(label)}">Search this subject →</a></div></header>
-{pager_top}
+{start_panel}{pager_top}
 {preview}
   <div class="download-grid subject-grid">{first_cards}</div>
 {more}
@@ -324,10 +407,11 @@ def catalog(root: Path = ROOT) -> dict:
                 pack = {key:value for key,value in pack.items() if key!='asset'}
             original_category = (item['category'] if kind == 'skill'
                                  else skill_by_id[item['skills'][0]]['category'])
+            public_category=SUBJECT_CORRECTIONS.get(item['id'], original_category) if kind == 'skill' else original_category
             rows.append(dict(id=item['id'], kind=kind, title=TITLES.get(item['id'],item['title']),
                              description=DESCRIPTIONS.get(item['id'],item[description]), asset=asset, url=base+asset,
-                             category=subject(original_category),
-                             keywords=original_category+' '+original_category.replace('-', ' '),
+                             category=subject(public_category),
+                             keywords=public_category+' '+public_category.replace('-', ' '),
                              roles=memberships[key][item['id']], **pack,
                              guide_url=REPO+'/blob/main/'+(
                                  ('collections/library/'+item['path'] if item.get('format')=='portable-skill'
