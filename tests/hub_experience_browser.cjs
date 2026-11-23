@@ -530,8 +530,8 @@ async function runChecks() {
         const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header img.brand-symbol");return {loaded:!!i&&i.complete&&i.naturalWidth>=64&&i.getAttribute("src")==="muse-mark.png",width:i?.getBoundingClientRect().width}})()');
         assert(mark.loaded && mark.width >= (viewport <= 850 ? 52 : 56), 'Brand mark must load at a legible size: ' + viewport);
         if (viewport <= 850) {
-          const labels = await evaluate('[...document.querySelectorAll(".r7-metrics dt")].map(x=>parseFloat(getComputedStyle(x).fontSize))');
-          assert(labels.length === 4 && labels.every(x=>x>=15), 'Resource labels must be readable on mobile: ' + viewport);
+          const labels = await evaluate('(()=>[...document.querySelectorAll(".r7-metrics dt")].map(x=>{const t=x.getBoundingClientRect(),cell=x.parentElement.getBoundingClientRect();return {size:parseFloat(getComputedStyle(x).fontSize),left:t.left,right:t.right,cellLeft:cell.left,cellRight:cell.right,text:x.textContent.trim()}}))()');
+          assert(labels.length === 4 && labels.every(x=>x.size>=13&&x.left>=x.cellLeft-1&&x.right<=x.cellRight+1), 'Resource labels must fit their own column without clipping: ' + viewport + ' ' + JSON.stringify(labels));
           const tasks = await evaluate('[...document.querySelectorAll(".r7-task-card")].map(x=>({width:x.getBoundingClientRect().width,height:x.getBoundingClientRect().height,title:parseFloat(getComputedStyle(x.querySelector("strong")).fontSize),body:parseFloat(getComputedStyle(x.querySelector("small")).fontSize)}))');
           assert(tasks.length === 4 && tasks.every(x=>x.width >= viewport*.80 && x.height>=85 && x.title>=17 && x.body>=14), 'Four readable touch targets required: ' + JSON.stringify(tasks));
         }
@@ -638,6 +638,25 @@ async function runChecks() {
       screens.push({viewport,measurements});
     }
     return {screens};
+  });
+  await check('reference phone hierarchy and complete laptop hero', async () => {
+    const proofs=[];
+    for (const viewport of [320,390,1440]) {
+      await resize(viewport);
+      await navigate('index.html');
+      const state=await evaluate('(()=>{const a=[...document.querySelectorAll(".r7-actions .r7-button")].map(x=>x.getBoundingClientRect()),m=[...document.querySelectorAll(".r7-metrics>div")].map(x=>x.getBoundingClientRect()),art=document.querySelector(".r7-pyramid"),featured=document.querySelector(".r7-feature-card").getBoundingClientRect();return {actions:a.map(x=>({left:x.left,right:x.right,top:x.top,bottom:x.bottom})),metrics:m.map(x=>({left:x.left,top:x.top})),art:getComputedStyle(art).display,featuredBottom:featured.bottom,viewportHeight:innerHeight}})()');
+      if(viewport<=390){
+        assert(state.art==='none','Phone reference must not insert decorative artwork between tasks and controls: '+viewport);
+        assert(state.actions[1].top>=state.actions[0].bottom+6,'Phone CTAs must be stacked with consistent spacing: '+JSON.stringify(state));
+        assert(state.actions.every(x=>x.right-x.left>=viewport*.75),'Phone CTAs must span the content rail: '+JSON.stringify(state));
+        assert(state.metrics.every(x=>Math.abs(x.top-state.metrics[0].top)<=1),'Four phone resource totals must share one baseline: '+JSON.stringify(state));
+      }else{
+        assert(state.art!=='none' && state.actions[1].left>state.actions[0].left,'Desktop must retain pyramid art and inline actions');
+        assert(state.featuredBottom<state.viewportHeight-20,'Featured specialist should remain in the initial desktop screen: '+JSON.stringify(state));
+      }
+      proofs.push({viewport,...state});
+    }
+    return proofs;
   });
   await check('all mobile Spaces and all five library types stay fully visible without sideways scrolling', async () => {
     const observations=[];
