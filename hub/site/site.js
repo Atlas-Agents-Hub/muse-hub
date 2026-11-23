@@ -184,6 +184,27 @@
       });
     }
     selectSetupRole();
+    // A specialist setup link should reveal its selected actions, not stop at
+    // the general three-step introduction above them.
+    if (incomingRole && knownRoles.has(incomingRole) && window.location.hash === '#setup') {
+      const revealDeepLinkedRole = () => {
+        if (setupSelect.value !== incomingRole || setupResult.hidden || window.location.hash !== '#setup') return;
+        const selectorPanel = setupSelect.closest('.setup-selector');
+        if (!selectorPanel) return;
+        const rootStyle = document.documentElement.style;
+        const previousScrollBehavior = rootStyle.scrollBehavior;
+        rootStyle.scrollBehavior = 'auto';
+        try {
+          selectorPanel.scrollIntoView({ block: 'start', behavior: 'instant' });
+        } finally {
+          rootStyle.scrollBehavior = previousScrollBehavior;
+        }
+        setupTitle.focus({ preventScroll: true });
+      };
+      const onReady = () => requestAnimationFrame(revealDeepLinkedRole);
+      if (document.readyState === 'complete') onReady();
+      else window.addEventListener('load', onReady, { once: true });
+    }
   }
   update();
   if (searchPanel) searchPanel.hidden = false;

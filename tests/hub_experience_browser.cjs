@@ -303,6 +303,23 @@ async function runChecks() {
     assert.equal(result.download, specialistRows.find(row=>row.id === 'creative-studio').url);
     return {specialists:links.length,all_setup_links_valid:true,selected_role:'creative-studio'};
   });
+  await check('specialist setup deep links expose the selected role immediately', async () => {
+    const seen = [];
+    for (const [role, viewport] of [['software-engineer',390],['claims-adjudicator',1440]]) {
+      await resize(viewport);
+      await navigate('downloads.html?type=specialist');
+      await click('.download-card[data-id="' + role + '"] .guide-link');
+      await wait('document.getElementById("setup-role-select")?.value === ' + JSON.stringify(role) + ' && !document.getElementById("setup-role-result")?.hidden');
+      await pause(450);
+      const geometry = await evaluate('(()=>{const p=document.getElementById("setup-role-result"),r=p.getBoundingClientRect();return {top:r.top,bottom:r.bottom,viewport:innerHeight,open:document.querySelector(".setup-disclosure").open,role:document.getElementById("setup-role-select").value}})()');
+      await screenshot('setup-deeplink-' + role + '-' + viewport + '.png');
+      assert(geometry.open && geometry.role === role);
+      assert(geometry.top >= 70 && geometry.top < geometry.viewport * .58,
+        'Selected role must be in the first viewport after setup-guide navigation: ' + JSON.stringify(geometry));
+      seen.push({viewport,...geometry});
+    }
+    return seen;
+  });
   await check('invalid download filters recover without reflected markup', async () => {
     for (const query of ['type=bad&role=bad', 'type=skill&type=workflow', 'role=%3Cimg%20src=x%3E', 'q='+'x'.repeat(3000)]) {
       await navigate('downloads.html?' + query);
