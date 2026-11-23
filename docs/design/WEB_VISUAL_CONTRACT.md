@@ -1,4 +1,4 @@
-# Muse Hub — Shared Visual Contract (R10)
+# Muse Hub — Shared Visual Contract
 
 ## Scope and authority
 
