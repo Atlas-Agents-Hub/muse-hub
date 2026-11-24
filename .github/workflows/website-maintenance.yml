@@ -1,0 +1,87 @@
+name: Website maintenance (read-only)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 13 * * *'
+    - cron: '47 13 * * 1'
+    - cron: '17 14 1 * *'
+
+permissions:
+  contents: read
+  actions: read
+  deployments: read
+
+concurrency:
+  group: muse-website-maintenance
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+        with:
+          python-version: '3.12'
+      - name: Resolve current successful Pages deployment and published tag
+        id: deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          deployment="$(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=github-pages&per_page=1" --jq '.[0]')"
+          id="$(jq -er '.id' <<< "$deployment")"
+          sha="$(jq -er '.sha' <<< "$deployment")"
+          [[ "$id" =~ ^[0-9]+$ && "$sha" =~ ^[0-9a-f]{40}$ ]]
+          status="$(gh api "repos/$GITHUB_REPOSITORY/deployments/$id/statuses?per_page=1" --jq '.[0].state')"
+          if [[ "$status" != success ]]; then echo "Latest Pages deployment status: $status"; exit 1; fi
+          conclusion="$(gh run list --workflow pages.yml --branch main --status completed --limit 1 --json conclusion --jq '.[0].conclusion')"
+          if [[ "$conclusion" != success ]]; then echo "Latest completed publishing workflow: $conclusion"; exit 1; fi
+          tag="$(git show "$sha:presets/catalog.json" | python -c 'import json,sys; print(json.load(sys.stdin)["release"])')"
+          [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          printf 'sha=%s\ntag=%s\n' "$sha" "$tag" >> "$GITHUB_OUTPUT"
+      - name: Verify live website bytes and critical download destinations
+        env:
+          DEPLOYED_SHA: ${{ steps.deployment.outputs.sha }}
+          RELEASE_TAG: ${{ steps.deployment.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B scripts/check_website_maintenance.py --deployment-commit "$DEPLOYED_SHA"
+          curl --fail --location --max-time 30 --silent --show-error --output /dev/null https://atlas-agents-hub.github.io/muse-hub/
+          base="https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/$RELEASE_TAG"
+          for asset in SHA256SUMS "muse-specialist-toolkit-$RELEASE_TAG.zip"; do
+            curl --head --fail --location --max-time 30 --silent --show-error --output /dev/null "$base/$asset"
+          done
+      - name: Use deployed source for deeper checks
+        if: github.event_name == 'workflow_dispatch' || github.event.schedule != '17 13 * * *'
+        env:
+          DEPLOYED_SHA: ${{ steps.deployment.outputs.sha }}
+        run: git checkout --detach "$DEPLOYED_SHA"
+      - name: Weekly release provenance and website structure
+        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '47 13 * * 1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.deployment.outputs.tag }}
+          DEPLOYED_SHA: ${{ steps.deployment.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" > "$RUNNER_TEMP/release.json"
+          tag_head="$(gh api "repos/$GITHUB_REPOSITORY/commits/$RELEASE_TAG" --jq .sha)"
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --pattern SHA256SUMS --pattern RELEASE_MANIFEST.json --dir "$RUNNER_TEMP/muse-release"
+          python -B scripts/check_website_release_scope.py --release-head "$tag_head" --website-head "$DEPLOYED_SHA"
+          python -B scripts/check_release_links.py "$RUNNER_TEMP/release.json" --manifest "$RUNNER_TEMP/muse-release/RELEASE_MANIFEST.json" --checksums "$RUNNER_TEMP/muse-release/SHA256SUMS" --expected-head "$tag_head" --tag-head "$tag_head"
+          python -B scripts/render_downloads.py --check
+          python -B -m unittest discover -s tests -p test_hub_sitewide_experience.py -q
+      - name: Monthly desktop and mobile browser journeys
+        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '17 14 1 * *'
+        timeout-minutes: 5
+        run: node tests/hub_experience_browser.cjs hub/site "$(command -v google-chrome)" "$RUNNER_TEMP/muse-maintenance-browser" --require-journeys

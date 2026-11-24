@@ -6,6 +6,7 @@
     ".github/workflows/checks.yml": "76afee0d4c6586cb38abcc04a134c69008ca39d53c774e2214d543245ba78393",
     ".github/workflows/macos.yml": "d816f509eaddc761dd5d3eac541a11c775c655888c673dd84a25a77897abb2b3",
     ".github/workflows/pages.yml": "e770012f7251db8fca8d6a433b42fe5c4714546eff3fe6888080071eebd11642",
+    ".github/workflows/website-maintenance.yml": "133b3ab824befe9b2194bef30063534f100d0533c03ba631cc40c21dcccded0e",
     ".gitignore": "f9a0a64567a39914b27e754fee211afad7b6da159590c3a5a0899e95bb34b395",
     "CHANGELOG.md": "e0103d6aff9735900dc292b6d566c1cee45e8785a6552fb11885df12be51d786",
     "CONTRIBUTING.md": "a54985738ef40f4b23f35b6d9460ef2dd0e656ad8d558b462b03258d26d64166",
@@ -29069,6 +29070,7 @@
     "docs/SKILLS.md": "50c261f343cb195c504267eac480a165c8a1b0482edbabb72b7a0f6aafcdfe91",
     "docs/TERMINAL.md": "c28164db5600abd432ba6eef5e9bbb3f1e69a599205ddb37c597436583aa18c8",
     "docs/TOOL_ADAPTERS.md": "0d22518918c2fb43877a38aea7a7e76a6ab22cfc8bb4b69e91656b6598fc823f",
+    "docs/WEBSITE_MAINTENANCE.md": "8fe0c8bd36ee8492901f63d8f8c3c674c60db6a6e318d2a3d0ce443650089f9b",
     "docs/WORKFLOWS.md": "f535bd9c81009afac47ce7cbef2f1a13d15e3b59ce295456c16bcc2b4ea3c980",
     "docs/collection/CREATIVE_STUDIO_SCOPE.md": "c6e347ea7dec0c9aea379e32d8e9fb43894770f939466729c5b353a9428b2f09",
     "docs/collection/FIND_AND_BUILD.md": "353a348ef9b65b878feb25c7adfe1d1ed5ca5eeb2ab3dcb7a14c41c35ec1ac20",
@@ -29739,7 +29741,8 @@
     "scripts/check_ci_results.py": "ec0572e59d150ad1125c25b66ca8fe65dd47e5f0d4b4ac2cb504d1e8880814ad",
     "scripts/check_public.py": "d162affa83bca4e2ded9afa9222293a0ea0b4b508be43e7cc1894a6cebaeea30",
     "scripts/check_release_links.py": "55c07d66157bb0b4ef2d8260cabf3acdb810d0b15b1a64592177ff81a45c5747",
-    "scripts/check_website_release_scope.py": "ce0c52488fc07783d9c947fae2e8cb4c34358d34dccf10bbd805b1798b79de12",
+    "scripts/check_website_maintenance.py": "955fb0a43e63b93923632099dd638c79af0e3d44150faf47463d44b1f1ae16e4",
+    "scripts/check_website_release_scope.py": "9648fe420b09e130632405605df3740adf4d2064bf88177f815dfdccdfcc02dd",
     "scripts/connector_catalog.py": "bcb47326be5fd1e901bb6f8486b5949b94a318507074c6b5142c3eea51c7481e",
     "scripts/import_service_connectors.py": "1695e669bf44ec84130dde31cbd4f2f9506057d6b96d3a396bee6c03897d9130",
     "scripts/import_workflow_templates.py": "16c5c9153ef69ec7e908ee0d636c92e39d6a3cc7b755e3d0b2f944656c7c97d9",
@@ -30072,7 +30075,8 @@
     "tests/test_vault_offline_archive.py": "e844e4565499fd1d838531443c791fb8d7e021c0b3fd0eb1a2685a5015014559",
     "tests/test_vault_quarantine_writer.py": "0500248918d76f411c3fe9396ab957a727547e2b502c45c4d95efd969e81da3d",
     "tests/test_vault_statement_adoption.py": "a43e38b97240cbae686b352b758e3cefc7d4ea809d878acf92ce9394aa53fd99",
-    "tests/test_website_release_scope.py": "eafaaaf30307b951a97ebeb927064c218c14b633a9442c7be891ee5aae08eaed",
+    "tests/test_website_maintenance.py": "e8fc3b91ded8f6cbef795620f5800d3c82a3bb3de61f168e4f7ac9585397bd76",
+    "tests/test_website_release_scope.py": "b90d58e95ca98a076f15d539b9622e49c197b9afa80e32186eb2a8a43975e8cb",
     "tests/test_workflow_templates.py": "43e2b78cf85fe31371ec3a8bae89aadf884689aed758f2cfb0e5c6439bd77b88",
     "tools/accessibility_check.py": "6b389b6017e85eb4d55d514409c0df85907fd6a965e6c74d3677fb508fd82a9a",
     "tools/collection_compatibility.py": "46b2ab8b83a2dc49fc26e4e5b46bbf16146a87ba2ca03f5f6971af26819ba62a",
@@ -30089,5 +30093,5 @@
   },
   "release_kind": "SOURCE_PACKAGE",
   "schema": "muse-source-package/v2",
-  "source_file_count": 30086
+  "source_file_count": 30090
 }
