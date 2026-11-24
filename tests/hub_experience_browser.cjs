@@ -322,6 +322,29 @@ async function runChecks() {
     } finally { await resize(originalWidth); }
     return observations;
   });
+  await check('filtered headings report matching group totals across pagination and reset', async () => {
+    await navigate('downloads.html?type=skill&q=emergency%20medical%20information%20card');
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), '1');
+    assert.equal(await evaluate('document.querySelector(".download-card[data-id=emergency-card] .download-kind").textContent'), 'Personal planning');
+    await screenshot('r21-emergency-filter-desktop.png');
+    await navigate('downloads.html?type=skill');
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), '5,242');
+    await type('#download-search', 'competitor');
+    const expected=downloads.items.filter(row=>row.kind==='skill' && [row.title,row.description,row.id,row.category,row.keywords||''].join(' ').toLowerCase().includes('competitor')).length;
+    assert(expected>18);
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), expected.toLocaleString('en-US'));
+    await click('#download-next');
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), expected.toLocaleString('en-US'));
+    await click('#download-reset');
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), '5,242');
+    const originalWidth=width;
+    await resize(390);
+    try {
+      await navigate('downloads.html?type=skill&q=emergency%20medical%20information%20card');
+      await evaluate('document.querySelector(".download-card[data-id=emergency-card]").scrollIntoView({block:"center"})');
+      await screenshot('r21-emergency-filter-mobile.png');
+    } finally {await resize(originalWidth);}
+  });
   await check('all specialist library setup links open matching onboarding', async () => {
     await navigate('downloads.html?type=specialist');
     const specialistRows = downloads.items.filter(row => row.kind === 'specialist');

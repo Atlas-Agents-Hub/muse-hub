@@ -2980,7 +2980,7 @@
       "id": "ai-competitor-title-rewriter",
       "kind": "skill",
       "title": "AI Competitor Title Rewriter",
-      "description": "AI Competitor Title Rewriter. Use when working with competitor title and your page topic.",
+      "description": "Create three original page titles based on competing content promises while preserving factual scope and avoiding copied phrasing.",
       "asset": "muse-skills-business-and-projects-001-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-business-and-projects-001-v1.6.2.zip",
       "category": "Business & projects",
@@ -21915,11 +21915,11 @@
       "id": "competitor-analysis",
       "kind": "skill",
       "title": "Competitor Analysis",
-      "description": "Research competitors with Browserbase discovery, enrichment lanes, screenshots, matrices, and HTML reports.",
+      "description": "Compare approved competitors using cited feature and pricing research, optional authorized screenshots, and an HTML or CSV report. Browserbase use requires provider and budget approval.",
       "asset": "muse-skills-automation-engineering-002-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-automation-engineering-002-v1.6.2.zip",
-      "category": "Software & automation",
-      "keywords": "automation-engineering automation engineering",
+      "category": "Business & projects",
+      "keywords": "automation-engineering automation engineering Business & projects Business & projects",
       "roles": [
         "software-engineer",
         "automation-engineer"
@@ -21935,11 +21935,11 @@
       "id": "competitor-backlink-idea-generator",
       "kind": "skill",
       "title": "Competitor Backlink Idea Generator",
-      "description": "Competitor Backlink Idea Generator. Use when working with your niche and competitor backlink examples or export.",
+      "description": "Analyze competitor backlink examples to identify relevant outreach prospects and original content opportunities. Mark unverified link metrics as unknown.",
       "asset": "muse-skills-software-engineering-009-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-software-engineering-009-v1.6.2.zip",
-      "category": "Software & automation",
-      "keywords": "software-engineering software engineering",
+      "category": "Business & projects",
+      "keywords": "software-engineering software engineering Business & projects Business & projects",
       "roles": [
         "software-engineer"
       ],
@@ -21954,11 +21954,11 @@
       "id": "competitor-gap-analyzer",
       "kind": "skill",
       "title": "Competitor Gap Analyzer",
-      "description": "Competitor Gap Analyzer. Use when working with your offering and at least one competitor profile.",
+      "description": "Compare offerings, audience needs and product capabilities using comparable evidence. Prioritize identified gaps by user value and implementation effort.",
       "asset": "muse-skills-software-engineering-009-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-software-engineering-009-v1.6.2.zip",
-      "category": "Software & automation",
-      "keywords": "software-engineering software engineering",
+      "category": "Business & projects",
+      "keywords": "software-engineering software engineering Business & projects Business & projects",
       "roles": [
         "software-engineer"
       ],
@@ -21973,11 +21973,11 @@
       "id": "competitor-keyword-overlap-checker",
       "kind": "skill",
       "title": "Competitor Keyword Overlap Checker",
-      "description": "Competitor Keyword Overlap Checker. Use when working with two labeled keyword sets.",
+      "description": "Compare two labeled keyword sets to identify shared and exclusive keywords, overlap percentages and keyword opportunities. Does not infer rankings.",
       "asset": "muse-skills-software-engineering-009-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-software-engineering-009-v1.6.2.zip",
-      "category": "Software & automation",
-      "keywords": "software-engineering software engineering",
+      "category": "Business & projects",
+      "keywords": "software-engineering software engineering Business & projects Business & projects",
       "roles": [
         "software-engineer"
       ],
@@ -22031,11 +22031,11 @@
       "id": "competitor-summary-report-creator",
       "kind": "skill",
       "title": "Competitor Summary Report Creator",
-      "description": "Competitor Summary Report Creator. Use when working with competitor names or URLs and evidence to summarize.",
+      "description": "Organize sourced competitor research into a dated report covering positioning, audiences, offerings and acquisition signals. Separate facts from interpretations.",
       "asset": "muse-skills-software-engineering-009-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-software-engineering-009-v1.6.2.zip",
-      "category": "Software & automation",
-      "keywords": "software-engineering software engineering",
+      "category": "Business & projects",
+      "keywords": "software-engineering software engineering Business & projects Business & projects",
       "roles": [
         "software-engineer"
       ],
@@ -32087,8 +32087,8 @@
       "description": "Prepare a concise emergency medical information card from supplied allergies, medications, urgent conditions and implants. Export as JSON, text or a QR code for travel or clinical visits.",
       "asset": "muse-skills-software-engineering-013-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-software-engineering-013-v1.6.2.zip",
-      "category": "Software & automation",
-      "keywords": "software-engineering software engineering",
+      "category": "Personal planning",
+      "keywords": "software-engineering software engineering Personal planning Personal planning",
       "roles": [
         "software-engineer"
       ],
@@ -41770,8 +41770,8 @@
       "description": "Explore changes in supplied health data over time, including symptoms, medications, vital signs, lab results, weight, mood and sleep. Includes correlation analysis and interactive ECharts reports.",
       "asset": "muse-skills-software-engineering-018-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-software-engineering-018-v1.6.2.zip",
-      "category": "Software & automation",
-      "keywords": "software-engineering software engineering",
+      "category": "Personal planning",
+      "keywords": "software-engineering software engineering Personal planning Personal planning",
       "roles": [
         "software-engineer"
       ],
@@ -51781,8 +51781,8 @@
       "description": "Build iridescent white or colorful black UI themes with parameterized OKLCH colors, WebGL or CSS fallback, screenshot checks and measured color-intensity reports.",
       "asset": "muse-skills-creative-production-005-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-creative-production-005-v1.6.2.zip",
-      "category": "Creative & games",
-      "keywords": "creative-production creative production",
+      "category": "Design & visualization",
+      "keywords": "creative-production creative production Design & visualization Design & visualization",
       "roles": [
         "creative-studio"
       ],
@@ -94735,8 +94735,8 @@
       "description": "Review supplied travel health information and destination risks, summarize vaccination considerations from supported WHO and CDC data, and prepare multilingual emergency information cards.",
       "asset": "muse-skills-personal-productivity-002-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-personal-productivity-002-v1.6.2.zip",
-      "category": "Personal planning",
-      "keywords": "personal-productivity personal productivity",
+      "category": "Home & travel",
+      "keywords": "personal-productivity personal productivity Home & travel Home & travel",
       "roles": [
         "coordinator",
         "personal-companion"
@@ -100506,8 +100506,8 @@
       "description": "Plan content for WeChat Official Accounts, including article structure, title approaches and Mini-Program integration.",
       "asset": "muse-skills-automation-engineering-009-v1.6.2.zip",
       "url": "https://github.com/Atlas-Agents-Hub/muse-hub/releases/download/v1.6.2/muse-skills-automation-engineering-009-v1.6.2.zip",
-      "category": "Software & automation",
-      "keywords": "automation-engineering automation engineering",
+      "category": "Business & projects",
+      "keywords": "automation-engineering automation engineering Business & projects Business & projects",
       "roles": [
         "software-engineer",
         "automation-engineer"

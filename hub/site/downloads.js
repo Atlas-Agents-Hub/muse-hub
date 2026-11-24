@@ -123,8 +123,11 @@
     const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
     page = Math.max(1, Math.min(page, pageCount));
     const shown = matches.slice((page - 1) * pageSize, page * pageSize);
+    const matchingCounts = new Map();
+    for (const {row} of matches) matchingCounts.set(row.kind, (matchingCounts.get(row.kind) || 0) + 1);
     for (const section of sections) {
       const group = shown.filter(item => item.row.kind === section.dataset.kind);
+      section.querySelector('h2 span').textContent = (matchingCounts.get(section.dataset.kind) || 0).toLocaleString('en-US');
       section.querySelector('.download-grid').replaceChildren(...group.map(item => cardFor(item.row)));
       section.hidden = group.length === 0;
     }

@@ -95,6 +95,13 @@ DESCRIPTIONS = {
     'geo-citability': 'Review answer clarity and source evidence with a citability rubric, then measure AI citations on a dated query sample. This editorial method does not guarantee ranking gains.',
     'geo-crawlers': 'Review crawler access against search, privacy and training preferences. Distinguish search bots, training crawlers and user-directed requests before changing site rules.',
     'hugging-face-dataset-viewer': 'Explore datasets with the read-only Hugging Face Dataset Viewer API: inspect splits, preview rows, search or filter entries, and retrieve statistics and Parquet links.',
+    # Source-grounded descriptions for competitor research tasks.
+    'competitor-analysis': 'Compare approved competitors using cited feature and pricing research, optional authorized screenshots, and an HTML or CSV report. Browserbase use requires provider and budget approval.',
+    'competitor-backlink-idea-generator': 'Analyze competitor backlink examples to identify relevant outreach prospects and original content opportunities. Mark unverified link metrics as unknown.',
+    'competitor-gap-analyzer': 'Compare offerings, audience needs and product capabilities using comparable evidence. Prioritize identified gaps by user value and implementation effort.',
+    'competitor-keyword-overlap-checker': 'Compare two labeled keyword sets to identify shared and exclusive keywords, overlap percentages and keyword opportunities. Does not infer rankings.',
+    'competitor-summary-report-creator': 'Organize sourced competitor research into a dated report covering positioning, audiences, offerings and acquisition signals. Separate facts from interpretations.',
+    'ai-competitor-title-rewriter': 'Create three original page titles based on competing content promises while preserving factual scope and avoiding copied phrasing.',
     # English display summaries of mixed-language source triggers; source packages stay intact.
     'baoyu-comic': 'Create educational, biographical and tutorial comics that explain a subject visually.',
     'baoyu-infographic': 'Design infographics using 21 layout options and 21 visual styles.',
@@ -181,6 +188,16 @@ SPECIALIST_SUBJECTS = {
 SUBJECT_CORRECTIONS = {
     '2d-games': 'Creative & games',
     '3d-games': 'Creative & games',
+    'emergency-card': 'Personal planning',
+    'health-trend-analyzer': 'Personal planning',
+    'travel-health-analyzer': 'Home & travel',
+    'liuguang-banlan-ui': 'Design & visualization',
+    'wechat-official-account-strategist': 'Business & projects',
+    'competitor-analysis': 'Business & projects',
+    'competitor-backlink-idea-generator': 'Business & projects',
+    'competitor-gap-analyzer': 'Business & projects',
+    'competitor-keyword-overlap-checker': 'Business & projects',
+    'competitor-summary-report-creator': 'Business & projects',
 }
 
 # Editorial task paths link only to existing source guides. These are not
