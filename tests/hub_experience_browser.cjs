@@ -301,6 +301,8 @@ async function runChecks() {
     const scenarios = [
       { viewport:390, id:'emergency-card', query:'emergency medical information card', expected:'Prepare a concise emergency medical information card' },
       { viewport:1440, id:'liuguang-banlan-ui', query:'parameterized OKLCH colors', expected:'Build iridescent white or colorful black UI themes' },
+        { viewport:390, id:'pypict-skill', query:'valid pairs of input values', expected:'Build a pairwise test matrix' },
+        { viewport:1440, id:'x-article-publisher-skill', query:'configured integration that supports articles', expected:'Prepare and review an X article draft' },
     ];
     const observations=[];
     try {
@@ -316,7 +318,7 @@ async function runChecks() {
         assert.equal(details.query,scenario.query);
         assert(details.overflow<=1);
         await evaluate('document.querySelector('+JSON.stringify(selector)+').scrollIntoView({block:"center"})');
-        await screenshot('english-search-'+scenario.viewport+'.png');
+        await screenshot('english-search-'+scenario.id+'-'+scenario.viewport+'.png');
         observations.push({id:scenario.id,viewport:scenario.viewport,...details});
       }
     } finally { await resize(originalWidth); }

@@ -488,10 +488,21 @@ class SpecialistDownloadDiscovery(unittest.TestCase):
         self.assertEqual(len({(row['kind'],row['id']) for row in self.directory['items']}),len(self.directory['items']))
         by_id = {(row['kind'], row['id']): row for row in self.directory['items']}
         skills = {row['id']: row for row in self.collection['skills']}
-        # The two documented game-development exceptions preserve original
-        # collection metadata and search terms; other source mappings remain exact.
-        self.assertEqual(self.renderer.SUBJECT_CORRECTIONS,
-                         {'2d-games': 'Creative & games', '3d-games': 'Creative & games'})
+        # Explicit source-reviewed display exceptions; all original terms stay searchable.
+        self.assertEqual(self.renderer.SUBJECT_CORRECTIONS, {
+            '2d-games': 'Creative & games',
+            '3d-games': 'Creative & games',
+            'emergency-card': 'Personal planning',
+            'health-trend-analyzer': 'Personal planning',
+            'travel-health-analyzer': 'Home & travel',
+            'liuguang-banlan-ui': 'Design & visualization',
+            'wechat-official-account-strategist': 'Business & projects',
+            'competitor-analysis': 'Business & projects',
+            'competitor-backlink-idea-generator': 'Business & projects',
+            'competitor-gap-analyzer': 'Business & projects',
+            'competitor-keyword-overlap-checker': 'Business & projects',
+            'competitor-summary-report-creator': 'Business & projects',
+        })
         for skill in skills.values():
             row = by_id['skill', skill['id']]
             expected = self.renderer.SUBJECT_CORRECTIONS.get(

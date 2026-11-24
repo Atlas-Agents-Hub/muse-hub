@@ -68,6 +68,21 @@ def release_version(root: Path = ROOT) -> str:
 
 # Short customer descriptions; procedures and acceptance criteria remain in each kit.
 DESCRIPTIONS = {
+    # Source-reviewed customer summaries.
+    '3d-web-experience': 'Build or debug interactive 3D websites and product configurators with Three.js, React Three Fiber or Spline. Review model loading, controls, accessibility and performance.',
+    'apple-hig-expert': 'Design or review Apple platform interfaces against the Human Interface Guidelines, including Liquid Glass, contrast and tap targets. Includes a checker; confirm current guidance.',
+    'cinematic-shot-prompting': 'Turn a scene description into a structured AI video prompt covering camera movement, framing and timing for generators such as Runway, Kling or Luma.',
+    'content-creator': 'Deprecated entry point: use Content Production for writing articles and guides, or Content Strategy for planning topics and calendars.',
+    'syllabus': 'Build supplementary reading lists from a course syllabus. Group topics, find peer-reviewed papers and prepare a Word document with summaries and discussion questions.',
+    'deep-learning-book': "Explore Goodfellow, Bengio and Courville's Deep Learning through chapter guides, reading paths and training diagnostics. Includes updates and links to the original book.",
+    'deep-work': 'Plan focused work around energy and available time. Group shallow tasks, schedule deep-work blocks and track focus sessions against a weekly target.',
+    'demo-video': 'Create a product walkthrough or demo from screenshots or scene descriptions. Rendering uses available Playwright, FFmpeg and text-to-speech tools; otherwise prepare a storyboard or manual workflow.',
+    'design-qa': 'Review a rendered interface for broken controls, missing states, keyboard focus, contrast and responsive layout. Includes source checks and browser snapshot tools.',
+    'design-spatial': 'Review UI composition using rendered screenshots at multiple widths. Identify collisions, alignment and visual hierarchy issues, then seek an independent review.',
+    'design-taste-frontend': 'Design or review responsive frontend interfaces with deliberate typography, layout, motion and component states. Adapt the guidance to the existing product and verify in a browser.',
+    'pypict-skill': 'Build a pairwise test matrix covering valid pairs of input values. Requires a separately installed generator; verify coverage and add boundary and failure tests.',
+    'remotion-docs': 'Find relevant Remotion documentation through its search index and read the linked Markdown pages before implementing video features.',
+    'x-article-publisher-skill': 'Prepare and review an X article draft. Publishing requires a configured integration that supports articles and explicit approval of the content and destination; no client is bundled.',
     'daily-briefing': 'Make a realistic plan for today. Includes reusable reminder and calendar worksheets with filled examples.',
     'weekly-reset': 'Review your goals, progress and available time, then choose the next useful action. Includes a goal review worksheet and example.',
     'accessible-ui': 'Review accessible interfaces and check HTML for missing language, empty page titles, duplicate IDs and markup to review. Includes a Python checker and example pages.',
