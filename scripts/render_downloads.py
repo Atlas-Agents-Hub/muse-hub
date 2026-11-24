@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import unicodedata
 import html
 import json
 from pathlib import Path
@@ -67,6 +68,21 @@ def release_version(root: Path = ROOT) -> str:
 
 # Short customer descriptions; procedures and acceptance criteria remain in each kit.
 DESCRIPTIONS = {
+    # Source-reviewed customer summaries.
+    '3d-web-experience': 'Build or debug interactive 3D websites and product configurators with Three.js, React Three Fiber or Spline. Review model loading, controls, accessibility and performance.',
+    'apple-hig-expert': 'Design or review Apple platform interfaces against the Human Interface Guidelines, including Liquid Glass, contrast and tap targets. Includes a checker; confirm current guidance.',
+    'cinematic-shot-prompting': 'Turn a scene description into a structured AI video prompt covering camera movement, framing and timing for generators such as Runway, Kling or Luma.',
+    'content-creator': 'Deprecated entry point: use Content Production for writing articles and guides, or Content Strategy for planning topics and calendars.',
+    'syllabus': 'Build supplementary reading lists from a course syllabus. Group topics, find peer-reviewed papers and prepare a Word document with summaries and discussion questions.',
+    'deep-learning-book': "Explore Goodfellow, Bengio and Courville's Deep Learning through chapter guides, reading paths and training diagnostics. Includes updates and links to the original book.",
+    'deep-work': 'Plan focused work around energy and available time. Group shallow tasks, schedule deep-work blocks and track focus sessions against a weekly target.',
+    'demo-video': 'Create a product walkthrough or demo from screenshots or scene descriptions. Rendering uses available Playwright, FFmpeg and text-to-speech tools; otherwise prepare a storyboard or manual workflow.',
+    'design-qa': 'Review a rendered interface for broken controls, missing states, keyboard focus, contrast and responsive layout. Includes source checks and browser snapshot tools.',
+    'design-spatial': 'Review UI composition using rendered screenshots at multiple widths. Identify collisions, alignment and visual hierarchy issues, then seek an independent review.',
+    'design-taste-frontend': 'Design or review responsive frontend interfaces with deliberate typography, layout, motion and component states. Adapt the guidance to the existing product and verify in a browser.',
+    'pypict-skill': 'Build a pairwise test matrix covering valid pairs of input values. Requires a separately installed generator; verify coverage and add boundary and failure tests.',
+    'remotion-docs': 'Find relevant Remotion documentation through its search index and read the linked Markdown pages before implementing video features.',
+    'x-article-publisher-skill': 'Prepare and review an X article draft. Publishing requires a configured integration that supports articles and explicit approval of the content and destination; no client is bundled.',
     'daily-briefing': 'Make a realistic plan for today. Includes reusable reminder and calendar worksheets with filled examples.',
     'weekly-reset': 'Review your goals, progress and available time, then choose the next useful action. Includes a goal review worksheet and example.',
     'accessible-ui': 'Review accessible interfaces and check HTML for missing language, empty page titles, duplicate IDs and markup to review. Includes a Python checker and example pages.',
@@ -85,6 +101,56 @@ DESCRIPTIONS = {
     'product-to-implementation': 'Turn a product request into interface, data and automation specifications your team can build.',
     'pipeline-validation': 'Review schema changes, reconcile a data batch and inspect query performance.',
     'idea-to-offer': 'Explore customer needs and shape a practical offer.',
+    # Verified against the linked source SKILL.md files; retain source terminology.
+    'azure-eventhub-dotnet': 'Send and receive events with the Azure Event Hubs .NET SDK. Covers EventProcessorClient checkpointing, Azure Identity and event-streaming configuration.',
+    'cc-skill-project-guidelines-example': 'Use an illustrative project-skill template for architecture, code patterns, tests and deployment. Adapt its examples to your own repository; it is not a universal project policy.',
+    'claude-scientific-skills': 'Find relevant workflows in the upstream Scientific Agent Skills library and review dependencies, licenses and evidence before importing. This is a discovery guide, not a bundled scientific toolkit.',
+    'expo-dev-client': 'Create an Expo development client with EAS Build for native modules and platform extensions beyond Expo Go. Includes development build profiles and device testing.',
+    'favicon': 'Generate favicon variants from a supplied image, place them in the correct static assets folder and update HTML links. Includes ImageMagick and framework detection.',
+    'geo-citability': 'Review answer clarity and source evidence with a citability rubric, then measure AI citations on a dated query sample. This editorial method does not guarantee ranking gains.',
+    'geo-crawlers': 'Review crawler access against search, privacy and training preferences. Distinguish search bots, training crawlers and user-directed requests before changing site rules.',
+    'hugging-face-dataset-viewer': 'Explore datasets with the read-only Hugging Face Dataset Viewer API: inspect splits, preview rows, search or filter entries, and retrieve statistics and Parquet links.',
+    # Source-grounded descriptions for competitor research tasks.
+    'competitor-analysis': 'Compare approved competitors using cited feature and pricing research, optional authorized screenshots, and an HTML or CSV report. Browserbase use requires provider and budget approval.',
+    'competitor-backlink-idea-generator': 'Analyze competitor backlink examples to identify relevant outreach prospects and original content opportunities. Mark unverified link metrics as unknown.',
+    'competitor-gap-analyzer': 'Compare offerings, audience needs and product capabilities using comparable evidence. Prioritize identified gaps by user value and implementation effort.',
+    'competitor-keyword-overlap-checker': 'Compare two labeled keyword sets to identify shared and exclusive keywords, overlap percentages and keyword opportunities. Does not infer rankings.',
+    'competitor-summary-report-creator': 'Organize sourced competitor research into a dated report covering positioning, audiences, offerings and acquisition signals. Separate facts from interpretations.',
+    'ai-competitor-title-rewriter': 'Create three original page titles based on competing content promises while preserving factual scope and avoiding copied phrasing.',
+    # English display summaries of mixed-language source triggers; source packages stay intact.
+    'baoyu-comic': 'Create educational, biographical and tutorial comics that explain a subject visually.',
+    'baoyu-infographic': 'Design infographics using 21 layout options and 21 visual styles.',
+    'crossframe': 'Use the CrossFrame method for structural diagnosis of complex relationships, organizations, institutions, public disputes or long-term change. The source method uses Chinese terminology.',
+    'de-ai-writer': 'Review Chinese drafts for 35 patterns associated with AI-generated writing, score those patterns, and revise the prose or adapt it to a supplied writing style.',
+    'emergency-card': 'Prepare a concise emergency medical information card from supplied allergies, medications, urgent conditions and implants. Export as JSON, text or a QR code for travel or clinical visits.',
+    'fact-check-x-unified': 'Orchestrate comparison of multiple AI answers, distinguish unverified synthesis from authoritative verification, and produce an auditable report. The full pipeline requires separately installed companion skills.',
+    'health-trend-analyzer': 'Explore changes in supplied health data over time, including symptoms, medications, vital signs, lab results, weight, mood and sleep. Includes correlation analysis and interactive ECharts reports.',
+    'humanize-chinese': 'Review AI-like patterns in Chinese prose and revise it for natural style. Covers scoring, academic writing review and style conversion.',
+    'liepin-jobs': "Connect supported coding agents to Liepin's official MCP server to search Chinese job listings and review resumes. Applications require explicit approval; tokens stay in environment variables.",
+    'liuguang-banlan-ui': 'Build iridescent white or colorful black UI themes with parameterized OKLCH colors, WebGL or CSS fallback, screenshot checks and measured color-intensity reports.',
+    'makepad-animation': "Work with Makepad's animation system, including animators, hover and pressed states, and transitions.",
+    'makepad-basics': 'Get started with Makepad app structure, project setup, live_design! and app_main!.',
+    'makepad-deployment': 'Package and distribute Makepad applications for desktop, mobile and WebAssembly with cargo-packager, cargo-makepad and CI workflows.',
+    'makepad-dsl': "Use Makepad's live design syntax, inheritance, prototypes and component definitions.",
+    'makepad-event-action': 'Handle Makepad events and actions using Event, ActionTrait, handle_event, pointer input and post_action.',
+    'makepad-font': 'Configure Makepad fonts, typography, glyph rendering, font atlases and text layout.',
+    'makepad-layout': 'Build Makepad layouts with Fit, Fill, Size, Walk, flow, spacing, padding and alignment.',
+    'makepad-platform': 'Review Makepad platform support across macOS, Windows, Linux, Android, iOS and web, including graphics backend differences.',
+    'makepad-shaders': 'Work with Makepad shaders, Sdf2d, draw_bg and draw_quad for GPU-based drawing.',
+    'makepad-splash': "Use Makepad's Splash scripting language, script! and cx.eval for scripting and dynamic behavior.",
+    'monetize': 'Build a personal side-income plan from existing experience and skills, with opportunity assessment, product ideas, a first action and sourced or explicitly labeled estimates.',
+    'pro-launch': 'Plan a product from concept to launch with references, naming, style frames, UI iteration, launch video and go-to-market gates.',
+    'pro-motion': 'Plan an audio-first product launch or promotional motion-graphics video, then render timed visuals to match the track.',
+    'readme-polish': "Improve an existing README's readability, information hierarchy, badges and diagrams using comparable repositories and a deterministic lint check.",
+    'robius-app-architecture': 'Apply Robius architecture patterns for Tokio, asynchronous requests, SignalToUI, worker tasks and app startup.',
+    'robius-event-action': 'Handle custom Robius actions and signals, including cx.widget_action, handle_actions and DefaultNone.',
+    'robius-matrix-integration': 'Integrate the Matrix SDK into Makepad and Robius apps, including sliding sync, requests, timelines, rooms and session handling.',
+    'robius-state-management': 'Manage Robius application state, persistence, theme switching, scoped data and Serde serialization.',
+    'robius-widget-patterns': 'Build Robius widget patterns including overlays, modals, collapsible sections, drag and drop, and reusable components.',
+    'skill-skill': 'Write, improve or audit a Claude skill with explicit triggers, behavioral requirements and a static quality audit.',
+    'travel-health-analyzer': 'Review supplied travel health information and destination risks, summarize vaccination considerations from supported WHO and CDC data, and prepare multilingual emergency information cards.',
+    'wechat-official-account-strategist': 'Plan content for WeChat Official Accounts, including article structure, title approaches and Mini-Program integration.',
+    'xiaohongshu-content-strategist': 'Plan Xiaohongshu content using platform-specific topics, save-rate optimization, trend formats and search discovery.',
 }
 TITLES = {
     'release-readiness': 'Prepare a Release for Delivery',
@@ -130,6 +196,80 @@ SPECIALIST_SUBJECTS = {
     'learning-coach': 'Learning & study', 'personal-companion': 'Personal planning',
     'garden-companion': 'Home & travel',
 }
+
+
+# Presentation-only taxonomy fixes, grounded in the linked SKILL.md topics.
+# The upstream collection and install-package membership remain unchanged.
+SUBJECT_CORRECTIONS = {
+    '2d-games': 'Creative & games',
+    '3d-games': 'Creative & games',
+    'emergency-card': 'Personal planning',
+    'health-trend-analyzer': 'Personal planning',
+    'travel-health-analyzer': 'Home & travel',
+    'liuguang-banlan-ui': 'Design & visualization',
+    'wechat-official-account-strategist': 'Business & projects',
+    'competitor-analysis': 'Business & projects',
+    'competitor-backlink-idea-generator': 'Business & projects',
+    'competitor-gap-analyzer': 'Business & projects',
+    'competitor-keyword-overlap-checker': 'Business & projects',
+    'competitor-summary-report-creator': 'Business & projects',
+}
+
+# Editorial task paths link only to existing source guides. These are not
+# rankings, endorsements or an alternative release inventory.
+SUBJECT_STARTS = {
+    'Business & projects': (
+        ('customer-research', 'Learn from customers', 'Plan or synthesize customer research before choosing a direction.'),
+        ('project-prioritization', 'Prioritize the backlog', 'Compare impact, dependencies and capacity before selecting work.'),
+        ('idea-to-offer', 'Test a proposed offer', 'Move from customer needs to a defensible offer without overpromising.'),
+    ),
+    'Creative & games': (
+        ('creative-brief', 'Define the brief', 'Turn an idea into a clear production brief with constraints and deliverables.'),
+        ('storyboard', 'Plan a visual sequence', 'Map scene purpose and progression before producing video or animation.'),
+        ('game-design', 'Design a game loop', 'Plan mechanics, player goals and progression before implementation.'),
+    ),
+    'Data & AI': (
+        ('data-quality-auditor', 'Inspect a dataset', 'Check missing values, inconsistencies and quality risks before analysis.'),
+        ('senior-data-engineer', 'Design a data pipeline', 'Plan ETL and ELT jobs, scheduling and data quality checks.'),
+        ('sql-pro', 'Investigate a slow query', 'Use query plans, schema design and indexes to diagnose SQL performance.'),
+    ),
+    'Design & visualization': (
+        ('ux-flow', 'Map a user journey', 'Lay out navigation and the steps people take to finish a task.'),
+        ('ux-audit', 'Find interface friction', 'Review usability issues and prioritize fixes grounded in observed screens.'),
+        ('design-token-audit', 'Verify interface colors', 'Check actual foreground and background token pairs for contrast.'),
+    ),
+    'Infrastructure & reliability': (
+        ('incident-commander', 'Coordinate an incident', 'Organize response roles, status and safe next actions during an outage.'),
+        ('performance-profiler', 'Find a bottleneck', 'Use profiling and traces to isolate slow endpoints or memory spikes.'),
+        ('capacity-planner', 'Plan for demand', 'Translate measured performance into realistic infrastructure capacity.'),
+    ),
+    'Learning & study': (
+        ('lecture-map', 'Preview a lecture', 'Build a concept map from slides or notes before detailed study.'),
+        ('source-flashcards', 'Practice from source', 'Turn supplied material into traceable questions and flashcards.'),
+        ('teach-back', 'Explain it aloud', 'Use an explanation to reveal missing links in your understanding.'),
+    ),
+    'Personal planning': (
+        ('daily-briefing', 'Plan today', 'Fit commitments into the time available with a practical daily briefing.'),
+        ('inbox-triage', 'Triage the inbox', 'Prioritize threads, draft replies and resume from the last review.'),
+        ('weekly-reset', 'Review the week', 'Revisit goals and available capacity to choose what matters next.'),
+    ),
+    'Research & science': (
+        ('question-to-evidence', 'Frame a research question', 'Define an answerable question and the evidence needed to check it.'),
+        ('literature-triage', 'Map the literature', 'Sort papers into themes and gaps before writing a review.'),
+        ('claim-audit', 'Check a claim', 'Trace a factual statement to the evidence that actually supports it.'),
+    ),
+    'Security': (
+        ('ai-agent-security', 'Harden an AI agent', 'Review prompt injection, tool privileges and data-exposure risks.'),
+        ('agentic-actions-auditor', 'Audit workflow permissions', 'Check automation integrations for insecure GitHub Action patterns.'),
+        ('security-pen-testing', 'Test with authorization', 'Define scope and check vulnerabilities only in permitted systems.'),
+    ),
+    'Software & automation': (
+        ('ai-code-review-triage', 'Review an AI-built change', 'Triage pull requests and focus review on high-impact defects.'),
+        ('api-contract-testing', 'Check an API change', 'Test consumer and provider contracts before schema changes break clients.'),
+        ('agentic-test-audit', 'Audit a test suite', 'Find flaky tests, surviving mutants and coverage gaps before release.'),
+    ),
+}
+
 
 
 def subject(category: str) -> str:
@@ -195,26 +335,65 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
                     last=i
                 if number<total_pages:links.append(f'<a rel="next" href="{slug}-{number+1:03d}.html" aria-label="Next subject page">Next →</a>')
                 navigation=' '.join(links)
+            start_panel=''
+            if number==1 and label in SUBJECT_STARTS:
+                by_id={row['id']:row for row in rows}
+                paths=[]
+                for item_id, action, summary in SUBJECT_STARTS[label]:
+                    selected=by_id.get(item_id)
+                    if not selected or selected['kind'] not in ('skill','workflow') or not selected.get('guide_url'):
+                        raise ValueError(f'Invalid curated starting point: {label} / {item_id}')
+                    paths.append(
+                        f'<a class="subject-start-link" data-resource-id="{esc(item_id)}" '
+                        f'href="{esc(selected["guide_url"])}">'
+                        f'<strong>{esc(action)}</strong><span>{esc(summary)}</span>'
+                        f'<em>Read method →</em></a>')
+                start_panel=(
+                    '<section class="subject-start" aria-labelledby="subject-start-title">'
+                    '<div class="subject-start-heading">'
+                    '<h2 id="subject-start-title">Start with a task</h2></div>'
+                    f'<nav class="subject-start-grid" aria-label="Task paths in {esc(label)}">'
+                    f'{"".join(paths)}</nav></section>\n')
             page_summary=f'Page {number} of {total_pages}' if total_pages>1 else 'All resources'
             pager_top=f'<nav class="download-pagination subject-pagination" aria-label="Subject pages">{navigation}</nav>' if navigation else ''
             pager_bottom=f'<nav class="download-pagination subject-pagination" aria-label="More subject pages">{navigation}</nav>' if navigation else ''
             cards=[]
             for row in items:
                 text=row['description']
-                if len(text)>400:text=text[:397].rsplit(' ',1)[0]+'…'
-                read=f'<a class="subject-guide-link" href="{esc(row["guide_url"])}">Read method →</a>' if row.get('guide_url') else ''
+                if len(text)>220:text=text[:217].rsplit(' ',1)[0]+'…'
+                read=f'<a class="subject-guide-link" href="{esc("../" + row["guide_url"] if row["kind"] == "specialist" else row["guide_url"])}">{"Setup guide" if row["kind"] == "specialist" else "Read method"} →</a>' if row.get('guide_url') else ''
                 packed=row.get('pack_kind')=='skill-pack'
                 download='Download skill pack' if packed else 'Download ZIP'
-                entry=f'<p class="download-entry">Inside this collection: <code>{esc(row["entry"])}</code></p>' if packed else ''
-                cards.append(f'<article class="download-card subject-card"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p><div class="subject-card-actions">{read}<a href="{esc(row["url"])}">{download} ↓</a></div>{entry}</article>')
+                entry=f'<details class="subject-source"><summary>Included pack path</summary><code>{esc(row["entry"])}</code></details>' if packed else ''
+                cards.append(f'<article class="download-card subject-card" data-kind="{esc(row["kind"])}"><span class="download-kind">{esc(row["kind"].replace("-"," "))}</span><h2>{esc(row["title"])}</h2><p>{esc(text)}</p>{entry}<div class="subject-card-actions">{read}<a href="{esc(row["url"])}">{download} ↓</a></div></article>')
+            # The published URL retains at most 200 indexed cards, but only the
+            # first 18 should consume layout space by default. Native details
+            # keep the remainder reachable with JavaScript completely disabled.
+            first_cards=''.join(cards[:DOWNLOAD_PAGE_SIZE])
+            slices=[]
+            for offset in range(DOWNLOAD_PAGE_SIZE,len(cards),DOWNLOAD_PAGE_SIZE):
+                end=min(offset+DOWNLOAD_PAGE_SIZE,len(cards))
+                slices.append(
+                    f'<details class="subject-slice" data-start="{offset+1}" data-end="{end}">'
+                    f'<summary>Show resources {offset+1}&ndash;{end} of {len(cards)} on this page</summary>'
+                    f'<div class="download-grid subject-grid">{"".join(cards[offset:end])}</div></details>')
+            preview=(f'<p class="subject-preview-note">Showing the first {DOWNLOAD_PAGE_SIZE} of {len(cards)} '
+                     f'resources on this page. <a href="#subject-more">Jump to more ranges</a></p>' if slices else '')
+            more=(f'<section class="subject-more" aria-label="More resources on this page">'
+                  f'<h2 id="subject-more" tabindex="-1">More resources on this page</h2>{"".join(slices)}</section>' if slices else '')
             url='https://atlas-agents-hub.github.io/muse-hub/'+route
             page_description=(intros[label] if len(pages)==1 else
                 f'{intros[label]} Browse {label.lower()} resources on page {number} of {len(pages)}.')
             schema={'@context':'https://schema.org','@type':'CollectionPage','name':title,
                     'url':url,'description':page_description,'image':SOCIAL_IMAGE,
-                    'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':'https://atlas-agents-hub.github.io/muse-hub/'}}
+                    'isPartOf':{'@type':'WebSite','name':'Muse Hub','url':SITE_BASE},
+                    'breadcrumb':{'@type':'BreadcrumbList','itemListElement':[
+                        {'@type':'ListItem','position':1,'name':'Muse Hub','item':SITE_BASE},
+                        {'@type':'ListItem','position':2,'name':'Library','item':SITE_BASE+'downloads.html'},
+                        {'@type':'ListItem','position':3,'name':label,'item':url},
+                    ]}}
             body=f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<html lang="en" class="subject-directory-page"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark"><meta name="theme-color" content="#151515">
 <title>{esc(title)} | Muse Hub · {number}</title><meta name="description" content="{esc(page_description)}">
 {social_meta(url, f'{title} | Page {number} | Muse Hub', page_description)}
@@ -224,10 +403,12 @@ def subject_pages(data: dict, home: str) -> dict[str,bytes]:
 {shared_header}
 <main id="main" class="shell subject-main">
   <nav class="subject-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Muse Hub</a><span aria-hidden="true">/</span><a href="../downloads.html">Library</a><span aria-hidden="true">/</span><span>{esc(label)}</span></nav>
-  <header class="subject-heading"><span class="subject-kicker">THE MUSE HUB LIBRARY / {esc(label).upper()}</span><h1>{esc(title)}</h1><p>{esc(intros[label])}</p>
+  <header class="subject-heading"><span class="subject-kicker">SKILLS, WORKFLOWS &amp; SPECIALISTS</span><h1>{esc(label)}</h1><p>{esc(intros[label])}</p>
   <div class="subject-summary"><span><strong>{len(rows):,}</strong> resources</span><span>{page_summary}</span><a href="../downloads.html?subject={quote(label)}">Search this subject →</a></div></header>
-{pager_top}
-  <div class="download-grid subject-grid">{''.join(cards)}</div>
+{start_panel}{pager_top}
+{preview}
+  <div class="download-grid subject-grid">{first_cards}</div>
+{more}
 {pager_bottom}
   <p class="subject-return"><a href="../downloads.html">← Explore all Muse skills, workflows and specialist kits</a></p>
 </main>
@@ -282,7 +463,8 @@ def catalog(root: Path = ROOT) -> dict:
                          description=role['description'], asset=asset, url=base+asset,
                          category=SPECIALIST_SUBJECTS[ALIASES.get(role['id'],role['id'])],
                          keywords='specialists '+role['category']+' '+role['category_label'],
-                         roles=[ALIASES.get(role['id'],role['id'])]))
+                         roles=[ALIASES.get(role['id'],role['id'])],
+                         guide_url=f'index.html?role={role["id"]}#setup'))
     for key, kind, description in (('skills', 'skill', 'trigger'), ('workflows', 'workflow', 'goal')):
         for item in sorted(collection[key], key=lambda row: (TITLES.get(row['id'],row['title']).casefold(), row['id'])):
             asset = f"muse-{kind}-{item['id']}-{version}.zip"
@@ -292,10 +474,13 @@ def catalog(root: Path = ROOT) -> dict:
                 pack = {key:value for key,value in pack.items() if key!='asset'}
             original_category = (item['category'] if kind == 'skill'
                                  else skill_by_id[item['skills'][0]]['category'])
+            public_category=SUBJECT_CORRECTIONS.get(item['id'], original_category) if kind == 'skill' else original_category
             rows.append(dict(id=item['id'], kind=kind, title=TITLES.get(item['id'],item['title']),
                              description=DESCRIPTIONS.get(item['id'],item[description]), asset=asset, url=base+asset,
-                             category=subject(original_category),
-                             keywords=original_category+' '+original_category.replace('-', ' '),
+                             category=subject(public_category),
+                             keywords=(original_category+' '+original_category.replace('-', ' ')+
+                                      (' '+public_category+' '+public_category.replace('-', ' ')
+                                       if public_category!=original_category else '')),
                              roles=memberships[key][item['id']], **pack,
                              guide_url=REPO+'/blob/main/'+(
                                  ('collections/library/'+item['path'] if item.get('format')=='portable-skill'
@@ -309,6 +494,13 @@ def catalog(root: Path = ROOT) -> dict:
             asset=asset,url=base+asset,category=subject(row['category']),
             keywords=row['category'],roles=sorted(guide_memberships[row['id']]),
             guide_url=REPO+'/blob/main/'+row['doc_path']))
+    # Reject untranslated prose from scripts used by imported multilingual resources.
+    # Greek statistical symbols and Latin diacritics are valid English technical text.
+    for row in rows:
+        if any(c.isalpha() and not any(script in unicodedata.name(c, '')
+                                      for script in ('LATIN', 'GREEK'))
+               for c in row['description']):
+            raise ValueError(f"Public description requires English editorial review: {row['id']}")
     counts = {kind: sum(row['kind'] == kind for row in rows) for kind in ('specialist','skill','workflow','tool-guide')}
     if counts['specialist']!=15 or counts['skill']<75 or counts['workflow']<25:
         raise ValueError(f'Incomplete release inventory: {counts}')
@@ -361,8 +553,8 @@ def render_homepage(data: dict, root: Path = ROOT) -> str:
         key=match['key']
         values={**data['counts'],'starter':data['starter_count'],'connector':data['connector_count']}
         if key not in values:raise ValueError('Unknown homepage inventory count.')
-        return match['open']+str(values[key])+match['close']
-    home=re.sub(r'(?P<open><(?:strong|span) data-library-count="(?P<key>[a-z-]+)">)\d+(?P<close></(?:strong|span)>)',library_count,home)
+        return match['open']+f'{values[key]:,}'+match['close']
+    home=re.sub(r'(?P<open><(?P<tag>strong|span|dd) data-library-count="(?P<key>[a-z-]+)">)[\d,]+(?P<close></(?P=tag)>)',library_count,home)
     for row in (item for item in data['items'] if item['kind']=='specialist'):
         identity=re.escape(row['id'])
         pattern=r'(<article class="role-card" data-role="'+identity+r'"[^>]*>)(.*?)(</article>)'
@@ -396,12 +588,7 @@ def render_homepage(data: dict, root: Path = ROOT) -> str:
 
 
 def display_count(kind: str, count: int) -> str:
-    """Use rounded counts in marketing copy and exact counts in result inventories."""
-    if kind == 'workflow' and 390 <= count < 400:
-        return 'nearly 400'
-    step = {'skill': 100, 'tool-guide': 10, 'starter': 50}.get(kind)
-    if step and count >= step and count % step:
-        return f'{(count // step) * step:,}+'
+    """Show verified catalog totals, not lower rounded marketing estimates."""
     return f'{count:,}'
 
 
@@ -434,6 +621,20 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
         f'<a class="bundle-card" href="{esc(row["url"])}"><span>{esc(bundle_title(row))}</span><p>{esc(row["description"])}</p><strong>Download ZIP ↓</strong></a>'
         for row in data['bundles'])
     initial_items = data['items'][:DOWNLOAD_PAGE_SIZE]
+    # Curated editorial entry points share the authoritative subject pages.
+    goal_paths = (
+        ('Build', 'Software & automation', 'Apps, debugging and workflows'),
+        ('Research', 'Research & science', 'Questions, evidence and analysis'),
+        ('Design', 'Design & visualization', 'Interfaces, graphics and charts'),
+        ('Learn', 'Learning & study', 'Lessons, flashcards and review'),
+    )
+    if any(category not in data['categories'] for _, category, _ in goal_paths):
+        raise ValueError('A discovery link lacks a subject page')
+    goal_links = ''.join(
+        f'<a href="library/{subject_slug(category)}-001.html">'
+        f'<strong>{esc(title)}</strong><span>{esc(detail)}</span></a>'
+        for title, category, detail in goal_paths
+    )
     subject_links = []
     for label in data['categories']:
         count = sum(row['category'] == label for row in data['items'])
@@ -448,13 +649,13 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
             if len(description)>320:
                 description=description[:317].rsplit(' ',1)[0]+'…'
             search=esc(' '.join((row['title'],description,row['id'],row['category'],row.get('keywords',''))))
-            read_link=f'<a class="guide-link" href="{esc(row["guide_url"])}">Read guide →</a>' if row.get('guide_url') else ''
+            read_link=f'<a class="guide-link" href="{esc(row["guide_url"])}">{"Setup guide" if kind == "specialist" else "Read guide"} →</a>' if row.get('guide_url') else ''
             packed=row.get('pack_kind')=='skill-pack'
             label=f"Download skill pack · {row['pack_size']} skills" if packed else 'Download ZIP'
             hint=f'<p class="download-entry">Open <code>{esc(row["entry"])}</code> in this pack.</p>' if packed else ''
             cards.append(f'''<article class="download-card" data-id="{esc(row['id'])}" data-kind="{kind}" data-category="{esc(row['category'])}" data-roles="{esc(' '.join(row['roles']))}" data-search="{search}">
-  <span class="download-kind">{esc(row['category'])}</span><h3>{esc(row['title'])}</h3><p>{esc(description)}</p>{read_link}{hint}
-  <a href="{esc(row['url'])}" aria-label="Download {esc(row['title'])}{' skill pack' if packed else ' ZIP'}">{esc(label)} <span aria-hidden="true">↓</span></a>
+  <span class="download-kind">{esc(row['category'])}</span><h3>{esc(row['title'])}</h3><p>{esc(description)}</p>{hint}
+  <div class="download-card-actions">{read_link}<a href="{esc(row['url'])}" aria-label="Download {esc(row['title'])}{' skill pack' if packed else ' ZIP'}">{esc(label)} <span aria-hidden="true">↓</span></a></div>
 </article>''')
         count_label = display_count(kind, data['counts'][kind])
         sections.append(f'<section class="download-section" data-kind="{kind}" id="{anchor}" aria-labelledby="{anchor}-heading"'+(' hidden' if not cards else '')+f'><h2 id="{anchor}-heading">{heading} <span>{count_label}</span></h2><div class="download-grid">'+ '\n'.join(cards)+'</div></section>')
@@ -480,7 +681,7 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
     <section class="downloads-catalog section-dark" id="catalog"><div class="shell">
       <div class="catalog-heading">
         <h1>Muse Hub Library</h1>
-        <p>Search {display_count('skill', counts['skill'])} skills, {display_count('workflow', counts['workflow'])} workflows, and {display_count('tool-guide', counts['tool-guide'])} tool guides.</p>
+        <p>Find {display_count('skill', counts['skill'])} Muse skills, {display_count('workflow', counts['workflow'])} workflows, {display_count('specialist', counts['specialist'])} specialist kits and {display_count('tool-guide', counts['tool-guide'])} tool guides. Search by task or start with a subject.</p>
       </div>
       <nav class="download-jumps" aria-label="Library types">
         <a href="downloads.html#catalog" data-download-type="all">All</a>
@@ -498,6 +699,10 @@ def render(data: dict, root: Path = ROOT, *, home: str | None = None) -> str:
         </div></details>\n        <button id="download-reset" class="reset-btn" type="button">Clear</button>
       </div>
       <p id="download-count" role="status" aria-live="polite">Showing 1–{len(initial_items)} of {len(data['items']):,} downloads</p>
+      <section class="catalog-goals" aria-labelledby="catalog-goals-title">
+        <h2 id="catalog-goals-title">Explore by goal</h2>
+        <nav class="catalog-goal-links" aria-label="Find a subject for your next task">{goal_links}</nav>
+      </section>
       <details class="catalog-subjects"><summary>Browse every download by subject</summary><nav class="download-jumps" aria-label="Subject library">{''.join(subject_links)}</nav></details>
       <div id="download-results" data-total="{len(data['items'])}" data-page-size="{DOWNLOAD_PAGE_SIZE}" data-version="{esc(version)}">{''.join(sections)}</div>
       <nav id="download-pages" class="download-pagination" aria-label="Download result pages" hidden><button id="download-previous" class="reset-btn" type="button">Previous</button><span id="download-page-label"></span><button id="download-next" class="reset-btn" type="button">Next</button></nav>
@@ -524,6 +729,25 @@ def outputs(root: Path = ROOT) -> dict[str,bytes]:
             'downloads.json':(json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8'),
             'downloads.html':render(data,root,home=home).encode('utf-8')}
     result.update(subject_pages(data,home))
+    # Publish a project-specific answer-engine index from the same inventory as the website.
+    base='https://atlas-agents-hub.github.io/muse-hub/'
+    counts=data['counts']
+    result['llms.txt']=(
+        '# Muse Hub\n\n'
+        "> Muse Hub is an open-source toolkit for Meta's Muse AI. "
+        'Published by Atlas Agents Hub. '
+        f"The library includes {counts['skill']:,} skills, {counts['workflow']:,} workflows, "
+        f"{counts['specialist']} specialist kits and {counts['tool-guide']} tool guides.\n\n"
+        '## Start here\n\n'
+        f'- [Muse Hub]({base}): choose a task, specialist or Space template.\n'
+        f'- [Resource library]({base}downloads.html): search skills, workflows and specialist kits.\n'
+        f'- [Setup guides]({base}public/index.html): browse setup and integration routes.\n'
+        f'- [Getting started]({REPO}/blob/main/docs/GETTING_STARTED.md): download and configure a kit in Muse.\n'
+        f'- [Release packages]({REPO}/releases/tag/{data["version"]}): current downloadable assets.\n'
+        f'- [Repository]({REPO}): source code and documentation.\n'
+        f'- [Sitemap]({base}sitemap.xml): canonical website pages.\n'
+        f'- [Expanded resource index]({REPO}/blob/main/llms.txt): additional guides and resources.\n'
+    ).encode('utf-8')
     urls=['','downloads.html','public/index.html',*sorted(name for name in result if name.startswith('library/'))]
     result['sitemap.xml']=('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
         ''.join('<url><loc>https://atlas-agents-hub.github.io/muse-hub/'+name+'</loc></url>\n' for name in urls)+'</urlset>\n').encode('utf-8')

@@ -87,7 +87,7 @@ class MuseHubBrandLaunch(unittest.TestCase):
             "README.md", "index.html", "site.css", "experience.css", "site.js", "roles.json",
             "downloads.html", "downloads.js", "downloads.json",
             "public/index.html", "public/styles.css", "public/app.js",
-            "public/catalog.json", "sitemap.xml", "social-card.png",
+            "public/catalog.json", "sitemap.xml", "llms.txt", "social-card.png",
             "planner-desktop.png", "planner-mobile.png", "muse-mark.png",
         }
         catalog=json.loads((SITE/"downloads.json").read_bytes())

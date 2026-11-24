@@ -14,7 +14,7 @@ const { spawn, execFile } = require('node:child_process');
 
 const [rootArg, chromeArg, outArg, ...flags] = process.argv.slice(2);
 assert(rootArg && chromeArg && outArg, 'Usage: <repo-or-site-root> <chrome-executable> <new-output-dir> [--require-journeys]');
-assert(flags.every(flag => flag === '--require-journeys'), 'Unknown argument');
+assert(flags.every(flag => ['--require-journeys','--visual-inventory'].includes(flag)), 'Unknown argument');
 assert(Number(process.versions.node.split('.')[0]) >= 22 && typeof WebSocket === 'function', 'Node 22+ with built-in WebSocket required');
 const suppliedRoot = fs.realpathSync(rootArg);
 const site = fs.existsSync(path.join(suppliedRoot, 'hub/site/index.html')) ? path.join(suppliedRoot, 'hub/site') : suppliedRoot;
@@ -256,6 +256,27 @@ async function start() {
 async function runChecks() {
   const pageSize = 18;
   const downloads = JSON.parse(fs.readFileSync(path.join(site, 'downloads.json'), 'utf8'));
+  await check('goal discovery reaches curated subjects with touch-safe links', async () => {
+    const results = [];
+    for (const viewport of [320, 390, 768, 1440]) {
+      await resize(viewport);
+      await navigate('downloads.html');
+      const state = await evaluate("(() => {const a=[...document.querySelectorAll('.catalog-goal-links a')];return {links:a.map(e=>{const r=e.getBoundingClientRect();return {href:e.getAttribute('href'),left:r.left,right:r.right,width:r.width,height:r.height};}),pageWidth:document.documentElement.scrollWidth};})()");
+      assert.deepEqual(state.links.map(link => link.href), [
+        'library/software-automation-001.html','library/research-science-001.html',
+        'library/design-visualization-001.html','library/learning-study-001.html']);
+      assert(state.links.every(link=>link.height>=44 && link.width>=44 && link.left>=-1 && link.right<=viewport+1),
+        'Goal links must be visible and touch sized: '+JSON.stringify(state));
+      assert(state.pageWidth<=viewport+1,'No horizontal scrolling: '+JSON.stringify(state));
+      if (viewport===390 || viewport===1440) await screenshot('goal-discovery-'+viewport+'.png');
+      await click('.catalog-goal-links a:nth-child(2)');
+      assert.equal(await evaluate('document.querySelector("main h1")?.textContent.trim()'), 'Research & science');
+      assert((await evaluate('location.pathname')).endsWith('/library/research-science-001.html'));
+      results.push({viewport,goals:state.links.length,navigated:true});
+    }
+    return results;
+  });
+
   await check('download inventory, specialist filters and shareable search', async () => {
     await navigate('downloads.html');
     const links = await evaluate('[...document.querySelectorAll(".download-card a[aria-label]")].map(a=>a.href)');
@@ -274,6 +295,102 @@ async function runChecks() {
     assert.equal(await evaluate('document.querySelectorAll(".download-card:not([hidden])").length'), Math.min(pageSize, downloads.items.length));
     assert.equal(new URL(await evaluate('location.href')).searchParams.has('role'), false);
     return {searchable_resources:downloads.items.length, rendered_cards:links.length, specialist_search:true, empty_state_reset:true};
+  });
+  await check('English descriptions support real task searches on phone and desktop', async () => {
+    const originalWidth = width;
+    const scenarios = [
+      { viewport:390, id:'emergency-card', query:'emergency medical information card', expected:'Prepare a concise emergency medical information card' },
+      { viewport:1440, id:'liuguang-banlan-ui', query:'parameterized OKLCH colors', expected:'Build iridescent white or colorful black UI themes' },
+        { viewport:390, id:'pypict-skill', query:'valid pairs of input values', expected:'Build a pairwise test matrix' },
+        { viewport:1440, id:'x-article-publisher-skill', query:'configured integration that supports articles', expected:'Prepare and review an X article draft' },
+    ];
+    const observations=[];
+    try {
+      for (const scenario of scenarios) {
+        await resize(scenario.viewport);
+        await navigate('downloads.html?type=skill');
+        await type('#download-search', scenario.query);
+        const selector='.download-card[data-id="'+scenario.id+'"]:not([hidden])';
+        await wait('Boolean(document.querySelector('+JSON.stringify(selector)+'))', 'English search reaches translated resource');
+        const details=await evaluate('(()=>{const c=document.querySelector('+JSON.stringify(selector)+');return {description:c.querySelector("p").textContent, url:c.querySelector("a[aria-label]").href, query:document.querySelector("#download-search").value, overflow:document.documentElement.scrollWidth-innerWidth}})()');
+        assert(details.description.startsWith(scenario.expected));
+        assert.equal(details.url,downloads.items.find(r=>r.id===scenario.id && r.kind==='skill').url);
+        assert.equal(details.query,scenario.query);
+        assert(details.overflow<=1);
+        await evaluate('document.querySelector('+JSON.stringify(selector)+').scrollIntoView({block:"center"})');
+        await screenshot('english-search-'+scenario.id+'-'+scenario.viewport+'.png');
+        observations.push({id:scenario.id,viewport:scenario.viewport,...details});
+      }
+    } finally { await resize(originalWidth); }
+    return observations;
+  });
+  await check('filtered headings report matching group totals across pagination and reset', async () => {
+    await navigate('downloads.html?type=skill&q=emergency%20medical%20information%20card');
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), '1');
+    assert.equal(await evaluate('document.querySelector(".download-card[data-id=emergency-card] .download-kind").textContent'), 'Personal planning');
+    await screenshot('r21-emergency-filter-desktop.png');
+    await navigate('downloads.html?type=skill');
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), '5,242');
+    await type('#download-search', 'competitor');
+    const expected=downloads.items.filter(row=>row.kind==='skill' && [row.title,row.description,row.id,row.category,row.keywords||''].join(' ').toLowerCase().includes('competitor')).length;
+    assert(expected>18);
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), expected.toLocaleString('en-US'));
+    await click('#download-next');
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), expected.toLocaleString('en-US'));
+    await click('#download-reset');
+    assert.equal(await evaluate('document.querySelector("#skills-heading span").textContent'), '5,242');
+    const originalWidth=width;
+    await resize(390);
+    try {
+      await navigate('downloads.html?type=skill&q=emergency%20medical%20information%20card');
+      await evaluate('document.querySelector(".download-card[data-id=emergency-card]").scrollIntoView({block:"center"})');
+      await screenshot('r21-emergency-filter-mobile.png');
+    } finally {await resize(originalWidth);}
+  });
+  await check('all specialist library setup links open matching onboarding', async () => {
+    await navigate('downloads.html?type=specialist');
+    const specialistRows = downloads.items.filter(row => row.kind === 'specialist');
+    const links = await evaluate('[...document.querySelectorAll(".download-card[data-kind=specialist] .guide-link")].map(a=>({id:a.closest(".download-card").dataset.id,label:a.textContent.trim(),href:a.getAttribute("href")}))');
+    assert.equal(specialistRows.length, 15);
+    assert.deepEqual(links.map(link => link.id), specialistRows.map(row => row.id));
+    for (const link of links) {
+      assert.equal(link.href, 'index.html?role=' + link.id + '#setup');
+      assert(link.label.startsWith('Setup guide'), 'Specialist path should describe the setup action');
+      assert(fs.statSync(path.join(repo, 'presets', link.id, 'INSTALL.md')).isFile(), 'Missing original installation guide for ' + link.id);
+    }
+    await resize(390);
+    const actions = await evaluate('(() => {const card=document.querySelector(".download-card[data-id=software-engineer]");const links=[...card.querySelectorAll(".download-card-actions a")];const boxes=links.map(a=>{const r=a.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,right:r.right}});return {boxes,viewport:innerWidth,pageWidth:document.documentElement.scrollWidth}})()');
+    assert.equal(actions.boxes.length, 2, 'Mobile card must show setup and download actions');
+    assert(actions.boxes.every(box => box.height >= 44), 'Mobile setup and download targets must be touch sized');
+    assert(Math.abs(actions.boxes[0].y - actions.boxes[1].y) < 3, '390px card actions should share a row');
+    assert(actions.boxes[0].right <= actions.boxes[1].x, 'Mobile card actions must not overlap');
+    assert(actions.pageWidth <= actions.viewport + 1, 'Mobile card actions must not overflow');
+    await resize(1440);
+    await click('.download-card[data-id="creative-studio"] .guide-link');
+    await wait('document.getElementById("setup-role-select")?.value === "creative-studio" && document.querySelector(".setup-disclosure")?.open',
+      'Selecting a library specialist must open that role in on-site setup');
+    const result = await evaluate('({path:location.pathname,role:new URL(location.href).searchParams.get("role"),download:document.getElementById("setup-role-download").href})');
+    assert(result.path.endsWith('/index.html'));
+    assert.equal(result.role, 'creative-studio');
+    assert.equal(result.download, specialistRows.find(row=>row.id === 'creative-studio').url);
+    return {specialists:links.length,all_setup_links_valid:true,selected_role:'creative-studio'};
+  });
+  await check('specialist setup deep links expose the selected role immediately', async () => {
+    const seen = [];
+    for (const [role, viewport] of [['software-engineer',390],['claims-adjudicator',1440]]) {
+      await resize(viewport);
+      await navigate('downloads.html?type=specialist');
+      await click('.download-card[data-id="' + role + '"] .guide-link');
+      await wait('document.getElementById("setup-role-select")?.value === ' + JSON.stringify(role) + ' && !document.getElementById("setup-role-result")?.hidden');
+      await pause(450);
+      const geometry = await evaluate('(()=>{const p=document.getElementById("setup-role-result"),r=p.getBoundingClientRect();return {top:r.top,bottom:r.bottom,viewport:innerHeight,open:document.querySelector(".setup-disclosure").open,role:document.getElementById("setup-role-select").value}})()');
+      await screenshot('setup-deeplink-' + role + '-' + viewport + '.png');
+      assert(geometry.open && geometry.role === role);
+      assert(geometry.top >= 70 && geometry.top < geometry.viewport * .58,
+        'Selected role must be in the first viewport after setup-guide navigation: ' + JSON.stringify(geometry));
+      seen.push({viewport,...geometry});
+    }
+    return seen;
   });
   await check('invalid download filters recover without reflected markup', async () => {
     for (const query of ['type=bad&role=bad', 'type=skill&type=workflow', 'role=%3Cimg%20src=x%3E', 'q='+'x'.repeat(3000)]) {
@@ -414,8 +531,11 @@ async function runChecks() {
       assert.deepEqual(journeys.paths.map(link => link.href), ['?role=software-engineer#setup', '?role=research-evaluator#setup', '?role=product-interface-designer#setup', '?role=coordinator#setup']);
       assert(await evaluate('document.querySelector("#hero-heading")?.textContent?.replace(/\\s+/g," ").trim()==="Make Muse your own."'), 'R7 home heading must be present');
       assert(await evaluate('Boolean(document.querySelector(".r7-pyramid svg") && document.querySelector(".r7-metrics"))'), 'R7 must preserve pyramid artwork and resource inventory');
-      const inventory = await evaluate('[...document.querySelectorAll(".r7-metrics dd")].map(x=>x.textContent.trim())');
-      assert.deepEqual(inventory, ['5,200+', '375+', '15', '50+'], 'Resource counts must remain visible');
+      const inventory = await evaluate('[...document.querySelectorAll(".r7-metrics dd")].map(x=>({kind:x.dataset.libraryCount,value:x.textContent.trim()}))');
+      const expected = ['skill', 'workflow', 'specialist', 'tool-guide'].map(kind => ({
+        kind, value: downloads.counts[kind].toLocaleString('en-US')
+      }));
+      assert.deepEqual(inventory, expected, 'Visible resource counts must match the release catalog');
       assert(journeys.paths.every(link => link.visible), 'All four task paths must be visible');
       for (const role of ['software-engineer', 'research-evaluator', 'product-interface-designer', 'coordinator']) {
         await navigate('index.html?role=' + role + '#setup');
@@ -445,6 +565,8 @@ async function runChecks() {
   await check('authentic Planner capture and direct specialist search on mobile', async () => {
     await resize(375);
     await navigate('index.html#specialists');
+    await evaluate('document.querySelector(".r7-app-preview").scrollIntoView({block:"start",behavior:"instant"})');
+    await wait('(()=>{const img=document.querySelector(".premium-capture-picture img");return !!img&&img.complete&&img.naturalWidth>0&&!!img.currentSrc})()');
     const proof = await evaluate('(()=>{const img=document.querySelector(".premium-capture-picture img");const field=document.getElementById("role-search");return {loaded:!!img&&img.complete&&img.naturalWidth>0,mobile:!!img&&new URL(img.currentSrc).pathname.endsWith("/planner-mobile.png"),searchVisible:!!field&&!!field.getClientRects().length,searchOutside:!!field&&!field.closest("details"),directory:document.querySelector(".specialist-directory").open}})()');
     assert(proof.loaded && proof.mobile && proof.searchVisible && proof.searchOutside && proof.directory, JSON.stringify(proof));
     const ring = await evaluate('(()=>{const field=document.getElementById("role-search");field.focus();const css=getComputedStyle(field);return {focused:document.activeElement === field,color:css.borderTopColor,style:css.borderTopStyle,width:parseFloat(css.borderTopWidth)}})()');
@@ -520,7 +642,7 @@ async function runChecks() {
     assert(await evaluate('document.getElementById("role-search").value==="" && [...document.querySelectorAll(".role-card:not([hidden])")].length===15 && !document.querySelector("[data-suggest-role][aria-pressed=true]")'));
     return {first,second,reset:true};
   });
-  for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
+  for (const viewport of [320, 360, 375, 390, 393, 768, 886, 1024, 1440]) await check('homepage and directory layout at ' + viewport, async () => {
     await resize(viewport); const rows = [];
     for (const [name, relative] of [['home', ''], ['resources', 'public/index.html?route=companion'], ['downloads','downloads.html']]) {
       await navigate(relative); rows.push({ page: name, ...await layout() });
@@ -528,17 +650,21 @@ async function runChecks() {
         const mark = await evaluate('(()=>{const i=document.querySelector(".r7-header img.brand-symbol");return {loaded:!!i&&i.complete&&i.naturalWidth>=64&&i.getAttribute("src")==="muse-mark.png",width:i?.getBoundingClientRect().width}})()');
         assert(mark.loaded && mark.width >= (viewport <= 850 ? 52 : 56), 'Brand mark must load at a legible size: ' + viewport);
         if (viewport <= 850) {
-          const labels = await evaluate('[...document.querySelectorAll(".r7-metrics dt")].map(x=>parseFloat(getComputedStyle(x).fontSize))');
-          assert(labels.length === 4 && labels.every(x=>x>=15), 'Resource labels must be readable on mobile: ' + viewport);
+          const labels = await evaluate('(()=>[...document.querySelectorAll(".r7-metrics dt")].map(x=>{const t=x.getBoundingClientRect(),cell=x.parentElement.getBoundingClientRect();return {size:parseFloat(getComputedStyle(x).fontSize),left:t.left,right:t.right,valueRight:x.parentElement.querySelector("dd").getBoundingClientRect().right,cellLeft:cell.left,cellRight:cell.right,text:x.textContent.trim()}}))()');
+          assert(labels.length === 4 && labels.every(x=>x.size>=13&&x.left>=x.cellLeft-1&&x.right<=x.cellRight+1&&x.valueRight<=x.cellRight+1), 'Resource labels must fit their own column without clipping: ' + viewport + ' ' + JSON.stringify(labels));
           const tasks = await evaluate('[...document.querySelectorAll(".r7-task-card")].map(x=>({width:x.getBoundingClientRect().width,height:x.getBoundingClientRect().height,title:parseFloat(getComputedStyle(x.querySelector("strong")).fontSize),body:parseFloat(getComputedStyle(x.querySelector("small")).fontSize)}))');
           assert(tasks.length === 4 && tasks.every(x=>x.width >= viewport*.80 && x.height>=85 && x.title>=17 && x.body>=14), 'Four readable touch targets required: ' + JSON.stringify(tasks));
+        }
+        if (viewport === 886) {
+          const nav = await evaluate('({menu:getComputedStyle(document.querySelector(".mobile-navigation")).display,desktop:getComputedStyle(document.querySelector(".header-nav")).display})');
+          assert(nav.menu !== 'none' && nav.desktop === 'none', 'Intermediate tablet width must use the uncluttered mobile navigation');
         }
         const header = await evaluate('getComputedStyle(document.querySelector(".r7-header")).backgroundColor');
         assert.equal(header, 'rgb(21, 21, 21)', 'Sticky header must be fully opaque while scrolling');
       }
       if (name === 'resources') {
         const palette = await evaluate('({text:getComputedStyle(document.querySelector(".intro-description")).color,background:getComputedStyle(document.body).backgroundColor})');
-        assert.deepEqual(palette, {text:'rgb(198, 196, 184)',background:'rgb(21, 21, 21)'});
+        assert.deepEqual(palette, {text:'rgb(201, 203, 189)',background:'rgb(21, 21, 21)'});
       }
       await screenshot(name + '-' + viewport + '.png');
       if (name === 'home' && (viewport === 390 || viewport === 1440)) {
@@ -563,22 +689,73 @@ async function runChecks() {
     const names = fs.readdirSync(path.join(site, 'library')).filter(name=>name.endsWith('.html')).sort();
     assert(names.length >= 35, 'Full public subject catalogue must be present');
     const visited = [];
-    for (const viewport of [320, 360, 375, 390, 393, 768, 1024, 1440]) {
+    for (const viewport of [320, 360, 375, 390, 393, 768, 886, 1024, 1440]) {
       await resize(viewport);
       for (const name of names) {
         await navigate('library/' + name);
-        const proof = await evaluate('(()=>{const header=document.querySelector(".r7-header"),main=document.querySelector(".subject-main"),footer=document.querySelector(".premium-footer"),cards=document.querySelectorAll(".subject-card"),h=document.querySelector(".subject-heading h1"),first=cards[0];return {header:!!header&&header.getBoundingClientRect().height>=70,footer:!!footer,main:!!main,cards:cards.length,heading:h?.textContent.trim().length,brand:document.querySelector(".r7-header img.brand-symbol")?.complete,font:parseFloat(getComputedStyle(first.querySelector("h2")).fontSize),overflow:document.documentElement.scrollWidth-innerWidth,styles:[...document.styleSheets].some(s=>s.href?.endsWith("/experience.css"))}})()');
-        assert(proof.header && proof.footer && proof.main && proof.cards>0 && proof.cards<=200 && proof.heading>10 && proof.brand && proof.styles,
+        const proof = await evaluate('(()=>{const header=document.querySelector(".r7-header"),main=document.querySelector(".subject-main"),footer=document.querySelector(".premium-footer"),cards=document.querySelectorAll(".subject-card"),h=document.querySelector(".subject-heading h1"),first=cards[0];return {header:!!header&&header.getBoundingClientRect().height>=70,footer:!!footer,main:!!main,cards:cards.length,heading:h?.textContent.trim(),crumb:document.querySelector(".subject-breadcrumb span:last-child")?.textContent.trim(),brand:document.querySelector(".r7-header img.brand-symbol")?.complete,font:parseFloat(getComputedStyle(first.querySelector("h2")).fontSize),overflow:document.documentElement.scrollWidth-innerWidth,styles:[...document.styleSheets].some(s=>s.href?.endsWith("/experience.css"))}})()');
+        assert(proof.header && proof.footer && proof.main && proof.cards>0 && proof.cards<=200 && proof.heading && proof.heading===proof.crumb && proof.brand && proof.styles,
           'Missing shared subject experience '+name+' '+viewport+' '+JSON.stringify(proof));
         assert(proof.overflow<=1, 'Subject horizontal overflow: '+name+' '+viewport+' '+JSON.stringify(proof));
         assert(proof.font>=20, 'Subject card titles too small: '+name+' '+viewport+' '+proof.font);
+        if (viewport<=690) {
+          const pager=await evaluate('(()=>{const nav=document.querySelector(".subject-pagination");if(!nav)return null;const visible=[...nav.querySelectorAll("a")].filter(a=>a.getClientRects().length);return {count:visible.length,topRows:[...new Set(visible.map(a=>Math.round(a.getBoundingClientRect().top)))],types:visible.map(a=>a.getAttribute("rel")||a.getAttribute("aria-current")||"unexpected")}})()');
+          assert(!pager || (pager.count<=3 && pager.topRows.length===1 && pager.types.every(t=>['prev','next','page'].includes(t))),
+            'Mobile pagination must have one row with accessible Prev/current/Next: '+name+' '+viewport+' '+JSON.stringify(pager));
+        }
         if ((name==='software-automation-001.html' && viewport===390) ||
             (name==='design-visualization-001.html' && viewport===1440))
           await screenshot('subject-' + viewport + '.png');
+        if (flags.includes('--visual-inventory') && (viewport===390 || viewport===1440))
+          await screenshot('visual-subject-'+name.replace('.html','')+'-'+viewport+'.png');
         visited.push(name+':'+viewport);
       }
     }
-    return {subject_pages:names.length,verified_viewports:[320,360,375,390,393,768,1024,1440],checked:visited.length};
+    return {subject_pages:names.length,verified_viewports:[320,360,375,390,393,768,886,1024,1440],checked:visited.length};
+  });
+  await check('subject pages make all 200 resources reachable in native short ranges', async () => {
+    const results = [];
+    for (const viewport of [390,1440]) {
+      await resize(viewport);
+      await navigate('library/business-projects-001.html');
+      const inspect = () => evaluate('(()=>{const cards=[...document.querySelectorAll(".subject-card")],ranges=[...document.querySelectorAll(".subject-slice")];return {total:cards.length,visible:cards.filter(card=>!card.closest(".subject-slice:not([open])")&&card.getClientRects().length).length,ranges:ranges.length,open:ranges.filter(item=>item.open).length,height:document.documentElement.scrollHeight,links:document.querySelectorAll(".subject-card-actions a:last-child").length}})()');
+      const closed = await inspect();
+      assert.equal(closed.total,200);
+      assert.equal(closed.visible,18);
+      assert.equal(closed.ranges,11);
+      assert.equal(closed.open,0);
+      assert.equal(closed.links,200);
+      assert(closed.height < 10000,'Subject page should not require a 200-card scroll: '+viewport+' '+JSON.stringify(closed));
+      await click('.subject-preview-note a');
+      await wait('location.hash==="#subject-more"');
+      await pause(160);
+      const anchorPosition = await evaluate('(()=>{const target=document.getElementById("subject-more"),top=target.getBoundingClientRect().top;return {top,viewport:innerHeight,scrollY,hash:location.hash,contentVisibility:getComputedStyle(document.querySelector(".subject-card")).contentVisibility}})()');
+      assert.equal(anchorPosition.contentVisibility,'visible','Subject cards must use measured heights for reliable fragment navigation');
+      await screenshot('subject-ranges-index-'+viewport+'.png');
+      assert(anchorPosition.top>=64 && anchorPosition.top<anchorPosition.viewport*.55,
+        'Jump to more ranges must land at the range controls, not partway through the preceding 18 cards: '+JSON.stringify(anchorPosition));
+      await click('.subject-slice summary');
+      const expanded = await inspect();
+      assert.equal(expanded.visible,36);
+      assert.equal(expanded.open,1);
+      await screenshot('subject-ranges-expanded-'+viewport+'.png');
+      await click('.subject-slice summary');
+      assert.equal((await inspect()).visible,18);
+      await call('Emulation.setScriptExecutionDisabled',{value:true});
+      try {
+        await navigate('library/business-projects-001.html',false);
+        await click('.subject-preview-note a');
+        await click('.subject-slice summary');
+        assert.equal((await inspect()).visible,36,'Native disclosure must work with JavaScript disabled');
+      } finally { await call('Emulation.setScriptExecutionDisabled',{value:false}); }
+      await navigate('library/using-muse-001.html');
+      const small=await inspect();
+      assert.equal(small.total,9);
+      assert.equal(small.visible,9);
+      assert.equal(small.ranges,0);
+      results.push({viewport,closed,expanded,small});
+    }
+    return results;
   });
   await check('library advanced filters disclose without losing search and reset', async () => {
     for (const viewport of [390,1440]) {
@@ -596,6 +773,86 @@ async function runChecks() {
     }
     return {viewport:[390,1440],disclosure:true,search_first:true};
   });
+  await check('shared R10 header, typography and card tokens across all page families', async () => {
+    const screens = [];
+    const families = [
+      ['index.html','.r7-task-card'],
+      ['downloads.html','.download-card'],
+      ['library/design-visualization-001.html','.subject-card'],
+      ['public/index.html','.route-card']
+    ];
+    for (const viewport of [390, 1440]) {
+      await resize(viewport);
+      const measurements = [];
+      for (const [page,card] of families) {
+        await navigate(page);
+        const state = await evaluate('(()=>{const h=document.querySelector(".muse-header"),logo=h.querySelector(".brand-symbol"),title=document.querySelector("h1"),card=document.querySelector(' + q(card) + '),shell=document.querySelector("main .shell")||document.querySelector("main.shell")||document.querySelector("main .directory-section");const cs=getComputedStyle(card),hs=getComputedStyle(h),ts=getComputedStyle(title),s= shell?.getBoundingClientRect();return {headerHeight:Math.round(h.getBoundingClientRect().height),logoSize:Math.round(logo.getBoundingClientRect().width),headerBackground:hs.backgroundColor,titleFamily:ts.fontFamily,cardBackground:cs.backgroundColor,cardBorder:cs.borderTopColor,cardRadius:cs.borderTopLeftRadius,gutter:s?Math.round(s.left+(parseFloat(getComputedStyle(shell).paddingLeft)||0)):null,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+        assert(state.overflow<=1,'Unexpected horizontal overflow '+page+' '+viewport);
+        assert(state.headerHeight>=68&&state.headerHeight<=85,'Inconsistent header height '+page+' '+viewport+' '+JSON.stringify(state));
+        assert(state.logoSize>=(viewport<=370?54:56)&&state.logoSize<=60,'Inconsistent logo size '+page+' '+viewport);
+        assert.equal(state.cardRadius,'5px','Cards must share visible corners: '+page);
+        measurements.push({page,...state});
+      }
+      const a=measurements[0];
+      for(const m of measurements.slice(1)){
+        assert.equal(m.headerHeight,a.headerHeight,'Header height differs from Home: '+m.page);
+        assert.equal(m.logoSize,a.logoSize,'Logo size differs from Home: '+m.page);
+        assert.equal(m.headerBackground,a.headerBackground,'Header surface differs: '+m.page);
+        assert.equal(m.titleFamily,a.titleFamily,'Primary heading font family differs: '+m.page);
+        assert.equal(m.cardBackground,a.cardBackground,'Primary card surfaces differ: '+m.page);
+        assert.equal(m.cardBorder,a.cardBorder,'Primary card borders differ: '+m.page);
+        assert(Math.abs(m.gutter-a.gutter)<=2,'Content gutters drift across families: '+m.page+' '+JSON.stringify(measurements));
+      }
+      screens.push({viewport,measurements});
+    }
+    return {screens};
+  });
+  await check('reference phone hierarchy and complete laptop hero', async () => {
+    const proofs=[];
+    for (const viewport of [320,390,1440]) {
+      await resize(viewport);
+      await navigate('index.html');
+      const state=await evaluate('(()=>{const a=[...document.querySelectorAll(".r7-actions .r7-button")].map(x=>x.getBoundingClientRect()),m=[...document.querySelectorAll(".r7-metrics>div")].map(x=>x.getBoundingClientRect()),art=document.querySelector(".r7-pyramid"),featured=document.querySelector(".r7-feature-card").getBoundingClientRect();return {actions:a.map(x=>({left:x.left,right:x.right,top:x.top,bottom:x.bottom})),metrics:m.map(x=>({left:x.left,top:x.top})),art:getComputedStyle(art).display,featuredBottom:featured.bottom,viewportHeight:innerHeight}})()');
+      if(viewport<=390){
+        assert(state.art==='none','Phone reference must not insert decorative artwork between tasks and controls: '+viewport);
+        assert(state.actions[1].top>=state.actions[0].bottom+6,'Phone CTAs must be stacked with consistent spacing: '+JSON.stringify(state));
+        assert(state.actions.every(x=>x.right-x.left>=viewport*.75),'Phone CTAs must span the content rail: '+JSON.stringify(state));
+        assert(state.metrics.every(x=>Math.abs(x.top-state.metrics[0].top)<=1),'Four phone resource totals must share one baseline: '+JSON.stringify(state));
+      }else{
+        assert(state.art!=='none' && state.actions[1].left>state.actions[0].left,'Desktop must retain pyramid art and inline actions');
+        assert(state.featuredBottom<state.viewportHeight-20,'Featured specialist should remain in the initial desktop screen: '+JSON.stringify(state));
+      }
+      proofs.push({viewport,...state});
+    }
+    return proofs;
+  });
+  await check('all mobile Spaces and all five library types stay fully visible without sideways scrolling', async () => {
+    const observations=[];
+    for (const viewport of [320,360,375,390,393]) {
+      await resize(viewport);
+      await navigate('index.html');
+      const spaces=await evaluate('(()=>{const grid=document.querySelector(".premium-space-grid"),cards=[...grid.querySelectorAll(".premium-space-card")],rects=cards.map(c=>c.getBoundingClientRect()),r=grid.getBoundingClientRect();return {display:getComputedStyle(grid).display,count:cards.length,gridWidth:r.width,overflow:grid.scrollWidth-grid.clientWidth,cardWidth:Math.max(...rects.map(a=>a.width)),rows:[...new Set(rects.map(a=>Math.round(a.top)))]}})()');
+      assert(spaces.display==='grid' && spaces.count>=3 && spaces.overflow<=1 && spaces.cardWidth<=spaces.gridWidth+1 && spaces.rows.length===spaces.count,
+        'All phone Spaces must appear as full-width readable vertical cards: '+viewport+' '+JSON.stringify(spaces));
+      await navigate('downloads.html');
+      const filters=await evaluate('(()=>{const nav=document.querySelector(".downloads-catalog .download-jumps"),links=[...nav.querySelectorAll("a[data-download-type]")],r=nav.getBoundingClientRect(),bounds=links.map(a=>a.getBoundingClientRect());return {count:links.length,overflow:nav.scrollWidth-nav.clientWidth,rows:[...new Set(bounds.map(a=>Math.round(a.top)))],links:links.map((a,i)=>({type:a.dataset.downloadType,visible:!!a.getClientRects().length,left:bounds[i].left,right:bounds[i].right,height:bounds[i].height})),left:r.left,right:r.right}})()');
+      assert(filters.count===5 && filters.overflow<=1 && filters.rows.length===2 && filters.links.every(x=>x.visible&&x.height>=44&&x.left>=filters.left-1&&x.right<=filters.right+1),
+        'All five phone library filters must be visible within the container on two orderly rows: '+viewport+' '+JSON.stringify(filters));
+      observations.push({viewport,spaces,filters});
+    }
+    return observations;
+  });
+  await check('subject pack paths are accessible disclosures with working method links', async () => {
+    await resize(390);
+    await navigate('library/design-visualization-001.html');
+    const details = await evaluate('document.querySelectorAll(".subject-source").length');
+    assert(details>1,'Expected multiple skill-pack disclosures');
+    const first = await evaluate('(()=>{const e=document.querySelector(".subject-source");return {closed:!e.open,link:!!e.closest(".subject-card").querySelector(".subject-guide-link"),path:e.querySelector("code")?.textContent}})()');
+    assert(first.closed&&first.link&&first.path.includes('/SKILL.md'),'Pack path and read guide must be preserved');
+    await click('.subject-source summary');
+    assert(await evaluate('document.querySelector(".subject-source").open'),'Pack path must disclose on click');
+    return {details,first};
+  });
   await check('mobile-first page rhythm and guide navigation are measurable', async () => {
     const observations = [];
     for (const viewport of [320, 360, 375, 390, 393]) {
@@ -611,21 +868,21 @@ async function runChecks() {
       assert(library.searchTop < 360 && library.firstCardTop < library.viewport-80 && library.overflow<=1,
         'Library must reach first result within initial phone view: '+viewport+' '+JSON.stringify(library));
       await navigate('public/index.html');
-      const guide = await evaluate('(()=>{const h=document.querySelector(".site-header").getBoundingClientRect(),nav=document.querySelector(".header-nav"),menu=document.querySelector(".guide-mobile-nav"),title=document.querySelector("h1").getBoundingClientRect();return {header:h.height,menu:!!menu&&!!menu.getClientRects().length,oldNav:!!nav.getClientRects().length,titleTop:title.top,overflow:document.documentElement.scrollWidth-innerWidth}})()');
+      const guide = await evaluate('(()=>{const h=document.querySelector(".site-header").getBoundingClientRect(),nav=document.querySelector(".header-nav"),menu=document.querySelector(".mobile-navigation"),title=document.querySelector("h1").getBoundingClientRect();return {header:h.height,menu:!!menu&&!!menu.getClientRects().length,oldNav:!!nav.getClientRects().length,titleTop:title.top,overflow:document.documentElement.scrollWidth-innerWidth}})()');
       assert(guide.header<=80 && guide.menu && !guide.oldNav && guide.titleTop>=guide.header && guide.overflow<=1,
         'Guide directory needs one-row mobile header: '+viewport+' '+JSON.stringify(guide));
-      await click('.guide-mobile-nav summary');
-      assert(await evaluate('document.querySelector(".guide-mobile-nav").open'), 'Menu must actually open on mobile');
-      const links = await evaluate('[...document.querySelectorAll(".guide-mobile-nav nav a")].map(a=>({href:a.getAttribute("href"),height:a.getBoundingClientRect().height,visible:!!a.getClientRects().length}))');
-      assert(links.length===4 && links.every(a=>a.visible&&a.height>=44),
+      await click('.mobile-navigation summary');
+      assert(await evaluate('document.querySelector(".mobile-navigation").open'), 'Menu must actually open on mobile');
+      const links = await evaluate('[...document.querySelectorAll(".mobile-navigation nav a")].map(a=>({href:a.getAttribute("href"),height:a.getBoundingClientRect().height,visible:!!a.getClientRects().length}))');
+      assert(links.length===6 && links.every(a=>a.visible&&a.height>=44),
         'Menu links must have accessible touch targets: '+JSON.stringify(links));
       if(viewport===390) await screenshot('resources-mobile-menu-390.png');
-      await click('.guide-mobile-nav summary');
-      assert.equal(await evaluate('document.querySelector(".guide-mobile-nav").open'),false);
+      await click('.mobile-navigation summary');
+      assert.equal(await evaluate('document.querySelector(".mobile-navigation").open'),false);
       observations.push({viewport,home,library,guide});
     }
     await resize(1440); await navigate('public/index.html');
-    const desktop = await evaluate('({nav:!!document.querySelector(".header-nav").getClientRects().length,mobile:!!document.querySelector(".guide-mobile-nav").getClientRects().length})');
+    const desktop = await evaluate('({nav:!!document.querySelector(".header-nav").getClientRects().length,mobile:!!document.querySelector(".mobile-navigation").getClientRects().length})');
     assert(desktop.nav&&!desktop.mobile, 'Desktop must preserve full guide navigation');
     return {phones:observations,desktop};
   });

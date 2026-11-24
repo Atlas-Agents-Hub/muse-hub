@@ -2,6 +2,7 @@
 import json
 import re
 import unittest
+from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
@@ -37,7 +38,7 @@ class SitewideExperienceTests(unittest.TestCase):
             with self.subTest(page=page.name):
                 source = page.read_text(encoding="utf-8")
                 self.assertIn('class="muse-premium subject-index"', source)
-                self.assertIn('class="site-header r7-header"', source)
+                self.assertIn('class="site-header r7-header muse-header"', source)
                 self.assertIn('class="site-footer premium-footer"', source)
                 self.assertIn('class="subject-breadcrumb"', source)
                 self.assertIn('class="subject-summary"', source)
@@ -56,18 +57,49 @@ class SitewideExperienceTests(unittest.TestCase):
                     else:
                         self.assertIn('rel="prev"', source)
                 self.assertIn('href="../experience.css"', source)
+                if 'class="subject-source"' in source:
+                    self.assertIn('<summary>Included pack path</summary>', source)
+                    self.assertIn('class="subject-card-actions"', source)
                 self.assertIn('href="../downloads.html"', source)
                 self.assertIn('src="../muse-mark.png"', source)
 
+    def test_subject_pages_limit_initial_cards_with_native_range_disclosures(self):
+        catalog = json.loads((SITE / 'downloads.json').read_text('utf-8'))
+        self.assertEqual(len(self.subjects), 35, 'Preserve existing published subject URLs')
+        totals = 0
+        for page in self.subjects:
+            with self.subTest(page=page.name):
+                source = page.read_text(encoding='utf-8')
+                self.assertIn('<html lang="en" class="subject-directory-page">', source)
+                count = source.count('class="download-card subject-card"')
+                totals += count
+                self.assertLessEqual(count, 200)
+                before_more = source.split('<section class="subject-more"', 1)[0]
+                self.assertEqual(before_more.count('class="download-card subject-card"'), min(count, 18))
+                ranges = [(int(a), int(b)) for a, b in re.findall(
+                    r'<details class="subject-slice" data-start="(\d+)" data-end="(\d+)">', source)]
+                expected = [(start + 1, min(start + 18, count)) for start in range(18, count, 18)]
+                self.assertEqual(ranges, expected, 'Native range disclosures must cover every remaining resource once')
+                if expected:
+                    self.assertIn('href="#subject-more"', source)
+                    self.assertIn('<h2 id="subject-more" tabindex="-1">More resources on this page</h2>', source)
+                    self.assertNotIn('heading.dataset.alignProbe', source)
+                    self.assertNotIn("history.pushState(null, '', url)", source)
+                    self.assertEqual(source.count('class="subject-slice"'), len(expected))
+                else:
+                    self.assertNotIn('id="subject-more"', source)
+        self.assertEqual(totals, len(catalog['items']), 'Preserve every resource card across subject pages')
+
     def test_guides_have_progressive_mobile_navigation(self):
         source = (SITE / "public/index.html").read_text(encoding="utf-8")
-        self.assertIn('class="guide-mobile-nav"', source)
-        self.assertIn('aria-label="Mobile guide navigation"', source)
-        self.assertIn('<summary>Menu ', source)
+        self.assertIn('class="site-header r7-header muse-header"', source)
+        self.assertIn('class="mobile-navigation"', source)
+        self.assertIn('aria-label="Mobile navigation"', source)
         self.assertIn('href="../downloads.html"', source)
-        styles = (SITE / "public/styles.css").read_text(encoding="utf-8")
-        self.assertIn(".guide-mobile-nav > summary:focus-visible", styles)
-        self.assertIn(".guide-mobile-nav nav a", styles)
+        self.assertIn('href="../experience.css"', source)
+        styles = (SITE / "experience.css").read_text(encoding="utf-8")
+        self.assertIn(".muse-header .mobile-navigation > summary", styles)
+        self.assertIn(".muse-header .mobile-navigation nav a", styles)
 
     def test_all_local_page_links_and_assets_resolve(self):
         pages = [SITE / "index.html", SITE / "downloads.html", *self.subjects, SITE / "public/index.html"]
@@ -112,6 +144,57 @@ class SitewideExperienceTests(unittest.TestCase):
                           if tag == "link" and attrs.get("rel") == "stylesheet"]
                 self.assertEqual(styles, ["site.css", "experience.css"])
 
+    def test_same_site_header_and_spacing_tokens_on_every_page_family(self):
+        pages = [SITE / "index.html", SITE / "downloads.html",
+                 *self.subjects, SITE / "public/index.html"]
+        for page in pages:
+            with self.subTest(page=page.name):
+                content = page.read_text(encoding="utf-8")
+                self.assertIn('class="site-header r7-header muse-header"', content)
+                self.assertIn('class="mobile-navigation"', content)
+                self.assertIn('experience.css', content)
+        css = self.css
+        self.assertIn('.subject-pagination a:not([rel]):not([aria-current])', css)
+        for token in ("--muse-gutter", "--muse-panel", "--muse-border",
+                      "--muse-gap", "--muse-sans", "--muse-serif"):
+            self.assertIn(token, css)
+        guide = (SITE / "public/index.html").read_text("utf-8")
+        self.assertNotIn("guide-mobile-nav", guide)
+        self.assertNotIn("wordmark-symbol", guide)
+
+    def test_subject_pack_paths_are_accessible_and_not_primary_card_copy(self):
+        pages = self.subjects
+        disclosed = 0
+        for page in pages:
+            source = page.read_text("utf-8")
+            disclosed += source.count('<details class="subject-source">')
+            self.assertNotIn('class="download-entry">Inside this collection:', source)
+        catalog = json.loads((SITE / 'downloads.json').read_text('utf-8'))
+        packed = sum(row.get('pack_kind') == 'skill-pack' for row in catalog['items'])
+        self.assertEqual(disclosed, packed, 'Every skill-pack resource must retain its source-path disclosure')
+
+
+    def test_curated_goal_links_are_distinct_real_subject_pages(self):
+        source = (SITE / "downloads.html").read_text(encoding="utf-8")
+        self.assertIn('id="catalog-goals-title">Explore by goal</h2>', source)
+        self.assertIn('class="catalog-goal-links"', source)
+        parser = PageRefs()
+        parser.feed(source)
+        links = [attrs['href'] for tag, attrs in parser.elements
+                 if tag == 'a' and attrs.get('href', '').startswith('library/')]
+        goals = (
+            'library/software-automation-001.html',
+            'library/research-science-001.html',
+            'library/design-visualization-001.html',
+            'library/learning-study-001.html',
+        )
+        for href in goals:
+            self.assertEqual(links.count(href), 2)
+            self.assertTrue((SITE / href).is_file())
+        self.assertEqual(source.count('class="catalog-goal-links"'), 1)
+        self.assertEqual(source.count('class="catalog-subjects"'), 1)
+        self.assertIn('15 specialist kits', source)
+
     def test_library_exposes_search_and_advanced_filters_without_js_dependency(self):
         source = (SITE / "downloads.html").read_text("utf-8")
         self.assertIn('<details class="download-advanced">', source)
@@ -122,6 +205,64 @@ class SitewideExperienceTests(unittest.TestCase):
             self.assertIn('id="' + element + '"', source)
         self.assertIn('class="catalog-subjects"', source)
         self.assertIn('class="download-grid"', source)
+
+    def test_specialist_setup_links_match_installed_kit_guides(self):
+        catalog = json.loads((SITE / "downloads.json").read_text("utf-8"))
+        roles = json.loads((SITE / "roles.json").read_text("utf-8"))["roles"]
+        specialists = {row["id"]: row for row in catalog["items"] if row["kind"] == "specialist"}
+        self.assertEqual(set(specialists), {role["id"] for role in roles})
+        self.assertEqual(len(specialists), 15)
+        home = (SITE / "index.html").read_text("utf-8")
+        library = (SITE / "downloads.html").read_text("utf-8")
+        subject_pages = "\n".join(page.read_text("utf-8") for page in self.subjects)
+        for role_id, entry in specialists.items():
+            with self.subTest(role=role_id):
+                setup_link = f"index.html?role={role_id}#setup"
+                self.assertEqual(entry["guide_url"], setup_link)
+                self.assertTrue((ROOT / "presets" / role_id / "INSTALL.md").is_file())
+                self.assertIn(f'<option value="{role_id}"', home)
+                self.assertIn(f'href="{setup_link}"', library)
+                self.assertIn(f'href="../{setup_link}"', subject_pages)
+
+    def test_public_inventory_counts_match_catalog(self):
+        data = json.loads((SITE / "downloads.json").read_text("utf-8"))
+        home = (SITE / "index.html").read_text("utf-8")
+        downloads = (SITE / "downloads.html").read_text("utf-8")
+        for kind, count in data["counts"].items():
+            with self.subTest(kind=kind):
+                self.assertIn(f'<dd data-library-count="{kind}">{count:,}</dd>', home)
+        self.assertIn(
+            f'Find {data["counts"]["skill"]:,} Muse skills, '
+            f'{data["counts"]["workflow"]:,} workflows, '
+            f'{data["counts"]["specialist"]:,} specialist kits and '
+            f'{data["counts"]["tool-guide"]:,} tool guides.',
+            downloads,
+        )
+
+    def test_subject_structured_breadcrumbs_match_visible_pages(self):
+        site_base = "https://atlas-agents-hub.github.io/muse-hub/"
+        for page in self.subjects:
+            with self.subTest(page=page.name):
+                source = page.read_text("utf-8")
+                match = re.search(
+                    r'<script type="application/ld\+json">(.*?)</script>', source, re.S
+                )
+                self.assertIsNotNone(match, "Subject page requires JSON-LD")
+                schema = json.loads(match.group(1))
+                self.assertEqual(schema["@type"], "CollectionPage")
+                elements = schema["breadcrumb"]["itemListElement"]
+                self.assertEqual(len(elements), 3)
+                self.assertEqual([row["position"] for row in elements], [1, 2, 3])
+                self.assertEqual(
+                    [row["name"] for row in elements[:2]], ["Muse Hub", "Library"]
+                )
+                self.assertEqual(elements[0]["item"], site_base)
+                self.assertEqual(elements[1]["item"], site_base + "downloads.html")
+                self.assertEqual(elements[2]["item"], site_base + "library/" + page.name)
+                self.assertIn(
+                    f'<span>{escape(elements[2]["name"])}</span></nav>',
+                    source,
+                )
 
     def test_release_guide_matches_released_version(self):
         data = json.loads((SITE / "downloads.json").read_text("utf-8"))
