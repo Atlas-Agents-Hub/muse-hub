@@ -57,6 +57,19 @@ class WebsiteReleaseScope(unittest.TestCase):
         self.write("src/muse_presets/public_export.py", "PUBLIC_HUB_FILES = {\n    \"hub/site/index.html\",\n    \"hub/site/llms.txt\",\n}\n")
         self.assertEqual(scope.check_scope(self.root, self.base, self.commit()), 3)
 
+    def test_maintenance_scope_is_exact_not_a_directory_wildcard(self):
+        for path in (
+            ".github/workflows/website-maintenance.yml",
+            "docs/WEBSITE_MAINTENANCE.md",
+            "scripts/check_website_maintenance.py",
+            "tests/test_website_maintenance.py",
+        ):
+            self.write(path, "website maintenance fixture")
+        self.assertEqual(scope.check_scope(self.root, self.base, self.commit()), 4)
+        self.write(".github/workflows/unrelated-plugin.yml", "out of scope")
+        with self.assertRaisesRegex(ValueError, "Non-website source changed"):
+            scope.check_scope(self.root, self.base, self.commit())
+
     def test_package_guide_change_requires_new_release(self):
         self.write("presets/role/INSTALL.md", "Altered guide")
         with self.assertRaisesRegex(ValueError, "Non-website source changed"):
