@@ -20,7 +20,7 @@ class WebsiteReleaseScope(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.git("init", "-q")
         self.git("config", "user.name", "Test")
-        self.git("config", "user.email", "test@example.invalid")
+        self.git("config", "user.email", "fixture@example.com")
         self.git("config", "core.autocrlf", "false")
         self.directory = {
             "version": "v1.6.2",
