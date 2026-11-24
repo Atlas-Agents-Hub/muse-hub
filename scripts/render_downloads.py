@@ -411,7 +411,9 @@ def catalog(root: Path = ROOT) -> dict:
             rows.append(dict(id=item['id'], kind=kind, title=TITLES.get(item['id'],item['title']),
                              description=DESCRIPTIONS.get(item['id'],item[description]), asset=asset, url=base+asset,
                              category=subject(public_category),
-                             keywords=public_category+' '+public_category.replace('-', ' '),
+                             keywords=(original_category+' '+original_category.replace('-', ' ')+
+                                      (' '+public_category+' '+public_category.replace('-', ' ')
+                                       if public_category!=original_category else '')),
                              roles=memberships[key][item['id']], **pack,
                              guide_url=REPO+'/blob/main/'+(
                                  ('collections/library/'+item['path'] if item.get('format')=='portable-skill'

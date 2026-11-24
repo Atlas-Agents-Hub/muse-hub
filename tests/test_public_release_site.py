@@ -477,9 +477,15 @@ class SpecialistDownloadDiscovery(unittest.TestCase):
         self.assertEqual(len({(row['kind'],row['id']) for row in self.directory['items']}),len(self.directory['items']))
         by_id = {(row['kind'], row['id']): row for row in self.directory['items']}
         skills = {row['id']: row for row in self.collection['skills']}
+        # The two documented game-development exceptions preserve original
+        # collection metadata and search terms; other source mappings remain exact.
+        self.assertEqual(self.renderer.SUBJECT_CORRECTIONS,
+                         {'2d-games': 'Creative & games', '3d-games': 'Creative & games'})
         for skill in skills.values():
             row = by_id['skill', skill['id']]
-            self.assertEqual(row['category'], self.renderer.subject(skill['category']))
+            expected = self.renderer.SUBJECT_CORRECTIONS.get(
+                skill['id'], self.renderer.subject(skill['category']))
+            self.assertEqual(row['category'], expected)
             self.assertIn(skill['category'], row['keywords'])
         for workflow in self.collection['workflows']:
             self.assertEqual(by_id['workflow', workflow['id']]['category'],

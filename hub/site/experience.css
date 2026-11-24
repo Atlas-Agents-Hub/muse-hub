@@ -831,3 +831,8 @@ body.muse-premium,body.guide-page {
   .muse-premium .catalog-goal-links a span,
   .muse-premium .catalog-goal-links a::after {display:none;}
 }
+
+/* R19 Linux 320px: keep search above the first-view threshold without shrinking type. */
+@media (max-width:360px) {
+  .muse-premium .downloads-catalog { padding-top:7px; }
+}
