@@ -296,6 +296,32 @@ async function runChecks() {
     assert.equal(new URL(await evaluate('location.href')).searchParams.has('role'), false);
     return {searchable_resources:downloads.items.length, rendered_cards:links.length, specialist_search:true, empty_state_reset:true};
   });
+  await check('English descriptions support real task searches on phone and desktop', async () => {
+    const originalWidth = width;
+    const scenarios = [
+      { viewport:390, id:'emergency-card', query:'emergency medical information card', expected:'Prepare a concise emergency medical information card' },
+      { viewport:1440, id:'liuguang-banlan-ui', query:'parameterized OKLCH colors', expected:'Build iridescent white or colorful black UI themes' },
+    ];
+    const observations=[];
+    try {
+      for (const scenario of scenarios) {
+        await resize(scenario.viewport);
+        await navigate('downloads.html?type=skill');
+        await type('#download-search', scenario.query);
+        const selector='.download-card[data-id="'+scenario.id+'"]:not([hidden])';
+        await wait('Boolean(document.querySelector('+JSON.stringify(selector)+'))', 'English search reaches translated resource');
+        const details=await evaluate('(()=>{const c=document.querySelector('+JSON.stringify(selector)+');return {description:c.querySelector("p").textContent, url:c.querySelector("a[aria-label]").href, query:document.querySelector("#download-search").value, overflow:document.documentElement.scrollWidth-innerWidth}})()');
+        assert(details.description.startsWith(scenario.expected));
+        assert.equal(details.url,downloads.items.find(r=>r.id===scenario.id && r.kind==='skill').url);
+        assert.equal(details.query,scenario.query);
+        assert(details.overflow<=1);
+        await evaluate('document.querySelector('+JSON.stringify(selector)+').scrollIntoView({block:"center"})');
+        await screenshot('english-search-'+scenario.viewport+'.png');
+        observations.push({id:scenario.id,viewport:scenario.viewport,...details});
+      }
+    } finally { await resize(originalWidth); }
+    return observations;
+  });
   await check('all specialist library setup links open matching onboarding', async () => {
     await navigate('downloads.html?type=specialist');
     const specialistRows = downloads.items.filter(row => row.kind === 'specialist');

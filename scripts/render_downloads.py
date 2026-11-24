@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import unicodedata
 import html
 import json
 from pathlib import Path
@@ -94,6 +95,40 @@ DESCRIPTIONS = {
     'geo-citability': 'Review answer clarity and source evidence with a citability rubric, then measure AI citations on a dated query sample. This editorial method does not guarantee ranking gains.',
     'geo-crawlers': 'Review crawler access against search, privacy and training preferences. Distinguish search bots, training crawlers and user-directed requests before changing site rules.',
     'hugging-face-dataset-viewer': 'Explore datasets with the read-only Hugging Face Dataset Viewer API: inspect splits, preview rows, search or filter entries, and retrieve statistics and Parquet links.',
+    # English display summaries of mixed-language source triggers; source packages stay intact.
+    'baoyu-comic': 'Create educational, biographical and tutorial comics that explain a subject visually.',
+    'baoyu-infographic': 'Design infographics using 21 layout options and 21 visual styles.',
+    'crossframe': 'Use the CrossFrame method for structural diagnosis of complex relationships, organizations, institutions, public disputes or long-term change. The source method uses Chinese terminology.',
+    'de-ai-writer': 'Review Chinese drafts for 35 patterns associated with AI-generated writing, score those patterns, and revise the prose or adapt it to a supplied writing style.',
+    'emergency-card': 'Prepare a concise emergency medical information card from supplied allergies, medications, urgent conditions and implants. Export as JSON, text or a QR code for travel or clinical visits.',
+    'fact-check-x-unified': 'Orchestrate comparison of multiple AI answers, distinguish unverified synthesis from authoritative verification, and produce an auditable report. The full pipeline requires separately installed companion skills.',
+    'health-trend-analyzer': 'Explore changes in supplied health data over time, including symptoms, medications, vital signs, lab results, weight, mood and sleep. Includes correlation analysis and interactive ECharts reports.',
+    'humanize-chinese': 'Review AI-like patterns in Chinese prose and revise it for natural style. Covers scoring, academic writing review and style conversion.',
+    'liepin-jobs': "Connect supported coding agents to Liepin's official MCP server to search Chinese job listings and review resumes. Applications require explicit approval; tokens stay in environment variables.",
+    'liuguang-banlan-ui': 'Build iridescent white or colorful black UI themes with parameterized OKLCH colors, WebGL or CSS fallback, screenshot checks and measured color-intensity reports.',
+    'makepad-animation': "Work with Makepad's animation system, including animators, hover and pressed states, and transitions.",
+    'makepad-basics': 'Get started with Makepad app structure, project setup, live_design! and app_main!.',
+    'makepad-deployment': 'Package and distribute Makepad applications for desktop, mobile and WebAssembly with cargo-packager, cargo-makepad and CI workflows.',
+    'makepad-dsl': "Use Makepad's live design syntax, inheritance, prototypes and component definitions.",
+    'makepad-event-action': 'Handle Makepad events and actions using Event, ActionTrait, handle_event, pointer input and post_action.',
+    'makepad-font': 'Configure Makepad fonts, typography, glyph rendering, font atlases and text layout.',
+    'makepad-layout': 'Build Makepad layouts with Fit, Fill, Size, Walk, flow, spacing, padding and alignment.',
+    'makepad-platform': 'Review Makepad platform support across macOS, Windows, Linux, Android, iOS and web, including graphics backend differences.',
+    'makepad-shaders': 'Work with Makepad shaders, Sdf2d, draw_bg and draw_quad for GPU-based drawing.',
+    'makepad-splash': "Use Makepad's Splash scripting language, script! and cx.eval for scripting and dynamic behavior.",
+    'monetize': 'Build a personal side-income plan from existing experience and skills, with opportunity assessment, product ideas, a first action and sourced or explicitly labeled estimates.',
+    'pro-launch': 'Plan a product from concept to launch with references, naming, style frames, UI iteration, launch video and go-to-market gates.',
+    'pro-motion': 'Plan an audio-first product launch or promotional motion-graphics video, then render timed visuals to match the track.',
+    'readme-polish': "Improve an existing README's readability, information hierarchy, badges and diagrams using comparable repositories and a deterministic lint check.",
+    'robius-app-architecture': 'Apply Robius architecture patterns for Tokio, asynchronous requests, SignalToUI, worker tasks and app startup.',
+    'robius-event-action': 'Handle custom Robius actions and signals, including cx.widget_action, handle_actions and DefaultNone.',
+    'robius-matrix-integration': 'Integrate the Matrix SDK into Makepad and Robius apps, including sliding sync, requests, timelines, rooms and session handling.',
+    'robius-state-management': 'Manage Robius application state, persistence, theme switching, scoped data and Serde serialization.',
+    'robius-widget-patterns': 'Build Robius widget patterns including overlays, modals, collapsible sections, drag and drop, and reusable components.',
+    'skill-skill': 'Write, improve or audit a Claude skill with explicit triggers, behavioral requirements and a static quality audit.',
+    'travel-health-analyzer': 'Review supplied travel health information and destination risks, summarize vaccination considerations from supported WHO and CDC data, and prepare multilingual emergency information cards.',
+    'wechat-official-account-strategist': 'Plan content for WeChat Official Accounts, including article structure, title approaches and Mini-Program integration.',
+    'xiaohongshu-content-strategist': 'Plan Xiaohongshu content using platform-specific topics, save-rate optimization, trend formats and search discovery.',
 }
 TITLES = {
     'release-readiness': 'Prepare a Release for Delivery',
@@ -427,6 +462,13 @@ def catalog(root: Path = ROOT) -> dict:
             asset=asset,url=base+asset,category=subject(row['category']),
             keywords=row['category'],roles=sorted(guide_memberships[row['id']]),
             guide_url=REPO+'/blob/main/'+row['doc_path']))
+    # Reject untranslated prose from scripts used by imported multilingual resources.
+    # Greek statistical symbols and Latin diacritics are valid English technical text.
+    for row in rows:
+        if any(c.isalpha() and not any(script in unicodedata.name(c, '')
+                                      for script in ('LATIN', 'GREEK'))
+               for c in row['description']):
+            raise ValueError(f"Public description requires English editorial review: {row['id']}")
     counts = {kind: sum(row['kind'] == kind for row in rows) for kind in ('specialist','skill','workflow','tool-guide')}
     if counts['specialist']!=15 or counts['skill']<75 or counts['workflow']<25:
         raise ValueError(f'Incomplete release inventory: {counts}')
