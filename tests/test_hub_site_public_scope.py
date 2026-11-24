@@ -8,6 +8,7 @@ from muse_presets.public_export import select_public_files, PublicExportError
 SITE_FILES = (
     "README.md", "index.html", "site.css", "site.js", "roles.json",
     "downloads.html", "downloads.js", "downloads.json", "sitemap.xml",
+    "llms.txt",
     "public/index.html", "public/styles.css", "public/app.js",
     "public/catalog.json", "INTEGRITY.json", "social-card.png"
 )

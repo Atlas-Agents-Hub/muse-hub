@@ -143,6 +143,17 @@ class PublicReleaseDownloads(unittest.TestCase):
             for phrase in ('source-only','source only','unpublished draft','not deployed','not additional agents','no authenticated cross-account','not a claim','h11 /','h12 /','h00–h21'):
                 self.assertNotIn(phrase,text,(name,phrase))
 
+    def test_project_answer_engine_index_matches_catalog_and_canonical_routes(self):
+        output = self.renderer.outputs()
+        index = output['llms.txt'].decode('utf-8')
+        for key, value in self.directory['counts'].items():
+            label = {'skill':'skills', 'workflow':'workflows', 'specialist':'specialist kits', 'tool-guide':'tool guides'}[key]
+            self.assertIn(f'{value:,} {label}', index)
+        for route in ('downloads.html', 'public/index.html', 'sitemap.xml'):
+            self.assertIn('https://atlas-agents-hub.github.io/muse-hub/' + route, index)
+        self.assertIn('/releases/tag/' + self.directory['version'], index)
+        self.assertEqual((ROOT/'hub/site/llms.txt').read_bytes(), output['llms.txt'])
+
     def test_initial_page_is_bounded_and_static_subject_pages_cover_every_item(self):
         from html.parser import HTMLParser
 

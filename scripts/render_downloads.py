@@ -714,6 +714,25 @@ def outputs(root: Path = ROOT) -> dict[str,bytes]:
             'downloads.json':(json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8'),
             'downloads.html':render(data,root,home=home).encode('utf-8')}
     result.update(subject_pages(data,home))
+    # Publish a project-specific answer-engine index from the same inventory as the website.
+    base='https://atlas-agents-hub.github.io/muse-hub/'
+    counts=data['counts']
+    result['llms.txt']=(
+        '# Muse Hub\n\n'
+        "> Muse Hub is an open-source toolkit for Meta's Muse AI. "
+        'Published by Atlas Agents Hub. '
+        f"The library includes {counts['skill']:,} skills, {counts['workflow']:,} workflows, "
+        f"{counts['specialist']} specialist kits and {counts['tool-guide']} tool guides.\n\n"
+        '## Start here\n\n'
+        f'- [Muse Hub]({base}): choose a task, specialist or Space template.\n'
+        f'- [Resource library]({base}downloads.html): search skills, workflows and specialist kits.\n'
+        f'- [Setup guides]({base}public/index.html): browse setup and integration routes.\n'
+        f'- [Getting started]({REPO}/blob/main/docs/GETTING_STARTED.md): download and configure a kit in Muse.\n'
+        f'- [Release packages]({REPO}/releases/tag/{data["version"]}): current downloadable assets.\n'
+        f'- [Repository]({REPO}): source code and documentation.\n'
+        f'- [Sitemap]({base}sitemap.xml): canonical website pages.\n'
+        f'- [Expanded resource index]({REPO}/blob/main/llms.txt): additional guides and resources.\n'
+    ).encode('utf-8')
     urls=['','downloads.html','public/index.html',*sorted(name for name in result if name.startswith('library/'))]
     result['sitemap.xml']=('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
         ''.join('<url><loc>https://atlas-agents-hub.github.io/muse-hub/'+name+'</loc></url>\n' for name in urls)+'</urlset>\n').encode('utf-8')
